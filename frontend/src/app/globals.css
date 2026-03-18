@@ -4,44 +4,30 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: 0 0% 0%;
-  --foreground: 0 0% 100%;
-  --card: 0 0% 5%;
-  --card-foreground: 0 0% 100%;
-  --border: 0 0% 12%;
-  --input: 0 0% 12%;
-  --ring: 221 83% 53%;
-  --radius: 0.75rem;
-}
-
 @layer base {
-  * {
-    @apply border-border;
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --border: 214.3 31.8% 91.4%;
   }
-  body {
-    @apply bg-black text-foreground antialiased selection:bg-blue-500/30 font-sans;
-    font-family:
-      'Inter',
-      system-ui,
-      -apple-system,
-      sans-serif;
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
   }
 }
 
-/* Custom Utilities for Premium UX */
-.glass {
-  @apply bg-black/60 backdrop-blur-md border-b border-white/5;
-}
-
-.card-gradient {
-  @apply bg-gradient-to-br from-neutral-900 to-black border border-neutral-800/50;
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+@layer utilities {
+  .border-border {
+    border-color: hsl(var(--border));
+  }
+  
+  .bg-background {
+    background-color: hsl(var(--background));
+  }
+  
+  .text-foreground {
+    color: hsl(var(--foreground));
+  }
 }

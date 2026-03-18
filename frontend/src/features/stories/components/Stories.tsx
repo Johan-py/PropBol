@@ -6,12 +6,12 @@ export const Stories = () => {
           <div
             key={i}
             className="flex-shrink-0 flex flex-col items-center space-y-2 group cursor-not-allowed"
-          >
+          > 
             <div className="relative w-[60px] h-[60px] rounded-full p-[2px] ring-2 ring-blue-500/30 group-hover:ring-blue-500 transition-all">
               <div className="w-full h-full rounded-full bg-neutral-900 p-[2px]">
                 <div className="w-full h-full rounded-full bg-gradient-to-br from-neutral-800 to-neutral-900 border border-white/5 flex items-center justify-center overflow-hidden">
                   <svg
-                    xmlns="http://www.w3.org/2000/center"
+                    xmlns="http://www.w3.org/200/center"
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"

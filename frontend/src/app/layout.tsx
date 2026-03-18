@@ -7,6 +7,26 @@ export const metadata: Metadata = {
   description: 'Arquitectura Screaming & UX de Clase Mundial'
 }
 
+// Mover estos componentes ANTES de RootLayout
+const SidebarItem = ({ label, active = false }: { label: string; active?: boolean }) => (
+  <div
+    className={`flex items-center space-x-4 px-4 py-3 rounded-xl cursor-not-allowed transition-all ${active ? 'bg-neutral-900 text-blue-500' : 'text-neutral-500 hover:bg-neutral-900/50 hover:text-neutral-300'}`}
+  >
+    <div
+      className={`w-5 h-5 rounded ${active ? 'bg-blue-500/20 text-blue-500' : 'bg-neutral-800'}`}
+    />
+    <span className="text-sm font-semibold">{label}</span>
+  </div>
+)
+
+const TrendingItem = ({ tag, posts }: { tag: string; posts: string }) => (
+  <div className="group cursor-not-allowed">
+    <p className="text-[10px] text-neutral-500 uppercase tracking-widest font-bold">Trending</p>
+    <p className="text-sm font-bold group-hover:text-blue-400 transition-colors">{tag}</p>
+    <p className="text-[10px] text-neutral-500">{posts} posts</p>
+  </div>
+)
+
 export default function RootLayout({
   children
 }: Readonly<{
@@ -27,7 +47,7 @@ export default function RootLayout({
               <SidebarItem label="Perfil" />
             </nav>
           </aside>
-
+          
           {/* Main Feed Column */}
           <main className="flex-1 flex justify-center py-4 overflow-x-hidden">
             <div className="w-full max-w-[500px]">{children}</div>
@@ -49,23 +69,3 @@ export default function RootLayout({
     </html>
   )
 }
-
-// Internal Layout Components for Professionalism
-const SidebarItem = ({ label, active = false }: { label: string; active?: boolean }) => (
-  <div
-    className={`flex items-center space-x-4 px-4 py-3 rounded-xl cursor-not-allowed transition-all ${active ? 'bg-neutral-900 text-blue-500' : 'text-neutral-500 hover:bg-neutral-900/50 hover:text-neutral-300'}`}
-  >
-    <div
-      className={`w-5 h-5 rounded ${active ? 'bg-blue-500/20 text-blue-500' : 'bg-neutral-800'}`}
-    />
-    <span className="text-sm font-semibold">{label}</span>
-  </div>
-)
-
-const TrendingItem = ({ tag, posts }: { tag: string; posts: string }) => (
-  <div className="group cursor-not-allowed">
-    <p className="text-[10px] text-neutral-500 uppercase tracking-widest font-bold">Trending</p>
-    <p className="text-sm font-bold group-hover:text-blue-400 transition-colors">{tag}</p>
-    <p className="text-[10px] text-neutral-500">{posts} posts</p>
-  </div>
-)
