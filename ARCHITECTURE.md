@@ -1,8 +1,10 @@
 # 🏗️ SOCIAL_IS - Arquitectura del Sistema
-
+# team DevOpsCore 
 ## 📋 Introducción
 
 **SOCIAL_IS** es una red social premium construida como laboratorio de ingeniería para prácticas DevOps. Combina una experiencia de usuario de clase mundial con una infraestructura robusta diseñada para simulaciones de estrés, pruebas de caos y escenarios de fallos realistas.
+
+
 
 El proyecto sirve como **base para construir escenarios de estrés realistas para el equipo de DevOps**, permitiendo practicar:
 - Fallos en pipelines CI/CD
