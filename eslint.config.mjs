@@ -46,7 +46,7 @@ export default [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: './frontend/tsconfig.json', // 👈 Ruta específica al frontend
+        project: './tsconfig.json', // 👈 Ruta específica al frontend
         ecmaVersion: 2022,
         sourceType: 'module',
         ecmaFeatures: {
@@ -90,7 +90,7 @@ export default [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: './backend/tsconfig.json', // 👈 Ruta específica al backend
+        project: './tsconfig.json', // 👈 Ruta específica al backend
         ecmaVersion: 2022,
         sourceType: 'module',
       },
