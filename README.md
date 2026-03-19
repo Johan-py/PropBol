@@ -1,110 +1,217 @@
-# 📦 Next.js TSX DevOps Stress Lab
+# 🚀 SOCIAL_IS - Premium Social Network & DevOps Engineering Lab
 
-Proyecto base para **simulaciones de estrés DevOps**. Incluye:
+Un laboratorio de ingeniería de software que combina una **red social de clase mundial** con un **entorno de prácticas DevOps realistas**. Este proyecto no es solo otra app más - es un ecosistema completo diseñado para que los equipos de desarrollo y operaciones puedan simular, practicar y dominar escenarios complejos del mundo real.
 
-* Frontend y Backend en **Next.js + TSX** (App Router)
-* API REST simple (`/api/calculator`)
-* Tests con **Bun**
-* Docker para contenedores
-* Scripts de desarrollo y CI/CD listos para pipelines
 
-Este proyecto permite simular: fallos en pipelines, tests rotos, conflictos de merge y despliegues fallidos.
+## 🏗️ Arquitectura del Sistema
+
+Este proyecto implementa **Screaming Architecture** - donde la estructura del código grita su propósito:
+
+```
+SOCIAL_IS/
+├── frontend/           # UI Premium con Next.js 14 App Router
+│   ├── src/
+│   │   ├── app/        # Páginas y layouts
+│   │   ├── components/ # Componentes reutilizables
+│   │   └── features/   # Lógica de negocio (feed, stories, etc.)
+├── backend/            # API REST con Express + Prisma
+│   ├── src/modules/    # Módulos auto-explicativos
+│   └── prisma/         # Base de datos type-safe
+├── infra/              # Laboratorio de pruebas de estrés
+│   ├── stress-lab/     # Scripts de caos y simulación
+│   └── docker/         # Contenedores y orquestación
+└── scripts/            # Command Center para automatización
+```
+
+### Tecnologías Core
+
+| Componente | Tecnología | Razón de elección |
+|------------|------------|-------------------|
+| **Runtime** | Bun v1.3+ | Performance extrema, monorepos nativos |
+| **Frontend** | Next.js 16 + React 19 | App Router, Server Components |
+| **Backend** | Express + Prisma | API REST robusta, type-safe |
+| **Estilos** | TailwindCSS v4 | Utility-first, diseño premium |
+| **Testing** | Bun Test | Integración nativa, velocidad |
+| **Contenedores** | Docker | Despliegue consistente |
 
 ---
 
-## 🗂 Estructura del repositorio
+## 🚀 Quick Start
 
-```
-nextjs-stress-lab/
-├── app/
-│   ├── api/calculator/route.ts   # API REST
-│   ├── page.tsx                  # Página principal
-│   └── layout.tsx                # Layout obligatorio
-├── tests/
-│   └── calculator.test.ts        # Tests de funciones
-├── Dockerfile
-├── package.json
-├── bun.lockb
-├── tsconfig.json
-└── .github/workflows/ci.yml      # Pipeline CI/CD
-```
-
----
-
-## ⚡ Requisitos
-
-* **Bun** (v1.3+) → [https://bun.sh](https://bun.sh)
-* Git
-* Docker (opcional para pruebas de despliegue)
-
-> No necesitas Node.js, Bun reemplaza todo.
-
----
-
-## 🚀 Comandos principales
-
-| Acción                | Comando Bun         |
-| --------------------- | ------------------- |
-| Levantar dev server   | `bun run dev`       |
-| Build de producción   | `bun run build`     |
-| Start de producción   | `bun run start`     |
-| Correr tests          | `bun test`          |
-| Instalar dependencias | `bun install`       |
-| Agregar dependencia   | `bun add <package>` |
-
----
-
-## 🧪 API Example
-
-**Sumar 2 números**:
-
-```
-GET /api/calculator?a=10&b=2&op=add
-```
-
-**Respuesta:**
-
-```json
-{ "result": 12 }
-```
-
-**División:**
-
-```
-GET /api/calculator?a=10&b=2&op=divide
-```
-
-> Maneja errores: divide por 0 o números inválidos → status 400
-
----
-
-## 🛠 Estructura de pruebas para DevOps
-
-* **DevOps 1**: Infraestructura y Docker, simular despliegues y caídas de servicios
-* **DevOps 2**: Pipelines y tests, inyectar tests rotos o builds fallidos
-* **DevOps 3**: Repositorio y monitoreo, crear PR con conflictos y revisar alertas
-
----
-
-## 🐳 Docker
-
-Levantar contenedor de desarrollo:
+### Prerrequisitos
 
 ```bash
-docker build -t nextjs-stress-lab .
-docker run -p 3000:3000 nextjs-stress-lab
+# Instalar Bun (si no lo tienes)
+curl -fsSL https://bun.sh/install | bash
+
+# Clonar y configurar
+git clone https://github.com/Johan-py/prueba_integracion_DevOpsCore.git
+cd prueba_integracion_DevOpsCore
+bun install
 ```
 
-* Acceder a `http://localhost:3000/`
-* API: `http://localhost:3000/api/calculator`
+### Levantar todo el ecosistema
+
+```bash
+# Iniciar frontend + backend + servicios
+bun run dev:all
+
+# O individualmente
+cd frontend 
+bun run dev    # :3000
+
+cd backend
+bun run dev     # :5000
+```
+
+### Comandos esenciales
+
+| Comando | Propósito |
+|---------|-----------|
+| `bun run dev:all` | Inicia todo el stack (frontend + backend) |
+| `bun test` | Ejecuta suite de tests completo |
+| `bun run build` | Build de producción optimizado |
+| `docker-compose up` | Levanta infraestructura completa |
 
 ---
 
-## ✅ Notas finales
+## 🌐 API RESTful
 
-* Usa `bun test` para todos los tests; no es necesario configurar Jest manualmente
-* Toda la lógica de API está en `app/api/calculator/route.ts`
-* Layout obligatorio en `app/layout.tsx` para evitar errores de Next.js con App Router
+El backend expone endpoints RESTful con manejo robusto de errores:
 
-> Este repositorio sirve como **base para construir escenarios de estrés realistas para el equipo de DevOps**.
+### Posts API
+```bash
+# Obtener todos los posts
+GET http://localhost:5000/api/posts
+
+# Crear nuevo post
+POST http://localhost:5000/api/posts
+Content-Type: application/json
+{
+  "content": "Mi primer post en SOCIAL_IS",
+  "authorId": 1
+}
+```
+
+---
+
+## 🧪 Laboratorio DevOps
+
+Este es el corazón del proyecto - donde los equipos practican escenarios reales:
+
+### DevOps 1: Infraestructura y Contenedores
+- **Simulación de caídas**: Docker containers que fallan intencionalmente
+- **Recovery procedures**: Scripts para restaurar servicios automáticamente
+- **Load testing**: Pruebas de estrés con k6 y Artillery
+
+### DevOps 2: Pipelines y Calidad
+- **Tests rotos intencionales**: Escenarios para debugging de CI/CD
+- **Builds fallidos**: Simulación de problemas de compilación
+- **Conflictos de merge**: Prácticas de resolución realistas
+
+### DevOps 3: Monitoreo y Respuesta
+- **Alertas falsas**: Distinguir entre problemas reales y falsos positivos
+- **Métricas en tiempo real**: Dashboards con Prometheus + Grafana
+- **Incident response**: Procedimientos de escalado
+
+### Scripts de Caos
+
+```bash
+# Inyectar latencia en el backend
+./scripts/chaos-injector.sh --service=backend --failure=latency
+
+# Simular caída de base de datos
+./scripts/chaos-injector.sh --service=database --failure=crash
+
+# Recuperación automática
+./scripts/recovery.sh --service=all
+```
+
+---
+
+## 🐳 Docker y Despliegue
+
+### Desarrollo local
+```bash
+# Build y run completo
+docker-compose up --build
+
+# Acceso a servicios
+# Frontend: http://localhost:3000
+# Backend:  http://localhost:5000
+# Database: localhost:5432
+```
+
+### Producción
+```bash
+# Build optimizado
+docker build -t social-is:latest .
+
+# Deploy con health checks
+docker run -d \
+  --name social-is-prod \
+  --health-cmd="curl -f http://localhost:3000/api/health" \
+  -p 3000:3000 \
+  social-is:latest
+```
+
+---
+
+## 🎨 Frontend
+La interfaz sigue los estándares de las redes sociales modernas:
+
+### Características
+- **Design System**: Componentes consistentes y reutilizables
+- **Responsive First**: Mobile-first con breakpoints inteligentes
+- **Micro-interactions**: Animaciones sutiles y feedback inmediato
+- **Performance**: Lazy loading, code splitting, optimización automática
+
+### Estructura de Componentes
+```
+src/
+├── components/
+│   ├── layout/          # Navbar, Footer, Sidebar
+│   └── ui/             # Botones, inputs, modales
+├── features/
+│   ├── feed/           # Timeline de posts
+│   ├── stories/        # Historias tipo Instagram
+│   └── profile/        # Perfiles de usuario
+└── app/               # Páginas y layouts Next.js
+```
+
+---
+
+## 🔧 Backend - Arquitectura Escalable
+
+### Módulos Desacoplados
+Cada módulo es una unidad independiente con su propia lógica:
+
+```
+src/modules/
+├── posts/
+│   ├── routes/         # Endpoints REST
+│   ├── services/       # Lógica de negocio
+│   └── validators/     # Validación de datos
+├── users/
+│   ├── auth/           # JWT y sesiones
+│   ├── profiles/       # Gestión de perfiles
+│   └── permissions/    # RBAC
+└── notifications/
+    └── real-time/      # WebSockets
+```
+
+### Base de Datos con Prisma
+```typescript
+// Schema type-safe
+model Post {
+  id        Int      @id @default(autoincrement())
+  content   String
+  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+```
+
+---
+
 
