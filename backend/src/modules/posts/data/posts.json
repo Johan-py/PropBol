@@ -16,5 +16,14 @@
     "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
     "time": "Hace 2 minutos",
     "tags": ["#DevOps", "#Nextjs", "#GitFlow", "#Practice"]
+  },
+  {
+    "id": 1003,
+    "username": "Bellido Zaballos Shawn Brandon",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=ByteMafiaDev",
+    "content": "Probando el flujo de Git con el equipo. ¡Todo listo! ",
+    "time": "Hace un momento",
+    "tags": ["#Homepage", "#desarrollo", "#bytemafia"]
   }
 ]
+
