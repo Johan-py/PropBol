@@ -1,3 +1,5 @@
+// Agrega una variable no usada
+// const variableSinUsar = "test"
 export default function Footer() {
   return (
     <footer className="bg-gray-800 text-white mt-auto">

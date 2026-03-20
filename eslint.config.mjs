@@ -11,13 +11,14 @@ export default [
       '**/node_modules/**',
       '**/dist/**',
       '**/.next/**',
-      '**/prisma/**',
       '**/infra/stress-lab/**',
       '**/scripts/**',
       '**/*.config.js',
       '**/*.config.ts',
       '**/tailwind.config.*',
       '**/postcss.config.*',
+      '**/.git/**',
+
     ],
   },
 
@@ -46,7 +47,7 @@ export default [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: './frontend/tsconfig.json', // 👈 Ruta corregida al frontend
+        project: './tsconfig.json', // 👈 Ruta corregida al frontend
         ecmaVersion: 2022,
         sourceType: 'module',
         ecmaFeatures: {
@@ -90,7 +91,7 @@ export default [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: './backend/tsconfig.json', 
+        project: './tsconfig.json', 
         ecmaVersion: 2022,
         sourceType: 'module',
       },
