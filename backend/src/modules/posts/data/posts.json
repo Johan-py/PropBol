@@ -54,24 +54,6 @@
     "tags": ["#BitPro", "#GitPractice", "#GitColaborativo", "#Sistemas"]
   },
   {
-    "id": 1031,
-    "username": "teamCebollitas_MelodyGutierrez",
-    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=neida",
-    "content": "¡Hola! Soy Melody del grupo TeamCebollitas. Estoy aprendiendo Git colaborativo 🚀",
-    "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
-    "time": "Hace 1 minuto",
-    "tags": ["#TeamCebollitas", "#GitPractice"]
-  },
-  {
-    "id": 1032,
-    "username": "teamCebollitas_RodrigoQuispeVargas",
-    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=neida",
-    "content": "¡Hola! Soy Rodrigo Quispe Vargas del grupo TeamCebollitas 🚀",
-    "image": "https://worldcampus.saintleo.edu/img/article/estudiar-ingenieria-en-sistemas-cuales-son-los-retos-de-ser-ingenierio-en-sistemas.webp",
-    "time": "Hace 1 minuto",
-    "tags": ["#TeamCebollitas", "#GitPractice"]
-  },
-  {
     "id": 1030,
     "username": "BitPro_Rodrigo110620",
     "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=rodrigo1030",
