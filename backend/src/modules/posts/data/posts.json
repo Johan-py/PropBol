@@ -41,7 +41,6 @@
       "#Learning"
     ]
   },
-  
   {
     "id": 1022,
     "username": "Ninel_Daniela_Alcocer_Zabala",
@@ -84,24 +83,19 @@
       "#Sistemas"
     ]
   },
-
-    {
-        "id": 1026,
-        "username": "Madahi_Angeles_Aranibar_Mamani",
-        "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=madahi",
-        "content": "Hola, soy Madahi del grupo BitPro. Esta es mi contribución para la práctica de Git colaborativo.",
-        "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee",
-        "time": "Hace 1 minuto",
-        "tags": [ "#BitPro", "#GitPractice", "#GitColaborativo", "#Sistemas" ]
-    },
   {
-    "id": 1028,
-    "username": "Cristhian_BitPro",
-    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Cristhian1028",
-    "content": "¡Hola a todos! Soy Cristhian del grupo BitPro. Cumpliendo con mi parte del laboratorio Git (EXPLOTADO LABORALMENTE😞😞😞!!!).",
-    "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
+    "id": 1025,
+    "username": "Melby_Mendoza",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=MelbyMendoza",
+    "content": "¡Hola! Soy Melby Mendoza, parte de BitPro. Integrando mi primer post de nuestro equipo",
+    "image": "https://images.unsplash.com/photo-1669023414162-8b0573b9c6b2?q=80&w=1032&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     "time": "Recién publicado",
-    "tags": ["#BitPro", "#GitPractice", "#Desarrollo"]
+    "tags": [
+      "#BitPro",
+      "#GitPractice",
+      "#GitColaborativo",
+      "#Sistemas"
+    ]
   },
   {
     "id": 1026,
@@ -131,6 +125,15 @@
       "#Sistemas",
       "#DevOps"
     ]
+  },
+  {
+    "id": 1028,
+    "username": "Cristhian_BitPro",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Cristhian1028",
+    "content": "¡Hola a todos! Soy Cristhian del grupo BitPro. Cumpliendo con mi parte del laboratorio Git (EXPLOTADO LABORALMENTE😞😞😞!!!).",
+    "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
+    "time": "Recién publicado",
+    "tags": ["#BitPro", "#GitPractice", "#Desarrollo"]
   },
   {
     "id": 1029,
