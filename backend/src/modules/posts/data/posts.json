@@ -33,7 +33,7 @@
     "content": "Hola no se como llegue aqui asi que saludame por favor ",
     "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
     "time": "Hace 1 minuto",
-    "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
+    "tags": ["#Bytemafia", "#GitPractice", "#DevOps", "#Learning"]
   }
   ,{
   "id": 1012,
@@ -55,16 +55,15 @@
   }
   ,
   {
-    "id": 2001,
+    "id": 1021,
     "username": "Bytemafia_Adrian.Perez",
     "avatar": "https://api.dicebear.com/9.x/adventurer/svg?seed=Aneka",
     "content": "Este es mi post para practicar, todo bien¡¡ (Por ahora)",
     "image": "https://images.unsplash.com/photo-1575553939928-d03b21323afe?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     "time": "Hace 2 minutos",
     "tags": ["#Bytemafia", "#Dev", "#DevOpsCore"]
-    }
-   ,
-   {
+    },
+  {
     "id": 1016,
     "username": "Miguel Angel Massi Geronimo",
     "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Miguel",
@@ -82,5 +81,23 @@
     "time": "Hace un momento",
     "likes": 0,
     "tags": ["#git", "#desarrollo", "#bytemafia"]
-}
+  },
+{
+    "id": 1018,
+    "username": "Esther_Romero_Menacho",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Esther",
+    "content": "¡Hola! Soy Esther Romero Menacho de Bytemafia",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97",
+    "time": "Hace 1 minuto",
+    "tags": ["#Bytemafia", "#SistemasUMSS", "#GitPractice"]
+  },
+  {
+    "id": 1019,
+    "username": "Briza_Zurita_Zelada",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Briza",
+    "content": "¡Hola! Soy Briza Zurita Zelada de Bytemafia",
+    "image": "https://plus.unsplash.com/premium_photo-1663100722417-6e36673fe0ed?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "time": "Hace instantes",
+    "tags": ["#BF", "#Devs", "#Git"]
+  }
 ]
