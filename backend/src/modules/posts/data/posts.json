@@ -35,7 +35,13 @@
     "time": "Hace 1 minuto",
     "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
   }
-  
-  
+  ,{
+    "id": 1011,
+    "username": "Bellido Zeballos Shawn Brandon",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=ByteMafiaDev",
+    "content": "Probando el flujo de Git con el equipo. ¡Todo listo! 💻",
+    "time": "Hace un momento",
+    "likes": 0,
+    "tags": ["#git", "#desarrollo", "#bytemafia"]
+  }
 ]
-
