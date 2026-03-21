@@ -1,4 +1,5 @@
-[
+
+  [
   {
     "id": 1001,
     "username": "arquitecto_is",
@@ -107,6 +108,15 @@
     "time": "Hace 1 minuto",
     "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
   },
+{
+  "id": 1073,
+  "username": "cristian_encinas",
+  "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=cristian",
+  "content": "¡Hola! Soy Cristian del grupo Sigma Developers. Esta es mi contribución para la práctica de Git colaborativo 🚀",
+  "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop",
+  "time": "Hace 1 minuto",
+  "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
+},
   {
     "id": 1074,
     "username": "alison_mamani",
@@ -115,6 +125,15 @@
     "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
     "time": "Hace 1 minuto",
     "tags": ["#DevOps", "#SigmaDevelopers"]
+  },
+  {
+    "id": 1075,
+    "username": "Aima_Lupa_Jose",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=jose",
+    "content": "¡Hola! Soy Aima Lupa Jose del grupo Sigma_developers. Aprendiendo Git colaborativo en SOCIAL_IS 🚀",
+    "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 30 segundos",
+    "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
   },
   {
     "id": 1076,
@@ -126,6 +145,15 @@
     "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
   },
   {
+  "id": 1077,
+  "username": "jofre_ticona_plata",
+  "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=jofre",
+  "content": "¡Hola! Soy Jofre Ticona Plata del grupo Sigma Developers. Esta es mi contribución para la práctica de Git colaborativo 🚀",
+  "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop",
+  "time": "Hace 1 minuto",
+  "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
+},
+  {
     "id": 1078,
     "username": "mariela_chamo",
     "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=mariela",
@@ -133,7 +161,16 @@
     "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
     "time": "Hace 1 minuto",
     "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
-  },
+ },
+   {
+    "id": 1079,
+    "username": "neida_zeballos",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Neida",
+    "content": "¡Hola! Soy Neida Zeballos Tejada del grupo Sigma Developers 🚀",
+    "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+    "time": "Hace 1 minuto",
+    "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Bolivia"]
+},
   {
     "id": 1004,
     "username": "Gustavo_Corrales",
@@ -142,8 +179,8 @@
     "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
     "time": "Hace 1 minuto",
     "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning", "#GitFlow", "#Practice"]
-  },
-  {
+ },
+   {
     "id": 1041,
     "username": "JuanDavidGutierrezLucero",
     "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=JuanDavidGutierrezLucero",
@@ -223,23 +260,14 @@
     "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
     "time": "Hace 30 minuto",
     "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
-  },
-  {
-    "id": 1050,
-    "username": "NoemiCondoriGaspar",
-    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=NoemiCondori",
-    "content": "¡Hola! Soy Noemí Condori del equipo La Comarca De IS ",
-    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
-    "time": "Hace 1 minuto",
-    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps", "#Learning"]
-  },
-  {
-    "id": 1051,
-    "username": "AlberthFuentesBustamante",
-    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=AlberthFuentesBustamante",
-    "content": "¡Hola! Soy Alberth Fuentes Bustamante del equipo La Comarca De IS ",
-    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
-    "time": "Hace 2 minuto",
-    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps", "#Learning"]
-  }
+},
+{
+  "id": 1051,
+  "username": "AlberthFuentesBustamante",
+  "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=AlberthFuentesBustamante",
+  "content": "¡Hola! Soy Alberth Fuentes Bustamante del equipo La Comarca De IS ",
+  "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+  "time": "Hace 2 minuto",
+  "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps", "#Learning"]
+}
 ]
