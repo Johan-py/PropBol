@@ -63,7 +63,18 @@
         "time": "Hace 1 minuto",
         "tags": [ "#BitPro", "#GitPractice", "#GitColaborativo", "#Sistemas" ]
     },
+    
+  {
+    "id": 1029,
+    "username": "Jhilmer_Chinchilla_Condori",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=bitpro",
+    "content": "¡Hola,soy Jhilmer del Grupo BitPro.Aprendiendo Git colaborativo.",
+    "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+    "time": "Hace 1 minuto",
+    "tags": ["#BitPro", "#GitPractice", "#DevOps", "#Grupo3"]
+  }
 
+,
   {
     "id": 1030,
     "username": "BitPro_Rodrigo110620",
