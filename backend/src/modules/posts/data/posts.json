@@ -34,5 +34,14 @@
     "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
     "time": "Hace 1 minuto",
     "tags": ["#TeamCebollitas", "#GitPractice", "#DevOps", "#Learning"]
+  },
+  {
+    "id": 1022,
+    "username": "teamCebollitas_RodrigoQuispeVargas",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=neida",
+    "content": "¡Hola! Soy Rodrigo Quispe Vargas del grupo TeamCebollitas. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
+    "image": "https://worldcampus.saintleo.edu/img/article/estudiar-ingenieria-en-sistemas-cuales-son-los-retos-de-ser-ingenierio-en-sistemas.webp" ,
+    "time": "Hace 1 minuto",
+    "tags": ["#TeamCebollitas", "#GitPractice", "#DevOps", "#Learning"]
   }
 ]
