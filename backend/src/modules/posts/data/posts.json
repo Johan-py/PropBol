@@ -99,6 +99,15 @@
     "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
   },
   {
+  "identificación": 1074,
+  "nombre de usuario": "alison_mamani",
+  "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=alison",
+  "contenido": "Hola! Soy Alison Mamani Yujra y mi equipo es Sigma Developers",
+  "imagen": "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+  "tiempo": "Hace 1 minuto",
+  "etiquetas": ["#DevOps", "#Git", "#SigmaDevelopers"]
+},
+  {
     "id": 1076,
     "username": "madahi_condori",
     "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=madahi",
@@ -115,6 +124,14 @@
     "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
     "time": "Hace 1 minuto",
     "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
+    "id": 1004,
+    "username": "Gustavo_Corrales",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=student1",
+    "content": "Hola Soy Gustavo Corrales del grupo Prisma. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
+    "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 1 minuto",
+    "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning", "#GitFlow", "#Practice"]
   }
+
 ]
 
