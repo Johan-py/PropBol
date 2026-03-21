@@ -109,12 +109,12 @@
   },
   {
     "id": 1075,
-    "username": "Jose Aima ",
-    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Jose",
-    "content": "Hola! Soy Jose Aima Lupa y  mi equipo es Sigma Developers",
-    "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
-    "time": "Hace 1 minuto",
-    "tags": ["#DevOps", "#SigmaDevelopers"]
+    "username": "Aima_Lupa_Jose",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=jose",
+    "content": "¡Hola! Soy Aima Lupa Jose del grupo Sigma_developers. Aprendiendo Git colaborativo en SOCIAL_IS 🚀",
+    "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 30 segundos",
+    "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
   },
   {
     "id": 1076,
