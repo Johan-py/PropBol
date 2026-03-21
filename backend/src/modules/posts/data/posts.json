@@ -99,13 +99,13 @@
     "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
   },
   {
-  "identificación": 1074,
-  "nombre de usuario": "alison_mamani",
+  "id": 1074,
+  "username": "alison_mamani",
   "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=alison",
-  "contenido": "Hola! Soy Alison Mamani Yujra y mi equipo es Sigma Developers",
-  "imagen": "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
-  "tiempo": "Hace 1 minuto",
-  "etiquetas": ["#DevOps", "#Git", "#SigmaDevelopers"]
+  "content": "Hola! Soy Alison Mamani Yujra y mi equipo es Sigma Developers",
+  "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+  "time": "Hace 1 minuto",
+  "tags": ["#DevOps", "#Git", "#SigmaDevelopers"]
 },
   {
     "id": 1076,
@@ -135,3 +135,89 @@
 
 ]
 
+
+    "id": 1041,
+    "username": "JuanDavidGutierrezLucero",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=JuanDavidGutierrezLucero",
+    "content": "¡Hola! Soy Juan David Gutierrez del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 1 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  },
+  {
+    "id": 1042,
+    "username": "JhonatanDavidQuispePerez",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=JhonatanDavidQuispePerez",
+    "content": "¡Hola! Soy Jhonatan David Quispe Perez del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 1 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  },
+  {
+    "id": 1043,
+    "username": "JoseAdrianVillazonRojas",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=JoseAdrianVillazonRojas",
+    "content": "¡Hola! Soy Jose Adrian Villazon Rojas del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 1 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  },
+  {
+    "id": 1044,
+    "username": "EduardoFranciscoKilibardaLima",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=EduardoFranciscoKilibardaLima",
+    "content": "¡Hola! Soy Eduardo Francisco Kilibarda Lima del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 5 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  },
+  {
+    "id": 1045,
+    "username": "CarlosJosueVasquezHuanca",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=CarlosJosueVasquezHuanca",
+    "content": "¡Hola! Soy Carlos Josue Vasquez Huanca del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 4 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  },
+
+  {
+    "id": 1046,
+    "username": "JhonAldoFernandezVelasco",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=JhonAldoFernandezVelasco",
+    "content": "¡Hola! Soy Jhon Aldo Fernandez Velasco del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 4 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  },
+
+  {
+    "id": 1047,
+    "username": "JoelArielLluscoAcho",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=JoelArielLluscoAcho",
+    "content": "¡Hola! Soy Joel Ariel Llusco Acho del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 5 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  },
+
+  {
+    "id": 1048,
+    "username": "AmirAsaithUreñaVidal",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=AmirAsaithUreñaVidal",
+    "content": "¡Hola! Soy Amir Asaith Ureña Vidal del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 2 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  },
+
+  {
+    "id": 1049,
+    "username": "AlexChoqueAjata",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=AlexChoqueAjata",
+    "content": "¡Hola! Soy Alex Choque Ajta del equipo La Comarca De IS",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 30 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  }
+]
