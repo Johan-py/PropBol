@@ -72,4 +72,14 @@
     "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
   }
 
+  {
+    "id": 1046,
+    "username": "JhonAldoFernandezVelasco",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=JhonAldoFernandezVelasco",
+    "content": "¡Hola! Soy Jhon Aldo Fernandez Velasco del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 4 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  }
+
 ]
