@@ -52,5 +52,15 @@
     "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
     "time": "Hace 1 minuto",
     "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  },
+  {
+    "id": 1044,
+    "username": "EduardoFranciscoKilibardaLima",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=EduardoFranciscoKilibardaLima",
+    "content": "¡Hola! Soy Eduardo Francisco Kilibarda Lima del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 5 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
   }
+
 ]
