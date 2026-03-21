@@ -63,20 +63,7 @@
     "tags": ["#TeamCebollitas", "#GitPractice", "#DevOps", "#Learning"]
   },
   {
-<<<<<<< HEAD
-    "id": 1025,
-    "username": "teamCebollitas_StevenFernandez",
-    "avatar": "https://api.dicebear.com/7.x/avataraaars/svg?seed=cebollita",
-    "content": "¡Hola! Soy Steven Fernandez del grupo TeamCebollitas. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
-    "image": "https://worldcampus.saintleo.edu/img/article/estudiar-ingenieria-en-sistemas-cuales-son-los-retos-de-ser-ingenierio-en-sistemas.webp",
-    "time": "Hace 1 minuto",
-    "tags": ["#TeamCebollitas", "#GitPractice", "#DevOps", "#Learning"]
-  },
-  {
-    "id": 1028,
-=======
     "id": 1035,
->>>>>>> 4fbfa744dde2999b14de233ddeba8595bc453fa0
     "username": "teamCebollitas_JosePardo",
     "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=cebollita",
     "content": "¡Hola! Soy Jose Pardo del grupo TeamCebollitas. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
@@ -99,6 +86,15 @@
     "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=cebollita",
     "content": "¡Hola! Soy Gonzalo Ayra Torrico del grupo TeamCebollitas. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
     "image": "https://worldcampus.saintleo.edu/img/article/estudiar-ingenieria-en-sistemas-cuales-son-los-retos-de-ser-ingenierio-en-sistemas.webp" ,
+    "time": "Hace 1 minuto",
+    "tags": ["#TeamCebollitas", "#GitPractice", "#DevOps", "#Learning"]
+  },
+  {
+    "id": 1038,
+    "username": "teamCebollitas_StevenFernandez",
+    "avatar": "https://api.dicebear.com/7.x/avataraaars/svg?seed=cebollita",
+    "content": "¡Hola! Soy Steven Fernandez del grupo TeamCebollitas. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
+    "image": "https://worldcampus.saintleo.edu/img/article/estudiar-ingenieria-en-sistemas-cuales-son-los-retos-de-ser-ingenierio-en-sistemas.webp",
     "time": "Hace 1 minuto",
     "tags": ["#TeamCebollitas", "#GitPractice", "#DevOps", "#Learning"]
   }
