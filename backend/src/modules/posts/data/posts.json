@@ -35,13 +35,12 @@
     "time": "Hace 1 minuto",
     "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
   }
-  ,
-  {
-  "id": 2020,
-  "username": "bytemafia_mireya",
+  ,{
+  "id": 1012,
+  "username": "bytemafia_mireyaRojas",
   "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=bytemafia",
   "content": "¡Hola desde Bytemafia! Aprendiendo Git colaborativo",
-  "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+  "image": "https://images.unsplash.com/photo-1521714161819-15534968fc5f?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   "time": "Hace 1 minuto",
   "tags": ["#Bytemafia", "#GitPractice", "#DevOps"]
 }
