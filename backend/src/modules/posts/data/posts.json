@@ -35,6 +35,16 @@
     "time": "Hace 1 minuto",
     "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
   }
+  ,
+  {
+  "id": 2020,
+  "username": "bytemafia_mireya",
+  "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=bytemafia",
+  "content": "¡Hola desde Bytemafia! Aprendiendo Git colaborativo",
+  "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+  "time": "Hace 1 minuto",
+  "tags": ["#Bytemafia", "#GitPractice", "#DevOps"]
+}
   ,{
     "id": 1011,
     "username": "Bellido Zeballos Shawn Brandon",
