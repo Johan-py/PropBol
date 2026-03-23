@@ -13,12 +13,19 @@
     "id": 1002,
     "username": "estudiante_devops",
     "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=student1",
-    "content": "¡Hola! Estoy practicando Git subiendo este post directamente al archivo JSON. Los nuevos grupos deben usar IDs únicos (ej: 1003, 1004, etc) para evitar conflictos. 🛠️",
+    "content": "¡Hola! Estoy practicando Git subiendo este post directamente al archivo JSON. Los nuevos grupos deben usar IDs únicos (ej: 1003, 1004, etc) para evitar conflictos. 🔧",
     "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
     "time": "Hace 2 minutos",
     "tags": ["#DevOps", "#Nextjs", "#GitFlow", "#Practice"]
   },
-
+  {
+    "id": 1003,
+    "username": "Joel_Fernando",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=neida",
+    "content": "¡Hola! Soy Joel del grupo Sigma_developers. Estoy aprendiendo Git colaborativo y esta es mi primera contribución ✏️",
+    "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
+    "tags": ["#DevOps", "#Nextjs", "#GitFlow", "#Practice"]
+  },
   {
     "id": 1022,
     "username": "Ninel_Daniela_Alcocer_Zabala",
@@ -32,6 +39,44 @@
       "#GitFlow",
       "#Informatica"
     ]
+  },
+
+  {
+  "id": 1069,
+  "username": "grupoPrisma_WilberOjedaValente",
+  "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Prisma",
+  "content": "¡Hola! Soy Wilber Ojeda Valente del grupo Prisma. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
+  "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+  "time": "Hace 1 minuto",
+  "tags": ["#GrupoPrisma", "#GitPractice", "#DevOps"]
+  },
+  {
+    "id": 1061,
+    "username": "Alex_Nina",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex_Nina",
+    "content": "¡Hola desde el Grupo 7! Aprendiendo Git colaborativo 🚀",
+    "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+    "time": "Hace 1 minuto",
+    "tags": ["#Grupo7", "#GitPractice", "#DevOps"]
+  },
+  
+  {
+    "id": 1062,
+    "username": "Patiño_Calep",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Calep",
+    "content": "¡Hola desde el Grupo 7! Soy Calep aprendiendo Git colaborativo 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 1 minuto",
+    "tags": ["#Grupo7", "#GitPractice", "#DevOps"]
+  },
+  {
+    "id": 1063,
+    "username": "Tapia_Joaquin",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Joaquin",
+    "content": "¡Hola desde el Grupo 7! Soy Joaquin aprendiendo Git colaborativo 🚀",
+    "image": "https://images.unsplash.com/photo-1627399270231-7d36245355a9?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 1 minuto",
+    "tags": ["#Grupo7", "#GitPractice", "#DevOps"]
   },
   {
     "id": 1023,
@@ -150,22 +195,22 @@
     "tags": ["#TeamCebollitas", "#GitPractice", "#DevOps", "#Learning"]
   },
   {
-    "id": 1032,
-    "username": "teamCebollitas_RodrigoQuispeVargas",
-    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=neida",
-    "content": "¡Hola! Soy Rodrigo Quispe Vargas del grupo TeamCebollitas. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
-    "image": "https://worldcampus.saintleo.edu/img/article/estudiar-ingenieria-en-sistemas-cuales-son-los-retos-de-ser-ingenierio-en-sistemas.webp" ,
-    "time": "Hace 1 minuto",
-    "tags": ["#TeamCebollitas", "#GitPractice", "#DevOps", "#Learning"]
+  "id": 1065,
+  "username": "Alejandro_Condori",
+  "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=aacm592",
+  "content": "Completando la práctica de flujo de Git y DevOps.",
+  "image": "",
+  "time": "Hace 1 minuto",
+  "tags": ["#practica", "#git"]
   },
   {
-    "id": 1033,
-    "username": "teamCebollitas_VladimirCamachoCabrera",
-    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=cebollita",
-    "content": "¡Hola! Soy Vladimir Camacho Cabrera del grupo TeamCebollitas. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
-    "image": "https://worldcampus.saintleo.edu/img/article/estudiar-ingenieria-en-sistemas-cuales-son-los-retos-de-ser-ingenierio-en-sistemas.webp" ,
+    "id": 1066,
+    "username": "grupo7_gilmer",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=grupo7_gilmer",
+    "content": "Practicando Git colaborativo ",
+    "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
     "time": "Hace 1 minuto",
-    "tags": ["#TeamCebollitas", "#GitPractice", "#DevOps", "#Learning"]
+    "tags": ["#Grupo7"]
   },
   {
     "id": 1034,
@@ -294,13 +339,13 @@
     "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Bolivia"]
 },
   {
-    "id": 1004,
+    "id": 1064,
     "username": "Gustavo_Corrales",
     "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=student1",
     "content": "Hola Soy Gustavo Corrales del grupo Prisma. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
     "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
     "time": "Hace 1 minuto",
-    "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning", "#GitFlow", "#Practice"]
+    "tags": ["#Prisma", "#GitPractice", "#DevOps", "#Learning", "#GitFlow", "#Practice"]
  },
    {
     "id": 1041,
@@ -494,3 +539,4 @@
     "tags": ["#Bytemafia", "#Dev", "#DevOpsCore"]
     }
 ]
+
