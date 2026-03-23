@@ -33,7 +33,7 @@
     "content": "¡Hola desde el Grupo 7! Aprendiendo Git colaborativo 🚀",
     "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
     "time": "Hace 1 minuto",
-    "tags": ["#Grupo7", "#GitPractice", "#DevOps"]
+    "tags": ["#Prisma", "#GitPractice", "#DevOps", "#Learning", "#GitFlow", "#Practice"]
   },
   {
     "id": 1062,
@@ -42,7 +42,7 @@
     "content": "¡Hola desde el Grupo 7! Soy Calep aprendiendo Git colaborativo 🚀",
     "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
     "time": "Hace 1 minuto",
-    "tags": ["#Grupo7", "#GitPractice", "#DevOps"]
+    "tags": ["#Prisma", "#GitPractice", "#DevOps", "#Learning", "#GitFlow", "#Practice"]
   },
   {
     "id": 1063,
@@ -51,17 +51,26 @@
     "content": "¡Hola desde el Grupo 7! Soy Joaquin aprendiendo Git colaborativo 🚀",
     "image": "https://images.unsplash.com/photo-1627399270231-7d36245355a9?q=80&w=2070&auto=format&fit=crop",
     "time": "Hace 1 minuto",
-    "tags": ["#Grupo7", "#GitPractice", "#DevOps"]
+    "tags": ["#Prisma", "#GitPractice", "#DevOps", "#Learning", "#GitFlow", "#Practice"]
   },
   {
-    "id": 1004,
+    "id": 1064,
     "username": "Gustavo_Corrales",
     "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=student1",
     "content": "Hola Soy Gustavo Corrales del grupo Prisma. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
     "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
     "time": "Hace 1 minuto",
-    "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning", "#GitFlow", "#Practice"]
+    "tags": ["#Prisma", "#GitPractice", "#DevOps", "#Learning", "#GitFlow", "#Practice"]
   } ,
+  {
+  "id": 1065,
+  "username": "Alejandro_Condori",
+  "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=aacm592",
+  "content": "Completando la práctica de flujo de Git y DevOps.",
+  "image": "",
+  "time": "Hace 1 minuto",
+  "tags": ["#Prisma", "#GitPractice", "#DevOps", "#Learning", "#GitFlow", "#Practice"]
+  },
   {
     "id": 1066,
     "username": "Hurtado",
@@ -69,6 +78,6 @@
     "content": "¡Hola desde el Grupo 7! Soy Hurtado practicando Git colaborativo ",
     "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
     "time": "Hace 1 minuto",
-    "tags": ["#Grupo7", "#GitPractice", "#DevOps"]
+    "tags": ["#Prisma", "#GitPractice", "#DevOps", "#Learning", "#GitFlow", "#Practice"]
   }
 ]
