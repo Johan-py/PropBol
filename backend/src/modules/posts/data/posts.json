@@ -1,4 +1,5 @@
-[
+
+  [
   {
     "id": 1001,
     "username": "arquitecto_is",
@@ -23,8 +24,31 @@
     "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=neida",
     "content": "¡Hola! Soy Joel del grupo Sigma_developers. Estoy aprendiendo Git colaborativo y esta es mi primera contribución ✏️",
     "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
+    "tags": ["#DevOps", "#Nextjs", "#GitFlow", "#Practice"]
+  },
+  {
+    "id": 1022,
+    "username": "Ninel_Daniela_Alcocer_Zabala",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=ninel",
+    "content": "Hola, soy Ninel del equipo BitPro. Probando el setup!!!",
+    "image": "https://images.unsplash.com/photo-1634838080334-28befa9efe80?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0",
     "time": "Hace 1 minuto",
-    "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
+    "tags": [
+      "#BitPro",
+      "#GitPractice",
+      "#GitFlow",
+      "#Informatica"
+    ]
+  },
+
+  {
+  "id": 1069,
+  "username": "grupoPrisma_WilberOjedaValente",
+  "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Prisma",
+  "content": "¡Hola! Soy Wilber Ojeda Valente del grupo Prisma. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
+  "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+  "time": "Hace 1 minuto",
+  "tags": ["#GrupoPrisma", "#GitPractice", "#DevOps"]
   },
   {
     "id": 1061,
@@ -33,8 +57,9 @@
     "content": "¡Hola desde el Grupo 7! Aprendiendo Git colaborativo 🚀",
     "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
     "time": "Hace 1 minuto",
-    "tags": ["#Prisma", "#GitPractice", "#DevOps", "#Learning", "#GitFlow", "#Practice"]
+    "tags": ["#Grupo7", "#GitPractice", "#DevOps"]
   },
+  
   {
     "id": 1062,
     "username": "Patiño_Calep",
@@ -42,7 +67,7 @@
     "content": "¡Hola desde el Grupo 7! Soy Calep aprendiendo Git colaborativo 🚀",
     "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
     "time": "Hace 1 minuto",
-    "tags": ["#Prisma", "#GitPractice", "#DevOps", "#Learning", "#GitFlow", "#Practice"]
+    "tags": ["#Grupo7", "#GitPractice", "#DevOps"]
   },
   {
     "id": 1063,
@@ -51,8 +76,268 @@
     "content": "¡Hola desde el Grupo 7! Soy Joaquin aprendiendo Git colaborativo 🚀",
     "image": "https://images.unsplash.com/photo-1627399270231-7d36245355a9?q=80&w=2070&auto=format&fit=crop",
     "time": "Hace 1 minuto",
-    "tags": ["#Prisma", "#GitPractice", "#DevOps", "#Learning", "#GitFlow", "#Practice"]
+    "tags": ["#Grupo7", "#GitPractice", "#DevOps"]
   },
+  {
+    "id": 1023,
+    "username": "Lia_Cardenas_Morales",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=neida",
+    "content": "¡Hola! Soy Lia del grupo BitPro. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
+    "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 1 minuto",
+    "tags": [
+      "#BitPro",
+      "#GitPractice",
+      "#DevOps",
+      "#Informatica"
+    ]
+  },
+  {
+    "id": 1024,
+    "username": "Jorge_Paniagua",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=JorgePanaigua",
+    "content": "¡Hola! Soy Jorge, Lead de BitPro. Integrando mi primer post de nuestro equipo",
+    "image": "https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0",
+    "time": "Recién publicado",
+    "tags": [
+      "#BitPro",
+      "#GitPractice",
+      "#GitColaborativo",
+      "#Sistemas"
+    ]
+  },
+  {
+    "id": 1025,
+    "username": "Melby_Mendoza",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=MelbyMendoza",
+    "content": "¡Hola! Soy Melby Mendoza, parte de BitPro. Integrando mi primer post de nuestro equipo",
+    "image": "https://images.unsplash.com/photo-1669023414162-8b0573b9c6b2?q=80&w=1032&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "time": "Recién publicado",
+    "tags": [
+      "#BitPro",
+      "#GitPractice",
+      "#GitColaborativo",
+      "#Sistemas"
+    ]
+  },
+  {
+    "id": 1026,
+    "username": "Madahi_Angeles_Aranibar_Mamani",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=madahi",
+    "content": "Hola, soy Madahi del grupo BitPro. Esta es mi contribución para la práctica de Git colaborativo.",
+    "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee",
+    "time": "Hace 1 minuto",
+    "tags": [
+      "#BitPro",
+      "#GitPractice",
+      "#GitColaborativo",
+      "#Sistemas"
+    ]
+  },
+  {
+    "id": 1027,
+    "username": "Darlyn_Alejandra_veliz_Mamani_bitpro",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=bitpro",
+    "content": "Hola 🚀 soy Darlyn del grupo BitPro aprendiendo Git colaborativo integrando el primer post de nuestro equipo",
+    "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+    "time": "Hace 1 minuto",
+    "tags": [
+      "#BitPro",
+      "#GitPractice",
+      "#GitColaborativo",
+      "#Sistemas",
+      "#DevOps"
+    ]
+  },
+  {
+    "id": 1028,
+    "username": "Cristhian_BitPro",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Cristhian1028",
+    "content": "¡Hola a todos! Soy Cristhian del grupo BitPro. Cumpliendo con mi parte del laboratorio Git (EXPLOTADO LABORALMENTE😞😞😞!!!).",
+    "image": "https://images.unsplash.com/photo-1555066931-4365d14bab8c",
+    "time": "Recién publicado",
+    "tags": ["#BitPro", "#GitPractice", "#Desarrollo"]
+  },
+  {
+    "id": 1029,
+    "username": "Jhilmer_Chinchilla_Condori",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=bitpro",
+    "content": "¡Hola,soy Jhilmer del Grupo BitPro.Aprendiendo Git colaborativo.",
+    "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+    "time": "Hace 1 minuto",
+    "tags": [
+      "#BitPro",
+      "#GitPractice",
+      "#DevOps",
+      "#Grupo3"
+    ]
+  },
+  {
+    "id": 1030,
+    "username": "BitPro_Rodrigo110620",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=rodrigo1030",
+    "content": "Hola, soy Rodrigo Figueroa Camacho del Grupo BitPro. Estoy aprendiendo Git colaborativo",
+    "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+    "time": "Hace 1 minuto",
+    "tags": [
+      "#BitPro",
+      "#GitPractice",
+      "#DevOps"
+    ]
+  },
+  {
+    "id": 1031,
+    "username": "teamCebollitas_MelodyGutierrez",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=neida",
+    "content": "¡Hola! Soy Melody del grupo TeamCebollitas. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
+    "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 1 minuto",
+    "tags": ["#TeamCebollitas", "#GitPractice", "#DevOps", "#Learning"]
+  },
+  {
+  "id": 1065,
+  "username": "Alejandro_Condori",
+  "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=aacm592",
+  "content": "Completando la práctica de flujo de Git y DevOps.",
+  "image": "",
+  "time": "Hace 1 minuto",
+  "tags": ["#practica", "#git"]
+  },
+  {
+    "id": 1066,
+    "username": "grupo7_gilmer",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=grupo7_gilmer",
+    "content": "Practicando Git colaborativo ",
+    "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+    "time": "Hace 1 minuto",
+    "tags": ["#Grupo7"]
+  },
+  {
+    "id": 1034,
+    "username": "teamCebollitas_CarlosMangudo",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=cebollita",
+    "content": "¡Hola! Soy Carlos Mangudo del grupo TeamCebollitas. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
+    "image": "https://worldcampus.saintleo.edu/img/article/estudiar-ingenieria-en-sistemas-cuales-son-los-retos-de-ser-ingenierio-en-sistemas.webp" ,
+    "time": "Hace 1 minuto",
+    "tags": ["#TeamCebollitas", "#GitPractice", "#DevOps", "#Learning"]
+  },
+  {
+    "id": 1035,
+    "username": "teamCebollitas_JosePardo",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=cebollita",
+    "content": "¡Hola! Soy Jose Pardo del grupo TeamCebollitas. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
+    "image": "https://worldcampus.saintleo.edu/img/article/estudiar-ingenieria-en-sistemas-cuales-son-los-retos-de-ser-ingenierio-en-sistemas.webp" ,
+    "time": "Hace 1 minuto",
+    "tags": ["#TeamCebollitas", "#GitPractice", "#DevOps", "#Learning"]
+  },
+  {
+    "id": 1036,
+    "username": "teamCebollitas_ManuelTellez",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=cebollita",
+    "content": "¡Hola! Soy Manuel Tellez del grupo TeamCebollitas. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
+    "image": "https://worldcampus.saintleo.edu/img/article/estudiar-ingenieria-en-sistemas-cuales-son-los-retos-de-ser-ingenierio-en-sistemas.webp" ,
+    "time": "Hace 1 minuto",
+    "tags": ["#TeamCebollitas", "#GitPractice", "#DevOps", "#Learning"]
+  },
+  {
+    "id": 1037,
+    "username": "teamCebollitas_GonzaloAyraTorrico",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=cebollita",
+    "content": "¡Hola! Soy Gonzalo Ayra Torrico del grupo TeamCebollitas. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
+    "image": "https://worldcampus.saintleo.edu/img/article/estudiar-ingenieria-en-sistemas-cuales-son-los-retos-de-ser-ingenierio-en-sistemas.webp" ,
+    "time": "Hace 1 minuto",
+    "tags": ["#TeamCebollitas", "#GitPractice", "#DevOps", "#Learning"]
+  },
+  {
+    "id": 1038,
+    "username": "teamCebollitas_StevenFernandez",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=cebollita",
+    "content": "¡Hola! Soy Steven Fernandez del grupo TeamCebollitas. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
+    "image": "https://worldcampus.saintleo.edu/img/article/estudiar-ingenieria-en-sistemas-cuales-son-los-retos-de-ser-ingenierio-en-sistemas.webp" ,
+    "time": "Hace 1 minuto",
+    "tags": ["#TeamCebollitas", "#GitPractice", "#DevOps", "#Learning"]
+  },
+  {
+    "id": 1071,
+    "username": "Joel_Fernando",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=joel",
+    "content": "¡Hola! Soy Joel del grupo Sigma_developers. Estoy aprendiendo Git colaborativo y esta es mi primera contribución 🚀",
+    "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 1 minuto",
+    "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
+  },
+  {
+    "id": 1072,
+    "username": "wilber_lancea",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=wilber",
+    "content": "Hola soy Wilber Lancea del grupo Sigma Developers 🚀",
+    "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+    "time": "Hace 1 minuto",
+    "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
+  },
+{
+  "id": 1073,
+  "username": "cristian_encinas",
+  "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=cristian",
+  "content": "¡Hola! Soy Cristian del grupo Sigma Developers. Esta es mi contribución para la práctica de Git colaborativo 🚀",
+  "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop",
+  "time": "Hace 1 minuto",
+  "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
+},
+  {
+    "id": 1074,
+    "username": "alison_mamani",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=alison",
+    "content": "Hola! Soy Alison Mamani Yujra y mi equipo es Sigma Developers",
+    "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+    "time": "Hace 1 minuto",
+    "tags": ["#DevOps", "#SigmaDevelopers"]
+  },
+  {
+    "id": 1075,
+    "username": "Aima_Lupa_Jose",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=jose",
+    "content": "¡Hola! Soy Aima Lupa Jose del grupo Sigma_developers. Aprendiendo Git colaborativo en SOCIAL_IS 🚀",
+    "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 30 segundos",
+    "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
+  },
+  {
+    "id": 1076,
+    "username": "madahi_condori",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=madahi",
+    "content": "Hola soy Madahi Condori del grupo Sigma Developers 🚀",
+    "image": "https://69bee95410e539a9070a4d92.imgix.net/flores.jpg",
+    "time": "Hace 1 minuto",
+    "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
+  },
+  {
+  "id": 1077,
+  "username": "jofre_ticona_plata",
+  "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=jofre",
+  "content": "¡Hola! Soy Jofre Ticona Plata del grupo Sigma Developers. Esta es mi contribución para la práctica de Git colaborativo 🚀",
+  "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop",
+  "time": "Hace 1 minuto",
+  "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
+},
+  {
+    "id": 1078,
+    "username": "mariela_chamo",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=mariela",
+    "content": "Hola soy Mariela Chamo del grupo Sigma Developers 🚀",
+    "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+    "time": "Hace 1 minuto",
+    "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Learning"]
+ },
+   {
+    "id": 1079,
+    "username": "neida_zeballos",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Neida",
+    "content": "¡Hola! Soy Neida Zeballos Tejada del grupo Sigma Developers 🚀",
+    "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+    "time": "Hace 1 minuto",
+    "tags": ["#SigmaDevelopers", "#GitPractice", "#DevOps", "#Bolivia"]
+},
   {
     "id": 1064,
     "username": "Gustavo_Corrales",
@@ -61,23 +346,197 @@
     "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
     "time": "Hace 1 minuto",
     "tags": ["#Prisma", "#GitPractice", "#DevOps", "#Learning", "#GitFlow", "#Practice"]
-  } ,
-  {
-  "id": 1065,
-  "username": "Alejandro_Condori",
-  "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=aacm592",
-  "content": "Completando la práctica de flujo de Git y DevOps.",
-  "image": "",
-  "time": "Hace 1 minuto",
-  "tags": ["#Prisma", "#GitPractice", "#DevOps", "#Learning", "#GitFlow", "#Practice"]
+ },
+   {
+    "id": 1041,
+    "username": "JuanDavidGutierrezLucero",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=JuanDavidGutierrezLucero",
+    "content": "¡Hola! Soy Juan David Gutierrez del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 1 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
   },
   {
-    "id": 1066,
-    "username": "Hurtado",
-    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Hurtado",
-    "content": "¡Hola desde el Grupo 7! Soy Hurtado practicando Git colaborativo ",
-    "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f",
+    "id": 1042,
+    "username": "JhonatanDavidQuispePerez",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=JhonatanDavidQuispePerez",
+    "content": "¡Hola! Soy Jhonatan David Quispe Perez del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
     "time": "Hace 1 minuto",
-    "tags": ["#Prisma", "#GitPractice", "#DevOps", "#Learning", "#GitFlow", "#Practice"]
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  },
+  {
+    "id": 1043,
+    "username": "JoseAdrianVillazonRojas",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=JoseAdrianVillazonRojas",
+    "content": "¡Hola! Soy Jose Adrian Villazon Rojas del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 1 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  },
+  {
+    "id": 1044,
+    "username": "EduardoFranciscoKilibardaLima",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=EduardoFranciscoKilibardaLima",
+    "content": "¡Hola! Soy Eduardo Francisco Kilibarda Lima del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 5 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  },
+  {
+    "id": 1045,
+    "username": "CarlosJosueVasquezHuanca",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=CarlosJosueVasquezHuanca",
+    "content": "¡Hola! Soy Carlos Josue Vasquez Huanca del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 4 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  },
+  {
+    "id": 1046,
+    "username": "JhonAldoFernandezVelasco",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=JhonAldoFernandezVelasco",
+    "content": "¡Hola! Soy Jhon Aldo Fernandez Velasco del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 4 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  },
+  {
+    "id": 1047,
+    "username": "JoelArielLluscoAcho",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=JoelArielLluscoAcho",
+    "content": "¡Hola! Soy Joel Ariel Llusco Acho del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 5 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  },
+  {
+    "id": 1048,
+    "username": "AmirAsaithUreñaVidal",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=AmirAsaithUreñaVidal",
+    "content": "¡Hola! Soy Amir Asaith Ureña Vidal del equipo La Comarca De IS 🚀",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 2 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+  },
+  {
+    "id": 1049,
+    "username": "AlexChoqueAjata",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=AlexChoqueAjata",
+    "content": "¡Hola! Soy Alex Choque Ajta del equipo La Comarca De IS",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 30 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps"]
+
+  },
+  {
+  "id": 1050,
+  "username": "NoemiCondoriGaspar",
+  "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=NoemiCondori",
+  "content": "¡Hola! Soy Noemí Condori del equipo La Comarca De IS ",
+  "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+  "time": "Hace 1 minuto",
+  "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps", "#Learning"]
+  },
+  {
+    "id": 1051,
+    "username": "AlberthFuentesBustamante",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=AlberthFuentesBustamante",
+    "content": "¡Hola! Soy Alberth Fuentes Bustamante del equipo La Comarca De IS ",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 2 minuto",
+    "tags": ["#LaComarcaIS", "#GitPractice", "#DevOps", "#Learning"]
+  },
+  {
+    "id": 1011,
+    "username": "Bellido Zeballos Shawn Brandon",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=ByteMafiaDev",
+    "content": "Probando el flujo de Git con el equipo. ¡Todo listo! 💻",
+    "time": "Hace un momento",
+    "likes": 0,
+    "tags": ["#git", "#desarrollo", "#bytemafia"]
+  },
+  {
+  "id": 1012,
+  "username": "bytemafia_mireyaRojas",
+  "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=bytemafia",
+  "content": "¡Hola desde Bytemafia! Aprendiendo Git colaborativo",
+  "image": "https://images.unsplash.com/photo-1521714161819-15534968fc5f?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "time": "Hace 1 minuto",
+  "tags": ["#Bytemafia", "#GitPractice", "#DevOps"]
+  },
+  {
+    "id": 1013,
+    "username": "Miguel Angel Massi Geronimo",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Miguel",
+    "content": "Compartiendo mi setup de desarrollo.",
+    "image": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072&auto=format&fit=crop",
+    "time": "Hace un instante",
+    "tags": ["#setup", "#bytemafia", "#bytemafia"]
+  },
+  {
+    "id": 1014,
+    "username": "Andres_Dev",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Andresved",
+    "content": "¡Logré integrarme a la rama Bytemafia! 🚀",
+    "time": "Hace un momento",
+    "tags": ["#Bytemafia", "#IS", "#GitFlow"]
+  },
+  {
+    "id": 1015,
+    "username": "Bytemafia_Giovani",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=GiovaniDevMafia",
+    "content": "Logre ingresar a la rama Bytemafia 🚀",
+    "time": "Hace un momento",
+    "tags": ["#Bytemafia", "#Dev", "#DevOpsCore"]
+  },
+  {
+    "id": 1017,
+    "username": "Bytemafia_Israel",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Bytemafia_Israel",
+    "content": "Probando el flujo de Git con el equipo. ¡Todo listo! 💻🚀",
+    "image": "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace un momento",
+    "likes": 0,
+    "tags": ["#git", "#desarrollo", "#bytemafia"]
+  },
+  {
+    "id": 1018,
+    "username": "Esther_Romero_Menacho",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Esther",
+    "content": "¡Hola! Soy Esther Romero Menacho de Bytemafia",
+    "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97",
+    "time": "Hace 1 minuto",
+    "tags": ["#Bytemafia", "#SistemasUMSS", "#GitPractice"]
+  },
+  {
+    "id": 1019,
+    "username": "Briza_Zurita_Zelada",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Briza",
+    "content": "¡Hola! Soy Briza Zurita Zelada de Bytemafia",
+    "image": "https://plus.unsplash.com/premium_photo-1663100722417-6e36673fe0ed?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "time": "Hace instantes",
+    "tags": ["#BF", "#Devs", "#Git"]
   }
+  ,
+  {
+    "id": 1020,
+    "username": "UnidadLK520(Eliot)",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=UnidadLK520",
+    "content": "Hola no se como llegue aqui asi que saludame por favor ",
+    "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070&auto=format&fit=crop",
+    "time": "Hace 1 minuto",
+    "tags": ["#Bytemafia", "#GitPractice", "#DevOps", "#Learning"]
+  }
+  ,
+  {
+    "id": 1021,
+    "username": "Bytemafia_Adrian.Perez",
+    "avatar": "https://api.dicebear.com/9.x/adventurer/svg?seed=Aneka",
+    "content": "Este es mi post para practicar, todo bien¡¡ (Por ahora)",
+    "image": "https://images.unsplash.com/photo-1575553939928-d03b21323afe?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "time": "Hace 2 minutos",
+    "tags": ["#Bytemafia", "#Dev", "#DevOpsCore"]
+    }
 ]
+
