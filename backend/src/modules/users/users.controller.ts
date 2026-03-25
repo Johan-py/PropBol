@@ -1,4 +1,4 @@
-import { getUsersService, createUserService } from './users.service'
+import { getUsersService, createUserService } from './users.service.ts'
 
 export const getUsersController = async () => {
   return getUsersService()
