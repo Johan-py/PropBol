@@ -11,10 +11,12 @@
     "dev:back": "cd backend && bun run dev",
     "dev:front": "cd frontend && bun run dev",
     "dev": "concurrently \"bun run dev:back\" \"bun run dev:front\"",
-    "prisma:generate": "cd backend && bun x prisma generate",
-    "prisma:migrate": "cd backend && bun x prisma migrate dev",
-    "prisma:seed": "cd backend && bun run seed",
-    "lab:chaos": "cd scripts && sh chaos_devs.sh"
+    "lab:chaos": "cd scripts && sh chaos_devs.sh",
+    
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "lint:back": "eslint backend --ext .ts,.js",
+    "lint:front": "eslint frontend --ext .ts,.tsx,.js,.jsx"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -22,7 +24,7 @@
     "@typescript-eslint/eslint-plugin": "^8.57.1",
     "@typescript-eslint/parser": "^8.57.1",
     "concurrently": "^9.2.1",
-    "eslint": "9.x"
+    "eslint": "^10.1.0"
   },
   "dependencies": {}
 }
