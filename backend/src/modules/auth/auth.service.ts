@@ -1,5 +1,5 @@
-import { generateToken } from '../../utils/jwt.ts'
-import { findUser } from './auth.repository.ts'
+import { generateToken } from '../../utils/jwt.js'
+import { findUser } from './auth.repository.js'
 
 export const loginService = async ({ email }: { email: string }) => {
   const user = await findUser(email)

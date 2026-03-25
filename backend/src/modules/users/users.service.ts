@@ -1,4 +1,4 @@
-import { getUsersRepository, createUserRepository } from './users.repository.ts'
+import { getUsersRepository, createUserRepository } from './users.repository.js'
 
 export const getUsersService = async () => {
   return getUsersRepository()

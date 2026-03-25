@@ -1,13 +1,17 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "Nodenext",
-    "moduleResolution": "Nodenext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist"
+
+    "outDir": "./dist",
+
+    "allowImportingTsExtensions": false
   },
   "include": ["src", "api"],
   "exclude": ["node_modules"]
