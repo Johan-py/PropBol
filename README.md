@@ -1,225 +1,195 @@
-# 🚀 SOCIAL_IS - Premium Social Network & DevOps Engineering Lab
+# 🏠 PropBol
 
-Un laboratorio de ingeniería de software que combina una **red social de clase mundial** con un **entorno de prácticas DevOps realistas**. Este proyecto no es solo otra app más - es un ecosistema completo diseñado para que los equipos de desarrollo y operaciones puedan simular, practicar y dominar escenarios complejos del mundo real.
+## 📌 Descripción General
 
-## 🏗️ Arquitectura del Sistema
+**PropBol** es una plataforma web enfocada en la **compra, venta y gestión de inmuebles** en Bolivia.
 
-Este proyecto implementa **Screaming Architecture** - donde la estructura del código grita su propósito:
+Permite a usuarios:
 
-```
-SOCIAL_IS/
-├── frontend/           # UI Premium con Next.js 14 App Router
-│   ├── src/
-│   │   ├── app/        # Páginas y layouts
-│   │   ├── components/ # Componentes reutilizables
-│   │   └── features/   # Lógica de negocio (feed, stories, etc.)
-├── backend/            # API REST con Express + Prisma
-│   ├── src/modules/    # Módulos auto-explicativos
-│   └── prisma/         # Base de datos type-safe
-├── infra/              # Laboratorio de pruebas de estrés
-│   ├── stress-lab/     # Scripts de caos y simulación
-│   └── docker/         # Contenedores y orquestación
-└── scripts/            # Command Center para automatización
-```
+* Publicar propiedades (casas, departamentos, terrenos)
+* Explorar listados disponibles
+* Gestionar información de usuarios
+* Autenticarse y operar de forma segura
 
-### Tecnologías Core
-
-| Componente       | Tecnología            | Razón de elección                      |
-| ---------------- | --------------------- | -------------------------------------- |
-| **Runtime**      | Bun v1.3+             | Performance extrema, monorepos nativos |
-| **Frontend**     | Next.js 16 + React 19 | App Router, Server Components          |
-| **Backend**      | Express + Prisma      | API REST robusta, type-safe            |
-| **Estilos**      | TailwindCSS v4        | Utility-first, diseño premium          |
-| **Testing**      | Bun Test              | Integración nativa, velocidad          |
-| **Contenedores** | Docker                | Despliegue consistente                 |
+El sistema está diseñado bajo una arquitectura moderna, escalable y desacoplada.
 
 ---
 
-## 🚀 Quick Start
+## 🧱 Arquitectura
 
-### Prerrequisitos
+El proyecto sigue un enfoque **monorepo** con separación clara por capas:
+
+* **Frontend** → Next.js (App Router + TypeScript)
+* **Backend** → API REST (Node.js + TypeScript)
+* **Infraestructura** → Docker + CI/CD (GitHub Actions)
+
+---
+
+## 📂 Estructura del Proyecto
 
 ```bash
-# Instalar Bun (si no lo tienes)
-curl -fsSL https://bun.sh/install | bash
+.
+├── backend/      # API (lógica de negocio, autenticación, usuarios, propiedades)
+├── frontend/     # Aplicación web (UI + interacción con el usuario)
+├── infra/        # herramientas de testing y entornos de prueba
+├── scripts/      # utilidades (stress testing, simulación, etc.)
+└── .github/      # pipelines CI/CD
+```
 
-# Clonar y configurar
-git clone https://github.com/Johan-py/prueba_integracion_DevOpsCore.git
-cd prueba_integracion_DevOpsCore
+---
+
+## ⚙️ Requisitos
+
+Asegúrate de tener instalado:
+
+* Bun >= 1.x
+* Node.js >= 18
+* Docker (opcional)
+
+---
+
+## 🚀 Ejecución Local
+
+### 1. Clonar el repositorio
+
+```bash
+git clone <repo-url>
+cd <repo>
+```
+
+---
+
+### 2. Instalar dependencias
+
+```bash
 bun install
 ```
 
-### Levantar todo el ecosistema
+---
+
+### 3. Configurar variables de entorno
+
+Crear archivo:
 
 ```bash
-# Iniciar frontend + backend + servicios
-bun run dev:all
+backend/.env
+```
 
-# O individualmente
-cd frontend
-bun run dev    # :3000
+Ejemplo:
 
+```env
+PORT=5000
+JWT_SECRET=your_secret_key
+```
+
+---
+
+### 4. Ejecutar Backend
+
+```bash
 cd backend
-bun run dev     # :5000
+bun run dev
 ```
 
-### Comandos esenciales
-
-| Comando             | Propósito                                 |
-| ------------------- | ----------------------------------------- |
-| `bun run dev:all`   | Inicia todo el stack (frontend + backend) |
-| `bun test`          | Ejecuta suite de tests completo           |
-| `bun run build`     | Build de producción optimizado            |
-| `docker-compose up` | Levanta infraestructura completa          |
-
----
-
-## 🌐 API RESTful
-
-El backend expone endpoints RESTful con manejo robusto de errores:
-
-### Posts API
+Disponible en:
 
 ```bash
-# Obtener todos los posts
-GET http://localhost:5000/api/posts
-
-# Crear nuevo post
-POST http://localhost:5000/api/posts
-Content-Type: application/json
-{
-  "content": "Mi primer post en SOCIAL_IS",
-  "authorId": 1
-}
+http://localhost:5000
 ```
 
 ---
 
-## 🧪 Laboratorio DevOps
+### 5. Ejecutar Frontend
 
-Este es el corazón del proyecto - donde los equipos practican escenarios reales:
-
-### DevOps 1: Infraestructura y Contenedores
-
-- **Simulación de caídas**: Docker containers que fallan intencionalmente
-- **Recovery procedures**: Scripts para restaurar servicios automáticamente
-- **Load testing**: Pruebas de estrés con k6 y Artillery
-
-### DevOps 2: Pipelines y Calidad
-
-- **Tests rotos intencionales**: Escenarios para debugging de CI/CD
-- **Builds fallidos**: Simulación de problemas de compilación
-- **Conflictos de merge**: Prácticas de resolución realistas
-
-### DevOps 3: Monitoreo y Respuesta
-
-- **Alertas falsas**: Distinguir entre problemas reales y falsos positivos
-- **Métricas en tiempo real**: Dashboards con Prometheus + Grafana
-- **Incident response**: Procedimientos de escalado
-
-### Scripts de Caos
+En otra terminal:
 
 ```bash
-# Inyectar latencia en el backend
-./scripts/chaos-injector.sh --service=backend --failure=latency
-
-# Simular caída de base de datos
-./scripts/chaos-injector.sh --service=database --failure=crash
-
-# Recuperación automática
-./scripts/recovery.sh --service=all
+cd frontend
+bun run dev
 ```
+### 6. Ejecucion general (back y front)
 
----
-
-## 🐳 Docker y Despliegue
-
-### Desarrollo local
+En la raiz del proyecto:
 
 ```bash
-# Build y run completo
-docker-compose up --build
-
-# Acceso a servicios
-# Frontend: http://localhost:3000
-# Backend:  http://localhost:5000
-# Database: localhost:5432
+bun run dev
 ```
 
-### Producción
+Disponible en:
 
 ```bash
-# Build optimizado
-docker build -t social-is:latest .
+## frontend
+http://localhost:3000
+## backend
+http://localhost:5000
 
-# Deploy con health checks
-docker run -d \
-  --name social-is-prod \
-  --health-cmd="curl -f http://localhost:3000/api/health" \
-  -p 3000:3000 \
-  social-is:latest
+```
+
+
+---
+
+## 🌿 Flujo de Trabajo
+
+* `main` → producción
+* `develop` → integración
+
+### Convención de commits
+
+```bash
+feat: nueva funcionalidad
+fix: corrección de errores
+chore: tareas internas
 ```
 
 ---
 
-## 🎨 Frontend
+## 📦 Buenas Prácticas
 
-La interfaz sigue los estándares de las redes sociales modernas:
+* No subir archivos `.env`
+* No modificar configuraciones críticas sin aprobación
+* Mantener commits pequeños:
 
-### Características
-
-- **Design System**: Componentes consistentes y reutilizables
-- **Responsive First**: Mobile-first con breakpoints inteligentes
-- **Micro-interactions**: Animaciones sutiles y feedback inmediato
-- **Performance**: Lazy loading, code splitting, optimización automática
-
-### Estructura de Componentes
-
-```
-src/
-├── components/
-│   ├── layout/          # Navbar, Footer, Sidebar
-│   └── ui/             # Botones, inputs, modales
-├── features/
-│   ├── feed/           # Timeline de posts
-│   ├── stories/        # Historias tipo Instagram
-│   └── profile/        # Perfiles de usuario
-└── app/               # Páginas y layouts Next.js
-```
+  * recomendado: ≤ 250 líneas
+  * máximo permitido: 400 líneas
+* Seguir arquitectura por capas en backend
+* Separar lógica y UI en frontend
 
 ---
 
-## 🔧 Backend - Arquitectura Escalable
+## 🔐 Seguridad
 
-### Módulos Desacoplados
-
-Cada módulo es una unidad independiente con su propia lógica:
-
-```
-src/modules/
-├── posts/
-│   ├── routes/         # Endpoints REST
-│   ├── services/       # Lógica de negocio
-│   └── validators/     # Validación de datos
-├── users/
-│   ├── auth/           # JWT y sesiones
-│   ├── profiles/       # Gestión de perfiles
-│   └── permissions/    # RBAC
-└── notifications/
-    └── real-time/      # WebSockets
-```
-
-### Base de Datos con Prisma
-
-```typescript
-// Schema type-safe
-model Post {
-  id        Int      @id @default(autoincrement())
-  content   String
-  author    User     @relation(fields: [authorId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-```
+* No hardcodear credenciales
+* Uso obligatorio de variables de entorno
+* Revisar scripts antes de ejecutarlos (`/scripts`)
 
 ---
+
+## 🚧 Estado del Proyecto
+
+En desarrollo activo.
+
+---
+
+## 🎯 Objetivo del Proyecto
+
+Construir una plataforma robusta y escalable que facilite el mercado inmobiliario en Bolivia, permitiendo:
+
+* Mayor visibilidad de propiedades
+* Gestión eficiente de usuarios
+* Experiencia moderna y rápida
+
+---
+
+## 👥 Contribución
+
+Para contribuir:
+
+1. Crear una rama desde `develop` feature/nombre_HU o feature
+2. Implementar cambios siguiendo los estándares
+3. Abrir un Pull Request a su lead de equipo
+
+---
+
+## 📄 Licencia
+
+Pendiente de definición.
