@@ -11,13 +11,13 @@ export default [
       '**/node_modules/**',
       '**/dist/**',
       '**/.next/**',
+      '**/prisma/**',
       '**/infra/stress-lab/**',
       '**/scripts/**',
       '**/*.config.js',
       '**/*.config.ts',
       '**/tailwind.config.*',
-      '**/postcss.config.*',
-      '**/.git/**'
+      '**/postcss.config.*'
     ]
   },
 
@@ -46,7 +46,7 @@ export default [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: './tsconfig.json', // 👈 Ruta corregida al frontend
+        project: './frontend/tsconfig.json', // 👈 Ruta específica al frontend
         ecmaVersion: 2022,
         sourceType: 'module',
         ecmaFeatures: {
@@ -69,7 +69,7 @@ export default [
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
-      '@next/next/no-html-link-for-pages': ['error', 'frontend/src/app'],
+      '@next/next/no-html-link-for-pages': ['error', 'frontend/src/app'], // 👈 Ruta específica
       '@next/next/no-img-element': 'warn',
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'prefer-const': 'error'
@@ -79,7 +79,7 @@ export default [
         version: 'detect'
       },
       next: {
-        rootDir: 'frontend'
+        rootDir: 'frontend' // 👈 Directorio raíz de Next.js
       }
     }
   },
@@ -90,7 +90,7 @@ export default [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: './tsconfig.json',
+        project: './backend/tsconfig.json', // 👈 Ruta específica al backend
         ecmaVersion: 2022,
         sourceType: 'module'
       },
@@ -105,7 +105,7 @@ export default [
     rules: {
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
-      'no-console': 'off',
+      'no-console': 'off', // Permitir console.log en backend
       'prefer-const': 'error'
     }
   },
