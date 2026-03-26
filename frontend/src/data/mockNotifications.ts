@@ -15,5 +15,10 @@ export const mockNotifications: NotificationItem[] = [
     id: 3,
     title: 'Actualización',
     description: 'Mensaje 3'
+  },
+  {
+    id: 4,
+    title: 'Mensaje 4',
+    description: 'Mensaje 4'
   }
 ]

@@ -5,30 +5,26 @@ import { useNotifications } from '@/hooks/useNotifications'
 import { useEffect } from 'react'
 
 export default function Navbar() {
-  const { open, notifications, notificationRef, toggleNotifications } = useNotifications()
-  
-  useEffect(() => {
+  const { open, notifications, openNotifications } = useNotifications()
 
-  const handleKey = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      if (open) {
-        toggleNotifications()
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (open) {
+          openNotifications()
+        }
       }
     }
-  }
 
-  document.addEventListener('keydown', handleKey)
+    document.addEventListener('keydown', handleKey)
 
-  return () => {
-    document.removeEventListener('keydown', handleKey)
-  }
-
-}, [open, toggleNotifications])
+    return () => {
+      document.removeEventListener('keydown', handleKey)
+    }
+  }, [open, openNotifications])
 
   return (
-    <nav className="bg-white shadow-md"
-        role="navigation"
-        aria-label="Menú principal">
+    <nav className="bg-white shadow-md" role="navigation" aria-label="Menú principal">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <Link href="/" className="text-xl font-bold text-blue-600">
@@ -40,11 +36,10 @@ export default function Navbar() {
               Inicio
             </Link>
 
-            <div className="relative" ref={notificationRef}
-                 role="menu" aria-hidden={!open}>
+            <div className="relative">
               <button
                 type="button"
-                onClick={toggleNotifications}
+                onClick={openNotifications}
                 className="relative rounded-full p-2 transition hover:bg-gray-100"
                 aria-label="Abrir notificaciones"
                 aria-expanded={open}
@@ -64,12 +59,19 @@ export default function Navbar() {
                     d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
                   />
                 </svg>
+                {notifications.length > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1 text-xs font-semibold text-white">
+                    {notifications.length}
+                  </span>
+                )}
               </button>
 
               {open && (
-                <div id="panel-notificaciones"
-                     role="menu"
-                     className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg">
+                <div
+                  id="panel-notificaciones"
+                  role="menu"
+                  className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg"
+                >
                   <div className="border-b border-gray-100 px-4 py-3">
                     <h3 className="text-sm font-semibold text-gray-800">Notificaciones</h3>
                   </div>
