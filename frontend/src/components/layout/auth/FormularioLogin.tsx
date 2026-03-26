@@ -9,13 +9,15 @@ export default function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({})
+
   const isFormValid =
-  email.length > 0 &&
-  password.length > 0 &&
-  !errors.email &&
-  !errors.password
+    email.length > 0 &&
+    password.length > 0 &&
+    !errors.email &&
+    !errors.password
+
   const validate = (field: string, value: string) => {
-    let newErrors = { ...errors }
+    const newErrors = { ...errors }
 
     if (field === 'email') {
       if (!value) {
@@ -30,9 +32,9 @@ export default function LoginForm() {
     if (field === 'password') {
       if (!value) {
         newErrors.password = 'La contraseña es obligatoria'
-      } else if(value.length > 16){
-        newErrors.password = ' La contraseña no puede tener mas de 16 caracteres'
-      }else{
+      } else if (value.length > 16) {
+        newErrors.password = 'La contraseña no puede tener mas de 16 caracteres'
+      } else {
         delete newErrors.password
       }
     }
@@ -40,12 +42,28 @@ export default function LoginForm() {
     setErrors(newErrors)
   }
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    const trimmedEmail = email.trim()
+
+    setEmail(trimmedEmail)
+    validate('email', trimmedEmail)
+    validate('password', password)
+
+    console.log('Correo original:', `"${email}"`)
+    console.log('Correo sin espacios al inicio/final:', `"${trimmedEmail}"`)
+    console.log('Password:', password)
+
+    // Aquí después puedes enviar al backend usando trimmedEmail
+    // login({ email: trimmedEmail, password })
+  }
+
   return (
     <div className="w-full max-w-sm rounded-md bg-white p-6 shadow-md">
       <h1 className="mb-4 text-3xl font-bold text-gray-900">Iniciar Sesión</h1>
 
-      <form className="space-y-4">
-        {/* EMAIL */}
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">
             Correo electrónico
@@ -56,10 +74,10 @@ export default function LoginForm() {
             placeholder="Ingresa tu correo electrónico"
             value={email}
             onChange={(e) => {
-              setEmail(e.target.value.trim())
-              validate('email', e.target.value.trim())
+              setEmail(e.target.value)
+              validate('email', e.target.value)
             }}
-            className="w-full rounded-md border border-gray-300 py-2 px-3 text-sm outline-none focus:border-orange-500"
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500"
           />
 
           {errors.email && (
@@ -82,7 +100,7 @@ export default function LoginForm() {
                 setPassword(e.target.value)
                 validate('password', e.target.value)
               }}
-              className="w-full rounded-md border border-gray-300 py-2 px-3 pr-10 text-sm outline-none focus:border-orange-500"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 pr-10 text-sm outline-none focus:border-orange-500"
             />
 
             <button
@@ -104,12 +122,13 @@ export default function LoginForm() {
           disabled={!isFormValid}
           className={`w-full rounded-md py-2 text-sm font-semibold text-white ${
             isFormValid
-            ? 'bg-orange-500 hover:bg-orange-600'
-            : 'bg-orange-300 cursor-not-allowed'
+              ? 'bg-orange-500 hover:bg-orange-600'
+              : 'cursor-not-allowed bg-orange-300'
           }`}
         >
           Iniciar sesión
-      </button>
+        </button>
+
         <button
           type="button"
           className="flex w-full items-center justify-center gap-2 rounded-md border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
