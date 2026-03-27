@@ -5,6 +5,7 @@ import MarkerClusterGroup from 'react-leaflet-cluster'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useMap } from 'react-leaflet'
+import { useEffect } from 'react'
 
 import ZoomControls from '@/components/ZoomControls'
 import { createGpsIcon } from '@/components/GpsPin'
@@ -116,6 +117,8 @@ export default function MapView({
 }: MapViewProps) {
   const { properties, isLoading, error } = useProperties()
 
+  const selectedProperty = properties.find(p => p.id === selectedId)
+
   return (
     <div className="relative w-full h-full">
 
@@ -147,6 +150,13 @@ export default function MapView({
         />
 
         <ZoomControls />
+
+        {selectedProperty && (
+          <FlyToSelected
+             lat={selectedProperty.lat}
+             lng={selectedProperty.lng}
+          />
+        )}
 
         <Marker position={center} icon={createGpsIcon()}>
           <Popup>Tu ubicación actual</Popup>
