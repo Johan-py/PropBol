@@ -16,6 +16,8 @@ export default function Navbar() {
     archiveNotification
   } = useNotifications()
 
+  const unreadCount = notifications.filter((n) => n.status === 'no leida').length
+
   return (
     <nav className="bg-white shadow-md">
       <div className="container mx-auto px-4 py-4">
@@ -51,9 +53,9 @@ export default function Navbar() {
                   />
                 </svg>
 
-                {notifications.filter((n) => n.status === 'no leida').length > 0 && (
+                {unreadCount > 0 && (
                   <span className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1 text-xs font-semibold text-white">
-                    {notifications.filter((n) => n.status === 'no leida').length}
+                    {unreadCount}
                   </span>
                 )}
               </button>
@@ -143,6 +145,7 @@ export default function Navbar() {
                           </div>
 
                           <p className="mt-1 text-sm text-gray-600">{notification.description}</p>
+
                           {notification.status !== 'archivada' && (
                             <div className="mt-2 flex justify-end">
                               <button
@@ -151,7 +154,7 @@ export default function Navbar() {
                                   e.stopPropagation()
                                   archiveNotification(notification.id)
                                 }}
-                                className="text-xs text-gray-400 hover:text-gray-600 transition"
+                                className="text-xs text-gray-400 transition hover:text-gray-600"
                               >
                                 Archivar
                               </button>
@@ -160,6 +163,15 @@ export default function Navbar() {
                         </div>
                       ))
                     )}
+                  </div>
+
+                  <div className="border-t border-gray-100 px-4 py-3 text-center">
+                    <Link
+                      href="/notificaciones"
+                      className="text-sm font-medium text-blue-600 transition hover:text-blue-700"
+                    >
+                      Ver todo
+                    </Link>
                   </div>
                 </div>
               )}
