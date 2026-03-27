@@ -76,6 +76,13 @@ export default function SignUpForm() {
             : undefined
         }))
       }
+      if(field === 'phone'){
+        const onlyNumbersRegex = /^[0-9]*$/
+        setErrors((prev) => ({
+          ...prev,
+          phone: onlyNumbersRegex.test(value) ? undefined : 'El teléfono solo permite números'
+        }))
+      }
 
     }
 
@@ -111,6 +118,13 @@ export default function SignUpForm() {
           : undefined
       }))
     }
+    if (field === 'phone') {
+      const onlyNumbersRegex = /^[0-9]*$/
+      setErrors((prev) => ({
+        ...prev,
+        phone: onlyNumbersRegex.test(formData.phone) ? undefined : 'El teléfono solo permite números'
+      }))
+    }
   }
 
   const handleCancel = () => {
@@ -123,7 +137,8 @@ export default function SignUpForm() {
   const isFormValid = useMemo(() => {
     return formData.email.trim() 
     !== '' && !validateEmail(formData.email) && !validatePassword(formData.password) &&
-    formData.confirmPassword === formData.password
+    formData.confirmPassword === formData.password &&
+    (formData.phone === '' || !errors.phone) 
   }, [formData.email, formData.password])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -262,6 +277,9 @@ export default function SignUpForm() {
           placeholder="Ingresa tu teléfono"
           className="w-full rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-orange-400"
         />
+        {touched.phone && errors.phone ? (
+          <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
+        ) : null}
       </div>
 
       <div>
