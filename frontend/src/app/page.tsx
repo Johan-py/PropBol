@@ -5,7 +5,6 @@ export default function Home() {
       <p className="text-lg text-center text-gray-600 mb-12">
         Esta es la página de inicio. Comienza a construir tu aplicación aquí.
       </p>
-
       {/* Aquí irán tus componentes y contenido */}
     </div>
   )

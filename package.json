@@ -26,6 +26,7 @@
     "eslint": "^10.1.0"
   },
   "dependencies": {
+    "tailwind": "^4.0.0",
     "leaflet": "^1.9.4",
     "react-leaflet": "4.2.1"
   }
