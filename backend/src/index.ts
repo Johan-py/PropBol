@@ -1,4 +1,4 @@
-import 'dotenv/config'                  // ← carga el .env PRIMERO
+import 'dotenv/config' // ← carga el .env PRIMERO
 import express from 'express'
 import { prisma } from './lib/prisma.js'
 
