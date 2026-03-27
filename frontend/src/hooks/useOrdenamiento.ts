@@ -1,34 +1,57 @@
-import { useState, useMemo } from 'react'
-import { CriterioOrdenamiento, DireccionOrdenamiento, Inmueble } from '../types/inmueble'
+import { useState, useMemo, useCallback } from 'react'
+import { Inmueble, EstadoOrdenamiento, ORDENAMIENTO_DEFAULT } from '../types/inmueble'
 import { ordenarInmuebles } from '../utils/ordenarInmuebles'
 
 interface UseOrdenamientoProps {
-  inmueblesIniciales: Inmueble[]
+  /** Array de inmuebles a ordenar (puede estar pre-filtrado) */
+  inmuebles: Inmueble[]
+  /** Estado de ordenamiento inicial (opcional) */
+  ordenInicial?: EstadoOrdenamiento
 }
 
-export const useOrdenamiento = ({ inmueblesIniciales }: UseOrdenamientoProps) => {
-  // Estado por defecto: Más recientes (Fecha desc)
-  const [criterio, setCriterio] = useState<CriterioOrdenamiento>('fechaPublicacion')
-  const [direccion, setDireccion] = useState<DireccionOrdenamiento>('desc')
+interface UseOrdenamientoResult {
+  /** Estado actual del ordenamiento */
+  ordenActual: EstadoOrdenamiento
+  /** Función para actualizar el ordenamiento */
+  cambiarOrden: (nuevoOrden: EstadoOrdenamiento) => void
+  /** Inmuebles ordenados según los criterios actuales */
+  inmueblesOrdenados: Inmueble[]
+}
 
-  // Actualizar el estado de ordenamiento
-  const cambiarOrden = (
-    nuevoCriterio: CriterioOrdenamiento,
-    nuevaDireccion: DireccionOrdenamiento
-  ) => {
-    setCriterio(nuevoCriterio)
-    setDireccion(nuevaDireccion)
-  }
+/**
+ * Hook para manejar el ordenamiento simultáneo de inmuebles.
+ *
+ * Características:
+ * - Soporta ordenamiento por múltiples criterios simultáneos
+ * - Estado por defecto: Más recientes, Precio menor a mayor, Superficie menor a mayor
+ * - Se re-aplica automáticamente cuando cambian los inmuebles filtrados
+ * - Ordena en cliente sin llamadas a API
+ *
+ * @example
+ * const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
+ *   inmuebles: inmueblesFiltrados
+ * })
+ */
+export const useOrdenamiento = ({
+  inmuebles,
+  ordenInicial = ORDENAMIENTO_DEFAULT
+}: UseOrdenamientoProps): UseOrdenamientoResult => {
+  // Estado del ordenamiento actual
+  const [ordenActual, setOrdenActual] = useState<EstadoOrdenamiento>(ordenInicial)
 
-  // Se aplica sobre los inmuebles que se pasan al hook
-  // (esto garantiza que actúe sobre data ya filtrada visualmente y sea performante)
+  // Callback memoizado para cambiar el orden
+  const cambiarOrden = useCallback((nuevoOrden: EstadoOrdenamiento) => {
+    setOrdenActual(nuevoOrden)
+  }, [])
+
+  // Ordenar inmuebles reactivamente
+  // Se re-ejecuta cuando cambian los inmuebles O el estado de ordenamiento
   const inmueblesOrdenados = useMemo(() => {
-    return ordenarInmuebles(inmueblesIniciales, criterio, direccion)
-  }, [inmueblesIniciales, criterio, direccion])
+    return ordenarInmuebles(inmuebles, ordenActual)
+  }, [inmuebles, ordenActual])
 
   return {
-    criterio,
-    direccion,
+    ordenActual,
     cambiarOrden,
     inmueblesOrdenados
   }
