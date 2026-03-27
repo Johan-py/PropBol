@@ -74,6 +74,9 @@ export default function SignUpForm() {
           value !== formData.password
             ? 'Las contraseñas no coinciden'
             : undefined
+        }))
+      }
+
     }
 
   const handleBlur = (field: keyof FormData) => () => {
@@ -106,6 +109,8 @@ export default function SignUpForm() {
         formData.confirmPassword !== formData.password
           ? 'Las contraseñas no coinciden'
           : undefined
+      }))
+    }
   }
 
   const handleCancel = () => {
