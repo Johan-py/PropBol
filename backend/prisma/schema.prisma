@@ -218,6 +218,9 @@ model UbicacionInmueble {
   zona         String?
   ciudad       String
 
+  ubicacionMaestraId Int?
+  ubicacionMaestra   UbicacionMaestra? @relation(fields: [ubicacionMaestraId], references: [id])
+
   inmuebleId   Int   @unique
   inmueble     Inmueble @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
 
@@ -393,4 +396,22 @@ model Visitor {
   usuario       Usuario? @relation(fields: [usuarioId], references: [id], onDelete: SetNull)
 
   @@map("visitor")
+}
+
+// ====================== CATÁLOGO DE UBICACIONES ======================
+
+model UbicacionMaestra {
+  id              Int      @id @default(autoincrement())
+  departamento    String
+  provincia       String?
+  municipio       String?
+  nombre          String   // El nombre que aparecerá en el autocompletado
+  latitud         Decimal  @db.Decimal(10, 7)
+  longitud        Decimal  @db.Decimal(10, 7)
+  popularidad     Int      @default(0) 
+
+  inmuebles       UbicacionInmueble[]
+
+  @@index([nombre]) 
+  @@map("ubicacion_maestra")
 }
