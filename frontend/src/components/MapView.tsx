@@ -24,7 +24,7 @@ export default function MapView() {
       zoomControl: false,
       touchZoom: true,
       dragging: true,
-      tap: true,
+      //tap: true,
     });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
