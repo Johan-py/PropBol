@@ -11,12 +11,15 @@ export function useNotifications() {
   const [filter, setFilter] = useState<FilterType>('todas')
   const notificationRef = useRef<HTMLDivElement>(null)
 
-  const notifications: NotificationItem[] = mockNotifications
+  const [notifications, setNotifications] = useState<NotificationItem[]>(mockNotifications)
 
   const toggleNotifications = () => {
     setOpen((prev) => !prev)
   }
 
+  const markAsRead = (id: number) => {
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, status: 'leida' } : n)))
+  }
   const filteredNotifications = useMemo(() => {
     if (filter === 'todas') {
       return notifications
@@ -46,6 +49,7 @@ export function useNotifications() {
     filteredNotifications,
     notificationRef,
     toggleNotifications,
-    setFilter
+    setFilter,
+    markAsRead
   }
 }

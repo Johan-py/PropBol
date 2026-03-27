@@ -12,6 +12,7 @@ export default function Navbar() {
     notificationRef,
     toggleNotifications,
     setFilter,
+    markAsRead
   } = useNotifications()
 
   return (
@@ -59,9 +60,7 @@ export default function Navbar() {
               {open && (
                 <div className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg">
                   <div className="border-b border-gray-100 px-4 py-3">
-                    <h3 className="text-sm font-semibold text-gray-800">
-                      Notificaciones
-                    </h3>
+                    <h3 className="text-sm font-semibold text-gray-800">Notificaciones</h3>
                   </div>
 
                   <div className="flex flex-wrap gap-2 border-b border-gray-100 px-4 py-3">
@@ -123,6 +122,7 @@ export default function Navbar() {
                       filteredNotifications.map((notification) => (
                         <div
                           key={notification.id}
+                          onClick={() => markAsRead(notification.id)}
                           className={`cursor-pointer border-b border-gray-100 px-4 py-3 transition hover:bg-gray-50 ${
                             notification.status === 'no leida' ? 'bg-blue-50' : 'bg-white'
                           }`}
@@ -137,9 +137,7 @@ export default function Navbar() {
                             </span>
                           </div>
 
-                          <p className="mt-1 text-sm text-gray-600">
-                            {notification.description}
-                          </p>
+                          <p className="mt-1 text-sm text-gray-600">{notification.description}</p>
                         </div>
                       ))
                     )}
