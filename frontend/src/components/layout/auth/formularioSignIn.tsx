@@ -54,14 +54,10 @@ export default function LoginForm() {
 
     console.log('Correo original:', `"${email}"`)
     console.log('Correo sin espacios al inicio/final:', `"${trimmedEmail}"`)
-<<<<<<< HEAD:frontend/src/components/layout/auth/formularioSingUp.tsx
     console.log('Password:', trimmedPassword)
 
     // Aquí después puedes enviar al backend usando trimmedEmail
     // login({ email: trimmedEmail, password })
-=======
-    console.log('Password:', password)
->>>>>>> 4f5d91b37d2672f25ee9ad38ee839d114767bae1:frontend/src/components/layout/auth/formularioSignIn.tsx
   }
 
   return (

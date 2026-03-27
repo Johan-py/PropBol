@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { validateEmail, validatePassword} from '@/lib/validators/auth'
+import { useRouter } from 'next/navigation'
+import { validateEmail, validatePassword } from '@/lib/validators/auth'
 
 type FormData = {
   email: string
@@ -22,16 +23,19 @@ type FormErrors = {
   confirmPassword?: string
 }
 
-export default function SignUpForm() {
-  const [formData, setFormData] = useState<FormData>({
-    email: '',
-    firstName: '',
-    lastName: '',
-    phone: '',
-    password: '',
-    confirmPassword: ''
-  })
+const initialFormData: FormData = {
+  email: '',
+  firstName: '',
+  lastName: '',
+  phone: '',
+  password: '',
+  confirmPassword: ''
+}
 
+export default function SignUpForm() {
+  const router = useRouter()
+
+  const [formData, setFormData] = useState<FormData>(initialFormData)
   const [errors, setErrors] = useState<FormErrors>({})
   const [touched, setTouched] = useState<Record<string, boolean>>({})
 
@@ -39,8 +43,7 @@ export default function SignUpForm() {
     (field: keyof FormData) => (event: React.ChangeEvent<HTMLInputElement>) => {
       const rawValue = event.target.value
 
-      const value =
-        field === 'email' ? rawValue.trimStart() : rawValue
+      const value = field === 'email' ? rawValue.trimStart() : rawValue
 
       setFormData((prev) => ({
         ...prev,
@@ -58,7 +61,7 @@ export default function SignUpForm() {
 
       if (field === 'password') {
         const passwordError = validatePassword(value)
-        
+
         setErrors((prev) => ({
           ...prev,
           password: passwordError || undefined
@@ -80,8 +83,10 @@ export default function SignUpForm() {
         email: emailError || undefined
       }))
     }
+
     if (field === 'password') {
       const passwordError = validatePassword(formData.password)
+
       setErrors((prev) => ({
         ...prev,
         password: passwordError || undefined
@@ -89,11 +94,15 @@ export default function SignUpForm() {
     }
   }
 
+  const handleCancel = () => {
+    setFormData(initialFormData)
+    setErrors({})
+    setTouched({})
+    router.push('/')
+  }
+
   const isFormValid = useMemo(() => {
-    return (
-      formData.email.trim() !== '' &&
-      !validateEmail(formData.email)
-    )
+    return formData.email.trim() !== '' && !validateEmail(formData.email)
   }, [formData.email])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -121,6 +130,10 @@ export default function SignUpForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <h2 className="text-center text-2xl font-bold text-slate-800">
+        Registro
+      </h2>
+
       <div>
         <label
           htmlFor="email"
@@ -228,9 +241,7 @@ export default function SignUpForm() {
           className="w-full rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-orange-400"
         />
         {touched.password && errors.password ? (
-        <p className="mt-1 text-sm text-red-600">
-        {errors.password}
-        </p>
+          <p className="mt-1 text-sm text-red-600">{errors.password}</p>
         ) : null}
       </div>
 
@@ -263,6 +274,7 @@ export default function SignUpForm() {
 
       <button
         type="button"
+        onClick={handleCancel}
         className="w-full rounded-md bg-slate-700 px-4 py-3 font-semibold text-white"
       >
         Cancelar registro
