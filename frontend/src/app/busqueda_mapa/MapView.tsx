@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import { useMap } from 'react-leaflet'
 
 import ZoomControls from '@/components/ZoomControls'
 import { createGpsIcon } from '@/components/GpsPin'
@@ -240,4 +241,18 @@ function createSelectedIcon(type: PropertyMapPin['type']): L.DivIcon {
     iconAnchor: [18, 36],
     popupAnchor: [0, -36],
   })
+}
+
+function FlyToSelected({ lat, lng }: { lat: number; lng: number }) {
+  const map = useMap()
+
+  useEffect(() => {
+    if (lat && lng) {
+      map.flyTo([lat, lng], 16, {
+        duration: 0.8,
+      })
+    }
+  }, [lat, lng, map])
+
+  return null
 }
