@@ -1,4 +1,5 @@
 import { HomeBanner } from '@/components/home/HomeBanner';
+import ExploreSection from '@/components/layout/ExploreSection'
 
 const fetchBanners = async () => {
   return [{ urlImagen: '/images/portada.webp', id: 1 }]; 
@@ -14,6 +15,7 @@ export default async function Home() {
       {mainBanner && <HomeBanner url={mainBanner.urlImagen} />}
       
       <div className="container mx-auto px-4 py-8">
+        <ExploreSection />
       </div>
     </main>
   );
