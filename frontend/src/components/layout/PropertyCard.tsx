@@ -5,6 +5,7 @@ export default function PropertyCard() {
       
       {/* 1. Contenedor de la Imagen con la etiqueta naranja */}
       <div className="relative">
+       {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=600&q=80"
           alt="Casa en venta"
