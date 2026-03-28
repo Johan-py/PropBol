@@ -41,6 +41,7 @@ export default function SignUpForm() {
   const [touched, setTouched] = useState<Record<string, boolean>>({})
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [successMsg, setSuccessMsg] = useState<string | null>(null)
 
   const handleChange =
     (field: keyof FormData) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,7 +104,7 @@ export default function SignUpForm() {
         const soloLetrasRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/
         setErrors((prev) => ({
           ...prev,
-          firstName: value === '' || !soloLetrasRegex.test(value)
+          firstName: value === '' || soloLetrasRegex.test(value)
           ? undefined
           : 'El nombre solo puede contener letras'
   }))
@@ -154,16 +155,6 @@ if (field === 'lastName') {
       }))
     }
 
-    if (field === 'phone') {
-      const onlyNumbersRegex = /^[0-9]*$/
-
-      setErrors((prev) => ({
-        ...prev,
-        phone: onlyNumbersRegex.test(formData.phone)
-          ? undefined
-          : 'El teléfono solo permite números'
-      }))
-    }
     if (field === 'firstName') {
       const soloLetrasRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/
       setErrors((prev) => ({
@@ -171,15 +162,14 @@ if (field === 'lastName') {
       firstName: formData.firstName === '' || soloLetrasRegex.test(formData.firstName)
       ? undefined
       : 'El nombre solo puede contener letras'
-
   }))
 }
 
-if (field === 'lastName') {
-  const soloLetrasRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/
-  setErrors((prev) => ({
-    ...prev,
-    lastName:
+    if (field === 'lastName') {
+      const soloLetrasRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/
+      setErrors((prev) => ({
+      ...prev,
+      lastName:
       formData.lastName === '' || soloLetrasRegex.test(formData.lastName)
       ? undefined
       : 'El apellido solo puede contener letras'
@@ -224,9 +214,11 @@ if (field === 'phone') {
       !validateEmail(formData.email) &&
       !validatePassword(formData.password) &&
       formData.confirmPassword === formData.password &&
-      !errors.phone
+      !errors.phone &&
+      !errors.firstName &&
+      !errors.lastName
     )
-  }, [formData, errors.phone])
+  }, [formData, errors.phone, errors.firstName, errors.lastName])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault()
@@ -265,38 +257,41 @@ if (field === 'phone') {
       confirmPassword: confirmPasswordError || undefined
     }
 
-     setErrors(newErrors)
-     setTouched({
-       email: true,
-       firstName: true,
-       lastName: true,
-       phone: true,
-       password: true,
-       confirmPassword: true
-       })
+    setErrors(newErrors)
+    setTouched({
+      email: true,
+      firstName: true,
+      lastName: true,
+      phone: true,
+      password: true,
+      confirmPassword: true
+      })
 
-       if (
+      if (
         emailError ||
         firstNameError ||
         lastNameError ||
         passwordError ||
         confirmPasswordError ||
         phoneError
-       ) {
+      ) {
         return
-       }
+      }
 
-       console.log('Formulario listo para enviar', {
-         ...formData,
-         email: formData.email.trim()
-          })
-          }
-
+      setSuccessMsg('¡Registro exitoso! Redirigiendo...')
+      setTimeout(() => router.replace('/'), 1500)
+    }
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <h2 className="text-center text-2xl font-bold text-slate-800">
         Registro
       </h2>
+
+    {successMsg && ( 
+      <p className="rounded-md bg-green-50 px-4 py-3 text-sm text-green-600">
+      {successMsg}
+      </p>
+    )}  
 
       <div>
         <label
@@ -346,7 +341,11 @@ if (field === 'phone') {
           onBlur={handleBlur('firstName')}
           placeholder="Ingresa tu nombre"
           maxLength={30}
-          className="w-full rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-orange-400"
+          className={`w-full rounded-md border px-4 py-3 outline-none transition ${
+            touched.firstName && errors.firstName
+            ? 'border-red-500'
+            : 'border-slate-300 focus:border-orange-400'
+          }`}
         />
         {touched.firstName && errors.firstName ? (
           <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>) : null}
@@ -387,22 +386,22 @@ if (field === 'phone') {
         >
           Teléfono
         </label>
-       <input
-       id="phone"
-       name="phone"
-       type="text"
-       value={formData.phone}
-       onChange={handleChange('phone')}
-       onBlur={handleBlur('phone')}
-       placeholder="Ingresa tu teléfono"
-       className={`w-full rounded-md border px-4 py-3 outline-none transition ${
-       touched.phone && errors.phone
+      <input
+      id="phone"
+      name="phone"
+      type="text"
+      value={formData.phone}
+      onChange={handleChange('phone')}
+      onBlur={handleBlur('phone')}
+      placeholder="Ingresa tu teléfono"
+      className={`w-full rounded-md border px-4 py-3 outline-none transition ${
+      touched.phone && errors.phone
       ? 'border-red-500'
       : 'border-slate-300 focus:border-orange-400'
       }`}
       aria-invalid={Boolean(touched.phone && errors.phone)}
       aria-describedby="phone-error"
-     />
+    />
 
 {touched.phone && errors.phone ? (
   <p id="phone-error" className="mt-1 text-sm text-red-600">
