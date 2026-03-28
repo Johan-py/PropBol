@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
-import {Search, MapPin, DollarSign, Home, Building, Square} from 'lucide-react';
+import {Search, MapPin, DollarSign, Home, Building, Square, ChevronRight, List } from 'lucide-react';
 
 const MapView = dynamic(() => import('./MapView'), { ssr: false });
 
@@ -75,14 +75,14 @@ export default function BusquedaMapaPage() {
       </header>
 
       {/* Contenedor Principal (Resultados y Mapa) */}
-      <div className="flex flex-col md:flex-row flex-grow relative overflow-hidden">
+      <div className="flex flex-col md:flex-row flex-grow relative overflow-hidden bg-gray-100">
         
         {/* Panel Lateral Colapsable */}
         <aside 
           className={`
-            bg-white transition-all duration-300 ease-in-out z-10 border-gray-200 overflow-hidden
+            bg-white transition-all duration-300 ease-in-out z-10 border-r border-gray-200 overflow-hidden shadow-md
             ${isSidebarOpen 
-              ? 'w-full h-[40vh] md:w-[30%] md:h-auto border-b md:border-b-0 md:border-r opacity-100' 
+              ? 'w-full h-[40vh] md:w-[350px] md:h-auto opacity-100' 
               : 'w-0 h-0 md:w-0 md:h-auto opacity-0'
             }
           `}
@@ -102,7 +102,7 @@ export default function BusquedaMapaPage() {
                 <span>Lista de inmuebles</span>
               </button>
             </div>
-            
+            {/* Contenido del panel lateral (tarjetas de prueba)*/}
             <div className="space-y-4">
               <div className="h-28 bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
                 <div className="h-4 bg-gray-200 w-3/4 mb-3 rounded"></div>
@@ -117,15 +117,22 @@ export default function BusquedaMapaPage() {
         <section className="flex-grow bg-gray-100 relative w-full h-[60vh] md:h-auto transition-all duration-300">
           
           {/* Botón flotante para expandir/contraer el panel */}
+        {!isSidebarOpen && (
           <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="absolute left-0 top-4 z-[1000] bg-white border border-gray-300 shadow-md p-2 rounded-r-md hover:bg-gray-50 flex items-center justify-center transition-colors focus:outline-none hidden md:flex"
-            title={isSidebarOpen ? "Contraer panel" : "Expandir panel"}
+            onClick={() => setIsSidebarOpen(true)}
+            className="absolute left-0 top-4 z-[1000] bg-white text-black shadow-md rounded-r-md hover:bg-gray-50 transition-colors focus:outline-none flex flex-col items-center pt-3 pb-5 px-1.5 gap-4 border-l-0"
+            title="Mostrar inmuebles"
           >
-            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isSidebarOpen ? "M15 19l-7-7 7-7" : "M9 5l7 7-7 7"} />
-            </svg>
+            <ChevronRight className="w-4 h-4" />
+            <span 
+              className="[writing-mode:vertical-lr] rotate-180 text-xs font-bold tracking-widest whitespace-nowrap"
+            >
+              Inmuebles
+
+            </span>
+            <List className="w-4 h-4 text-black" />
           </button>
+        )}
 
           <div className="absolute inset-0">
             <MapView />
