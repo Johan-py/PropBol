@@ -2,10 +2,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { LucideIcon, ChevronDown } from 'lucide-react';
 
+export interface ComboBoxOption {
+  label: string;
+  icon?: LucideIcon;
+}
+
 interface ComboBoxProps {
   label: string;
   placeholder?: string;
-  options?: string[];
+  options?: (string | ComboBoxOption)[];
   icon?: LucideIcon;
 }
 
@@ -60,11 +65,18 @@ export function ComboBox({ label, placeholder, options = [], icon: Icon }: Combo
         
         {isOpen && (
           <ul className="absolute z-20 w-full mt-1 bg-white border border-stone-200 rounded-xl shadow-lg overflow-hidden">
-            {options.map((option) => (
-              <li key={option} onClick={() => handleOptionClick(option)} className="px-4 py-2.5 text-stone-600 hover:bg-amber-50 hover:text-amber-700 cursor-pointer">
-                {option}
-              </li>
-            ))}
+            {options.map((option) => {
+              const isString = typeof option === 'string';
+              const optionLabel = isString ? option : option.label;
+              const OptionIcon = isString ? null : option.icon;
+
+              return (
+                <li key={optionLabel} onClick={() => handleOptionClick(optionLabel)} className="px-4 py-2.5 text-stone-600 hover:bg-amber-50 hover:text-amber-700 cursor-pointer flex items-center gap-2 transition-colors">
+                  {OptionIcon && <OptionIcon className="w-4 h-4 opacity-70" />}
+                  {optionLabel}
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>

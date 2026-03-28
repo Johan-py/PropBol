@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ComboBox } from "../ui/ComboBox";
-import { Home, Search, MapPin } from "lucide-react"; 
+import { Home, Search, MapPin, Building, Bed, Trees, Flower2 } from "lucide-react"; 
 
 const searchOptions = [
   { id: "venta", name: "Venta" },
@@ -13,7 +13,13 @@ const searchOptions = [
 export default function ExploreSection() {
   const [selectedOption, setSelectedOption] = useState<string[]>([]);
 
-  const propertyTypes = ["Casas", "Departamentos", "Cuartos", "Terrenos", "Espacios Cementerio"];
+  const propertyTypes = [
+    { label: "Casas", icon: Home },
+    { label: "Departamentos", icon: Building },
+    { label: "Cuartos", icon: Bed },
+    { label: "Terrenos", icon: Trees },
+    { label: "Espacios Cementerio", icon: Flower2 }
+  ];
 
   return (
     <section className="bg-white py-10 md:py-16">
