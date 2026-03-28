@@ -72,7 +72,7 @@ export default function Navbar() {
                   {!isLoggedIn ? (
                     <div className="px-4 py-6 text-center">
                       <p className="text-sm text-gray-500">
-                        Regístrate o inicia sesión para recibir notificaciones
+                        Inicia sesión para recibir notificaciones
                       </p>
                       <div className="mt-3 flex justify-center">
                         <button
