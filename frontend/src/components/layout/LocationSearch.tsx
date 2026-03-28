@@ -3,8 +3,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MapPin, Search, Loader2, X } from 'lucide-react';
 
-export function LocationSearch() {
-  const [query, setQuery] = useState('');
+type LocationSearchProps = {
+  value: string;
+  onChange: (value: string) => void;
+};
+
+export function LocationSearch({ value, onChange }: LocationSearchProps) {
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,14 +26,14 @@ export function LocationSearch() {
 
   useEffect(() => {
     const fetchLocations = async () => {
-      if (query.trim().length < 2) {
+      if (value.trim().length < 2) {
         setSuggestions([]);
         return;
       }
 
       setIsLoading(true);
       try {
-        const res = await fetch(`http://localhost:5000/api/locations/search?q=${encodeURIComponent(query)}`);
+        const res = await fetch(`http://localhost:5000/api/locations/search?q=${encodeURIComponent(value)}`);
         if (res.ok) {
           const data = await res.json();
           setSuggestions(data);
@@ -44,7 +48,7 @@ export function LocationSearch() {
 
     const timer = setTimeout(fetchLocations, 300);
     return () => clearTimeout(timer);
-  }, [query]);
+  }, [value]);
 
   return (
     <div className="w-full relative" ref={containerRef}>
@@ -55,18 +59,18 @@ export function LocationSearch() {
       <div className={`h-[46px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${
         isOpen && suggestions.length > 0 ? 'border-amber-600 ring-2 ring-amber-100' : 'border-stone-300'
       }`}>
-        <MapPin className={`w-5 h-5 ${query ? 'text-amber-600' : 'text-stone-400'}`} />
+        <MapPin className={`w-5 h-5 ${value ? 'text-amber-600' : 'text-stone-400'}`} />
         <input
           type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
           placeholder="Cochabamba, La Paz..."
           className="w-full bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 font-inter"
         />
         {isLoading ? (
           <Loader2 className="w-4 h-4 animate-spin text-amber-600" />
-        ) : query && (
-          <button onClick={() => setQuery('')} type="button">
+        ) : value && (
+          <button onClick={() => onChange('')} type="button">
             <X className="w-4 h-4 text-stone-400 hover:text-red-500" />
           </button>
         )}
@@ -79,7 +83,13 @@ export function LocationSearch() {
               key={loc.id}
               type="button"
               onClick={() => { 
-                setQuery(`${loc.nombre}, ${loc.departamento}`);
+                onChange(
+                  `${loc.nombre}${
+                    loc.provincia ? ` - ${loc.provincia}` : ''
+                  }${
+                    loc.municipio ? ` - ${loc.municipio}` : ''
+                  } - ${loc.departamento} - Bolivia`
+                );
                 setIsOpen(false);
               }}
               className="w-full px-4 py-3 flex items-center gap-3 hover:bg-amber-50 transition-colors text-left border-b border-stone-50 last:border-0"
@@ -89,7 +99,14 @@ export function LocationSearch() {
               </div>
               <div>
                 <span className="block text-sm font-bold text-stone-500 font-inter">
-                  {loc.nombre}, {loc.departamento}
+                  <span>
+                    {loc.nombre}
+                    {loc.provincia ? ` - ${loc.provincia}` : ''}
+                    {loc.municipio ? ` - ${loc.municipio}` : ''}
+                    {' - '}
+                    {loc.departamento}
+                    {' - Bolivia'}
+                  </span>
                   <img
                   src="https://flagcdn.com/w20/bo.png"
                   alt="Bolivia"
