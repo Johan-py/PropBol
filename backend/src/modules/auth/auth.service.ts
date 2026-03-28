@@ -1,7 +1,12 @@
 import { generateToken } from "../../utils/jwt.js";
-import { findUser } from "./auth.repository.js";
+import { findUser, createUser, findUserByCorreo } from "./auth.repository.js";
 import { Prisma } from "@prisma/client";
-import { createUser, findUserByCorreo } from "./auth.repository.js";
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const onlyLettersRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+const onlyNumbersRegex = /^[0-9]+$/;
+const DEFAULT_USER_ROLE_ID = 2;
+
 export const loginService = async ({
   email,
   password,
@@ -48,11 +53,6 @@ export interface RegisterUserInput {
   telefono?: string;
 }
 
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const onlyLettersRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
-const onlyNumbersRegex = /^[0-9]+$/;
-const DEFAULT_USER_ROLE_ID = 2;
-
 export const registerUser = async (data: RegisterUserInput) => {
   const nombre = data.nombre.trim();
   const apellido = data.apellido.trim();
@@ -81,14 +81,18 @@ export const registerUser = async (data: RegisterUserInput) => {
     throw new Error("El teléfono solo permite números");
   }
 
-  if (password !== confirmPassword) {
-    throw new Error("Las contraseñas no coinciden");
-  }
-
   if (password.length < 8) {
     throw new Error("La contraseña debe tener al menos 8 caracteres");
   }
 
+  if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+    throw new Error('La contraseña debe tener al menos una mayúscula y un número')
+  }
+
+  if (password !== confirmPassword) {
+    throw new Error('Las contraseñas no coinciden')
+  }
+  
   const existingUser = await findUserByCorreo(correo);
 
   if (existingUser) {
