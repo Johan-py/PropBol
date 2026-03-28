@@ -9,6 +9,17 @@ export const loginService = async ({
   email: string;
   password: string;
 }) => {
+
+if (!email || !password) {
+  throw new Error("Correo y contraseña son obligatorios");
+}
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if (!emailRegex.test(email)) {
+  throw new Error("Formato de correo inválido");
+}
+
   const user = await findUser(email);
 
   if (!user) {
