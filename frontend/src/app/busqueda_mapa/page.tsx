@@ -4,6 +4,9 @@ import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import {Search, MapPin, DollarSign, Home, Building, Square} from 'lucide-react';
 
+// 1. Aquí agregamos la importación de tu tarjeta
+import PropertyCard from '../../components/layout/PropertyCard';
+
 const MapView = dynamic(() => import('./MapView'), { ssr: false });
 
 export default function BusquedaMapaPage() {
@@ -104,11 +107,26 @@ export default function BusquedaMapaPage() {
             </div>
             
             <div className="space-y-4">
-              <div className="h-28 bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
-                <div className="h-4 bg-gray-200 w-3/4 mb-3 rounded"></div>
-                <div className="h-4 bg-gray-200 w-1/2 mb-3 rounded"></div>
-                <div className="h-8 bg-gray-100 w-full rounded mt-auto"></div>
-              </div>
+              {/* 2. Aquí implementamos tus tarjetas dinámicas */}
+              <PropertyCard 
+                imagen="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=500&q=60"
+                estado="EN VENTA"
+                precio="$US 180.000"
+                descripcion="Casa Obra Gruesa Sobre terreno de 272m2 en Urbanización Bisa"
+                camas={4}
+                banos={3}
+                metros={272}
+              />
+
+              <PropertyCard 
+                imagen="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=500&q=60"
+                estado="EN ALQUILER"
+                precio="$US 800 / mes"
+                descripcion="Hermosa casa minimalista en zona norte con jardín amplio"
+                camas={3}
+                banos={2}
+                metros={150}
+              />
             </div>
           </div>
         </aside>
