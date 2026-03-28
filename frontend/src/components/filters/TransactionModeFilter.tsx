@@ -1,24 +1,53 @@
-"use client";
-type Props = {
-  selected: string;
-  onChange: (modo: "venta" | "alquiler" | "anticretico") => void;
-};
 
-export default function TransactionModeFilter({ selected, onChange }: Props) {
-  const options = ["venta", "alquiler", "anticretico"] as const;
+"use client";
+
+interface TransactionModeFilterProps {
+  modoSeleccionado: string;
+  onModoChange: (modo: string) => void;
+}
+
+export default function TransactionModeFilter({ modoSeleccionado, onModoChange }: TransactionModeFilterProps) {
+  const modos = [
+    { id: "venta", label: "Venta" },
+    { id: "alquiler", label: "Alquiler" },
+    { id: "anticretico", label: "Anticrético" }
+  ];
 
   return (
-    <div className="flex gap-4">
-      {options.map((modo) => (
-        <button
-          key={modo}
-          onClick={() => onChange(modo)}
-          className={`px-4 py-2 rounded ${
-            selected === modo ? "bg-blue-500 text-white" : "bg-gray-200"
-          }`}
-        >
-          {modo}
-        </button>
+    <div className="flex gap-16">
+      {modos.map((modo) => (
+        <label key={modo.id} className="flex items-center gap-8 text-sm text-stone-900 font-medium cursor-pointer">
+          <div className="relative inline-flex shadow-xl"> 
+            <input
+              type="radio"
+              name="modoTransaccion"
+              value={modo.id}
+              checked={modoSeleccionado === modo.id}
+              onChange={() => onModoChange(modo.id)}
+              className={`
+                w-[35px] h-[23px] rounded border cursor-pointer appearance-none
+                ${modoSeleccionado === modo.id 
+                  ? 'bg-[#d97706] border-[#d97706]' 
+                  : 'bg-white border-gray-400'
+                }
+              `}
+            />
+            {modoSeleccionado === modo.id && (
+              <svg
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[14px] h-[14px] pointer-events-none"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#000000"
+                strokeWidth="3"
+                strokeLinecap="square"
+                strokeLinejoin="miter"
+              >
+                <polyline points="4 12 10 18 20 6" />
+              </svg>
+            )}
+          </div>
+          {modo.label}
+        </label>
       ))}
     </div>
   );
