@@ -2,38 +2,26 @@ import {
   createMultimediaRepository,
   findPublicationById,
   getMultimediaByPublicationId,
-  countMultimediaByPublicationIdAndType
+  countMultimediaByPublicationIdAndType,
+  countPublishedFreePublicationsByUser,
+  publishPublicationById,
+  findMultimediaById,
+  deleteMultimediaById
 } from './multimedia.repository.js'
 
-const MULTIMEDIA_TYPES = {
+export const MULTIMEDIA_TYPES = {
   IMAGE: 1,
   VIDEO: 2
-}
+} as const
 
+const MAX_IMAGES_PER_PUBLICATION = 5
 const MAX_VIDEOS_PER_PUBLICATION = 2
-const ALLOWED_YOUTUBE_HOSTS = ['youtube.com', 'www.youtube.com', 'youtu.be']
+const MAX_FREE_PUBLICATIONS = Number(process.env.MAX_FREE_PUBLICATIONS ?? 3)
 
-const isValidYoutubeUrl = (videoUrl: string): boolean => {
+const isYouTubeUrl = (url: string) => {
   try {
-    const parsedUrl = new URL(videoUrl.trim())
-    const host = parsedUrl.hostname.toLowerCase()
-
-    if (!ALLOWED_YOUTUBE_HOSTS.includes(host)) {
-      return false
-    }
-
-    if (host === 'youtu.be') {
-      return parsedUrl.pathname.length > 1
-    }
-
-    if (host === 'youtube.com' || host === 'www.youtube.com') {
-      return (
-        parsedUrl.searchParams.has('v') ||
-        parsedUrl.pathname.startsWith('/shorts/')
-      )
-    }
-
-    return false
+    const u = new URL(url)
+    return u.hostname.includes('youtube.com') || u.hostname.includes('youtu.be')
   } catch {
     return false
   }
@@ -47,10 +35,7 @@ export const getPublicationMultimediaService = async ({
   usuario_id: number
 }) => {
   const publication = await findPublicationById(id_publicacion)
-
-  if (!publication) {
-    throw new Error('La publicación no existe')
-  }
+  if (!publication) throw new Error('La publicación no existe')
 
   if (publication.usuario_id !== usuario_id) {
     throw new Error('La publicación no pertenece al usuario autenticado')
@@ -58,10 +43,7 @@ export const getPublicationMultimediaService = async ({
 
   const multimedia = await getMultimediaByPublicationId(id_publicacion)
 
-  return {
-    publication,
-    multimedia
-  }
+  return { publication, multimedia }
 }
 
 export const registerVideoLinkService = async ({
@@ -74,30 +56,17 @@ export const registerVideoLinkService = async ({
   videoUrl: string
 }) => {
   const publication = await findPublicationById(id_publicacion)
-
-  if (!publication) {
-    throw new Error('La publicación no existe')
-  }
+  if (!publication) throw new Error('La publicación no existe')
 
   if (publication.usuario_id !== usuario_id) {
     throw new Error('La publicación no pertenece al usuario autenticado')
   }
 
-  const normalizedVideoUrl = videoUrl?.trim()
-
-  if (!normalizedVideoUrl) {
-    throw new Error('El enlace de video es obligatorio')
-  }
-
-  if (!isValidYoutubeUrl(normalizedVideoUrl)) {
+  if (!isYouTubeUrl(videoUrl)) {
     throw new Error('Enlace de video no válido')
   }
 
-  const totalVideos = await countMultimediaByPublicationIdAndType(
-    id_publicacion,
-    MULTIMEDIA_TYPES.VIDEO
-  )
-
+  const totalVideos = await countMultimediaByPublicationIdAndType(id_publicacion, MULTIMEDIA_TYPES.VIDEO)
   if (totalVideos >= MAX_VIDEOS_PER_PUBLICATION) {
     throw new Error('Límite de videos alcanzado')
   }
@@ -105,13 +74,105 @@ export const registerVideoLinkService = async ({
   const newVideo = await createMultimediaRepository({
     id_publicacion,
     id_tipo: MULTIMEDIA_TYPES.VIDEO,
-    url: normalizedVideoUrl,
+    url: videoUrl,
     formato: 'youtube',
     peso_mb: 0
   })
 
-  return {
-    publication,
-    multimedia: newVideo
+  return { publication, multimedia: newVideo }
+}
+
+// ✅ TAREA 4: registrar video subido (archivo)
+export const registerVideoFileService = async ({
+  id_publicacion,
+  usuario_id,
+  url,
+  formato,
+  peso_mb
+}: {
+  id_publicacion: number
+  usuario_id: number
+  url: string
+  formato: string
+  peso_mb: number
+}) => {
+  const publication = await findPublicationById(id_publicacion)
+  if (!publication) throw new Error('La publicación no existe')
+
+  if (publication.usuario_id !== usuario_id) {
+    throw new Error('La publicación no pertenece al usuario autenticado')
   }
+
+  const totalVideos = await countMultimediaByPublicationIdAndType(id_publicacion, MULTIMEDIA_TYPES.VIDEO)
+  if (totalVideos >= MAX_VIDEOS_PER_PUBLICATION) {
+    throw new Error('Límite de videos alcanzado')
+  }
+
+  const newVideo = await createMultimediaRepository({
+    id_publicacion,
+    id_tipo: MULTIMEDIA_TYPES.VIDEO,
+    url,
+    formato,
+    peso_mb
+  })
+
+  return { publication, multimedia: newVideo }
+}
+
+// ✅ TAREA 5: eliminar multimedia
+export const deleteMultimediaService = async ({
+  id_multimedia,
+  usuario_id
+}: {
+  id_multimedia: number
+  usuario_id: number
+}) => {
+  const media = await findMultimediaById(id_multimedia)
+  if (!media) throw new Error('Multimedia no encontrado')
+
+  const publication = await findPublicationById(media.id_publicacion)
+  if (!publication) throw new Error('La publicación no existe')
+
+  if (publication.usuario_id !== usuario_id) {
+    throw new Error('La publicación no pertenece al usuario autenticado')
+  }
+
+  const deleted = await deleteMultimediaById(id_multimedia)
+  if (!deleted) throw new Error('No se pudo eliminar')
+
+  return { publication, multimedia: deleted }
+}
+
+// ✅ TAREA 6: publicar inmueble
+export const publishPublicationService = async ({
+  id_publicacion,
+  usuario_id,
+  confirmacion_publicacion
+}: {
+  id_publicacion: number
+  usuario_id: number
+  confirmacion_publicacion: boolean
+}) => {
+  const publication = await findPublicationById(id_publicacion)
+  if (!publication) throw new Error('La publicación no existe')
+
+  if (publication.usuario_id !== usuario_id) {
+    throw new Error('La publicación no pertenece al usuario autenticado')
+  }
+
+  if (!confirmacion_publicacion) {
+    throw new Error('Debes marcar el checkbox de confirmación para publicar')
+  }
+
+  if (publication.es_gratis) {
+    const totalGratis = await countPublishedFreePublicationsByUser(usuario_id)
+    if (totalGratis >= MAX_FREE_PUBLICATIONS) {
+      throw new Error('LIMITE_GRATUITO_ALCANZADO')
+    }
+  }
+
+  const updated = await publishPublicationById(id_publicacion)
+  if (!updated) throw new Error('No se pudo publicar')
+
+  return { publication: updated }
 }
