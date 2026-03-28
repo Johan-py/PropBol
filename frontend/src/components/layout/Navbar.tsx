@@ -9,11 +9,13 @@ export default function Navbar() {
     filter,
     notifications,
     filteredNotifications,
+    visibleNotifications,
     notificationRef,
     toggleNotifications,
     setFilter,
     markAsRead,
-    archiveNotification
+    archiveNotification,
+    loadMoreNotifications
   } = useNotifications()
 
   const unreadCount = notifications.filter((n) => n.status === 'no leida').length
@@ -116,52 +118,73 @@ export default function Navbar() {
                     </button>
                   </div>
 
-                  <div className="max-h-80 overflow-y-auto">
+                  <div
+                    className="max-h-80 overflow-y-auto"
+                    onScroll={(e) => {
+                      const target = e.currentTarget
+                      const reachedBottom =
+                        target.scrollTop + target.clientHeight >= target.scrollHeight - 10
+
+                      if (reachedBottom) {
+                        loadMoreNotifications()
+                      }
+                    }}
+                  >
                     {filteredNotifications.length === 0 ? (
                       <p className="px-4 py-6 text-center text-sm text-gray-500">
                         No hay notificaciones
                       </p>
                     ) : (
-                      filteredNotifications.map((notification) => (
-                        <div
-                          key={notification.id}
-                          onClick={() => {
-                            if (notification.status !== 'archivada') {
-                              markAsRead(notification.id)
-                            }
-                          }}
-                          className={`cursor-pointer border-b border-gray-100 px-4 py-3 transition hover:bg-gray-50 ${
-                            notification.status === 'no leida' ? 'bg-blue-50' : 'bg-white'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between gap-3">
-                            <p className="text-sm font-semibold text-gray-800">
-                              {notification.title}
+                      <>
+                        {visibleNotifications.map((notification) => (
+                          <div
+                            key={notification.id}
+                            onClick={() => {
+                              if (notification.status !== 'archivada') {
+                                markAsRead(notification.id)
+                              }
+                            }}
+                            className={`cursor-pointer border-b border-gray-100 px-4 py-3 transition hover:bg-gray-50 ${
+                              notification.status === 'no leida' ? 'bg-blue-50' : 'bg-white'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between gap-3">
+                              <p className="text-sm font-semibold text-gray-800">
+                                {notification.title}
+                              </p>
+
+                              <span className="text-[10px] uppercase text-gray-400">
+                                {notification.status}
+                              </span>
+                            </div>
+
+                            <p className="mt-1 text-sm text-gray-600">
+                              {notification.description}
                             </p>
 
-                            <span className="text-[10px] uppercase text-gray-400">
-                              {notification.status}
-                            </span>
+                            {notification.status !== 'archivada' && (
+                              <div className="mt-2 flex justify-end">
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    archiveNotification(notification.id)
+                                  }}
+                                  className="text-xs text-gray-400 transition hover:text-gray-600"
+                                >
+                                  Archivar
+                                </button>
+                              </div>
+                            )}
                           </div>
+                        ))}
 
-                          <p className="mt-1 text-sm text-gray-600">{notification.description}</p>
-
-                          {notification.status !== 'archivada' && (
-                            <div className="mt-2 flex justify-end">
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  archiveNotification(notification.id)
-                                }}
-                                className="text-xs text-gray-400 transition hover:text-gray-600"
-                              >
-                                Archivar
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      ))
+                        {visibleNotifications.length < filteredNotifications.length && (
+                          <p className="px-4 py-3 text-center text-xs text-gray-400">
+                            Cargando más notificaciones...
+                          </p>
+                        )}
+                      </>
                     )}
                   </div>
 

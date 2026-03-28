@@ -6,12 +6,15 @@ import type { NotificationItem } from '@/types/notification'
 
 type FilterType = 'todas' | 'leida' | 'no leida' | 'archivada'
 
+const ITEMS_PER_LOAD = 20
+
 export function useNotifications() {
   const [open, setOpen] = useState(false)
   const [filter, setFilter] = useState<FilterType>('todas')
   const notificationRef = useRef<HTMLDivElement>(null)
 
   const [notifications, setNotifications] = useState<NotificationItem[]>(mockNotifications)
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_LOAD)
 
   const toggleNotifications = () => {
     setOpen((prev) => !prev)
@@ -33,6 +36,20 @@ export function useNotifications() {
     return notifications.filter((notification) => notification.status === filter)
   }, [filter, notifications])
 
+  const visibleNotifications = useMemo(() => {
+    return filteredNotifications.slice(0, visibleCount)
+  }, [filteredNotifications, visibleCount])
+
+  const loadMoreNotifications = () => {
+    if (visibleCount < filteredNotifications.length) {
+      setVisibleCount((prev) => prev + ITEMS_PER_LOAD)
+    }
+  }
+
+  useEffect(() => {
+    setVisibleCount(ITEMS_PER_LOAD)
+  }, [filter])
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
@@ -52,10 +69,12 @@ export function useNotifications() {
     filter,
     notifications,
     filteredNotifications,
+    visibleNotifications,
     notificationRef,
     toggleNotifications,
     setFilter,
     markAsRead,
-    archiveNotification
+    archiveNotification,
+    loadMoreNotifications
   }
 }
