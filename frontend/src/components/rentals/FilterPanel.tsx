@@ -79,16 +79,18 @@ const visibleTypes = sortData(DUMMY_TYPES).slice(0, limitTypes);
         
         <div className="flex flex-col gap-2 mt-2">
           {visibleRentals.map((city, index) => (
-            <div key={index} className="flex justify-between items-center text-lg">
-              <span className="text-gray-400 hover:text-gray-600 cursor-pointer transition-colors">
-                {city.name}
-              </span>
-              <span className="text-gray-400">{city.count} casas</span>
-            </div>
+            <div key={index} className="flex justify-between items-center text-lg gap-3">
+  <span className="text-gray-400 hover:text-gray-600 cursor-pointer transition-colors truncate flex-1">
+    {city.name}
+  </span>
+  <span className="text-gray-400 whitespace-nowrap flex-shrink-0">
+    {city.count.toLocaleString()} casas
+  </span>
+</div>
           ))}
 {limitRentals < DUMMY_RENTALS.length ? (
             <button 
-              onClick={() => setLimitRentals(DUMMY_RENTALS.length)}
+              onClick={() => setLimitRentals(prev => prev === 3 ? 6 : DUMMY_RENTALS.length)}
               className="text-sm text-orange-400 hover:text-orange-600 font-medium mt-1 w-fit transition-colors underline"
             >
               Ver más {'>'}
@@ -96,7 +98,7 @@ const visibleTypes = sortData(DUMMY_TYPES).slice(0, limitTypes);
           ) : (
             <button 
               onClick={() => setLimitRentals(3)}
-              className="text-sm text-orange-400 hover:text-orange-600 font-medium mt-1 w-fit transition-colors underline"
+              className="text-sm text-orange-400 hover:text-orange-600 font-medium mt-1 w-fit transition-colors underline ml-auto"
             >
               {'<'} Ver menos
             </button>
