@@ -22,10 +22,11 @@ const DUMMY_SALES = [
 ];
 
 const DUMMY_TYPES = [
-  { name: 'Casas', count: 12000 },
-  { name: 'Departamentos', count: 8500 },
-  { name: 'Terrenos', count: 3000 },
-  { name: 'Oficinas', count: 1200 },
+  { name: 'Casas', count: 4567 },
+  { name: 'Departamentos', count: 2340 },
+  { name: 'Cuartos', count: 2346 },
+  { name: 'Terrenos', count: 3450 },
+  { name: 'Espacios Cementerio', count: 5674 },
 ];
 
 export default function FilterPanel() {
@@ -39,7 +40,7 @@ const toggleSort = () => setSortOrder(prev => prev === 'none' ? 'asc' : prev ===
 
 // Función auxiliar de ordenamiento (Estándar: 1 responsabilidad [cite: 74])
 const sortData = (data: { name: string, count: number }[]) => {
-  if (sortOrder === 'none') return data;
+  if (sortOrder === 'none') return [...data].sort((a, b) => b.count - a.count);
   return [...data].sort((a, b) => 
     sortOrder === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
   );
@@ -65,9 +66,8 @@ const visibleTypes = sortData(DUMMY_TYPES).slice(0, limitTypes);
           className="flex items-center gap-1 cursor-pointer group outline-none"
         >
           <span className="text-sm font-medium text-orange-400 group-hover:text-orange-600">
-            {sortOrder === 'none' ? 'Ordenar' : sortOrder === 'asc' ? 'A-Z' : 'Z-A'}
+            {sortOrder === 'none' ? 'Ordenar' : sortOrder === 'asc' ? 'Ordenar A↓' : 'Ordenar A↑'}
           </span>
-          <ArrowDownUp size={16} className={`transition-colors ${sortOrder !== 'none' ? 'text-orange-600' : 'text-orange-400 group-hover:text-orange-600'}`} />
         </button>
       </div>
 
