@@ -98,19 +98,27 @@ export default function SignUpForm() {
         : onlyNumbersRegex.test(value)
           ? undefined
           : 'El teléfono solo permite números'
+          
+          
   }))
 }
       if (field === 'firstName') {
-  setErrors((prev) => ({
-    ...prev,
-    firstName: value.trim() === '' ? 'El campo no puede estar vacío' : undefined
+        const soloLetrasRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/
+        setErrors((prev) => ({
+          ...prev,
+          firstName: value === '' || !soloLetrasRegex.test(value)
+          ? undefined
+          : 'El nombre solo puede contener letras'
   }))
 }
 
 if (field === 'lastName') {
+  const soloLetrasRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/
   setErrors((prev) => ({
     ...prev,
-    lastName: value.trim() === '' ? 'El campo no puede estar vacío' : undefined
+    lastName: value === '' || soloLetrasRegex.test(value)
+      ? undefined
+      : 'El apellido solo puede contener letras'
   }))
 }
     }
@@ -160,25 +168,28 @@ if (field === 'lastName') {
       }))
     }
     if (field === 'firstName') {
-  setErrors((prev) => ({
-    ...prev,
-    firstName:
-      formData.firstName.trim() === ''
-        ? 'El campo no puede estar vacío'
-        : undefined
+      const soloLetrasRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/
+      setErrors((prev) => ({
+      ...prev,
+      firstName: formData.firstName === '' || soloLetrasRegex.test(formData.firstName)
+      ? undefined
+      : 'El nombre solo puede contener letras'
+
   }))
 }
 
 if (field === 'lastName') {
+  const soloLetrasRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/
   setErrors((prev) => ({
     ...prev,
     lastName:
-      formData.lastName.trim() === ''
-        ? 'El campo no puede estar vacío'
-        : undefined
+      formData.lastName === '' || soloLetrasRegex.test(formData.lastName)
+      ? undefined
+      : 'El apellido solo puede contener letras'
   }))
- }
- if (field === 'phone') {
+}
+
+if (field === 'phone') {
   const onlyNumbersRegex = /^[0-9]*$/
 
   setErrors((prev) => ({
@@ -370,8 +381,11 @@ if (field === 'lastName') {
           onChange={handleChange('firstName')}
           onBlur={handleBlur('firstName')}
           placeholder="Ingresa tu nombre"
+          maxLength={30}
           className="w-full rounded-md border border-slate-300 px-4 py-3 outline-none focus:border-orange-400"
         />
+        {touched.firstName && errors.firstName ? (
+          <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>) : null}
       </div>
 
       <div>
@@ -381,28 +395,25 @@ if (field === 'lastName') {
         >
           Apellido
         </label>
-       <input
-       id="lastName"
-       name="lastName"
-       type="text"
-       value={formData.lastName}
-       onChange={handleChange('lastName')}
-       onBlur={handleBlur('lastName')}
-       placeholder="Ingresa tu apellido"
-       className={`w-full rounded-md border px-4 py-3 outline-none transition ${
-       touched.lastName && errors.lastName
-       ? 'border-red-500'
-       : 'border-slate-300 focus:border-orange-400'
+        <input
+        id="lastName"
+        name="lastName"
+        type="text"
+        value={formData.lastName}
+        onChange={handleChange('lastName')}
+        onBlur={handleBlur('lastName')}
+        placeholder="Ingresa tu apellido"
+        maxLength={30}
+        className={`w-full rounded-md border px-4 py-3 outline-none transition ${
+        touched.lastName && errors.lastName
+        ? 'border-red-500'
+        : 'border-slate-300 focus:border-orange-400'
         }`}
         aria-invalid={Boolean(touched.lastName && errors.lastName)}
         aria-describedby="lastName-error"
-       />
-
-     {touched.lastName && errors.lastName ? (
-     <p id="lastName-error" className="mt-1 text-sm text-red-600">
-     {errors.lastName}
-     </p>
-     ) : null}
+      />
+      {touched.lastName && errors.lastName ? (
+        <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>) : null}
     </div>
 
       <div>
