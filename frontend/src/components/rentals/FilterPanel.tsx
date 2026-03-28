@@ -150,16 +150,18 @@ const visibleTypes = sortData(DUMMY_TYPES).slice(0, limitTypes);
         
         <div className="flex flex-col gap-2 mt-2">
           {visibleTypes.map((type, index) => (
-            <div key={index} className="flex justify-between items-center text-lg">
-              <span className="text-gray-400 hover:text-gray-600 cursor-pointer transition-colors">
-                {type.name}
-              </span>
-              <span className="text-gray-400">{type.count} propiedades</span>
-            </div>
+            <div key={index} className="flex justify-between items-center text-lg gap-3">
+  <span className="text-gray-400 hover:text-gray-600 cursor-pointer transition-colors truncate flex-1">
+    {type.name}
+  </span>
+  <span className="text-gray-400 whitespace-nowrap flex-shrink-0">
+    {type.count.toLocaleString()} propiedades
+  </span>
+</div>
           ))}
 {limitTypes < DUMMY_TYPES.length ? (
   <button 
-    onClick={() => setLimitTypes(DUMMY_TYPES.length)}
+    onClick={() => setLimitTypes(prev => prev === 3 ? 6 : DUMMY_TYPES.length)}
     className="text-sm text-orange-400 hover:text-orange-600 font-medium mt-1 w-fit transition-colors underline"
   >
     Ver más {'>'}
@@ -167,7 +169,7 @@ const visibleTypes = sortData(DUMMY_TYPES).slice(0, limitTypes);
 ) : (
   <button 
     onClick={() => setLimitTypes(3)}
-    className="text-sm text-orange-400 hover:text-orange-600 font-medium mt-1 w-fit transition-colors underline"
+    className="text-sm text-orange-400 hover:text-orange-600 font-medium mt-1 w-fit transition-colors underline ml-auto"
   >
     {'<'} Ver menos
   </button>
