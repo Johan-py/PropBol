@@ -41,7 +41,7 @@ export default function FilterPanel() {
           </div>
 
           {/* ENLACE VER MÁS */}
-          <button className="text-sm text-orange-400 hover:text-orange-600 font-medium mt-1 w-fit transition-colors">
+          <button className="text-sm text-orange-400 hover:text-orange-600 font-medium mt-1 w-fit transition-colors underline">
             Ver más {'>'}
           </button>
 
@@ -62,7 +62,7 @@ export default function FilterPanel() {
             <span className="text-gray-400">2100 casas</span>
           </div>
             {/* ENLACE VER MÁS */}    
-          <button className="text-sm text-orange-400 hover:text-orange-600 font-medium mt-1 w-fit transition-colors">
+          <button className="text-sm text-orange-400 hover:text-orange-600 font-medium mt-1 w-fit transition-colors underline">
             Ver más {'>'}
           </button>
 
@@ -83,7 +83,7 @@ export default function FilterPanel() {
             <span className="text-gray-400">2100 casas</span>
           </div>
             {/* ENLACE VER MÁS */}
-          <button className="text-sm text-orange-400 hover:text-orange-600 font-medium mt-1 w-fit transition-colors">
+          <button className="text-sm text-orange-400 hover:text-orange-600 font-medium mt-1 w-fit transition-colors underline">
             Ver más {'>'}
           </button> 
         </div>
