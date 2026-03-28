@@ -257,11 +257,19 @@ function FlyToSelected({ lat, lng }: { lat: number; lng: number }) {
   const map = useMap()
 
   useEffect(() => {
-    if (lat && lng) {
-      map.flyTo([lat, lng], 16, {
-        duration: 0.8,
-      })
-    }
+    if (!lat || !lng) return
+
+    const targetZoom = 18 // control zoom
+
+    map.flyTo([lat, lng], targetZoom, {
+      duration: 1.2,
+    })
+
+    const timeout = setTimeout(() => {
+      map.setView([lat, lng], targetZoom)
+    }, 1200)
+
+    return () => clearTimeout(timeout)
   }, [lat, lng, map])
 
   return null
