@@ -35,12 +35,15 @@ const initialFormData: FormData = {
 
 export default function SignUpForm() {
   const router = useRouter()
+  const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 
   const [formData, setFormData] = useState<FormData>(initialFormData)
   const [errors, setErrors] = useState<FormErrors>({})
   const [touched, setTouched] = useState<Record<string, boolean>>({})
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [serverMessage, setServerMessage] = useState('')
+  const [serverError, setServerError] = useState('')
 
   const handleChange =
     (field: keyof FormData) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -217,8 +220,11 @@ if (field === 'lastName') {
     )
   }, [formData, errors.phone])
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+ const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault()
+
+  setServerMessage('')
+  setServerError('')
 
   const emailError = validateEmail(formData.email)
 
@@ -246,40 +252,70 @@ if (field === 'lastName') {
         : 'El teléfono solo permite números'
 
   const newErrors: FormErrors = {
-      email: emailError || undefined,
-      firstName: firstNameError,
-      lastName: lastNameError,
-      phone: phoneError,
-      password: passwordError || undefined,
-      confirmPassword: confirmPasswordError || undefined
+    email: emailError || undefined,
+    firstName: firstNameError,
+    lastName: lastNameError,
+    phone: phoneError,
+    password: passwordError || undefined,
+    confirmPassword: confirmPasswordError || undefined
+  }
+
+  setErrors(newErrors)
+  setTouched({
+    email: true,
+    firstName: true,
+    lastName: true,
+    phone: true,
+    password: true,
+    confirmPassword: true
+  })
+
+  if (
+    emailError ||
+    firstNameError ||
+    lastNameError ||
+    passwordError ||
+    confirmPasswordError ||
+    phoneError
+  ) {
+    return
+  }
+
+  const payload = {
+    nombre: formData.firstName.trim(),
+    apellido: formData.lastName.trim(),
+    correo: formData.email.trim().toLowerCase(),
+    telefono: formData.phone.trim(),
+    password: formData.password.trim(),
+    confirmPassword: formData.confirmPassword.trim()
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/api/auth/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      throw new Error(data.message || 'No se pudo completar el registro')
     }
 
-     setErrors(newErrors)
-     setTouched({
-       email: true,
-       firstName: true,
-       lastName: true,
-       phone: true,
-       password: true,
-       confirmPassword: true
-       })
+    setServerMessage(data.message || 'Usuario registrado correctamente')
 
-       if (
-        emailError ||
-        firstNameError ||
-        lastNameError ||
-        passwordError ||
-        confirmPasswordError ||
-        phoneError
-       ) {
-        return
-       }
+    console.log('Registro exitoso:', data)
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : 'No se pudo completar el registro'
 
-       console.log('Formulario listo para enviar', {
-         ...formData,
-         email: formData.email.trim()
-          })
-          }
+    setServerError(message)
+    console.error('Error al registrar:', error)
+  }
+}
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
