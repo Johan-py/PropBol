@@ -341,7 +341,7 @@ export default function SignUpForm() {
 
       setServerMessage(data?.message || 'Usuario registrado correctamente')
       setTimeout(() => {
-      router.replace('/')
+  router.replace('/')
        }, 1500) 
 
     } catch (error) {
