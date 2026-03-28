@@ -1,12 +1,19 @@
 'use client'
+
 import { useMap } from 'react-leaflet'
 import { useEffect, useState, useCallback } from 'react'
+
 const MIN_ZOOM = 3
 const MAX_ZOOM = 18
+
 export default function ZoomControls() {
   const map = useMap()
+  
+  // ESTADOS (Corregidos y con tipos)
   const [zoom, setZoom] = useState(map.getZoom())
-  const [active, setActive] = useState(null)
+  const [active, setActive] = useState<string | null>(null)
+
+  // Sincronizar el zoom del mapa con nuestro estado
   useEffect(() => {
     const handleZoom = () => setZoom(map.getZoom())
     map.on('zoomend', handleZoom)
@@ -14,6 +21,7 @@ export default function ZoomControls() {
       map.off('zoomend', handleZoom)
     }
   }, [map])
+
   const handleZoomIn = useCallback(() => {
     if (zoom < MAX_ZOOM) {
       setActive('in')
@@ -21,6 +29,7 @@ export default function ZoomControls() {
       setTimeout(() => setActive(null), 300)
     }
   }, [map, zoom])
+
   const handleZoomOut = useCallback(() => {
     if (zoom > MIN_ZOOM) {
       setActive('out')
@@ -28,9 +37,12 @@ export default function ZoomControls() {
       setTimeout(() => setActive(null), 300)
     }
   }, [map, zoom])
+
   const isMaxZoom = zoom >= MAX_ZOOM
   const isMinZoom = zoom <= MIN_ZOOM
-  const btnStyle = (type, disabled) => ({
+
+  // Estilos dinámicos
+  const btnStyle = (type: string, disabled: boolean) => ({
     width: '36px',
     height: '36px',
     border: 'none',
@@ -44,6 +56,7 @@ export default function ZoomControls() {
     backgroundColor: active === type ? '#F97316' : '#ffffff',
     color: disabled ? '#d1d5db' : active === type ? '#ffffff' : '#374151'
   })
+
   return (
     <div
       style={{
@@ -64,7 +77,7 @@ export default function ZoomControls() {
         onClick={handleZoomIn}
         disabled={isMaxZoom}
         aria-label="Zoom in"
-        style={btnStyle('in', isMaxZoom)}
+        style={btnStyle('in', isMaxZoom) as React.CSSProperties}
       >
         +
       </button>
@@ -73,7 +86,7 @@ export default function ZoomControls() {
         onClick={handleZoomOut}
         disabled={isMinZoom}
         aria-label="Zoom out"
-        style={btnStyle('out', isMinZoom)}
+        style={btnStyle('out', isMinZoom) as React.CSSProperties}
       >
         -
       </button>
