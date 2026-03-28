@@ -19,6 +19,7 @@
     "prisma": "^7.6.0"
   },
   "devDependencies": {
+    "@prisma/config": "^7.6.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.10",
