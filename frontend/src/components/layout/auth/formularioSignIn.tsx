@@ -42,23 +42,49 @@ export default function LoginForm() {
     setErrors(newErrors)
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault()
 
-    const trimmedEmail = email.trim()
-    const trimmedPassword = password.trim()
+  const trimmedEmail = email.trim()
+  setEmail(trimmedEmail)
 
-    setEmail(trimmedEmail)
-    validate('email', trimmedEmail)
-    validate('password', trimmedPassword)
+  validate('email', trimmedEmail)
+  validate('password', password)
 
-    console.log('Correo original:', `"${email}"`)
-    console.log('Correo sin espacios al inicio/final:', `"${trimmedEmail}"`)
-    console.log('Password:', trimmedPassword)
+  if (!isFormValid) return
 
-    // Aquí después puedes enviar al backend usando trimmedEmail
-    // login({ email: trimmedEmail, password })
+  try {
+    const response = await fetch('http://localhost:5000/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: trimmedEmail,
+        password,
+      }),
+    })
+
+    let data = null
+    try {
+      data = await response.json()
+    } catch {
+      data = null
+    }
+
+    if (!response.ok) {
+      setPassword('') // 
+      alert(data?.message || 'Error al iniciar sesión')
+      return
+    }
+
+    console.log('Login exitoso', data)
+
+  } catch (error) {
+    setPassword('') // 
+    alert('Error de conexión con el servidor')
   }
+}
 
   return (
     <div className="w-full max-w-sm rounded-md bg-white p-6 shadow-md">
@@ -140,15 +166,11 @@ export default function LoginForm() {
 
         <button
           type="button"
-          className="w-full rounded-md bg-gray-700 py-2 text-sm font-medium text-white hover:bg-gray-800"
+          className="mx-auto block w-fit rounded-md bg-gray-700 px-4 py-1.5 text-xs font-medium text-white hover:bg-gray-800"
         >
           Cancelar Inicio de sesión
         </button>
-      </form>
-
-      <p className="mt-4 text-center text-sm text-gray-600">
-        ¿No tienes una cuenta?
-      </p>
+        </form>
 
       <p className="mt-4 text-center text-sm text-gray-600">
         ¿No tienes una cuenta?{' '}
