@@ -1,15 +1,24 @@
 import jwt from "jsonwebtoken";
+export type JwtPayload = {
+  id: number;
+  correo: string;
+};
+export const generateToken = (payload: JwtPayload) => {
+  const secret = process.env.JWT_SECRET;
 
-const JWT_SECRET = process.env.JWT_SECRET as string;
+  if (!secret) throw new Error("JWT_SECRET is not defined");
 
-export const generateToken = (payload: { id: number; correo: String }) => {
-  return jwt.sign(payload, JWT_SECRET, {
+  return jwt.sign(payload, secret, {
     expiresIn: "1h",
   });
 };
 
 export const verifyJwtToken = (token: string) => {
-  return jwt.verify(token, JWT_SECRET) as {
+  const secret = process.env.JWT_SECRET;
+
+  if (!secret) throw new Error("JWT_SECRET is not defined");
+
+  return jwt.verify(token, secret) as {
     id: number;
     correo: string;
     iat: number;
