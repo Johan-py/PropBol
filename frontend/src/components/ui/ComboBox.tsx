@@ -1,48 +1,72 @@
 "use client";
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { LucideIcon, ChevronDown } from 'lucide-react';
 
 interface ComboBoxProps {
   label: string;
   placeholder?: string;
   options?: string[];
-  icon?: LucideIcon; // 1. Le agregamos el "?" para hacerlo opcional
+  icon?: LucideIcon;
 }
 
-// 2. Le asignamos un alias con mayúscula (Icon)
 export function ComboBox({ label, placeholder, options = [], icon: Icon }: ComboBoxProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedValue, setSelectedValue] = useState<string | null>(null);
+  const comboBoxRef = useRef<HTMLDivElement>(null);
+
+  const handleOptionClick = (option: string) => {
+    setSelectedValue(option);
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (comboBoxRef.current && !comboBoxRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="flex flex-col gap-2 w-full font-inter">
+    <div className="flex flex-col gap-2 w-full font-inter" ref={comboBoxRef}>
       <label className="text-sm font-medium text-stone-900">
         {label}
       </label>
       
       <div className="relative group">
-        {/* 3. Renderizado condicional: Solo dibuja el div si Icon existe */}
         {Icon && (
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <Icon className="w-5 h-5 text-stone-400 group-focus-within:text-amber-600 transition-colors" />
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10">
+            <Icon className={`w-5 h-5 transition-colors ${isOpen ? 'text-amber-600' : 'text-stone-400'}`} />
           </div>
         )}
 
-        {/* 4. Ajustamos el padding izquierdo (pl) dependiendo de si hay icono o no */}
-        <select
-          defaultValue=""
-          className={`w-full appearance-none bg-white border border-stone-200 text-stone-600 py-2.5 pr-10 rounded-xl focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600 cursor-pointer transition-all shadow-sm hover:border-stone-300 ${
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className={`w-full flex items-center justify-between appearance-none bg-white border text-stone-600 py-2.5 pr-3 rounded-xl focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600 cursor-pointer transition-all shadow-sm hover:border-stone-300 ${
             Icon ? 'pl-10' : 'pl-4'
-          }`}
+          } ${isOpen ? 'border-amber-600 ring-1 ring-amber-600' : 'border-stone-200'}`}
         >
-          <option value="" disabled>{placeholder}</option>
-          {options.map((option) => (
-            <option key={option} value={option.toLowerCase()}>
-              {option}
-            </option>
-          ))}
-        </select>
+          <span className={selectedValue ? 'text-stone-900' : 'text-stone-500'}>
+            {selectedValue || placeholder}
+          </span>
+          <ChevronDown className={`w-4 h-4 text-stone-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+        </button>
         
-        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-          <ChevronDown className="w-4 h-4 text-stone-400" />
-        </div>
+        {isOpen && (
+          <ul className="absolute z-20 w-full mt-1 bg-white border border-stone-200 rounded-xl shadow-lg overflow-hidden">
+            {options.map((option) => (
+              <li key={option} onClick={() => handleOptionClick(option)} className="px-4 py-2.5 text-stone-600 hover:bg-amber-50 hover:text-amber-700 cursor-pointer">
+                {option}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
