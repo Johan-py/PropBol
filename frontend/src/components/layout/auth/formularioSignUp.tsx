@@ -42,7 +42,6 @@ export default function SignUpForm() {
   const handleChange =
     (field: keyof FormData) => (event: React.ChangeEvent<HTMLInputElement>) => {
       const rawValue = event.target.value
-
       const value = field === 'email' ? rawValue.trimStart() : rawValue
 
       setFormData((prev) => ({
@@ -67,23 +66,27 @@ export default function SignUpForm() {
           password: passwordError || undefined
         }))
       }
+
       if (field === 'confirmPassword') {
         setErrors((prev) => ({
           ...prev,
           confirmPassword:
-          value !== formData.password
-            ? 'Las contraseñas no coinciden'
-            : undefined
-        }))
-      }
-      if(field === 'phone'){
-        const onlyNumbersRegex = /^[0-9]*$/
-        setErrors((prev) => ({
-          ...prev,
-          phone: onlyNumbersRegex.test(value) ? undefined : 'El teléfono solo permite números'
+            value !== formData.password
+              ? 'Las contraseñas no coinciden'
+              : undefined
         }))
       }
 
+      if (field === 'phone') {
+        const onlyNumbersRegex = /^[0-9]*$/
+
+        setErrors((prev) => ({
+          ...prev,
+          phone: onlyNumbersRegex.test(value)
+            ? undefined
+            : 'El teléfono solo permite números'
+        }))
+      }
     }
 
   const handleBlur = (field: keyof FormData) => () => {
@@ -109,20 +112,25 @@ export default function SignUpForm() {
         password: passwordError || undefined
       }))
     }
+
     if (field === 'confirmPassword') {
       setErrors((prev) => ({
         ...prev,
-      confirmPasswordError :
-        formData.confirmPassword !== formData.password
-          ? 'Las contraseñas no coinciden'
-          : undefined
+        confirmPassword:
+          formData.confirmPassword !== formData.password
+            ? 'Las contraseñas no coinciden'
+            : undefined
       }))
     }
+
     if (field === 'phone') {
       const onlyNumbersRegex = /^[0-9]*$/
+
       setErrors((prev) => ({
         ...prev,
-        phone: onlyNumbersRegex.test(formData.phone) ? undefined : 'El teléfono solo permite números'
+        phone: onlyNumbersRegex.test(formData.phone)
+          ? undefined
+          : 'El teléfono solo permite números'
       }))
     }
   }
@@ -135,43 +143,72 @@ export default function SignUpForm() {
   }
 
   const isFormValid = useMemo(() => {
-    return formData.email.trim() 
-    !== '' && !validateEmail(formData.email) && !validatePassword(formData.password) &&
-    formData.confirmPassword === formData.password &&
-    (formData.phone === '' || !errors.phone) 
-  }, [formData.email, formData.password])
+    const requiredFieldsCompleted =
+      formData.email.trim() !== '' &&
+      formData.firstName.trim() !== '' &&
+      formData.lastName.trim() !== '' &&
+      formData.phone.trim() !== '' &&
+      formData.password.trim() !== '' &&
+      formData.confirmPassword.trim() !== ''
+
+    return (
+      requiredFieldsCompleted &&
+      !validateEmail(formData.email) &&
+      !validatePassword(formData.password) &&
+      formData.confirmPassword === formData.password &&
+      !errors.phone
+    )
+  }, [formData, errors.phone])
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  event.preventDefault()
+    event.preventDefault()
 
-  const emailError = validateEmail(formData.email)
-  const passwordError = validatePassword(formData.password)
-  const confirmPasswordError =
-    formData.confirmPassword !== formData.password
-      ? 'Las contraseñas no coinciden'
-      : undefined
+    const emailError = validateEmail(formData.email)
+    const passwordError = validatePassword(formData.password)
+    const confirmPasswordError =
+      formData.confirmPassword !== formData.password
+        ? 'Las contraseñas no coinciden'
+        : undefined
+    const onlyNumbersRegex = /^[0-9]*$/
+    const phoneError = onlyNumbersRegex.test(formData.phone)
+      ? undefined
+      : 'El teléfono solo permite números'
 
-  const newErrors: FormErrors = {
-    email: emailError || undefined,
-    password: passwordError || undefined,
-    confirmPassword: confirmPasswordError || undefined
+    const newErrors: FormErrors = {
+      email: emailError || undefined,
+      password: passwordError || undefined,
+      confirmPassword: confirmPasswordError || undefined,
+      phone: phoneError
+    }
+
+    setErrors(newErrors)
+    setTouched((prev) => ({
+      ...prev,
+      email: true,
+      firstName: true,
+      lastName: true,
+      phone: true,
+      password: true,
+      confirmPassword: true
+    }))
+
+    if (
+      emailError ||
+      passwordError ||
+      confirmPasswordError ||
+      phoneError ||
+      formData.firstName.trim() === '' ||
+      formData.lastName.trim() === '' ||
+      formData.phone.trim() === ''
+    ) {
+      return
+    }
+
+    console.log('Formulario listo para enviar', {
+      ...formData,
+      email: formData.email.trim()
+    })
   }
-
-  setErrors(newErrors)
-  setTouched((prev) => ({
-    ...prev,
-    email: true,
-    password: true,
-    confirmPassword: true
-  }))
-
-  if (emailError || passwordError || confirmPasswordError) return
-
-  console.log('Formulario listo para enviar', {
-    ...formData,
-    email: formData.email.trim()
-  })
-}
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
