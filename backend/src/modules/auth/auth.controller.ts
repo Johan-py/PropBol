@@ -18,7 +18,8 @@ export const registerController = async (req: Request, res: Response) => {
 
     return res.status(201).json({
       message: "Usuario registrado correctamente",
-      user,
+      token: user.token,
+      user: user.user,
     });
   } catch (error) {
     const message =

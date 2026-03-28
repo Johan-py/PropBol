@@ -24,6 +24,10 @@ type FormErrors = {
   confirmPassword?: string
 }
 
+interface RegisterResponse {
+  message: string
+  token?: string
+}
 const initialFormData: FormData = {
   email: '',
   firstName: '',
@@ -327,10 +331,10 @@ export default function SignUpForm() {
         body: JSON.stringify(payload)
       })
 
-      let data: any = null
+      let data: RegisterResponse | null = null
 
       try {
-        data = await response.json()
+        data = await response.json() as RegisterResponse
       } catch {
         data = null
       }
@@ -339,10 +343,14 @@ export default function SignUpForm() {
         throw new Error(data?.message || 'No se pudo completar el registro')
       }
 
+      if (data?.token) {
+        localStorage.setItem('token', data.token)
+      }
+
       setServerMessage(data?.message || 'Usuario registrado correctamente')
       setTimeout(() => {
       router.replace('/')
-       }, 1500) 
+      }, 1500) 
 
     } catch (error) {
       const message =
@@ -484,6 +492,7 @@ export default function SignUpForm() {
           onChange={handleChange('phone')}
           onBlur={handleBlur('phone')}
           placeholder="Ingresa tu teléfono"
+          maxLength={20}
           className={`w-full rounded-md border px-4 py-3 outline-none transition ${
             touched.phone && errors.phone
               ? 'border-red-500'
@@ -515,6 +524,7 @@ export default function SignUpForm() {
             onChange={handleChange('password')}
             onBlur={handleBlur('password')}
             placeholder="Ingresa tu contraseña"
+            maxLength={255}
             className={`w-full rounded-md border px-4 py-3 pr-12 outline-none transition ${
               touched.password && errors.password
                 ? 'border-red-500'
@@ -557,6 +567,7 @@ export default function SignUpForm() {
             onChange={handleChange('confirmPassword')}
             onBlur={handleBlur('confirmPassword')}
             placeholder="Confirma tu contraseña"
+            maxLength={255}
             className={`w-full rounded-md border px-4 py-3 pr-12 outline-none transition ${
               touched.confirmPassword && errors.confirmPassword
                 ? 'border-red-500'

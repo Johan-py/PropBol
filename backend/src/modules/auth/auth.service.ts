@@ -1,11 +1,11 @@
 import { generateToken } from "../../utils/jwt.js";
-import { findUser, createUser, findUserByCorreo } from "./auth.repository.js";
+import { findUser, createUser, findUserByCorreo, createSesion } from "./auth.repository.js";
 import { Prisma } from "@prisma/client";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const onlyLettersRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
 const onlyNumbersRegex = /^[0-9]+$/;
-const DEFAULT_USER_ROLE_ID = 2;
+
 
 export const loginService = async ({
   email,
@@ -100,14 +100,19 @@ export const registerUser = async (data: RegisterUserInput) => {
   }
 
   try {
-    return await createUser({
+    const user = await createUser({
       nombre,
       apellido,
       correo,
       password,
       telefono,
-      rolId: DEFAULT_USER_ROLE_ID,
-    });
+      rolId: 2,
+    })
+    const token = generateToken(user)
+    await createSesion(user.id, token)
+
+    return { user, token }
+    
   } catch (error: unknown) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
