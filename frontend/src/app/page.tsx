@@ -4,6 +4,8 @@ import ExploreSection from '@/components/layout/ExploreSection';
 interface BannerData {
   id: number;
   urlImagen: string;
+  titulo?: string;
+  subtitulo?: string;
 }
 
 const fetchBanners = async (): Promise<BannerData[]> => {
@@ -33,7 +35,11 @@ export default async function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center">
       {mainBanner && (
-        <HomeBanner url={mainBanner.urlImagen} />
+        <HomeBanner 
+          url={mainBanner.urlImagen} 
+          title={mainBanner.titulo || "Encuentra tu lugar ideal en Bolivia"}
+          subtitle={mainBanner.subtitulo || "Compra, vende o alquila propiedades de forma rápida y segura"}
+        />
       )}
       
       <div className="container mx-auto px-4 py-8">
