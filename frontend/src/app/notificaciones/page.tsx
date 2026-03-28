@@ -1,7 +1,23 @@
+"use client";
+import { useEffect } from 'react'
 import { mockNotifications } from '@/data/mockNotifications'
 
 export default function NotificationsPage() {
-  return (
+   useEffect(() => {
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        alert('Cerrar notificaciones (simulado)');
+      }
+    };
+
+    document.addEventListener('keydown', handleEsc);
+
+    return () => {
+      document.removeEventListener('keydown', handleEsc);
+    };
+  }, []);
+  
+  return ( 
     <section className="mx-auto max-w-3xl">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Todas las notificaciones</h1>
@@ -10,7 +26,11 @@ export default function NotificationsPage() {
         </p>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+      <div 
+           role="list"
+           aria-label="Lista de notificaciones"
+           aria-live="polite"
+           className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
         {mockNotifications.length === 0 ? (
           <p className="px-4 py-6 text-center text-sm text-gray-500">
             No hay notificaciones
@@ -19,6 +39,9 @@ export default function NotificationsPage() {
           mockNotifications.map((notification) => (
             <div
               key={notification.id}
+              role="listitem"
+              tabIndex={0}
+              aria-label={`Notificación: ${notification.title}`}
               className={`border-b border-gray-100 px-4 py-4 last:border-b-0 ${
                 notification.status === 'no leida' ? 'bg-blue-50' : 'bg-white'
               }`}
