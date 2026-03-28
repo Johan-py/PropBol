@@ -2,19 +2,22 @@
 
 import ConfirmDeleteModal from "@/components/publicacion/ConfirmDeleteModal";
 import DeleteSuccessModal from "@/components/publicacion/DeleteSuccessModal";
+import DeleteErrorModal from "@/components/publicacion/DeleteErrorModal";
 import { useDeletePublicacion } from "@/hooks/useDeletePublicacion";
 
 export default function PruebasEliminarPublicacionPage() {
   const {
     modalConfirmacionAbierto,
     modalExitoAbierto,
+    modalErrorAbierto,
     loading,
     error,
     abrirConfirmacion,
     cerrarConfirmacion,
     cerrarExito,
+    cerrarError,
     confirmarEliminacion,
-  } = useDeletePublicacion(1); // luego reemplazas por id real
+  } = useDeletePublicacion(1); // cambia por un id activo para probar(luego reemplazas por id real)
 
   return (
     <div className="p-8">
@@ -27,12 +30,6 @@ export default function PruebasEliminarPublicacionPage() {
         Eliminar publicación
       </button>
 
-      {error && (
-        <p className="mt-4 text-sm text-red-600">
-          {error}
-        </p>
-      )}
-
       <ConfirmDeleteModal
         abierto={modalConfirmacionAbierto}
         onAceptar={confirmarEliminacion}
@@ -43,6 +40,12 @@ export default function PruebasEliminarPublicacionPage() {
       <DeleteSuccessModal
         abierto={modalExitoAbierto}
         onAceptar={cerrarExito}
+      />
+
+      <DeleteErrorModal
+        abierto={modalErrorAbierto}
+        mensaje={error || "No se puede eliminar la publicación, intente nuevamente"}
+        onAceptar={cerrarError}
       />
     </div>
   );

@@ -6,11 +6,12 @@ import { eliminarPublicacion } from '@/services/publicacion.service'
 export function useDeletePublicacion(publicacionId: number) {
   const [modalConfirmacionAbierto, setModalConfirmacionAbierto] = useState(false)
   const [modalExitoAbierto, setModalExitoAbierto] = useState(false)
+  const [modalErrorAbierto, setModalErrorAbierto] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<string>('')
 
   const abrirConfirmacion = () => {
-    setError(null)
+    setError('')
     setModalConfirmacionAbierto(true)
   }
 
@@ -23,18 +24,29 @@ export function useDeletePublicacion(publicacionId: number) {
     setModalExitoAbierto(false)
   }
 
+  const cerrarError = () => {
+    setModalErrorAbierto(false)
+    setError('')
+  }
+
   const confirmarEliminacion = async () => {
     try {
       setLoading(true)
-      setError(null)
+      setError('')
 
       await eliminarPublicacion(publicacionId)
 
       setModalConfirmacionAbierto(false)
       setModalExitoAbierto(true)
     } catch (err) {
-      const mensaje = err instanceof Error ? err.message : 'Ocurrió un error inesperado'
+      const mensaje =
+        err instanceof Error
+          ? err.message
+          : 'No se puede eliminar la publicación, intente nuevamente'
+
+      setModalConfirmacionAbierto(false)
       setError(mensaje)
+      setModalErrorAbierto(true)
     } finally {
       setLoading(false)
     }
@@ -43,11 +55,13 @@ export function useDeletePublicacion(publicacionId: number) {
   return {
     modalConfirmacionAbierto,
     modalExitoAbierto,
+    modalErrorAbierto,
     loading,
     error,
     abrirConfirmacion,
     cerrarConfirmacion,
     cerrarExito,
+    cerrarError,
     confirmarEliminacion
   }
 }
