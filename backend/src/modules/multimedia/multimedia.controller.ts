@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import {
   getPublicationMultimediaService,
+  registerImagesService,
   registerVideoLinkService
 } from './multimedia.service.js'
 
@@ -42,6 +43,32 @@ export const registerVideoLinkController = async (req: Request, res: Response) =
 
     res.json({
       message: 'Video registrado correctamente',
+      data: result
+    })
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : 'Error interno del servidor'
+
+    res.status(400).json({ message })
+  }
+}
+
+export const registerImagesController = async (req: Request, res: Response) => {
+  try {
+    const publicacionId = Number(req.params.publicacionId)
+    const { usuarioId, images } = req.body as {
+      usuarioId: number
+      images: { url: string; extension: string; pesoMb: number }[]
+    }
+
+    const result = await registerImagesService({
+      publicacionId,
+      usuarioId: Number(usuarioId),
+      images
+    })
+
+    res.json({
+      message: 'Imágenes registradas correctamente',
       data: result
     })
   } catch (error) {
