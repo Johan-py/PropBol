@@ -1,5 +1,8 @@
 import {
+  ALLOWED_IMAGE_EXTENSIONS,
   ALLOWED_YOUTUBE_HOSTS,
+  MAX_IMAGE_SIZE_MB,
+  MAX_IMAGES_PER_PUBLICATION,
   MAX_VIDEOS_PER_PUBLICATION,
   MULTIMEDIA_TYPES
 } from './multimedia.constants.js'
@@ -11,6 +14,7 @@ import {
 } from './multimedia.repository.js'
 import {
   GetPublicationMultimediaInput,
+  RegisterImagesInput,
   RegisterVideoLinkInput
 } from './multimedia.types.js'
 
@@ -55,6 +59,32 @@ const validatePublicationOwnership = async (
   }
 
   return publication
+}
+
+const validateImagesInput = (images: RegisterImagesInput['images']) => {
+  if (!Array.isArray(images) || images.length === 0) {
+    throw new Error('Debe enviar al menos una imagen')
+  }
+
+  if (images.length > MAX_IMAGES_PER_PUBLICATION) {
+    throw new Error('Límite de imágenes alcanzado')
+  }
+
+  for (const image of images) {
+    const normalizedExtension = image.extension.trim().toLowerCase()
+
+    if (!ALLOWED_IMAGE_EXTENSIONS.includes(normalizedExtension)) {
+      throw new Error('Formato no permitido. Solo PNG o JPG')
+    }
+
+    if (image.pesoMb > MAX_IMAGE_SIZE_MB) {
+      throw new Error('La imagen supera el tamaño máximo permitido de 5 MB')
+    }
+
+    if (!image.url.trim()) {
+      throw new Error('La URL de la imagen es obligatoria')
+    }
+  }
 }
 
 export const getPublicationMultimediaService = async ({
@@ -106,5 +136,40 @@ export const registerVideoLinkService = async ({
   return {
     publication,
     multimedia: newVideo
+  }
+}
+
+export const registerImagesService = async ({
+  publicacionId,
+  usuarioId,
+  images
+}: RegisterImagesInput) => {
+  const publication = await validatePublicationOwnership(publicacionId, usuarioId)
+
+  validateImagesInput(images)
+
+  const totalImages = await countMultimediaByPublicationIdAndTypeRepository(
+    publicacionId,
+    MULTIMEDIA_TYPES.IMAGE
+  )
+
+  if (totalImages + images.length > MAX_IMAGES_PER_PUBLICATION) {
+    throw new Error('Límite de imágenes alcanzado')
+  }
+
+  const createdImages = await Promise.all(
+    images.map((image) =>
+      createMultimediaRepository({
+        publicacionId,
+        tipo: MULTIMEDIA_TYPES.IMAGE,
+        url: image.url.trim(),
+        pesoMb: image.pesoMb
+      })
+    )
+  )
+
+  return {
+    publication,
+    multimedia: createdImages
   }
 }
