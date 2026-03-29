@@ -1,13 +1,26 @@
 'use client'
 
-import { useState } from 'react'
+import { useState,useEffect} from 'react'
 import dynamic from 'next/dynamic'
 import { Search, MapPin, DollarSign, Home, Building, Square, ChevronRight, List } from 'lucide-react';
+import { useProperties } from '@/hooks/useProperties'
 
 const MapView = dynamic(() => import('./MapView'), { ssr: false })
 
 export default function BusquedaMapaPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
+  const { properties } = useProperties()
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
+   useEffect(() => {
+  if (!hoveredId) return
+
+  const timeout = setTimeout(() => {
+    setSelectedPropertyId(hoveredId)
+  }, 200)
+
+  return () => clearTimeout(timeout)
+}, [hoveredId])
 
   return (
     <div className="flex flex-col w-full min-h-[calc(100vh-theme(spacing.32))] border rounded-lg overflow-hidden shadow-sm bg-white">
@@ -101,14 +114,38 @@ export default function BusquedaMapaPage() {
                 <span>Lista de inmuebles</span>
               </button>
             </div>
+              {/* Esta es una implementación temporal (mock visual) de la lista de inmuebles */}
+              <div className="space-y-3">
+                {properties.map((property) => (
+                 <div
+                   key={property.id}
+                   onMouseEnter={() => setHoveredId(property.id)}
+              
+                   onClick={() => setSelectedPropertyId(property.id)}
+                   className={`
+                    p-3 border rounded-lg cursor-pointer transition-all
+                     ${
+                      selectedPropertyId === property.id
+                       ? 'border-red-500 bg-red-50'
+                      : 'border-gray-200 hover:border-gray-400'
+                     }
+                   `}
+                  >
+                   <p className="font-semibold text-sm text-gray-800">
+                     {property.title}
+                   </p>
 
-            <div className="space-y-4">
-              <div className="h-28 bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
-                <div className="h-4 bg-gray-200 w-3/4 mb-3 rounded"></div>
-                <div className="h-4 bg-gray-200 w-1/2 mb-3 rounded"></div>
-                <div className="h-8 bg-gray-100 w-full rounded mt-auto"></div>
-              </div>
+                   <p className="text-sm text-gray-600">
+                     ${property.price}
+                   </p>
+
+                   <p className="text-xs text-gray-400 capitalize">
+                     {property.type}
+                   </p>
+                </div>
+              ))}
             </div>
+            {/* Fin de codigo temporal  */}
           </div>
         </aside>
 
@@ -132,7 +169,10 @@ export default function BusquedaMapaPage() {
           )}
 
           <div className="absolute inset-0">
-            <MapView />
+            <MapView 
+              selectedId={selectedPropertyId}
+              onSelect={setSelectedPropertyId}
+            />
           </div>
         </section>
       </div>
