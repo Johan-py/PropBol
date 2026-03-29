@@ -75,3 +75,63 @@ function FlyToSelected({ property }: { property?: PropertyMapPin }) {
 
   return null;
 }
+
+interface MapViewProps {
+  properties: PropertyMapPin[];
+  selectedId?: string | null;
+  onSelect?: (id: string) => void;
+}
+
+export default function MapView({
+  properties,
+  selectedId,
+  onSelect,
+}: MapViewProps) {
+  const center: [number, number] = [-17.39, -66.15];
+
+  return (
+    <div className="w-full h-full">
+      <MapContainer
+        center={center}
+        zoom={13}
+        zoomControl={false}
+        className="w-full h-full"
+      >
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+        <ZoomControls />
+
+        <FlyToSelected property={properties.find((p) => p.id === selectedId)} />
+
+        <Marker position={center} icon={createGpsIcon()}>
+          <Popup>Tu ubicación</Popup>
+        </Marker>
+
+        <MarkerClusterGroup
+          iconCreateFunction={createClusterIcon}
+          maxClusterRadius={CLUSTER_CONFIG.maxClusterRadius}
+        >
+          {properties.map((property) => {
+            const isSelected = property.id === selectedId;
+
+            return (
+              <Marker
+                key={property.id}
+                position={[property.lat, property.lng]}
+                icon={createPinIcon(property, isSelected)}
+                eventHandlers={{
+                  click: () => onSelect?.(property.id),
+                }}
+              >
+                <Popup>
+                  <b>{property.title}</b>
+                  <br />${property.price.toLocaleString()} USD
+                </Popup>
+              </Marker>
+            );
+          })}
+        </MarkerClusterGroup>
+      </MapContainer>
+    </div>
+  );
+}
