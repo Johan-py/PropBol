@@ -1,57 +1,52 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import PropertyTypeVisual from "./PropertyTypeFilter";
-import TransactionModeFilter from "./TransactionModeFilter";
+import { useState } from "react"
+import PropertyTypeVisual from "./PropertyTypeFilter"
+import TransactionModeFilter from "./TransactionModeFilter"
+import { usePropertySearch } from "@/hooks/usePropertySearch"
 
-interface FilterBarProps {
-  onSearch?: (filtros: { tipos: string[]; modo: string }) => void;
-}
+export default function FilterBar() {
 
-export default function FilterBar({ onSearch }: FilterBarProps) {
-  const [tiposSeleccionados, setTiposSeleccionados] = useState<string[]>([]);
-  const [modoSeleccionado, setModoSeleccionado] = useState<string>("VENTA");
+  const [tiposSeleccionados, setTiposSeleccionados] = useState<string[]>([])
+  const [modoSeleccionado, setModoSeleccionado] = useState<string>("VENTA")
+
+  const { searchProperties } = usePropertySearch()
 
   const handleTipoChange = (tipo: string) => {
-    setTiposSeleccionados(prev =>
-      prev.includes(tipo) ? prev.filter(t => t !== tipo) : [...prev, tipo]
-    );
-  };
 
-  const handleModoChange = (modo: string) => {
-    setModoSeleccionado(modo);
-  };
+    setTiposSeleccionados(prev =>
+      prev.includes(tipo)
+        ? prev.filter(t => t !== tipo)
+        : [...prev, tipo]
+    )
+
+  }
 
   const handleSearch = () => {
-    if (onSearch) {
-      onSearch({
-        tipos: tiposSeleccionados,
-        modo: modoSeleccionado
-      });
-    }
-  };
+
+    searchProperties(tiposSeleccionados, modoSeleccionado)
+
+  }
 
   return (
     <div className="bg-white shadow-lg rounded-[30px] p-6 flex flex-col gap-6 w-[921px]">
       <TransactionModeFilter
         modoSeleccionado={modoSeleccionado}
-        onModoChange={handleModoChange}
+        onModoChange={setModoSeleccionado}
+      />
+      <div className="flex items-center gap-16">
+      <PropertyTypeVisual
+        tiposSeleccionados={tiposSeleccionados}
+        onTipoChange={handleTipoChange}
       />
 
-      <div className="flex items-center gap-16">
-        <PropertyTypeVisual
-          tiposSeleccionados={tiposSeleccionados}
-          onTipoChange={handleTipoChange}
-        />
-        
-        {/* Botón Buscar */}
-        <button
-          onClick={handleSearch}
-          className="px-6 py-2 bg-[#d97706] text-white rounded-lg hover:bg-[#b95e00] transition-colors font-medium"
-        >
-          Buscar
-        </button>
-      </div>
+      <button onClick={handleSearch}
+      className="px-6 py-2 bg-[#d97706] text-white rounded-lg hover:bg-[#b95e00] transition-colors font-medium"
+      >
+        Buscar
+      </button>
     </div>
-  );
+    </div>
+  )
+
 }

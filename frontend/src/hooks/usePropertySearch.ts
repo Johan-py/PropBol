@@ -1,110 +1,37 @@
-"use client";
+"use client"
 
-import { useState, useCallback } from "react";
-
-type Categoria =
-  | "CASA"
-  | "DEPARTAMENTO"
-  | "TERRENO"
-  | "HABITACION"
-  | "LOCAL";
-
-type TipoAccion =
-  | "VENTA"
-  | "ALQUILER"
-  | "ANTICRETO";
-
-interface Property {
-
-  id: number;
-  titulo: string;
-  tipoAccion: TipoAccion;
-  categoria: Categoria | null;
-  precio: number;
-
-  superficieM2: number | null;
-  nroCuartos: number | null;
-  nroBanos: number | null;
-
-  descripcion: string | null;
-  estado: string;
-  fechaPublicacion: string;
-
-  propietarioId: number;
-
-  ubicacion?: {
-    direccion: string | null;
-    zona: string | null;
-    ciudad: string;
-  } | null;
-
-}
-
-interface SearchParams {
-  tipos?: Categoria[];
-  modo?: TipoAccion;
-}
+import { useState } from "react"
 
 export function usePropertySearch() {
 
-  const [properties, setProperties] = useState<Property[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<any>(null)
 
-  const searchProperties = useCallback(async (params: SearchParams) => {
+  const searchProperties = async (tipos: string[], modo: string) => {
 
-    setLoading(true);
-    setError(null);
+    const params = new URLSearchParams()
 
-    const startTime = Date.now();
+    tipos.forEach(tipo => {
+      params.append("categoria", tipo)
+    })
 
-    try {
+    params.append("tipoAccion", modo)
 
-      const urlParams = new URLSearchParams();
+    const res = await fetch(
+      `http://localhost:5000/api/properties/search?${params}`
+    )
 
-      if (params.tipos && params.tipos.length > 0) {
-        params.tipos.forEach(tipo => {
-          urlParams.append("categoria", tipo);
-        });
-      }
+    const json = await res.json()
 
-      if (params.modo) {
-        urlParams.append("tipoAccion", params.modo);
-      }
+    console.log("RESULTADO JSON:")
+    console.log(json)
 
-      const response = await fetch(
-        `/api/properties/search?${urlParams.toString()}`
-      );
+    setData(json)
 
-      if (!response.ok) {
-        throw new Error(`Error ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      setProperties(data);
-
-      const responseTime = Date.now() - startTime;
-      console.log(`Búsqueda completada en ${responseTime}ms`);
-
-    } catch (err) {
-
-      const message =
-        err instanceof Error ? err.message : "Error al buscar";
-
-      setError(message);
-      setProperties([]);
-
-    } finally {
-      setLoading(false);
-    }
-
-  }, []);
+  }
 
   return {
-    properties,
-    loading,
-    error,
+    data,
     searchProperties
-  };
+  }
+
 }
