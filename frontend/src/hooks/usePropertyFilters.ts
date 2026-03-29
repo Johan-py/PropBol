@@ -2,15 +2,15 @@
 import { useState, useCallback } from 'react';
 
 
-export type TipoInmueble = 'Casa' | 'Departamento' | 'Terreno' | 'Habitación' | 'Local';
-export type ModoTransaccion = 'venta' | 'alquiler' | 'anticretico';
+export type TipoInmueble =  'CASA' | 'DEPARTAMENTO' | 'TERRENO' | 'HABITACION' | 'LOCAL';
+export type ModoTransaccion = 'VENTA' | 'ALQUILER' | 'ANTICRETO';
 
 export function usePropertyFilters() {
 
   const [tiposSeleccionados, setTiposSeleccionados] = useState<TipoInmueble[]>([]);
   
 
-  const [modoSeleccionado, setModoSeleccionado] = useState<ModoTransaccion>('venta');
+  const [modoSeleccionado, setModoSeleccionado] = useState<ModoTransaccion>('VENTA');
 
 
   const handleTipoChange = useCallback((tipo: TipoInmueble) => {
@@ -33,7 +33,7 @@ export function usePropertyFilters() {
 
   const resetFilters = useCallback(() => {
     setTiposSeleccionados([]);
-    setModoSeleccionado('venta');
+    setModoSeleccionado('VENTA');
   }, []);
 
   return {

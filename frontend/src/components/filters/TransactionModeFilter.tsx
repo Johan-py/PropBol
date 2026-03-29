@@ -8,9 +8,9 @@ interface TransactionModeFilterProps {
 
 export default function TransactionModeFilter({ modoSeleccionado, onModoChange }: TransactionModeFilterProps) {
   const modos = [
-    { id: "venta", label: "Venta" },
-    { id: "alquiler", label: "Alquiler" },
-    { id: "anticretico", label: "Anticrético" }
+  { id: "VENTA", label: "Venta" },
+  { id: "ALQUILER", label: "Alquiler" },
+  { id: "ANTICRETO", label: "Anticrético" }
   ];
 
   return (
