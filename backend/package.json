@@ -8,6 +8,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@prisma/client": "^7.6.0",
     "@vercel/node": "^5.6.20",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
