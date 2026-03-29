@@ -53,5 +53,24 @@ export const mockProperties: PropertyMapPin[] = [
     bathrooms: 1,
     lat: -17.4,
     lng: -66.14
-  }
+  },
+  ...Array.from({ length: 21 }, (_, i) => {
+    const types = ['casa', 'departamento', 'terreno', 'local'] as const
+    const operations = ['venta', 'alquiler', 'anticretico'] as const
+
+    const type = types[i % types.length]
+    const operation = operations[i % operations.length]
+
+    return {
+      id: (i + 5).toString(),
+      title: `${type.charAt(0).toUpperCase() + type.slice(1)} ${i + 5}`,
+      price: 40000 + i * 5000,
+      type,
+      operation,
+      rooms: type === 'terreno' ? 0 : (i % 4) + 1,
+      bathrooms: type === 'terreno' ? 0 : (i % 3) + 1,
+      lat: -17.39 + (Math.random() - 0.5) * 0.05,
+      lng: -66.15 + (Math.random() - 0.5) * 0.05,
+    }
+  }),
 ]
