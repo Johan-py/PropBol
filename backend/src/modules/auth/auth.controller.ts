@@ -1,37 +1,45 @@
-import { Request, Response } from 'express'
-import { loginService, registerUser } from './auth.service.js'
+import { Request, Response } from "express";
+import { loginService, registerUser } from "./auth.service.js";
 
 type RegisterBody = {
-  nombre: string
-  apellido: string
-  correo: string
-  password: string
-  confirmPassword: string
-  telefono?: string
-}
+  nombre: string;
+  apellido: string;
+  correo: string;
+  password: string;
+  confirmPassword: string;
+  telefono?: string;
+};
 
-export const loginController = async (req: Request, res: Response) => {
+type LoginBody = {
+  correo: string;
+  password: string;
+};
+
+export const loginController = async (
+  req: Request<unknown, unknown, LoginBody>,
+  res: Response,
+) => {
   try {
-    const { email, password } = req.body
+    const { correo, password } = req.body;
 
-    const result = await loginService({ email, password })
+    const result = await loginService({ correo, password });
 
-    return res.status(200).json(result)
+    return res.status(200).json(result);
   } catch (error) {
     const message =
-      error instanceof Error ? error.message : 'Error interno del servidor'
+      error instanceof Error ? error.message : "Error interno del servidor";
 
-    return res.status(400).json({ message })
+    return res.status(400).json({ message });
   }
-}
+};
 
 export const registerController = async (
   req: Request<unknown, unknown, RegisterBody>,
-  res: Response
+  res: Response,
 ) => {
   try {
     const { nombre, apellido, correo, password, confirmPassword, telefono } =
-      req.body
+      req.body;
 
     const user = await registerUser({
       nombre,
@@ -39,17 +47,17 @@ export const registerController = async (
       correo,
       password,
       confirmPassword,
-      telefono
-    })
+      telefono,
+    });
 
     return res.status(201).json({
-      message: 'Usuario registrado correctamente',
-      user
-    })
+      message: "Usuario registrado correctamente",
+      user,
+    });
   } catch (error) {
     const message =
-      error instanceof Error ? error.message : 'Error interno del servidor'
+      error instanceof Error ? error.message : "Error interno del servidor";
 
-    return res.status(400).json({ message })
+    return res.status(400).json({ message });
   }
-}
+};
