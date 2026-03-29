@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "bun --hot src/index.ts",
     "build": "tsc",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.5.0",
