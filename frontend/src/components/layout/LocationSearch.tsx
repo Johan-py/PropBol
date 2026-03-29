@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { MapPin, Search, Loader2, X } from 'lucide-react'
-
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 type Location = {
   id: string | number
   nombre: string
@@ -42,7 +42,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
       setIsLoading(true)
       try {
         const res = await fetch(
-          `http://localhost:5000/api/locations/search?q=${encodeURIComponent(value)}`
+          `${API_URL}/api/locations/search?q=${encodeURIComponent(value)}`
         )
         if (res.ok) {
           const data = await res.json()
