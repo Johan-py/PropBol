@@ -130,24 +130,26 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b shadow-sm">
+      <nav className="sticky top-0 z-40 bg-white border-b shadow-sm w-full">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
+            
             <Link
               href="/"
-              className="text-xl font-bold text-blue-600 hover:text-blue-700 transition"
+              className="flex items-center gap-2 text-xl font-bold text-black hover:text-gray-700 transition p-1 rounded"
             >
+              <div className="w-8 h-8 bg-black rounded-sm"></div>
               PropBol
             </Link>
 
-            <div className="flex items-center gap-6 text-sm font-medium text-gray-700">
-              <Link href="/" className="hover:text-blue-600 transition">
+            <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-700">
+              <Link href="/" className="hover:text-black hover:shadow-sm transition p-1 rounded">
                 Inicio
               </Link>
-              <Link href="#contacto" className="hover:text-blue-600 transition">
+              <Link href="#contacto" className="hover:text-black hover:shadow-sm transition p-1 rounded">
                 Contáctanos
               </Link>
-              <Link href="#nosotros" className="hover:text-blue-600 transition">
+              <Link href="#nosotros" className="hover:text-black hover:shadow-sm transition p-1 rounded">
                 Sobre Nosotros
               </Link>
             </div>
@@ -155,45 +157,60 @@ export default function Navbar() {
             <div className="relative" ref={panelRef}>
               <button
                 onClick={togglePanel}
-                className="bg-gray-100 px-4 py-2 rounded-xl font-semibold text-gray-700 shadow-sm hover:bg-gray-200 hover:shadow transition duration-200"
+                className="p-2 text-gray-700 rounded-full hover:bg-gray-100 hover:shadow-sm transition duration-200 focus:outline-none"
+                aria-label="Menú de usuario"
               >
-                Usuario
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
               </button>
 
               <div
-                className={`absolute right-0 mt-3 w-64 rounded-2xl border bg-white shadow-xl p-4 z-50 transition-all duration-200 ${
+                className={`absolute right-0 mt-3 w-72 rounded-2xl border bg-white shadow-xl p-5 z-50 transition-all duration-200 ${
                   isPanelOpen
                     ? 'opacity-100 translate-y-0 visible'
                     : 'opacity-0 -translate-y-2 invisible pointer-events-none'
                 }`}
               >
+                <div className="flex justify-between items-center mb-4 border-b pb-2">
+                  <span className="font-bold text-sm text-gray-900">Bienvenido a PropBol</span>
+                  <button onClick={() => setIsPanelOpen(false)} className="text-gray-500 hover:text-black hover:shadow-sm rounded transition px-1">✕</button>
+                </div>
+
                 {user ? (
                   <>
-                    <p className="font-bold text-gray-800">{user.name}</p>
-                    <p className="text-sm text-gray-500 mb-4">{user.email}</p>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-10 h-10 bg-gray-500 rounded-full"></div> 
+                      <div>
+                        <p className="font-bold text-gray-800 text-sm">{user.name}</p>
+                        <p className="text-xs text-gray-500">{user.email}</p>
+                      </div>
+                    </div>
 
                     <Link
                       href="/perfil"
-                      className="block text-blue-600 font-medium mb-4 hover:text-blue-700 transition"
+                      className="flex justify-between w-full text-black font-bold mb-4 hover:shadow-sm p-1 rounded transition text-sm"
                       onClick={() => setIsPanelOpen(false)}
                     >
-                      Mi perfil
+                      Mi perfil <span>&gt;</span>
                     </Link>
 
                     <button
                       onClick={handleOpenLogoutModal}
-                      className="w-full bg-[#e83017] text-white py-2 rounded-xl font-bold shadow-md hover:opacity-90 transition"
+                      className="w-full bg-[#ff0050] text-white py-2 rounded-lg font-bold shadow-md hover:opacity-90 hover:shadow-lg transition text-sm"
                     >
                       Cerrar Sesión
                     </button>
                   </>
                 ) : (
-                  <button
-                    onClick={handleLoginMock}
-                    className="w-full bg-blue-600 text-white py-2 rounded-xl font-semibold shadow-md hover:bg-blue-700 transition"
-                  >
-                    Ingresar / Registrarse
-                  </button>
+                  <div className="text-center py-2">
+                    <button
+                      onClick={handleLoginMock}
+                      className="text-sm font-semibold text-gray-600 hover:text-black hover:shadow-sm p-2 rounded transition w-full"
+                    >
+                      Ingresar / Registrarse
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
@@ -207,7 +224,7 @@ export default function Navbar() {
         }`}
       >
         <div
-          className={`bg-white w-[360px] rounded-2xl shadow-xl px-6 py-5 transition-all duration-200 ${
+          className={`bg-white w-[360px] rounded-2xl shadow-xl px-6 py-5 text-center transition-all duration-200 ${
             showLogoutModal ? 'scale-100 translate-y-0' : 'scale-95 translate-y-2'
           }`}
         >
@@ -215,15 +232,15 @@ export default function Navbar() {
             ¿Cerrar Sesión?
           </h2>
 
-          <p className="text-sm text-gray-500 mb-5">
+          <p className="text-sm text-gray-500 mb-6">
             Se finalizará tu sesión actual en este dispositivo.
           </p>
 
-          <div className="flex justify-end gap-3">
+          <div className="flex justify-center gap-4">
             <button
               onClick={handleCancelLogout}
               disabled={isLoggingOut}
-              className="px-5 py-2 rounded-lg bg-gray-100 text-gray-600 font-semibold hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-5 py-2 rounded-lg bg-gray-100 text-gray-800 font-semibold hover:bg-gray-200 hover:shadow-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancelar
             </button>
