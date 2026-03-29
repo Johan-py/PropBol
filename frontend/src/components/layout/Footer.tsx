@@ -20,7 +20,7 @@ const exploreActions: FooterAction[] = [
 const companyActions: FooterAction[] = [
   { label: 'Sobre Nosotros', href: '/sobre-nosotros' },
   { label: 'Términos y Condiciones' }, // TODO: '/terminos-y-condiciones'
-  { label: 'Políticas de Privacidad' } // TODO: '/politicas-de-privacidad'
+  { label: 'Políticas de Privacidad', href: '/politicas-privacidad' }
 ]
 
 const socialActions: FooterAction[] = [
