@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Filter } from 'lucide-react';
 import { useFilterLogic } from '@/hooks/useFilterLogic';
+import { div } from 'framer-motion/m';
 
 // Función auxiliar para normalizar el texto (Cochabamba, Santa Cruz, etc.)
 const formatName = (text: string) => {
@@ -54,25 +55,26 @@ export default function FilterPanel() {
           onClick={rentalsLogic.toggleSort} 
           className="text-sm font-medium text-orange-400 hover:text-orange-600 outline-none"
         >
-          {rentalsLogic.sortOrder === 'none' ? 'Ordenar' : rentalsLogic.sortOrder === 'asc' ? 'A↓' : 'A↑'}
+          {rentalsLogic.sortOrder === 'asc' ? 'Ordenar A↓' : 'Ordenar A↑'}
         </button>
       </div>
 
       {/* SECCIÓN: ALQUILERES */}
       <section className="mt-4">
         <h3 className="text-xl font-bold text-black mb-3 border-b-2 border-black inline-block">Alquileres</h3>
-        <div className="flex flex-col gap-2 mt-2">
+        <div className={`flex flex-col gap-2 mt-2 ${rentalsLogic.viewLevel > 2 ? 'max-h-60 overflow-y-auto pr-2' : ''}`}>
           {rentalsLogic.getVisibleData(rentalsData).map((city: any, index: number) => (
             <div key={index} className="flex justify-between items-center text-lg gap-3">
-              {/* Normalizamos el nombre aquí con formatName */}
-              <span className="text-gray-400 hover:text-gray-600 cursor-pointer truncate flex-1">
-                {formatName(city.name)}
-              </span>
-              <span className="text-gray-400 whitespace-nowrap">{city.count.toLocaleString()} casas</span>
+            <span className="text-gray-400 hover:text-gray-600 cursor-pointer transition-colors truncate flex-1 text-base">
+               {city.name}
+            </span>
+            <span className="text-gray-400 whitespace-nowrap flex-shrink-0 text-sm md:text-base font-medium">
+               {city.count.toLocaleString()} casas
+            </span>
             </div>
           ))}
           {rentalsLogic.viewLevel < 3 && rentalsData.length > 2 ? (
-            <button onClick={rentalsLogic.handleSeeMore} className="text-sm text-orange-400 underline mt-1 w-fit">Ver más {'>'}</button>
+            <button onClick={rentalsLogic.handleSeeMore} className="text-sm text-orange-400 underline mt-1 w-fit">{salesLogic.viewLevel === 1 ? 'Ver más >' : 'Mostrar todo >'}</button>
           ) : rentalsData.length > 2 && (
             <button onClick={rentalsLogic.handleSeeLess} className="text-sm text-orange-400 underline mt-1 w-fit ml-auto">{'<'} Ver menos</button>
           )}
@@ -82,7 +84,7 @@ export default function FilterPanel() {
       {/* SECCIÓN: EN VENTA */}
       <section className="mt-8">
         <h3 className="text-xl font-bold text-black mb-3 border-b-2 border-black inline-block">En venta</h3>
-        <div className="flex flex-col gap-2 mt-2">
+        <div className={`flex flex-col gap-2 mt-2 ${salesLogic.viewLevel > 2 ? 'max-h-60 overflow-y-auto pr-2' : ''}`}>
           {salesLogic.getVisibleData(salesData).map((city: any, index: number) => (
             <div key={index} className="flex justify-between items-center text-lg gap-3">
               <span className="text-gray-400 hover:text-gray-600 cursor-pointer truncate flex-1">
@@ -92,19 +94,19 @@ export default function FilterPanel() {
             </div>
           ))}
           {salesLogic.viewLevel < 3 && salesData.length > 2 ? (
-            <button onClick={salesLogic.handleSeeMore} className="text-sm text-orange-400 underline mt-1 w-fit">Ver más {'>'}</button>
+            <button onClick={salesLogic.handleSeeMore} className="text-sm text-orange-400 underline mt-1 w-fit">{rentalsLogic.viewLevel === 1 ? 'Ver más >' : 'Mostrar todo >'}</button>
           ) : salesData.length > 2 && (
             <button onClick={salesLogic.handleSeeLess} className="text-sm text-orange-400 underline mt-1 w-fit ml-auto">{'<'} Ver menos</button>
           )}
         </div>
       </section>
 
-      {/* SECCIÓN: POR TIPO DE INMUEBLE (Título actualizado) */}
+      {/* SECCIÓN: POR TIPO DE INMUEBLE  */}
       <section className="mt-8">
         <h3 className="text-xl font-bold text-black mb-3 border-b-2 border-black inline-block">
           Por tipo de inmueble
         </h3>
-        <div className="flex flex-col gap-2 mt-2">
+        <div className={`flex flex-col gap-2 mt-2 ${typesLogic.viewLevel > 2 ? 'max-h-60 overflow-y-auto pr-2' : ''}`}>
           {typesLogic.getVisibleData(typesData).map((type: any, index: number) => (
             <div key={index} className="flex justify-between items-center text-lg gap-3">
               <span className="text-gray-400 hover:text-gray-600 cursor-pointer truncate flex-1">
@@ -114,7 +116,9 @@ export default function FilterPanel() {
             </div>
           ))}
           {typesLogic.viewLevel < 3 && typesData.length > 2 ? (
-            <button onClick={typesLogic.handleSeeMore} className="text-sm text-orange-400 underline mt-1 w-fit">Ver más {'>'}</button>
+            <button onClick={typesLogic.handleSeeMore} className="text-sm text-orange-400 underline mt-1 w-fit">
+  {typesLogic.viewLevel === 1 ? 'Ver más >' : 'Mostrar todo >'}
+</button>
           ) : typesData.length > 2 && (
             <button onClick={typesLogic.handleSeeLess} className="text-sm text-orange-400 underline mt-1 w-fit ml-auto">{'<'} Ver menos</button>
           )}
