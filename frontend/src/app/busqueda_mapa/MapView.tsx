@@ -65,13 +65,13 @@ function createPinIcon(
 
 //Centrar mapa
 function FlyToSelected({ property }: { property?: PropertyMapPin }) {
-  const map = useMap()
+  const map = useMap();
 
   useEffect(() => {
     if (property) {
-      map.flyTo([property.lat, property.lng], 15, { duration: 1.5 })
+      map.flyTo([property.lat, property.lng], 15, { duration: 1.5 });
     }
-  }, [property, map])
+  }, [property, map]);
 
-  return null
+  return null;
 }
