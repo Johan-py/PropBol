@@ -5,13 +5,15 @@ import dynamic from 'next/dynamic'
 import { ChevronLeft } from 'lucide-react'
 import FilterBar from '@/components/FilterBar'
 
-import HeaderPanel from '@/components/galeria/HeaderPanel' // lo modificaremos para solo botones
+import HeaderPanel from '@/components/galeria/HeaderPanel'
 import PropertyRow from '@/components/galeria/PropertyRow'
+import EmptyState from '@/components/galeria/EmptyState'
 
 const MapView = dynamic(() => import('./MapView'), { ssr: false })
 
 export default function BusquedaMapaPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  // Nuestra lista inicia vacía para probar el estado "Sin resultados"
   const [data, setData] = useState<any[]>([])
 
   return (
@@ -46,7 +48,7 @@ export default function BusquedaMapaPage() {
                 <div>
                   <h1 className="text-xl font-bold text-gray-900">Lista de Inmuebles</h1>
                   <p className="text-sm text-gray-500 mt-0.5">
-                    {data.length > 0 ? data.length : 3} encontrado{ (data.length > 0 ? data.length : 3) !== 1 ? 's' : ''}
+                    {data.length} encontrado{data.length !== 1 ? 's' : ''}
                   </p>
                 </div>
 
@@ -66,8 +68,8 @@ export default function BusquedaMapaPage() {
                     <span className="text-[9px] font-bold text-gray-500 text-center">Contacto</span>
                   </div>
 
-                  {/* Filas */}
-                  <div className="divide-y divide-gray-50">
+                  {/* Filas o Estado Vacío */}
+                  <div className="divide-y divide-gray-50 flex-1 flex flex-col min-h-[300px]">
                     {data.length > 0 ? (
                       data.map((item, index) => (
                         <PropertyRow
@@ -80,29 +82,7 @@ export default function BusquedaMapaPage() {
                         />
                       ))
                     ) : (
-                      <>
-                        <PropertyRow 
-                          title="Casa Obra Gruesa..." 
-                          price="$us 189K" 
-                          size="272 m²" 
-                          contactType="whatsapp"
-                          image="https://images.unsplash.com/photo-1568605114967-8130f3a36994"
-                        />
-                        <PropertyRow 
-                          title="Depto Minimalista..." 
-                          price="Bs 950K" 
-                          size="110 m²" 
-                          contactType="messenger"
-                          image="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688"
-                        />
-                        <PropertyRow 
-                          title="Terreno Comercial" 
-                          price="$us 85K" 
-                          size="500 m²" 
-                          contactType="whatsapp"
-                          image="https://images.unsplash.com/photo-1500382017468-9049fed747ef"
-                        />
-                      </>
+                      <EmptyState />
                     )}
                   </div>
                 </div>
