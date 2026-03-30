@@ -13,6 +13,7 @@ export default function ResumenCompra() {
   const planNombre = searchParams.get('nombre');
   const planPrecio = searchParams.get('precio'); // Este viene como string
   const planDuracion = searchParams.get('duracion');
+  const planIcono = searchParams.get('icono'); // Icono del plan (emoji o URL)
 
   // Convertir el precio a número para hacer cálculos
   const precioNumerico = planPrecio ? parseFloat(planPrecio) : 0;
@@ -37,6 +38,33 @@ export default function ResumenCompra() {
   const formatearPrecio = (valor: number) => {
     return valor.toFixed(2);
   };
+
+  // Función para obtener el icono según el tipo de plan (si no viene en la URL)
+  const obtenerIconoPorPlan = (nombre: string) => {
+    const nombreLower = nombre?.toLowerCase() || '';
+    if (nombreLower.includes('básico') || nombreLower.includes('basico')) return '📦';
+    if (nombreLower.includes('estándar') || nombreLower.includes('estandar')) return '📦';
+    if (nombreLower.includes('premium')) return '📦';
+    if (nombreLower.includes('empresarial')) return '📦';
+    return '📦'; // Icono por defecto
+  };
+
+  // Determinar qué icono mostrar
+  const iconoMostrar = planIcono || obtenerIconoPorPlan(planNombre || '');
+
+  // Datos de prueba (comenta cuando tengas integración real)
+  const MOCK_PLAN = {
+    nombre: 'Plan Estándar',
+    precio: '59.00',
+    duracion: 'Mensual',
+    icono: '📦'
+  };
+  
+  // Usar datos reales o de prueba
+  const nombreMostrar = planNombre || MOCK_PLAN.nombre;
+  const precioMostrar = planPrecio || MOCK_PLAN.precio;
+  const duracionMostrar = planDuracion || MOCK_PLAN.duracion;
+  const iconoMostrarFinal = iconoMostrar || MOCK_PLAN.icono;
 
   // Si no hay datos del plan, mostrar mensaje de error
   //if (!planId || !planNombre || !planPrecio) {
@@ -94,6 +122,29 @@ export default function ResumenCompra() {
           Resumen de compra
         </h1>
       </div>
+
+      {/* BLOQUE DE SUSCRIPCIÓN SELECCIONADA - DINÁMICO */}
+        <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+          <div className="flex items-center gap-4">
+            {/* Icono del plan (dinámico según el plan seleccionado) */}
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center text-3xl shadow-sm">
+              {iconoMostrarFinal}
+            </div>
+
+            {/* Nombre del plan (dinámico según el plan seleccionado) */}
+            <div>
+              <h2 className="text-xl font-bold text-gray-800">
+                {nombreMostrar}
+              </h2>
+              {duracionMostrar && (
+                <p className="text-sm text-gray-500 mt-1">
+                  Pago {duracionMostrar.toLowerCase()}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      
 
        {/* METODOS DE PAGO */}
       <div className="bg-white p-6 rounded-xl shadow-md">
