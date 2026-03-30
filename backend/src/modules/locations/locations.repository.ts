@@ -1,17 +1,11 @@
-import { PrismaClient } from '@prisma/client';
-import { Pool } from 'pg';
-import { PrismaPg } from '@prisma/adapter-pg';
-
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
-const prisma = new PrismaClient({ adapter });
+import prisma from '../../lib/prisma.js' // Ruta relativa correcta
 
 export class LocationsRepository {
   async findByName(query: string) {
     return await prisma.ubicacion_maestra.findMany({
       where: {
         OR: [
-          { nombre: { contains: query, mode: 'insensitive' } },//Esta es la zona porsiacaso en la bd esta como nombre
+          { nombre: { contains: query, mode: 'insensitive' } },
           { municipio: { contains: query, mode: 'insensitive' } },
         ],
       },
@@ -25,7 +19,7 @@ export class LocationsRepository {
       take: 5,
     });
   }
-  //Incrementa la popularidad de una ubicación dada su ID -- BitPro
+
   async incrementPopularity(id: number) {
     return await prisma.ubicacion_maestra.update({
       where: { id: id },
