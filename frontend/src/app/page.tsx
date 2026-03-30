@@ -49,7 +49,6 @@ export default async function Home() {
       {/* Contenido Unificado: Tu FilterPanel + ExploreSection */}
       <div className="container mx-auto px-4 py-12">
         <div className="flex flex-col lg:flex-row gap-8 items-start">
-          
           {/* Tu sección de Filtros (Columna Izquierda) */}
           <aside className="w-full lg:w-80 shrink-0 sticky top-24">
             <FilterPanel />
@@ -59,7 +58,6 @@ export default async function Home() {
           <section className="flex-1 w-full">
             <ExploreSection />
           </section>
-
         </div>
       </div>
     </main>

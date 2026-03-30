@@ -1,16 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import {
-  Eye,
-  EyeOff,
-  Mail,
-  User,
-  Phone,
-  Lock,
-  AlertCircle,
-  Chrome
-} from 'lucide-react'
+import { Eye, EyeOff, Mail, User, Phone, Lock, AlertCircle, Chrome } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { validateEmail, validatePassword } from '@/lib/validators/auth'
@@ -61,38 +52,20 @@ function getInputClasses(hasError?: boolean, hasRightIcon?: boolean) {
   ].join(' ')
 }
 
-function FieldError({
-  id,
-  error
-}: {
-  id: string
-  error?: string
-}) {
+function FieldError({ id, error }: { id: string; error?: string }) {
   if (!error) return null
 
   return (
-    <p
-      id={id}
-      className="mt-1 flex items-center gap-1 text-[11px] text-red-500"
-    >
+    <p id={id} className="mt-1 flex items-center gap-1 text-[11px] text-red-500">
       <AlertCircle size={12} />
       <span>{error}</span>
     </p>
   )
 }
 
-function FieldLabel({
-  htmlFor,
-  children
-}: {
-  htmlFor: string
-  children: React.ReactNode
-}) {
+function FieldLabel({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) {
   return (
-    <label
-      htmlFor={htmlFor}
-      className="mb-1 block text-[12px] font-medium text-[#292524]"
-    >
+    <label htmlFor={htmlFor} className="mb-1 block text-[12px] font-medium text-[#292524]">
       {children}
     </label>
   )
@@ -167,66 +140,65 @@ export default function SignUpForm() {
     return undefined
   }
 
-  const handleChange =
-    (field: keyof FormData) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      const rawValue = event.target.value
-      const value = field === 'email' ? rawValue.trimStart() : rawValue
+  const handleChange = (field: keyof FormData) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = event.target.value
+    const value = field === 'email' ? rawValue.trimStart() : rawValue
 
-      setFormData((prev) => ({
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value
+    }))
+
+    setServerError('')
+
+    if (field === 'email') {
+      setErrors((prev) => ({
         ...prev,
-        [field]: value
+        email: validateEmail(value) || undefined
       }))
-
-      setServerError('')
-
-      if (field === 'email') {
-        setErrors((prev) => ({
-          ...prev,
-          email: validateEmail(value) || undefined
-        }))
-      }
-
-      if (field === 'firstName') {
-        setErrors((prev) => ({
-          ...prev,
-          firstName: validateFirstName(value)
-        }))
-      }
-
-      if (field === 'lastName') {
-        setErrors((prev) => ({
-          ...prev,
-          lastName: validateLastName(value)
-        }))
-      }
-
-      if (field === 'phone') {
-        setErrors((prev) => ({
-          ...prev,
-          phone: validatePhone(value)
-        }))
-      }
-
-      if (field === 'password') {
-        const passwordError = validatePassword(value)
-
-        setErrors((prev) => ({
-          ...prev,
-          password: passwordError || undefined,
-          confirmPassword:
-            formData.confirmPassword.trim() === ''
-              ? prev.confirmPassword
-              : validateConfirmPassword(formData.confirmPassword, value)
-        }))
-      }
-
-      if (field === 'confirmPassword') {
-        setErrors((prev) => ({
-          ...prev,
-          confirmPassword: validateConfirmPassword(value, formData.password)
-        }))
-      }
     }
+
+    if (field === 'firstName') {
+      setErrors((prev) => ({
+        ...prev,
+        firstName: validateFirstName(value)
+      }))
+    }
+
+    if (field === 'lastName') {
+      setErrors((prev) => ({
+        ...prev,
+        lastName: validateLastName(value)
+      }))
+    }
+
+    if (field === 'phone') {
+      setErrors((prev) => ({
+        ...prev,
+        phone: validatePhone(value)
+      }))
+    }
+
+    if (field === 'password') {
+      const passwordError = validatePassword(value)
+
+      setErrors((prev) => ({
+        ...prev,
+        password: passwordError || undefined,
+        confirmPassword:
+          formData.confirmPassword.trim() === ''
+            ? prev.confirmPassword
+            : validateConfirmPassword(formData.confirmPassword, value)
+      }))
+    }
+
+    if (field === 'confirmPassword') {
+      setErrors((prev) => ({
+        ...prev,
+        confirmPassword: validateConfirmPassword(value, formData.password)
+      }))
+    }
+  }
 
   const handleBlur = (field: keyof FormData) => () => {
     setTouched((prev) => ({
@@ -272,10 +244,7 @@ export default function SignUpForm() {
     if (field === 'confirmPassword') {
       setErrors((prev) => ({
         ...prev,
-        confirmPassword: validateConfirmPassword(
-          formData.confirmPassword,
-          formData.password
-        )
+        confirmPassword: validateConfirmPassword(formData.confirmPassword, formData.password)
       }))
     }
   }
@@ -324,10 +293,7 @@ export default function SignUpForm() {
       lastName: validateLastName(formData.lastName),
       phone: validatePhone(formData.phone),
       password: validatePassword(formData.password) || undefined,
-      confirmPassword: validateConfirmPassword(
-        formData.confirmPassword,
-        formData.password
-      )
+      confirmPassword: validateConfirmPassword(formData.confirmPassword, formData.password)
     }
 
     setErrors(newErrors)
@@ -441,10 +407,7 @@ export default function SignUpForm() {
                   aria-describedby="email-error"
                 />
               </div>
-              <FieldError
-                id="email-error"
-                error={touched.email ? errors.email : undefined}
-              />
+              <FieldError id="email-error" error={touched.email ? errors.email : undefined} />
             </div>
 
             <div>
@@ -459,9 +422,7 @@ export default function SignUpForm() {
                   onChange={handleChange('firstName')}
                   onBlur={handleBlur('firstName')}
                   placeholder="Ingresa tu nombre"
-                  className={getInputClasses(
-                    Boolean(touched.firstName && errors.firstName)
-                  )}
+                  className={getInputClasses(Boolean(touched.firstName && errors.firstName))}
                   aria-invalid={Boolean(touched.firstName && errors.firstName)}
                   aria-describedby="firstName-error"
                 />
@@ -484,9 +445,7 @@ export default function SignUpForm() {
                   onChange={handleChange('lastName')}
                   onBlur={handleBlur('lastName')}
                   placeholder="Ingresa tu apellido"
-                  className={getInputClasses(
-                    Boolean(touched.lastName && errors.lastName)
-                  )}
+                  className={getInputClasses(Boolean(touched.lastName && errors.lastName))}
                   aria-invalid={Boolean(touched.lastName && errors.lastName)}
                   aria-describedby="lastName-error"
                 />
@@ -514,10 +473,7 @@ export default function SignUpForm() {
                   aria-describedby="phone-error"
                 />
               </div>
-              <FieldError
-                id="phone-error"
-                error={touched.phone ? errors.phone : undefined}
-              />
+              <FieldError id="phone-error" error={touched.phone ? errors.phone : undefined} />
             </div>
 
             <div>
@@ -544,9 +500,7 @@ export default function SignUpForm() {
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
                   className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-[#78716c] hover:bg-[#f5f5f4] hover:text-[#292524]"
-                  aria-label={
-                    showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'
-                  }
+                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                 >
                   {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
@@ -558,9 +512,7 @@ export default function SignUpForm() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="confirmPassword">
-                Confirmar contraseña
-              </FieldLabel>
+              <FieldLabel htmlFor="confirmPassword">Confirmar contraseña</FieldLabel>
               <div className="relative">
                 <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#78716c]" />
                 <input
@@ -576,9 +528,7 @@ export default function SignUpForm() {
                     Boolean(touched.confirmPassword && errors.confirmPassword),
                     true
                   )} hide-native-password-toggle`}
-                  aria-invalid={Boolean(
-                    touched.confirmPassword && errors.confirmPassword
-                  )}
+                  aria-invalid={Boolean(touched.confirmPassword && errors.confirmPassword)}
                   aria-describedby="confirmPassword-error"
                 />
                 <button
@@ -591,18 +541,12 @@ export default function SignUpForm() {
                       : 'Mostrar confirmación de contraseña'
                   }
                 >
-                  {showConfirmPassword ? (
-                    <EyeOff size={15} />
-                  ) : (
-                    <Eye size={15} />
-                  )}
+                  {showConfirmPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
               </div>
               <FieldError
                 id="confirmPassword-error"
-                error={
-                  touched.confirmPassword ? errors.confirmPassword : undefined
-                }
+                error={touched.confirmPassword ? errors.confirmPassword : undefined}
               />
             </div>
 
