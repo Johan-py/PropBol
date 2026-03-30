@@ -1,17 +1,21 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import dynamic from 'next/dynamic'
 import { 
   ChevronLeft, LayoutGrid, List, Search, MapPin, 
-  DollarSign, Home, Building, Square, ChevronRight,
-  MessageCircle, Image as ImageIcon
+  DollarSign, Home, Building, Square, ChevronRight
 } from 'lucide-react'
+
+// Datos Mockeados
 import { mockCasas } from '@/data/mockCasas'
 
-// Componentes de Dev 3
+// Componentes
 import PropertyCard from '@/components/layout/PropertyCard'
+import PropertyRow from '@/components/galeria/PropertyRow'
+import EmptyState from '@/components/galeria/EmptyState'
 
+// Carga dinámica del mapa para evitar errores de SSR en Next.js
 const MapView = dynamic(() => import('./MapView'), { ssr: false })
 
 export default function BusquedaMapaPage() {
@@ -20,6 +24,7 @@ export default function BusquedaMapaPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [data] = useState(mockCasas) 
 
+  // Lógica de Dev 3: Filtrar datos según la búsqueda
   const filteredData = data.filter(casa => 
     casa.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
   )
@@ -27,11 +32,11 @@ export default function BusquedaMapaPage() {
   return (
     <div className="flex flex-col h-screen bg-white overflow-hidden">
       
-      {/* HEADER PRINCIPAL - Copiado fielmente de tu primera imagen */}
+      {/* HEADER PRINCIPAL */}
       <header className="w-full p-4 border-b border-gray-200 bg-white shrink-0 z-20">
         <div className="max-w-7xl mx-auto flex flex-col gap-4">
           
-          {/* Fila 1: Botoncitos de tipo de contrato (Venta, Alquiler, Anticrético) */}
+          {/* Fila 1: Botoncitos de tipo de contrato */}
           <div className="flex items-center justify-center gap-6 text-sm">
             <label className="flex items-center gap-2 cursor-pointer group">
               <input type="checkbox" className="w-5 h-5 accent-orange-600 rounded border-gray-300" defaultChecked />
@@ -80,67 +85,62 @@ export default function BusquedaMapaPage() {
         <aside className={`bg-white border-r border-stone-200 flex flex-col z-10 transition-all duration-300 ${isSidebarOpen ? 'w-full md:w-[450px]' : 'w-0'}`}>
           {isSidebarOpen && (
             <>
-              {/* CABECERA PANEL */}
+              {/* Botón de ocultar Panel */}
+              <div className="p-3 border-b border-stone-200 flex items-center bg-stone-50 shrink-0">
+                <button 
+                  onClick={() => setIsSidebarOpen(false)} 
+                  className="flex items-center text-xs font-medium text-stone-500 hover:text-stone-700 transition-colors"
+                >
+                  <ChevronLeft className="w-4 h-4 mr-1"/> Ocultar
+                </button>
+              </div>
+
+              {/* CABECERA DE LA LISTA */}
               <div className="p-4 border-b border-stone-100 flex items-center justify-between bg-white shrink-0">
                 <div className="flex flex-col">
                   <h2 className="text-xl font-bold text-slate-900">
                     {searchTerm ? `Resultados: ${searchTerm}` : 'Lista de Inmuebles'}
                   </h2>
-                  <p className="text-xs text-stone-400 font-medium">
-                    {filteredData.length} encontrados
+                  <p className="text-xs text-stone-400 font-medium mt-0.5">
+                    {filteredData.length} encontrado{filteredData.length !== 1 ? 's' : ''}
                   </p>
                 </div>
                 
-                {/* Botones Grid/List del Dev 2 */}
-                <div className="flex bg-stone-100 p-1 rounded-md border border-stone-200">
+                {/* Botones Toggle Grid/List */}
+                <div className="flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner">
                   <button 
                     onClick={() => setViewMode('grid')}
-                    className={`p-1.5 rounded ${viewMode === 'grid' ? 'bg-white text-orange-600 shadow-sm' : 'text-stone-400'}`}
+                    className={`p-1.5 rounded transition-colors ${viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400 hover:text-stone-600'}`}
                   >
                     <LayoutGrid size={18} />
                   </button>
                   <button 
                     onClick={() => setViewMode('list')}
-                    className={`p-1.5 rounded ${viewMode === 'list' ? 'bg-white text-orange-600 shadow-sm' : 'text-stone-400'}`}
+                    className={`p-1.5 rounded transition-colors ${viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400 hover:text-stone-600'}`}
                   >
                     <List size={18} />
                   </button>
                 </div>
               </div>
 
-              {/* CONTENIDO SCROLL */}
+              {/* CONTENIDO (AQUÍ USAMOS TUS COMPONENTES) */}
               <div className="flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar">
                 {filteredData.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-20 text-center">
-                    <Search className="w-12 h-12 text-stone-300 mb-2" />
-                    <p className="text-stone-500 font-bold">Uy, no encontramos inmuebles</p>
-                  </div>
+                  <EmptyState />
                 ) : (
-                  <div className="flex flex-col gap-6">
+                  <div className={`gap-4 ${viewMode === 'grid' ? 'flex flex-col' : 'divide-y divide-gray-100 flex flex-col bg-white border border-gray-100 rounded-xl shadow-sm'}`}>
                     {filteredData.map((inmueble) => (
-                      <div key={inmueble.id}>
+                      <div key={inmueble.id} className={viewMode === 'list' ? 'py-1' : ''}>
                         {viewMode === 'grid' ? (
                           <PropertyCard {...inmueble} />
                         ) : (
-                          /* Vista de Tabla/Fila del Dev 2 */
-                          <div className="flex gap-4 bg-white p-3 rounded-xl border border-stone-200 hover:shadow-md transition-all">
-                            <div className="w-24 h-20 bg-stone-100 rounded-lg overflow-hidden shrink-0">
-                              {inmueble.imagen ? (
-                                <img src={inmueble.imagen} className="w-full h-full object-cover" />
-                              ) : (
-                                <div className="flex items-center justify-center h-full"><ImageIcon className="text-stone-300" /></div>
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h4 className="font-bold text-orange-600">{inmueble.precio}</h4>
-                              <p className="text-[11px] text-stone-500 line-clamp-1">{inmueble.descripcion}</p>
-                              <div className="flex gap-2 mt-1 text-[9px] text-stone-400 font-bold uppercase">
-                                <span>{inmueble.camas} Dorm.</span>
-                                <span>{inmueble.metros} m²</span>
-                              </div>
-                            </div>
-                            <a href="#" className="self-center p-2 text-green-500"><MessageCircle size={20} /></a>
-                          </div>
+                          <PropertyRow
+                            title={inmueble.descripcion}
+                            price={inmueble.precio}
+                            size={`${inmueble.camas} Dorm. • ${inmueble.metros} m²`}
+                            contactType="whatsapp" 
+                            image={inmueble.imagen || ''}
+                          />
                         )}
                       </div>
                     ))}
@@ -151,15 +151,23 @@ export default function BusquedaMapaPage() {
           )}
         </aside>
 
+        {/* ÁREA DEL MAPA */}
         <section className="flex-1 relative bg-stone-200">
           {!isSidebarOpen && (
-            <button onClick={() => setIsSidebarOpen(true)} className="absolute left-0 top-4 z-[1000] bg-white text-black shadow-md rounded-r-md flex flex-col items-center py-4 px-2 gap-4">
+            <button 
+              onClick={() => setIsSidebarOpen(true)} 
+              className="absolute left-0 top-4 z-[1000] bg-white text-black shadow-md rounded-r-md flex flex-col items-center py-4 px-2 gap-4 hover:bg-stone-50 transition-colors"
+            >
               <ChevronRight size={16} />
-              <span className="[writing-mode:vertical-lr] rotate-180 text-[10px] font-bold tracking-widest uppercase">Inmuebles</span>
-              <List size={16} />
+              <span className="[writing-mode:vertical-lr] rotate-180 text-[10px] font-bold tracking-widest uppercase text-stone-600">
+                Inmuebles
+              </span>
+              <List size={16} className="text-stone-500" />
             </button>
           )}
-          <div className="absolute inset-0"><MapView /></div>
+          <div className="absolute inset-0">
+            <MapView />
+          </div>
         </section>
       </main>
     </div>
