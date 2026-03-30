@@ -118,17 +118,9 @@ export default function Navbar() {
     setIsPanelOpen(!isPanelOpen)
   }
 
-  const handleLoginMock = () => {
-    const mockUser: User = {
-      name: 'Juan Perez',
-      email: 'juan.perez@gmail.com',
-    }
-
-    const expiresAt = Date.now() + SESSION_DURATION_MS
-
-    setUser(mockUser)
-    localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(mockUser))
-    localStorage.setItem(SESSION_EXPIRES_KEY, String(expiresAt))
+  const handleLoginRedirect = () => {
+    setIsPanelOpen(false)
+    router.push('/sign-in')
   }
 
   const handleOpenLogoutModal = () => {
@@ -354,7 +346,7 @@ export default function Navbar() {
                   isPanelOpen={isPanelOpen}
                   onTogglePanel={togglePanel}
                   onClosePanel={() => setIsPanelOpen(false)}
-                  onLogin={handleLoginMock}
+                  onLogin={handleLoginRedirect}
                   onOpenLogoutModal={handleOpenLogoutModal}
                 />
               </div>
