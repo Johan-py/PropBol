@@ -1,10 +1,11 @@
 import express from 'express'
+import plansRoutes from './modules/plans/plans.routes';
 
 const app = express()
 
 app.use(express.json())
+app.use('/api/plans', plansRoutes);
 
-// ✅ ENDPOINT
 app.post('/api/users', (req, res) => {
   const user = req.body
 
