@@ -1,4 +1,5 @@
 import express from 'express'
+import router from './routes/publicacion.routes.js' //sig-dev
 
 const app = express()
 
@@ -13,6 +14,8 @@ app.post('/api/users', (req, res) => {
     user
   })
 })
+//mis apis s-d
+app.use('/api', router)
 
 const PORT = 5000
 
