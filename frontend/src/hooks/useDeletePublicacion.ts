@@ -22,6 +22,7 @@ export function useDeletePublicacion(publicacionId: number, onDeleted?: () => vo
 
   const cerrarExito = () => {
     setModalExitoAbierto(false)
+    onDeleted?.()
   }
 
   const cerrarError = () => {
@@ -37,7 +38,6 @@ export function useDeletePublicacion(publicacionId: number, onDeleted?: () => vo
       await eliminarPublicacion(publicacionId)
 
       setModalConfirmacionAbierto(false)
-      onDeleted?.()
       setModalExitoAbierto(true)
     } catch (err) {
       const mensaje =
