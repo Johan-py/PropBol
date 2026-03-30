@@ -1,0 +1,320 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model banner_home {
+  id            Int      @id @default(autoincrement())
+  activo        Boolean  @default(true)
+  subtitulo     String?
+  fechaCreacion DateTime @default(now())
+  orden         Int
+  titulo        String?
+  urlImagen     String
+}
+
+model cambio_email {
+  id           Int       @id @default(autoincrement())
+  token        String    @unique
+  completadoEn DateTime?
+  creadoEn     DateTime  @default(now())
+  emailNuevo   String
+  expiraEn     DateTime
+  usuarioId    Int
+  usuario      usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+}
+
+model detalle_grupo {
+  grupoId          Int
+  marcadorId       Int
+  grupo_marcadores grupo_marcadores @relation(fields: [grupoId], references: [id], onDelete: Cascade)
+  marcador_mapa    marcador_mapa    @relation(fields: [marcadorId], references: [id], onDelete: Cascade)
+
+  @@id([grupoId, marcadorId])
+}
+
+model etiqueta {
+  nombre            String              @unique
+  id                Int                 @id @default(autoincrement())
+  inmueble_etiqueta inmueble_etiqueta[]
+}
+
+model grupo_marcadores {
+  id                Int             @id @default(autoincrement())
+  latitudCentro     Decimal         @db.Decimal(10, 7)
+  longitudCentro    Decimal         @db.Decimal(10, 7)
+  cantidadInmuebles Int
+  nivelColor        String?
+  nivelZoom         Int
+  radioKm           Decimal?        @db.Decimal(10, 2)
+  actualizadoEn     DateTime
+  detalle_grupo     detalle_grupo[]
+}
+
+model inmueble {
+  titulo             String
+  precio             Decimal             @db.Decimal(12, 2)
+  descripcion        String?
+  estado             EstadoInmueble      @default(ACTIVO)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime
+  fechaPublicacion   DateTime            @default(now())
+  id                 Int                 @id @default(autoincrement())
+  nroBanos           Int?
+  nroCuartos         Int?
+  propietarioId      Int
+  superficieM2       Decimal?            @db.Decimal(10, 2)
+  tipoAccion         TipoAccion
+  categoria          Categoria?
+  usuario            usuario             @relation(fields: [propietarioId], references: [id], onDelete: Cascade)
+  inmueble_etiqueta  inmueble_etiqueta[]
+  marcador_mapa      marcador_mapa[]
+  publicacion        publicacion[]
+  ubicacion_inmueble ubicacion_inmueble?
+
+  @@index([propietarioId])
+}
+
+model inmueble_etiqueta {
+  etiquetaId Int
+  inmuebleId Int
+  etiqueta   etiqueta @relation(fields: [etiquetaId], references: [id], onDelete: Cascade)
+  inmueble   inmueble @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
+
+  @@id([inmuebleId, etiquetaId])
+}
+
+model interaccion_mapa {
+  id              Int             @id @default(autoincrement())
+  tipo            TipoInteraccion
+  latitudMomento  Decimal?        @db.Decimal(10, 7)
+  longitudMomento Decimal?        @db.Decimal(10, 7)
+  zoomMomento     Int?
+  ocurrioEn       DateTime        @default(now())
+  sesionId        Int
+  marcadorId      Int
+  marcador_mapa   marcador_mapa   @relation(fields: [marcadorId], references: [id], onDelete: Cascade)
+  sesion_mapa     sesion_mapa     @relation(fields: [sesionId], references: [id], onDelete: Cascade)
+}
+
+model marcador_mapa {
+  id                 Int                @id @default(autoincrement())
+  tipo               TipoMarcador
+  esVisible          Boolean            @default(true)
+  nivelZ             Int?
+  inmuebleId         Int
+  ubicacionId        Int
+  detalle_grupo      detalle_grupo[]
+  interaccion_mapa   interaccion_mapa[]
+  inmueble           inmueble           @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
+  ubicacion_inmueble ubicacion_inmueble @relation(fields: [ubicacionId], references: [id], onDelete: Cascade)
+}
+
+model multimedia {
+  id            Int            @id @default(autoincrement())
+  url           String
+  tipo          TipoMultimedia
+  pesoMb        Decimal?       @db.Decimal(8, 2)
+  publicacionId Int
+  publicacion   publicacion    @relation(fields: [publicacionId], references: [id], onDelete: Cascade)
+}
+
+model notificacion {
+  titulo        String
+  mensaje       String
+  leida         Boolean   @default(false)
+  eliminada     Boolean   @default(false)
+  fechaCreacion DateTime  @default(now())
+  fechaLectura  DateTime?
+  id            Int       @id @default(autoincrement())
+  usuarioId     Int
+  usuario       usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+}
+
+model perfil {
+  datos          Json?
+  id             Int     @id @default(autoincrement())
+  nombreCompleto String
+  usuarioId      Int     @unique
+  usuario        usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+}
+
+model publicacion {
+  id               Int               @id @default(autoincrement())
+  titulo           String
+  descripcion      String?
+  estado           EstadoPublicacion @default(ACTIVA)
+  fechaPublicacion DateTime          @default(now())
+  usuarioId        Int
+  inmuebleId       Int
+  multimedia       multimedia[]
+  inmueble         inmueble          @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
+  usuario          usuario           @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+}
+
+model rol {
+  id      Int       @id @default(autoincrement())
+  nombre  RolNombre @unique
+  usuario usuario[]
+}
+
+model sesion {
+  token           String   @unique
+  estado          Boolean  @default(true)
+  fechaExpiracion DateTime
+  fechaInicio     DateTime @default(now())
+  id              Int      @id @default(autoincrement())
+  usuarioId       Int
+  usuario         usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+}
+
+model sesion_mapa {
+  id               Int                @id @default(autoincrement())
+  token            String             @unique
+  limiteNorte      Decimal?           @db.Decimal(10, 7)
+  limiteSur        Decimal?           @db.Decimal(10, 7)
+  limiteEste       Decimal?           @db.Decimal(10, 7)
+  limiteOeste      Decimal?           @db.Decimal(10, 7)
+  nivelZoom        Int
+  latitudCentro    Decimal?           @db.Decimal(10, 7)
+  longitudCentro   Decimal?           @db.Decimal(10, 7)
+  iniciadoEn       DateTime           @default(now())
+  ultimaActividad  DateTime
+  interaccion_mapa interaccion_mapa[]
+}
+
+model telefono {
+  numero     String
+  principal  Boolean @default(false)
+  codigoPais String
+  id         Int     @id @default(autoincrement())
+  usuarioId  Int
+  usuario    usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+}
+
+model ubicacion_inmueble {
+  id                 Int                @id @default(autoincrement())
+  latitud            Decimal            @db.Decimal(10, 7)
+  longitud           Decimal            @db.Decimal(10, 7)
+  direccion          String?
+  zona               String?
+  ciudad             String
+  inmuebleId         Int                @unique
+  ubicacionMaestraId Int?
+  marcador_mapa      marcador_mapa[]
+  inmueble           inmueble           @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
+  ubicacion_maestra  ubicacion_maestra? @relation(fields: [ubicacionMaestraId], references: [id])
+}
+
+model ubicacion_maestra {
+  id                 Int                  @id @default(autoincrement())
+  departamento       String
+  provincia          String?
+  municipio          String?
+  nombre             String
+  latitud            Decimal              @db.Decimal(10, 7)
+  longitud           Decimal              @db.Decimal(10, 7)
+  popularidad        Int                  @default(0)
+  ubicacion_inmueble ubicacion_inmueble[]
+
+  @@index([nombre])
+}
+
+model usuario {
+  id            Int            @id @default(autoincrement())
+  nombre        String
+  apellido      String
+  pais          String?
+  avatar        String?
+  genero        Genero?
+  direccion     String?
+  correo        String         @unique
+  password      String
+  activo        Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime
+  fechaRegistro DateTime       @default(now())
+  rolId         Int
+  cambio_email  cambio_email[]
+  inmueble      inmueble[]
+  notificacion  notificacion[]
+  perfil        perfil?
+  publicacion   publicacion[]
+  sesion        sesion[]
+  telefono      telefono[]
+  rol           rol            @relation(fields: [rolId], references: [id])
+  visitor       visitor[]
+
+  @@index([correo])
+}
+
+model visitor {
+  id          Int      @id @default(autoincrement())
+  fechaVisita DateTime @default(now())
+  ip          String
+  metaData    Json?
+  usuarioId   Int?
+  usuario     usuario? @relation(fields: [usuarioId], references: [id])
+}
+
+enum Categoria {
+  CASA
+  DEPARTAMENTO
+  TERRENO
+  OFICINA
+}
+
+enum EstadoInmueble {
+  ACTIVO
+  INACTIVO
+  VENDIDO
+  ALQUILADO
+  RESERVADO
+}
+
+enum EstadoPublicacion {
+  ACTIVA
+  PAUSADA
+  ELIMINADA
+}
+
+enum Genero {
+  MASCULINO
+  FEMENINO
+  OTRO
+}
+
+enum RolNombre {
+  ADMIN
+  PROPIETARIO
+  VISITANTE
+  AGENTE
+}
+
+enum TipoAccion {
+  VENTA
+  ALQUILER
+  ANTICRETO
+}
+
+enum TipoInteraccion {
+  CLICK
+  HOVER
+  ZOOM
+  DRAG
+}
+
+enum TipoMarcador {
+  NORMAL
+  DESTACADO
+  CLUSTER
+}
+
+enum TipoMultimedia {
+  IMAGEN
+  VIDEO
+}

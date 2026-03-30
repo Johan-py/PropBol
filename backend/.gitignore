@@ -30,3 +30,4 @@ bun.lockb
 .DS_Store
 Thumbs.db
 uploads/
+/src/generated/prisma
