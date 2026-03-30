@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "dev:bun": "bun --hot src/index.ts",
     "dev": "nodemon --watch src --exec ts-node src/server.ts",
     "build": "tsc",
     "lint": "eslint ."

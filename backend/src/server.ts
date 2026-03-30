@@ -2,11 +2,11 @@
 import 'dotenv/config';
 import express from "express";
 import cors from "cors";
-import authRoutes from './routes/auth.routes.ts';
-import publicaciones from './routes/publicaciones.js';
-import { authMiddleware } from './middleware/authMiddleware.ts';
 
-
+// Importar rutas
+import authRoutes from './routes/auth.routes.js';
+import publicacionesRoutes from './routes/publicaciones.js'; 
+import { authMiddleware } from './middleware/authMiddleware.js';
 const app = express();
 
 // Middlewares globales
@@ -15,8 +15,9 @@ app.use(express.json());
 
 // Rutas
 app.use("/auth", authRoutes);
+app.use("/api", publicacionesRoutes);
 
-// Ejemplo de ruta protegida
+// Ejemplo de ruta protegida (validación de publicaciones gratuitas)
 app.get("/users/:id/publicaciones/free", authMiddleware, (req, res) => {
   // Aquí luego implementamos la lógica con Prisma
   res.json({ restantes: 2 });
