@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { MapPin, Search, Loader2, X, History } from 'lucide-react'
 import { usePopularidad } from '@/hooks/usePopularidad'
+import { useSearchFilters } from '@/hooks/useSearchFilters'
 
 type Location = {
   id: string | number
@@ -23,7 +24,25 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
   const [history, setHistory] = useState<string[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
 
+  const { updateFilters } = useSearchFilters();
   const { registrarConsulta } = usePopularidad();
+
+  // FUNCIÓN MODULAR DE SELECCIÓN
+  const handleSelectLocation = (loc: Location) => {
+    const fullName = `${loc.nombre} - ${loc.departamento} - Bolivia`;
+    
+    // 1. "Avisamos" al sistema
+    updateFilters({ 
+      locationId: loc.id, 
+      query: fullName 
+    });
+
+    // 2. Lógica interna del componente
+    onChange(fullName);
+    saveToHistory(fullName);
+    setIsOpen(false);
+    registrarConsulta(loc.id, fullName);
+  };
 
   // Cargar historial al montar el componente
   useEffect(() => {
@@ -154,7 +173,12 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                 <button
                   key={`hist-${idx}`}
                   type="button"
-                  onClick={() => onChange(item)}
+                  // Acción del botón
+                  onClick={() => {
+                    onChange(item);
+                    setIsOpen(false);
+                    updateFilters({ query: item }); // Avisamos al sistema global
+                  }}
                   className="w-full px-4 py-3 flex items-center gap-3 hover:bg-amber-50 transition-colors text-left border-b border-stone-50 last:border-0"
                 >
                   <History className="w-3.5 h-3.5 text-stone-300" />
@@ -178,13 +202,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                     <button
                       key={loc.id}
                       type="button"
-                      onClick={() => {
-                        const fullName = `${loc.nombre} - ${loc.departamento} - Bolivia`
-                        onChange(fullName)
-                        saveToHistory(fullName) // Guardamos en el historial
-                        setIsOpen(false)
-                        registrarConsulta(loc.id, fullName);
-                      }}
+                      onClick={() => handleSelectLocation(loc)}
                       className="w-full px-4 py-3 flex items-center justify-between hover:bg-amber-50 transition-colors text-left border-b border-stone-50 last:border-0"
                     >
                       <div className="flex items-center gap-3">
