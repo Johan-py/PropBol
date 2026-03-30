@@ -36,6 +36,11 @@ type FormErrors = {
 interface RegisterResponse {
   message: string;
   token?: string;
+  user?: {
+    nombre: string;
+    apellido: string;
+    correo: string;
+  };
 }
 
 const MAX_NAME_LENGTH = 30;
@@ -372,6 +377,19 @@ export default function SignUpForm() {
 
       if (data?.token) {
         localStorage.setItem("token", data.token);
+      }
+
+      // Guardar usuario para que el Navbar lo detecte
+      if (data?.user) {
+        const userData = {
+          name: `${data.user.nombre} ${data.user.apellido}`,
+          email: data.user.correo,
+        };
+        localStorage.setItem("propbol_user", JSON.stringify(userData));
+        localStorage.setItem(
+          "propbol_session_expires",
+          String(Date.now() + 60 * 60 * 1000),
+        );
       }
 
       sessionStorage.setItem(

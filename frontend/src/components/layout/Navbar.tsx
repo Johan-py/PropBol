@@ -51,6 +51,7 @@ export default function Navbar() {
   const clearSession = () => {
     localStorage.removeItem(USER_STORAGE_KEY);
     localStorage.removeItem(SESSION_EXPIRES_KEY);
+    localStorage.removeItem("token");
     setUser(null);
     setIsPanelOpen(false);
     setShowLogoutModal(false);
@@ -134,16 +135,27 @@ export default function Navbar() {
     setShowLogoutModal(false);
   };
 
-  const handleConfirmLogout = () => {
+  const handleConfirmLogout = async () => {
     if (isLoggingOut) return;
 
     setIsLoggingOut(true);
 
-    setTimeout(() => {
-      clearSession();
-      setIsLoggingOut(false);
-      router.push("/");
-    }, 400);
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      try {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000"}/api/auth/logout`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } catch {
+        // si falla la red igual limpiamos la sesión local
+      }
+    }
+
+    clearSession();
+    setIsLoggingOut(false);
+    router.push("/");
   };
 
   return (

@@ -5,7 +5,9 @@ import locationSearchHandler from "../api/locations/search.js";
 import {
   registerController,
   loginController,
+  logoutController,
 } from "./modules/auth/auth.controller.js";
+
 
 const app = express();
 
@@ -27,6 +29,7 @@ app.post("/api/users", (req, res) => {
 });
 app.post("/api/auth/register", registerController);
 app.post("/api/auth/login", loginController);
+app.post("/api/auth/logout", logoutController);
 
 app.get("/api/banners", (req, res) => bannersController.getBanners(req, res));
 

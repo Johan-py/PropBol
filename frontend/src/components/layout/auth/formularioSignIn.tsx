@@ -10,6 +10,8 @@ type LoginResponse = {
   user?: {
     id: number;
     correo: string;
+    nombre?: string;
+    apellido?: string;
   };
 };
 
@@ -108,6 +110,20 @@ export default function LoginForm() {
       if (data.token) {
         localStorage.setItem("token", data.token);
       }
+
+      // Guardar usuario para que el Navbar lo detecte
+      const userName = data.user?.nombre && data.user?.apellido
+        ? `${data.user.nombre} ${data.user.apellido}`
+        : data.user?.correo ?? trimmedCorreo;
+
+      localStorage.setItem(
+        "propbol_user",
+        JSON.stringify({ name: userName, email: data.user?.correo ?? trimmedCorreo }),
+      );
+      localStorage.setItem(
+        "propbol_session_expires",
+        String(Date.now() + 60 * 60 * 1000),
+      );
 
       setSuccessMessage(data.message || "Inicio de sesión exitoso");
 
