@@ -3,18 +3,20 @@ import { useState } from 'react'
 import HeaderPropio from '@/components/HeaderPropio'
 
 export default function MiRegistroPage() {
-  // Estado del formulario
   const [datos, setDatos] = useState({
     titulo: 'Tropico 6 Federaciones',
-    operacion: 'Anticretico',
+    operacion: 'ANTICRETO',
     tipoInmueble: '',
     precio: '',
     area: '',
     habitaciones: '',
+    banos: '',
+    direccion: '',
+    zona: '',
+    ciudad: 'Cochabamba',
     descripcion: ''
   })
 
-  // Estados de validación
   const [estado, setEstado] = useState<'ninguno' | 'exito' | 'error'>('ninguno')
   const [mensajeError, setMensajeError] = useState('')
 
@@ -22,44 +24,81 @@ export default function MiRegistroPage() {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target
-    // Validar solo números positivos
-    if (['precio', 'area', 'habitaciones'].includes(name)) {
+
+    if (['precio', 'area', 'habitaciones', 'banos'].includes(name)) {
       if (value !== '' && Number(value) < 0) return
     }
+
     setDatos({ ...datos, [name]: value })
   }
 
-  const validarYContinuar = () => {
-    // 1. Verificar vacíos
+  const guardarPropiedad = async () => {
+    setEstado('ninguno')
+    setMensajeError('')
+
     const incompleto =
-      !datos.titulo ||
+      !datos.titulo.trim() ||
       !datos.tipoInmueble ||
       !datos.precio ||
-      !datos.area ||
-      !datos.habitaciones ||
-      !datos.descripcion
+      !datos.direccion.trim() ||
+      !datos.descripcion.trim()
 
     if (incompleto) {
-      setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIAMENTE')
+      setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
       setEstado('error')
       return
     }
 
-    // 2. Validar longitudes (Criterios de ingeniería)
-    if (datos.titulo.length < 20 || datos.titulo.length > 80) {
-      setMensajeError('EL TÍTULO DEBE TENER ENTRE 20 Y 80 CARACTERES')
-      setEstado('error')
-      return
+    const payload = {
+      titulo: datos.titulo.trim(),
+      tipoAccion: datos.operacion,
+      categoria: datos.tipoInmueble,
+      precio: Number(datos.precio),
+      superficieM2: datos.area ? Number(datos.area) : undefined,
+      nroCuartos: datos.habitaciones ? Number(datos.habitaciones) : undefined,
+      nroBanos: datos.banos ? Number(datos.banos) : 1,
+      descripcion: datos.descripcion.trim(),
+      direccion: datos.direccion.trim(),
+      zona: datos.zona.trim() || 'CENTRO',
+      ciudad: datos.ciudad
     }
 
-    if (datos.descripcion.length < 50 || datos.descripcion.length > 300) {
-      setMensajeError('LA DESCRIPCIÓN DEBE TENER ENTRE 50 Y 300 CARACTERES')
-      setEstado('error')
-      return
-    }
+    console.log('📤 Payload enviado al backend:', payload)
 
-    setEstado('exito')
-    setMensajeError('')
+    try {
+      const response = await fetch('http://localhost:5000/api/properties', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+
+      const result = await response.json()
+
+      console.log('📥 Respuesta backend:', result)
+
+      if (!response.ok) {
+        const erroresBackend =
+          result.errores?.map((e: any) => `• ${e.mensaje}`).join('\n') ||
+          result.mensaje ||
+          'ERROR AL GUARDAR LA PROPIEDAD'
+
+        console.error('❌ Error backend:', erroresBackend)
+
+        setMensajeError(erroresBackend)
+        setEstado('error')
+        return
+      }
+
+      console.log('✅ Propiedad guardada correctamente')
+      setEstado('exito')
+      setMensajeError('')
+    } catch (error) {
+      console.error('🔥 Error fetch:', error)
+      setMensajeError('NO SE PUDO CONECTAR CON EL BACKEND')
+      setEstado('error')
+    }
   }
 
   return (
@@ -69,9 +108,7 @@ export default function MiRegistroPage() {
       <main className="max-w-6xl mx-auto p-8 md:p-12">
         <h1 className="text-2xl font-bold mb-6 text-gray-950">Registro Inmueble</h1>
 
-        {/* Contenedor Beige Principal */}
         <div className="bg-[#FAF4ED] rounded-3xl p-8 md:p-10 shadow-sm border border-gray-100">
-          {/* Cabecera interna */}
           <div className="flex items-center gap-3 mb-6">
             <div className="bg-white p-2 rounded-xl shadow-sm border border-orange-100">
               <span className="text-orange-500 text-2xl">📋</span>
@@ -79,17 +116,13 @@ export default function MiRegistroPage() {
             <h2 className="text-xl font-bold text-gray-900 tracking-tight">Registro de Inmueble</h2>
           </div>
 
-          {/* Texto descriptivo corregido */}
           <p className="text-[14px] text-gray-500 mb-10 leading-relaxed">
             Completa el siguiente formulario con la información detallada del inmueble para su venta
-            o alquiler. Los campos marcados con <span className="text-red-500 font-bold">*</span>{' '}
-            son obligatorio.
+            o alquiler.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-10">
-            {/* COLUMNA IZQUIERDA */}
             <div className="space-y-10">
-              {/* Sección: INFORMACIÓN PRINCIPAL */}
               <section>
                 <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-200 pb-2 mb-6">
                   INFORMACION PRINCIPAL
@@ -98,20 +131,20 @@ export default function MiRegistroPage() {
                 <div className="space-y-6">
                   <div>
                     <label className="block text-[15px] font-bold text-gray-900 mb-2">
-                      Título del anuncio <span className="text-red-500">*</span>
+                      Título del anuncio *
                     </label>
                     <input
                       name="titulo"
                       value={datos.titulo}
                       onChange={manejarCambio}
-                      className="w-full p-3 rounded-xl border border-gray-200 bg-white/70 focus:ring-2 focus:ring-orange-100 outline-none transition"
+                      className="w-full p-3 rounded-xl border border-gray-200 bg-white/70"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[15px] font-bold text-gray-900 mb-2">
-                        Tipo de operacion <span className="text-red-500">*</span>
+                        Tipo de operación *
                       </label>
                       <select
                         name="operacion"
@@ -119,13 +152,15 @@ export default function MiRegistroPage() {
                         onChange={manejarCambio}
                         className="w-full p-3 rounded-xl border border-gray-200 bg-white"
                       >
-                        <option value="Anticretico">Anticretico</option>
-                        <option value="Venta">Venta</option>
+                        <option value="ANTICRETO">Anticreto</option>
+                        <option value="VENTA">Venta</option>
+                        <option value="ALQUILER">Alquiler</option>
                       </select>
                     </div>
+
                     <div>
                       <label className="block text-[15px] font-bold text-gray-900 mb-2">
-                        Tipo Inmueble <span className="text-red-500">*</span>
+                        Tipo Inmueble *
                       </label>
                       <select
                         name="tipoInmueble"
@@ -134,124 +169,133 @@ export default function MiRegistroPage() {
                         className="w-full p-3 rounded-xl border border-gray-200 bg-white"
                       >
                         <option value="">Seleccionar...</option>
-                        <option value="Casa">Casa</option>
-                        <option value="Departamento">Departamento</option>
+                        <option value="CASA">Casa</option>
+                        <option value="DEPARTAMENTO">Departamento</option>
+                        <option value="TERRENO">Terreno</option>
+                        <option value="OFICINA">Oficina</option>
                       </select>
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-[15px] font-bold text-gray-900 mb-2">
-                      Precio USD$ <span className="text-red-500">*</span>
+                      Precio USD$ *
                     </label>
-                    <div className="relative">
-                      <span className="absolute left-4 top-3 text-gray-400">$</span>
-                      <input
-                        name="precio"
-                        type="number"
-                        value={datos.precio}
-                        onChange={manejarCambio}
-                        className="w-full p-3 pl-10 rounded-xl border border-gray-200"
-                        placeholder="0"
-                      />
-                    </div>
+                    <input
+                      name="precio"
+                      type="number"
+                      value={datos.precio}
+                      onChange={manejarCambio}
+                      className="w-full p-3 rounded-xl border border-gray-200"
+                    />
                   </div>
                 </div>
               </section>
 
-              {/* Sección: Detalles de la Propiedad */}
               <section>
                 <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] border-b border-gray-200 pb-2 mb-6">
                   DETALLES DE LA PROPIEDAD
                 </h3>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-[15px] font-bold text-gray-900 mb-2 text-red-500">
-                      Area total (m²) *
-                    </label>
+                    <label className="block text-[15px] font-bold mb-2">Área total (m²)</label>
                     <input
                       name="area"
                       type="number"
                       value={datos.area}
                       onChange={manejarCambio}
-                      className="w-full p-3 rounded-xl border border-red-200"
-                      placeholder="0"
+                      className="w-full p-3 rounded-xl border border-gray-200"
                     />
-                    <p className="text-red-400 text-[10px] mt-1 italic">El Area es obligatorio</p>
                   </div>
+
                   <div>
-                    <label className="block text-[15px] font-bold text-gray-900 mb-2 text-red-500">
-                      Habitaciones *
-                    </label>
+                    <label className="block text-[15px] font-bold mb-2">Habitaciones</label>
                     <input
                       name="habitaciones"
                       type="number"
                       value={datos.habitaciones}
                       onChange={manejarCambio}
-                      className="w-full p-3 rounded-xl border border-red-200"
-                      placeholder="0"
+                      className="w-full p-3 rounded-xl border border-gray-200"
                     />
-                    <p className="text-red-400 text-[10px] mt-1 italic">Indica la cantidad</p>
                   </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mt-6">
+                  <div>
+                    <label className="block text-[15px] font-bold mb-2">Baños</label>
+                    <input
+                      name="banos"
+                      type="number"
+                      value={datos.banos}
+                      onChange={manejarCambio}
+                      className="w-full p-3 rounded-xl border border-gray-200"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[15px] font-bold mb-2">Dirección *</label>
+                    <input
+                      name="direccion"
+                      value={datos.direccion}
+                      onChange={manejarCambio}
+                      className="w-full p-3 rounded-xl border border-gray-200"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <label className="block text-[15px] font-bold mb-2">Zona</label>
+                  <input
+                    name="zona"
+                    value={datos.zona}
+                    onChange={manejarCambio}
+                    className="w-full p-3 rounded-xl border border-gray-200"
+                  />
                 </div>
               </section>
             </div>
 
-            {/* COLUMNA DERECHA */}
             <div className="flex flex-col h-full">
               <div className="flex-grow">
-                <label className="block text-[15px] font-bold text-gray-900 mb-2 text-red-500">
+                <label className="block text-[15px] font-bold text-gray-900 mb-2">
                   DESCRIPCION DETALLADA *
                 </label>
                 <textarea
                   name="descripcion"
                   value={datos.descripcion}
                   onChange={manejarCambio}
-                  className="w-full p-4 rounded-2xl border border-gray-300 h-72 bg-white text-sm outline-none focus:ring-2 focus:ring-orange-100"
-                  placeholder="Casa de dos plantas..."
-                ></textarea>
-                <p className="text-red-400 text-[11px] mt-2 italic">
-                  La descripcion es obligatoria
-                </p>
+                  className="w-full p-4 rounded-2xl border border-gray-300 h-72 bg-white"
+                  placeholder="Casa de dos plantas, amplia y moderna ubicada en una zona tranquila..."
+                />
               </div>
 
               <div className="mt-12 space-y-6">
                 <div className="flex justify-center md:justify-end gap-6">
                   <button
                     onClick={() => setEstado('ninguno')}
-                    className="px-12 py-3 rounded-full border border-gray-400 bg-[#D9D9D9] text-gray-800 font-bold hover:bg-gray-300 transition shadow-sm"
+                    className="px-12 py-3 rounded-full border border-gray-400 bg-[#D9D9D9]"
                   >
                     Cancelar
                   </button>
+
                   <button
-                    onClick={validarYContinuar}
-                    className="px-12 py-3 rounded-full border-2 border-orange-400 bg-[#D9D9D9] text-gray-800 font-bold hover:bg-orange-50 transition shadow-sm"
+                    onClick={guardarPropiedad}
+                    className="px-12 py-3 rounded-full border-2 border-orange-400 bg-[#D9D9D9]"
                   >
-                    Continuar
+                    Guardar
                   </button>
                 </div>
 
-                {/* Mensaje ERROR */}
                 {estado === 'error' && (
-                  <div className="flex items-center gap-4 bg-white border-2 border-red-400 rounded-2xl p-4 shadow-md animate-bounce max-w-md ml-auto">
-                    <div className="bg-red-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-black">
-                      X
-                    </div>
-                    <span className="text-[11px] font-black text-gray-600 uppercase tracking-tight">
-                      {mensajeError}
-                    </span>
+                  <div className="bg-white border-2 border-red-400 rounded-2xl p-4 shadow-md max-w-md ml-auto whitespace-pre-line">
+                    {mensajeError}
                   </div>
                 )}
 
-                {/* Mensaje ÉXITO */}
                 {estado === 'exito' && (
-                  <div className="flex items-center gap-4 bg-white border-2 border-orange-400 rounded-2xl p-4 shadow-md max-w-md ml-auto">
-                    <div className="bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center text-xl">
-                      ✓
-                    </div>
-                    <span className="text-[14px] font-medium text-gray-700 italic">
-                      Datos completados correctamente
-                    </span>
+                  <div className="bg-white border-2 border-green-400 rounded-2xl p-4 shadow-md max-w-md ml-auto">
+                    Publicación registrada correctamente ✅
                   </div>
                 )}
               </div>
