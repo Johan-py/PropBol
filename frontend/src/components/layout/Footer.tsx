@@ -120,10 +120,10 @@ function FooterSection({ actions, title }: { actions: FooterAction[]; title: str
 function FooterBottomBar() {
   return (
     <div className="border-t border-stone-200">
-      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-5 text-sm text-stone-600 sm:px-8 lg:flex-row lg:items-center lg:px-10">
+      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-5 text-sm text-stone-600 sm:flex-row sm:flex-wrap sm:items-center sm:px-8 lg:px-10">
         <span className="h-4 w-4 rounded-md border border-stone-400" aria-hidden="true" />
         <span>2026 PropBol Inmobiliaria.</span>
-        <span className="hidden h-1 w-1 rounded-full bg-stone-300 lg:block" aria-hidden="true" />
+        <span className="hidden h-1 w-1 rounded-full bg-stone-300 sm:block" aria-hidden="true" />
         <span>Todos los derechos reservados</span>
       </div>
     </div>
