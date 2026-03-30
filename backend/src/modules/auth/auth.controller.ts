@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
-import { AuthError, loginService, logoutService, registerUser } from "./auth.service.js";
+import {
+  AuthError,
+  loginService,
+  logoutService,
+  registerUser,
+} from "./auth.service.js";
 
 type RegisterBody = {
   nombre: string;
