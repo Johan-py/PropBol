@@ -41,7 +41,7 @@ export default function Navbar() {
     archiveNotification,
     loadMoreNotifications,
     isLoggedIn,
-    setIsLoggedIn,
+    setIsLoggedIn
   } = useNotifications()
 
   const unreadCount = notifications.filter((n) => n.status === 'no leida').length
@@ -121,7 +121,7 @@ export default function Navbar() {
   const handleLoginMock = () => {
     const mockUser: User = {
       name: 'Juan Perez',
-      email: 'juan.perez@gmail.com',
+      email: 'juan.perez@gmail.com'
     }
 
     const expiresAt = Date.now() + SESSION_DURATION_MS
@@ -289,9 +289,7 @@ export default function Navbar() {
                                     }
                                   }}
                                   className={`cursor-pointer border-b border-gray-100 px-4 py-3 transition hover:bg-gray-50 ${
-                                    notification.status === 'no leida'
-                                      ? 'bg-blue-50'
-                                      : 'bg-white'
+                                    notification.status === 'no leida' ? 'bg-blue-50' : 'bg-white'
                                   }`}
                                 >
                                   <div className="flex items-center justify-between gap-3">

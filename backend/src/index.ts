@@ -2,10 +2,11 @@ import express from 'express'
 import cors from 'cors'
 import { BannersController } from './modules/banners/banners.controller.js'
 import locationSearchHandler from '../api/locations/search.js'
+import { FiltersHomepageController } from './modules/filtershomepage/filtershomepage.controller.js'  
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import {registerController,loginController,} from "./modules/auth/auth.controller.js";
 
 const app = express();
-
 app.use(cors({
   origin: 'http://localhost:3000',
   methods: ['GET', 'POST'],
@@ -14,7 +15,8 @@ app.use(cors({
 
 app.use(express.json())
 
-const bannersController = new BannersController()
+const bannersController = new BannersController();
+const filtersController = new FiltersHomepageController();
 
 app.post('/api/users', (req, res) => {
   const user = req.body
@@ -23,11 +25,14 @@ app.post('/api/users', (req, res) => {
 app.post("/api/auth/register", registerController);
 app.post("/api/auth/login", loginController);
 
+app.get('/api/filters', filtersController.getFilters);
 app.get('/api/banners', (req, res) => bannersController.getBanners(req, res))
-
 app.get('/api/locations/search', async (req, res) => {
-  await locationSearchHandler(req as any, res as any)
-})
+  await locationSearchHandler(
+    (req as unknown) as VercelRequest, 
+    (res as unknown) as VercelResponse
+  );
+});
 
 const PORT = 5000
 

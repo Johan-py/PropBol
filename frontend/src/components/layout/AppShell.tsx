@@ -6,11 +6,7 @@ import Footer from '@/components/layout/Footer'
 
 const AUTH_ROUTES = ['/sign-in', '/sign-up']
 
-export default function AppShell({
-  children
-}: {
-  children: React.ReactNode
-}) {
+export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isAuthRoute = AUTH_ROUTES.includes(pathname)
 

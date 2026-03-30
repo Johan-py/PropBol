@@ -16,7 +16,7 @@ export default function UserMenu({
   onTogglePanel,
   onClosePanel,
   onLogin,
-  onOpenLogoutModal,
+  onOpenLogoutModal
 }: UserMenuProps) {
   return (
     <>
@@ -83,7 +83,12 @@ export default function UserMenu({
         ) : (
           <div className="text-center py-2 flex flex-col items-center">
             <div className="w-12 h-12 bg-[#E68B25]/10 rounded-full flex items-center justify-center mb-3">
-              <svg className="w-6 h-6 text-[#E68B25]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-6 h-6 text-[#E68B25]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -93,9 +98,7 @@ export default function UserMenu({
               </svg>
             </div>
 
-            <p className="text-sm text-gray-600 mb-5 px-2">
-              Encuentra tu hogar ideal hoy mismo.
-            </p>
+            <p className="text-sm text-gray-600 mb-5 px-2">Encuentra tu hogar ideal hoy mismo.</p>
 
             <button
               onClick={onLogin}
