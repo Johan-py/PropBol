@@ -9,6 +9,7 @@ interface CreateUserInput {
   telefono?: string;
 }
 
+
 export const createUser = async (data: CreateUserInput) => {
   const rol = await prisma.rol.findUnique({
     where: { nombre: RolNombre.VISITANTE },
