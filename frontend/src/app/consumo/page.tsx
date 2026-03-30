@@ -9,89 +9,137 @@ export default function ConsumoPage() {
 
   useEffect(() => {
     setTimeout(() => {
-      
+
       setData({
-        usadas: 2,
+        usadas: 3,
         limite: 10,
-        plan: "Gratis",
+        plan: "Básico Gratuito",
       });
 
-     
        //setError(true);
 
       setLoading(false);
     }, 1500);
   }, []);
 
- 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="w-10 h-10 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+      <div className="flex justify-center items-center h-screen">
+        <div className="w-10 h-10 border-4 border-gray-300 border-t-orange-500 rounded-full animate-spin"></div>
       </div>
     );
   }
 
- 
   if (error) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="bg-red-100 text-red-700 px-6 py-4 rounded-xl shadow">
+      <div className="flex flex-col items-center justify-center h-screen">
+        <div className="bg-red-100 text-red-700 px-6 py-4 rounded-xl shadow mb-4">
           No pudimos cargar tu información, intenta de nuevo
         </div>
+
+        {/* Este es para que salga un boton de reintentar */}
+        <button
+          onClick={() => window.location.reload()}
+          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
+        >
+          Reintentar
+        </button>
       </div>
     );
   }
 
   const porcentaje = (data.usadas / data.limite) * 100;
+  const disponibles = data.limite - data.usadas;
+
+  let colorBarra = "bg-green-500";
+  let colorTexto = "text-green-600";
+  let mensaje = "Consumo normal";
+
+  if (data.usadas >= 9) {
+    colorBarra = "bg-red-500";
+    colorTexto = "text-red-600";
+    mensaje = "Límite alcanzado";
+  } else if (data.usadas >= 5) {
+    colorBarra = "bg-yellow-400";
+    colorTexto = "text-yellow-600";
+    mensaje = "Casi sin cupo disponible";
+  }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-      <div className="w-full max-w-xl bg-white rounded-2xl shadow-lg p-6">
+    <div className="min-h-screen bg-gray-100 p-6">
 
-        {/* HEADER */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">
-            Panel de Consumo
-          </h1>
+      {/* esto es para la parte de arriba  */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Panel de consumo</h1>
+        <button className="bg-gradient-to-r from-black to-orange-400 text-white px-4 py-2 rounded-lg hover:bg-orange-900 transition">
+          Ver planes de ampliación
+        </button>
+      </div>
 
-          <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
-            Plan: {data.plan}
-          </span>
-        </div>
+      {/* Esto es para el mensaje que dice cuando le queda por usar */}
+      <div className="bg-yellow-100 text-yellow-800 p-4 rounded-lg mb-6">
+        Tienes publicaciones restantes este mes. Te queda {disponibles}.
+      </div>
 
-        {/* mensajito */}
-        {data.usadas >= data.limite ? (
-          <div className="bg-red-100 text-red-700 p-3 rounded-lg mb-4">
-            No te quedan publicaciones gratuitas. Compra una suscripción para seguir publicando.
-          </div>
-        ) : (
-          <p className="text-gray-600 mb-4">
-            Has usado {data.usadas} de {data.limite} publicaciones este mes
-          </p>
-        )}
+      {/* Esto es para la tarjeta del medio que cambia de color */}
+      <div className="bg-gradient-to-r from-black to-orange-500 text-white p-6 rounded-xl shadow mb-6">
+        
+        <p className="text-sm opacity-80 mb-2">
+          PUBLICACIONES USADAS ESTE MES
+        </p>
 
-        {/* la barra */}
-        <div className="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+        <h2 className="text-4xl font-bold mb-4">
+          {data.usadas} / {data.limite}
+        </h2>
+
+        {/* Esto es para la barra del medio que cambia por cuanto uso */}
+        <div className="w-full bg-gray-300 rounded-full h-3 mb-4">
           <div
-            className="h-4 transition-all duration-700 ease-in-out"
-            style={{
-              width: `${porcentaje}%`,
-              background:
-                porcentaje >= 100
-                  ? "red"
-                  : porcentaje >= 80
-                  ? "orange"
-                  : "green",
-            }}
+            className={`h-3 rounded-full transition-all duration-700 ${colorBarra}`}
+            style={{ width: `${porcentaje}%` }}
           />
         </div>
 
-        {/* BOTÓN */}
-        <button className="mt-6 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
-          Ver catálogo de suscripciones
-        </button>
+        <p className={`text-sm font-semibold ${colorTexto}`}>
+          {mensaje}
+        </p>
       </div>
+
+      {/* Esto es para lo que esta abajo de la tarjeta que cambia de color */}
+      <div className="grid grid-cols-3 gap-4 mb-6">
+
+        <div className="bg-white p-4 rounded-xl shadow text-center">
+          <h3 className="text-green-600 text-xl font-bold">
+            {disponibles}
+          </h3>
+          <p>Disponibles</p>
+        </div>
+
+        <div className="bg-white p-4 rounded-xl shadow text-center">
+          <h3 className="text-orange-600 text-xl font-bold">
+            {data.usadas}
+          </h3>
+          <p>Usadas</p>
+        </div>
+
+        <div className="bg-white p-4 rounded-xl shadow text-center">
+          <h3 className="text-blue-600 text-xl font-bold">
+            {data.limite}
+          </h3>
+          <p>Límite</p>
+        </div>
+
+      </div>
+
+      {/* Esto sale cuando esta de 10/10 en uso */}
+      {data.usadas >= data.limite && (
+        <div className="bg-red-100 text-red-700 p-4 rounded-lg flex justify-between items-center">
+          <span>Sin cupo restante</span>
+          <button className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
+            Ampliar plan
+          </button>
+        </div>
+      )}
     </div>
   );
 }
