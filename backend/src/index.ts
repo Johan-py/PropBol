@@ -148,20 +148,18 @@ app.post('/api/publicaciones/:id_publicacion/multimedia/videos', (req, res) => {
     try {
       const id_publicacion = Number(req.params.id_publicacion)
       const usuario_id = Number((req as any).body.usuario_id)
-
       const file = (req as any).file
+
       if (!file) throw new Error('Video es obligatorio')
 
-      const formato = path.extname(file.originalname).replace('.', '').toLowerCase()
-      const peso_mb = Number((file.size / (1024 * 1024)).toFixed(2))
+      const pesoMb = Number((file.size / (1024 * 1024)).toFixed(2))
       const url = `/uploads/videos/${file.filename}`
 
       const result = await registerVideoFileController({
         id_publicacion,
         usuario_id,
         url,
-        formato,
-        peso_mb
+        pesoMb
       })
 
       res.json({ message: 'Video subido correctamente', data: result })
