@@ -42,22 +42,38 @@ const buildNotificationsUrl = (filter: NotificationFilter) => {
 }
 
 const requestJson = async <T>(url: string, init?: RequestInit): Promise<T> => {
-  const response = await fetch(url, {
-    ...init,
-    headers: {
-      ...(init?.body ? { 'Content-Type': 'application/json' } : {}),
-      ...getAuthHeaders(),
-      ...(init?.headers ?? {})
+  const controller = new AbortController()
+  const timeout = window.setTimeout(() => {
+    controller.abort()
+  }, 8000)
+
+  try {
+    const response = await fetch(url, {
+      ...init,
+      headers: {
+        ...(init?.body ? { 'Content-Type': 'application/json' } : {}),
+        ...getAuthHeaders(),
+        ...(init?.headers ?? {})
+      },
+      signal: controller.signal
+    })
+
+    const data = await response.json().catch(() => null)
+
+    if (!response.ok) {
+      throw new Error(data?.message ?? 'No se pudo completar la solicitud')
     }
-  })
 
-  const data = await response.json().catch(() => null)
+    return data as T
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      throw new Error('No se pudieron cargar las notificaciones.')
+    }
 
-  if (!response.ok) {
-    throw new Error(data?.message ?? 'No se pudo completar la solicitud')
+    throw error
+  } finally {
+    window.clearTimeout(timeout)
   }
-
-  return data as T
 }
 
 export function useNotifications() {
@@ -99,17 +115,13 @@ export function useNotifications() {
       setUnreadCount(unreadCountResponse.unreadCount)
       setIsLoggedIn(true)
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'No se pudieron cargar las notificaciones'
+      const technicalMessage = err instanceof Error ? err.message.toLowerCase() : ''
 
-      setError(message)
-
-      if (
-        message.toLowerCase().includes('no autorizado') ||
-        message.toLowerCase().includes('token')
-      ) {
+      if (technicalMessage.includes('no autorizado') || technicalMessage.includes('token')) {
         setIsLoggedIn(false)
       }
+
+      setError('No se pudieron cargar las notificaciones.')
     } finally {
       setIsLoading(false)
     }
