@@ -20,12 +20,14 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@next/eslint-plugin-next": "^16.2.0",
+    "@types/express": "^5.0.6",
     "@typescript-eslint/eslint-plugin": "^8.57.1",
     "@typescript-eslint/parser": "^8.57.1",
     "concurrently": "^9.2.1",
     "eslint": "^10.1.0"
   },
   "dependencies": {
+    "express": "^5.2.1",
     "tailwind": "^4.0.0"
   }
 }
