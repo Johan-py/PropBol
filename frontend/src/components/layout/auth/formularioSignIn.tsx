@@ -15,6 +15,8 @@ type LoginResponse = {
   };
 };
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+
 export default function LoginForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
@@ -88,7 +90,7 @@ export default function LoginForm() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -111,14 +113,17 @@ export default function LoginForm() {
         localStorage.setItem("token", data.token);
       }
 
-      // Guardar usuario para que el Navbar lo detecte
-      const userName = data.user?.nombre && data.user?.apellido
-        ? `${data.user.nombre} ${data.user.apellido}`
-        : data.user?.correo ?? trimmedCorreo;
+      const userName =
+        data.user?.nombre && data.user?.apellido
+          ? `${data.user.nombre} ${data.user.apellido}`
+          : (data.user?.correo ?? trimmedCorreo);
 
       localStorage.setItem(
         "propbol_user",
-        JSON.stringify({ name: userName, email: data.user?.correo ?? trimmedCorreo }),
+        JSON.stringify({
+          name: userName,
+          email: data.user?.correo ?? trimmedCorreo,
+        }),
       );
       localStorage.setItem(
         "propbol_session_expires",
@@ -128,6 +133,8 @@ export default function LoginForm() {
       setSuccessMessage(data.message || "Inicio de sesión exitoso");
 
       window.dispatchEvent(new Event("propbol:login"));
+      window.dispatchEvent(new Event("propbol:session-changed"));
+
       setTimeout(() => {
         router.push("/");
       }, 1000);

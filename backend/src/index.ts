@@ -7,7 +7,7 @@ import {
   loginController,
   logoutController,
 } from "./modules/auth/auth.controller.js";
-
+import meHandler from "../api/auth/me.js";
 
 const app = express();
 
@@ -41,4 +41,8 @@ const PORT = 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+});
+
+app.get("/api/auth/me", async (req, res) => {
+  await meHandler(req as any, res as any);
 });

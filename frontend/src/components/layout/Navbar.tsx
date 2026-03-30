@@ -55,6 +55,7 @@ export default function Navbar() {
     setUser(null);
     setIsPanelOpen(false);
     setShowLogoutModal(false);
+    window.dispatchEvent(new Event("propbol:session-changed"));
   };
 
   const isSessionExpired = () => {
@@ -76,16 +77,28 @@ export default function Navbar() {
       clearSession();
       return;
     }
-
-    setUser(JSON.parse(savedUser));
+    try {
+      setUser(JSON.parse(savedUser));
+    } catch {
+      clearSession();
+    }
   };
 
   useEffect(() => {
     restoreSession();
 
-    const handleLogin = () => restoreSession();
-    window.addEventListener("propbol:login", handleLogin);
-    return () => window.removeEventListener("propbol:login", handleLogin);
+    const handleSessionChange = () => restoreSession();
+
+    window.addEventListener("propbol:login", handleSessionChange);
+    window.addEventListener("propbol:session-changed", handleSessionChange);
+
+    return () => {
+      window.removeEventListener("propbol:login", handleSessionChange);
+      window.removeEventListener(
+        "propbol:session-changed",
+        handleSessionChange,
+      );
+    };
   }, []);
 
   useEffect(() => {
@@ -148,10 +161,13 @@ export default function Navbar() {
 
     if (token) {
       try {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000"}/api/auth/logout`, {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000"}/api/auth/logout`,
+          {
+            method: "POST",
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
       } catch {
         // si falla la red igual limpiamos la sesión local
       }
