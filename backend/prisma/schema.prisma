@@ -218,8 +218,10 @@ model UbicacionInmueble {
   zona         String?
   ciudad       String
 
-  inmuebleId   Int   @unique
-  inmueble     Inmueble @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
+  inmuebleId         Int   @unique
+  inmueble           Inmueble @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
+  ubicacionMaestraId Int?
+  ubicacionMaestra   UbicacionMaestra? @relation(fields: [ubicacionMaestraId], references: [id])
 
   marcadores   MarcadorMapa[]
 
@@ -394,3 +396,19 @@ model Visitor {
 
   @@map("visitor")
 }
+
+model UbicacionMaestra {
+  id           Int                 @id @default(autoincrement())
+  departamento String
+  provincia    String?
+  municipio    String?
+  nombre       String
+  latitud      Decimal             @db.Decimal(10, 7)
+  longitud     Decimal             @db.Decimal(10, 7)
+  popularidad  Int                 @default(0)
+  inmuebles    UbicacionInmueble[]
+
+  @@index([nombre])
+  @@map("ubicacion_maestra")
+}
+

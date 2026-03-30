@@ -10,7 +10,8 @@ if (!databaseUrl) {
 
 const adapter = new PrismaPg({ connectionString: databaseUrl })
 const prisma = new PrismaClient({ adapter })
-type OrdenFecha = 'mas-recientes' | 'mas-populares'
+
+type OrdenFecha = 'mas-recientes' | 'mas-populares' | 'mas-antiguos'
 type OrdenDireccion = 'menor-a-mayor' | 'mayor-a-menor'
 
 interface FiltrosOrdenamiento {
@@ -23,7 +24,19 @@ export const propertiesRepository = {
   async getAll(orden: FiltrosOrdenamiento = {}) {
     const orderBy: any[] = []
 
-    if (orden.fecha === 'mas-recientes' || !orden.fecha) {
+    if (orden.fecha === 'mas-recientes') {
+      orderBy.push({ fechaPublicacion: 'desc' })
+    } else if (orden.fecha === 'mas-antiguos') {
+      orderBy.push({ fechaPublicacion: 'desc' })
+    } else if (orden.fecha === 'mas-populares') {
+      orderBy.push({
+        ubicacion: {
+          ubicacionMaestra: {
+            popularidad: 'desc'
+          }
+        }
+      })
+    } else {
       orderBy.push({ fechaPublicacion: 'desc' })
     }
 
