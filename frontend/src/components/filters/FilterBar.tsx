@@ -3,14 +3,15 @@
 import { useState } from "react"
 import PropertyTypeVisual from "./PropertyTypeFilter"
 import TransactionModeFilter from "./TransactionModeFilter"
-import { usePropertySearch } from "@/hooks/usePropertySearch"
 
-export default function FilterBar() {
+interface FilterBarProps {
+  onSearch: (filtros: { tipos: string[]; modo: string }) => void
+}
+
+export default function FilterBar({ onSearch }: FilterBarProps) {
 
   const [tiposSeleccionados, setTiposSeleccionados] = useState<string[]>([])
   const [modoSeleccionado, setModoSeleccionado] = useState<string>("VENTA")
-
-  const { searchProperties } = usePropertySearch()
 
   const handleTipoChange = (tipo: string) => {
 
@@ -24,7 +25,10 @@ export default function FilterBar() {
 
   const handleSearch = () => {
 
-    searchProperties(tiposSeleccionados, modoSeleccionado)
+    onSearch({
+      tipos: tiposSeleccionados,
+      modo: modoSeleccionado
+    })
 
   }
 
@@ -34,7 +38,7 @@ export default function FilterBar() {
         modoSeleccionado={modoSeleccionado}
         onModoChange={setModoSeleccionado}
       />
-      <div className="flex items-center gap-16">
+      <div className="flex items-end justify-between pr-4">
       <PropertyTypeVisual
         tiposSeleccionados={tiposSeleccionados}
         onTipoChange={handleTipoChange}

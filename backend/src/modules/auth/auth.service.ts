@@ -1,5 +1,5 @@
-import { generateToken, type JwtPayload } from '../../utils/jwt.js'
-import { findUser } from './auth.repository.js'
+import { generateToken, type JwtPayload } from '../../utils/jwt'
+import { findUser } from './auth.repository'
 
 type LoginDTO = {
   email: string

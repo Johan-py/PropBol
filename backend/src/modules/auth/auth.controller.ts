@@ -1,4 +1,4 @@
-import { loginService } from './auth.service.js'
+import { loginService } from './auth.service'
 type payload = {
   name: string,
   email: string

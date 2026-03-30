@@ -1,4 +1,4 @@
-import { propertiesRepository } from "./properties.repository.js"
+import { propertiesRepository } from "./properties.repository"
 
 export const propertiesService = {
 

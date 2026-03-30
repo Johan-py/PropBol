@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { propertiesService } from "./properties.service.js"
+import { propertiesService } from "./properties.service"
 
 export const propertiesController = {
 
@@ -14,21 +14,30 @@ export const propertiesController = {
         tipoAccion
       }
 
+      console.log("Parámetros recibidos:", { categoria, tipoAccion })
+
       const properties = await propertiesService.search(filtros)
 
-      res.json({
+      const response = {
         ok: true,
-        total: properties.length,
-        data: properties
-      })
+        total: properties ? properties.length : 0,
+        data: properties || []
+      }
+
+      console.log("Response enviado:", response)
+      res.json(response)
 
     } catch (error) {
 
-      console.error(error)
+      console.error("Error en properties.controller:", error)
+
+      const message = error instanceof Error ? error.message : "Error desconocido"
 
       res.status(500).json({
         ok: false,
-        message: "Error al buscar propiedades"
+        total: 0,
+        data: [],
+        message: message
       })
 
     }

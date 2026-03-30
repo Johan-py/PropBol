@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node'
 import {
   getUsersController,
   createUserController
-} from '../../src/modules/users/users.controller.js'
+} from '../../src/modules/users/users.controller'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
