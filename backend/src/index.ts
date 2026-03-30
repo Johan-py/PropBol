@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import { BannersController } from './modules/banners/banners.controller.js'
 import locationSearchHandler from '../api/locations/search.js'
+import correoverificacionRoutes from './modules/perfil/correoverificacion.routes.js';
 
 const app = express()
 
@@ -25,6 +26,8 @@ app.get('/api/banners', (req, res) => bannersController.getBanners(req, res))
 app.get('/api/locations/search', async (req, res) => {
   await locationSearchHandler(req as any, res as any)
 })
+
+app.use('/api/perfil', correoverificacionRoutes);
 
 const PORT = 5000
 
