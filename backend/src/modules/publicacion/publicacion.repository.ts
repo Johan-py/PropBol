@@ -1,12 +1,14 @@
-import { EstadoPublicacion } from '@prisma/client'
 import { prisma } from '../../lib/prisma.js'
+
+const ESTADO_PUBLICACION_ELIMINADA = 'ELIMINADA' as const
+const ESTADO_INMUEBLE_INACTIVO = 'INACTIVO' as const
 
 export const buscarPublicacionesPorUsuarioRepository = async (usuarioId: number) => {
   return prisma.publicacion.findMany({
     where: {
       usuarioId,
       estado: {
-        not: EstadoPublicacion.ELIMINADA
+        not: ESTADO_PUBLICACION_ELIMINADA
       }
     },
     include: {
@@ -40,13 +42,13 @@ export const eliminarLogicamentePublicacionRepository = async (
     prisma.publicacion.update({
       where: { id: publicacionId },
       data: {
-        estado: 'ELIMINADA'
+        estado: ESTADO_PUBLICACION_ELIMINADA
       }
     }),
     prisma.inmueble.update({
       where: { id: inmuebleId },
       data: {
-        estado: 'INACTIVO'
+        estado: ESTADO_INMUEBLE_INACTIVO
       }
     })
   ])
