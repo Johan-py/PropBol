@@ -1,24 +1,26 @@
+// --BitPro
 export const usePopularidad = () => {
-  const registrarConsulta = async (locationId: string | number) => {
-    // ESTO APARECERÁ EN TU CONSOLA F12
-    console.log("🚀 [FRONTEND] Intentando enviar incremento para ID:", locationId);
-
+  const registrarConsulta = async (id: string | number, nombreCompleto: string) => {
+    // 1. Registro en el Backend
     try {
-      const res = await fetch(`http://localhost:5000/api/locations/popularidad`, {
+      await fetch(`http://localhost:5000/api/locations/popularity/${id}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: locationId }),
       });
-
-      // ESTO NOS DIRÁ SI EL SERVIDOR ENCONTRÓ LA RUTA
-      console.log("📡 [BACKEND] Respuesta del servidor:", res.status, res.statusText);
-
-      if (!res.ok) {
-        console.warn("⚠️ El servidor respondió con un error (posible 404 o 500)");
-      }
     } catch (error) {
-      console.error("❌ [ERROR] Fallo total en la conexión:", error);
+      console.error("Error al registrar popularidad", error);
     }
+
+    // 2. Registro en LocalStorage para el Historial 
+    const historialKey = 'propbol_historial_busqueda';
+    const historialActual = JSON.parse(localStorage.getItem(historialKey) || '[]');
+    
+    // Filtramos para que no haya duplicados y agregamos al inicio
+    const nuevoHistorial = [
+      { id, nombreCompleto },
+      ...historialActual.filter((item: any) => item.id !== id)
+    ].slice(0, 5); // Solo guardamos las últimas 5
+
+    localStorage.setItem(historialKey, JSON.stringify(nuevoHistorial));
   };
 
   return { registrarConsulta };

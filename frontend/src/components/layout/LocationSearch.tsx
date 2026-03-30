@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { MapPin, Search, Loader2, X } from 'lucide-react'
+import { MapPin, Search, Loader2, X, History } from 'lucide-react'
 import { usePopularidad } from '@/hooks/usePopularidad'
 
 type Location = {
@@ -20,9 +20,25 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
   const [suggestions, setSuggestions] = useState<Location[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [history, setHistory] = useState<string[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
 
   const { registrarConsulta } = usePopularidad();
+
+  // Cargar historial al montar el componente
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('searchHistory')
+    if (savedHistory) {
+      setHistory(JSON.parse(savedHistory))
+    }
+  }, [])
+
+  // Guardar en historial cuando se selecciona una ubicación
+  const saveToHistory = (item: string) => {
+    const updatedHistory = [item, ...history.filter(i => i !== item)].slice(0, 5)
+    setHistory(updatedHistory)
+    localStorage.setItem('searchHistory', JSON.stringify(updatedHistory))
+  }
 
   // --- LÓGICA DE LIMPIEZA (HU 2) --- --BitPro
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,6 +123,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             type="text"
             value={value}
             onChange={handleInputChange}
+            onFocus={() => setIsOpen(true)} // Al hacer clic, abrimos el desplegable
             placeholder="Cochabamba, La Paz..."
             className="w-full bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 font-inter relative z-10"
           />
@@ -123,58 +140,68 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
         )}
       </div>
 
-      {/* PANEL DE SUGERENCIAS */}
-      {isOpen && value.trim().length >= 2 && !isSelected && (
+      {/* PANEL DESPLEGABLE */}
+      {isOpen && (
         <div className="absolute z-[100] w-full mt-2 bg-white border border-stone-200 rounded-xl shadow-xl overflow-hidden">
           
-          {/* ESTADO: CARGANDO */}
-          {isLoading && (
-            <div className="px-4 py-6 text-center flex flex-col items-center gap-2">
-              <Loader2 className="w-5 h-5 animate-spin text-amber-600" />
-              <span className="text-sm text-stone-500 italic">Buscando zonas...</span>
-            </div>
-          )}
-
-          {/* ESTADO: CON RESULTADOS (Máximo 5) */}
-          {!isLoading && suggestions.length > 0 && (
-            <div className="max-h-[300px] overflow-y-auto">
-              {suggestions.slice(0, 5).map((loc) => (
+          {/* CASO A: MOSTRAR HISTORIAL (Input vacío) */}
+          {value.trim().length === 0 && history.length > 0 && (
+            <div>
+              <div className="px-4 py-2 bg-stone-50 border-b border-stone-100">
+                <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">Búsquedas recientes</span>
+              </div>
+              {history.map((item, idx) => (
                 <button
-                  key={loc.id}
+                  key={`hist-${idx}`}
                   type="button"
-                  onClick={() => {
-                    onChange(`${loc.nombre} - ${loc.departamento} - Bolivia`)
-                    setIsOpen(false)
-                    registrarConsulta(loc.id)
-                  }}
-                  className="w-full px-4 py-3 flex items-center justify-between hover:bg-amber-50 transition-colors text-left border-b border-stone-50 last:border-0"
+                  onClick={() => onChange(item)}
+                  className="w-full px-4 py-3 flex items-center gap-3 hover:bg-amber-50 transition-colors text-left border-b border-stone-50 last:border-0"
                 >
-                  <div className="flex items-center gap-3">
-                    <Search className="w-3.5 h-3.5 text-stone-500" />
-                    <span className="text-sm font-bold text-stone-600">
-                      {loc.nombre} - {loc.departamento} - Bolivia
-                    </span>
-                  </div>
-                  <Image
-                    src="https://flagcdn.com/w20/bo.png"
-                    alt="BO"
-                    width={20}
-                    height={14}
-                    className="rounded-sm"
-                  />
+                  <History className="w-3.5 h-3.5 text-stone-300" />
+                  <span className="text-sm text-stone-600">{item}</span>
                 </button>
               ))}
             </div>
           )}
 
-          {/* ESTADO: SIN RESULTADOS */}
-          {!isLoading && suggestions.length === 0 && (
-            <div className="px-4 py-8 text-center bg-stone-50/50">
-              <p className="text-sm text-stone-600 font-medium">No se encontraron resultados</p>
-              <p className="text-xs text-stone-400 mt-1 italic">
-                Pruebe con "Cala Cala"
-              </p>
-            </div>
+          {/* CASO B: MOSTRAR SUGERENCIAS (Escribiendo) */}
+          {value.trim().length >= 2 && !isSelected && (
+            <>
+              {isLoading ? (
+                <div className="px-4 py-6 text-center flex flex-col items-center gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin text-amber-600" />
+                  <span className="text-sm text-stone-500 italic">Buscando zonas...</span>
+                </div>
+              ) : suggestions.length > 0 ? (
+                <div className="max-h-[300px] overflow-y-auto">
+                  {suggestions.slice(0, 5).map((loc) => (
+                    <button
+                      key={loc.id}
+                      type="button"
+                      onClick={() => {
+                        const fullName = `${loc.nombre} - ${loc.departamento} - Bolivia`
+                        onChange(fullName)
+                        saveToHistory(fullName) // Guardamos en el historial
+                        setIsOpen(false)
+                        registrarConsulta(loc.id, fullName);
+                      }}
+                      className="w-full px-4 py-3 flex items-center justify-between hover:bg-amber-50 transition-colors text-left border-b border-stone-50 last:border-0"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Search className="w-3.5 h-3.5 text-stone-500" />
+                        <span className="text-sm font-bold text-stone-600">{loc.nombre} - {loc.departamento} - Bolivia</span>
+                      </div>
+                      <Image src="https://flagcdn.com/w20/bo.png" alt="BO" width={20} height={14} className="rounded-sm" />
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <div className="px-4 py-8 text-center bg-stone-50/50">
+                  <p className="text-sm text-stone-600 font-medium">No se encontraron resultados</p>
+                  <p className="text-xs text-stone-400 mt-1 italic">Pruebe con "Cala Cala"</p>
+                </div>
+              )}
+            </>
           )}
         </div>
       )}
