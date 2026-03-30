@@ -16,7 +16,7 @@ export const crearPublicacion = async (req: Request, res: Response) => {
     }
 
     const nueva = await prisma.publicacion.create({
-      data: { titulo, descripcion, precio: 0, usuario: {
+      data: { titulo, descripcion, usuario: {
     connect: { id: userId }}, inmueble: {connect: { id: 1 }  } }
     });
 
