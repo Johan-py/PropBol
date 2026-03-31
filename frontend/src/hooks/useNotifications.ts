@@ -339,6 +339,14 @@ export function useNotifications() {
   const filteredNotifications = useMemo(() => notifications, [notifications])
   const visibleNotifications = useMemo(() => notifications, [notifications])
 
+  useEffect(() => {
+    if (!isLoggedIn || !isOnline) return
+    const interval = setInterval(() => {
+      void refreshNotifications(filter)
+    }, 30000)
+    return () => clearInterval(interval)
+  }, [isLoggedIn, isOnline, filter, refreshNotifications])
+
   return {
     open,
     filter,
