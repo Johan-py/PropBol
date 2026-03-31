@@ -201,7 +201,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-40 w-full border-b border-gray-200 bg-[#F9F6EE] shadow-sm">
+      <nav className="sticky top-0 z-40 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
@@ -214,22 +214,22 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={toggleNotifications}
-                  className="relative rounded-full p-2 transition hover:bg-gray-100"
+                  className="relative rounded-full p-2 transition duration-200 hover:bg-black/5 hover:shadow-sm"
                   aria-label="Abrir notificaciones"
                 >
-                  <Bell className="h-6 w-6 text-gray-600" />
+                  <Bell className="h-6 w-6 text-stone-600" />
 
                   {unreadCount > 0 ? (
-                    <span className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1 text-xs font-semibold text-white">
+                    <span className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-amber-600 px-1 text-xs font-semibold text-white">
                       {unreadCount > 99 ? "99+" : unreadCount}
                     </span>
                   ) : null}
                 </button>
 
                 {open ? (
-                  <div className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg">
-                    <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
-                      <h3 className="text-sm font-semibold text-gray-800">
+                  <div className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-lg">
+                    <div className="flex items-center justify-between border-b border-stone-100 px-4 py-3">
+                      <h3 className="text-sm font-semibold text-stone-900">
                         Notificaciones
                       </h3>
 
@@ -237,7 +237,7 @@ export default function Navbar() {
                         <button
                           type="button"
                           onClick={() => void markAllAsRead()}
-                          className="inline-flex items-center gap-1 text-xs text-blue-600 transition hover:text-blue-700"
+                          className="inline-flex items-center gap-1 text-xs text-amber-600 transition hover:text-amber-700"
                         >
                           <CheckCheck className="h-4 w-4" />
                           Marcar todas
@@ -247,14 +247,14 @@ export default function Navbar() {
 
                     {!isLoggedIn ? (
                       <div className="px-4 py-6 text-center">
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-stone-500">
                           Inicia sesión para recibir notificaciones
                         </p>
                         <div className="mt-3 flex justify-center">
                           <button
                             type="button"
                             onClick={handleLoginMock}
-                            className="rounded-full bg-blue-600 px-4 py-1.5 text-xs font-medium text-white transition hover:bg-blue-700"
+                            className="rounded-full bg-amber-600 px-4 py-1.5 text-xs font-medium text-white transition hover:bg-amber-700"
                           >
                             Iniciar sesión
                           </button>
@@ -262,7 +262,7 @@ export default function Navbar() {
                       </div>
                     ) : (
                       <>
-                        <div className="flex flex-wrap gap-2 border-b border-gray-100 px-4 py-3">
+                        <div className="flex flex-wrap gap-2 border-b border-stone-100 px-4 py-3">
                           {filters.map((item) => (
                             <button
                               key={item}
@@ -270,8 +270,8 @@ export default function Navbar() {
                               onClick={() => setFilter(item)}
                               className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                                 filter === item
-                                  ? "bg-blue-600 text-white"
-                                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                  ? "bg-amber-600 text-white"
+                                  : "bg-stone-100 text-stone-700 hover:bg-stone-200"
                               }`}
                             >
                               {item === "todas"
@@ -297,7 +297,7 @@ export default function Navbar() {
                           }}
                         >
                           {isLoading ? (
-                            <div className="flex items-center justify-center gap-2 px-4 py-8 text-sm text-gray-500">
+                            <div className="flex items-center justify-center gap-2 px-4 py-8 text-sm text-stone-500">
                               <Loader2 className="h-4 w-4 animate-spin" />
                               Cargando notificaciones...
                             </div>
@@ -309,13 +309,13 @@ export default function Navbar() {
                                 onClick={() =>
                                   void refreshNotifications(filter)
                                 }
-                                className="mt-3 rounded border border-gray-300 px-3 py-1 text-sm text-gray-700 transition hover:bg-gray-50"
+                                className="mt-3 rounded border border-stone-300 px-3 py-1 text-sm text-stone-700 transition hover:bg-stone-50"
                               >
                                 Reintentar
                               </button>
                             </div>
                           ) : visibleNotifications.length === 0 ? (
-                            <p className="px-4 py-6 text-center text-sm text-gray-500">
+                            <p className="px-4 py-6 text-center text-sm text-stone-500">
                               No hay notificaciones
                             </p>
                           ) : (
@@ -323,25 +323,25 @@ export default function Navbar() {
                               {visibleNotifications.map((notification) => (
                                 <div
                                   key={notification.id}
-                                  className={`border-b border-gray-100 px-4 py-3 transition hover:bg-gray-50 ${
+                                  className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
                                     notification.status === "no leida"
-                                      ? "bg-blue-50"
+                                      ? "bg-amber-50"
                                       : "bg-white"
                                   }`}
                                 >
                                   <div className="flex items-start justify-between gap-3">
                                     <div className="min-w-0 flex-1">
-                                      <p className="text-sm font-semibold text-gray-800">
+                                      <p className="text-sm font-semibold text-stone-900">
                                         {notification.title?.trim() ||
                                           "(Sin título)"}
                                       </p>
 
-                                      <p className="mt-1 text-sm text-gray-600">
+                                      <p className="mt-1 text-sm text-stone-600">
                                         {notification.description?.trim() ||
                                           "(Sin descripción disponible)"}
                                       </p>
 
-                                      <span className="mt-2 inline-block text-[10px] uppercase text-gray-400">
+                                      <span className="mt-2 inline-block text-[10px] uppercase text-stone-400">
                                         {notification.status}
                                       </span>
                                     </div>
@@ -353,7 +353,7 @@ export default function Navbar() {
                                           onClick={() =>
                                             void markAsRead(notification.id)
                                           }
-                                          className="text-xs text-blue-500 transition hover:text-blue-600"
+                                          className="text-xs text-amber-600 transition hover:text-amber-700"
                                         >
                                           Leer
                                         </button>
@@ -377,7 +377,7 @@ export default function Navbar() {
                               ))}
 
                               {isLoadingMore ? (
-                                <p className="px-4 py-3 text-center text-xs text-gray-400">
+                                <p className="px-4 py-3 text-center text-xs text-stone-400">
                                   Cargando más notificaciones...
                                 </p>
                               ) : null}
@@ -385,10 +385,10 @@ export default function Navbar() {
                           )}
                         </div>
 
-                        <div className="border-t border-gray-100 px-4 py-3 text-center">
+                        <div className="border-t border-stone-100 px-4 py-3 text-center">
                           <Link
                             href="/notificaciones"
-                            className="text-sm font-medium text-blue-600 transition hover:text-blue-700"
+                            className="text-sm font-medium text-amber-600 transition hover:text-amber-700"
                           >
                             Ver todas las notificaciones
                           </Link>
