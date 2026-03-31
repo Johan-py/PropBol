@@ -2,11 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Trash2 } from "lucide-react";
+import { Trash2, Archive } from "lucide-react";
 import { useNotifications } from "@/hooks/useNotifications";
 import type { NotificationFilter } from "@/types/notification";
 
-const filters: NotificationFilter[] = ["todas", "no leida", "leida"];
+const filters: NotificationFilter[] = ["todas", "no leida", "leida", "archivada"];
 
 export default function NotificationsPage() {
   const router = useRouter();
@@ -24,6 +24,7 @@ export default function NotificationsPage() {
     markAsRead,
     markAllAsRead,
     deleteNotification,
+    archiveNotification,
     refreshNotifications,
   } = useNotifications();
 
@@ -104,7 +105,13 @@ export default function NotificationsPage() {
                 : "bg-stone-100 text-stone-600 hover:bg-stone-200"
             }`}
           >
-            {item}
+            {item === "todas"
+              ? "Todas"
+              : item === "no leida"
+                ? "No leídas"
+                : item === "leida"
+                  ? "Leídas"
+                  : "Archivadas"}
           </button>
         ))}
       </div>
@@ -184,13 +191,25 @@ export default function NotificationsPage() {
                     <span />
                   )}
 
-                  <button
-                    onClick={() => void deleteNotification(notification.id)}
-                    className="flex items-center gap-1 text-xs text-stone-400 transition hover:text-red-500"
-                  >
-                    <Trash2 className="h-3 w-3" />
-                    Eliminar
-                  </button>
+                  <div className="flex items-center gap-3">
+                    {!notification.archived ? (
+                      <button
+                        onClick={() => void archiveNotification(notification.id)}
+                        className="flex items-center gap-1 text-xs text-stone-400 transition hover:text-amber-600"
+                      >
+                        <Archive className="h-3 w-3" />
+                        Archivar
+                      </button>
+                    ) : null}
+
+                    <button
+                      onClick={() => void deleteNotification(notification.id)}
+                      className="flex items-center gap-1 text-xs text-stone-400 transition hover:text-red-500"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                      Eliminar
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

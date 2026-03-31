@@ -71,6 +71,7 @@ model Notificacion {
   mensaje       String
   leida         Boolean   @default(false)
   eliminada     Boolean   @default(false)
+  archivada     Boolean   @default(false)
   fechaCreacion DateTime  @default(now())
   fechaLectura  DateTime?
   id            Int       @id @default(autoincrement())
