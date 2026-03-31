@@ -94,6 +94,7 @@ function formatPrice(price: number, currency: 'USD' | 'BOB'): string {
 }
 
 interface MapViewProps {
+  properties: PropertyMapPin[]
   center?: [number, number]
   zoom?: number
   selectedId?: string | null
@@ -101,28 +102,15 @@ interface MapViewProps {
 }
 
 export default function MapView({
+  properties = [],
   center = [-17.392418841841394, -66.1461583463333],
   zoom = 12,
   selectedId,
   onSelect,
 }: MapViewProps) {
-  const { properties, isLoading, error } = useProperties()
 
   return (
     <div className="relative w-full h-full">
-
-      {isLoading && (
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] bg-white px-4 py-2 rounded-full shadow text-sm text-gray-600 flex items-center gap-2 pointer-events-none">
-          <span className="animate-spin inline-block w-3 h-3 border-2 border-gray-300 border-t-blue-500 rounded-full" />
-          Cargando propiedades...
-        </div>
-      )}
-
-      {error && (
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] bg-red-50 border border-red-200 px-4 py-2 rounded-full shadow text-sm text-red-600 pointer-events-none">
-          ⚠️ {error}
-        </div>
-      )}
 
       <MapContainer
         center={center}

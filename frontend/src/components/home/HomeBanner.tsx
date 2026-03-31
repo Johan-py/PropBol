@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import FilterBar from '../filters/FilterBar'
 
 interface BannerProps {
   url: string
@@ -10,7 +11,7 @@ export const HomeBanner = ({ url, title, subtitle }: BannerProps) => {
   return (
     /* h-[220px] -> Altura slim para móvil para ver el buscador rápido */
     /* md:h-[60vh] -> Altura completa para escritorio */
-    <div className="relative w-full h-[220px] md:h-[60vh] bg-stone-200 flex items-center justify-center overflow-hidden">
+    <div className="relative w-full h-[320px] md:h-[75vh] flex flex-col items-center justify-center overflow-visible">
       
       <Image 
         src={url} 
@@ -40,7 +41,18 @@ export const HomeBanner = ({ url, title, subtitle }: BannerProps) => {
             {subtitle}
           </p>
         )}
+        {/* INTEGRACIÓN: La Barra de Filtros centrada */}
+        {/* Usamos un div envoltorio para asegurar el ancho máximo de 921px  */}
+        <div className="hidden md:flex w-full max-w-[921px] justify-center">
+          <FilterBar />
+        </div>
       </div>
-    </div>
+
+      {/* En móvil, mostramos la barra de filtros debajo del banner */}
+      {/* Versión móvil: La barra sale debajo en pantallas pequeñas para no tapar la foto */}
+      <div className="md:hidden relative z-20 -mt-10 px-4 w-full">
+         {/* Aquí podrías poner una versión simplificada o la misma FilterBar ajustada */}
+      </div>
+      </div>
   )
 }

@@ -12,10 +12,10 @@ interface ComboBoxProps {
   placeholder?: string;
   options?: (string | ComboBoxOption)[];
   icon?: LucideIcon;
+  onChange?: (value: string) => void;
 }
 
-// AQUÍ ESTÁ EL ARREGLO: Agregué "export" antes de function
-export function ComboBox({ label, placeholder, options = [], icon: Icon }: ComboBoxProps) {
+export function ComboBox({ label, placeholder, options = [], icon: Icon, onChange }: ComboBoxProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<ComboBoxOption | null>(null);
   const comboBoxRef = useRef<HTMLDivElement>(null);
@@ -24,6 +24,10 @@ export function ComboBox({ label, placeholder, options = [], icon: Icon }: Combo
     const optionObj = typeof option === 'string' ? { label: option } : option;
     setSelected(optionObj);
     setIsOpen(false);
+
+    if (onChange) {
+      onChange(optionObj.label);
+    }
   };
 
   const DisplayIcon = selected?.icon || Icon;
