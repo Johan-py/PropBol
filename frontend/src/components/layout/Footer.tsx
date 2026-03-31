@@ -1,43 +1,18 @@
 "use client";
 
-<<<<<<< HEAD
-import Image from 'next/image'
-import Link from 'next/link'
-import { useState } from 'react'
-import PlanModal from '../ui/PlanModal'
-// import { usePathname } from 'next/navigation'  COMENTADA PARA IMPLEMENTAR LA FUNCIÓN DEL HU1 EPIC PUBLICACIÓN
-import { usePathname, useRouter } from 'next/navigation'
-type FooterAction = {
-  href?: string
-  isExternal?: boolean
-  label: string
-  onClick?: () => void // Modificación de botón hu1 pubicación
-}
-
-//const exploreActions: FooterAction[] = [
-  //{ label: 'Comprar Propiedad' }, // TODO: users -> '/propiedades/en-venta' | visitors -> '/auth/login'
-  //{ label: 'Alquilar Inmueble' }, // TODO: users -> '/propiedades/alquiler' | visitors -> '/auth/login'
-  //{ label: 'Anticrético' }, // TODO: users -> '/propiedades/anticretico' | visitors -> '/auth/login'
-  //{ label: 'Publica tu inmueble' } // TODO: users -> '/publicar' | visitors -> '/auth/login'
-//]
-=======
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+import PlanModal from "../ui/PlanModal"; // Asegúrate de que esta ruta a tu modal sea la correcta
 
+// 1. Aquí le avisamos a TypeScript que los botones pueden recibir una función (onClick)
 type FooterAction = {
   href?: string;
   isExternal?: boolean;
   label: string;
+  onClick?: () => void; 
 };
-
-const exploreActions: FooterAction[] = [
-  { label: "Comprar Propiedad" }, // TODO: users -> '/propiedades/en-venta' | visitors -> '/auth/login'
-  { label: "Alquilar Inmueble" }, // TODO: users -> '/propiedades/alquiler' | visitors -> '/auth/login'
-  { label: "Anticrético" }, // TODO: users -> '/propiedades/anticretico' | visitors -> '/auth/login'
-  { label: "Publica tu inmueble" }, // TODO: users -> '/publicar' | visitors -> '/auth/login'
-];
->>>>>>> develop
 
 const companyActions: FooterAction[] = [
   { label: "Sobre Nosotros", href: "/sobre-nosotros" },
@@ -109,13 +84,7 @@ function FooterBrand() {
   );
 }
 
-function FooterSection({
-  actions,
-  title,
-}: {
-  actions: FooterAction[];
-  title: string;
-}) {
+function FooterSection({ actions, title }: { actions: FooterAction[]; title: string; }) {
   return (
     <section className="border-t border-amber-600 pt-4">
       <h2 className="text-xl font-bold text-stone-900">{title}</h2>
@@ -134,7 +103,7 @@ function FooterSection({
             ) : (
               <button
                 type="button"
-                onClick={action.onClick} // Modificación de botón hu1 pubicación
+                onClick={action.onClick}
                 className="text-left text-sm text-stone-600 transition-colors hover:text-amber-600"
               >
                 {action.label}
@@ -151,58 +120,48 @@ function FooterBottomBar() {
   return (
     <div className="border-t border-stone-200">
       <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-5 text-sm text-stone-600 sm:flex-row sm:flex-wrap sm:items-center sm:px-8 lg:px-10">
-        <span
-          className="h-4 w-4 rounded-md border border-stone-400"
-          aria-hidden="true"
-        />
+        <span className="h-4 w-4 rounded-md border border-stone-400" aria-hidden="true" />
         <span>2026 PropBol Inmobiliaria.</span>
-        <span
-          className="hidden h-1 w-1 rounded-full bg-stone-300 sm:block"
-          aria-hidden="true"
-        />
+        <span className="hidden h-1 w-1 rounded-full bg-stone-300 sm:block" aria-hidden="true" />
         <span>Todos los derechos reservados</span>
       </div>
     </div>
   );
 }
 
-//export default function Footer() {
-  //return (
-    //<footer className="mt-auto border-t border-stone-200 bg-stone-50">
-      //<div className="mx-auto max-w-6xl px-6 py-10 sm:px-8 lg:px-10">
-        //<div className="grid gap-10 md:grid-cols-2 xl:grid-cols-4">
-          //<FooterBrand />
-          //<FooterSection actions={exploreActions} title="Explorar" />
-          //<FooterSection actions={companyActions} title="Conócenos" />
-          //<FooterSection actions={socialActions} title="Redes Sociales" />
-        //</div>
-      //</div>
-      //<FooterBottomBar />
-    //</footer>
-  //)
-//}
-export default function Footer() {    //funcion agregada por HU1 EPIC PUBLICACIÓN
-  const router = useRouter()
-  // 1. Estado para controlar si el modal está abierto o cerrado
-  const [isModalOpen, setIsModalOpen] = useState(false)
+export default function Footer() {
+  const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handlePublicarClick = () => {
-    const session = localStorage.getItem('userSession')
+  // 2. TU LÓGICA DE INTEGRACIÓN
+  const handlePublicarClick = async () => {
+    const session = localStorage.getItem('userSession');
     
     if (session === 'activa') {
-      // SIMULADOR: En lugar de ir a /publicar, abrimos el modal para probarlo
-      setIsModalOpen(true) 
+      try {
+        // Petición al backend de Beto en el puerto 5000
+        const respuesta = await fetch('http://localhost:5000/api/publicaciones/gratis');
+        const datos = await respuesta.json();
+        
+        // El Lead verá esto en consola y sabrá que lo lograste
+        console.log("¡CONEXIÓN EXITOSA CON BACKEND! Mensaje:", datos.message);
+
+        // Simulamos que superó el límite y abrimos tu diseño de precios
+        setIsModalOpen(true); 
+      } catch (error) {
+        console.error("Error al conectar con el backend:", error);
+      }
     } else {
-      router.push('/login')
+      router.push('/login');
     }
-  }
+  };
 
   const exploreActions: FooterAction[] = [
     { label: 'Comprar Propiedad' }, 
     { label: 'Alquilar Inmueble' }, 
     { label: 'Anticrético' }, 
-    { label: 'Publica tu inmueble', onClick: handlePublicarClick }
-  ]
+    { label: 'Publica tu inmueble', onClick: handlePublicarClick } // <-- Aquí conectamos tu función
+  ];
 
   return (
     <>
@@ -215,22 +174,13 @@ export default function Footer() {    //funcion agregada por HU1 EPIC PUBLICACI�
             <FooterSection actions={socialActions} title="Redes Sociales" />
           </div>
         </div>
-<<<<<<< HEAD
         <FooterBottomBar />
       </footer>
 
-      {/* 2. Inyectamos el Modal aquí abajo. Solo se verá si isModalOpen es true */}
-      <PlanModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-      />
+      {/* 3. TU MODAL */}
+      {isModalOpen && (
+        <PlanModal onClose={() => setIsModalOpen(false)} /> 
+      )}
     </>
-  )
-}
-=======
-      </div>
-      <FooterBottomBar />
-    </footer>
   );
 }
->>>>>>> develop

@@ -60,10 +60,5 @@ export default async function Home() {
         </div>
       </div>
     </main>
-<<<<<<< HEAD
-  )
-}
-=======
   );
 }
->>>>>>> develop
