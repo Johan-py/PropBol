@@ -10,7 +10,7 @@ import { SuccessView } from "@/components/payment/SuccessView";
 import { CancelPaymentModal } from "@/components/payment/CancelPaymentModal";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-
+// borrar esto mas tarde
 export default function PagoQRPage() {
   const router = useRouter();
   const { payment, loading, error } = useCurrentPayment();
