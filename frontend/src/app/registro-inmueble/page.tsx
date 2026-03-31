@@ -1,7 +1,5 @@
 'use client'
 import { useState } from 'react'
-import HeaderPropio from '@/components/HeaderPropio'
-
 export default function MiRegistroPage() {
   const [datos, setDatos] = useState({
     titulo: 'Tropico 6 Federaciones',
@@ -103,7 +101,6 @@ export default function MiRegistroPage() {
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
-      <HeaderPropio />
 
       <main className="max-w-6xl mx-auto p-8 md:p-12">
         <h1 className="text-2xl font-bold mb-6 text-gray-950">Registro Inmueble</h1>
