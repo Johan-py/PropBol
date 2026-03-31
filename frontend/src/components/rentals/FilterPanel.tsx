@@ -1,11 +1,11 @@
-"use client";
+'use client'
 import { useState, useEffect } from 'react'
 import { Filter } from 'lucide-react'
 import { useFilterLogic } from '@/hooks/useFilterLogic'
 
 interface FilterItem {
-  name: string;
-  count: number;
+  name: string
+  count: number
 }
 
 // Función para normalizar el texto (Cochabamba, Santa cruz -> Cochabamba, Santa cruz)
@@ -71,8 +71,8 @@ export default function FilterPanel() {
   const [globalSort, setGlobalSort] = useState<'asc' | 'desc'>('asc')
 
   const toggleGlobalSort = () => {
-    setGlobalSort((prev) => (prev === "asc" ? "desc" : "asc"));
-  };
+    setGlobalSort((prev) => (prev === 'asc' ? 'desc' : 'asc'))
+  }
 
   useEffect(() => {
     const fetchFilters = async () => {
@@ -87,11 +87,11 @@ export default function FilterPanel() {
       } catch (error) {
         console.error('Error:', error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
-    fetchFilters();
-  }, []);
+    }
+    fetchFilters()
+  }, [])
 
   const rentalsLogic = useFilterLogic(rentalsData, globalSort)
   const salesLogic = useFilterLogic(salesData, globalSort)
@@ -111,23 +111,26 @@ export default function FilterPanel() {
       <div className="flex items-center justify-between mb-6 border-b border-gray-800 pb-3">
         <div className="flex items-center gap-2 text-gray-900">
           <Filter size={20} className="text-orange-500" />
-          <h2 className="text-lg font-bold font-inter tracking-tight">
-            Filtros
-          </h2>
+          <h2 className="text-lg font-bold font-inter tracking-tight">Filtros</h2>
         </div>
         <button
           onClick={toggleGlobalSort}
           className="text-sm font-medium text-orange-400 hover:text-orange-600 outline-none transition-all font-inter"
         >
-          {globalSort === "asc" ? "Ordenar A↑" : "Ordenar A↓"}
+          {globalSort === 'asc' ? 'Ordenar A↑' : 'Ordenar A↓'}
         </button>
       </div>
 
       <div className="space-y-10">
-        <FilterSection title="Alquileres" data={rentalsData} logic={rentalsLogic} itemLabel="casas" />
+        <FilterSection
+          title="Alquileres"
+          data={rentalsData}
+          logic={rentalsLogic}
+          itemLabel="casas"
+        />
         <FilterSection title="En venta" data={salesData} logic={salesLogic} itemLabel="casas" />
         <FilterSection title="Inmuebles" data={typesData} logic={typesLogic} itemLabel="prop." />
       </div>
     </aside>
-  );
+  )
 }

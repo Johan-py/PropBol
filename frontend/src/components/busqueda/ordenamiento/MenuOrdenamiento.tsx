@@ -1,6 +1,5 @@
 'use client'
 
-
 import { useState, useRef, useEffect } from 'react'
 import { ChevronDown, ArrowUpDown } from 'lucide-react'
 import {
@@ -12,16 +11,13 @@ import {
   ORDENAMIENTO_DEFAULT
 } from '../../../types/inmueble'
 
-
 // ─── Types ────────────────────────────────────────────────────────────────────
-
 
 interface MenuOrdenamientoProps {
   ordenActual?: EstadoOrdenamiento
   onOrdenChange?: (orden: EstadoOrdenamiento) => void
   totalResultados: number
 }
-
 
 interface DropdownProps {
   label: string
@@ -30,13 +26,11 @@ interface DropdownProps {
   children: React.ReactNode
 }
 
-
 interface DropdownItemProps {
   label: string
   isSelected: boolean
   onClick: () => void
 }
-
 
 interface SeccionMetricaProps {
   titulo: string
@@ -44,9 +38,7 @@ interface SeccionMetricaProps {
   onChange: (val: OrdenDireccion) => void
 }
 
-
 // ─── Dropdown Base ────────────────────────────────────────────────────────────
-
 
 function Dropdown({ label, isOpen, onToggle, children }: DropdownProps) {
   return (
@@ -67,7 +59,6 @@ function Dropdown({ label, isOpen, onToggle, children }: DropdownProps) {
         />
       </button>
 
-
       {isOpen && (
         <div
           className="absolute left-0 top-full mt-1.5 z-50 bg-white rounded-lg shadow-lg
@@ -81,9 +72,7 @@ function Dropdown({ label, isOpen, onToggle, children }: DropdownProps) {
   )
 }
 
-
 // ─── Dropdown Item ────────────────────────────────────────────────────────────
-
 
 function DropdownItem({ label, isSelected, onClick }: DropdownItemProps) {
   return (
@@ -102,9 +91,7 @@ function DropdownItem({ label, isSelected, onClick }: DropdownItemProps) {
   )
 }
 
-
 // ─── Sección de Métrica (Precio/Superficie) ───────────────────────────────────
-
 
 function SeccionMetrica({ titulo, valor, onChange }: SeccionMetricaProps) {
   return (
@@ -131,9 +118,7 @@ function SeccionMetrica({ titulo, valor, onChange }: SeccionMetricaProps) {
   )
 }
 
-
 // ─── Menu Principal de Ordenamiento ───────────────────────────────────────────
-
 
 export function MenuOrdenamiento({
   ordenActual = ORDENAMIENTO_DEFAULT,
@@ -143,7 +128,6 @@ export function MenuOrdenamiento({
   const [orden, setOrden] = useState<EstadoOrdenamiento>(ordenActual)
   const [dropdownAbierto, setDropdownAbierto] = useState<'fecha' | 'metricas' | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
-
 
   // Cerrar al hacer clic fuera
   useEffect(() => {
@@ -156,12 +140,10 @@ export function MenuOrdenamiento({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-
   // Toggle dropdown
   function toggleDropdown(dropdown: 'fecha' | 'metricas') {
     setDropdownAbierto((prev) => (prev === dropdown ? null : dropdown))
   }
-
 
   // Actualizar estado de ordenamiento
   function actualizarOrden(parcial: Partial<EstadoOrdenamiento>) {
@@ -170,19 +152,15 @@ export function MenuOrdenamiento({
     onOrdenChange?.(nuevoOrden)
   }
 
-
   // Labels activos
   const labelFechaActivo =
     OPCIONES_FECHA.find((o) => o.value === orden.fecha)?.label ?? 'Más recientes'
 
-
   const labelPrecioActivo =
     OPCIONES_DIRECCION.find((o) => o.value === orden.precio)?.label ?? 'Menor a Mayor'
 
-
   const labelSuperficieActivo =
     OPCIONES_DIRECCION.find((o) => o.value === orden.superficie)?.label ?? 'Menor a Mayor'
-
 
   return (
     <div ref={menuRef} className="flex flex-col gap-4 mb-6">
@@ -196,14 +174,12 @@ export function MenuOrdenamiento({
         </h2>
       </div>
 
-
       {/* Sección de ordenamiento */}
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2">
           <ArrowUpDown className="w-4 h-4 text-gray-400" strokeWidth={2} />
           <span className="text-sm font-semibold text-gray-600">Ordenar por:</span>
         </div>
-
 
         <div className="flex flex-wrap gap-4">
           {/* Dropdown Fecha */}
@@ -227,7 +203,6 @@ export function MenuOrdenamiento({
               ))}
             </Dropdown>
           </div>
-
 
           {/* Dropdown Métricas (Precio + Superficie) */}
           <div className="flex flex-col gap-1.5">

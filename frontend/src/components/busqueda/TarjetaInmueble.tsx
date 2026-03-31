@@ -12,9 +12,10 @@ export const TarjetaInmueble = ({ inmueble }: TarjetaInmuebleProps) => {
     maximumFractionDigits: 0
   })
 
-  const ubicacionTexto = typeof inmueble.ubicacion === 'object' && inmueble.ubicacion !== null
-    ? `${inmueble.ubicacion.zona ?? ''}, ${inmueble.ubicacion.ciudad ?? ''}`
-    : ''
+  const ubicacionTexto =
+    typeof inmueble.ubicacion === 'object' && inmueble.ubicacion !== null
+      ? `${inmueble.ubicacion.zona ?? ''}, ${inmueble.ubicacion.ciudad ?? ''}`
+      : ''
 
   return (
     <div className="group flex flex-col w-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
