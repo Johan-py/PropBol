@@ -43,18 +43,20 @@ export default function Page() {
 
           {/* TEXTO */}
           <p className="text-sm text-gray-600 mt-3 leading-relaxed px-2">
-            Revisamos tu historial y has agotado las publicaciones gratuitas que
-            te quedaban este mes. Para seguir creando publicaciones, expande tu
-            plan de membresía o revisa tus planes vigentes.
+            Has alcanzado el límite de tus publicaciones gratuitas de este mes.
+            Para continuar, amplía tu plan de membresía o revisa tus planes disponibles.
           </p>
 
           {/* CAJA INTERNA */}
           <div className="mt-5 bg-[#e5e5e5] rounded-lg px-4 py-3 flex items-center justify-between">
-            <p className="text-gray-700 text-sm text-left">
+            <div className="text-left">
+            <p className="text-gray-700 text-sm">
               Tus publicaciones restantes:
-              <span className="text-red-500 font-semibold ml-2">0 / 3</span>
-            </p>
-
+              </p>
+              <p className="text-red-500 font-semibold text-sm">
+              0 de 3 restantes
+             </p>
+             </div>
             <div className="w-8 h-8 flex items-center justify-center bg-orange-200 rounded-md">
               🔒
             </div>
