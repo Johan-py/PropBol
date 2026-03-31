@@ -14,6 +14,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { validateEmail, validatePassword } from "@/lib/validators/auth";
 import GoogleRegisterButton from "@/components/layout/auth/google/GoogleRegisterButton";
+import {
+  consumeGoogleSignupPrefill,
+  extractGooglePrefillFromCredential,
+} from "@/lib/auth/google";
 
 type FormData = {
   email: string;
@@ -119,6 +123,28 @@ export default function SignUpForm() {
       router.replace("/");
     }
   }, [router]);
+
+  useEffect(() => {
+    const googlePrefill = consumeGoogleSignupPrefill();
+
+    if (!googlePrefill) {
+      return;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      email: googlePrefill.email?.trim() || prev.email,
+      firstName: googlePrefill.firstName?.trim() || prev.firstName,
+      lastName: googlePrefill.lastName?.trim() || prev.lastName,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      email: undefined,
+      firstName: undefined,
+      lastName: undefined,
+    }));
+  }, []);
 
   const validateFirstName = (value: string) => {
     const trimmed = value.trim();
@@ -413,58 +439,32 @@ export default function SignUpForm() {
     }
   };
 
-  const handleGoogleCredential = useCallback(
-    async (credential: string) => {
-      setServerError("");
-      setIsSubmitting(true);
+  const handleGoogleCredential = useCallback((credential: string) => {
+    setServerError("");
 
-      try {
-        console.log("Credencial JWT de Google:", credential);
+    const googlePrefill = extractGooglePrefillFromCredential(credential);
 
-        // Aquí luego conectarás con tu backend.
-        // Ejemplo futuro:
-        // const response = await fetch(`${API_URL}/api/auth/google/register`, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify({ credential }),
-        // });
-        //
-        // const data = await response.json();
-        //
-        // if (!response.ok) {
-        //   throw new Error(data?.message || "No se pudo registrar con Google");
-        // }
-        //
-        // if (data?.token) {
-        //   localStorage.setItem("token", data.token);
-        // }
-        //
-        // if (data?.user) {
-        //   localStorage.setItem("propbol_user", JSON.stringify(data.user));
-        //   localStorage.setItem(
-        //     "propbol_session_expires",
-        //     String(Date.now() + 60 * 60 * 1000),
-        //   );
-        // }
-        //
-        // window.dispatchEvent(new Event("propbol:login"));
-        // router.replace("/");
-      } catch (error) {
-        const message =
-          error instanceof Error
-            ? error.message
-            : "No se pudo completar el registro con Google";
+    if (!googlePrefill) {
+      setServerError(
+        "No se pudieron obtener los datos de la cuenta de Google.",
+      );
+      return;
+    }
 
-        setServerError(message);
-        console.error("Error con Google:", error);
-      } finally {
-        setIsSubmitting(false);
-      }
-    },
-    [],
-  );
+    setFormData((prev) => ({
+      ...prev,
+      email: googlePrefill.email || prev.email,
+      firstName: googlePrefill.firstName || prev.firstName,
+      lastName: googlePrefill.lastName || prev.lastName,
+    }));
+
+    setErrors((prev) => ({
+      ...prev,
+      email: undefined,
+      firstName: undefined,
+      lastName: undefined,
+    }));
+  }, []);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#f5f5f4] px-4 py-8">
