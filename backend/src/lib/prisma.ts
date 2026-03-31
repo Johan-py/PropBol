@@ -6,7 +6,7 @@ import { PrismaPg } from '@prisma/adapter-pg'
 const connectionString = process.env.DATABASE_URL
 
 // Configuramos el Pool de conexiones de forma global
-const pool = new Pool({ 
+const pool = new Pool({
   connectionString,
   max: 1 // Limitamos a 1 conexión por instancia para no saturar Supabase
 })
