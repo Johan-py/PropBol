@@ -136,6 +136,23 @@ export default function Navbar() {
     return () => clearInterval(interval);
   }, [user, router]);
 
+  // Cierre con Esc en el panel de la campanita
+  useEffect(() => {
+    if (!open) return;
+
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        toggleNotifications();
+      }
+    };
+
+    document.addEventListener("keydown", handleEsc);
+
+    return () => {
+      document.removeEventListener("keydown", handleEsc);
+    };
+  }, [open, toggleNotifications]);
+
   const togglePanel = () => {
     if (user && isSessionExpired()) {
       clearSession();
@@ -215,22 +232,35 @@ export default function Navbar() {
                 <button
                   type="button"
                   onClick={toggleNotifications}
-                  className="relative rounded-full p-2 transition duration-200 hover:bg-black/5 hover:shadow-sm"
                   aria-label="Abrir notificaciones"
+                  aria-haspopup="true"
+                  aria-expanded={open}
+                  className="relative rounded-full p-2 transition duration-200 hover:bg-black/5 hover:shadow-sm"
                 >
                   <Bell className="h-6 w-6 text-stone-600" />
 
                   {unreadCount > 0 ? (
-                    <span className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-amber-600 px-1 text-xs font-semibold text-white">
+                    <span
+                      aria-label={`${unreadCount} notificaciones no leídas`}
+                      className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-amber-600 px-1 text-xs font-semibold text-white"
+                    >
                       {unreadCount > 99 ? "99+" : unreadCount}
                     </span>
                   ) : null}
                 </button>
 
                 {open ? (
-                  <div className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-lg">
+                  <div
+                    role="dialog"
+                    aria-label="Panel de notificaciones"
+                    aria-modal="true"
+                    className="absolute right-0 top-12 z-50 w-80 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-lg"
+                  >
                     <div className="flex items-center justify-between border-b border-stone-100 px-4 py-3">
-                      <h3 className="text-sm font-semibold text-stone-900">
+                      <h3
+                        id="notifications-title"
+                        className="text-sm font-semibold text-stone-900"
+                      >
                         Notificaciones
                       </h3>
 
@@ -271,11 +301,17 @@ export default function Navbar() {
                       </div>
                     ) : (
                       <>
-                        <div className="flex flex-wrap gap-2 border-b border-stone-100 px-4 py-3">
+                        <div
+                          role="tablist"
+                          aria-label="Filtros de notificaciones"
+                          className="flex flex-wrap gap-2 border-b border-stone-100 px-4 py-3"
+                        >
                           {filters.map((item) => (
                             <button
                               key={item}
                               type="button"
+                              role="tab"
+                              aria-selected={filter === item}
                               onClick={() => setFilter(item)}
                               className={`rounded-full px-3 py-1 text-xs font-medium transition ${
                                 filter === item
@@ -293,6 +329,9 @@ export default function Navbar() {
                         </div>
 
                         <div
+                          role="list"
+                          aria-label="Lista de notificaciones"
+                          aria-live="polite"
                           className="max-h-80 overflow-y-auto"
                           onScroll={(e) => {
                             const target = e.currentTarget;
@@ -324,7 +363,10 @@ export default function Navbar() {
                               </button>
                             </div>
                           ) : visibleNotifications.length === 0 ? (
-                            <p className="px-4 py-6 text-center text-sm text-stone-500">
+                            <p
+                              role="status"
+                              className="px-4 py-6 text-center text-sm text-stone-500"
+                            >
                               No hay notificaciones
                             </p>
                           ) : (
@@ -332,6 +374,8 @@ export default function Navbar() {
                               {visibleNotifications.map((notification) => (
                                 <div
                                   key={notification.id}
+                                  role="listitem"
+                                  aria-label={`Notificación: ${notification.title}`}
                                   className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
                                     notification.status === "no leida"
                                       ? "bg-amber-50"
@@ -363,6 +407,7 @@ export default function Navbar() {
                                             void markAsRead(notification.id)
                                           }
                                           disabled={!isOnline}
+                                          aria-label={`Marcar como leída: ${notification.title}`}
                                           className="text-xs text-amber-600 transition hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-40"
                                         >
                                           Leer
@@ -377,8 +422,8 @@ export default function Navbar() {
                                           )
                                         }
                                         disabled={!isOnline}
+                                        aria-label={`Eliminar notificación: ${notification.title}`}
                                         className="text-xs text-red-500 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-40"
-                                        aria-label="Eliminar notificación"
                                       >
                                         <Trash2 className="h-4 w-4" />
                                       </button>
