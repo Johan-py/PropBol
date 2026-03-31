@@ -8,19 +8,26 @@ export default function ConsumoPage() {
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    setTimeout(() => {
+  const fetchData = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/consumo/1");
 
-      setData({
-        usadas: 3,
-        limite: 10,
-        plan: "Básico Gratuito",
-      });
+      if (!res.ok) {
+        throw new Error("Error en la API");
+      }
 
-       //setError(true);
+      const json = await res.json();
 
+      setData(json);
+    } catch (err) {
+      setError(true);
+    } finally {
       setLoading(false);
-    }, 1500);
-  }, []);
+    }
+  };
+
+  fetchData();
+}, []);
 
   if (loading) {
     return (
