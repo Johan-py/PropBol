@@ -1,15 +1,18 @@
 import { defineConfig } from '@prisma/config'
-import * as dotenv from 'dotenv'
-import path from 'path'
+import 'dotenv/config'
 
-// Cargar .env desde la raíz del backend
-dotenv.config({ path: path.join(__dirname, '.env') })
+console.log('DATABASE_URL:', process.env.DATABASE_URL)
 
 export default defineConfig({
-  migrations: {
-    seed: 'bun ./prisma/seed.ts'
-  },
+  earlyAccess: true,
+  schema: './prisma/schema.prisma',
   datasource: {
-    url: process.env.DATABASE_URL
+    url: process.env.DATABASE_URL!
+  },
+  migrate: {
+    adapter: async () => {
+      const { PrismaPg } = await import('@prisma/adapter-pg')
+      return new PrismaPg({ connectionString: process.env.DATABASE_URL! })
+    }
   }
 })
