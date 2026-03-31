@@ -1,4 +1,27 @@
-export default function FotosSection() {
+type ImageItem = {
+  id: string;
+  file: File;
+  previewUrl: string;
+  name: string;
+};
+
+type FotosSectionProps = {
+  images: ImageItem[];
+  onOpenPicker: () => void;
+  onRemoveImage: (id: string) => void;
+  error?: string;
+  isUploading?: boolean;
+};
+
+export default function FotosSection({
+  images,
+  onOpenPicker,
+  onRemoveImage,
+  error,
+  isUploading = false,
+}: FotosSectionProps) {
+  const emptySlots = Math.max(0, 5 - images.length);
+
   return (
     <section
       style={{
@@ -22,11 +45,20 @@ export default function FotosSection() {
         }}
       >
         <p style={{ fontSize: "18px", color: "#555", marginBottom: "18px" }}>
-          Arrastra aquí las fotos hasta de 5 MB cada una o haz clic en el botón para subirlas.
+          Arrastra aquí las fotos hasta de 5 MB cada una o haz clic en el botón
+          para subirlas.
         </p>
 
-        <div style={{ display: "flex", gap: "14px", flexWrap: "wrap", alignItems: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "14px",
+            flexWrap: "wrap",
+            alignItems: "center",
+          }}
+        >
           <button
+            onClick={onOpenPicker}
             style={{
               background: "#ff7f11",
               color: "white",
@@ -41,12 +73,40 @@ export default function FotosSection() {
             Subir Fotos
           </button>
 
-          <div style={slotStyle}>📷</div>
-          <div style={slotStyle}>📷</div>
-          <div style={slotStyle}>📷</div>
-          <div style={slotStyle}>📷</div>
-          <div style={slotStyle}>+</div>
+          {images.map((image) => (
+            <div key={image.id} style={slotContainerStyle}>
+              <img
+                src={image.previewUrl}
+                alt={image.name}
+                style={previewImageStyle}
+              />
+              <button
+                onClick={() => onRemoveImage(image.id)}
+                style={removeButtonStyle}
+              >
+                ×
+              </button>
+            </div>
+          ))}
+
+          {Array.from({ length: emptySlots }).map((_, index) => (
+            <div key={index} style={emptySlotStyle}>
+              +
+            </div>
+          ))}
         </div>
+
+        {isUploading && (
+          <p style={{ color: "#f57c00", fontSize: "14px", marginTop: "12px" }}>
+            Cargando imágenes...
+          </p>
+        )}
+
+        {error && (
+          <p style={{ color: "#d32f2f", fontSize: "14px", marginTop: "12px" }}>
+            {error}
+          </p>
+        )}
 
         <p style={{ color: "#6f6f6f", fontSize: "16px", marginTop: "16px" }}>
           Puedes subir hasta 5 fotos en formato PNG o JPG.
@@ -56,7 +116,38 @@ export default function FotosSection() {
   );
 }
 
-const slotStyle = {
+const slotContainerStyle: React.CSSProperties = {
+  width: "120px",
+  height: "75px",
+  border: "1px solid #eadfd8",
+  borderRadius: "10px",
+  background: "#faf6f4",
+  position: "relative",
+  overflow: "hidden",
+};
+
+const previewImageStyle: React.CSSProperties = {
+  width: "100%",
+  height: "100%",
+  objectFit: "cover",
+};
+
+const removeButtonStyle: React.CSSProperties = {
+  position: "absolute",
+  top: "4px",
+  right: "4px",
+  width: "24px",
+  height: "24px",
+  borderRadius: "50%",
+  border: "none",
+  background: "rgba(0,0,0,0.65)",
+  color: "#fff",
+  cursor: "pointer",
+  fontSize: "16px",
+  lineHeight: 1,
+};
+
+const emptySlotStyle: React.CSSProperties = {
   width: "120px",
   height: "75px",
   border: "1px solid #eadfd8",
