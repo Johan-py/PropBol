@@ -1,162 +1,68 @@
-export type GoogleSignupPrefill = {
-  email: string;
-  firstName: string;
-  lastName: string;
-  fullName?: string;
-};
+"use client";
 
-const GOOGLE_SIGNUP_PREFILL_KEY = "propbol_google_signup_prefill";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  buildGoogleSignupPrefillFromSearchParams,
+  saveGoogleSignupPrefill,
+} from "@/lib/auth/google";
 
-type GoogleCredentialPayload = {
-  email?: string;
-  name?: string;
-  given_name?: string;
-  family_name?: string;
-};
+export default function GoogleCallbackPage() {
+  const router = useRouter();
+  const [message, setMessage] = useState(
+    "Procesando datos de tu cuenta de Google...",
+  );
 
-function decodeBase64Url(value: string): string | null {
-  try {
-    const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
-    const padding =
-      normalized.length % 4 === 0
-        ? ""
-        : "=".repeat(4 - (normalized.length % 4));
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const hasError = searchParams.get("error");
 
-    const decoded = atob(normalized + padding);
+    let timeoutId: number | undefined;
 
-    return decodeURIComponent(
-      Array.from(decoded)
-        .map((char) => `%${char.charCodeAt(0).toString(16).padStart(2, "0")}`)
-        .join(""),
-    );
-  } catch {
-    return null;
-  }
-}
+    if (hasError) {
+      setMessage("No se pudo obtener la información de Google.");
 
-function splitFullName(fullName: string): {
-  firstName: string;
-  lastName: string;
-} {
-  const trimmed = fullName.trim();
+      timeoutId = window.setTimeout(() => {
+        router.replace("/sign-up");
+      }, 1500);
 
-  if (!trimmed) {
-    return {
-      firstName: "",
-      lastName: "",
-    };
-  }
-
-  const parts = trimmed.split(/\s+/);
-
-  if (parts.length === 1) {
-    return {
-      firstName: parts[0],
-      lastName: "",
-    };
-  }
-
-  return {
-    firstName: parts[0],
-    lastName: parts.slice(1).join(" "),
-  };
-}
-
-export function extractGooglePrefillFromCredential(
-  credential: string,
-): GoogleSignupPrefill | null {
-  if (!credential) {
-    return null;
-  }
-
-  const parts = credential.split(".");
-
-  if (parts.length < 2) {
-    return null;
-  }
-
-  const payloadJson = decodeBase64Url(parts[1]);
-
-  if (!payloadJson) {
-    return null;
-  }
-
-  try {
-    const payload = JSON.parse(payloadJson) as GoogleCredentialPayload;
-    const fallbackNames = splitFullName(payload.name ?? "");
-
-    const email = payload.email?.trim() ?? "";
-    const firstName = payload.given_name?.trim() || fallbackNames.firstName;
-    const lastName = payload.family_name?.trim() || fallbackNames.lastName;
-
-    if (!email && !firstName && !lastName) {
-      return null;
+      return () => {
+        if (timeoutId) {
+          window.clearTimeout(timeoutId);
+        }
+      };
     }
 
-    return {
-      email,
-      firstName,
-      lastName,
-      fullName:
-        payload.name?.trim() ||
-        [firstName, lastName].filter(Boolean).join(" ").trim(),
+    const prefill = buildGoogleSignupPrefillFromSearchParams(searchParams);
+
+    if (prefill) {
+      saveGoogleSignupPrefill(prefill);
+      setMessage("Datos obtenidos correctamente. Redirigiendo al formulario...");
+    } else {
+      setMessage(
+        "No se recibieron datos para autocompletar el formulario. Redirigiendo...",
+      );
+    }
+
+    timeoutId = window.setTimeout(() => {
+      router.replace("/sign-up");
+    }, 1000);
+
+    return () => {
+      if (timeoutId) {
+        window.clearTimeout(timeoutId);
+      }
     };
-  } catch {
-    return null;
-  }
-}
+  }, [router]);
 
-export function saveGoogleSignupPrefill(
-  data: Partial<GoogleSignupPrefill>,
-): void {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  sessionStorage.setItem(GOOGLE_SIGNUP_PREFILL_KEY, JSON.stringify(data));
-}
-
-export function consumeGoogleSignupPrefill(): Partial<GoogleSignupPrefill> | null {
-  if (typeof window === "undefined") {
-    return null;
-  }
-
-  const rawValue = sessionStorage.getItem(GOOGLE_SIGNUP_PREFILL_KEY);
-
-  if (!rawValue) {
-    return null;
-  }
-
-  sessionStorage.removeItem(GOOGLE_SIGNUP_PREFILL_KEY);
-
-  try {
-    return JSON.parse(rawValue) as Partial<GoogleSignupPrefill>;
-  } catch {
-    return null;
-  }
-}
-
-export function buildGoogleSignupPrefillFromSearchParams(
-  searchParams: URLSearchParams,
-): Partial<GoogleSignupPrefill> | null {
-  const email = searchParams.get("email")?.trim() ?? "";
-  const firstName = searchParams.get("firstName")?.trim() ?? "";
-  const lastName = searchParams.get("lastName")?.trim() ?? "";
-  const fullName = searchParams.get("name")?.trim() ?? "";
-
-  const fallbackNames = splitFullName(fullName);
-
-  const resolvedFirstName = firstName || fallbackNames.firstName;
-  const resolvedLastName = lastName || fallbackNames.lastName;
-
-  if (!email && !resolvedFirstName && !resolvedLastName && !fullName) {
-    return null;
-  }
-
-  return {
-    email,
-    firstName: resolvedFirstName,
-    lastName: resolvedLastName,
-    fullName,
-  };
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-[#f5f5f4] px-4">
+      <div className="w-full max-w-md rounded-md border border-[#e7e5e4] bg-white px-6 py-8 text-center shadow-sm">
+        <h1 className="text-2xl font-bold text-[#292524]">
+          Autenticación con Google
+        </h1>
+        <p className="mt-3 text-sm text-[#57534e]">{message}</p>
+      </div>
+    </main>
+  );
 }
