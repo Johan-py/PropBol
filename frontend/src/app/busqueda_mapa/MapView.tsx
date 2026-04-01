@@ -93,11 +93,11 @@ function formatPrice(price: number, currency: "USD" | "BOB"): string {
 }
 
 interface MapViewProps {
-  properties: PropertyMapPin[]
-  center?: [number, number]
-  zoom?: number
-  selectedId?: string | null
-  onSelect?: (id: string) => void
+  properties: PropertyMapPin[];
+  center?: [number, number];
+  zoom?: number;
+  selectedId?: string | null;
+  onSelect?: (id: string) => void;
 }
 
 export default function MapView({
