@@ -12,11 +12,17 @@ import {
   findPublicationByIdRepository,
   getMultimediaByPublicationIdRepository
 } from './multimedia.repository.js'
-import {
+import type {
   GetPublicationMultimediaInput,
   RegisterImagesInput,
   RegisterVideoLinkInput
 } from './multimedia.types.js'
+
+const validatePositiveInteger = (value: number, fieldName: string) => {
+  if (!Number.isInteger(value) || value <= 0) {
+    throw new Error(`${fieldName} no válido`)
+  }
+}
 
 const isValidYoutubeUrl = (videoUrl: string): boolean => {
   try {
@@ -48,6 +54,9 @@ const validatePublicationOwnership = async (
   publicacionId: number,
   usuarioId: number
 ) => {
+  validatePositiveInteger(publicacionId, 'ID de publicación')
+  validatePositiveInteger(usuarioId, 'Usuario')
+
   const publication = await findPublicationByIdRepository(publicacionId)
 
   if (!publication) {
@@ -70,21 +79,39 @@ const validateImagesInput = (images: RegisterImagesInput['images']) => {
     throw new Error('Límite de imágenes alcanzado')
   }
 
-  for (const image of images) {
+  images.forEach((image, index) => {
+    const imageIndex = index + 1
+
+    if (!image || typeof image !== 'object') {
+      throw new Error(`La imagen ${imageIndex} no es válida`)
+    }
+
+    if (typeof image.url !== 'string' || !image.url.trim()) {
+      throw new Error(`La URL de la imagen ${imageIndex} es obligatoria`)
+    }
+
+    if (typeof image.extension !== 'string' || !image.extension.trim()) {
+      throw new Error(`La extensión de la imagen ${imageIndex} es obligatoria`)
+    }
+
     const normalizedExtension = image.extension.trim().toLowerCase()
 
     if (!ALLOWED_IMAGE_EXTENSIONS.includes(normalizedExtension)) {
-      throw new Error('Formato no permitido. Solo PNG o JPG')
+      throw new Error('Formato no permitido. Solo PNG, JPG o JPEG')
+    }
+
+    if (
+      typeof image.pesoMb !== 'number' ||
+      Number.isNaN(image.pesoMb) ||
+      image.pesoMb <= 0
+    ) {
+      throw new Error(`El tamaño de la imagen ${imageIndex} no es válido`)
     }
 
     if (image.pesoMb > MAX_IMAGE_SIZE_MB) {
       throw new Error('La imagen supera el tamaño máximo permitido de 5 MB')
     }
-
-    if (!image.url.trim()) {
-      throw new Error('La URL de la imagen es obligatoria')
-    }
-  }
+  })
 }
 
 export const getPublicationMultimediaService = async ({
@@ -107,11 +134,11 @@ export const registerVideoLinkService = async ({
 }: RegisterVideoLinkInput) => {
   const publication = await validatePublicationOwnership(publicacionId, usuarioId)
 
-  const normalizedVideoUrl = videoUrl.trim()
-
-  if (!normalizedVideoUrl) {
+  if (typeof videoUrl !== 'string' || !videoUrl.trim()) {
     throw new Error('El enlace de video es obligatorio')
   }
+
+  const normalizedVideoUrl = videoUrl.trim()
 
   if (!isValidYoutubeUrl(normalizedVideoUrl)) {
     throw new Error('Enlace de video no válido')
