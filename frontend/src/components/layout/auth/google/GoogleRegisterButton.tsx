@@ -1,5 +1,5 @@
 "use client";
-
+import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react";
 
 declare global {
@@ -13,9 +13,19 @@ interface GoogleCredentialResponse {
   select_by: string;
 }
 
+interface GoogleMomentNotification {
+  isDismissedMoment: () => boolean
+  getDismissedReason: () => string
+  isNotDisplayed: () => boolean
+  getNotDisplayedReason: () => string
+  isSkippedMoment: () => boolean
+  getSkippedReason: () => string
+}
+
 interface GoogleInitializeConfig {
   client_id: string;
   callback: (response: GoogleCredentialResponse) => void | Promise<void>;
+  moment_callback?: (notification: GoogleMomentNotification) => void
   ux_mode?: "popup" | "redirect";
   locale?: string;
   cancel_on_tap_outside?: boolean;
@@ -58,6 +68,7 @@ export default function GoogleRegisterButton({
 }: GoogleRegisterButtonProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [localError, setLocalError] = useState("");
+  const router = useRouter()
 
   useEffect(() => {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
@@ -80,13 +91,24 @@ export default function GoogleRegisterButton({
             return;
           }
 
-          setLocalError("");
-          await onCredentialReceived(response.credential);
-        },
-        ux_mode: "popup",
-        locale: "es",
-        cancel_on_tap_outside: true,
-      });
+        setLocalError("");
+        await onCredentialReceived(response.credential);
+      },
+      moment_callback: (notification: GoogleMomentNotification) => {
+        const wasDismissed =
+          notification.isDismissedMoment() &&
+          (notification.getDismissedReason() === "credential_returned" ||
+            notification.getDismissedReason() === "cancel_called" ||
+            notification.getDismissedReason() === "flow_restarted")
+
+        if (notification.isDismissedMoment() && !wasDismissed) {
+          router.replace("/sign-up")
+        }
+      },
+      ux_mode: "popup",
+      locale: "es",
+      cancel_on_tap_outside: true,
+    });
 
       window.google.accounts.id.renderButton(containerRef.current, {
         type: "standard",
