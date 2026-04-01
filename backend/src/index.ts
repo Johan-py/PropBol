@@ -22,6 +22,9 @@ import { requireAuth } from './middleware/auth.middleware.js'
 import meHandler from '../api/auth/me.js'
 import correoverificacionRoutes from './modules/perfil/correoverificacion.routes.js'
 
+// 👉 Importa tu router de publicaciones
+import publicacionesRoutes from './modules/publicaciones/publicaciones.routes.js'
+
 const app = express()
 
 app.use(
@@ -73,18 +76,8 @@ app.patch('/notificaciones/:id/read', requireAuth, markNotificationAsReadControl
 app.patch('/notificaciones/read-all', requireAuth, markAllNotificationsAsReadController)
 app.delete('/notificaciones/:id', requireAuth, deleteNotificationController)
 
-app.post('/api/publicaciones', (req, res) => {
-  const nuevaPublicacion = req.body
-  res.json({ message: 'Publicación creada', publicacion: nuevaPublicacion })
-})
-
-app.get('/api/publicaciones', (_req, res) => {
-  res.json({ message: 'Listado de publicaciones' })
-})
-
-app.get('/api/publicaciones/gratis', (_req, res) => {
-  res.json({ message: 'Listado de publicaciones gratuitas' })
-})
+// 👉 Aquí montamos tu router de publicaciones
+app.use('/api', publicacionesRoutes)
 
 app.get('/api/auth/me', async (req, res) => {
   await meHandler(req as any, res as any)

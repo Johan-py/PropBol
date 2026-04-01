@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-import type { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-
-export interface AuthenticatedRequest extends Request {
-  user?: {
-    id: number;
-    email?: string;
-  };
-}
-=======
 import type { NextFunction, Request, Response } from 'express'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { verifyJwtToken } from '../utils/jwt.js'
@@ -21,34 +10,26 @@ export type AuthenticatedRequest = Request & {
   }
 }
 
+// Middleware para Express
 export const requireAuth = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({
-      message: 'Token no proporcionado'
-    })
+    return res.status(401).json({ message: 'Token no proporcionado' })
   }
 
   const token = authHeader.split(' ')[1]
 
   if (!token) {
-    return res.status(401).json({
-      message: 'Token no proporcionado'
-    })
+    return res.status(401).json({ message: 'Token no proporcionado' })
   }
->>>>>>> b893eaa588fdf3b2e85cebfe130d4b69f653a1c9
 
-export const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
     verifyJwtToken(token)
-
     const session = await findActiveSessionByToken(token)
 
     if (!session) {
-      return res.status(401).json({
-        message: 'Sesión inválida o expirada'
-      })
+      return res.status(401).json({ message: 'Sesión inválida o expirada' })
     }
 
     ;(req as AuthenticatedRequest).user = {
@@ -58,40 +39,32 @@ export const authMiddleware = (req: AuthenticatedRequest, res: Response, next: N
 
     next()
   } catch {
-    return res.status(401).json({
-      message: 'Token inválido'
-    })
+    return res.status(401).json({ message: 'Token inválido' })
   }
 }
 
+// Middleware para Vercel (serverless)
 export const verifyAuth = async (req: VercelRequest, res: VercelResponse) => {
   const authHeader = req.headers.authorization
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    res.status(401).json({
-      message: 'Token no proporcionado'
-    })
+    res.status(401).json({ message: 'Token no proporcionado' })
     return null
   }
 
   const token = authHeader.split(' ')[1]
 
   if (!token) {
-    res.status(401).json({
-      message: 'Token no proporcionado'
-    })
+    res.status(401).json({ message: 'Token no proporcionado' })
     return null
   }
 
   try {
     verifyJwtToken(token)
-
     const session = await findActiveSessionByToken(token)
 
     if (!session) {
-      res.status(401).json({
-        message: 'Sesión inválida o expirada'
-      })
+      res.status(401).json({ message: 'Sesión inválida o expirada' })
       return null
     }
 
@@ -100,9 +73,7 @@ export const verifyAuth = async (req: VercelRequest, res: VercelResponse) => {
       user: session.usuario
     }
   } catch {
-    res.status(401).json({
-      message: 'Token inválido'
-    })
+    res.status(401).json({ message: 'Token inválido' })
     return null
   }
 }
