@@ -1,10 +1,7 @@
 // correoverificacion.controller.ts
 import { Request, Response } from 'express'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from "../../db";
 import { enviarCodigoCambioEmail } from '../../lib/email.service.js'
-
-// Crear instancia de PrismaClient
-const prisma = new PrismaClient()
 
 interface AuthRequest extends Request {
   usuario?: {
@@ -69,7 +66,6 @@ export const solicitarCambioEmail = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ ok: false, msg: 'Email requerido' })
     }
 
-    // Verificar si el email ya está registrado
     const existeEmail = await prisma.usuario.findUnique({
       where: { correo: emailNuevo }
     })
@@ -81,11 +77,9 @@ export const solicitarCambioEmail = async (req: AuthRequest, res: Response) => {
       })
     }
 
-    // Generar OTP de 4 dígitos
     const otp = Math.floor(1000 + Math.random() * 9000).toString()
-    const expiraEn = new Date(Date.now() + 5 * 60 * 1000) // 5 minutos
+    const expiraEn = new Date(Date.now() + 5 * 60 * 1000)
 
-    // Guardar la solicitud en la base de datos
     await prisma.cambioEmail.create({
       data: {
         token: otp,
@@ -104,21 +98,8 @@ export const solicitarCambioEmail = async (req: AuthRequest, res: Response) => {
 
     if (!emailEnviado.success) {
       console.error(`❌ Error al enviar email a ${emailNuevo}, pero el OTP fue guardado`)
-      // Podrías eliminar el registro si prefieres que falle la solicitud
-      // await prisma.cambioEmail.deleteMany({
-      //   where: {
-      //     usuarioId,
-      //     token: otp,
-      //     completadoEn: null
-      //   }
-      // })
-      // return res.status(500).json({
-      //   ok: false,
-      //   msg: 'Error al enviar el código. Intenta nuevamente.'
-      // })
     }
 
-    // No devolver el OTP en producción por seguridad
     return res.json({
       ok: true,
       msg: 'Código enviado al nuevo correo'
@@ -145,7 +126,6 @@ export const confirmarCambioEmail = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ ok: false, msg: 'Código requerido' })
     }
 
-    // Buscar la solicitud pendiente más reciente
     const solicitud = await prisma.cambioEmail.findFirst({
       where: {
         usuarioId,
@@ -161,7 +141,6 @@ export const confirmarCambioEmail = async (req: AuthRequest, res: Response) => {
       })
     }
 
-    // Verificar expiración
     if (new Date() > solicitud.expiraEn) {
       return res.status(410).json({
         ok: false,
@@ -169,7 +148,6 @@ export const confirmarCambioEmail = async (req: AuthRequest, res: Response) => {
       })
     }
 
-    // Verificar código
     if (solicitud.token !== otp) {
       return res.status(400).json({
         ok: false,
@@ -177,7 +155,6 @@ export const confirmarCambioEmail = async (req: AuthRequest, res: Response) => {
       })
     }
 
-    // Actualizar email y marcar solicitud como completada
     const [usuarioActualizado] = await prisma.$transaction([
       prisma.usuario.update({
         where: { id: usuarioId },
