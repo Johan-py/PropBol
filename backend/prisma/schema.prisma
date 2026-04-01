@@ -137,6 +137,7 @@ model UbicacionInmueble {
   latitud            Decimal            @db.Decimal(10, 7)
   longitud           Decimal            @db.Decimal(10, 7)
   direccion          String?
+  
   inmuebleId         Int                @unique
   ubicacionMaestraId Int?
   marcadores         MarcadorMapa[]
