@@ -10,8 +10,12 @@ type LoginResponse = {
   user?: {
     id: number;
     correo: string;
+    nombre?: string;
+    apellido?: string;
   };
 };
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -109,7 +113,27 @@ export default function LoginForm() {
         localStorage.setItem("token", data.token);
       }
 
+      const userName =
+        data.user?.nombre && data.user?.apellido
+          ? `${data.user.nombre} ${data.user.apellido}`
+          : (data.user?.correo ?? trimmedCorreo);
+
+      localStorage.setItem(
+        "propbol_user",
+        JSON.stringify({
+          name: userName,
+          email: data.user?.correo ?? trimmedCorreo,
+        }),
+      );
+      localStorage.setItem(
+        "propbol_session_expires",
+        String(Date.now() + 60 * 60 * 1000),
+      );
+
       setSuccessMessage(data.message || "Inicio de sesión exitoso");
+
+      window.dispatchEvent(new Event("propbol:login"));
+      window.dispatchEvent(new Event("propbol:session-changed"));
 
       setTimeout(() => {
         router.push("/");
@@ -215,10 +239,11 @@ export default function LoginForm() {
         </button>
 
         <button
-          type="button"
-          className="mx-auto block w-fit rounded-md bg-gray-700 px-4 py-1.5 text-xs font-medium text-white hover:bg-gray-800"
-        >
-          Cancelar Inicio de sesión
+            type="button"
+            onClick={() => router.push("/")}
+            className="mx-auto block w-fit rounded-md bg-gray-700 px-4 py-1.5 text-xs font-medium text-white hover:bg-gray-800"
+          >
+            Cancelar Inicio de sesión
         </button>
       </form>
 
