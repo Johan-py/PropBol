@@ -4,7 +4,7 @@ export const verifyEmailController = async () => {
 }
 // correoverificacion.controller.ts
 import { Request, Response } from 'express'
-import { prisma } from '../../lib/prisma.js' // ✅ Importar el prisma que ellos ya usan
+import { prisma } from "../../db"; // ✅ Importar el prisma que ellos ya usan
 
 interface AuthRequest extends Request {
   usuario?: {
