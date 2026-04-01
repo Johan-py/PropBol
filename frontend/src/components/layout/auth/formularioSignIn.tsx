@@ -29,7 +29,7 @@ export default function LoginForm() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const [googleError, setGoogleError] = useState("");
   const isFormValid =
     correo.length > 0 &&
     password.length > 0 &&
@@ -62,6 +62,22 @@ export default function LoginForm() {
 
     setErrors(newErrors);
   };
+
+  const handleGoogleLogin = () => {
+  setGoogleError("");
+
+  const popup = null //window.open(
+   // `${API_URL}/api/auth/google`,
+    //"_blank",
+    //"width=500,height=600"
+  //);
+
+  if (!popup || popup.closed || typeof popup.closed === "undefined") {
+    setGoogleError(
+      "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar."
+    );
+  }
+};
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -232,11 +248,18 @@ export default function LoginForm() {
 
         <button
           type="button"
+          onClick={handleGoogleLogin}
           className="flex w-full items-center justify-center gap-2 rounded-md border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
+>
           <span className="text-base font-bold">G</span>
           Continuar con Google
         </button>
+
+        {googleError && (
+          <p className="mt-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+             {googleError}
+          </p>
+        )}
 
         <button
           type="button"
