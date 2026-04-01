@@ -1,4 +1,4 @@
-import { prisma } from '../prismaClient.js'
+import { prisma } from '../../prismaClient.js'
 
 const createProperty = async (data: any, userId: number) => {
   const result = await prisma.$transaction(async (tx) => {
@@ -12,19 +12,7 @@ const createProperty = async (data: any, userId: number) => {
         nroCuartos: data.nroCuartos,
         nroBanos: data.nroBanos,
         descripcion: data.descripcion,
-        propietarioId: userId,
-        ubicacion: {
-          create: {
-            direccion: data.direccion,
-            zona: data.zona,
-            ciudad: data.ciudad || 'Cochabamba',
-            latitud: data.latitud || 0,
-            longitud: data.longitud || 0
-          }
-        }
-      },
-      include: {
-        ubicacion: true
+        propietarioId: userId
       }
     })
 
@@ -36,6 +24,16 @@ const createProperty = async (data: any, userId: number) => {
         inmuebleId: inmueble.id
       }
     })
+
+    await tx.$executeRaw`
+      INSERT INTO ubicacion_inmueble ("inmuebleId", "direccion", "latitud", "longitud")
+      VALUES (
+        ${inmueble.id},
+        ${data.direccion},
+        ${data.latitud ?? 0},
+        ${data.longitud ?? 0}
+      )
+    `
 
     return { inmueble, publicacion }
   })

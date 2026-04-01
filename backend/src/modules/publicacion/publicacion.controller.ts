@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { validationResult } from 'express-validator'
-import propertyService from '../services/publicacion.service.js'
+import propertyService from '../publicacion/publicacion.service.js'
 
 export const createProperty = async (req: Request, res: Response) => {
   const errors = validationResult(req)
@@ -22,7 +22,7 @@ export const createProperty = async (req: Request, res: Response) => {
     // mensaje: 'Usuario no autenticado'
     // });
     // }
-    const userId = 1
+    const userId = 4
     const property = await propertyService.createProperty(req.body, userId)
 
     return res.status(201).json({

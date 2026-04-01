@@ -10,16 +10,36 @@ if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL no está definida')
 }
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
-})
+// 👇 evitar múltiples instancias
+const globalForPrisma = globalThis as unknown as {
+  prisma?: PrismaClient
+  pool?: Pool
+}
+
+// 👇 pool único + límite de conexiones
+const pool =
+  globalForPrisma.pool ??
+  new Pool({
+    connectionString: process.env.DATABASE_URL,
+    max: 1
+  })
 
 const adapter = new PrismaPg(pool)
 
 console.log('Adapter creado')
 
-export const prisma = new PrismaClient({
-  adapter
-})
+// 👇 prisma singleton
+const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    adapter
+  })
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.pool = pool
+  globalForPrisma.prisma = prisma
+}
 
 console.log('Prisma client creado')
+
+export { prisma }

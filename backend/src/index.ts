@@ -3,7 +3,7 @@ import cors from 'cors'
 import { BannersController } from './modules/banners/banners.controller.js'
 import locationSearchHandler from '../api/locations/search.js'
 import { registerController, loginController } from './modules/auth/auth.controller.js'
-import router from './routes/publicacion.routes.js' //sig-dev
+import router from './modules/publicacion/publicacion.routes.js' //sig-dev
 
 const app = express()
 
