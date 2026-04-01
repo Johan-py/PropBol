@@ -33,7 +33,7 @@ export const enviarCodigoCambioEmail = async ({
     const info = await transporter.sendMail({
       from: `"Mi App" <${process.env.EMAIL_USER}>`,
       to: emailDestino,
-      subject: "🔐 Código de verificación - Cambio de email",
+      subject: " Código de verificación - Cambio de email",
       html: `
         <!DOCTYPE html>
         <html>
@@ -59,12 +59,12 @@ export const enviarCodigoCambioEmail = async ({
               </div>
               
               <p style="font-size: 14px; color: #666;">
-                ⏰ Este código expirará en <strong style="color: #d97706;">5 minutos</strong>.
+                 Este código expirará en <strong style="color: #d97706;">5 minutos</strong>.
               </p>
               
               <div style="background-color: #fffbeb; border-left: 4px solid #d97706; padding: 12px; margin: 20px 0;">
                 <p style="margin: 0; font-size: 13px; color: #78350f;">
-                  ⚠️ Si no solicitaste este cambio, puedes ignorar este mensaje. Tu cuenta permanece segura.
+                   Si no solicitaste este cambio, puedes ignorar este mensaje. Tu cuenta permanece segura.
                 </p>
               </div>
             </div>
@@ -95,10 +95,10 @@ export const enviarCodigoCambioEmail = async ({
       `,
     });
 
-    console.log(`✅ Email enviado a ${emailDestino} - ID: ${info.messageId}`);
+    console.log(` Email enviado a ${emailDestino} - ID: ${info.messageId}`);
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error("❌ Error al enviar email:", error);
+    console.error(" Error al enviar email:", error);
     return { success: false, error };
   }
 };
@@ -112,7 +112,7 @@ export const enviarCodigoRegistro = async ({
     const info = await transporter.sendMail({
       from: `"PropBol" <${process.env.EMAIL_USER}>`,
       to: emailDestino,
-      subject: "🔐 Código de verificación - Registro PropBol",
+      subject: " Código de verificación - Registro PropBol",
       html: `
         <!DOCTYPE html>
         <html>
@@ -138,7 +138,7 @@ export const enviarCodigoRegistro = async ({
               </div>
 
               <p style="font-size: 14px; color: #666;">
-                ⏰ Este código expirará en <strong style="color: #d97706;">5 minutos</strong>.
+                 Este código expirará en <strong style="color: #d97706;">5 minutos</strong>.
               </p>
             </div>
 
@@ -164,11 +164,11 @@ export const enviarCodigoRegistro = async ({
     });
 
     console.log(
-      `✅ Email de registro enviado a ${emailDestino} - ID: ${info.messageId}`,
+      ` Email de registro enviado a ${emailDestino} - ID: ${info.messageId}`,
     );
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error("❌ Error al enviar email de registro:", error);
+    console.error(" Error al enviar email de registro:", error);
     return { success: false, error };
   }
 };
