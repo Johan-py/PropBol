@@ -65,7 +65,7 @@ export default function LoginForm() {
 
   const handleGoogleLogin = () => {
   setGoogleError("");
-  setIsLoadingGoogle(true);
+  setIsLoadingGoogle(true); 
 
   const popup = window.open(
     `${API_URL}/api/auth/google`,
@@ -73,13 +73,21 @@ export default function LoginForm() {
     "width=500,height=600"
   );
 
-  
   if (!popup || popup.closed || typeof popup.closed === "undefined") {
     setGoogleError(
       "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar."
     );
     setIsLoadingGoogle(false);
+    return;
   }
+
+  
+  const checkPopup = setInterval(() => {
+    if (popup.closed) {
+      clearInterval(checkPopup);
+      setIsLoadingGoogle(false); 
+    }
+  }, 500);
 };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -252,7 +260,7 @@ export default function LoginForm() {
         <button
           type="button"
           onClick={handleGoogleLogin}
-          disabled={isLoadingGoogle} // desactiva mientras carga
+          disabled={isLoadingGoogle} 
           className="flex w-full items-center justify-center gap-2 rounded-md border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
         >
          <span className="text-base font-bold">G</span>
