@@ -25,7 +25,7 @@ model Usuario {
   genero                Genero?
   direccion             String?
   activo                Boolean                 @default(true)
-  fechaRegistro         DateTime               : @default(now())
+  fechaRegistro         DateTime                @default(now())
   createdAt             DateTime                @default(now())
   updatedAt             DateTime                @updatedAt
   rolId                 Int
@@ -137,8 +137,6 @@ model UbicacionInmueble {
   latitud            Decimal            @db.Decimal(10, 7)
   longitud           Decimal            @db.Decimal(10, 7)
   direccion          String?
-  zona               String?
-  ciudad             String
   inmuebleId         Int                @unique
   ubicacionMaestraId Int?
   marcadores         MarcadorMapa[]
@@ -308,15 +306,6 @@ model ubicacion_maestra {
   ubicacion_inmueble UbicacionInmueble[]
 
   @@index([nombre])
-}
-
-model PagoQr {
-  id               Int      @id @default(autoincrement())
-  monto            Float
-  codigoReferencia String   @unique
-  estado           String
-  usuarioId        Int
-  fechaCreacion    DateTime @default(now())
 }
 
 model bitacora_pagos {
