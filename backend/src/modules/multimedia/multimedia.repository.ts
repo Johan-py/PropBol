@@ -1,6 +1,10 @@
-import { TipoMultimedia } from '@prisma/client'
-import { prisma } from '../../lib/prisma.js'
-import { MultimediaRecord, MultimediaType, PublicacionRecord } from './multimedia.types.js'
+import type { TipoMultimedia } from '@prisma/client'
+import { prisma } from '../../db.js'
+import type {
+  MultimediaRecord,
+  MultimediaType,
+  PublicacionRecord
+} from './multimedia.types.js'
 
 const mapPublicationRecord = (publication: {
   id: number
@@ -33,7 +37,9 @@ const mapMultimediaRecord = (multimedia: {
   }
 }
 
-export const findPublicationByIdRepository = async (publicacionId: number) => {
+export const findPublicationByIdRepository = async (
+  publicacionId: number
+): Promise<PublicacionRecord | null> => {
   const publication = await prisma.publicacion.findUnique({
     where: { id: publicacionId },
     select: {
@@ -46,7 +52,9 @@ export const findPublicationByIdRepository = async (publicacionId: number) => {
   return publication ? mapPublicationRecord(publication) : null
 }
 
-export const getMultimediaByPublicationIdRepository = async (publicacionId: number) => {
+export const getMultimediaByPublicationIdRepository = async (
+  publicacionId: number
+): Promise<MultimediaRecord[]> => {
   const multimedia = await prisma.multimedia.findMany({
     where: { publicacionId },
     orderBy: { id: 'asc' },
@@ -65,7 +73,7 @@ export const getMultimediaByPublicationIdRepository = async (publicacionId: numb
 export const countMultimediaByPublicationIdAndTypeRepository = async (
   publicacionId: number,
   tipo: MultimediaType
-) => {
+): Promise<number> => {
   return prisma.multimedia.count({
     where: {
       publicacionId,
@@ -76,13 +84,13 @@ export const countMultimediaByPublicationIdAndTypeRepository = async (
 
 export const createMultimediaRepository = async (
   data: Omit<MultimediaRecord, 'id'>
-) => {
+): Promise<MultimediaRecord> => {
   const created = await prisma.multimedia.create({
     data: {
       publicacionId: data.publicacionId,
       tipo: data.tipo as TipoMultimedia,
       url: data.url,
-      pesoMb: data.pesoMb
+      pesoMb: data.pesoMb ?? null
     },
     select: {
       id: true,
