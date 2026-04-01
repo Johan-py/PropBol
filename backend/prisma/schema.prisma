@@ -138,6 +138,7 @@ model UbicacionInmueble {
   inmuebleId Int            @unique
   marcadores MarcadorMapa[]
   inmueble   Inmueble       @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
+  ubicacion_maestra  ubicacion_maestra? @relation(fields: [ubicacionMaestraId], references: [id])
 
   @@map("ubicacion_inmueble")
 }
