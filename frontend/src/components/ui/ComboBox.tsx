@@ -12,6 +12,7 @@ interface ComboBoxProps {
   placeholder?: string;
   options?: (string | ComboBoxOption)[];
   icon?: LucideIcon;
+  onChange?: (value: string) => void;
 }
 
 export function ComboBox({
@@ -19,6 +20,7 @@ export function ComboBox({
   placeholder,
   options = [],
   icon: Icon,
+  onChange,
 }: ComboBoxProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<ComboBoxOption | null>(null);
@@ -28,9 +30,12 @@ export function ComboBox({
     const optionObj = typeof option === "string" ? { label: option } : option;
     setSelected(optionObj);
     setIsOpen(false);
+
+    if (onChange) {
+      onChange(optionObj.label);
+    }
   };
 
-  // Prioridad: Si hay algo seleccionado, usamos su ícono. Si no, el ícono por defecto.
   const DisplayIcon = selected?.icon || Icon;
 
   useEffect(() => {
@@ -51,7 +56,6 @@ export function ComboBox({
       <label className="text-sm font-medium text-stone-900">{label}</label>
 
       <div className="relative group">
-        {/* ÍCONO DE LA IZQUIERDA (El plomo) */}
         {DisplayIcon && (
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10">
             <DisplayIcon
@@ -67,7 +71,6 @@ export function ComboBox({
             DisplayIcon ? "pl-10" : "pl-4"
           } ${isOpen ? "border-amber-600 ring-1 ring-amber-600" : "border-stone-200"}`}
         >
-          {/* TEXTO SELECCIONADO (Sin el ícono repetido aquí) */}
           <span className={selected ? "text-stone-900" : "text-stone-500"}>
             {selected?.label || placeholder}
           </span>
