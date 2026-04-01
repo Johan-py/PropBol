@@ -63,21 +63,35 @@ export default function LoginForm() {
     setErrors(newErrors);
   };
 
-  const handleGoogleLogin = () => {
-    setGoogleError("");
+const handleGoogleLogin = () => {
+  setGoogleError("");
 
-    const popup = window.open(
-      `${API_URL}/api/auth/google`,
-      "_blank",
-      "width=500,height=600",
+  const popup = window.open(
+    `${API_URL}/api/auth/google`,
+    "_blank",
+    "width=500,height=600",
+  );
+
+  if (!popup || popup.closed || typeof popup.closed === "undefined") {
+    setGoogleError(
+      "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.",
     );
+    return;
+  }
 
-    if (!popup || popup.closed || typeof popup.closed === "undefined") {
-      setGoogleError(
-        "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.",
-      );
+  const popupMonitor = setInterval(() => {
+    if (popup.closed) {
+      clearInterval(popupMonitor)
+ 
+      const tokenGuardado = localStorage.getItem("token")
+      if (!tokenGuardado) {
+        setGoogleError(
+          "Cancelaste el inicio de sesión con Google. Puedes intentarlo nuevamente.",
+        )
+      }
     }
-  };
+  }, 500)
+}
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
