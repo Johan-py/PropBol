@@ -281,6 +281,30 @@ model Visitor {
   @@map("visitor")
 }
 
+model public_Telefono {
+  id         Int     @id @default(autoincrement())
+  numero     String
+  usuarioId  Int
+  codigoPais String
+  principal  Boolean
+
+  @@map("Telefono")
+}
+
+model ubicacion_maestra {
+  id                 Int                 @id @default(autoincrement())
+  departamento       String
+  provincia          String?
+  municipio          String?
+  nombre             String
+  latitud            Decimal             @db.Decimal(10, 7)
+  longitud           Decimal             @db.Decimal(10, 7)
+  popularidad        Int                 @default(0)
+  ubicacion_inmueble UbicacionInmueble[]
+
+  @@index([nombre])
+}
+
 enum Genero {
   MASCULINO
   FEMENINO
