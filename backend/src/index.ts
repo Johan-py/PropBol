@@ -21,6 +21,7 @@ import {
 import { requireAuth } from "./middleware/auth.middleware.js";
 import meHandler from "../api/auth/me.js";
 import correoverificacionRoutes from "./modules/perfil/correoverificacion.routes.js";
+import multimediaRoutes from "./modules/multimedia/multimedia.routes.js";
 
 const app = express();
 
@@ -35,6 +36,9 @@ app.use(
 
 app.use(express.json());
 
+app.use("/api/perfil", correoverificacionRoutes);
+app.use("/api/publicaciones", multimediaRoutes);
+
 const bannersController = new BannersController();
 const filtersController = new FiltersHomepageController();
 
@@ -47,7 +51,9 @@ app.post("/api/auth/register", registerController);
 app.post("/api/auth/login", loginController);
 app.post("/api/auth/logout", logoutController);
 
-app.use("/api/perfil", correoverificacionRoutes);
+app.get("/api/auth/me", async (req, res) => {
+  await meHandler(req as any, res as any);
+});
 
 app.get("/api/filters", filtersController.getFilters);
 app.get("/api/banners", (req, res) => bannersController.getBanners(req, res));
@@ -97,11 +103,7 @@ app.get("/api/publicaciones/gratis", (_req, res) => {
   res.json({ message: "Listado de publicaciones gratuitas" });
 });
 
-app.get("/api/auth/me", async (req, res) => {
-  await meHandler(req as any, res as any);
-});
-
-const PORT = 5000;
+const PORT = Number(process.env.PORT) || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
