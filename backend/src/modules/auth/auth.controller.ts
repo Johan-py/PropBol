@@ -15,9 +15,27 @@ type RegisterBody = {
   telefono?: string;
 };
 
+const isDuplicateEmailError = (message: string) => {
+  const normalized = message.toLowerCase();
+
+  return (
+    normalized === "el correo ya está registrado" ||
+    (normalized.includes("unique constraint failed") &&
+      normalized.includes("correo"))
+  );
+};
+
 const getRegisterErrorStatus = (message: string) => {
-  if (message === "El correo ya está registrado") return 409;
+  if (isDuplicateEmailError(message)) return 409;
   return 400;
+};
+
+const getRegisterErrorMessage = (message: string) => {
+  if (isDuplicateEmailError(message)) {
+    return "El correo ya está registrado";
+  }
+
+  return message;
 };
 
 export const loginController = async (req: Request, res: Response) => {
@@ -70,10 +88,12 @@ export const registerController = async (
       token: result.token,
     });
   } catch (error) {
-    const message =
+    const rawMessage =
       error instanceof Error ? error.message : "Error interno del servidor";
 
-    return res.status(getRegisterErrorStatus(message)).json({ message });
+    return res.status(getRegisterErrorStatus(rawMessage)).json({
+      message: getRegisterErrorMessage(rawMessage),
+    });
   }
 };
 
@@ -84,7 +104,7 @@ export const logoutController = async (req: Request, res: Response) => {
     return res.status(401).json({ message: "Token no proporcionado" });
   }
 
-  const token = authHeader.split(" ")[1];
+  const token = authHeader.split("Bearer ")[1];
 
   try {
     const result = await logoutService(token);
