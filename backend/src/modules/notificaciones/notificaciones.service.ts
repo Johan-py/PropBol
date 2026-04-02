@@ -8,6 +8,8 @@ import {
   markNotificationAsReadRepository,
   softDeleteNotificationRepository
 } from '../notificaciones/notificaciones.repository.js'
+import { findUserById } from '../auth/auth.repository.js'
+import { sendNotificationEmail } from '../email/notification-email.service.js'
 
 type NotificationFilter = 'todas' | 'leida' | 'no leida' | 'archivada'
 type SupportedNotificationFilter = Exclude<NotificationFilter, 'archivada'>
@@ -159,6 +161,21 @@ export const createNotificationService = async ({
     titulo: normalizedTitle,
     mensaje: normalizedMessage
   })
+
+  try {
+    const user = await findUserById(usuarioId)
+
+    if (user?.correo) {
+      await sendNotificationEmail({
+        emailDestino: user.correo,
+        titulo: notification.titulo,
+        mensaje: notification.mensaje,
+        nombreUsuario: user.nombre
+      })
+    }
+  } catch (error) {
+    console.error('Error enviando correo de notificación:', error)
+  }
 
   return {
     message: 'Notificación creada correctamente',

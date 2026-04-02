@@ -23,6 +23,7 @@ import { requireAuth } from './middleware/auth.middleware.js'
 import meHandler from '../api/auth/me.js'
 import correoverificacionRoutes from './modules/perfil/correoverificacion.routes.js'
 import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
+import { verifyNotificationEmailTransport } from './modules/email/notification-email.service.js'
 
 const app = express()
 
@@ -96,7 +97,14 @@ app.get('/api/publicaciones/gratis', (_req, res) => {
 
 const PORT = Number(process.env.PORT) || 5000
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server running on http://localhost:${PORT}`)
   console.log(`Health check: http://localhost:${PORT}/health`)
+
+  try {
+    await verifyNotificationEmailTransport()
+    console.log('✅ Servicio de email para notificaciones listo')
+  } catch (error) {
+    console.error('❌ Error en configuración de email para notificaciones:', error)
+  }
 })
