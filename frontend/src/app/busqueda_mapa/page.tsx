@@ -8,13 +8,16 @@ import { ChevronLeft, ChevronRight, List as ListIcon, LayoutGrid } from 'lucide-
 import { useProperties } from '@/hooks/useProperties'
 
 // === COMPONENTES (Tu diseño Frontend) ===
-import FilterBar from '@/components/FilterBar' 
+import FilterBar from '@/components/filters/FilterBar'
 import PropertyCard from '@/components/layout/PropertyCard'
 import PropertyRow from '@/components/galeria/PropertyRow'
 import EmptyState from '@/components/galeria/EmptyState'
 
 // Carga dinámica del mapa para evitar errores de SSR en Next.js
-const MapView = dynamic(() => import('./MapView'), { ssr: false })
+const MapView = dynamic(() => import('./MapView'), { 
+  ssr: false,
+  loading: () => <div className="h-full w-full bg-stone-100 animate-pulse flex items-center justify-center text-stone-400">Cargando mapa de Bolivia...</div>
+})
 
 export default function BusquedaMapaPage() {
   // Estados de UI (Frontend)
@@ -40,7 +43,17 @@ export default function BusquedaMapaPage() {
     <div className="flex flex-col h-screen bg-white overflow-hidden">
       
       {/* 1. BARRA DE FILTROS SUPERIOR (Tu componente limpio) */}
-      <FilterBar />
+      <FilterBar 
+        variant="map" 
+        onSearch={(filtros: { 
+          tipoInmueble: string[]; 
+          modoInmueble: string[]; 
+          query: string; 
+          updatedAt: string; 
+        }) => {
+          console.log("Filtros aplicados:", filtros);
+        }} 
+      />
 
       {/* 2. ÁREA CENTRAL (Lista + Mapa) */}
       <main className="flex flex-1 overflow-hidden relative">
