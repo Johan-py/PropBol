@@ -16,6 +16,7 @@ type LoginResponse = {
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
+const LOGIN_TIMEOUT_MS = 10000 
 
 export default function LoginForm() {
   const router = useRouter()
@@ -87,9 +88,17 @@ export default function LoginForm() {
       return
     }
 
+    const googleTimeoutId = setTimeout(() => {
+      clearInterval(checkPopup)
+      if (!popup.closed) popup.close()
+      setIsLoadingGoogle(false)
+      setGoogleError('La autenticación con Google tardó demasiado. Por favor intenta nuevamente.')
+    }, 2 * 60 * 1000)
+
     const checkPopup = setInterval(() => {
       if (popup.closed) {
         clearInterval(checkPopup)
+        clearTimeout(googleTimeoutId)
         setIsLoadingGoogle(false)
 
         const tokenGuardado = localStorage.getItem('token')
@@ -127,6 +136,9 @@ export default function LoginForm() {
     setIsLoading(true)
 
     try {
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), LOGIN_TIMEOUT_MS)
+
       const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: {
@@ -135,16 +147,19 @@ export default function LoginForm() {
         body: JSON.stringify({
           correo: trimmedCorreo,
           password: trimmedPassword
-        })
+        }),
+        signal: controller.signal
       })
+
+      clearTimeout(timeoutId)
 
       const data: LoginResponse = await response.json()
 
       if (!response.ok) {
         setPassword('')
               if (response.status === 404) {
-               setErrorMessage(
-               'Esta cuenta no está registrada. Puedes registrarte para crear una cuenta.'
+                setErrorMessage(
+                'Esta cuenta no está registrada. Puedes registrarte para crear una cuenta.'
               )
               return
               }
@@ -178,13 +193,17 @@ export default function LoginForm() {
       setTimeout(() => {
         router.push('/')
       }, 1000)
-    } catch {
-      setPassword('')
-      setErrorMessage('No se pudo conectar con el servidor')
-    } finally {
-      setIsLoading(false)
-    }
-  }
+      } catch (error) {
+        setPassword('')
+        if (error instanceof Error && error.name === 'AbortError') {
+          setErrorMessage('La solicitud tardó demasiado. Por favor intenta nuevamente.')
+        } else {
+          setErrorMessage('No se pudo conectar con el servidor')
+        }
+          } finally {
+            setIsLoading(false)
+          }
+        }
 
   return (
     <div className="w-full max-w-sm rounded-md bg-white p-6 shadow-md">
