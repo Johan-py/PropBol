@@ -37,6 +37,16 @@ type GooglePopupMessage = GooglePopupSuccessMessage | GooglePopupErrorMessage;
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const LOGIN_TIMEOUT_MS = 10000;
+const GOOGLE_LOGIN_TIMEOUT_MS = 2 * 60 * 1000;
+
+const NO_CONNECTION_MESSAGE =
+  "Sin conexión a internet. Verifica tu red e intenta nuevamente.";
+const SERVER_CONNECTION_MESSAGE =
+  "No se pudo conectar con el servidor. Intenta nuevamente.";
+const LOGIN_TIMEOUT_MESSAGE =
+  "La solicitud tardó demasiado. Por favor intenta nuevamente.";
+const GOOGLE_TIMEOUT_MESSAGE =
+  "La autenticación con Google tardó demasiado. Por favor intenta nuevamente.";
 
 const saveSession = (token: string, user?: LoginResponse["user"]) => {
   localStorage.setItem("token", token);
@@ -69,6 +79,26 @@ const isGooglePopupMessage = (value: unknown): value is GooglePopupMessage => {
   }
 
   return "type" in value;
+};
+
+const hasNoInternetConnection = () => {
+  if (typeof navigator === "undefined") {
+    return false;
+  }
+
+  return !navigator.onLine;
+};
+
+const getRequestErrorMessage = (error: unknown) => {
+  if (error instanceof Error && error.name === "AbortError") {
+    return LOGIN_TIMEOUT_MESSAGE;
+  }
+
+  if (hasNoInternetConnection()) {
+    return NO_CONNECTION_MESSAGE;
+  }
+
+  return SERVER_CONNECTION_MESSAGE;
 };
 
 export default function LoginForm() {
@@ -122,6 +152,12 @@ export default function LoginForm() {
     setGoogleError("");
     setErrorMessage("");
     setSuccessMessage("");
+
+    if (hasNoInternetConnection()) {
+      setGoogleError(NO_CONNECTION_MESSAGE);
+      return;
+    }
+
     setIsLoadingGoogle(true);
 
     const popupWidth = 500;
@@ -129,13 +165,17 @@ export default function LoginForm() {
     const left = window.screenX + (window.outerWidth - popupWidth) / 2;
     const top = window.screenY + (window.outerHeight - popupHeight) / 2;
 
-    const popup = window.open(
+    const popupWindow = window.open(
       `${API_URL}/api/auth/google/login`,
       "google-login",
       `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`,
     );
 
-    if (!popup || popup.closed || typeof popup.closed === "undefined") {
+    if (
+      !popupWindow ||
+      popupWindow.closed ||
+      typeof popupWindow.closed === "undefined"
+    ) {
       setGoogleError(
         "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.",
       );
@@ -143,21 +183,25 @@ export default function LoginForm() {
       return;
     }
 
+    const popup = popupWindow;
     popup.focus();
 
     const expectedOrigin = new URL(API_URL).origin;
     let authWasResolved = false;
+    let checkPopupIntervalId = 0;
+    let googleTimeoutId = 0;
 
-    const cleanup = (shouldStopLoading = true) => {
+    function cleanup(shouldStopLoading = true) {
       window.removeEventListener("message", handleMessage);
-      window.clearInterval(checkPopup);
+      window.clearInterval(checkPopupIntervalId);
+      window.clearTimeout(googleTimeoutId);
 
       if (shouldStopLoading) {
         setIsLoadingGoogle(false);
       }
-    };
+    }
 
-    const handleMessage = (event: MessageEvent<GooglePopupMessage>) => {
+    function handleMessage(event: MessageEvent<GooglePopupMessage>) {
       if (event.origin !== expectedOrigin) {
         return;
       }
@@ -189,9 +233,9 @@ export default function LoginForm() {
       );
       setIsLoadingGoogle(false);
       popup.close();
-    };
+    }
 
-    const checkPopup = window.setInterval(() => {
+    checkPopupIntervalId = window.setInterval(() => {
       if (!popup.closed) {
         return;
       }
@@ -199,6 +243,11 @@ export default function LoginForm() {
       cleanup();
 
       if (!authWasResolved) {
+        if (hasNoInternetConnection()) {
+          setGoogleError(NO_CONNECTION_MESSAGE);
+          return;
+        }
+
         const tokenGuardado = localStorage.getItem("token");
 
         if (!tokenGuardado) {
@@ -208,6 +257,20 @@ export default function LoginForm() {
         }
       }
     }, 500);
+
+    googleTimeoutId = window.setTimeout(() => {
+      cleanup();
+
+      if (!popup.closed) {
+        popup.close();
+      }
+
+      setGoogleError(
+        hasNoInternetConnection()
+          ? NO_CONNECTION_MESSAGE
+          : GOOGLE_TIMEOUT_MESSAGE,
+      );
+    }, GOOGLE_LOGIN_TIMEOUT_MS);
 
     window.addEventListener("message", handleMessage);
   };
@@ -235,7 +298,15 @@ export default function LoginForm() {
     setSuccessMessage("");
     setGoogleError("");
 
-    if (Object.keys(newErrors).length > 0) return;
+    if (Object.keys(newErrors).length > 0) {
+      return;
+    }
+
+    if (hasNoInternetConnection()) {
+      setPassword("");
+      setErrorMessage(NO_CONNECTION_MESSAGE);
+      return;
+    }
 
     setIsLoading(true);
 
@@ -247,9 +318,7 @@ export default function LoginForm() {
     try {
       const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           correo: trimmedCorreo,
           password: trimmedPassword,
@@ -284,14 +353,7 @@ export default function LoginForm() {
       }, 1000);
     } catch (error) {
       setPassword("");
-
-      if (error instanceof Error && error.name === "AbortError") {
-        setErrorMessage(
-          "La solicitud tardó demasiado. Por favor intenta nuevamente.",
-        );
-      } else {
-        setErrorMessage("No se pudo conectar con el servidor");
-      }
+      setErrorMessage(getRequestErrorMessage(error));
     } finally {
       window.clearTimeout(timeoutId);
       setIsLoading(false);
