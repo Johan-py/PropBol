@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import path from 'path'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { propertiesController } from './modules/properties/properties.controller.js'
 import {
@@ -21,19 +22,21 @@ import {
 import { requireAuth } from './middleware/auth.middleware.js'
 import meHandler from '../api/auth/me.js'
 import correoverificacionRoutes from './modules/perfil/correoverificacion.routes.js'
+import perfilRoutes from './modules/perfil/perfil.routes.js'
 
 const app = express()
 
 app.use(
   cors({
     origin: ['http://localhost:3000', 'http://localhost:3001'],
-    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
   })
 )
 
 app.use(express.json())
+app.use('/uploads', express.static(path.resolve('uploads')))
 
 const bannersController = new BannersController()
 const filtersController = new FiltersHomepageController()
@@ -48,12 +51,16 @@ app.post('/api/auth/login', loginController)
 app.post('/api/auth/logout', logoutController)
 
 app.use('/api/perfil', correoverificacionRoutes)
+app.use('/api/perfil', perfilRoutes)
 
 app.get('/api/filters', filtersController.getFilters)
 app.get('/api/banners', (req, res) => bannersController.getBanners(req, res))
 
 app.get('/api/locations/search', async (req, res) => {
-  await locationSearchHandler(req as unknown as VercelRequest, res as unknown as VercelResponse)
+  await locationSearchHandler(
+    req as unknown as VercelRequest,
+    res as unknown as VercelResponse
+  )
 })
 
 app.post('/api/locations/popularidad', async (req, res) => {
@@ -68,9 +75,21 @@ app.get('/api/properties/search', propertiesController.search)
 app.get('/api/inmuebles', propertiesController.getAll)
 
 app.get('/notificaciones', requireAuth, getNotificationsController)
-app.get('/notificaciones/unread-count', requireAuth, getUnreadCountController)
-app.patch('/notificaciones/:id/read', requireAuth, markNotificationAsReadController)
-app.patch('/notificaciones/read-all', requireAuth, markAllNotificationsAsReadController)
+app.get(
+  '/notificaciones/unread-count',
+  requireAuth,
+  getUnreadCountController
+)
+app.patch(
+  '/notificaciones/:id/read',
+  requireAuth,
+  markNotificationAsReadController
+)
+app.patch(
+  '/notificaciones/read-all',
+  requireAuth,
+  markAllNotificationsAsReadController
+)
 app.delete('/notificaciones/:id', requireAuth, deleteNotificationController)
 
 app.post('/api/publicaciones', (req, res) => {
