@@ -29,11 +29,6 @@ import {
   StratGoogleLoginController,
 } from "./modules/auth/google/google.controller.js";
 
-import {
-  AuthError,
-  loginWithGoogleCodeService,
-} from "./modules/auth/auth.service.js";
-
 const app = express();
 
 app.use(
@@ -58,56 +53,6 @@ app.post("/api/auth/register", registerController);
 app.post("/api/auth/login", loginController);
 app.post("/api/auth/logout", logoutController);
 app.post("/api/auth/verify-register", verifyRegisterCodeController);
-const buildGooglePopupResponseHtml = (payload: {
-  type: "GOOGLE_AUTH_SUCCESS" | "GOOGLE_AUTH_ERROR";
-  token?: string;
-  user?: unknown;
-  error?: string;
-}) => {
-  return `
-    <!doctype html>
-    <html lang="es">
-      <head>
-        <meta charset="UTF-8" />
-        <title>Google Auth</title>
-      </head>
-      <body>
-        <script>
-          (function () {
-            const message = ${JSON.stringify({
-              source: "propbol-google-auth",
-              ...payload,
-            })};
-            const frontendOrigin = ${JSON.stringify(env.FRONTEND_URL)};
-
-            if (window.opener && !window.opener.closed) {
-              window.opener.postMessage(message, frontendOrigin);
-              window.close();
-              return;
-            }
-
-            const params = new URLSearchParams();
-
-            if (message.type === 'GOOGLE_AUTH_SUCCESS') {
-              params.set('google', 'success');
-              params.set('token', message.token || '');
-            } else {
-              params.set('google', 'error');
-              params.set(
-                'message',
-                typeof message.error === 'string'
-                  ? message.error
-                  : 'No se pudo iniciar sesión con Google'
-              );
-            }
-
-            window.location.href = frontendOrigin + '/sign-in?' + params.toString();
-          })();
-        </script>
-      </body>
-    </html>
-  `;
-};
 app.get("/api/auth/google/login", StratGoogleLoginController);
 
 app.get("/api/auth/google/callback", googleCallbackController);
