@@ -6,12 +6,14 @@ import { ChevronLeft, ChevronRight, List as ListIcon, LayoutGrid } from 'lucide-
 
 // === HOOKS (Lógica Backend de tu compañero) ===
 import { useProperties } from '@/hooks/useProperties'
+import { useOrdenamiento } from '@/hooks/useOrdenamiento'
 
 // === COMPONENTES (Tu diseño Frontend) ===
 import FilterBar from '@/components/filters/FilterBar'
 import PropertyCard from '@/components/layout/PropertyCard'
 import PropertyRow from '@/components/galeria/PropertyRow'
 import EmptyState from '@/components/galeria/EmptyState'
+import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenamiento'
 
 // Carga dinámica del mapa para evitar errores de SSR en Next.js
 const MapView = dynamic(() => import('./MapView'), { 
@@ -26,6 +28,8 @@ export default function BusquedaMapaPage() {
 
   // Estados de Lógica (Backend / Mapas)
   const { properties, isLoading } = useProperties()
+  // Integración de la lógica de ordenamiento sincronizada con la URL
+  const { ordenActual, cambiarOrden } = useOrdenamiento({ inmuebles: properties })
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
 
@@ -39,21 +43,10 @@ export default function BusquedaMapaPage() {
   }, [hoveredId])
 
   return (
-    // Contenedor principal con h-screen y overflow-hidden para evitar scroll global
-    <div className="flex flex-col h-screen bg-white overflow-hidden">
+ <div className="flex flex-col h-screen bg-white overflow-hidden">
       
-      {/* 1. BARRA DE FILTROS SUPERIOR (Tu componente limpio) */}
-      <FilterBar 
-        variant="map" 
-        onSearch={(filtros: { 
-          tipoInmueble: string[]; 
-          modoInmueble: string[]; 
-          query: string; 
-          updatedAt: string; 
-        }) => {
-          console.log("Filtros aplicados:", filtros);
-        }} 
-      />
+      {/* 1. BARRA DE FILTROS SUPERIOR */}
+      <FilterBar variant="map" />
 
       {/* 2. ÁREA CENTRAL (Lista + Mapa) */}
       <main className="flex flex-1 overflow-hidden relative">
@@ -65,107 +58,108 @@ export default function BusquedaMapaPage() {
           }`}
         >
           {isSidebarOpen && (
-            <>
-              {/* Botón de ocultar Panel */}
-              <div className="p-3 border-b border-stone-200 flex items-center bg-stone-50 shrink-0">
-                <button
-                  onClick={() => setIsSidebarOpen(false)}
-                  className="flex items-center text-xs font-medium text-stone-500 hover:text-stone-700 transition-colors"
-                >
-                  <ChevronLeft className="w-4 h-4 mr-1" /> Ocultar
-                </button>
-              </div>
-
-              {/* Cabecera de la Lista (Resultados y Toggle de vistas) */}
-              <div className="p-4 border-b border-stone-100 flex items-center justify-between bg-white shrink-0">
-                <div className="flex flex-col">
-                  <h2 className="text-xl font-bold text-slate-900">Lista de Inmuebles</h2>
-                  <p className="text-xs text-stone-400 font-medium mt-0.5">
-                    {properties.length} encontrado{properties.length !== 1 ? 's' : ''}
-                  </p>
+            <div className="flex flex-col h-full">
+              
+              {/* CABECERA: Contador y Botón Ocultar (Diseño de tu imagen) */}
+              <div className="p-4 bg-white shrink-0">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex flex-col">
+                    <h2 className="text-2xl font-bold text-slate-900">
+                      <span className="text-orange-500">{properties.length}</span>
+                      <span className="ml-2 text-gray-600 font-normal text-lg">
+                        {properties.length === 1 ? 'propiedad encontrada' : 'propiedades encontradas'}
+                      </span>
+                    </h2>
+                  </div>
+                  <button
+                    onClick={() => setIsSidebarOpen(false)}
+                    className="p-1 hover:bg-stone-100 rounded-full transition-colors text-stone-400"
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
                 </div>
 
-                {/* Se mantiene este toggle aquí para controlar el state 'viewMode' directamente */}
-                <div className="flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner">
+                {/* 🚀 MENÚ DE ORDENAMIENTO INTEGRADO (Sincronizado con URL) */}
+                <div className="border-b border-stone-100 pb-4">
+                   <MenuOrdenamiento 
+                     totalResultados={properties.length}
+                     ordenActual={ordenActual}
+                     onOrdenChange={cambiarOrden} 
+                   />
+                </div>
+              </div>
+
+              {/* Toggle de vistas (Grid/List) */}
+              <div className="px-4 py-2 border-b border-stone-50 flex justify-end bg-white">
+                <div className="flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90">
                   <button
                     onClick={() => setViewMode('grid')}
-                    className={`p-1.5 rounded transition-colors ${
-                      viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400 hover:text-stone-600'
+                    className={`p-1 rounded transition-colors ${
+                      viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
                     }`}
                   >
-                    <LayoutGrid size={18} />
+                    <LayoutGrid size={16} />
                   </button>
                   <button
                     onClick={() => setViewMode('list')}
-                    className={`p-1.5 rounded transition-colors ${
-                      viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400 hover:text-stone-600'
+                    className={`p-1 rounded transition-colors ${
+                      viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
                     }`}
                   >
-                    <ListIcon size={18} />
+                    <ListIcon size={16} />
                   </button>
                 </div>
               </div>
 
-              {/* CONTENIDO SCROLLEABLE (Aquí solucionamos el problema de que se iba hasta abajo) */}
+              {/* CONTENIDO SCROLLEABLE */}
               <div className="flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar">
                 {isLoading ? (
-                  <div className="flex justify-center items-center h-full text-stone-500 text-sm font-medium animate-pulse">
-                    Cargando propiedades de la base de datos...
+                  <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
+                    <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+                    Actualizando resultados...
                   </div>
                 ) : properties.length === 0 ? (
                   <EmptyState />
                 ) : (
-                  <div
-                    className={`gap-4 ${
-                      viewMode === 'grid'
-                        ? 'flex flex-col'
-                        : 'divide-y divide-gray-100 flex flex-col bg-white border border-gray-100 rounded-xl shadow-sm'
-                    }`}
-                  >
-                    {/* Renderizamos las propiedades del BACKEND en tus componentes de FRONTEND */}
-                    {properties.map((property) => {
-                      const isSelected = selectedPropertyId === property.id
-
-                      return (
-                        <div
-                          key={property.id}
-                          onMouseEnter={() => setHoveredId(property.id)}
-                          onClick={() => setSelectedPropertyId(property.id)}
-                          // El div reacciona si el pin del mapa está seleccionado
-                          className={`cursor-pointer transition-all duration-200 rounded-xl ${
-                            viewMode === 'list' ? 'py-1 px-2' : ''
-                          } ${
-                            isSelected
-                              ? 'ring-2 ring-[#ea580c] shadow-md bg-orange-50/50' // Highlight si está seleccionado
-                              : 'hover:border-stone-300 hover:shadow-sm'
-                          }`}
-                        >
-                          {viewMode === 'grid' ? (
-                            <PropertyCard
-                              imagen="" // Mandamos vacío para que active tu COLOR_GRIS_PLACEHOLDER
-                              estado={property.type} // casa, terreno, etc.
-                              precio={property.currency === 'USD' ? `$${property.price.toLocaleString("es-BO")} USD` : `Bs ${property.price.toLocaleString("es-BO")}`}
-                              descripcion={property.title}
-                              camas={3} // Mockeado porque PropertyMapPin no trae este dato
-                              banos={2} // Mockeado
-                              metros={150} // Mockeado
-                            />
-                          ) : (
-                            <PropertyRow
-                              title={property.title}
-                              price={property.currency === 'USD' ? `$${property.price.toLocaleString("es-BO")} USD` : `Bs ${property.price.toLocaleString("es-BO")}`}
-                              size="3 Dorm. • 150 m²"
-                              contactType="whatsapp"
-                              image=""
-                            />
-                          )}
-                        </div>
-                      )
-                    })}
+                  <div className={`gap-4 flex flex-col ${
+                    viewMode === 'list' ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm' : ''
+                  }`}>
+                    {properties.map((property) => (
+                      <div
+                        key={property.id}
+                        onMouseEnter={() => setHoveredId(property.id)}
+                        onClick={() => setSelectedPropertyId(property.id)}
+                        className={`cursor-pointer transition-all duration-200 rounded-xl ${
+                          viewMode === 'list' ? 'py-1 px-2' : ''
+                        } ${
+                          selectedPropertyId === property.id
+                            ? 'ring-2 ring-[#ea580c] shadow-md bg-orange-50/50'
+                            : 'hover:border-stone-300 hover:shadow-sm'
+                        }`}
+                      >
+                        {viewMode === 'grid' ? (
+                          <PropertyCard
+                            imagen="" 
+                            estado={property.type}
+                            precio={property.currency === 'USD' ? `$${property.price.toLocaleString("es-BO")} USD` : `Bs ${property.price.toLocaleString("es-BO")}`}
+                            descripcion={property.title}
+                            camas={3} banos={2} metros={150} 
+                          />
+                        ) : (
+                          <PropertyRow
+                            title={property.title}
+                            price={property.currency === 'USD' ? `$${property.price.toLocaleString("es-BO")} USD` : `Bs ${property.price.toLocaleString("es-BO")}`}
+                            size="3 Dorm. • 150 m²"
+                            contactType="whatsapp"
+                            image=""
+                          />
+                        )}
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
-            </>
+            </div>
           )}
         </aside>
 

@@ -6,7 +6,7 @@ import { useSearchFilters } from '@/hooks/useSearchFilters'
 import { LocationSearch } from '../layout/LocationSearch' // Componente de Zona
 import { ComboBox } from '../ui/ComboBox' // Componente estético
 import TransactionModeFilter from './TransactionModeFilter'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 interface FilterBarProps {
   // Ajustamos los nombres para que coincidan con 'nuevosFiltros'
@@ -21,6 +21,7 @@ interface FilterBarProps {
 
 export default function FilterBar({ onSearch, variant = 'home' }: FilterBarProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const isMapPage = pathname?.includes('busqueda_mapa');
 
   const { updateFilters } = useSearchFilters()
@@ -56,13 +57,22 @@ export default function FilterBar({ onSearch, variant = 'home' }: FilterBarProps
     };
 
     updateFilters(nuevosFiltros);
+    const params = new URLSearchParams();
 
-    // 🔥 LA CLAVE: Si ya estamos en el mapa, NO recargamos
-    if (isMapPage) {
-       if (onSearch) onSearch(nuevosFiltros);
-    } else {
-       window.location.href = '/busqueda_mapa';
+    modosSeleccionados.forEach(modo => params.append('modoInmueble', modo));
+    if (tipoInmueble !== 'Cualquier tipo') {
+      params.set('tipoInmueble', tipoInmueble.toUpperCase());
     }
+    if (ubicacionTexto.trim() !== '') {
+      params.set('query', ubicacionTexto);
+    }
+
+    const searchString = params.toString();
+    const targetPath = `/busqueda_mapa${searchString ? `?${searchString}` : ''}`;
+
+    router.push(targetPath, { scroll: false });
+
+    if (onSearch) onSearch(nuevosFiltros);
   };
 
   // Estilos condicionales según la variante

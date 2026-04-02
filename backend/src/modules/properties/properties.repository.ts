@@ -20,29 +20,44 @@ interface FiltrosBusqueda {
 }
 
 export const propertiesRepository = {
-  async getAll(filtros: FiltrosBusqueda = {}) {
+  async getAll(filtros: any = {}) {
     // ── WHERE ──────────────────────────────────────────────────────────────
     const where: any = { estado: 'ACTIVO' }
 
-    if (filtros.categoria) {
-      const categoriasValidas: Categoria[] = ['CASA', 'DEPARTAMENTO', 'TERRENO', 'OFICINA']
-      const entrada = Array.isArray(filtros.categoria) ? filtros.categoria : [filtros.categoria]
+    if (filtros.tipoInmueble) {
+      const entrada = Array.isArray(filtros.tipoInmueble) ? filtros.tipoInmueble : [filtros.tipoInmueble];
       const validas = entrada
-        .map((c) => c.toUpperCase() as Categoria)
-        .filter((c) => categoriasValidas.includes(c))
-      if (validas.length > 0) {
-        where.categoria = { in: validas }
-      }
+        .map((c: string) => c.toUpperCase())
+        .filter((c: string) => ['CASA', 'DEPARTAMENTO', 'TERRENO', 'OFICINA'].includes(c));
+      if (validas.length > 0) where.categoria = { in: validas };
     }
 
-    if (filtros.tipoAccion) {
-      const tipoUpper = filtros.tipoAccion.toUpperCase() as TipoAccion
-      const tiposValidos: TipoAccion[] = ['VENTA', 'ALQUILER', 'ANTICRETO']
-      if (tiposValidos.includes(tipoUpper)) {
-        where.tipoAccion = tipoUpper
-      }
+    if (filtros.modoInmueble) {
+      const entrada = Array.isArray(filtros.modoInmueble) ? filtros.modoInmueble : [filtros.modoInmueble];
+      const validas = entrada
+        .map((m: string) => m.toUpperCase().includes('ANTICR') ? 'ANTICRETO' : m.toUpperCase())
+        .filter((m: string) => ['VENTA', 'ALQUILER', 'ANTICRETO'].includes(m));
+      if (validas.length > 0) where.tipoAccion = { in: validas };
     }
 
+    if (filtros.query && filtros.query.trim() !== '') {
+          where.OR = [
+            { titulo: { contains: filtros.query, mode: 'insensitive' } },
+            {
+              ubicacion: {
+                OR: [
+                  { direccion: { contains: filtros.query, mode: 'insensitive' } },
+                  {
+                    // Buscamos en el nombre de la ubicación maestra (Cochabamba, Cala Cala, etc.)
+                    ubicacion_maestra: {
+                      nombre: { contains: filtros.query, mode: 'insensitive' }
+                    }
+                  }
+                ]
+              }
+            }
+          ];
+    }
     // ── ORDER BY ───────────────────────────────────────────────────────────
     // mas-populares: ordena por ubicacion → ubicacion_maestra → popularidad desc
     // Prisma soporta orderBy anidado siguiendo las relaciones del schema.
@@ -51,43 +66,30 @@ export const propertiesRepository = {
     //
     // Para precio y superficie: el frontend los maneja con criterioActivo,
     // así que el backend solo necesita proveer el default y popularidad.
-    let orderBy: any[]
+    let orderBy: any[] = [];
 
-    if (filtros.fecha === 'mas-populares') {
-      orderBy = [
-        {
-          ubicacion: {
-            ubicacion_maestra: {
-              popularidad: 'desc'
-            }
-          }
-        },
-        // Desempate: más recientes primero entre inmuebles de igual popularidad
-        { fechaPublicacion: 'desc' }
-      ]
-    } else if (filtros.fecha === 'mas-antiguos') {
-      orderBy = [{ fechaPublicacion: 'asc' }]
-    } else {
-      // default: mas-recientes
-      orderBy = [{ fechaPublicacion: 'desc' }]
+    // 1. Orden por Precio (Menor o Mayor)
+    if (filtros.precio === 'menor-a-mayor') {
+      orderBy.push({ precio: 'asc' });
+    } else if (filtros.precio === 'mayor-a-menor') {
+      orderBy.push({ precio: 'desc' });
+    } 
+    // 2. Orden por Superficie
+    else if (filtros.superficie === 'menor-a-mayor') {
+      orderBy.push({ superficieM2: 'asc' });
+    } else if (filtros.superficie === 'mayor-a-menor') {
+      orderBy.push({ superficieM2: 'desc' });
+    }
+    // 3. Orden por Popularidad
+    else if (filtros.fecha === 'mas-populares') {
+      orderBy.push({ ubicacion: { ubicacion_maestra: { popularidad: 'desc' } } });
+    } 
+    // 4. Orden Cronológico
+    else if (filtros.fecha === 'mas-antiguos') {
+      orderBy.push({ fechaPublicacion: 'asc' });
     }
 
-    // ── QUERY ──────────────────────────────────────────────────────────────
-    console.log('WHERE clause:', JSON.stringify(where))
-    console.log('ORDER BY:', JSON.stringify(orderBy))
-
-    return prisma.inmueble.findMany({
-      where,
-      orderBy,
-      include: {
-        ubicacion: {
-          include: {
-            // Necesario para que el orderBy por popularidad funcione
-            // y para exponer el valor al frontend si lo necesita
-            ubicacion_maestra: true
-          }
-        }
+    // Siempre un desempate por defecto (más recientes)
+    orderBy.push({ fechaPublicacion: 'desc' });
       }
-    })
-  }
-}
+    }
