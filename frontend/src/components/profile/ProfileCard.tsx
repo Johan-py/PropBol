@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import React, { useState } from "react";
 import { Plus, Trash2 } from 'lucide-react';
@@ -136,7 +136,6 @@ export default function ProfileCard() {
                         </div>
                     ))}
 
-                    {/* CAMPOS ADICIONALES (Recuperados de Imagen 2) */}
                     <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
                         <label className="w-full md:w-40 font-medium text-stone-700">País:</label>
                         <input type="text" className="flex-1 bg-gray-200 px-3 py-2 rounded" />
@@ -150,7 +149,6 @@ export default function ProfileCard() {
                         <input type="text" className="flex-1 bg-gray-200 px-3 py-2 rounded" />
                     </div>
 
-                    {/* Botones de Guardar Cambios (Solo para Email) */}
                     {isEmailEditable && (
                         <div className="flex justify-end mt-4">
                             <button
