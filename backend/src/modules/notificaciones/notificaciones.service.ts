@@ -1,6 +1,7 @@
 import {
   countNotificationsByUserRepository,
   countUnreadNotificationsRepository,
+  createNotificationRepository,
   findNotificationByIdRepository,
   findNotificationsByUserRepository,
   markAllNotificationsAsReadRepository,
@@ -15,6 +16,12 @@ type GetNotificationsParams = {
   filter?: string
   limit?: number
   offset?: number
+}
+
+type CreateNotificationParams = {
+  usuarioId: number
+  titulo: string
+  mensaje: string
 }
 
 const DEFAULT_LIMIT = 20
@@ -57,6 +64,12 @@ const normalizeOffset = (offset?: number) => {
 const validateNotificationId = (id: number) => {
   if (!Number.isInteger(id) || id <= 0) {
     throw new ServiceError('El id de la notificación no es válido', 400)
+  }
+}
+
+const validateUserId = (usuarioId: number) => {
+  if (!Number.isInteger(usuarioId) || usuarioId <= 0) {
+    throw new ServiceError('El usuario no es válido', 400)
   }
 }
 
@@ -120,6 +133,36 @@ export const getUnreadCountService = async (usuarioId: number) => {
 
   return {
     unreadCount
+  }
+}
+
+export const createNotificationService = async ({
+  usuarioId,
+  titulo,
+  mensaje
+}: CreateNotificationParams) => {
+  validateUserId(usuarioId)
+
+  const normalizedTitle = titulo.trim()
+  const normalizedMessage = mensaje.trim()
+
+  if (!normalizedTitle) {
+    throw new ServiceError('El título de la notificación es obligatorio', 400)
+  }
+
+  if (!normalizedMessage) {
+    throw new ServiceError('El mensaje de la notificación es obligatorio', 400)
+  }
+
+  const notification = await createNotificationRepository({
+    usuarioId,
+    titulo: normalizedTitle,
+    mensaje: normalizedMessage
+  })
+
+  return {
+    message: 'Notificación creada correctamente',
+    item: mapNotificationToFrontend(notification)
   }
 }
 

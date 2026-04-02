@@ -3,6 +3,7 @@ import cors from 'cors'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { propertiesController } from './modules/properties/properties.controller.js'
 import {
+  createNotificationController,
   deleteNotificationController,
   getNotificationsController,
   getUnreadCountController,
@@ -73,6 +74,7 @@ app.get('/health', (_req, res) => {
 app.get('/api/properties/search', propertiesController.search)
 app.get('/api/inmuebles', propertiesController.getAll)
 
+app.post('/notificaciones', requireAuth, createNotificationController)
 app.get('/notificaciones', requireAuth, getNotificationsController)
 app.get('/notificaciones/unread-count', requireAuth, getUnreadCountController)
 app.patch('/notificaciones/:id/read', requireAuth, markNotificationAsReadController)
