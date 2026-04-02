@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { User } from "../layout/Navbar";
-
+import { User as UserIcon, Eye, FileText, Map, ArrowLeftRight } from "lucide-react";
 type UserMenuProps = {
   user: User | null;
   isPanelOpen: boolean;
@@ -10,12 +10,12 @@ type UserMenuProps = {
   onOpenLogoutModal: () => void;
 };
 
-const MenuLink = ({ label, href, onClick }: { label: string; href: string; onClick: () => void }) => (
+const MenuLink = ({ label, href, onClick, icon: Icon }: { label: string; href: string; onClick: () => void; icon: any }) => (
   <Link
     href={href}
     onClick={onClick}
-    className="py-2 px-2 text-gray-500 text-sm hover:bg-black/5 hover:text-[#E68B25] transition-colors rounded"
-  >
+    className="flex items-center gap-3 py-2 px-2 text-gray-500 text-sm hover:bg-black/5 hover:text-[#E68B25] transition-colors rounded">
+    <Icon size={18} strokeWidth={1.5} />
     {label}
   </Link>
 );
@@ -90,12 +90,12 @@ export default function UserMenu({
             </Link>
 
             <div className="flex flex-col mb-4">
-              <MenuLink label="Mi cuenta" href="/cuenta" onClick={onClosePanel} />
-              <MenuLink label="Mis propiedades vistas" href="/vistas" onClick={onClosePanel} />
-              <MenuLink label="Mis publicaciones" href="/publicaciones" onClick={onClosePanel} />
-              <MenuLink label="Mis zonas" href="/zonas" onClick={onClosePanel} />
-              <MenuLink label="Mis comparaciones" href="/comparaciones" onClick={onClosePanel} />
-            </div>
+             <MenuLink label="Mi cuenta" href="/cuenta" icon={UserIcon} onClick={onClosePanel} />
+             <MenuLink label="Mis propiedades vistas" href="/vistas" icon={Eye} onClick={onClosePanel} />
+             <MenuLink label="Mis publicaciones" href="/publicaciones" icon={FileText} onClick={onClosePanel} />
+             <MenuLink label="Mis zonas" href="/zonas" icon={Map} onClick={onClosePanel} />
+             <MenuLink label="Mis comparaciones" href="/comparaciones" icon={ArrowLeftRight} onClick={onClosePanel} />
+             </div>
 
             <button
               onClick={onOpenLogoutModal}
