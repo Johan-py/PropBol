@@ -92,6 +92,8 @@ const handleGoogleLogin = () => {
         setGoogleError(
           "Cancelaste el inicio de sesión con Google. Puedes intentarlo nuevamente.",
         )
+      } else {
+        router.push("/");
       }
     }
   }, 500);
