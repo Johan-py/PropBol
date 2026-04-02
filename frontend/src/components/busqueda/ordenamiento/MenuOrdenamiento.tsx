@@ -46,7 +46,7 @@ function Dropdown({ label, isOpen, onToggle, disabled = false, children }: Dropd
         onClick={onToggle}
         disabled={disabled}
         aria-expanded={isOpen}
-        className={`flex items-center gap-1.5 px-2 py-1.5 text-xs font-medium
+        className={`flex items-center gap-1.5 px-2 py-1.5 text-xs font-normal
           border rounded-lg shadow-sm transition-colors duration-150 w-[120px] truncate
           ${
             disabled
@@ -82,7 +82,7 @@ function DropdownItem({ label, isSelected, onClick }: DropdownItemProps) {
       className={`w-full text-left px-4 py-2.5 text-xs transition-colors duration-150
         ${
           isSelected
-            ? 'bg-orange-500 text-white font-semibold'
+            ? 'bg-orange-500 text-white font-medium'
             : 'text-gray-700 hover:bg-orange-50 hover:text-orange-500'
         }`}
     >
@@ -95,7 +95,7 @@ function SeccionMetrica({ titulo, valor, onChange, isActive }: SeccionMetricaPro
   return (
     <div className="px-3 py-2">
       <p
-        className={`text-xs font-semibold uppercase tracking-wide mb-1.5
+        className={`text-xs font-medium uppercase tracking-wide mb-1.5
         ${isActive ? 'text-gray-400' : 'text-gray-300'}`}
       >
         {titulo}
@@ -106,10 +106,10 @@ function SeccionMetrica({ titulo, valor, onChange, isActive }: SeccionMetricaPro
             key={opt.value}
             type="button"
             onClick={() => onChange(opt.value)}
-            className={`w-full text-left text-xs py-1.5 px-2 rounded transition-colors duration-150
+            className={`w-full text-left text-xs py-1.5 px-2 rounded transition-colors duration-150 whitespace-nowrap
               ${
                 isActive && valor === opt.value
-                  ? 'text-orange-500 font-semibold bg-orange-50'
+                  ? 'text-orange-500 font-medium bg-orange-50'
                   : isActive
                     ? 'text-gray-700 hover:text-orange-500 hover:bg-orange-50'
                     : 'text-gray-300 hover:text-orange-400 hover:bg-orange-50'

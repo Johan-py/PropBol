@@ -38,7 +38,7 @@ export const TarjetaInmueble = ({ inmueble }: TarjetaInmuebleProps) => {
           <h3 className="font-semibold text-lg text-gray-900 leading-tight line-clamp-1">
             {inmueble.titulo}
           </h3>
-          <span className="text-lg font-bold text-gray-900 whitespace-nowrap ml-2">
+          <span className="text-xs font-bold text-gray-900 whitespace-nowrap ml-2">
             {formatoMoneda.format(Number(inmueble.precio))}
           </span>
         </div>
