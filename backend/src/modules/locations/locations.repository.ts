@@ -24,7 +24,7 @@ export class LocationsRepository {
       return await prisma.ubicacion_maestra.findMany({
         where: {
           OR: [
-            // 'nombre' es la ZONA en tu base de datos [cite: 89]
+            // 'nombre' es la ZONA en tu base de datos 
             { nombre: { contains: query, mode: 'insensitive' } }, 
             { municipio: { contains: query, mode: 'insensitive' } },
             { departamento: { contains: query, mode: 'insensitive' } }

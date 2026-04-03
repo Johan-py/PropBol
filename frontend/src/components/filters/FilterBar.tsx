@@ -53,7 +53,7 @@ export default function FilterBar({ onSearch, variant = 'home' }: FilterBarProps
       return
     }
 
-    // Mapeo para el backend [cite: 222-226]
+    // Mapeo para el backend 
     const tipoMap: Record<string, string> = {
       'Casa': 'CASA',
       'Departamento': 'DEPARTAMENTO',
@@ -83,7 +83,7 @@ export default function FilterBar({ onSearch, variant = 'home' }: FilterBarProps
     // MENSAJE DE CONTROL 2: Verifica la URL final antes de navegar
     console.log("%c🚀 Navegando a resultados:", "color: #10b981; font-weight: bold;", targetUrl);
 
-    // Ejecutar navegación [cite: 236]
+    // Ejecutar navegación 
     router.push(targetUrl);
 
     if (onSearch) onSearch(nuevosFiltros);
@@ -132,7 +132,7 @@ export default function FilterBar({ onSearch, variant = 'home' }: FilterBarProps
           }}
           className={`${variant === 'map' ? 'h-[40px] px-6' : 'h-[46px] px-10'} bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center gap-2 transition-all active:scale-95`} 
         >
-          <SearchIcon size={18} /> {variant === 'map' ? "" : "BUSCAR"} [cite: 276]
+          <SearchIcon size={18} /> {variant === 'map' ? "" : "BUSCAR"} 
         </button>
       </div>
     </div>
