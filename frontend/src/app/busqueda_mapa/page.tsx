@@ -1,15 +1,9 @@
 'use client'
 
-<<<<<<< HEAD
-import { useState } from 'react';
-import dynamic from 'next/dynamic';
-import {Search, MapPin, DollarSign, Home, Building, Square, ChevronRight, List } from 'lucide-react';
-=======
 import { useState,useEffect} from 'react'
 import dynamic from 'next/dynamic'
 import { Search, MapPin, DollarSign, Home, Building, Square, ChevronRight, List } from 'lucide-react';
 import { useProperties } from '@/hooks/useProperties'
->>>>>>> feature/Mapas
 
 const MapView = dynamic(() => import('./MapView'), { ssr: false })
 
