@@ -1,17 +1,17 @@
-"use client";
+'use client'
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 declare global {
   interface Window {
-    google?: GoogleNamespace;
+    google?: GoogleNamespace
   }
 }
 
 interface GoogleCredentialResponse {
-  credential: string;
-  select_by: string;
+  credential: string
+  select_by: string
 }
 
 interface GoogleMomentNotification {
@@ -33,13 +33,13 @@ interface GoogleInitializeConfig {
 }
 
 interface GoogleRenderButtonOptions {
-  type?: "standard" | "icon";
-  theme?: "outline" | "filled_blue" | "filled_black";
-  size?: "large" | "medium" | "small";
-  shape?: "rectangular" | "pill" | "circle" | "square";
-  logo_alignment?: "left" | "center";
-  width?: number;
-  locale?: string;
+  type?: 'standard' | 'icon'
+  theme?: 'outline' | 'filled_blue' | 'filled_black'
+  size?: 'large' | 'medium' | 'small'
+  shape?: 'rectangular' | 'pill' | 'circle' | 'square'
+  logo_alignment?: 'left' | 'center'
+  width?: number
+  locale?: string
 }
 
 interface GoogleAccountsId {
@@ -54,8 +54,8 @@ interface GoogleAccountsId {
 
 interface GoogleNamespace {
   accounts: {
-    id: GoogleAccountsId;
-  };
+    id: GoogleAccountsId
+  }
 }
 
 type GoogleRegisterButtonProps = {
@@ -125,7 +125,7 @@ export default function GoogleRegisterButton({
   };
 
   useEffect(() => {
-    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
 
     if (!clientId) {
       setErrorMessage("Falta configurar NEXT_PUBLIC_GOOGLE_CLIENT_ID");
@@ -133,9 +133,9 @@ export default function GoogleRegisterButton({
     }
 
     const renderGoogleButton = () => {
-      if (!containerRef.current || !window.google) return;
+      if (!containerRef.current || !window.google) return
 
-      containerRef.current.innerHTML = "";
+      containerRef.current.innerHTML = ''
 
       window.google.accounts.id.disableAutoSelect();
 
@@ -189,15 +189,15 @@ export default function GoogleRegisterButton({
       });
 
       window.google.accounts.id.renderButton(containerRef.current, {
-        type: "standard",
-        theme: "outline",
-        size: "large",
-        shape: "rectangular",
-        logo_alignment: "left",
+        type: 'standard',
+        theme: 'outline',
+        size: 'large',
+        shape: 'rectangular',
+        logo_alignment: 'left',
         width: containerRef.current.offsetWidth || 300,
-        locale: "es",
-      });
-    };
+        locale: 'es'
+      })
+    }
 
     if (window.google?.accounts?.id) {
       renderGoogleButton();
@@ -207,9 +207,7 @@ export default function GoogleRegisterButton({
       };
     }
 
-    const existingScript = document.getElementById(
-      SCRIPT_ID,
-    ) as HTMLScriptElement | null;
+    const existingScript = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null
 
     if (existingScript) {
       existingScript.addEventListener("load", renderGoogleButton);
@@ -220,17 +218,17 @@ export default function GoogleRegisterButton({
       };
     }
 
-    const script = document.createElement("script");
-    script.id = SCRIPT_ID;
-    script.src = "https://accounts.google.com/gsi/client";
-    script.async = true;
-    script.defer = true;
-    script.onload = renderGoogleButton;
+    const script = document.createElement('script')
+    script.id = SCRIPT_ID
+    script.src = 'https://accounts.google.com/gsi/client'
+    script.async = true
+    script.defer = true
+    script.onload = renderGoogleButton
     script.onerror = () => {
       setErrorMessage("No se pudo cargar Google Identity Services");
     };
 
-    document.head.appendChild(script);
+    document.head.appendChild(script)
 
     return () => {
       clearSelectionTimeout();
@@ -248,9 +246,7 @@ export default function GoogleRegisterButton({
         <div ref={containerRef} className="w-full" />
       </div>
 
-      {localError ? (
-        <p className="text-[11px] text-red-500">{localError}</p>
-      ) : null}
+      {localError ? <p className="text-[11px] text-red-500">{localError}</p> : null}
     </div>
-  );
+  )
 }

@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 type LoginResponse = {
-  message?: string;
-  token?: string;
+  message?: string
+  token?: string
   user?: {
-    id: number;
-    correo: string;
-    nombre?: string;
-    apellido?: string;
-  };
-};
+    id: number
+    correo: string
+    nombre?: string
+    apellido?: string
+  }
+}
 
 type GooglePopupSuccessMessage = {
   type: "propbol:google-login-success";
@@ -115,38 +115,33 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [googleError, setGoogleError] = useState("");
 
-  const isFormValid =
-    correo.length > 0 &&
-    password.length > 0 &&
-    !errors.correo &&
-    !errors.password;
+  const isFormValid = correo.length > 0 && password.length > 0 && !errors.correo && !errors.password
 
   const validate = (field: string, value: string) => {
-    const newErrors = { ...errors };
+    const newErrors = { ...errors }
 
-    if (field === "correo") {
+    if (field === 'correo') {
       if (!value) {
-        newErrors.correo = "El correo es obligatorio";
+        newErrors.correo = 'El correo es obligatorio'
       } else if (!/\S+@\S+\.\S+/.test(value)) {
-        newErrors.correo = "Formato de correo inválido";
+        newErrors.correo = 'Formato de correo inválido'
       } else {
-        delete newErrors.correo;
+        delete newErrors.correo
       }
     }
 
-    if (field === "password") {
+    if (field === 'password') {
       if (!value) {
-        newErrors.password = "La contraseña es obligatoria";
+        newErrors.password = 'La contraseña es obligatoria'
       } else if (value.length > 16) {
-        newErrors.password =
-          "La contraseña no puede tener más de 16 caracteres";
+        newErrors.password = 'La contraseña no puede tener más de 16 caracteres'
       } else {
-        delete newErrors.password;
+        delete newErrors.password
       }
     }
 
-    setErrors(newErrors);
-  };
+    setErrors(newErrors)
+  }
 
   const handleGoogleLogin = () => {
     setGoogleError("");
@@ -276,21 +271,21 @@ export default function LoginForm() {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    const trimmedCorreo = correo.trim().toLowerCase();
-    const trimmedPassword = password.trim();
+    const trimmedCorreo = correo.trim().toLowerCase()
+    const trimmedPassword = password.trim()
 
-    const newErrors: { correo?: string; password?: string } = {};
+    const newErrors: { correo?: string; password?: string } = {}
 
     if (!trimmedCorreo) {
-      newErrors.correo = "El correo es obligatorio";
+      newErrors.correo = 'El correo es obligatorio'
     } else if (!/\S+@\S+\.\S+/.test(trimmedCorreo)) {
-      newErrors.correo = "Formato de correo inválido";
+      newErrors.correo = 'Formato de correo inválido'
     }
 
     if (!trimmedPassword) {
-      newErrors.password = "La contraseña es obligatoria";
+      newErrors.password = 'La contraseña es obligatoria'
     }
 
     setErrors(newErrors);
@@ -308,7 +303,7 @@ export default function LoginForm() {
       return;
     }
 
-    setIsLoading(true);
+    setIsLoading(true)
 
     const controller = new AbortController();
     const timeoutId = window.setTimeout(() => {
@@ -326,7 +321,7 @@ export default function LoginForm() {
         signal: controller.signal,
       });
 
-      const data: LoginResponse = await response.json();
+      const data: LoginResponse = await response.json()
 
       if (!response.ok) {
         setPassword("");
@@ -358,7 +353,7 @@ export default function LoginForm() {
       window.clearTimeout(timeoutId);
       setIsLoading(false);
     }
-  };
+  }
 
   return (
     <div className="w-full max-w-sm rounded-md bg-white p-6 shadow-md">
@@ -366,9 +361,7 @@ export default function LoginForm() {
 
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
-            Correo electrónico
-          </label>
+          <label className="mb-1 block text-sm font-medium text-gray-700">Correo electrónico</label>
 
           <input
             type="email"
@@ -376,32 +369,28 @@ export default function LoginForm() {
             placeholder="Ingresa tu correo electrónico"
             value={correo}
             onChange={(e) => {
-              setCorreo(e.target.value);
-              validate("correo", e.target.value);
+              setCorreo(e.target.value)
+              validate('correo', e.target.value)
             }}
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500"
           />
 
-          {errors.correo && (
-            <p className="mt-1 text-xs text-red-500">{errors.correo}</p>
-          )}
+          {errors.correo && <p className="mt-1 text-xs text-red-500">{errors.correo}</p>}
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
-            Contraseña
-          </label>
+          <label className="mb-1 block text-sm font-medium text-gray-700">Contraseña</label>
 
           <div className="relative">
             <input
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               required
               placeholder="Ingresa tu contraseña"
               value={password}
               maxLength={16}
               onChange={(e) => {
-                setPassword(e.target.value);
-                validate("password", e.target.value);
+                setPassword(e.target.value)
+                validate('password', e.target.value)
               }}
               className="w-full rounded-md border border-gray-300 px-3 py-2 pr-10 text-sm outline-none focus:border-orange-500"
             />
@@ -411,13 +400,11 @@ export default function LoginForm() {
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-500"
             >
-              {showPassword ? "Ocultar" : "Ver"}
+              {showPassword ? 'Ocultar' : 'Ver'}
             </button>
           </div>
 
-          {errors.password && (
-            <p className="mt-1 text-xs text-red-500">{errors.password}</p>
-          )}
+          {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
         </div>
 
         {errorMessage && (
@@ -437,11 +424,11 @@ export default function LoginForm() {
           disabled={!isFormValid || isLoading}
           className={`w-full rounded-md py-2 text-sm font-semibold text-white ${
             !isFormValid || isLoading
-              ? "cursor-not-allowed bg-orange-300"
-              : "bg-orange-500 hover:bg-orange-600"
+              ? 'cursor-not-allowed bg-orange-300'
+              : 'bg-orange-500 hover:bg-orange-600'
           }`}
         >
-          {isLoading ? "Ingresando..." : "Iniciar sesión"}
+          {isLoading ? 'Ingresando...' : 'Iniciar sesión'}
         </button>
 
         <button
@@ -462,7 +449,7 @@ export default function LoginForm() {
 
         <button
           type="button"
-          onClick={() => router.push("/")}
+          onClick={() => router.push('/')}
           className="mx-auto block w-fit rounded-md bg-gray-700 px-4 py-1.5 text-xs font-medium text-white hover:bg-gray-800"
         >
           Cancelar Inicio de sesión
@@ -470,14 +457,11 @@ export default function LoginForm() {
       </form>
 
       <p className="mt-4 text-center text-sm text-gray-600">
-        ¿No tienes una cuenta?{" "}
-        <Link
-          href="/sign-up"
-          className="font-semibold text-orange-500 hover:underline"
-        >
+        ¿No tienes una cuenta?{' '}
+        <Link href="/sign-up" className="font-semibold text-orange-500 hover:underline">
           Regístrate
         </Link>
       </p>
     </div>
-  );
+  )
 }

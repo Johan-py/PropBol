@@ -15,12 +15,12 @@ transporter.verify((error) => {
   } else {
     console.log(" Servicio de email listo");
   }
-});
+})
 
 interface EnviarCodigoParams {
-  emailDestino: string;
-  codigo: string;
-  nombreUsuario?: string;
+  emailDestino: string
+  codigo: string
+  nombreUsuario?: string
 }
 
 export const enviarCodigoCambioEmail = async ({
