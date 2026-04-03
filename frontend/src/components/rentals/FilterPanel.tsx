@@ -185,7 +185,7 @@ export default function FilterPanel() {
             En Venta
           </button>
           <button onClick={() => setMobileTab('tipo')} className={`flex-shrink-0 px-6 py-2.5 rounded-2xl text-sm font-bold font-inter transition-all ${mobileTab === 'tipo' ? 'bg-orange-500 text-white shadow-lg shadow-orange-200' : 'bg-gray-100 text-gray-500'}`}>
-            Propiedades
+            Inmuebles
           </button>
         </div>
 
@@ -193,7 +193,7 @@ export default function FilterPanel() {
         <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm mx-2">
           {mobileTab === 'alquiler' && <FilterSection title="En Alquiler" data={rentalsData} logic={rentalsLogic} itemLabel="casas" />}
           {mobileTab === 'venta' && <FilterSection title="En Venta" data={salesData} logic={salesLogic} itemLabel="casas" />}
-          {mobileTab === 'tipo' && <FilterSection title="Por Tipo" data={typesData} logic={typesLogic} itemLabel="prop." />}
+          {mobileTab === 'tipo' && <FilterSection title="Por tipo de Inmueble" data={typesData} logic={typesLogic} itemLabel="prop." />}
         </div>
       </div>
 
@@ -204,7 +204,7 @@ export default function FilterPanel() {
         <div className="space-y-6">
           <FilterSection title="Alquileres" data={rentalsData} logic={rentalsLogic} itemLabel="casas" />
           <FilterSection title="En venta" data={salesData} logic={salesLogic} itemLabel="casas" />
-          <FilterSection title="Inmuebles" data={typesData} logic={typesLogic} itemLabel="prop." />
+          <FilterSection title="Por tipo de Inmueble" data={typesData} logic={typesLogic} itemLabel="prop." />
         </div>
       </aside>
     </>
