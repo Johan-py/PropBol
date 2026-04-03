@@ -46,7 +46,12 @@ export default function BusquedaMapaPage() {
  <div className="flex flex-col h-screen bg-white overflow-hidden">
       
       {/* 1. BARRA DE FILTROS SUPERIOR */}
-      <FilterBar variant="map" />
+      <FilterBar 
+        variant="map" 
+        onSearch={(nuevosFiltros) => {
+          console.log("🔍 Buscando con filtros:", nuevosFiltros);
+        }} 
+      />
 
       {/* 2. ÁREA CENTRAL (Lista + Mapa) */}
       <main className="flex flex-1 overflow-hidden relative">

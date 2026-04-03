@@ -7,6 +7,7 @@ import { LocationSearch } from '../layout/LocationSearch' // Componente de Zona
 import { ComboBox } from '../ui/ComboBox' // Componente estético
 import TransactionModeFilter from './TransactionModeFilter'
 import { usePathname, useRouter } from 'next/navigation'
+import { cite, div } from 'framer-motion/m'
 
 interface FilterBarProps {
   // Ajustamos los nombres para que coincidan con 'nuevosFiltros'
@@ -44,13 +45,26 @@ export default function FilterBar({ onSearch, variant = 'home' }: FilterBarProps
   }, [])
 
   const handleSearch = () => {
+    // MENSAJE DE CONTROL 1: Verifica que la función inicia
+    console.log("%c🔍 Iniciando búsqueda en BitPro...", "color: #d97706; font-weight: bold;");
+
     if (modosSeleccionados.length === 0) {
-      alert('Por favor, selecciona al menos un modo (Venta, Alquiler o Anticrético)')
+      alert('Por favor, selecciona al menos un modo (Venta, Alquiler o Anticrético)') 
       return
     }
 
+    // Mapeo para el backend [cite: 222-226]
+    const tipoMap: Record<string, string> = {
+      'Casa': 'CASA',
+      'Departamento': 'DEPARTAMENTO',
+      'Terreno': 'TERRENO',
+      'Espacios Cementerio': 'TERRENO'
+    };
+
+    const tipoFinal = tipoMap[tipoInmueble] || (tipoInmueble !== 'Cualquier tipo' ? tipoInmueble.toUpperCase() : null);
+
     const nuevosFiltros = {
-      tipoInmueble: [tipoInmueble.toUpperCase()],
+      tipoInmueble: tipoInmueble !== 'Cualquier tipo' ? [tipoInmueble.toUpperCase()] : [],
       modoInmueble: modosSeleccionados,
       query: ubicacionTexto,
       updatedAt: new Date().toISOString()
@@ -60,55 +74,65 @@ export default function FilterBar({ onSearch, variant = 'home' }: FilterBarProps
     const params = new URLSearchParams();
 
     modosSeleccionados.forEach(modo => params.append('modoInmueble', modo));
-    if (tipoInmueble !== 'Cualquier tipo') {
-      params.set('tipoInmueble', tipoInmueble.toUpperCase());
-    }
-    if (ubicacionTexto.trim() !== '') {
-      params.set('query', ubicacionTexto);
-    }
+    if (tipoFinal) params.set('tipoInmueble', tipoFinal);
+    if (ubicacionTexto.trim() !== '') params.set('query', ubicacionTexto.trim()); 
 
-    const searchString = params.toString();
-    const targetPath = `/busqueda_mapa${searchString ? `?${searchString}` : ''}`;
+    const queryString = params.toString();
+    const targetUrl = `/busqueda_mapa${queryString ? `?${queryString}` : ''}`;
 
-    router.push(targetPath, { scroll: false });
+    // MENSAJE DE CONTROL 2: Verifica la URL final antes de navegar
+    console.log("%c🚀 Navegando a resultados:", "color: #10b981; font-weight: bold;", targetUrl);
+
+    // Ejecutar navegación [cite: 236]
+    router.push(targetUrl);
 
     if (onSearch) onSearch(nuevosFiltros);
   };
 
-  // Estilos condicionales según la variante
   const containerStyles = variant === 'map' 
-    ? "bg-white border-b border-stone-200 p-3 flex flex-row items-center gap-4 w-full shadow-sm" // Diseño compacto para el mapa
-    : "bg-white shadow-lg rounded-[30px] p-6 flex flex-col gap-6 w-[921px]"; // Diseño original del Home
+    ? "bg-white border-b border-stone-200 p-3 flex flex-row items-center gap-4 w-full shadow-sm" 
+    : "bg-white shadow-lg rounded-[30px] p-6 flex flex-col gap-6 w-[921px]"; 
+
   return (
     <div className={containerStyles}>
-      {/* En el mapa ocultamos o achicamos el selector de modo para ganar espacio */}
       <div className={variant === 'map' ? "shrink-0 scale-90 origin-left" : ""}>
         <TransactionModeFilter
           modoSeleccionado={modosSeleccionados}
-          onModoChange={setModosSeleccionados}
+          onModoChange={setModosSeleccionados} 
         />
       </div>
 
       <div className={`flex items-end gap-3 ${variant === 'map' ? 'flex-1 flex-row' : 'flex-col md:flex-row w-full'}`}>
         <div className={variant === 'map' ? "w-48" : "w-full md:w-1/4"}>
           <ComboBox
-            label={variant === 'map' ? "" : "Tipo"}
+            label={variant === 'map' ? "" : "Tipo"} 
             placeholder="Cualquier tipo"
-            icon={Home}
-            options={['Casa', 'Departamento', 'Terreno', 'Espacios Cementerio']}
-            onChange={(val) => setTipoInmueble(val)}
+            icon={Home} 
+            options={['Casa', 'Departamento', 'Terreno', 'Espacios Cementerio']} 
+            onChange={(val) => setTipoInmueble(val)} 
           />
         </div>
 
         <div className="flex-1">
-          <LocationSearch value={ubicacionTexto} onChange={setUbicacionTexto} />
+          <LocationSearch 
+            value={ubicacionTexto} 
+            onChange={(val: any) => {
+               // Captura tanto strings como objetos de autocompletado
+               const text = typeof val === 'string' ? val : val?.nombre || val?.target?.value || '';
+               setUbicacionTexto(text);
+            }} 
+          />
         </div>
 
         <button
-          onClick={handleSearch}
-          className={`${variant === 'map' ? 'h-[40px] px-6' : 'h-[46px] px-10'} bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center gap-2 transition-all active:scale-95`}
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            handleSearch();
+          }}
+          className={`${variant === 'map' ? 'h-[40px] px-6' : 'h-[46px] px-10'} bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center gap-2 transition-all active:scale-95`} 
         >
-          <SearchIcon size={18} /> {variant === 'map' ? "" : "BUSCAR"}
+          <SearchIcon size={18} /> {variant === 'map' ? "" : "BUSCAR"} [cite: 276]
         </button>
       </div>
     </div>
