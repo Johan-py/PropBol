@@ -6,7 +6,7 @@ const MAX_ZOOM = 18
 export default function ZoomControls() {
   const map = useMap()
   const [zoom, setZoom] = useState(map.getZoom())
-  const [active, setActive] = useState(null)
+  const [active, setActive] = useState<'in' | 'out' | null>(null);
   useEffect(() => {
     const handleZoom = () => setZoom(map.getZoom())
     map.on('zoomend', handleZoom)
@@ -30,7 +30,7 @@ export default function ZoomControls() {
   }, [map, zoom])
   const isMaxZoom = zoom >= MAX_ZOOM
   const isMinZoom = zoom <= MIN_ZOOM
-  const btnStyle = (type, disabled) => ({
+  const btnStyle = (type: 'in' | 'out', disabled: boolean)=> ({
     width: '36px',
     height: '36px',
     border: 'none',
