@@ -82,13 +82,13 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
           </div>
 
           <div className="flex gap-3">
-            <button className="h-11 flex-1 rounded-full border border-[#9a9a9a] bg-white text-[14px] font-medium text-[#2c2c2c] transition hover:bg-gray-50">
+            <button className="h-11 flex-1 rounded-lg border border-[#9a9a9a] bg-white text-[14px] font-medium text-[#2c2c2c] transition hover:bg-gray-50">
               Editar
             </button>
 
             <button
               onClick={abrirConfirmacion}
-              className="h-11 flex-1 rounded-full bg-[#D97706] text-[14px] font-medium text-white transition hover:bg-[#bf6905]"
+              className="h-11 flex-1 rounded-lg bg-[#D97706] text-[14px] font-medium text-white transition hover:bg-[#bf6905]"
             >
               Eliminar
             </button>

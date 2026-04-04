@@ -13,8 +13,8 @@ export default function DeleteErrorModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="mx-4 w-full max-w-sm overflow-hidden rounded-2xl bg-white shadow-xl">
-        <div className="bg-gray-100 px-6 py-5">
+      <div className="mx-4 w-full max-w-sm overflow-hidden rounded-2xl bg-[#F9F6EE] shadow-xl">
+        <div className="bg-[#F9F6EE] px-6 py-5">
           <h2 className="text-center text-xl font-bold text-gray-800">
             Error
           </h2>
@@ -29,7 +29,7 @@ export default function DeleteErrorModal({
 
           <button
             onClick={onAceptar}
-            className="rounded-lg bg-[#D97706] px-10 py-3 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
+            className="rounded-lg bg-[#D97706] px-10 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#bf6905]"
           >
             Aceptar
           </button>
