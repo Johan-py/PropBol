@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Plus, Trash2, Pencil } from 'lucide-react';
 import SecurityModal from "./SecurityModal";
 import OtpModal from "./OtpModal";
@@ -41,26 +41,125 @@ export default function ProfileCard() {
   const [tempEmail, setTempEmail] = useState("perfil1@gmail.com");
   const [otpError, setOtpError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [emailToUpdate, setEmailToUpdate] = useState(""); // Email nuevo a guardar
+  const [emailToUpdate, setEmailToUpdate] = useState("");
 
-  // Cargar datos del usuario desde localStorage
-  useEffect(() => {
-    const email = localStorage.getItem('correo');
-    const nombreStorage = localStorage.getItem('nombre');
-    if (email) {
-      setOriginalEmail(email);
-      setTempEmail(email);
-    }
-    if (nombreStorage) {
-      setNombre(nombreStorage);
-    }
-  }, []);
+  // ===== INTEGRACIÓN BACKEND SOLO FOTO =====
+  const [fotoPerfil, setFotoPerfil] = useState("");
+  const [archivoFoto, setArchivoFoto] = useState<File | null>(null);
+  const [previewFoto, setPreviewFoto] = useState("");
+  const [guardandoFoto, setGuardandoFoto] = useState(false);
+  const inputFotoRef = useRef<HTMLInputElement | null>(null);
 
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const hasEmailChanged = tempEmail !== originalEmail && isValidEmail(tempEmail);
 
   // Obtener token
   const getToken = () => localStorage.getItem('token');
+
+  // Cargar datos del usuario desde localStorage + foto desde backend
+  useEffect(() => {
+    const email = localStorage.getItem('correo');
+    const nombreStorage = localStorage.getItem('nombre');
+
+    if (email) {
+      setOriginalEmail(email);
+      setTempEmail(email);
+    }
+
+    if (nombreStorage) {
+      setNombre(nombreStorage);
+    }
+
+    cargarFotoPerfil();
+  }, []);
+
+  // Trae la foto actual desde backend
+  const cargarFotoPerfil = async () => {
+    try {
+      const token = getToken();
+      if (!token) return;
+
+      const response = await fetch(`${API_URL}/api/perfil/usuario`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data?.perfil?.fotoPerfil) {
+        setFotoPerfil(data.perfil.fotoPerfil);
+      }
+    } catch (error) {
+      console.error("Error al cargar foto de perfil:", error);
+    }
+  };
+
+  // Selecciona imagen desde el dispositivo
+  const handleSeleccionFoto = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] || null;
+    if (!file) return;
+
+    const tiposPermitidos = ["image/png", "image/jpeg", "image/jpg"];
+    if (!tiposPermitidos.includes(file.type)) {
+      alert("Solo se permiten imágenes JPG o PNG");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("La imagen no debe superar los 5 MB");
+      return;
+    }
+
+    setArchivoFoto(file);
+    setPreviewFoto(URL.createObjectURL(file));
+  };
+
+  // Sube la foto al backend
+  const guardarFotoPerfil = async () => {
+    try {
+      const token = getToken();
+
+      if (!token) {
+        throw new Error("No hay sesión activa");
+      }
+
+      if (!archivoFoto) return;
+
+      setGuardandoFoto(true);
+
+      const formData = new FormData();
+      formData.append("fotoPerfil", archivoFoto);
+
+      const response = await fetch(`${API_URL}/api/perfil/usuario/foto-perfil`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.msg || "No se pudo actualizar la foto");
+      }
+
+      setFotoPerfil(data.fotoPerfil || "");
+      setArchivoFoto(null);
+      setPreviewFoto("");
+      if (inputFotoRef.current) {
+        inputFotoRef.current.value = "";
+      }
+      alert("Foto de perfil actualizada correctamente");
+    } catch (error: any) {
+      console.error("Error al guardar foto:", error);
+      alert(error.message || "Error al actualizar la foto");
+    } finally {
+      setGuardandoFoto(false);
+    }
+  };
 
   // PASO 1: Verificar contraseña al hacer clic en el lápiz
   const handlePasswordSubmit = async (passwordActual: string) => {
@@ -72,7 +171,6 @@ export default function ProfileCard() {
         throw new Error("No hay sesión activa. Inicia sesión nuevamente.");
       }
 
-      // Verificar contraseña
       const verifyRes = await fetch(`${API_URL}/api/perfil/verificar-password`, {
         method: 'POST',
         headers: {
@@ -93,10 +191,9 @@ export default function ProfileCard() {
         throw new Error(verifyData.msg);
       }
 
-      // Contraseña correcta: habilitar edición de email
       setIsSecurityModalOpen(false);
       setIsEmailEditable(true);
-      setTempEmail(originalEmail); // Reset al valor original por si acaso
+      setTempEmail(originalEmail);
 
     } catch (error: any) {
       console.error("Error:", error);
@@ -132,10 +229,7 @@ export default function ProfileCard() {
         throw new Error(solicitarData.msg);
       }
 
-      // Guardar email que se va a actualizar
       setEmailToUpdate(nuevoEmail);
-
-      // Abrir modal OTP
       setIsOtpModalOpen(true);
       setOtpError("");
 
@@ -173,7 +267,6 @@ export default function ProfileCard() {
         throw new Error(data.msg);
       }
 
-      // Actualizar email en localStorage y estado
       localStorage.setItem('correo', emailToUpdate);
       setOriginalEmail(emailToUpdate);
       setTempEmail(emailToUpdate);
@@ -229,20 +322,20 @@ export default function ProfileCard() {
     }
   };
 
-  // Manejar click en guardar cambios
-  const handleSaveAll = () => {
-    // Si el email está en modo edición y cambió
+  // Guardar cambios generales + foto si se seleccionó una
+  const handleSaveAll = async () => {
     if (isEmailEditable && hasEmailChanged) {
-      solicitarCambioEmail(tempEmail);
+      await solicitarCambioEmail(tempEmail);
     } else if (isEmailEditable && !hasEmailChanged) {
-      // Si no cambió el email, solo salir del modo edición
       setIsEmailEditable(false);
     }
 
-    // Guardar otros campos (nombre, dirección, etc.)
+    if (archivoFoto) {
+      await guardarFotoPerfil();
+    }
+
     if (campoEditando) {
       setCampoEditando(null);
-      // Aquí puedes agregar la lógica para guardar los demás campos
       if (campoEditando !== "email") {
         alert(`${campoEditando} guardado correctamente`);
       }
@@ -256,9 +349,14 @@ export default function ProfileCard() {
     setPais("");
     setGenero("");
     setDireccion("");
-    // Restaurar email original y salir del modo edición
     setTempEmail(originalEmail);
     setIsEmailEditable(false);
+
+    setArchivoFoto(null);
+    setPreviewFoto("");
+    if (inputFotoRef.current) {
+      inputFotoRef.current.value = "";
+    }
   };
 
   // Activar edición de email - abre el modal de seguridad primero
@@ -294,20 +392,41 @@ export default function ProfileCard() {
 
       {/* PERFIL */}
       <div className="flex flex-col items-center justify-center w-full md:w-1/3">
-        <div className="w-28 h-28 rounded-full bg-white border border-gray-300 relative flex items-center justify-center shadow-sm mb-10">
-          <span className="text-gray-500 text-xs uppercase">Imagen</span>
-          <button
-            className="
-              absolute
-              right-0 top-1/2 -translate-y-1/2
-              md:right-1/2 md:translate-x-1/2 md:top-full md:mt-6
-              w-8 h-8 bg-white border border-gray-300 rounded-full
-              flex items-center justify-center shadow-sm hover:bg-gray-100
-            "
-          >
-            <Plus size={16} />
-          </button>
-        </div>
+        <div className="relative mb-10">
+  <div className="w-28 h-28 rounded-full bg-white border border-gray-300 flex items-center justify-center shadow-sm overflow-hidden">
+    {previewFoto || fotoPerfil ? (
+      <img
+        src={previewFoto || `${API_URL}${fotoPerfil}`}
+        alt="Foto de perfil"
+        className="w-full h-full object-cover"
+      />
+    ) : (
+      <span className="text-gray-500 text-xs uppercase">Imagen</span>
+    )}
+  </div>
+
+  <button
+    type="button"
+    onClick={() => inputFotoRef.current?.click()}
+    className="
+      absolute
+      right-0 top-1/2 -translate-y-1/2
+      md:right-1/2 md:translate-x-1/2 md:top-full md:mt-6
+      w-8 h-8 bg-white border border-gray-300 rounded-full
+      flex items-center justify-center shadow-sm hover:bg-gray-100
+    "
+  >
+    <Plus size={16} />
+  </button>
+
+  <input
+    ref={inputFotoRef}
+    type="file"
+    accept="image/png,image/jpeg,image/jpg"
+    className="hidden"
+    onChange={handleSeleccionFoto}
+  />
+</div>
         <p className="mt-4 font-semibold text-lg">{nombre}</p>
         <p className="text-sm text-gray-500">{originalEmail}</p>
       </div>
@@ -529,16 +648,16 @@ export default function ProfileCard() {
             <button
               onClick={handleCancelAll}
               className="text-stone-600 hover:text-black text-sm"
-              disabled={isLoading}
+              disabled={isLoading || guardandoFoto}
             >
               Cancelar
             </button>
             <button
               onClick={handleSaveAll}
-              disabled={isLoading}
+              disabled={isLoading || guardandoFoto}
               className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg text-sm font-medium shadow-sm disabled:bg-orange-300 disabled:cursor-not-allowed"
             >
-              {isLoading ? "Procesando..." : "Guardar Cambios"}
+              {isLoading || guardandoFoto ? "Procesando..." : "Guardar Cambios"}
             </button>
           </div>
         </div>
@@ -561,7 +680,6 @@ export default function ProfileCard() {
           setOtpError("");
           setEmailToUpdate("");
           setIsLoading(false);
-          // Si cierra el OTP sin confirmar, deshabilitar edición y restaurar email
           setIsEmailEditable(false);
           setTempEmail(originalEmail);
         }}
