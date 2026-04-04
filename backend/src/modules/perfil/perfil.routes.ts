@@ -58,6 +58,7 @@ PUT http://localhost:5000/api/perfil/usuario/telefonos
   "telefonos": ["+59171234567", "+59176543210"]}
 */
 
+// perfil.routes.ts
 router.put('/telefonos', validarJWT, editarTelefonos)
 
 export default router
