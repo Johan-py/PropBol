@@ -1,11 +1,19 @@
 import { Request, Response } from 'express'
 import { eliminarPublicacionService, listarMisPublicacionesService } from './publicacion.service.js'
 
-export const listarMisPublicacionesController = async (req: Request, res: Response) => {
-  const usuarioId = Number(req.header('x-user-id'))
+interface AuthRequest extends Request {
+  usuario?: {
+    id: number
+    nombre?: string
+    rol?: string
+  }
+}
+
+export const listarMisPublicacionesController = async (req: AuthRequest, res: Response) => {
+  const usuarioId = req.usuario?.id
 
   try {
-    const publicaciones = await listarMisPublicacionesService(usuarioId)
+    const publicaciones = await listarMisPublicacionesService(Number(usuarioId))
 
     return res.status(200).json({
       ok: true,
@@ -28,12 +36,12 @@ export const listarMisPublicacionesController = async (req: Request, res: Respon
   }
 }
 
-export const eliminarPublicacionController = async (req: Request, res: Response) => {
+export const eliminarPublicacionController = async (req: AuthRequest, res: Response) => {
   const publicacionId = Number(req.params.id)
-  const usuarioSolicitanteId = Number(req.header('x-user-id'))
+  const usuarioSolicitanteId = req.usuario?.id
 
   try {
-    const resultado = await eliminarPublicacionService(publicacionId, usuarioSolicitanteId)
+    const resultado = await eliminarPublicacionService(publicacionId, Number(usuarioSolicitanteId))
 
     return res.status(200).json({
       ok: true,

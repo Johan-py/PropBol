@@ -85,7 +85,7 @@ export default function UserMenu({
             <div className="flex flex-col mb-4">
              <MenuLink label="Mi cuenta" href="/cuenta" icon={UserIcon} onClick={onClosePanel} />
              <MenuLink label="Mis propiedades vistas" href="/vistas" icon={Eye} onClick={onClosePanel} />
-             <MenuLink label="Mis publicaciones" href="/publicaciones" icon={FileText} onClick={onClosePanel} />
+             <MenuLink label="Mis publicaciones" href="mis-publicaciones" icon={FileText} onClick={onClosePanel} />
              <MenuLink label="Mis zonas" href="/zonas" icon={Map} onClick={onClosePanel} />
              <MenuLink label="Mis comparaciones" href="/comparaciones" icon={ArrowLeftRight} onClick={onClosePanel} />
              </div>

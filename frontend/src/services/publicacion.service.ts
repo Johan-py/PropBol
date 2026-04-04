@@ -10,14 +10,25 @@ function getApiUrl() {
   return apiUrl
 }
 
+function getToken() {
+  const token = localStorage.getItem('token')
+
+  if (!token) {
+    throw new Error('No hay sesión activa. Inicia sesión nuevamente.')
+  }
+
+  return token
+}
+
 export async function obtenerMisPublicaciones(): Promise<MisPublicacionesItem[]> {
   const apiUrl = getApiUrl()
+  const token = getToken()
 
   const response = await fetch(`${apiUrl}/api/publicaciones/mias`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'x-user-id': '3' // Simulamos un usuario autenticado con ID 1
+      Authorization: `Bearer ${token}`
     },
     cache: 'no-store'
   })
@@ -33,12 +44,13 @@ export async function obtenerMisPublicaciones(): Promise<MisPublicacionesItem[]>
 
 export async function eliminarPublicacion(id: number) {
   const apiUrl = getApiUrl()
+  const token = getToken()
 
   const response = await fetch(`${apiUrl}/api/publicaciones/${id}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
-      'x-user-id': '3' // Simulamos un usuario autenticado con ID 3
+      Authorization: `Bearer ${token}`
     }
   })
 

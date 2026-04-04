@@ -17,10 +17,7 @@ export const listarMisPublicacionesService = async (usuarioId: number) => {
     id: publicacion.id,
     titulo: publicacion.titulo,
     precio: Number(publicacion.inmueble.precio),
-    ubicacion:
-      [publicacion.inmueble.ubicacion?.ciudad, publicacion.inmueble.ubicacion?.zona]
-        .filter(Boolean)
-        .join(', ') || 'Ubicación no disponible',
+    ubicacion: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
     nroBanos: publicacion.inmueble.nroBanos,
     nroCuartos: publicacion.inmueble.nroCuartos,
     superficieM2: publicacion.inmueble.superficieM2

@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { validarJWT } from '../../middleware/validarJWT.js'
 import {
   eliminarPublicacionController,
   listarMisPublicacionesController
@@ -6,7 +7,7 @@ import {
 
 const router = Router()
 
-router.get('/mias', listarMisPublicacionesController)
-router.delete('/:id', eliminarPublicacionController)
+router.get('/mias', validarJWT, listarMisPublicacionesController)
+router.delete('/:id', validarJWT, eliminarPublicacionController)
 
 export default router
