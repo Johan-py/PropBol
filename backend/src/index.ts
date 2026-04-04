@@ -1,9 +1,14 @@
+import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
+
 import path from 'path'
+
+import { env } from './config/env.js'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { propertiesController } from './modules/properties/properties.controller.js'
 import {
+  createNotificationController,
   deleteNotificationController,
   getNotificationsController,
   getUnreadCountController,
@@ -17,12 +22,20 @@ import { FiltersHomepageController } from './modules/filtershomepage/filtershome
 import {
   registerController,
   loginController,
-  logoutController
+  logoutController,
+  verifyRegisterCodeController
 } from './modules/auth/auth.controller.js'
 import { requireAuth } from './middleware/auth.middleware.js'
 import meHandler from '../api/auth/me.js'
 import correoverificacionRoutes from './modules/perfil/correoverificacion.routes.js'
 import perfilRoutes from './modules/perfil/perfil.routes.js'
+import {
+  googleCallbackController,
+  StratGoogleLoginController
+} from './modules/auth/google/google.controller.js'
+import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
+import { verifyNotificationEmailTransport } from './modules/email/notification-email.service.js'
+
 
 const app = express()
 
@@ -38,20 +51,27 @@ app.use(
 app.use(express.json())
 app.use('/uploads', express.static(path.resolve('uploads')))
 
-const bannersController = new BannersController()
-const filtersController = new FiltersHomepageController()
-
+app.use('/api/perfil', correoverificacionRoutes)
+app.use('/api/perfil/usuario', perfilRoutes)
+app.use('/api/publicaciones', multimediaRoutes)
 app.post('/api/users', (req, res) => {
   const user = req.body
   res.json({ message: 'User created', user })
 })
-
 app.post('/api/auth/register', registerController)
 app.post('/api/auth/login', loginController)
 app.post('/api/auth/logout', logoutController)
+app.post('/api/auth/verify-register', verifyRegisterCodeController)
+app.get('/api/auth/google/login', StratGoogleLoginController)
+app.get('/api/auth/google/callback', googleCallbackController)
+const bannersController = new BannersController()
+const filtersController = new FiltersHomepageController()
 
 app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil', perfilRoutes)
+app.get('/api/auth/me', async (req, res) => {
+  await meHandler(req as any, res as any)
+})
 
 app.get('/api/filters', filtersController.getFilters)
 app.get('/api/banners', (req, res) => bannersController.getBanners(req, res))
@@ -74,6 +94,7 @@ app.get('/health', (_req, res) => {
 app.get('/api/properties/search', propertiesController.search)
 app.get('/api/inmuebles', propertiesController.getAll)
 
+app.post('/notificaciones', requireAuth, createNotificationController)
 app.get('/notificaciones', requireAuth, getNotificationsController)
 app.get(
   '/notificaciones/unread-count',
@@ -105,13 +126,18 @@ app.get('/api/publicaciones/gratis', (_req, res) => {
   res.json({ message: 'Listado de publicaciones gratuitas' })
 })
 
-app.get('/api/auth/me', async (req, res) => {
-  await meHandler(req as any, res as any)
-})
+const PORT = Number(process.env.PORT) || 5000
 
-const PORT = 5000
-
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server running on http://localhost:${PORT}`)
   console.log(`Health check: http://localhost:${PORT}/health`)
 })
+
+  try {
+    await verifyNotificationEmailTransport()
+    console.log('✅ Servicio de email para notificaciones listo')
+  } catch (error) {
+    console.error('❌ Error en configuración de email para notificaciones:', error)
+  }
+})
+
