@@ -6,6 +6,7 @@ datasource db {
   provider = "postgresql"
 }
 
+// ====================== ENUMS ======================
 model Rol {
   id       Int       @id @default(autoincrement())
   nombre   RolNombre @unique

@@ -2,7 +2,6 @@ import path from 'path'
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
-import { env } from './config/env.js'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { propertiesController } from './modules/properties/properties.controller.js'
 import {
@@ -88,7 +87,7 @@ app.get('/health', (_req, res) => {
 })
 
 app.get('/api/properties/search', propertiesController.search)
-app.get('/api/inmuebles', propertiesController.getAll)
+app.get('/api/properties/inmuebles', propertiesController.getAll)
 
 app.post('/notificaciones', requireAuth, createNotificationController)
 app.get('/notificaciones', requireAuth, getNotificationsController)
