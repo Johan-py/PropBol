@@ -88,7 +88,7 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
 
             <button
               onClick={abrirConfirmacion}
-              className="h-11 flex-1 rounded-full bg-[#d97b0d] text-[14px] font-medium text-white transition hover:bg-[#bf6905]"
+              className="h-11 flex-1 rounded-full bg-[#D97706] text-[14px] font-medium text-white transition hover:bg-[#bf6905]"
             >
               Eliminar
             </button>

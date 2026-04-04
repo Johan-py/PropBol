@@ -20,7 +20,7 @@ export default function DeleteErrorModal({
           </h2>
         </div>
 
-        <hr className="border-gray-200" />
+        <hr className="h-[2px] bg-gray-800" />
 
         <div className="flex flex-col items-center gap-5 px-6 py-6">
           <p className="text-center text-sm text-gray-800">
@@ -29,7 +29,7 @@ export default function DeleteErrorModal({
 
           <button
             onClick={onAceptar}
-            className="rounded-full bg-orange-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
+            className="rounded-lg bg-[#D97706] px-10 py-3 text-sm font-semibold text-white transition-colors hover:bg-orange-600"
           >
             Aceptar
           </button>
