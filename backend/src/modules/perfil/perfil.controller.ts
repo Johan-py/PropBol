@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { prisma } from "../../db";
+import { prisma } from '../../db'
 
 interface AuthRequest extends Request {
   usuario?: {
@@ -12,290 +12,309 @@ interface AuthRequest extends Request {
 // Obtener perfil completo del usuario
 export const obtenerPerfil = async (req: AuthRequest, res: Response) => {
   try {
-    const usuarioId = req.usuario?.id;
+    const usuarioId = req.usuario?.id
 
     if (!usuarioId) {
-      return res.status(401).json({ ok: false, msg: "No hay token válido" });
+      return res.status(401).json({ ok: false, msg: 'No hay token válido' })
     }
 
     const usuario = await prisma.usuario.findUnique({
       where: { id: usuarioId },
-      include: {
+      select: {
+        id: true,
+        nombre: true,
+        correo: true,
+        avatar: true,
+        pais: true,
+        genero: true,
+        direccion: true,
         telefonos: true
       }
-    });
+    })
 
     if (!usuario) {
-      return res.status(404).json({ ok: false, msg: "Usuario no encontrado" });
+      return res.status(404).json({ ok: false, msg: 'Usuario no encontrado' })
     }
 
-    // Extraer los teléfonos (máximo 3)
-    const telefonos = usuario.telefonos.slice(0, 3).map(tel => ({
-      codigoPais: tel.codigoPais,
-      numero: tel.numero,
-      principal: tel.principal
-    }));
+    // Mapear género a formato legible
+    const generoMap: { [key: string]: string } = {
+      MASCULINO: 'Masculino',
+      FEMENINO: 'Femenino',
+      OTRO: 'Otro'
+    }
+
+    const perfilFormateado = {
+      ...usuario,
+      genero: usuario.genero ? generoMap[usuario.genero] : null
+    }
 
     return res.json({
       ok: true,
-      perfil: {
-        nombreCompleto: `${usuario.nombre} ${usuario.apellido}`,
-        correo: usuario.correo,
-        telefonos: telefonos,
-        pais: usuario.pais || null,
-        genero: usuario.genero || null,
-        direccion: usuario.direccion || null,
-        fotoPerfil: usuario.avatar || null
-      }
-    });
+      perfil: perfilFormateado
+    })
   } catch (error) {
-    console.error("Error en obtenerPerfil:", error);
-    return res.status(500).json({
-      ok: false,
-      msg: "Error al obtener el perfil del usuario",
-    });
+    console.error('Error en obtenerPerfil:', error)
+    return res.status(500).json({ ok: false, msg: 'Error al obtener el perfil' })
   }
-};
+}
 
 // Editar nombre
 export const editarNombre = async (req: AuthRequest, res: Response) => {
   try {
-    const usuarioId = req.usuario?.id;
-    const { nombre, apellido } = req.body;
+    const usuarioId = req.usuario?.id
+    const { nombre } = req.body
 
     if (!usuarioId) {
-      return res.status(401).json({ ok: false, msg: "No hay token válido" });
+      return res.status(401).json({ ok: false, msg: 'No hay token válido' })
     }
 
-    if (!nombre && !apellido) {
-      return res.status(400).json({ ok: false, msg: "Debe proporcionar nombre o apellido" });
+    if (!nombre || nombre.trim() === '') {
+      return res.status(400).json({ ok: false, msg: 'El nombre es requerido' })
     }
-
-    const updateData: any = {};
-    if (nombre) updateData.nombre = nombre;
-    if (apellido) updateData.apellido = apellido;
 
     const usuarioActualizado = await prisma.usuario.update({
       where: { id: usuarioId },
-      data: updateData
-    });
+      data: { nombre: nombre.trim() }
+    })
 
     return res.json({
       ok: true,
-      msg: "Nombre actualizado exitosamente",
-      nombreCompleto: `${usuarioActualizado.nombre} ${usuarioActualizado.apellido}`
-    });
+      msg: 'Nombre actualizado exitosamente',
+      nombre: usuarioActualizado.nombre
+    })
   } catch (error) {
-    console.error("Error en editarNombre:", error);
+    console.error('Error en editarNombre:', error)
     return res.status(500).json({
       ok: false,
-      msg: "Error al editar el nombre",
-    });
+      msg: 'Error al editar el nombre'
+    })
   }
-};
+}
 
 // Editar país
 export const editarPais = async (req: AuthRequest, res: Response) => {
   try {
-    const usuarioId = req.usuario?.id;
-    const { pais } = req.body;
+    const usuarioId = req.usuario?.id
+    const { pais } = req.body
 
     if (!usuarioId) {
-      return res.status(401).json({ ok: false, msg: "No hay token válido" });
+      return res.status(401).json({ ok: false, msg: 'No hay token válido' })
     }
 
-    if (pais === undefined) {
-      return res.status(400).json({ ok: false, msg: "El país es requerido" });
-    }
+    // Si pais es undefined o string vacío, guardar null
+    const paisActualizado = pais && pais.trim() !== '' ? pais : null
 
     const usuarioActualizado = await prisma.usuario.update({
       where: { id: usuarioId },
-      data: { pais }
-    });
+      data: { pais: paisActualizado }
+    })
 
     return res.json({
       ok: true,
-      msg: "País actualizado exitosamente",
+      msg: 'País actualizado exitosamente',
       pais: usuarioActualizado.pais
-    });
+    })
   } catch (error) {
-    console.error("Error en editarPais:", error);
+    console.error('Error en editarPais:', error)
     return res.status(500).json({
       ok: false,
-      msg: "Error al editar el país",
-    });
+      msg: 'Error al editar el país'
+    })
   }
-};
+}
 
-// Editar género
+// Editar género - también devuelve el valor mapeado
 export const editarGenero = async (req: AuthRequest, res: Response) => {
   try {
-    const usuarioId = req.usuario?.id;
-    const { genero } = req.body;
+    const usuarioId = req.usuario?.id
+    const { genero } = req.body
 
     if (!usuarioId) {
-      return res.status(401).json({ ok: false, msg: "No hay token válido" });
+      return res.status(401).json({ ok: false, msg: 'No hay token válido' })
     }
 
-    if (!genero) {
-      return res.status(400).json({ ok: false, msg: "El género es requerido" });
+    // Mapeo de valores del frontend a los valores del enum en MAYÚSCULAS
+    const enumMap: { [key: string]: string } = {
+      Masculino: 'MASCULINO',
+      Femenino: 'FEMENINO',
+      Otro: 'OTRO'
+    }
+
+    let generoActualizado = null
+
+    if (genero && enumMap[genero]) {
+      generoActualizado = enumMap[genero]
+    } else if (genero && !enumMap[genero]) {
+      return res.status(400).json({
+        ok: false,
+        msg: 'Género inválido. Valores permitidos: Masculino, Femenino, Otro'
+      })
     }
 
     const usuarioActualizado = await prisma.usuario.update({
       where: { id: usuarioId },
-      data: { genero }
-    });
+      data: { genero: generoActualizado as any }
+    })
+
+    // Mapear de vuelta para la respuesta
+    const generoResponseMap: { [key: string]: string } = {
+      MASCULINO: 'Masculino',
+      FEMENINO: 'Femenino',
+      OTRO: 'Otro'
+    }
+
+    const generoRespuesta = usuarioActualizado.genero
+      ? generoResponseMap[usuarioActualizado.genero]
+      : null
 
     return res.json({
       ok: true,
-      msg: "Género actualizado exitosamente",
-      genero: usuarioActualizado.genero
-    });
+      msg: 'Género actualizado exitosamente',
+      genero: generoRespuesta
+    })
   } catch (error) {
-    console.error("Error en editarGenero:", error);
+    console.error('Error en editarGenero:', error)
     return res.status(500).json({
       ok: false,
-      msg: "Error al editar el género",
-    });
+      msg: 'Error al editar el género'
+    })
   }
-};
-
+}
 // Editar dirección
 export const editarDireccion = async (req: AuthRequest, res: Response) => {
   try {
-    const usuarioId = req.usuario?.id;
-    const { direccion } = req.body;
+    const usuarioId = req.usuario?.id
+    const { direccion } = req.body
 
     if (!usuarioId) {
-      return res.status(401).json({ ok: false, msg: "No hay token válido" });
+      return res.status(401).json({ ok: false, msg: 'No hay token válido' })
     }
 
-    if (direccion === undefined) {
-      return res.status(400).json({ ok: false, msg: "La dirección es requerida" });
-    }
+    // Si direccion es undefined o string vacío, guardar null
+    const direccionActualizada = direccion && direccion.trim() !== '' ? direccion : null
 
     const usuarioActualizado = await prisma.usuario.update({
       where: { id: usuarioId },
-      data: { direccion }
-    });
+      data: { direccion: direccionActualizada }
+    })
 
     return res.json({
       ok: true,
-      msg: "Dirección actualizada exitosamente",
+      msg: 'Dirección actualizada exitosamente',
       direccion: usuarioActualizado.direccion
-    });
+    })
   } catch (error) {
-    console.error("Error en editarDireccion:", error);
+    console.error('Error en editarDireccion:', error)
     return res.status(500).json({
       ok: false,
-      msg: "Error al editar la dirección",
-    });
+      msg: 'Error al editar la dirección'
+    })
   }
-};
+}
 
 // Editar foto de perfil
 export const editarFotoPerfil = async (req: AuthRequest, res: Response) => {
   try {
-    const usuarioId = req.usuario?.id;
-    const { fotoPerfil } = req.body;
+    const usuarioId = req.usuario?.id
 
     if (!usuarioId) {
-      return res.status(401).json({ ok: false, msg: "No hay token válido" });
+      return res.status(401).json({ ok: false, msg: 'No hay token válido' })
     }
 
-    if (!fotoPerfil) {
-      return res.status(400).json({ ok: false, msg: "La URL de la foto es requerida" });
+    if (!req.file) {
+      return res.status(400).json({
+        ok: false,
+        msg: 'No se ha subido ninguna imagen'
+      })
     }
+
+    const baseUrl = `${req.protocol}://${req.get('host')}`
+    const fotoUrl = `${baseUrl}/uploads/avatars/${req.file.filename}`
 
     const usuarioActualizado = await prisma.usuario.update({
       where: { id: usuarioId },
-      data: { avatar: fotoPerfil }
-    });
+      data: { avatar: fotoUrl }
+    })
 
     return res.json({
       ok: true,
-      msg: "Foto de perfil actualizada exitosamente",
+      msg: 'Foto de perfil actualizada exitosamente',
       fotoPerfil: usuarioActualizado.avatar
-    });
+    })
   } catch (error) {
-    console.error("Error en editarFotoPerfil:", error);
+    console.error('Error en editarFotoPerfil:', error)
     return res.status(500).json({
       ok: false,
-      msg: "Error al editar la foto de perfil",
-    });
+      msg: 'Error al subir la foto de perfil'
+    })
   }
-};
+}
 
-// Editar teléfonos (actualiza todos los teléfonos de una vez)
+// Editar teléfonos
 export const editarTelefonos = async (req: AuthRequest, res: Response) => {
   try {
-    const usuarioId = req.usuario?.id;
-    const { telefonos } = req.body;
+    const usuarioId = req.usuario?.id
+    const { telefonos } = req.body
 
     if (!usuarioId) {
-      return res.status(401).json({ ok: false, msg: "No hay token válido" });
+      return res.status(401).json({ ok: false, msg: 'No hay token válido' })
     }
 
     if (!telefonos || !Array.isArray(telefonos)) {
       return res.status(400).json({
         ok: false,
-        msg: "Debe proporcionar un array de teléfonos"
-      });
+        msg: 'Debe proporcionar un array de teléfonos'
+      })
     }
 
     if (telefonos.length === 0 || telefonos.length > 3) {
       return res.status(400).json({
         ok: false,
-        msg: "Debe proporcionar entre 1 y 3 teléfonos"
-      });
+        msg: 'Debe proporcionar entre 1 y 3 teléfonos'
+      })
     }
 
-    // Validar que cada teléfono tenga codigoPais y numero
     for (let i = 0; i < telefonos.length; i++) {
-      const tel = telefonos[i];
+      const tel = telefonos[i]
       if (!tel.codigoPais || !tel.numero) {
         return res.status(400).json({
           ok: false,
           msg: `El teléfono ${i + 1} debe tener 'codigoPais' y 'numero'`
-        });
+        })
       }
     }
 
-    // Determinar cuál es el teléfono principal (el primero si no se especifica)
     const telefonosConPrincipal = telefonos.map((tel, index) => ({
       codigoPais: tel.codigoPais,
       numero: tel.numero,
-      principal: tel.principal !== undefined ? tel.principal : index === 0 // El primero es principal por defecto
-    }));
+      principal: tel.principal !== undefined ? tel.principal : index === 0
+    }))
 
-    // Actualizar teléfonos en transacción
     await prisma.$transaction(async (tx) => {
-      // Eliminar teléfonos existentes
       await tx.telefono.deleteMany({
         where: { usuarioId: usuarioId }
-      });
+      })
 
-      // Crear nuevos teléfonos
       await tx.telefono.createMany({
-        data: telefonosConPrincipal.map(tel => ({
+        data: telefonosConPrincipal.map((tel) => ({
           codigoPais: tel.codigoPais,
           numero: tel.numero,
           principal: tel.principal,
           usuarioId: usuarioId
         }))
-      });
-    });
+      })
+    })
 
     return res.json({
       ok: true,
-      msg: "Teléfonos actualizados exitosamente",
+      msg: 'Teléfonos actualizados exitosamente',
       telefonos: telefonosConPrincipal
-    });
+    })
   } catch (error) {
-    console.error("Error en editarTelefonos:", error);
+    console.error('Error en editarTelefonos:', error)
     return res.status(500).json({
       ok: false,
-      msg: "Error al editar los teléfonos",
-    });
+      msg: 'Error al editar los teléfonos'
+    })
   }
-};
+}
