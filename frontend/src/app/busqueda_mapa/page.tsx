@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import dynamic from 'next/dynamic'
 import { ChevronLeft, ChevronRight, List as ListIcon, LayoutGrid } from 'lucide-react'
 
@@ -21,19 +21,18 @@ const MapView = dynamic(() => import('./MapView'), {
   loading: () => <div className="h-full w-full bg-stone-100 animate-pulse flex items-center justify-center text-stone-400">Cargando mapa de Bolivia...</div>
 })
 
-export default function BusquedaMapaPage() {
-  // Estados de UI (Frontend)
+function BusquedaMapaContent() {
+  // Estados de UI
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
-  // Estados de Lógica (Backend / Mapas)
+  // Lógica de datos (Usa useSearchParams internamente)
   const { properties, isLoading } = useProperties()
-  // Integración de la lógica de ordenamiento sincronizada con la URL
   const { ordenActual, cambiarOrden } = useOrdenamiento({ inmuebles: properties })
+  
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
 
-  // Efecto original del equipo de mapas: Retraso sutil al hacer hover para no saturar el mapa
   useEffect(() => {
     if (!hoveredId) return
     const timeout = setTimeout(() => {
@@ -43,7 +42,7 @@ export default function BusquedaMapaPage() {
   }, [hoveredId])
 
   return (
- <div className="flex flex-col h-screen bg-white overflow-hidden">
+    <div className="flex flex-col h-screen bg-white overflow-hidden">
       
       {/* 1. BARRA DE FILTROS SUPERIOR */}
       <FilterBar 
@@ -65,7 +64,6 @@ export default function BusquedaMapaPage() {
           {isSidebarOpen && (
             <div className="flex flex-col h-full">
               
-              {/* CABECERA: Contador y Botón Ocultar (Diseño de tu imagen) */}
               <div className="p-4 bg-white shrink-0">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex flex-col">
@@ -84,7 +82,6 @@ export default function BusquedaMapaPage() {
                   </button>
                 </div>
 
-                {/* 🚀 MENÚ DE ORDENAMIENTO INTEGRADO (Sincronizado con URL) */}
                 <div className="border-b border-stone-100 pb-4">
                    <MenuOrdenamiento 
                      totalResultados={properties.length}
@@ -94,7 +91,6 @@ export default function BusquedaMapaPage() {
                 </div>
               </div>
 
-              {/* Toggle de vistas (Grid/List) */}
               <div className="px-4 py-2 border-b border-stone-50 flex justify-end bg-white">
                 <div className="flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90">
                   <button
@@ -116,7 +112,6 @@ export default function BusquedaMapaPage() {
                 </div>
               </div>
 
-              {/* CONTENIDO SCROLLEABLE */}
               <div className="flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar">
                 {isLoading ? (
                   <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
@@ -129,7 +124,7 @@ export default function BusquedaMapaPage() {
                   <div className={`gap-4 flex flex-col ${
                     viewMode === 'list' ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm' : ''
                   }`}>
-                    {properties.map((property) => (
+                    {properties.map((property: any) => (
                       <div
                         key={property.id}
                         onMouseEnter={() => setHoveredId(property.id)}
@@ -193,5 +188,13 @@ export default function BusquedaMapaPage() {
         </section>
       </main>
     </div>
+  )
+}
+export default function BusquedaMapaPage() {
+  return (
+    // Envolvemos todo en Suspense para que el Build de Vercel sea exitoso
+    <Suspense fallback={<div className="h-screen w-screen flex items-center justify-center bg-white text-gray-500 italic">Cargando buscador de PropBol...</div>}>
+      <BusquedaMapaContent />
+    </Suspense>
   )
 }
