@@ -11,7 +11,6 @@ export default function BusquedaPage() {
           <ResultadosBusqueda />
         </Suspense>
       </div>
-      
       {/* Panel derecho */}
       <div className="flex-1 bg-gray-100">
         {/* Aquí irá el mapa */}
