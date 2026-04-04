@@ -116,7 +116,6 @@ export const ResultadosBusqueda = () => {
         onOrdenChange={cambiarOrden}
         totalResultados={inmueblesOrdenados.length}
       />
-
       {inmueblesOrdenados.length > 0 ? (
         <div className="grid grid-cols-1 gap-4">
           {inmueblesOrdenados.map((inmueble: any) => (
