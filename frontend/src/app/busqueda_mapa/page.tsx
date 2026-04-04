@@ -4,28 +4,29 @@ import { useState, useEffect, Suspense } from 'react'
 import dynamic from 'next/dynamic'
 import { ChevronLeft, ChevronRight, List as ListIcon, LayoutGrid } from 'lucide-react'
 
-// === HOOKS (Lógica Backend de tu compañero) ===
+// === HOOKS ===
 import { useProperties } from '@/hooks/useProperties'
 import { useOrdenamiento } from '@/hooks/useOrdenamiento'
 
-// === COMPONENTES (Tu diseño Frontend) ===
+// === COMPONENTES ===
 import FilterBar from '@/components/filters/FilterBar'
 import PropertyCard from '@/components/layout/PropertyCard'
 import PropertyRow from '@/components/galeria/PropertyRow'
 import EmptyState from '@/components/galeria/EmptyState'
 import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenamiento'
-// Carga dinámica del mapa para evitar errores de SSR en Next.js
+
+// 🟢 Mantenemos la carga dinámica del mapa
 const MapView = dynamic(() => import('./MapView'), { 
   ssr: false,
   loading: () => <div className="h-full w-full bg-stone-100 animate-pulse flex items-center justify-center text-stone-400">Cargando mapa de Bolivia...</div>
 })
 
+// 🟢 Componente con la lógica interna
 function BusquedaMapaContent() {
-  // Estados de UI
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
-  // Lógica de datos (Usa useSearchParams internamente)
+  // ⚠️ Estos hooks son los que causan el error si no hay Suspense arriba
   const { properties, isLoading } = useProperties()
   const { ordenActual, cambiarOrden } = useOrdenamiento({ inmuebles: properties })
   
@@ -42,8 +43,6 @@ function BusquedaMapaContent() {
 
   return (
     <div className="flex flex-col h-screen bg-white overflow-hidden">
-      
-      {/* 1. BARRA DE FILTROS SUPERIOR */}
       <FilterBar 
         variant="map" 
         onSearch={(nuevosFiltros) => {
@@ -51,10 +50,7 @@ function BusquedaMapaContent() {
         }} 
       />
 
-      {/* 2. ÁREA CENTRAL (Lista + Mapa) */}
       <main className="flex flex-1 overflow-hidden relative">
-        
-        {/* PANEL LATERAL COLAPSABLE */}
         <aside
           className={`bg-white border-r border-stone-200 flex flex-col z-10 transition-all duration-300 ${
             isSidebarOpen ? 'w-full md:w-[450px]' : 'w-0'
@@ -62,7 +58,6 @@ function BusquedaMapaContent() {
         >
           {isSidebarOpen && (
             <div className="flex flex-col h-full">
-              
               <div className="p-4 bg-white shrink-0">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex flex-col">
@@ -94,17 +89,13 @@ function BusquedaMapaContent() {
                 <div className="flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90">
                   <button
                     onClick={() => setViewMode('grid')}
-                    className={`p-1 rounded transition-colors ${
-                      viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-                    }`}
+                    className={`p-1 rounded transition-colors ${viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'}`}
                   >
                     <LayoutGrid size={16} />
                   </button>
                   <button
                     onClick={() => setViewMode('list')}
-                    className={`p-1 rounded transition-colors ${
-                      viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-                    }`}
+                    className={`p-1 rounded transition-colors ${viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'}`}
                   >
                     <ListIcon size={16} />
                   </button>
@@ -120,20 +111,14 @@ function BusquedaMapaContent() {
                 ) : properties.length === 0 ? (
                   <EmptyState />
                 ) : (
-                  <div className={`gap-4 flex flex-col ${
-                    viewMode === 'list' ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm' : ''
-                  }`}>
+                  <div className={`gap-4 flex flex-col ${viewMode === 'list' ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm' : ''}`}>
                     {properties.map((property: any) => (
                       <div
                         key={property.id}
                         onMouseEnter={() => setHoveredId(property.id)}
                         onClick={() => setSelectedPropertyId(property.id)}
-                        className={`cursor-pointer transition-all duration-200 rounded-xl ${
-                          viewMode === 'list' ? 'py-1 px-2' : ''
-                        } ${
-                          selectedPropertyId === property.id
-                            ? 'ring-2 ring-[#ea580c] shadow-md bg-orange-50/50'
-                            : 'hover:border-stone-300 hover:shadow-sm'
+                        className={`cursor-pointer transition-all duration-200 rounded-xl ${viewMode === 'list' ? 'py-1 px-2' : ''} ${
+                          selectedPropertyId === property.id ? 'ring-2 ring-[#ea580c] shadow-md bg-orange-50/50' : 'hover:border-stone-300 hover:shadow-sm'
                         }`}
                       >
                         {viewMode === 'grid' ? (
@@ -162,7 +147,6 @@ function BusquedaMapaContent() {
           )}
         </aside>
 
-        {/* ÁREA DEL MAPA */}
         <section className="flex-1 relative bg-stone-200">
           {!isSidebarOpen && (
             <button
@@ -189,9 +173,12 @@ function BusquedaMapaContent() {
     </div>
   )
 }
+
+// 🟢 EXPORT PRINCIPAL: Ahora forzamos que no se intente pre-renderizar estáticamente
+export const dynamicPage = 'force-dynamic' // 🚀 Truco extra para Vercel
+
 export default function BusquedaMapaPage() {
   return (
-    // Envolvemos todo en Suspense para que el Build de Vercel sea exitoso
     <Suspense fallback={<div className="h-screen w-screen flex items-center justify-center bg-white text-gray-500 italic">Cargando buscador de PropBol...</div>}>
       <BusquedaMapaContent />
     </Suspense>
