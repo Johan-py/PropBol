@@ -33,7 +33,7 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
 
   return (
     <>
-      <div className="overflow-hidden rounded-2xl border border-[#e6ddd1] bg-[#f5efe7] shadow-sm transition-shadow hover:shadow-md">
+      <div className="overflow-hidden rounded-2xl border border-[#e6ddd1] bg-[#F9F6EE] shadow-sm transition-shadow hover:shadow-md">
         <div className="overflow-hidden">
           <img
             src={publicacion.imagenUrl || '/placeholder-house.jpg'}
