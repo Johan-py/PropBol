@@ -36,9 +36,21 @@ export const obtenerPerfil = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ ok: false, msg: 'Usuario no encontrado' })
     }
 
+    // Mapear género a formato legible
+    const generoMap: { [key: string]: string } = {
+      'MASCULINO': 'Masculino',
+      'FEMENINO': 'Femenino',
+      'OTRO': 'Otro'
+    }
+
+    const perfilFormateado = {
+      ...usuario,
+      genero: usuario.genero ? generoMap[usuario.genero] : null
+    }
+
     return res.json({
       ok: true,
-      perfil: usuario
+      perfil: perfilFormateado
     })
   } catch (error) {
     console.error('Error en obtenerPerfil:', error)
@@ -89,7 +101,8 @@ export const editarPais = async (req: AuthRequest, res: Response) => {
       return res.status(401).json({ ok: false, msg: 'No hay token válido' })
     }
 
-    const paisActualizado = pais === undefined ? null : pais
+    // Si pais es undefined o string vacío, guardar null
+    const paisActualizado = (pais && pais.trim() !== '') ? pais : null
 
     const usuarioActualizado = await prisma.usuario.update({
       where: { id: usuarioId },
@@ -110,7 +123,7 @@ export const editarPais = async (req: AuthRequest, res: Response) => {
   }
 }
 
-// Editar género
+// Editar género - también devuelve el valor mapeado
 export const editarGenero = async (req: AuthRequest, res: Response) => {
   try {
     const usuarioId = req.usuario?.id
@@ -120,17 +133,42 @@ export const editarGenero = async (req: AuthRequest, res: Response) => {
       return res.status(401).json({ ok: false, msg: 'No hay token válido' })
     }
 
-    const generoActualizado = genero === undefined ? null : genero
+    // Mapeo de valores del frontend a los valores del enum en MAYÚSCULAS
+    const enumMap: { [key: string]: string } = {
+      'Masculino': 'MASCULINO',
+      'Femenino': 'FEMENINO',
+      'Otro': 'OTRO'
+    }
+
+    let generoActualizado = null
+
+    if (genero && enumMap[genero]) {
+      generoActualizado = enumMap[genero]
+    } else if (genero && !enumMap[genero]) {
+      return res.status(400).json({
+        ok: false,
+        msg: 'Género inválido. Valores permitidos: Masculino, Femenino, Otro'
+      })
+    }
 
     const usuarioActualizado = await prisma.usuario.update({
       where: { id: usuarioId },
-      data: { genero: generoActualizado }
+      data: { genero: generoActualizado as any }
     })
+
+    // Mapear de vuelta para la respuesta
+    const generoResponseMap: { [key: string]: string } = {
+      'MASCULINO': 'Masculino',
+      'FEMENINO': 'Femenino',
+      'OTRO': 'Otro'
+    }
+
+    const generoRespuesta = usuarioActualizado.genero ? generoResponseMap[usuarioActualizado.genero] : null
 
     return res.json({
       ok: true,
       msg: 'Género actualizado exitosamente',
-      genero: usuarioActualizado.genero
+      genero: generoRespuesta
     })
   } catch (error) {
     console.error('Error en editarGenero:', error)
@@ -140,7 +178,6 @@ export const editarGenero = async (req: AuthRequest, res: Response) => {
     })
   }
 }
-
 // Editar dirección
 export const editarDireccion = async (req: AuthRequest, res: Response) => {
   try {
@@ -151,7 +188,8 @@ export const editarDireccion = async (req: AuthRequest, res: Response) => {
       return res.status(401).json({ ok: false, msg: 'No hay token válido' })
     }
 
-    const direccionActualizada = direccion === undefined ? null : direccion
+    // Si direccion es undefined o string vacío, guardar null
+    const direccionActualizada = (direccion && direccion.trim() !== '') ? direccion : null
 
     const usuarioActualizado = await prisma.usuario.update({
       where: { id: usuarioId },
