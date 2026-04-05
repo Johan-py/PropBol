@@ -15,7 +15,7 @@ import type { PropertyMapPin } from '@/types/property'
 // Fix íconos default de Leaflet en Next.js
 if (typeof window !== 'undefined') {
   delete (L.Icon.Default.prototype as any)._getIconUrl
-L.Icon.Default.mergeOptions({
+  L.Icon.Default.mergeOptions({
     iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
     shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
   })
