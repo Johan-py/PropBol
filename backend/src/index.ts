@@ -124,6 +124,7 @@ const filtersController = new FiltersHomepageController()
 app.get('/api/auth/me', async (req, res) => {
   await meHandler(req as any, res as any)
 })
+>>>>>>> b68a39aab8d9cda89a4ae3b8e3d1069c14f8933f
 
 app.get("/api/filters", filtersController.getFilters);
 app.get("/api/banners", (req, res) => bannersController.getBanners(req, res));
@@ -203,3 +204,4 @@ app.listen(PORT, async () => {
     console.error('❌ Error en configuración de email para notificaciones:', error)
   }
 })
+>>>>>>> b68a39aab8d9cda89a4ae3b8e3d1069c14f8933f
