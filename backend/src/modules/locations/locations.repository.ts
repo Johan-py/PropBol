@@ -17,11 +17,17 @@ export class LocationsRepository {
       .replace(/[uú]/gi, '[uú]')
   }
   async findByName(query: string) {
+    try {
+      // Si la query es muy corta, devolvemos vacío para evitar carga innecesaria
+      if (!query || query.length < 2) return []
+
     return await prisma.ubicacion_maestra.findMany({
       where: {
         OR: [
-          { nombre: { contains: query, mode: 'insensitive' } }, //Esta es la zona porsiacaso en la bd esta como nombre
-          { municipio: { contains: query, mode: 'insensitive' } }
+            // 'nombre' es la ZONA en tu base de datos
+            { nombre: { contains: query, mode: 'insensitive' } },
+            { municipio: { contains: query, mode: 'insensitive' } },
+            { departamento: { contains: query, mode: 'insensitive' } }
         ]
       },
       select: {
@@ -33,16 +39,27 @@ export class LocationsRepository {
       orderBy: { popularidad: 'desc' },
       take: 5
     })
+    } catch (error) {
+      console.error('❌ Error en LocationsRepository.findByName:', error)
+      // Devolvemos un array vacío para que el frontend no reciba el 500
+      return []
+    }
   }
 
+  /**
+   * Incrementa la popularidad de una zona cuando el usuario la selecciona.
+   */
   async incrementPopularity(id: number) {
+    try {
     return await prisma.ubicacion_maestra.update({
       where: { id: id },
       data: {
-        popularidad: {
-          increment: 1
+          popularidad: { increment: 1 }
         }
+      })
+    } catch (error) {
+      console.error('❌ Error al incrementar popularidad:', error)
+      return null
       }
-    })
   }
 }
