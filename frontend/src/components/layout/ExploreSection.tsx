@@ -52,13 +52,13 @@ export default function ExploreSection() {
 <<<<<<< HEAD
 =======
 
-    // 1. Construir los parámetros de búsqueda 
+    // 1. Construir los parámetros de búsqueda
     const params = new URLSearchParams()
-    
+
     // Modos (VENTA, ALQUILER, etc.)
     selectedOption.forEach((modo) => params.append('modoInmueble', modo.toUpperCase()))
 
-    // Tipo de Inmueble (Mapeo manual para el Backend) 
+    // Tipo de Inmueble (Mapeo manual para el Backend)
     if (propertyType !== 'Cualquier tipo') {
       const tipoMap: Record<string, string> = {
         Casas: 'CASA',
