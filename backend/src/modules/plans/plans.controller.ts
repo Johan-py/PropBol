@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response } from 'express'
 
 const planes = [
   {
@@ -26,21 +26,26 @@ const planes = [
     price: 19.99,
     description: 'Publicaciones ilimitadas + estadísticas avanzadas',
     tiempo: 'Por mes',
-    beneficios: ['Publicaciones ilimitadas', 'Soporte 24/7', 'Estadísticas avanzadas', 'API acceso'],
+    beneficios: [
+      'Publicaciones ilimitadas',
+      'Soporte 24/7',
+      'Estadísticas avanzadas',
+      'API acceso'
+    ],
     texto_corto: 'Para empresas'
   }
-];
+]
 
 export const getPlanes = async (req: Request, res: Response) => {
   try {
     const planesValidos = planes.filter(
-      plan => plan.price !== null && plan.price !== undefined && plan.price >= 0
-    );
-    res.json(planesValidos);
+      (plan) => plan.price !== null && plan.price !== undefined && plan.price >= 0
+    )
+    res.json(planesValidos)
   } catch {
     res.status(500).json({
       error: 'Error del servidor',
       message: 'No se pudieron cargar los planes'
-    });
+    })
   }
-};
+}
