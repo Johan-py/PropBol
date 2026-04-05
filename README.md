@@ -32,7 +32,6 @@ El proyecto sigue un enfoque **monorepo** con separación clara por capas:
 
 ---
 
-
 ## ⚡ Requisitos
 
 - **Bun** (v1.3+) → [https://bun.sh](https://bun.sh)
@@ -90,10 +89,9 @@ GET /api/calculator?a=10&b=2&op=divide
 
 ## 🐳 Docker
 
-
 # Levantar contenedor de desarrollo:
-Levantar contenedor de desarrollo:
 
+Levantar contenedor de desarrollo:
 
 ## 📂 Estructura del Proyecto
 
@@ -113,7 +111,6 @@ Levantar contenedor de desarrollo:
 
 ## ⚙️ Requisitos
 
-
 - Usa `bun test` para todos los tests; no es necesario configurar Jest manualmente
 - Toda la lógica de API está en `app/api/calculator/route.ts`
 - Layout obligatorio en `app/layout.tsx` para evitar errores de Next.js con App Router
@@ -121,7 +118,6 @@ Levantar contenedor de desarrollo:
 > # Este repositorio sirve como **base para construir escenarios de estrés realistas para el equipo de DevOps**.
 >
 > Este repositorio sirve como **base para construir escenarios de estrés realistas para el equipo de DevOps**.
-
 
 > # Este repositorio sirve como **base para construir escenarios de estrés realistas para el equipo de DevOps**.
 >
@@ -279,4 +275,3 @@ Para contribuir:
 ## 📄 Licencia
 
 Pendiente de definición.
-
