@@ -74,8 +74,6 @@
     }
   }
 
-<<<<<<< HEAD
-=======
   .cluster-bubble {
     border-radius: 50%;
     display: flex;
@@ -231,7 +229,6 @@
 }
 .cluster-bubble--low {
   /* azul    1    */
-
 }
 
 .leaflet-cluster-anim .leaflet-marker-icon,
@@ -259,7 +256,6 @@
 }
 /* Commit 1: tamaño clusters móvil */
 @media (max-width: 768px) {
->>>>>>> 12892ab53161466e83fa52424359eeccc35604a5
   .cluster-bubble {
     border-radius: 50%;
     display: flex;
@@ -295,6 +291,7 @@
   .leaflet-cluster-anim .leaflet-marker-icon,
   .leaflet-cluster-anim .leaflet-marker-shadow {
     transition:
+<<<<<<< HEAD
 <<<<<<< HEAD
       transform 400ms ease,
       opacity 400ms ease !important;
@@ -388,6 +385,10 @@
 =======
     transform 250ms ease,
     opacity 250ms ease;
+=======
+      transform 250ms ease,
+      opacity 250ms ease;
+>>>>>>> 453ab1a520127979d6fa94229b1b3a7e940c3a22
   }
 }
 /* Commit 5: celulares pequeños ≤480px */
@@ -409,5 +410,8 @@
     transform: scale(0.85);
   }
 }
+<<<<<<< HEAD
 
 >>>>>>> 12892ab53161466e83fa52424359eeccc35604a5
+=======
+>>>>>>> 453ab1a520127979d6fa94229b1b3a7e940c3a22
