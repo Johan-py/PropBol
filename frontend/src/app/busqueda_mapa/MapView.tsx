@@ -5,13 +5,20 @@ import MarkerClusterGroup from 'react-leaflet-cluster'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { useMap } from 'react-leaflet'
-import { useEffect } from 'react'
+//import { useEffect } from 'react'
+// prueba
+import { useEffect, useState } from 'react'
+
+
 
 import ZoomControls from '@/components/ZoomControls'
 import { createGpsIcon } from '@/components/GpsPin'
 import { createClusterIcon, CLUSTER_CONFIG } from '@/lib/clusterIcon'
 import { useProperties } from '@/hooks/useProperties'
 import type { PropertyMapPin } from '@/types/property'
+
+
+
 
 // Fix íconos default de Leaflet en Next.js
 delete (L.Icon.Default.prototype as any)._getIconUrl
@@ -118,6 +125,16 @@ export default function MapView({
   const { properties, isLoading, error } = useProperties()
 
   const selectedProperty = properties.find(p => p.id === selectedId)
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null)
+
+  useEffect(() => {
+    if (!navigator.geolocation) return
+    navigator.geolocation.getCurrentPosition(
+      (pos) => setUserLocation([pos.coords.latitude, pos.coords.longitude]),
+      (err) => console.error('Error obteniendo ubicación:', err),
+      { enableHighAccuracy: true }
+    )
+  }, [])
 
   return (
     <div className="relative w-full h-full">
@@ -158,9 +175,12 @@ export default function MapView({
           />
         )}
 
-        <Marker position={center} icon={createGpsIcon()}>
-          <Popup>Tu ubicación actual</Popup>
-        </Marker>
+
+        {userLocation && (
+      <Marker position={userLocation} icon={createGpsIcon()}>
+        <Popup>Tu ubicación actual</Popup>
+       </Marker>
+        )}
         
                 <MarkerClusterGroup
           iconCreateFunction={createClusterIcon}
