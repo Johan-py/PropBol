@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-
+//formulario
 export default function MiRegistroPage() {
   const [datos, setDatos] = useState({
     titulo: 'Tropico 6 Federa',
