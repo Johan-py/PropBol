@@ -61,8 +61,8 @@ export const propertiesRepository = {
           ubicacion: {
             ubicacion_maestra: {
               nombre: { contains: q, mode: 'insensitive' }
-      }
-    }
+            }
+          }
         }
       ]
     }
