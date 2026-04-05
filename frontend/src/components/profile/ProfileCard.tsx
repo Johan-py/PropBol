@@ -736,8 +736,8 @@ export default function ProfileCard() {
                 className={`flex-1 px-3 py-2 rounded text-sm
                   ${
                     campoEditando === 'nombre'
-                    ? 'bg-white border border-amber-500'
-                    : 'bg-gray-200 cursor-not-allowed'
+                      ? 'bg-white border border-amber-500'
+                      : 'bg-gray-200 cursor-not-allowed'
                   }
                 `}
               />
@@ -815,7 +815,7 @@ export default function ProfileCard() {
                       campoEditando === keyCampo
                         ? 'bg-white border border-amber-500'
                         : 'bg-gray-200 cursor-not-allowed'
-                      }`}
+                    }`}
                   >
                     {PAISES.map((p) => (
                       <option key={p.nombre} value={`${p.nombre} ${p.codigo}`}>
@@ -833,7 +833,7 @@ export default function ProfileCard() {
                       campoEditando === keyCampo
                         ? 'bg-white border border-amber-500'
                         : 'bg-gray-200 cursor-not-allowed'
-                      }`}
+                    }`}
                   />
                   <button
                     onClick={() => setCampoEditando(campoEditando === keyCampo ? null : keyCampo)}
@@ -867,8 +867,8 @@ export default function ProfileCard() {
                 className={`flex-1 px-3 py-2 rounded text-sm
                   ${
                     campoEditando === 'pais'
-                    ? 'bg-white border border-amber-500'
-                    : 'bg-gray-200 cursor-not-allowed'
+                      ? 'bg-white border border-amber-500'
+                      : 'bg-gray-200 cursor-not-allowed'
                   }
                 `}
               >
@@ -898,8 +898,8 @@ export default function ProfileCard() {
                 className={`flex-1 px-3 py-2 rounded text-sm
                   ${
                     campoEditando === 'genero'
-                    ? 'bg-white border border-amber-500'
-                    : 'bg-gray-200 cursor-not-allowed'
+                      ? 'bg-white border border-amber-500'
+                      : 'bg-gray-200 cursor-not-allowed'
                   }
                 `}
               >
@@ -928,8 +928,8 @@ export default function ProfileCard() {
                 className={`flex-1 px-3 py-2 rounded text-sm
                   ${
                     campoEditando === 'direccion'
-                    ? 'bg-white border border-amber-500'
-                    : 'bg-gray-200 cursor-not-allowed'
+                      ? 'bg-white border border-amber-500'
+                      : 'bg-gray-200 cursor-not-allowed'
                   }
                 `}
               />
