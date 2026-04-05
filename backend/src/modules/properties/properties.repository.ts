@@ -40,17 +40,30 @@ export const propertiesRepository = {
     }
   }
 
-  if (filtros.locationId) {
-    where.ubicacion = {
-      ubicacionMaestraId: Number(filtros.locationId)
-    };
-  } else if (filtros.query && filtros.query.trim() !== '') {
-    const q = filtros.query.trim();
-    where.OR = [
-      { titulo: { contains: q, mode: 'insensitive' } },
-      { descripcion: { contains: q, mode: 'insensitive' } }
-    ];
-  }
+  if (filtros.locationId || (filtros.query && filtros.query.trim() !== '')) {
+      where.OR = [];
+      
+      // 1. Buscar por ID de zona exacta (Ideal cuando pases a producción)
+      if (filtros.locationId) {
+        where.OR.push({
+          ubicacion: { ubicacionMaestraId: Number(filtros.locationId) }
+        });
+      }
+
+      // 2. Buscar por texto (Salva la vida con datos de prueba o sin ID enlazado)
+      if (filtros.query && filtros.query.trim() !== '') {
+        // Extraemos la primera parte (Ej: Saca "Cala Cala" de "Cala Cala - Cochabamba - Bolivia")
+        const textoLimpio = filtros.query.split('-')[0].trim();
+        
+        where.OR.push({ titulo: { contains: textoLimpio, mode: 'insensitive' } });
+        where.OR.push({ descripcion: { contains: textoLimpio, mode: 'insensitive' } });
+        
+        // También buscamos en la dirección textual de la ubicación
+        where.OR.push({ 
+          ubicacion: { direccion: { contains: textoLimpio, mode: 'insensitive' } } 
+        });
+      }
+    }
 
   
     // ── ORDER BY ───────────────────────────────────────────────────────────
