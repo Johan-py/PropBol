@@ -161,45 +161,49 @@ function BusquedaMapaContent() {
                   </div>
             )}
           </div>
+            </div>
+          )}
         </aside>
 
-        {/* Área del Mapa */}
-        <section className="flex-grow bg-gray-100 relative w-full h-[60vh] md:h-auto transition-all duration-300">
-          {/* Botón flotante para expandir/contraer el panel */}
+        <section className="flex-1 relative bg-stone-200">
+          {!isSidebarOpen && (
           <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="absolute left-0 top-4 z-[1000] bg-white border border-gray-300 shadow-md p-2 rounded-r-md hover:bg-gray-50 flex items-center justify-center transition-colors focus:outline-none hidden md:flex"
-            title={isSidebarOpen ? "Contraer panel" : "Expandir panel"}
-          >
-            <svg
-              className="w-5 h-5 text-gray-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+              onClick={() => setIsSidebarOpen(true)}
+              className="absolute left-0 top-4 z-[1000] bg-white text-black shadow-md rounded-r-md flex flex-col items-center py-4 px-2 gap-4 hover:bg-stone-50 transition-colors"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d={isSidebarOpen ? "M15 19l-7-7 7-7" : "M9 5l7 7-7 7"}
-              />
-            </svg>
+              <ChevronRight size={16} />
+              <span className="[writing-mode:vertical-lr] rotate-180 text-[10px] font-bold tracking-widest uppercase text-stone-600">
+                Inmuebles
+              </span>
+              <ListIcon size={16} className="text-stone-500" />
           </button>
+          )}
 
           <div className="absolute inset-0">
-          {!loading && (
             <MapView
-              properties={data || []}
+              properties={properties}
               selectedId={selectedPropertyId}
               onSelect={setSelectedPropertyId}
-              isLoading={loading}
-              error={null}
             />
-            )}
           </div>
         </section>
-      </div>
+      </main>
     </div>
-  );
+  )
+}
+
+export const dynamic = 'force-dynamic'
+
+export default function BusquedaMapaPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="h-screen w-screen flex items-center justify-center bg-white text-gray-500 italic">
+          Cargando buscador de PropBol...
+        </div>
+      }
+    >
+      <BusquedaMapaContent />
+    </Suspense>
+  )
 }
