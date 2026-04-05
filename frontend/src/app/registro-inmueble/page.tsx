@@ -49,10 +49,7 @@ export default function MiRegistroPage() {
   }
 
   const incompleto =
-    !datos.tipoInmueble ||
-    !datos.precio ||
-    !datos.direccion.trim() ||
-    !datos.descripcion.trim()
+      !datos.tipoInmueble || !datos.precio || !datos.direccion.trim() || !datos.descripcion.trim()
 
   if (incompleto) {
     setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
