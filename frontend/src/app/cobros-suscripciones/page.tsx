@@ -1,48 +1,52 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Plan = {
-  name: string
-  price: number
-  description: string
-  comment: string
-  benefits: string[]
-  subscribers: number
-}
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  comment: string;
+  benefits: string[];
+  subscribers: number;
+};
 
 const plansData: Plan[] = [
   {
-    name: 'Básico',
+    id: 1,
+    name: "Básico",
     price: 59,
-    description: 'Ideal para comenzar',
-    comment: 'Perfecto para empezar y explorar nuestras funciones esenciales sin complicaciones.',
-    benefits: ['Acceso limitado', 'Soporte básico', '1 usuario'],
-    subscribers: 25
+    description: "Ideal para comenzar",
+    comment: "Perfecto para empezar y explorar nuestras funciones esenciales sin complicaciones.",
+    benefits: ["Acceso limitado", "Soporte básico", "1 usuario"],
+    subscribers: 25,
   },
   {
-    name: 'Estándar',
+    id: 2,
+    name: "Estándar",
     price: 99,
-    description: 'Para usuarios intermedios',
-    comment:
-      'La opción más elegida para empresas pequeñas: balance perfecto entre funciones y precio.',
-    benefits: ['Acceso completo', 'Soporte prioritario', '5 usuarios'],
-    subscribers: 60
+    description: "Para usuarios intermedios",
+    comment: "La opción más elegida para empresas pequeñas: balance perfecto entre funciones y precio.",
+    benefits: ["Acceso completo", "Soporte prioritario", "5 usuarios"],
+    subscribers: 60,
   },
   {
-    name: 'Pro',
+    id: 3,
+    name: "Pro",
     price: 199,
-    description: 'Máximo rendimiento',
-    comment:
-      'Todo incluido, ideal para usuarios avanzados o empresas que buscan máximo rendimiento.',
-    benefits: ['Todo incluido', 'Soporte 24/7', 'Usuarios ilimitados'],
-    subscribers: 10
-  }
-]
+    description: "Máximo rendimiento",
+    comment: "Todo incluido, ideal para usuarios avanzados o empresas que buscan máximo rendimiento.",
+    benefits: ["Todo incluido", "Soporte 24/7", "Usuarios ilimitados"],
+    subscribers: 10,
+  },
+];
 
 export default function CobrosSuscripciones() {
-  const [plans] = useState(plansData)
-  const maxSubscribers = Math.max(...plans.map((plan) => plan.subscribers))
+  const [plans] = useState(plansData);
+  const maxSubscribers = Math.max(...plans.map((plan) => plan.subscribers));
+  const router = useRouter();
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center p-10 font-inter">
@@ -51,7 +55,7 @@ export default function CobrosSuscripciones() {
       <div className="grid md:grid-cols-3 gap-6">
         {plans.map((plan) => (
           <div
-            key={plan.name}
+            key={plan.id}
             className="relative bg-white rounded-2xl p-6 shadow-md border border-stone-200 w-72 flex flex-col justify-between"
           >
             {plan.subscribers === maxSubscribers && (
@@ -82,7 +86,10 @@ export default function CobrosSuscripciones() {
             <p className="text-base text-stone-600 mb-4">{plan.comment}</p>
 
             <div className="flex flex-col gap-2 mt-auto">
-              <button className="bg-amber-600 hover:bg-amber-700 text-white p-2 rounded-lg transition">
+              <button
+                className="bg-amber-600 hover:bg-amber-700 text-white p-2 rounded-lg transition"
+                onClick={() => router.push(`/pago/resumen?planId=${plan.id}`)}
+              >
                 Suscribirse
               </button>
             </div>
