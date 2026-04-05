@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "dev:bun": "bun --hot src/index.ts",
     "dev": "bun --hot src/index.ts",
     "build": "tsc",
-    "lint": "eslint .",
-    "postinstall": "prisma generate"
+    "lint": "eslint . --quiet",
+    "postinstall": "prisma generate --schema=./prisma/schema.prisma"
+  },
+  "prisma": {
+    "schema": "prisma/schema.prisma"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.6.0",
@@ -19,8 +23,8 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
-    "prisma": "^7.6.0",
-    "qrcode": "^1.5.4",
+    "multer": "^2.1.1",
+    "nodemailer": "^8.0.4",
     "pg": "^8.20.0"
   },
   "devDependencies": {
@@ -28,7 +32,9 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.1.0",
     "@types/node": "^20.11.20",
+    "@types/nodemailer": "^7.0.11",
     "@types/pg": "^8.20.0",
     "@typescript-eslint/eslint-plugin": "^8.57.2",
     "@typescript-eslint/parser": "^8.57.2",
