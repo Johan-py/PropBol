@@ -1,6 +1,8 @@
 'use client'
 import { useState } from 'react'
 
+type CampoError = 'titulo' | 'descripcion' | 'direccion' | null
+
 export default function MiRegistroPage() {
   const [datos, setDatos] = useState({
     titulo: 'Tropico 6 Federa',
@@ -18,6 +20,13 @@ export default function MiRegistroPage() {
 
   const [estado, setEstado] = useState<'ninguno' | 'exito' | 'error'>('ninguno')
   const [mensajeError, setMensajeError] = useState('')
+  const [campoError, setCampoError] = useState<CampoError>(null)
+
+  const limpiarError = () => {
+    setMensajeError('')
+    setCampoError(null)
+    setEstado('ninguno')
+  }
 
   const manejarCambio = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -36,16 +45,20 @@ export default function MiRegistroPage() {
 
       if (!tituloLimpio) {
         setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
+        setCampoError('titulo')
         setEstado('error')
       } else if (tituloLimpio.length < 20) {
         setMensajeError('TÍTULO MUY CORTO, DEBE TENER MÍNIMO 20 CARACTERES')
+        setCampoError('titulo')
         setEstado('error')
       } else if (tituloLimpio.length >= 80) {
         setMensajeError('Has llegado al máximo de 80 caracteres')
+        setCampoError('titulo')
         setEstado('error')
       } else {
-        setMensajeError('')
-        setEstado('ninguno')
+        if (campoError === 'titulo') {
+          limpiarError()
+        }
       }
     }
 
@@ -54,16 +67,42 @@ export default function MiRegistroPage() {
 
       if (!descripcionLimpia) {
         setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
+        setCampoError('descripcion')
         setEstado('error')
       } else if (descripcionLimpia.length < 50) {
         setMensajeError('DESCRIPCIÓN MUY CORTA, DEBE TENER MÍNIMO 50 CARACTERES')
+        setCampoError('descripcion')
         setEstado('error')
       } else if (descripcionLimpia.length >= 300) {
         setMensajeError('Has llegado al máximo de 300 caracteres')
+        setCampoError('descripcion')
         setEstado('error')
       } else {
-        setMensajeError('')
-        setEstado('ninguno')
+        if (campoError === 'descripcion') {
+          limpiarError()
+        }
+      }
+    }
+
+    if (name === 'direccion') {
+      const direccionLimpia = value.trim()
+
+      if (!direccionLimpia) {
+        setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
+        setCampoError('direccion')
+        setEstado('error')
+      } else if (direccionLimpia.length < 8) {
+        setMensajeError('DIRECCIÓN MUY CORTA, MÍNIMO 8 CARACTERES')
+        setCampoError('direccion')
+        setEstado('error')
+      } else if (direccionLimpia.length >= 80) {
+        setMensajeError('Has llegado al máximo de 80 caracteres')
+        setCampoError('direccion')
+        setEstado('error')
+      } else {
+        if (campoError === 'direccion') {
+          limpiarError()
+        }
       }
     }
   }
@@ -71,51 +110,81 @@ export default function MiRegistroPage() {
   const guardarPropiedad = async () => {
     setEstado('ninguno')
     setMensajeError('')
+    setCampoError(null)
 
     const tituloLimpio = datos.titulo.trim()
     const descripcionLimpia = datos.descripcion.trim()
+    const direccionLimpia = datos.direccion.trim()
 
     if (!tituloLimpio) {
       setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
+      setCampoError('titulo')
       setEstado('error')
       return
     }
 
     if (tituloLimpio.length < 20) {
       setMensajeError('TÍTULO MUY CORTO, DEBE TENER MÍNIMO 20 CARACTERES')
+      setCampoError('titulo')
       setEstado('error')
       return
     }
 
     if (tituloLimpio.length >= 80) {
       setMensajeError('Has llegado al máximo de 80 caracteres')
+      setCampoError('titulo')
       setEstado('error')
       return
     }
 
     if (!descripcionLimpia) {
       setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
+      setCampoError('descripcion')
       setEstado('error')
       return
     }
 
     if (descripcionLimpia.length < 50) {
       setMensajeError('DESCRIPCIÓN MUY CORTA, DEBE TENER MÍNIMO 50 CARACTERES')
+      setCampoError('descripcion')
       setEstado('error')
       return
     }
 
     if (descripcionLimpia.length >= 300) {
       setMensajeError('Has llegado al máximo de 300 caracteres')
+      setCampoError('descripcion')
+      setEstado('error')
+      return
+    }
+
+    if (!direccionLimpia) {
+      setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
+      setCampoError('direccion')
+      setEstado('error')
+      return
+    }
+
+    if (direccionLimpia.length < 8) {
+      setMensajeError('DIRECCIÓN MUY CORTA, MÍNIMO 8 CARACTERES')
+      setCampoError('direccion')
+      setEstado('error')
+      return
+    }
+
+    if (direccionLimpia.length >= 80) {
+      setMensajeError('Has llegado al máximo de 80 caracteres')
+      setCampoError('direccion')
       setEstado('error')
       return
     }
 
     const incompleto =
-      !datos.tipoInmueble || !datos.precio || !datos.direccion.trim() || !descripcionLimpia
+      !datos.tipoInmueble || !datos.precio || !descripcionLimpia || !direccionLimpia
 
     if (incompleto) {
       setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
+      setCampoError(null)
       setEstado('error')
       return
     }
@@ -129,7 +198,7 @@ export default function MiRegistroPage() {
       nroCuartos: datos.habitaciones ? Number(datos.habitaciones) : undefined,
       nroBanos: datos.banos ? Number(datos.banos) : 1,
       descripcion: descripcionLimpia,
-      direccion: datos.direccion.trim(),
+      direccion: direccionLimpia,
       zona: datos.zona.trim() || 'CENTRO',
       ciudad: datos.ciudad
     }
@@ -157,6 +226,7 @@ export default function MiRegistroPage() {
 
         console.error('❌ Error backend:', erroresBackend)
         setMensajeError(erroresBackend)
+        setCampoError(null)
         setEstado('error')
         return
       }
@@ -164,20 +234,18 @@ export default function MiRegistroPage() {
       console.log('✅ Propiedad guardada correctamente')
       setEstado('exito')
       setMensajeError('')
+      setCampoError(null)
     } catch (error) {
       console.error('🔥 Error fetch:', error)
       setMensajeError('NO SE PUDO CONECTAR CON EL BACKEND')
+      setCampoError(null)
       setEstado('error')
     }
   }
 
-  const errorTitulo =
-    mensajeError.includes('TÍTULO MUY CORTO') ||
-    mensajeError.includes('máximo de 80 caracteres')
-
-  const errorDescripcion =
-    mensajeError.includes('DESCRIPCIÓN MUY CORTA') ||
-    mensajeError.includes('máximo de 300 caracteres')
+  const errorTitulo = campoError === 'titulo'
+  const errorDescripcion = campoError === 'descripcion'
+  const errorDireccion = campoError === 'direccion'
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -326,8 +394,19 @@ export default function MiRegistroPage() {
                       name="direccion"
                       value={datos.direccion}
                       onChange={manejarCambio}
-                      className="w-full p-3 rounded-xl border border-gray-200"
+                      maxLength={80}
+                      className={`w-full p-3 rounded-xl border ${
+                        errorDireccion ? 'border-red-500' : 'border-gray-200'
+                      }`}
                     />
+
+                    {errorDireccion && (
+                      <p className="text-red-500 text-sm mt-2">{mensajeError}</p>
+                    )}
+
+                    <p className="text-xs text-gray-500 mt-1">
+                      {datos.direccion.length}/80 caracteres
+                    </p>
                   </div>
                 </div>
 
@@ -374,6 +453,7 @@ export default function MiRegistroPage() {
                     onClick={() => {
                       setEstado('ninguno')
                       setMensajeError('')
+                      setCampoError(null)
                     }}
                     className="px-12 py-3 rounded-full border border-gray-400 bg-[#D9D9D9]"
                   >
@@ -388,7 +468,7 @@ export default function MiRegistroPage() {
                   </button>
                 </div>
 
-                {estado === 'error' && mensajeError && !errorTitulo && !errorDescripcion && (
+                {estado === 'error' && mensajeError && !campoError && (
                   <div className="bg-white border-2 border-red-400 rounded-2xl p-4 shadow-md max-w-md ml-auto whitespace-pre-line">
                     {mensajeError}
                   </div>
