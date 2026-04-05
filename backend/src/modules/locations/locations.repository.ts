@@ -25,8 +25,8 @@ export class LocationsRepository {
       return await prisma.ubicacion_maestra.findMany({
         where: {
           OR: [
-            // 'nombre' es la ZONA en tu base de datos 
-            { nombre: { contains: query, mode: 'insensitive' } }, 
+            // 'nombre' es la ZONA en tu base de datos
+            { nombre: { contains: query, mode: 'insensitive' } },
             { municipio: { contains: query, mode: 'insensitive' } },
             { departamento: { contains: query, mode: 'insensitive' } }
           ]
@@ -41,9 +41,9 @@ export class LocationsRepository {
         take: 5
       })
     } catch (error) {
-      console.error("❌ Error en LocationsRepository.findByName:", error);
+      console.error('❌ Error en LocationsRepository.findByName:', error)
       // Devolvemos un array vacío para que el frontend no reciba el 500
-      return []; 
+      return []
     }
   }
 
@@ -59,8 +59,8 @@ export class LocationsRepository {
         }
       })
     } catch (error) {
-      console.error("❌ Error al incrementar popularidad:", error);
-      return null;
+      console.error('❌ Error al incrementar popularidad:', error)
+      return null
     }
   }
 }

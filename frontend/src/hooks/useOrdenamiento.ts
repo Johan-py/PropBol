@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { PropertyMapPin } from '../types/property' 
+import { PropertyMapPin } from '../types/property'
 import { EstadoOrdenamiento, ORDENAMIENTO_DEFAULT } from '../types/inmueble'
 
 const STORAGE_KEY = 'propbol:ordenamiento'
@@ -65,29 +65,32 @@ export const useOrdenamiento = ({
     guardarOrden(ordenActual)
   }, [ordenActual])
 
-  const cambiarOrden = useCallback((nuevoOrden: EstadoOrdenamiento) => {
-    setOrdenActual(nuevoOrden) 
-    // Sincronización con la URL para que el Backend ordene
-    const params = new URLSearchParams(searchParams.toString())
-    
-    params.delete('precio')
-    params.delete('superficie')
-    params.delete('fecha')
+  const cambiarOrden = useCallback(
+    (nuevoOrden: EstadoOrdenamiento) => {
+      setOrdenActual(nuevoOrden)
+      // Sincronización con la URL para que el Backend ordene
+      const params = new URLSearchParams(searchParams.toString())
 
-    if (nuevoOrden.criterioActivo === 'precio') {
-      params.set('precio', nuevoOrden.precio)
-    } else if (nuevoOrden.criterioActivo === 'superficie') {
-      params.set('superficie', nuevoOrden.superficie)
-    } else if (nuevoOrden.criterioActivo === 'fecha') {
-      params.set('fecha', nuevoOrden.fecha)
-    }
+      params.delete('precio')
+      params.delete('superficie')
+      params.delete('fecha')
 
-    router.push(`?${params.toString()}`, { scroll: false })
-  }, [router, searchParams])
+      if (nuevoOrden.criterioActivo === 'precio') {
+        params.set('precio', nuevoOrden.precio)
+      } else if (nuevoOrden.criterioActivo === 'superficie') {
+        params.set('superficie', nuevoOrden.superficie)
+      } else if (nuevoOrden.criterioActivo === 'fecha') {
+        params.set('fecha', nuevoOrden.fecha)
+      }
 
-  return { 
-    ordenActual, 
-    cambiarOrden, 
+      router.push(`?${params.toString()}`, { scroll: false })
+    },
+    [router, searchParams]
+  )
+
+  return {
+    ordenActual,
+    cambiarOrden,
     inmueblesOrdenados: inmuebles // Prisma ya los devuelve ordenados
   }
 }

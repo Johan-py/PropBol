@@ -26,23 +26,23 @@ export function useProperties(): UsePropertiesResult {
       setError(null)
 
       try {
-        //Convertimos los parámetros de la URL en una query string 
+        //Convertimos los parámetros de la URL en una query string
         const queryString = searchParams.toString()
-        
-        //Llamamos al endpoint de inmuebles con los filtros dinámicos 
+
+        //Llamamos al endpoint de inmuebles con los filtros dinámicos
         const res = await fetch(`${API_URL}/api/properties/inmuebles?${queryString}`)
-        
+
         if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`)
-        
+
         const json = await res.json()
-        
+
         //Actualizamos el estado con los datos reales de la BD
         if (!cancelled) {
           const mappedData: PropertyMapPin[] = (json.data || []).map((item: any) => ({
             id: item.id.toString(),
             // Accedemos a la latitud/longitud según UbicacionInmueble del schema
             lat: parseFloat(item.ubicacion?.latitud || 0),
-            lng: parseFloat(item.ubicacion?.longitud || 0), 
+            lng: parseFloat(item.ubicacion?.longitud || 0),
             price: parseFloat(item.precio),
             currency: 'USD', // O el campo que definas en el schema
             type: (item.categoria?.toLowerCase() || 'casa') as any,
@@ -51,7 +51,8 @@ export function useProperties(): UsePropertiesResult {
           setProperties(mappedData)
         }
       } catch (err) {
-        if (!cancelled) setError(err instanceof Error ? err.message : 'Error al conectar con PropBol')
+        if (!cancelled)
+          setError(err instanceof Error ? err.message : 'Error al conectar con PropBol')
       } finally {
         if (!cancelled) setIsLoading(false)
       }

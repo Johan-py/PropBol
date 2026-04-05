@@ -1,35 +1,36 @@
 // frontend/src/components/layout/PropertyCard.tsx
-import Image from 'next/image'; 
-import { BedDouble, Bath, Square, ImageOff } from 'lucide-react'; // Quité MessageSquareText porque ya viene en tu botón
-import ContactButton from '../galeria/ContactButton'; // <-- Tu botón modular importado
+import Image from 'next/image'
+import { BedDouble, Bath, Square, ImageOff } from 'lucide-react' // Quité MessageSquareText porque ya viene en tu botón
+import ContactButton from '../galeria/ContactButton' // <-- Tu botón modular importado
 
 type PropsTarjeta = {
-  imagen?: string;
-  estado: string; 
-  precio: string; 
-  descripcion: string; 
-  camas: number;
-  banos: number;
-  metros: number;
-};
+  imagen?: string
+  estado: string
+  precio: string
+  descripcion: string
+  camas: number
+  banos: number
+  metros: number
+}
 
 // 1. Definimos una constante para el color gris de fondo cuando no hay imagen
-const COLOR_GRIS_PLACEHOLDER = "bg-gray-200";
+const COLOR_GRIS_PLACEHOLDER = 'bg-gray-200'
 
-export default function PropertyCard({ 
-  imagen, 
-  estado, 
-  precio, 
-  descripcion, 
-  camas, 
-  banos, 
-  metros 
+export default function PropertyCard({
+  imagen,
+  estado,
+  precio,
+  descripcion,
+  camas,
+  banos,
+  metros
 }: PropsTarjeta) {
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 border border-gray-100 group">
-      
       {/* 2. Implementación de Imagen o Cuadro Gris (Misión Día 3) */}
-      <div className={`relative aspect-[16/10] overflow-hidden ${!imagen ? COLOR_GRIS_PLACEHOLDER : ''} flex items-center justify-center`}>
+      <div
+        className={`relative aspect-[16/10] overflow-hidden ${!imagen ? COLOR_GRIS_PLACEHOLDER : ''} flex items-center justify-center`}
+      >
         {imagen ? (
           <Image
             src={imagen}
@@ -45,14 +46,16 @@ export default function PropertyCard({
             <span className="text-[10px] font-medium uppercase">Sin foto disponible</span>
           </div>
         )}
-        
+
         <span className="absolute top-3 left-3 bg-[#ea580c] text-white text-[10px] font-bold px-2.5 py-1.5 rounded-sm shadow uppercase tracking-wider z-10">
           {estado}
         </span>
       </div>
 
       <div className="p-4 flex flex-col gap-3">
-        <h2 className="text-xl md:text-2xl font-extrabold text-gray-950 tracking-tight">{precio}</h2>
+        <h2 className="text-xl md:text-2xl font-extrabold text-gray-950 tracking-tight">
+          {precio}
+        </h2>
 
         <p className="text-sm text-gray-800 line-clamp-2 font-medium leading-relaxed min-h-[40px]">
           {descripcion}
@@ -72,9 +75,9 @@ export default function PropertyCard({
 
         {/* 3. Botón de contacto modular */}
         <div className="mt-1 w-full">
-           <ContactButton type="whatsapp" variant="grid" />
+          <ContactButton type="whatsapp" variant="grid" />
         </div>
       </div>
     </div>
-  );
+  )
 }

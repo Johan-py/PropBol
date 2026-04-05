@@ -21,34 +21,33 @@ if (typeof window !== 'undefined') {
   })
 }
 
-
 const PIN_FILL: Record<PropertyMapPin['type'], string> = {
-  casa:         '#3b82f6',
+  casa: '#3b82f6',
   departamento: '#8b5cf6',
-  terreno:      '#f59e0b',
-  local:        '#10b981',
+  terreno: '#f59e0b',
+  local: '#10b981'
 }
 
 const PIN_HALO: Record<PropertyMapPin['type'], string> = {
-  casa:         'rgba(59,  130, 246, 0.25)',
+  casa: 'rgba(59,  130, 246, 0.25)',
   departamento: 'rgba(139, 92,  246, 0.25)',
-  terreno:      'rgba(245, 158, 11,  0.25)',
-  local:        'rgba(16,  185, 129, 0.25)',
+  terreno: 'rgba(245, 158, 11,  0.25)',
+  local: 'rgba(16,  185, 129, 0.25)'
 }
 
 // Color sólido para el texto del precio en el popup
 const PIN_LABEL: Record<PropertyMapPin['type'], string> = {
-  casa:         '#2563eb',
+  casa: '#2563eb',
   departamento: '#7c3aed',
-  terreno:      '#d97706',
-  local:        '#059669',
+  terreno: '#d97706',
+  local: '#059669'
 }
 
 const SELECTED_ICONS: Record<PropertyMapPin['type'], string> = {
   casa: '/house.svg',
   departamento: '/department.svg',
   terreno: '/land.svg',
-  local: '/local.svg',
+  local: '/local.svg'
 }
 
 function createPinIcon(type: PropertyMapPin['type']): L.DivIcon {
@@ -57,7 +56,7 @@ function createPinIcon(type: PropertyMapPin['type']): L.DivIcon {
 
   const outer = 28
   const inner = 20
-  const half  = outer / 2
+  const half = outer / 2
 
   return L.divIcon({
     className: '',
@@ -91,9 +90,9 @@ function createPinIcon(type: PropertyMapPin['type']): L.DivIcon {
         "></div>
       </div>
     `,
-    iconSize:    [outer, outer],
-    iconAnchor:  [half,  outer],
-    popupAnchor: [0, -outer],
+    iconSize: [outer, outer],
+    iconAnchor: [half, outer],
+    popupAnchor: [0, -outer]
   })
 }
 
@@ -130,11 +129,10 @@ export default function MapView({
 
   if (!isMounted) return <div className="w-full h-full bg-gray-100 animate-pulse" />
 
-  const selectedProperty = properties.find(p => p.id === selectedId)
+  const selectedProperty = properties.find((p) => p.id === selectedId)
 
   return (
     <div className="relative w-full h-full">
-
       {isLoading && (
         <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] bg-white px-4 py-2 rounded-full shadow text-sm text-gray-600 flex items-center gap-2 pointer-events-none">
           <span className="animate-spin inline-block w-3 h-3 border-2 border-gray-300 border-t-blue-500 rounded-full" />
@@ -165,10 +163,7 @@ export default function MapView({
         <ZoomControls />
 
         {selectedProperty && (
-          <FlyToSelected
-             lat={selectedProperty.lat}
-             lng={selectedProperty.lng}
-          />
+          <FlyToSelected lat={selectedProperty.lat} lng={selectedProperty.lng} />
         )}
 
         <Marker position={center} icon={createGpsIcon()}>
@@ -196,30 +191,22 @@ export default function MapView({
                 position={[property.lat, property.lng]}
                 icon={isSelected ? createSelectedIcon(property.type) : createPinIcon(property.type)}
                 eventHandlers={{
-                  click: () => onSelect?.(property.id),
+                  click: () => onSelect?.(property.id)
                 }}
               >
                 <Popup>
                   <div className="text-sm min-w-[160px]">
-                    <p className="font-semibold text-gray-800 mb-1">
-                      {property.title}
-                    </p>
-                    <p
-                      className="font-bold"
-                      style={{ color: PIN_LABEL[property.type] }}
-                    >
+                    <p className="font-semibold text-gray-800 mb-1">{property.title}</p>
+                    <p className="font-bold" style={{ color: PIN_LABEL[property.type] }}>
                       {formatPrice(property.price, property.currency)}
                     </p>
-                    <p className="text-gray-500 capitalize mt-1">
-                      {property.type}
-                    </p>
+                    <p className="text-gray-500 capitalize mt-1">{property.type}</p>
                   </div>
                 </Popup>
               </Marker>
             )
           })}
         </MarkerClusterGroup>
-
       </MapContainer>
     </div>
   )
@@ -262,7 +249,7 @@ function createSelectedIcon(type: PropertyMapPin['type']): L.DivIcon {
     `,
     iconSize: [36, 36],
     iconAnchor: [18, 36],
-    popupAnchor: [0, -36],
+    popupAnchor: [0, -36]
   })
 }
 
@@ -275,7 +262,7 @@ function FlyToSelected({ lat, lng }: { lat: number; lng: number }) {
     const targetZoom = 18 // control zoom
 
     map.flyTo([lat, lng], targetZoom, {
-      duration: 1.2,
+      duration: 1.2
     })
 
     const timeout = setTimeout(() => {

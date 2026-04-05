@@ -15,9 +15,13 @@ import PropertyRow from '@/components/galeria/PropertyRow'
 import EmptyState from '@/components/galeria/EmptyState'
 import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenamiento'
 // 🟢 Mantenemos la carga dinámica del mapa
-const MapView = nextDynamic(() => import('./MapView'), { 
+const MapView = nextDynamic(() => import('./MapView'), {
   ssr: false,
-  loading: () => <div className="h-full w-full bg-stone-100 animate-pulse flex items-center justify-center text-stone-400">Cargando mapa de Bolivia...</div>
+  loading: () => (
+    <div className="h-full w-full bg-stone-100 animate-pulse flex items-center justify-center text-stone-400">
+      Cargando mapa de Bolivia...
+    </div>
+  )
 })
 
 // 🟢 Componente con la lógica interna
@@ -28,7 +32,7 @@ function BusquedaMapaContent() {
   // ⚠️ Estos hooks son los que causan el error si no hay Suspense arriba
   const { properties, isLoading } = useProperties()
   const { ordenActual, cambiarOrden } = useOrdenamiento({ inmuebles: properties })
-  
+
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
 
@@ -42,11 +46,11 @@ function BusquedaMapaContent() {
 
   return (
     <div className="flex flex-col h-screen bg-white overflow-hidden">
-      <FilterBar 
-        variant="map" 
+      <FilterBar
+        variant="map"
         onSearch={(nuevosFiltros) => {
-          console.log("🔍 Buscando con filtros:", nuevosFiltros);
-        }} 
+          console.log('🔍 Buscando con filtros:', nuevosFiltros)
+        }}
       />
       <main className="flex flex-1 overflow-hidden relative">
         <aside
@@ -62,7 +66,9 @@ function BusquedaMapaContent() {
                     <h2 className="text-2xl font-bold text-slate-900">
                       <span className="text-orange-500">{properties.length}</span>
                       <span className="ml-2 text-gray-600 font-normal text-lg">
-                        {properties.length === 1 ? 'propiedad encontrada' : 'propiedades encontradas'}
+                        {properties.length === 1
+                          ? 'propiedad encontrada'
+                          : 'propiedades encontradas'}
                       </span>
                     </h2>
                   </div>
@@ -75,11 +81,11 @@ function BusquedaMapaContent() {
                 </div>
 
                 <div className="border-b border-stone-100 pb-4">
-                   <MenuOrdenamiento 
-                     totalResultados={properties.length}
-                     ordenActual={ordenActual}
-                     onOrdenChange={cambiarOrden} 
-                   />
+                  <MenuOrdenamiento
+                    totalResultados={properties.length}
+                    ordenActual={ordenActual}
+                    onOrdenChange={cambiarOrden}
+                  />
                 </div>
               </div>
 
@@ -109,28 +115,42 @@ function BusquedaMapaContent() {
                 ) : properties.length === 0 ? (
                   <EmptyState />
                 ) : (
-                  <div className={`gap-4 flex flex-col ${viewMode === 'list' ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm' : ''}`}>
+                  <div
+                    className={`gap-4 flex flex-col ${viewMode === 'list' ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm' : ''}`}
+                  >
                     {properties.map((property: any) => (
                       <div
                         key={property.id}
                         onMouseEnter={() => setHoveredId(property.id)}
                         onClick={() => setSelectedPropertyId(property.id)}
                         className={`cursor-pointer transition-all duration-200 rounded-xl ${viewMode === 'list' ? 'py-1 px-2' : ''} ${
-                          selectedPropertyId === property.id ? 'ring-2 ring-[#ea580c] shadow-md bg-orange-50/50' : 'hover:border-stone-300 hover:shadow-sm'
+                          selectedPropertyId === property.id
+                            ? 'ring-2 ring-[#ea580c] shadow-md bg-orange-50/50'
+                            : 'hover:border-stone-300 hover:shadow-sm'
                         }`}
                       >
                         {viewMode === 'grid' ? (
                           <PropertyCard
-                            imagen="" 
+                            imagen=""
                             estado={property.type}
-                            precio={property.currency === 'USD' ? `$${property.price.toLocaleString("es-BO")} USD` : `Bs ${property.price.toLocaleString("es-BO")}`}
+                            precio={
+                              property.currency === 'USD'
+                                ? `$${property.price.toLocaleString('es-BO')} USD`
+                                : `Bs ${property.price.toLocaleString('es-BO')}`
+                            }
                             descripcion={property.title}
-                            camas={3} banos={2} metros={150} 
+                            camas={3}
+                            banos={2}
+                            metros={150}
                           />
                         ) : (
                           <PropertyRow
                             title={property.title}
-                            price={property.currency === 'USD' ? `$${property.price.toLocaleString("es-BO")} USD` : `Bs ${property.price.toLocaleString("es-BO")}`}
+                            price={
+                              property.currency === 'USD'
+                                ? `$${property.price.toLocaleString('es-BO')} USD`
+                                : `Bs ${property.price.toLocaleString('es-BO')}`
+                            }
                             size="3 Dorm. • 150 m²"
                             contactType="whatsapp"
                             image=""
@@ -161,7 +181,7 @@ function BusquedaMapaContent() {
 
           <div className="absolute inset-0">
             <MapView
-              properties={properties} 
+              properties={properties}
               selectedId={selectedPropertyId}
               onSelect={setSelectedPropertyId}
             />
@@ -172,10 +192,17 @@ function BusquedaMapaContent() {
   )
 }
 
-export const dynamic = 'force-dynamic' 
+export const dynamic = 'force-dynamic'
+
 export default function BusquedaMapaPage() {
   return (
-    <Suspense fallback={<div className="h-screen w-screen flex items-center justify-center bg-white text-gray-500 italic">Cargando buscador de PropBol...</div>}>
+    <Suspense
+      fallback={
+        <div className="h-screen w-screen flex items-center justify-center bg-white text-gray-500 italic">
+          Cargando buscador de PropBol...
+        </div>
+      }
+    >
       <BusquedaMapaContent />
     </Suspense>
   )

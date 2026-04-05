@@ -1,4 +1,4 @@
-import ContactButton from "./ContactButton"; // <-- Importas tu componente
+import ContactButton from './ContactButton' // <-- Importas tu componente
 import Image from 'next/image'
 
 export default function PropertyRow({
@@ -8,18 +8,23 @@ export default function PropertyRow({
   contactType,
   image
 }: {
-  title: string;
-  price: string;
-  size: string;
-  contactType: string;
-  image: string;
+  title: string
+  price: string
+  size: string
+  contactType: string
+  image: string
 }) {
   return (
     <div className="grid grid-cols-[40px_70px_minmax(0,1fr)_50px] gap-2 px-3 py-2 items-center">
-      
       {/* FOTO */}
       <div className="w-[40px] h-[40px] rounded-md overflow-hidden bg-gray-200">
-        <Image src={image} alt={title} className="w-full h-full object-cover" width={40} height={40} />
+        <Image
+          src={image}
+          alt={title}
+          className="w-full h-full object-cover"
+          width={40}
+          height={40}
+        />
       </div>
 
       {/* PRECIO */}
@@ -36,5 +41,5 @@ export default function PropertyRow({
         <ContactButton type={contactType} variant="table" />
       </div>
     </div>
-  );
+  )
 }

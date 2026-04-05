@@ -24,11 +24,11 @@ export const propertiesRepository = {
     // ── WHERE ──────────────────────────────────────────────────────────────
     const where: any = {estado: 'ACTIVO'}
 
-    const rawTipo = filtros.tipoInmueble || filtros.categoria;
+    const rawTipo = filtros.tipoInmueble || filtros.categoria
     if (rawTipo) {
-      const valor = Array.isArray(rawTipo) ? rawTipo[0] : rawTipo;
+      const valor = Array.isArray(rawTipo) ? rawTipo[0] : rawTipo
       if (valor && valor !== 'Cualquier tipo') {
-        where.categoria = valor.toUpperCase().trim();
+        where.categoria = valor.toUpperCase().trim()
       }
     }
 
@@ -65,7 +65,6 @@ export const propertiesRepository = {
       }
     }
 
-  
     // ── ORDER BY ───────────────────────────────────────────────────────────
     // mas-populares: ordena por ubicacion → ubicacion_maestra → popularidad desc
     // Prisma soporta orderBy anidado siguiendo las relaciones del schema.
@@ -74,24 +73,24 @@ export const propertiesRepository = {
     //
     // Para precio y superficie: el frontend los maneja con criterioActivo,
     // así que el backend solo necesita proveer el default y popularidad.
-    const orderBy: any[] = [];
+    const orderBy: any[] = []
 
     if (filtros.precio === 'menor-a-mayor') {
-      orderBy.push({ precio: 'asc' });
-      orderBy.push({ id: 'asc' });
+      orderBy.push({ precio: 'asc' })
+      orderBy.push({ id: 'asc' })
     } else if (filtros.precio === 'mayor-a-menor') {
-      orderBy.push({ precio: 'desc' });
+      orderBy.push({ precio: 'desc' })
     } else if (filtros.superficie === 'menor-a-mayor') {
-      orderBy.push({ superficieM2: 'asc' });
+      orderBy.push({ superficieM2: 'asc' })
     } else if (filtros.superficie === 'mayor-a-menor') {
-      orderBy.push({ superficieM2: 'desc' });
+      orderBy.push({ superficieM2: 'desc' })
     } else if (filtros.fecha === 'mas-recientes') {
-      orderBy.push({ fechaPublicacion: 'desc' });
+      orderBy.push({ fechaPublicacion: 'desc' })
     } else if (filtros.fecha === 'mas-antiguos') {
-      orderBy.push({ fechaPublicacion: 'asc' });
+      orderBy.push({ fechaPublicacion: 'asc' })
     }
 
-    orderBy.push({ id: 'asc' }); // Desempate default
+    orderBy.push({ id: 'asc' }) // Desempate default
 
     return prisma.inmueble.findMany({
       where,
@@ -99,7 +98,7 @@ export const propertiesRepository = {
       include: {
         ubicacion: {
           include: {
-            ubicacion_maestra: true // Vital para mostrar zonas de Cochabamba 
+            ubicacion_maestra: true // Vital para mostrar zonas de Cochabamba
           }
         },
         publicaciones: {
@@ -107,6 +106,6 @@ export const propertiesRepository = {
           include: { multimedia: true } // Para obtener las fotos reales
         }
       }
-    });
+    })
   }
 }

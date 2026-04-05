@@ -229,7 +229,6 @@
 }
 .cluster-bubble--low {
   /* azul    1    */
-
 }
 
 .leaflet-cluster-anim .leaflet-marker-icon,
@@ -300,8 +299,8 @@
   .leaflet-cluster-anim .leaflet-marker-icon,
   .leaflet-cluster-anim .leaflet-marker-shadow {
     transition:
-    transform 250ms ease,
-    opacity 250ms ease;
+      transform 250ms ease,
+      opacity 250ms ease;
   }
 }
 /* Commit 5: celulares pequeños ≤480px */
@@ -323,4 +322,3 @@
     transform: scale(0.85);
   }
 }
-

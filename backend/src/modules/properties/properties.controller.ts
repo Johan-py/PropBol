@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { propertiesService } from './properties.service.js'
-import { FiltrosBusqueda } from './properties.repository';
+import { FiltrosBusqueda } from './properties.repository'
 
 export const propertiesController = {
   async getAll(req: Request, res: Response) {
@@ -23,7 +23,7 @@ export const propertiesController = {
         fecha: fecha as any,
         precio: precio as any,
         superficie: superficie as any
-      };
+      }
 
       const orden = {
         fecha: fecha as 'mas-recientes' | 'mas-populares' | undefined,

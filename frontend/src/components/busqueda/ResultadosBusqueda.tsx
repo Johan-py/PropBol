@@ -120,11 +120,9 @@ export const ResultadosBusqueda = () => {
       {inmueblesOrdenados.length > 0 ? (
         <div className="grid grid-cols-1 gap-4">
           {inmueblesOrdenados.map((item: unknown) => {
-          const inmueble = item as Inmueble; 
-          return (
-            <TarjetaInmueble key={inmueble.id} inmueble={inmueble} />
-          );
-        })}
+            const inmueble = item as Inmueble
+            return <TarjetaInmueble key={inmueble.id} inmueble={inmueble} />
+          })}
         </div>
       ) : (
         <div className="text-center py-12">

@@ -51,7 +51,8 @@ const HeaderPanel = () => {
           fill="none"
           stroke={activeView === 'list' ? '#ea580c' : 'currentColor'}
           strokeWidth="2"
-          strokeLinecap="round" strokeLinejoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
           <line x1="8" y1="6" x2="21" y2="6"></line>
           <line x1="8" y1="12" x2="21" y2="12"></line>

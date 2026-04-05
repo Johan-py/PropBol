@@ -8,17 +8,16 @@ interface ContactButtonProps {
   variant?: 'grid' | 'table'
 }
 
-export default function ContactButton({ 
-  type, 
-  phoneNumber = "59170000000", 
-  variant = 'grid' 
+export default function ContactButton({
+  type,
+  phoneNumber = '59170000000',
+  variant = 'grid'
 }: ContactButtonProps) {
-  
   const isWhatsApp = type === 'whatsapp'
-  
+
   // Lógica principal (Tu tarea T7)
   const handleClick = () => {
-    const url = isWhatsApp 
+    const url = isWhatsApp
       ? `https://wa.me/${phoneNumber}?text=Hola,%20estoy%20interesado%20en%20esta%20propiedad`
       : `https://m.me/tu_pagina_facebook` // Ejemplo para Messenger
     window.open(url, '_blank')
@@ -27,9 +26,9 @@ export default function ContactButton({
   // --- VISTA TABLA (Respeta el diseño de tu compañero) ---
   if (variant === 'table') {
     return (
-      <button 
-        onClick={handleClick} 
-        title={isWhatsApp ? "Contactar por WhatsApp" : "Contactar por Messenger"}
+      <button
+        onClick={handleClick}
+        title={isWhatsApp ? 'Contactar por WhatsApp' : 'Contactar por Messenger'}
         className="hover:scale-110 transition-transform duration-200"
       >
         {isWhatsApp ? (
@@ -43,12 +42,12 @@ export default function ContactButton({
 
   // --- VISTA GRILLA (El botón grande y bonito que espera el Dev 3) ---
   return (
-    <button 
+    <button
       onClick={handleClick}
       className={`flex items-center justify-center w-full py-2.5 px-4 text-sm gap-2 rounded-lg font-medium transition-all duration-200 text-white shadow-sm ${
-        isWhatsApp ? "bg-[#25D366] hover:bg-[#20ba5a]" : "bg-[#0084FF] hover:bg-[#0073e6]"
+        isWhatsApp ? 'bg-[#25D366] hover:bg-[#20ba5a]' : 'bg-[#0084FF] hover:bg-[#0073e6]'
       }`}
-      title={isWhatsApp ? "Contactar por WhatsApp" : "Contactar por Messenger"}
+      title={isWhatsApp ? 'Contactar por WhatsApp' : 'Contactar por Messenger'}
     >
       {isWhatsApp ? <MessageCircle className="w-5 h-5" /> : <MessageSquare className="w-5 h-5" />}
       <span>Contactar</span>

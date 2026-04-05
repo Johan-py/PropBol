@@ -14,7 +14,7 @@ const searchOptions = [
 ]
 
 export default function ExploreSection() {
-  const router = useRouter();
+  const router = useRouter()
   const [selectedOption, setSelectedOption] = useState<string[]>([])
   const [location, setLocation] = useState('')
   const [propertyType, setPropertyType] = useState('Cualquier tipo')
