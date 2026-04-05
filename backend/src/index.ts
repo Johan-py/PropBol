@@ -107,6 +107,7 @@ app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
 app.use('/api/publicaciones', multimediaRoutes)
 app.use('/uploads', express.static(path.resolve('uploads')))
+app.use('/api', router)
 app.post('/api/users', (req, res) => {
   const user = req.body
   res.json({ message: 'User created', user })
