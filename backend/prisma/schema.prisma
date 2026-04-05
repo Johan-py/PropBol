@@ -6,7 +6,6 @@ datasource db {
   provider = "postgresql"
 }
 
-// ====================== ENUMS ======================
 model Rol {
   id       Int       @id @default(autoincrement())
   nombre   RolNombre @unique
@@ -293,19 +292,6 @@ model public_Telefono {
   principal  Boolean
 
   @@map("Telefono")
-}
-
-model plan_suscripcion {
-  id                     Int                     @id @default(autoincrement())
-  nombre_plan            String                  @db.VarChar(50)
-  descripcion_plan       String?
-  precio_plan            Decimal                 @db.Decimal(10, 2)
-  duracion_plan_dias     Int
-  nro_publicaciones_plan Int
-  imagen_gr_url          String?                 @db.VarChar(255)
-  bitacora_pagos         bitacora_pagos[]
-  suscripciones_activas  suscripciones_activas[]
-  transacciones          transacciones[]
 }
 
 model ubicacion_maestra {
