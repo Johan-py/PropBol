@@ -1,52 +1,54 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 type Plan = {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-  comment: string;
-  benefits: string[];
-  subscribers: number;
-};
+  id: number
+  name: string
+  price: number
+  description: string
+  comment: string
+  benefits: string[]
+  subscribers: number
+}
 
 const plansData: Plan[] = [
   {
     id: 1,
-    name: "Básico",
+    name: 'Básico',
     price: 59,
-    description: "Ideal para comenzar",
-    comment: "Perfecto para empezar y explorar nuestras funciones esenciales sin complicaciones.",
-    benefits: ["Acceso limitado", "Soporte básico", "1 usuario"],
-    subscribers: 25,
+    description: 'Ideal para comenzar',
+    comment: 'Perfecto para empezar y explorar nuestras funciones esenciales sin complicaciones.',
+    benefits: ['Acceso limitado', 'Soporte básico', '1 usuario'],
+    subscribers: 25
   },
   {
     id: 2,
-    name: "Estándar",
+    name: 'Estándar',
     price: 99,
-    description: "Para usuarios intermedios",
-    comment: "La opción más elegida para empresas pequeñas: balance perfecto entre funciones y precio.",
-    benefits: ["Acceso completo", "Soporte prioritario", "5 usuarios"],
-    subscribers: 60,
+    description: 'Para usuarios intermedios',
+    comment:
+      'La opción más elegida para empresas pequeñas: balance perfecto entre funciones y precio.',
+    benefits: ['Acceso completo', 'Soporte prioritario', '5 usuarios'],
+    subscribers: 60
   },
   {
     id: 3,
-    name: "Pro",
+    name: 'Pro',
     price: 199,
-    description: "Máximo rendimiento",
-    comment: "Todo incluido, ideal para usuarios avanzados o empresas que buscan máximo rendimiento.",
-    benefits: ["Todo incluido", "Soporte 24/7", "Usuarios ilimitados"],
-    subscribers: 10,
-  },
-];
+    description: 'Máximo rendimiento',
+    comment:
+      'Todo incluido, ideal para usuarios avanzados o empresas que buscan máximo rendimiento.',
+    benefits: ['Todo incluido', 'Soporte 24/7', 'Usuarios ilimitados'],
+    subscribers: 10
+  }
+]
 
 export default function CobrosSuscripciones() {
-  const [plans] = useState(plansData);
-  const maxSubscribers = Math.max(...plans.map((plan) => plan.subscribers));
-  const router = useRouter();
+  const [plans] = useState(plansData)
+  const maxSubscribers = Math.max(...plans.map((plan) => plan.subscribers))
+  const router = useRouter()
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center p-10 font-inter">
