@@ -1,4 +1,7 @@
+'use client'
+
 import Image from 'next/image'
+import { useState } from 'react'
 
 interface BannerProps {
   url: string
@@ -6,10 +9,23 @@ interface BannerProps {
   subtitle?: string
 }
 
+const FALLBACK_BANNER = '/portada.webp' // Ruta a una imagen local de respaldo en caso de error
+
 export const HomeBanner = ({ url, title, subtitle }: BannerProps) => {
+  const [hasError, setHasError] = useState(false)
+  const imageUrl = !url || hasError ? FALLBACK_BANNER : url
+
   return (
     <div className="relative w-full h-[60vh] min-h-[300px] bg-slate-100 flex items-center justify-center">
-      <Image src={url} alt="Portada principal" fill className="object-cover" priority />
+      <Image
+        src={imageUrl}
+        alt="Portada principal"
+        fill
+        className="object-cover"
+        priority
+        onError={() => setHasError(true)}
+        unoptimized
+      />
 
       {/* Capa oscura para que el texto blanco siempre se lea bien */}
       <div className="absolute inset-0 bg-black/45 z-0" />
@@ -28,13 +44,8 @@ export const HomeBanner = ({ url, title, subtitle }: BannerProps) => {
           </p>
         )}
         {/* INTEGRACIÓN: La Barra de Filtros centrada */}
-        {/* Usamos un div envoltorio para asegurar el ancho máximo de 921px  */}
       </div>
-      {/* En móvil, mostramos la barra de filtros debajo del banner */}
-      {/* Versión móvil: La barra sale debajo en pantallas pequeñas para no tapar la foto */}
-      <div className="md:hidden relative z-20 -mt-10 px-4 w-full">
-        {/* Aquí podrías poner una versión simplificada o la misma FilterBar ajustada */}
-      </div>
+      <div className="md:hidden relative z-20 -mt-10 px-4 w-full"></div>
     </div>
   )
 }
