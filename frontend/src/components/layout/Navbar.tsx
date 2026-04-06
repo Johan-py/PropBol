@@ -135,7 +135,11 @@ export default function Navbar() {
       if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
         setIsPanelOpen(false)
       }
-      if (notificationPanelRef.current && !notificationPanelRef.current.contains(event.target as Node) && open) {
+      if (
+        notificationPanelRef.current &&
+        !notificationPanelRef.current.contains(event.target as Node) &&
+        open
+      ) {
         toggleNotifications()
       }
     }
@@ -186,11 +190,14 @@ export default function Navbar() {
     const token = localStorage.getItem('token')
     if (token) {
       try {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/auth/logout`, {
+        await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/auth/logout`,
+          {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` }
-        })
-      } catch { }
+          }
+        )
+      } catch {}
     }
     clearSession()
     setIsLoggingOut(false)
@@ -257,7 +264,9 @@ export default function Navbar() {
 
                     {!isLoggedIn ? (
                       <div className="px-4 py-6 text-center">
-                        <p className="text-sm text-stone-500">Inicia sesión para recibir notificaciones</p>
+                        <p className="text-sm text-stone-500">
+                          Inicia sesión para recibir notificaciones
+                        </p>
                         <div className="mt-3 flex justify-center">
                           <button
                             type="button"
@@ -270,7 +279,11 @@ export default function Navbar() {
                       </div>
                     ) : (
                       <>
-                        <div role="tablist" aria-label="Filtros de notificaciones" className="flex flex-wrap gap-2 border-b border-stone-100 px-4 py-3">
+                        <div
+                          role="tablist"
+                          aria-label="Filtros de notificaciones"
+                          className="flex flex-wrap gap-2 border-b border-stone-100 px-4 py-3"
+                        >
                           {filters.map((item) => (
                             <button
                               key={item}
@@ -278,12 +291,17 @@ export default function Navbar() {
                               role="tab"
                               aria-selected={filter === item}
                               onClick={() => setFilter(item)}
-                              className={`rounded-full px-3 py-1 text-xs font-medium transition ${filter === item
+                              className={`rounded-full px-3 py-1 text-xs font-medium transition ${
+                                filter === item
                                   ? 'bg-amber-600 text-white'
                                   : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
                                 }`}
                             >
-                              {item === 'todas' ? 'Todas' : item === 'leida' ? 'Leídas' : 'No leídas'}
+                              {item === 'todas'
+                                ? 'Todas'
+                                : item === 'leida'
+                                  ? 'Leídas'
+                                  : 'No leídas'}
                             </button>
                           ))}
                         </div>
@@ -295,7 +313,8 @@ export default function Navbar() {
                           className="max-h-[60vh] overflow-y-auto sm:max-h-80"
                           onScroll={(e) => {
                             const target = e.currentTarget
-                            const reachedBottom = target.scrollTop + target.clientHeight >= target.scrollHeight - 10
+                            const reachedBottom =
+                              target.scrollTop + target.clientHeight >= target.scrollHeight - 10
                             if (reachedBottom && hasMore && !isLoadingMore) {
                               void loadMoreNotifications()
                             }
@@ -318,7 +337,10 @@ export default function Navbar() {
                               </button>
                             </div>
                           ) : visibleNotifications.length === 0 ? (
-                            <p role="status" className="px-4 py-6 text-center text-sm text-stone-500">
+                            <p
+                              role="status"
+                              className="px-4 py-6 text-center text-sm text-stone-500"
+                            >
                               No hay notificaciones
                             </p>
                           ) : (
@@ -327,7 +349,8 @@ export default function Navbar() {
                                 <div
                                   key={notification.id}
                                   role="listitem"
-                                  className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${notification.status === 'no leida' ? 'bg-amber-50' : 'bg-white'
+                                  className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
+                                    notification.status === 'no leida' ? 'bg-amber-50' : 'bg-white'
                                     }`}
                                 >
                                   <div className="flex items-start justify-between gap-3">
@@ -336,7 +359,8 @@ export default function Navbar() {
                                         {notification.title?.trim() || '(Sin título)'}
                                       </p>
                                       <p className="mt-1 line-clamp-2 text-sm text-stone-600">
-                                        {notification.description?.trim() || '(Sin descripción disponible)'}
+                                        {notification.description?.trim() ||
+                                          '(Sin descripción disponible)'}
                                       </p>
                                       <span className="mt-2 inline-block text-[10px] uppercase text-stone-400">
                                         {notification.status}
