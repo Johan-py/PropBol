@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import FotosSection from "@/components/contenido-multimedia/FotosSection";
 import VideosSection from "@/components/contenido-multimedia/VideosSection";
@@ -26,6 +26,14 @@ type VideoItem = {
 };
 
 export default function ContenidoMultimediaPage() {
+  return (
+    <Suspense fallback={<div style={{ padding: "24px" }}>Cargando...</div>}>
+      <ContenidoMultimediaPageContent />
+    </Suspense>
+  );
+}
+
+function ContenidoMultimediaPageContent() {
   const searchParams = useSearchParams();
   const publicacionId = Number(searchParams.get("publicacionId"));
 
