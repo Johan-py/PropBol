@@ -81,11 +81,11 @@ export const ResultadosBusqueda = () => {
         .then((data) => {
           // Ajustamos según la respuesta de tu API (data.ok o data directo)
          if (data && data.ok === true && Array.isArray(data.data)) {
-            console.log("✅ Datos recibidos con éxito:", data.data.length);
-            setInmueblesRaw(data.data); // Guardamos solo el arreglo de inmuebles
+            console.log('✅ Datos recibidos con éxito:', data.data.length)
+            setInmueblesRaw(data.data) // Guardamos solo el arreglo de inmuebles
           } else {
-            console.error("❌ Formato de datos inesperado:", data);
-            setError(true);
+            console.error('❌ Formato de datos inesperado:', data)
+            setError(true)
           }
         })
         .finally(() => setCargando(false))
