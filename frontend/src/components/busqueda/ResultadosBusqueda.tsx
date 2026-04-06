@@ -33,7 +33,7 @@ function construirParams(filtros: FiltrosGlobales): URLSearchParams {
   // 🚀 Mapeamos con el nombre correcto que espera el backend (tipoInmueble)
   const tipo = filtros.tipoInmueble?.[0]
   if (tipo && tipo !== 'CUALQUIER TIPO' && tipo !== '') {
-    params.set('tipoInmueble', tipo) 
+    params.set('tipoInmueble', tipo)
   }
 
   // 🚀 Mapeamos con el nombre correcto (modoInmueble)
@@ -80,7 +80,7 @@ export const ResultadosBusqueda = () => {
         })
         .then((data) => {
           // Ajustamos según la respuesta de tu API (data.ok o data directo)
-         if (data && data.ok === true && Array.isArray(data.data)) {
+          if (data && data.ok === true && Array.isArray(data.data)) {
             console.log('✅ Datos recibidos con éxito:', data.data.length)
             setInmueblesRaw(data.data) // Guardamos solo el arreglo de inmuebles
           } else {
