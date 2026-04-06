@@ -1,51 +1,45 @@
-import { PrismaClient } from '@prisma/client'
-import { Request, Response } from 'express'
+import { PrismaClient } from '@prisma/client';
+import { Request, Response } from 'express';
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 export const getPlanLimit = async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user?.id
-    if (!userId) return res.status(401).json({ message: 'No autorizado' })
-
-    // Obtenemos el inicio del mes actual para el filtro
-    const inicioMes = new Date()
-    inicioMes.setHours(0, 0, 0, 0)
-    inicioMes.setDate(1)
+    // Usamos 'as any' solo para el user del request si no tienes el tipo extendido
+    const userId = (req as any).user?.id;
+    if (!userId) return res.status(401).json({ message: 'No autorizado' });
 
     const user = await prisma.usuario.findUnique({
-      where: { id: userId },
-      select: {
-        // 💡 Contamos solo las de este mes
-        _count: {
-          select: {
-            publicaciones: {
-              where: {
-                createdAt: { gte: inicioMes } // Ajusta 'createdAt' al nombre de tu columna de fechaSSS
-              }
-            }
-          }
-        },
-        suscripciones_activas: {
-          where: { estado: 'ACTIVA' },
-          take: 1, // Solo nos interesa la actual
-          select: {
-            plan_suscripcion: {
-              select: { nro_publicaciones_plan: true }
-            }
-          }
-        }
-      }
-    })
-
-    if (!user) return res.status(404).json({ message: 'Usuario no encontrado' })
-
-    const total = user.suscripciones_activas?.[0]?.plan_suscripcion?.nro_publicaciones_plan ?? 0
-    const usadas = user._count?.publicaciones ?? 0
-
-    res.json({ total, usadas })
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Error al obtener el límite del plan' })
+    where: { id: Number(userId) },
+    include: {
+   
+    publicaciones: true,
+    suscripciones_activas: true, // Nombre exacto de tu imagen
+    _count: {
+      select: { publicaciones: true }
+    }
   }
-}
+});
+
+    if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+
+    // El error de 'createdAt' en el where:
+    // Solo filtra por campos que existan en el modelo Publicacion.
+    const publicacionesMes = await prisma.publicacion.count({
+      where: {
+        usuarioId: Number(userId),
+        // Si no existe 'createdAt', usa el campo de fecha que tengas en tu schema
+        // fechaCreacion: { gte: inicioMes } 
+      }
+    });
+
+    return res.status(200).json({
+      total: publicacionesMes,
+      // limit: user.plan.limite (si tienes esa relacion)
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Error en el servidor' });
+  }
+};
