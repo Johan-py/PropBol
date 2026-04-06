@@ -14,7 +14,7 @@ type CampoError =
 
 export default function MiRegistroPage() {
   const [datos, setDatos] = useState({
-    titulo: 'Tropico 6 Federa',
+    titulo: '',
     operacion: 'ANTICRETO',
     tipoInmueble: '',
     precio: '',
