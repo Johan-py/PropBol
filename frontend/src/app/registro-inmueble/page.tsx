@@ -10,12 +10,13 @@ type CampoError =
   | 'banos'
   | 'precio'
   | 'area'
+  | 'operacion'
   | null
 
 export default function MiRegistroPage() {
   const [datos, setDatos] = useState({
     titulo: '',
-    operacion: 'ANTICRETO',
+    operacion: '',
     tipoInmueble: '',
     precio: '',
     area: '',
@@ -176,6 +177,16 @@ export default function MiRegistroPage() {
     const nuevosDatos = { ...datos, [name]: value }
     setDatos(nuevosDatos)
 
+    if (name === 'operacion') {
+      if (!value) {
+        setMensajeError('DEBE SELECCIONAR EL TIPO DE OPERACIÓN')
+        setCampoError('operacion')
+        setEstado('error')
+      } else {
+        if (campoError === 'operacion') limpiarError()
+      }
+    }
+
     if (name === 'titulo') {
       const tituloLimpio = value.trim()
 
@@ -271,6 +282,13 @@ export default function MiRegistroPage() {
     const areaNumero = datos.area !== '' ? Number(limpiarSoloNumeros(datos.area)) : null
     const habitacionesNumero = datos.habitaciones !== '' ? Number(datos.habitaciones) : null
     const banosNumero = datos.banos !== '' ? Number(datos.banos) : null
+
+    if (!datos.operacion) {
+      setMensajeError('DEBE SELECCIONAR EL TIPO DE OPERACIÓN')
+      setCampoError('operacion')
+      setEstado('error')
+      return
+    }
 
     if (!tituloLimpio) {
       setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
@@ -418,6 +436,7 @@ export default function MiRegistroPage() {
 
     const incompleto =
       !datos.tipoInmueble ||
+      !datos.operacion ||
       precioNumero === null ||
       !descripcionLimpia ||
       !direccionLimpia ||
@@ -492,6 +511,7 @@ export default function MiRegistroPage() {
   const errorBanos = campoError === 'banos'
   const errorPrecio = campoError === 'precio'
   const errorArea = campoError === 'area'
+  const errorOperacion = campoError === 'operacion'
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -545,12 +565,18 @@ export default function MiRegistroPage() {
                         name="operacion"
                         value={datos.operacion}
                         onChange={manejarCambio}
-                        className="w-full p-3 rounded-xl border border-gray-200 bg-white"
+                        className={`w-full p-3 rounded-xl border bg-white ${
+                          errorOperacion ? 'border-red-500' : 'border-gray-200'
+                        }`}
                       >
+                        <option value="">Seleccionar...</option>
                         <option value="ANTICRETO">Anticreto</option>
                         <option value="VENTA">Venta</option>
                         <option value="ALQUILER">Alquiler</option>
                       </select>
+                      {errorOperacion && (
+                        <p className="text-red-500 text-sm mt-2">{mensajeError}</p>
+                      )}
                     </div>
 
                     <div>
