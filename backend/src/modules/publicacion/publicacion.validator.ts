@@ -1,5 +1,16 @@
 import { body } from 'express-validator'
 
+/**
+ * HU1 - Validaciones para creación de publicación
+ * - Título: obligatorio, entre 20 y 80 caracteres, solo alfanumérico
+ * - Tipo de acción: obligatorio, valores permitidos: VENTA, ALQUILER, ANTICRETO
+ * - Categoría: obligatorio, valores permitidos: CASA, DEPARTAMENTO, TERRENO, OFICINA
+ * - Precio: obligatorio, número positivo
+ * - Superficie: opcional, número positivo
+ * - Número de cuartos: opcional, entero positivo
+ * - Dirección: obligatoria
+ * - Descripción: obligatoria, entre 50 y 300 caracteres, caracteres básicos permitidos
+ */
 export const propertyValidationRules = [
   body('titulo')
     .isLength({ min: 20, max: 80 })
