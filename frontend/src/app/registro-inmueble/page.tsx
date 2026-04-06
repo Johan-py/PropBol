@@ -1,7 +1,13 @@
 'use client'
 import { useState } from 'react'
 
-type CampoError = 'titulo' | 'descripcion' | 'direccion' | null
+type CampoError =
+  | 'titulo'
+  | 'descripcion'
+  | 'direccion'
+  | 'zona'
+  | 'habitaciones'
+  | null
 
 export default function MiRegistroPage() {
   const [datos, setDatos] = useState({
@@ -35,6 +41,42 @@ export default function MiRegistroPage() {
 
     if (['precio', 'area', 'habitaciones', 'banos'].includes(name)) {
       if (value !== '' && Number(value) < 0) return
+    }
+
+    if (name === 'habitaciones') {
+      if (value === '') {
+        setDatos({ ...datos, habitaciones: '' })
+        if (campoError === 'habitaciones') {
+          limpiarError()
+        }
+        return
+      }
+
+      const numeroHabitaciones = Number(value)
+
+      if (numeroHabitaciones < 1) {
+        setDatos({ ...datos, habitaciones: value })
+        setMensajeError('HABITACIONES DEBE SER MÍNIMO 1')
+        setCampoError('habitaciones')
+        setEstado('error')
+        return
+      }
+
+      if (numeroHabitaciones >= 50) {
+        setDatos({ ...datos, habitaciones: '50' })
+        setMensajeError('Has llegado al máximo de 50 habitaciones')
+        setCampoError('habitaciones')
+        setEstado('error')
+        return
+      }
+
+      setDatos({ ...datos, habitaciones: value })
+
+      if (campoError === 'habitaciones') {
+        limpiarError()
+      }
+
+      return
     }
 
     const nuevosDatos = { ...datos, [name]: value }
@@ -105,6 +147,28 @@ export default function MiRegistroPage() {
         }
       }
     }
+
+    if (name === 'zona') {
+      const zonaLimpia = value.trim()
+
+      if (!zonaLimpia) {
+        setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
+        setCampoError('zona')
+        setEstado('error')
+      } else if (zonaLimpia.length < 8) {
+        setMensajeError('ZONA MUY CORTA, MÍNIMO 8 CARACTERES')
+        setCampoError('zona')
+        setEstado('error')
+      } else if (zonaLimpia.length >= 80) {
+        setMensajeError('Has llegado al máximo de 80 caracteres')
+        setCampoError('zona')
+        setEstado('error')
+      } else {
+        if (campoError === 'zona') {
+          limpiarError()
+        }
+      }
+    }
   }
 
   const guardarPropiedad = async () => {
@@ -115,6 +179,9 @@ export default function MiRegistroPage() {
     const tituloLimpio = datos.titulo.trim()
     const descripcionLimpia = datos.descripcion.trim()
     const direccionLimpia = datos.direccion.trim()
+    const zonaLimpia = datos.zona.trim()
+    const habitacionesNumero =
+      datos.habitaciones !== '' ? Number(datos.habitaciones) : null
 
     if (!tituloLimpio) {
       setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
@@ -179,8 +246,45 @@ export default function MiRegistroPage() {
       return
     }
 
+    if (!zonaLimpia) {
+      setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
+      setCampoError('zona')
+      setEstado('error')
+      return
+    }
+
+    if (zonaLimpia.length < 8) {
+      setMensajeError('ZONA MUY CORTA, MÍNIMO 8 CARACTERES')
+      setCampoError('zona')
+      setEstado('error')
+      return
+    }
+
+    if (zonaLimpia.length >= 80) {
+      setMensajeError('Has llegado al máximo de 80 caracteres')
+      setCampoError('zona')
+      setEstado('error')
+      return
+    }
+
+    if (habitacionesNumero !== null) {
+      if (habitacionesNumero < 1) {
+        setMensajeError('HABITACIONES DEBE SER MÍNIMO 1')
+        setCampoError('habitaciones')
+        setEstado('error')
+        return
+      }
+
+      if (habitacionesNumero >= 50) {
+        setMensajeError('Has llegado al máximo de 50 habitaciones')
+        setCampoError('habitaciones')
+        setEstado('error')
+        return
+      }
+    }
+
     const incompleto =
-      !datos.tipoInmueble || !datos.precio || !descripcionLimpia || !direccionLimpia
+      !datos.tipoInmueble || !datos.precio || !descripcionLimpia || !direccionLimpia || !zonaLimpia
 
     if (incompleto) {
       setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
@@ -195,11 +299,11 @@ export default function MiRegistroPage() {
       categoria: datos.tipoInmueble,
       precio: Number(datos.precio),
       superficieM2: datos.area ? Number(datos.area) : undefined,
-      nroCuartos: datos.habitaciones ? Number(datos.habitaciones) : undefined,
+      nroCuartos: habitacionesNumero !== null ? habitacionesNumero : undefined,
       nroBanos: datos.banos ? Number(datos.banos) : 1,
       descripcion: descripcionLimpia,
       direccion: direccionLimpia,
-      zona: datos.zona.trim() || 'CENTRO',
+      zona: zonaLimpia,
       ciudad: datos.ciudad
     }
 
@@ -246,6 +350,8 @@ export default function MiRegistroPage() {
   const errorTitulo = campoError === 'titulo'
   const errorDescripcion = campoError === 'descripcion'
   const errorDireccion = campoError === 'direccion'
+  const errorZona = campoError === 'zona'
+  const errorHabitaciones = campoError === 'habitaciones'
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -369,10 +475,22 @@ export default function MiRegistroPage() {
                     <input
                       name="habitaciones"
                       type="number"
+                      min={1}
+                      max={50}
                       value={datos.habitaciones}
                       onChange={manejarCambio}
-                      className="w-full p-3 rounded-xl border border-gray-200"
+                      className={`w-full p-3 rounded-xl border ${
+                        errorHabitaciones ? 'border-red-500' : 'border-gray-200'
+                      }`}
                     />
+
+                    {errorHabitaciones && (
+                      <p className="text-red-500 text-sm mt-2">{mensajeError}</p>
+                    )}
+
+                    <p className="text-xs text-gray-500 mt-1">
+                      Máximo 50 habitaciones
+                    </p>
                   </div>
                 </div>
 
@@ -416,8 +534,19 @@ export default function MiRegistroPage() {
                     name="zona"
                     value={datos.zona}
                     onChange={manejarCambio}
-                    className="w-full p-3 rounded-xl border border-gray-200"
+                    maxLength={80}
+                    className={`w-full p-3 rounded-xl border ${
+                      errorZona ? 'border-red-500' : 'border-gray-200'
+                    }`}
                   />
+
+                  {errorZona && (
+                    <p className="text-red-500 text-sm mt-2">{mensajeError}</p>
+                  )}
+
+                  <p className="text-xs text-gray-500 mt-1">
+                    {datos.zona.length}/80 caracteres
+                  </p>
                 </div>
               </section>
             </div>
