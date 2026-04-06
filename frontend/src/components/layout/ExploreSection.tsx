@@ -28,7 +28,7 @@ export default function ExploreSection() {
     { label: 'Espacios Cementerio', icon: Flower2 }
   ]
 
-  const { updateFilters } = useSearchFilters(); // 🚀 1. Inicializamos el hook
+  const { updateFilters } = useSearchFilters() // 🚀 1. Inicializamos el hook
 
   const handleSearch = () => {
     const hasOperationFilter = selectedOption.length > 0
@@ -42,30 +42,31 @@ export default function ExploreSection() {
     setErrorMessage('')
 
     const tipoMap: Record<string, string> = {
-      'Casas': 'CASA',
-      'Departamentos': 'DEPARTAMENTO',
-      'Cuartos': 'CASA', 
-      'Terrenos': 'TERRENO',
+      Casas: 'CASA',
+      Departamentos: 'DEPARTAMENTO',
+      Cuartos: 'CASA',
+      Terrenos: 'TERRENO',
       'Espacios Cementerio': 'TERRENO'
-    };
-    const tipoFinal = tipoMap[propertyType] || (propertyType !== 'Cualquier tipo' ? propertyType.toUpperCase() : '');
+    }
+    const tipoFinal =
+      tipoMap[propertyType] || (propertyType !== 'Cualquier tipo' ? propertyType.toUpperCase() : '')
 
     // 🚀 2. SINCRONIZAMOS EL STORAGE ANTES DE VIAJAR (Para que ResultadosBusqueda lo lea)
     updateFilters({
       tipoInmueble: tipoFinal ? [tipoFinal] : [],
-      modoInmueble: selectedOption.map(m => m.toUpperCase()),
+      modoInmueble: selectedOption.map((m) => m.toUpperCase()),
       query: location.trim()
-    });
+    })
 
     // 3. NAVEGACIÓN INTACTA (Para no romper el mapa)
-    const params = new URLSearchParams();
-    selectedOption.forEach(modo => params.append('modoInmueble', modo.toUpperCase()));
-    if (tipoFinal) params.set('tipoInmueble', tipoFinal);
-    if (location.trim() !== '') params.set('query', location.trim());
+    const params = new URLSearchParams()
+    selectedOption.forEach((modo) => params.append('modoInmueble', modo.toUpperCase()))
+    if (tipoFinal) params.set('tipoInmueble', tipoFinal)
+    if (location.trim() !== '') params.set('query', location.trim())
 
-    const finalUrl = `/busqueda_mapa?${params.toString()}`;
-    console.log("🚀 Navegando desde Home a:", finalUrl);
-    router.push(finalUrl);
+    const finalUrl = `/busqueda_mapa?${params.toString()}`
+    console.log('🚀 Navegando desde Home a:', finalUrl)
+    router.push(finalUrl)
   }
 
   return (
