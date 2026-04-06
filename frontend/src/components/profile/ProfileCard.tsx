@@ -24,10 +24,10 @@ interface PerfilData {
 }
 
 const PAISES = [
-  { nombre: 'Bolivia', codigo: '+591', flag: '🇧🇴' },
-  { nombre: 'Argentina', codigo: '+54', flag: '🇦🇷' },
-  { nombre: 'Chile', codigo: '+56', flag: '🇨🇱' },
-  { nombre: 'Perú', codigo: '+51', flag: '🇵🇪' }
+    { nombre: 'Bolivia', codigo: '+591', flag: '🇧🇴', digitos: 8 },
+    { nombre: 'Argentina', codigo: '+54', flag: '🇦🇷', digitos: 10 },
+    { nombre: 'Chile', codigo: '+56', flag: '🇨🇱', digitos: 9 },
+    { nombre: 'Perú', codigo: '+51', flag: '🇵🇪', digitos: 9 }
 ]
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
@@ -410,11 +410,21 @@ export default function ProfileCard() {
     }
   }
 
-  const actualizarTelefono = (id: number, valor: string) => {
-    setTelefonos(
-      telefonos.map((t) => (t.id === id ? { ...t, numero: valor.replace(/\D/g, '') } : t))
-    )
-  }
+    const actualizarTelefono = (id: number, valor: string) => {
+        setTelefonos(
+            telefonos.map((t) => {
+                if (t.id === id) {
+                    const configPais = PAISES.find(p => p.nombre === t.pais);
+                    const maxDigitos = configPais?.digitos || 15;
+
+                    const soloNumerosYCortados = valor.replace(/\D/g, '').slice(0, maxDigitos);
+
+                    return { ...t, numero: soloNumerosYCortados };
+                }
+                return t;
+            })
+        )
+    }
 
   const handleSaveAll = () => {
     if (isEmailEditable && hasEmailChanged) {
@@ -611,11 +621,15 @@ export default function ProfileCard() {
                   >
                     <Pencil size={16} />
                   </button>
-                  {index === 0 && telefonos.length < 3 && (
-                    <button onClick={agregarTelefono}>
-                      <Plus size={18} />
-                    </button>
-                  )}
+                    {index === 0 && (
+                        <button
+                            onClick={agregarTelefono}
+                            disabled={telefonos.length >= 3}
+                            className="disabled:opacity-30 disabled:cursor-not-allowed hover:text-orange-600 transition-colors"
+                        >
+                            <Plus size={18} />
+                        </button>
+                    )}
                   {index > 0 && (
                     <button onClick={() => eliminarTelefono(tel.id)}>
                       <Trash2 size={18} />
@@ -625,7 +639,11 @@ export default function ProfileCard() {
               </div>
             )
           })}
-
+            {telefonos.length >= 3 && (
+                <p className="text-[10px] text-orange-600 font-medium md:ml-44 mt-1">
+                    * Has alcanzado el límite máximo de 3 números de contacto.
+                </p>
+            )}
           {/* PAÍS */}
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
             <label className="w-full md:w-40 font-medium text-stone-700">País:</label>
@@ -706,7 +724,7 @@ export default function ProfileCard() {
             <button
               onClick={handleSaveAll}
               disabled={isLoading}
-              className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg text-sm font-medium shadow-sm disabled:bg-orange-300 disabled:cursor-not-allowed"
+              className="bg-orange-500 hover:bg-orange-600 text-black px-6 py-2 rounded-lg text-sm font-medium shadow-sm disabled:bg-orange-300 disabled:cursor-not-allowed"
             >
               {isLoading ? 'Guardando...' : 'Guardar Cambios'}
             </button>
