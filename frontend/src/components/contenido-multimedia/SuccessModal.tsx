@@ -23,7 +23,7 @@ export default function SuccessModal({
         <h2 style={titleStyle}>¡Inmueble publicado con éxito!</h2>
 
         <p style={textStyle}>
-          Tu Inmueble se ha publicado correctamente.
+          Tu inmueble se ha publicado correctamente.
         </p>
 
         <button onClick={onClose} style={acceptButtonStyle}>

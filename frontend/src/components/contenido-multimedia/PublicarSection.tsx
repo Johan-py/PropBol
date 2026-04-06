@@ -3,6 +3,7 @@ type PublicarSectionProps = {
   onConfirmedChange: (value: boolean) => void;
   onPublish: () => void;
   publishError?: string;
+  canPublish: boolean;
 };
 
 export default function PublicarSection({
@@ -10,6 +11,7 @@ export default function PublicarSection({
   onConfirmedChange,
   onPublish,
   publishError,
+  canPublish,
 }: PublicarSectionProps) {
   return (
     <section
@@ -18,24 +20,30 @@ export default function PublicarSection({
         border: "1px solid #f0dfd8",
         borderRadius: "18px",
         padding: "24px",
+        marginBottom: "22px",
       }}
     >
+      <h2 style={{ fontSize: "28px", marginBottom: "18px" }}>
+        Publicar inmueble
+      </h2>
+
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: "16px",
-          flexWrap: "wrap",
+          border: "1px solid #efe3de",
+          borderRadius: "16px",
+          background: "#fffdfc",
+          padding: "18px",
         }}
       >
         <label
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "12px",
-            fontSize: "18px",
-            color: "#444",
+            gap: "10px",
+            fontSize: "16px",
+            color: "#555",
+            marginBottom: "18px",
+            cursor: "pointer",
           }}
         >
           <input
@@ -43,36 +51,39 @@ export default function PublicarSection({
             checked={confirmed}
             onChange={(e) => onConfirmedChange(e.target.checked)}
           />
-          <span>Confirmo que la información es correcta y deseo publicar</span>
+          Confirmo que la información ingresada es correcta
         </label>
+
+        {!canPublish && (
+          <p style={{ color: "#d32f2f", fontSize: "14px", marginBottom: "12px" }}>
+            Debes agregar al menos una imagen o un video para habilitar la publicación.
+          </p>
+        )}
+
+        {publishError && (
+          <p style={{ color: "#d32f2f", fontSize: "14px", marginBottom: "12px" }}>
+            {publishError}
+          </p>
+        )}
 
         <button
           onClick={onPublish}
-          disabled={!confirmed}
+          disabled={!canPublish}
           style={{
-            background: confirmed ? "#ff7f11" : "#d9d9d9",
+            background: !canPublish ? "#d9d9d9" : "#ff7f11",
             color: "white",
             border: "none",
             borderRadius: "10px",
             padding: "14px 22px",
             fontSize: "16px",
             fontWeight: 600,
-            cursor: confirmed ? "pointer" : "not-allowed",
+            cursor: !canPublish ? "not-allowed" : "pointer",
+            opacity: !canPublish ? 0.7 : 1,
           }}
         >
-          Publicar Inmueble
+          Publicar inmueble
         </button>
       </div>
-
-      {publishError && (
-        <p style={{ color: "#d32f2f", fontSize: "14px", marginTop: "12px" }}>
-          {publishError}
-        </p>
-      )}
-
-      <p style={{ marginTop: "12px", fontSize: "16px", color: "#666" }}>
-        Nota: Puedes publicar hasta 2 inmuebles de forma gratuita.
-      </p>
     </section>
   );
 }

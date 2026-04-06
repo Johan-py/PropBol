@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import FotosSection from "@/components/contenido-multimedia/FotosSection";
 import VideosSection from "@/components/contenido-multimedia/VideosSection";
 import PublicarSection from "@/components/contenido-multimedia/PublicarSection";
@@ -21,9 +22,13 @@ type VideoItem = {
   previewUrl?: string;
   embedUrl?: string;
   file?: File;
+  sourceUrl?: string;
 };
 
 export default function ContenidoMultimediaPage() {
+  const searchParams = useSearchParams();
+  const publicacionId = Number(searchParams.get("publicacionId"));
+
   const [images, setImages] = useState<ImageItem[]>([]);
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [videoUrl, setVideoUrl] = useState("");
@@ -41,6 +46,8 @@ export default function ContenidoMultimediaPage() {
 
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const videoInputRef = useRef<HTMLInputElement | null>(null);
+
+  const hasMultimedia = images.length > 0 || videos.length > 0;
 
   const handleOpenImagePicker = () => {
     imageInputRef.current?.click();
@@ -123,6 +130,7 @@ export default function ContenidoMultimediaPage() {
       "video/avi",
       "video/x-msvideo",
     ];
+
     const maxSize = 20 * 1024 * 1024;
 
     setIsUploadingVideos(true);
@@ -157,28 +165,40 @@ export default function ContenidoMultimediaPage() {
     event.target.value = "";
   };
 
-  const getYoutubeEmbedUrl = (url: string) => {
+  const getYoutubeData = (url: string) => {
     const trimmed = url.trim();
 
     const shortMatch = trimmed.match(
       /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/
     );
+
     if (shortMatch) {
-      return `https://www.youtube.com/embed/${shortMatch[1]}`;
+      return {
+        embedUrl: `https://www.youtube.com/embed/${shortMatch[1]}`,
+        sourceUrl: trimmed,
+      };
     }
 
     const normalMatch = trimmed.match(
       /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/
     );
+
     if (normalMatch) {
-      return `https://www.youtube.com/embed/${normalMatch[1]}`;
+      return {
+        embedUrl: `https://www.youtube.com/embed/${normalMatch[1]}`,
+        sourceUrl: trimmed,
+      };
     }
 
     const embedMatch = trimmed.match(
       /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/
     );
+
     if (embedMatch) {
-      return `https://www.youtube.com/embed/${embedMatch[1]}`;
+      return {
+        embedUrl: `https://www.youtube.com/embed/${embedMatch[1]}`,
+        sourceUrl: trimmed,
+      };
     }
 
     return null;
@@ -197,9 +217,9 @@ export default function ContenidoMultimediaPage() {
       return;
     }
 
-    const embedUrl = getYoutubeEmbedUrl(videoUrl);
+    const parsed = getYoutubeData(videoUrl);
 
-    if (!embedUrl) {
+    if (!parsed) {
       setVideoError("Enlace de video no válido");
       return;
     }
@@ -208,7 +228,8 @@ export default function ContenidoMultimediaPage() {
       id: `youtube-${Date.now()}-${Math.random()}`,
       type: "youtube",
       name: "Video de YouTube",
-      embedUrl,
+      embedUrl: parsed.embedUrl,
+      sourceUrl: parsed.sourceUrl,
     };
 
     setVideos((prev) => [...prev, newVideo].slice(0, 2));
@@ -226,26 +247,24 @@ export default function ContenidoMultimediaPage() {
   const handlePublish = async () => {
     setPublishError("");
 
+    if (!publicacionId || Number.isNaN(publicacionId)) {
+      setPublishError("No se recibió el ID de la publicación.");
+      return;
+    }
+
+    if (!hasMultimedia) {
+      setPublishError(
+        "Debes agregar al menos una imagen o un video antes de publicar el inmueble."
+      );
+      return;
+    }
+
     if (!confirmed) {
       setPublishError("Debes confirmar que la información es correcta.");
       return;
     }
 
-    // Aquí después conectarás el backend real.
-    // Ejemplos de respuesta: "success" | "limit_reached" | "error"
-    const simulatedBackendResponse = "success";
-
-    if (simulatedBackendResponse === "success") {
-      setShowSuccessModal(true);
-      return;
-    }
-
-    if (simulatedBackendResponse === "limit_reached") {
-      setShowPlanModal(true);
-      return;
-    }
-
-    setPublishError("Ocurrió un error al publicar el inmueble.");
+    setShowSuccessModal(true);
   };
 
   return (
@@ -263,6 +282,10 @@ export default function ContenidoMultimediaPage() {
 
         <p style={{ fontSize: "20px", color: "#666", marginBottom: "24px" }}>
           Agrega hasta 5 fotos y 2 videos para mostrar mejor tu inmueble
+        </p>
+
+        <p style={{ fontSize: "14px", color: "#888", marginBottom: "18px" }}>
+          Publicación actual: #{publicacionId || "sin id"}
         </p>
 
         <input
@@ -307,6 +330,7 @@ export default function ContenidoMultimediaPage() {
           onConfirmedChange={setConfirmed}
           onPublish={handlePublish}
           publishError={publishError}
+          canPublish={hasMultimedia}
         />
 
         <SuccessModal
