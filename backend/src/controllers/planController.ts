@@ -21,7 +21,7 @@ export const getPlanLimit = async (req: Request, res: Response) => {
           select: {
             publicaciones: {
               where: {
-                createdAt: { gte: inicioMes } // Ajusta 'createdAt' al nombre de tu columna de fechaSSS
+                fechaPublicacion: { gte: inicioMes } // Ajusta 'fechaPublicacion' al nombre de tu columna de fecha
               }
             }
           }
