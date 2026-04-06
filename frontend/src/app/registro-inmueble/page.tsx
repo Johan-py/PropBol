@@ -7,6 +7,7 @@ type CampoError =
   | 'direccion'
   | 'zona'
   | 'habitaciones'
+  | 'banos'
   | null
 
 export default function MiRegistroPage() {
@@ -73,6 +74,42 @@ export default function MiRegistroPage() {
       setDatos({ ...datos, habitaciones: value })
 
       if (campoError === 'habitaciones') {
+        limpiarError()
+      }
+
+      return
+    }
+
+    if (name === 'banos') {
+      if (value === '') {
+        setDatos({ ...datos, banos: '' })
+        if (campoError === 'banos') {
+          limpiarError()
+        }
+        return
+      }
+
+      const numeroBanos = Number(value)
+
+      if (numeroBanos < 1) {
+        setDatos({ ...datos, banos: value })
+        setMensajeError('BAÑOS DEBE SER MÍNIMO 1')
+        setCampoError('banos')
+        setEstado('error')
+        return
+      }
+
+      if (numeroBanos >= 50) {
+        setDatos({ ...datos, banos: '50' })
+        setMensajeError('Has llegado al máximo de 50 baños')
+        setCampoError('banos')
+        setEstado('error')
+        return
+      }
+
+      setDatos({ ...datos, banos: value })
+
+      if (campoError === 'banos') {
         limpiarError()
       }
 
@@ -180,8 +217,8 @@ export default function MiRegistroPage() {
     const descripcionLimpia = datos.descripcion.trim()
     const direccionLimpia = datos.direccion.trim()
     const zonaLimpia = datos.zona.trim()
-    const habitacionesNumero =
-      datos.habitaciones !== '' ? Number(datos.habitaciones) : null
+    const habitacionesNumero = datos.habitaciones !== '' ? Number(datos.habitaciones) : null
+    const banosNumero = datos.banos !== '' ? Number(datos.banos) : null
 
     if (!tituloLimpio) {
       setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
@@ -283,6 +320,22 @@ export default function MiRegistroPage() {
       }
     }
 
+    if (banosNumero !== null) {
+      if (banosNumero < 1) {
+        setMensajeError('BAÑOS DEBE SER MÍNIMO 1')
+        setCampoError('banos')
+        setEstado('error')
+        return
+      }
+
+      if (banosNumero >= 50) {
+        setMensajeError('Has llegado al máximo de 50 baños')
+        setCampoError('banos')
+        setEstado('error')
+        return
+      }
+    }
+
     const incompleto =
       !datos.tipoInmueble || !datos.precio || !descripcionLimpia || !direccionLimpia || !zonaLimpia
 
@@ -300,7 +353,7 @@ export default function MiRegistroPage() {
       precio: Number(datos.precio),
       superficieM2: datos.area ? Number(datos.area) : undefined,
       nroCuartos: habitacionesNumero !== null ? habitacionesNumero : undefined,
-      nroBanos: datos.banos ? Number(datos.banos) : 1,
+      nroBanos: banosNumero !== null ? banosNumero : 1,
       descripcion: descripcionLimpia,
       direccion: direccionLimpia,
       zona: zonaLimpia,
@@ -352,6 +405,7 @@ export default function MiRegistroPage() {
   const errorDireccion = campoError === 'direccion'
   const errorZona = campoError === 'zona'
   const errorHabitaciones = campoError === 'habitaciones'
+  const errorBanos = campoError === 'banos'
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -500,10 +554,22 @@ export default function MiRegistroPage() {
                     <input
                       name="banos"
                       type="number"
+                      min={1}
+                      max={50}
                       value={datos.banos}
                       onChange={manejarCambio}
-                      className="w-full p-3 rounded-xl border border-gray-200"
+                      className={`w-full p-3 rounded-xl border ${
+                        errorBanos ? 'border-red-500' : 'border-gray-200'
+                      }`}
                     />
+
+                    {errorBanos && (
+                      <p className="text-red-500 text-sm mt-2">{mensajeError}</p>
+                    )}
+
+                    <p className="text-xs text-gray-500 mt-1">
+                      Máximo 50 baños
+                    </p>
                   </div>
 
                   <div>
