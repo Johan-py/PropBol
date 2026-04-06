@@ -90,11 +90,9 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
       }
       setIsLoading(true)
       try {
-        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
       
-      const res = await fetch(
-        `${API_BASE}/api/locations/search?q=${encodeURIComponent(value)}`
-      )
+        const res = await fetch(`${API_BASE}/api/locations/search?q=${encodeURIComponent(value)}`)
       
       if (res.ok) {
         const data = await res.json()
@@ -102,8 +100,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
         setIsOpen(true)
       }
     } catch (error) {
-      
-      console.error("Error buscando ubicaciones:", error);
+        console.error('Error buscando ubicaciones:', error)
     } finally {
       setIsLoading(false)
     }
