@@ -111,7 +111,7 @@ export default function Page() {
             <div className="w-8 h-8 flex items-center justify-center bg-orange-200 rounded-md">🔒</div>
           </div>
 
-          {/* BOTÓN PRINCIPAL */}
+            {/* BOTÓN PRINCIPAL */}
           <button
 <<<<<<< HEAD
             onClick={() => router.push('/cobros-suscripciones')}
