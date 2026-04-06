@@ -35,9 +35,7 @@ import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
 import router from './modules/registro-publicacion/publicacion.routes.js' //sig-dev
 import { verifyNotificationEmailTransport } from './modules/email/notification-email.service.js'
 import publicacionRoutes from './modules/publicacion/publicacion.routes.js' //lista de publicaciones
-
-// 👇 AQUÍ ESTÁ TU NUEVA IMPORTACIÓN DE TRANSACCIONES
-import transaccionesRoutes from './modules/transacciones/transacciones.routes.js'
+import transaccionesRoutes from './routes/transacciones.routes.js'
 
 const app = express()
 
