@@ -5,11 +5,22 @@ import { useEffect, useState } from 'react'
 export default function Page() {
   const router = useRouter()
   const [visible, setVisible] = useState(false)
+  const [datosPlan, setDatosPlan] = useState({ total: 0, usadas: 0 });
+  const [cargando, setCargando] = useState(true);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 100)
-    return () => clearTimeout(timer)
-  }, [])
+ useEffect(() => {
+  const timer = setTimeout(() => setVisible(true), 100);
+
+  fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/consumo/limite`) 
+    .then(res => res.json())
+    .then(data => {
+      setDatosPlan({ total: data.total, usadas: data.usadas });
+      setCargando(false);
+    })
+    .catch(err => console.error("Error:", err));
+
+  return () => clearTimeout(timer);
+}, []);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/25 z-50">
@@ -46,7 +57,9 @@ export default function Page() {
           <div className="mt-5 bg-[#e5e5e5] rounded-lg px-4 py-3 flex items-center justify-between">
             <div className="text-left">
               <p className="text-gray-700 text-sm">Tus publicaciones restantes:</p>
-              <p className="text-red-500 font-semibold text-sm">0 de 3 restantes</p>
+              <p className="text-red-500 font-semibold text-sm">
+                {cargando ? 'Cargando...' : `${Math.max(datosPlan.total - datosPlan.usadas, 0)} de ${datosPlan.total} restantes`}
+              </p>           
             </div>
             <div className="w-8 h-8 flex items-center justify-center bg-orange-200 rounded-md">
               🔒
@@ -55,7 +68,7 @@ export default function Page() {
 
           {/* BOTÓN PRINCIPAL */}
           <button
-            onClick={() => router.push('/planes')}
+            onClick={() => router.push('/cobros-suscripciones')}
             className="mt-5 w-full py-2.5 rounded-lg text-white font-medium bg-orange-500 hover:bg-orange-600 transition"
           >
             💳 ¡Ver mis planes y ampliar cupo!
