@@ -556,7 +556,9 @@ export default function MiRegistroPage() {
                       }`}
                     />
                     {errorTitulo && <p className="text-red-500 text-sm mt-2">{mensajeError}</p>}
-                    <p className="text-xs text-gray-500 mt-1">{datos.titulo.length}/80 caracteres</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {datos.titulo.length}/80 caracteres
+                    </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -733,9 +735,7 @@ export default function MiRegistroPage() {
                   }`}
                   placeholder="Casa de dos plantas, amplia y moderna ubicada en una zona tranquila..."
                 />
-                {errorDescripcion && (
-                  <p className="text-red-500 text-sm mt-2">{mensajeError}</p>
-                )}
+                {errorDescripcion && <p className="text-red-500 text-sm mt-2">{mensajeError}</p>}
                 <p className="text-xs text-gray-500 mt-1">
                   {datos.descripcion.length}/300 caracteres
                 </p>
