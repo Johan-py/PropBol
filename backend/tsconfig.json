@@ -20,9 +20,7 @@
       "@routes/*": ["./routes/*"],
       "@services/*": ["./services/*"],
       "@utils/*": ["./utils/*"]
-    },
-    "rewriteRelativeImportExtensions": true,
-    "allowImportingTsExtensions": true
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
