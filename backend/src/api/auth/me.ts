@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { verifyAuth } from '../../src/middleware/auth.middleware.js'
-import { logoutService } from '../../src/modules/auth/auth.service.js'
+import { verifyAuth } from '../../middleware/auth.middleware.js'
+import { getMeService } from '../../modules/auth/auth.service.js'
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'POST') {
+  if (req.method !== 'GET') {
     return res.status(405).json({
       message: 'Método no permitido'
     })
@@ -13,11 +13,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!auth) return
 
   try {
-    const result = await logoutService(auth.token)
+    const result = await getMeService(auth.token)
     return res.status(200).json(result)
   } catch (error) {
-    return res.status(400).json({
-      message: error instanceof Error ? error.message : 'Error al cerrar sesión'
+    return res.status(401).json({
+      message: error instanceof Error ? error.message : 'No autorizado'
     })
   }
 }

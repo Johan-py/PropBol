@@ -35,9 +35,9 @@ import { requireAuth } from './middleware/auth.middleware.js'
 // --------------------
 // ROUTES / HANDLERS
 // --------------------
-import locationSearchHandler from '../api/locations/search.js'
-import popularidadHandler from '../api/locations/popularidad.js'
-import meHandler from '../api/auth/me.js'
+import locationSearchHandler from './api/locations/search.js'
+import popularidadHandler from './api/locations/popularidad.js'
+import meHandler from './api/auth/me.js'
 
 import correoverificacionRoutes from './modules/perfil/correoverificacion.routes.js'
 import perfilRoutes from './modules/perfil/perfil.routes.js'

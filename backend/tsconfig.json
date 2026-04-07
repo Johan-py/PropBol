@@ -9,8 +9,9 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
 
+    "rootDir": "./src",
     "outDir": "./dist"
   },
-  "include": ["src", "api"],
+  "include": ["src", "src/api"],
   "exclude": ["node_modules"]
 }
