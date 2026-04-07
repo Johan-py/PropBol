@@ -152,6 +152,12 @@ export default function UserMenu({
                 icon={Map}
                 onClick={onClosePanel}
               />
+              <MenuLink
+                label="Mis comparaciones"
+                href="/mis-comparaciones"
+                icon={FileText}
+                onClick={onClosePanel}
+              />
             </div>
 
             <button
