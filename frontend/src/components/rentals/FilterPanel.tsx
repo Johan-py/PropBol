@@ -123,7 +123,7 @@ export default function FilterPanel() {
 
   if (loading) {
     return (
-      <div className="w-full lg:w-80 bg-white p-8 rounded-3xl lg:rounded-2xl border border-gray-100 shadow-sm lg:shadow-[0_10px_40px_rgba(0,0,0,0.06)] mb-8 lg:sticky lg:top-20 shrink-0 flex items-center justify-center">
+      <div className="w-full md:w-80 bg-white p-8 rounded-3xl md:rounded-2xl border border-gray-100 shadow-sm md:shadow-[0_10px_40px_rgba(0,0,0,0.06)] mb-8 md:sticky md:top-20 shrink-0 flex items-center justify-center">
         <span className="text-gray-500 italic font-inter font-medium text-sm animate-pulse">
           Sincronizando filtros...
         </span>
@@ -133,7 +133,7 @@ export default function FilterPanel() {
 
   if (hasError) {
     return (
-      <div className="w-full lg:w-80 bg-white p-8 rounded-3xl lg:rounded-2xl border border-gray-100 shadow-sm lg:shadow-[0_10px_40px_rgba(0,0,0,0.06)] mb-8 lg:sticky lg:top-20 shrink-0 flex flex-col items-center justify-center text-center gap-4">
+      <div className="w-full md:w-80 bg-white p-8 rounded-3xl md:rounded-2xl border border-gray-100 shadow-sm md:shadow-[0_10px_40px_rgba(0,0,0,0.06)] mb-8 md:sticky md:top-20 shrink-0 flex flex-col items-center justify-center text-center gap-4">
         <div className="bg-orange-50 p-4 rounded-full">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -220,7 +220,7 @@ export default function FilterPanel() {
 
   return (
     <>
-      <div className="lg:hidden w-full mb-8">
+      <div className="md:hidden w-full mb-8">
         <div className="px-2">
           <FilterHeader />
         </div>
@@ -274,7 +274,7 @@ export default function FilterPanel() {
         </div>
       </div>
 
-      <aside className="hidden lg:block w-80 bg-white p-8 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-gray-100 h-fit sticky top-20 shrink-0">
+      <aside className="hidden md:block w-80 bg-white p-8 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-gray-100 h-fit sticky md:top-20 shrink-0">
         <FilterHeader />
 
         <div className="space-y-6">
