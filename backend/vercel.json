@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "name": "PropBol backend",   
   "builds": [
     {
       "src": "src/index.ts",
