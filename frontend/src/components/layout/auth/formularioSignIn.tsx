@@ -66,7 +66,7 @@ const saveSession = (token: string, user?: LoginResponse["user"]) => {
 
   localStorage.setItem(
     "propbol_session_expires",
-    String(Date.now() + 60 * 60 * 1000),
+    String(Date.now() + 3 * 60 * 1000),
   );
 
   window.dispatchEvent(new Event("propbol:login"));
