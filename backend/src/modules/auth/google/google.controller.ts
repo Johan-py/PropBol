@@ -12,7 +12,7 @@ const buildGoogleAuthUrl = () => {
       response_type: "code",
       scope: "openid email profile",
       access_type: "offline",
-      prompt: "select_account",
+      prompt: "consent select_account",
     }).toString()
   );
 };
@@ -67,7 +67,7 @@ const sendPopupResponse = (
             const targetOrigin = ${targetOrigin};
 
             if (window.opener && !window.opener.closed) {
-            window.opener.postMessage(payload, targetOrigin);
+              window.opener.postMessage(payload, targetOrigin);
             }
 
             window.close();
@@ -89,7 +89,7 @@ export const googleCallbackController = async (req: Request, res: Response) => {
     return sendPopupResponse(res, {
       type: "propbol:google-login-error",
       code: "GOOGLE_AUTH_FAILED",
-      message: "La autenteicación con Google fue cancelada o falló.",
+      message: "La autenticación con Google fue cancelada o falló.",
     });
   }
 
@@ -97,7 +97,7 @@ export const googleCallbackController = async (req: Request, res: Response) => {
     return sendPopupResponse(res, {
       type: "propbol:google-login-error",
       code: "GOOGLE_AUTH_FAILED",
-      message: "Google no devolvió un código válido",
+      message: "Google no devolvió un código válido.",
     });
   }
 
