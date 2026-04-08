@@ -37,5 +37,9 @@
   "dependencies": {
     "cors": "^2.8.6",
     "tailwind": "^4.0.0"
+  },
+  "engines": {
+    "node": "20.x"
   }
+
 }
