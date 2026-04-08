@@ -27,5 +27,14 @@ export const propertiesController = {
     } catch (error) {
       res.status(500).json({ error: 'Error en la búsqueda' })
     }
+  },
+
+  async getMap(req: Request, res: Response) {
+    try {
+      const data = await propertiesService.getMapProperties()
+      res.json({ ok: true, data })
+    } catch (error) {
+      res.status(500).json({ ok: false, message: 'Error en mapa' })
+    }
   }
 }

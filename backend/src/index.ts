@@ -90,7 +90,7 @@ app.get('/api/auth/me', async (req, res) => {
   await meHandler(req as any, res as any)
 })
 
-app.get('/api/localizacionMapa', propertiesController.getAll)
+app.get('/api/localizacionMapa', propertiesController.getMap)
 
 const PORT = 5000
 
