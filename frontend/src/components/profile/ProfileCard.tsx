@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { Plus, Trash2, Pencil, Camera, Loader2 } from 'lucide-react'
+import { Plus, Trash2, Pencil, Camera, Loader2, User} from 'lucide-react'
 import SecurityModal from './SecurityModal'
 import OtpModal from './OtpModal'
 
@@ -52,7 +52,10 @@ export default function ProfileCard() {
   const [genero, setGenero] = useState('')
   const [direccion, setDireccion] = useState('')
   const [avatar, setAvatar] = useState<string | null>(null)
+  const [tempAvatar, setTempAvatar] = useState<File | null>(null)
+  const [previewAvatar, setPreviewAvatar] = useState<string | null>(null)
   const [errorNombre, setErrorNombre] = useState("");
+
 
   const [originalNombre] = useState("");
   const [originalPais] = useState("");
@@ -441,6 +444,11 @@ export default function ProfileCard() {
     }
 
   const handleSaveAll = () => {
+       if (tempAvatar) {
+       subirFoto(tempAvatar)
+       setTempAvatar(null)
+       setPreviewAvatar(null)
+      }
     if (isEmailEditable && hasEmailChanged) {
       solicitarCambioEmail(tempEmail)
     } else if (isEmailEditable && !hasEmailChanged) {
@@ -487,6 +495,8 @@ export default function ProfileCard() {
   genero !== originalGenero ||
   direccion !== originalDireccion ||
   tempEmail !== originalEmail;
+  tempAvatar !== null;
+  ;
 
   if (isLoading && !perfilData) {
     return (
@@ -506,16 +516,19 @@ export default function ProfileCard() {
 
         {/* AVATAR */}
         <div className="w-28 h-28 rounded-full bg-white border border-gray-300 flex items-center justify-center shadow-sm overflow-hidden">
-          {avatar ? (
-            <img
-              src={avatar.startsWith('http') ? avatar : `${API_URL}${avatar}`}
-              alt="Foto de perfil"
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <span className="text-gray-500 text-xs uppercase">Imagen</span>
-          )}
-        </div>
+  {(previewAvatar || avatar) ? (
+    <img
+      src={
+        previewAvatar ||
+        (avatar?.startsWith('http') ? avatar : `${API_URL}${avatar}`)
+      }
+      alt="Foto de perfil"
+      className="w-full h-full object-cover"
+    />
+  ) : (
+    <User className="w-10 h-10 text-gray-400" />
+  )}
+</div>
 
         {/* BOTÓN + */}
         <button
@@ -542,7 +555,14 @@ export default function ProfileCard() {
           type="file"
           accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
           hidden
-          onChange={(e) => e.target.files?.[0] && subirFoto(e.target.files[0])}
+          onChange={(e) => {
+          const file = e.target.files?.[0]
+            if (file) {
+          const preview = URL.createObjectURL(file)
+            setTempAvatar(file)
+            setPreviewAvatar(preview)
+  }
+}}
         />
 
       </div>
