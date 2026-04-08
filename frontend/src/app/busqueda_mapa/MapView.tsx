@@ -97,8 +97,10 @@ function createPinIcon(type: PropertyMapPin["type"]): L.DivIcon {
   });
 }
 
-function createSelectedIcon(type: PropertyMapPin["type"]): L.DivIcon {
+function createSelectedIcon(type: PropertyMapPin["type"], isHover: boolean = false): L.DivIcon {
   const iconPath = SELECTED_ICONS[type];
+  const scale = isHover ? 1.8 : 1.6; 
+  const shadowIntensity = isHover ? "0 6px 16px rgba(0,0,0,0.4)" : "0 4px 12px rgba(0,0,0,0.35)";
 
   return L.divIcon({
     className: "",
@@ -107,7 +109,8 @@ function createSelectedIcon(type: PropertyMapPin["type"]): L.DivIcon {
         display: flex;
         align-items: center;
         justify-content: center;
-        transform: scale(1.6);
+        transform: scale(${scale});
+        transition: all 0.15s ease;
       ">
         <div style="
           width: 36px;
@@ -117,7 +120,7 @@ function createSelectedIcon(type: PropertyMapPin["type"]): L.DivIcon {
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.35);
+          box-shadow: ${shadowIntensity};
           border: 2px solid white;
         ">
           <img 
