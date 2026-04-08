@@ -26,14 +26,14 @@ const PIN_FILL: Record<PropertyMapPin["type"], string> = {
   casa: "#3b82f6",
   departamento: "#8b5cf6",
   terreno: "#f59e0b",
-  local: "#10b981",
+  oficina: "#10b981",
 };
 
 const PIN_HALO: Record<PropertyMapPin["type"], string> = {
   casa: "rgba(59,  130, 246, 0.25)",
   departamento: "rgba(139, 92,  246, 0.25)",
   terreno: "rgba(245, 158, 11,  0.25)",
-  local: "rgba(16,  185, 129, 0.25)",
+  oficina: "rgba(16,  185, 129, 0.25)",
 };
 
 // Color sólido para el texto del precio en el popup
@@ -41,14 +41,14 @@ const PIN_LABEL: Record<PropertyMapPin["type"], string> = {
   casa: "#2563eb",
   departamento: "#7c3aed",
   terreno: "#d97706",
-  local: "#059669",
+  oficina: "#059669",
 };
 
 const SELECTED_ICONS: Record<PropertyMapPin["type"], string> = {
   casa: "/house.svg",
   departamento: "/department.svg",
   terreno: "/land.svg",
-  local: "/local.svg",
+  oficina: "/office.svg",
 };
 
 function createPinIcon(type: PropertyMapPin["type"]): L.DivIcon {
