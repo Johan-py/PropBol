@@ -1,41 +1,41 @@
-"use client";
+'use client'
 
-import { useState, useRef, useEffect } from "react";
-import { ChevronDown, ArrowUpDown } from "lucide-react";
+import { useState, useRef, useEffect } from 'react'
+import { ChevronDown, ArrowUpDown } from 'lucide-react'
 import {
   EstadoOrdenamiento,
   OrdenFecha,
   OrdenDireccion,
   OPCIONES_FECHA,
   OPCIONES_DIRECCION,
-  ORDENAMIENTO_DEFAULT,
-} from "../../../types/inmueble";
+  ORDENAMIENTO_DEFAULT
+} from '../../../types/inmueble'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface MenuOrdenamientoProps {
-  ordenActual?: EstadoOrdenamiento;
-  onOrdenChange?: (orden: EstadoOrdenamiento) => void;
-  totalResultados: number;
+  ordenActual?: EstadoOrdenamiento
+  onOrdenChange?: (orden: EstadoOrdenamiento) => void
+  totalResultados: number
 }
 
 interface DropdownProps {
-  label: string;
-  isOpen: boolean;
-  onToggle: () => void;
-  children: React.ReactNode;
+  label: string
+  isOpen: boolean
+  onToggle: () => void
+  children: React.ReactNode
 }
 
 interface DropdownItemProps {
-  label: string;
-  isSelected: boolean;
-  onClick: () => void;
+  label: string
+  isSelected: boolean
+  onClick: () => void
 }
 
 interface SeccionMetricaProps {
-  titulo: string;
-  valor: OrdenDireccion;
-  onChange: (val: OrdenDireccion) => void;
+  titulo: string
+  valor: OrdenDireccion
+  onChange: (val: OrdenDireccion) => void
 }
 
 // ─── Dropdown Base ────────────────────────────────────────────────────────────
@@ -54,7 +54,7 @@ function Dropdown({ label, isOpen, onToggle, children }: DropdownProps) {
       >
         {label}
         <ChevronDown
-          className={`w-4 h-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
           aria-hidden="true"
         />
       </button>
@@ -69,7 +69,7 @@ function Dropdown({ label, isOpen, onToggle, children }: DropdownProps) {
         </div>
       )}
     </div>
-  );
+  )
 }
 
 // ─── Dropdown Item ────────────────────────────────────────────────────────────
@@ -82,13 +82,13 @@ function DropdownItem({ label, isSelected, onClick }: DropdownItemProps) {
       className={`w-full text-left px-4 py-2.5 text-sm transition-colors duration-150
         ${
           isSelected
-            ? "bg-orange-500 text-white font-semibold"
-            : "text-gray-700 hover:bg-orange-50 hover:text-orange-500"
+            ? 'bg-orange-500 text-white font-semibold'
+            : 'text-gray-700 hover:bg-orange-50 hover:text-orange-500'
         }`}
     >
       {label}
     </button>
-  );
+  )
 }
 
 // ─── Sección de Métrica (Precio/Superficie) ───────────────────────────────────
@@ -96,9 +96,7 @@ function DropdownItem({ label, isSelected, onClick }: DropdownItemProps) {
 function SeccionMetrica({ titulo, valor, onChange }: SeccionMetricaProps) {
   return (
     <div className="px-3 py-2">
-      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">
-        {titulo}
-      </p>
+      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">{titulo}</p>
       <div className="space-y-0.5">
         {OPCIONES_DIRECCION.map((opt) => (
           <button
@@ -108,8 +106,8 @@ function SeccionMetrica({ titulo, valor, onChange }: SeccionMetricaProps) {
             className={`w-full text-left text-sm py-1.5 px-2 rounded transition-colors duration-150
               ${
                 valor === opt.value
-                  ? "text-orange-500 font-semibold bg-orange-50"
-                  : "text-gray-700 hover:text-orange-500 hover:bg-orange-50"
+                  ? 'text-orange-500 font-semibold bg-orange-50'
+                  : 'text-gray-700 hover:text-orange-500 hover:bg-orange-50'
               }`}
           >
             {opt.label}
@@ -117,7 +115,7 @@ function SeccionMetrica({ titulo, valor, onChange }: SeccionMetricaProps) {
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 // ─── Menu Principal de Ordenamiento ───────────────────────────────────────────
@@ -125,49 +123,44 @@ function SeccionMetrica({ titulo, valor, onChange }: SeccionMetricaProps) {
 export function MenuOrdenamiento({
   ordenActual = ORDENAMIENTO_DEFAULT,
   onOrdenChange,
-  totalResultados,
+  totalResultados
 }: MenuOrdenamientoProps) {
-  const [orden, setOrden] = useState<EstadoOrdenamiento>(ordenActual);
-  const [dropdownAbierto, setDropdownAbierto] = useState<
-    "fecha" | "metricas" | null
-  >(null);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const [orden, setOrden] = useState<EstadoOrdenamiento>(ordenActual)
+  const [dropdownAbierto, setDropdownAbierto] = useState<'fecha' | 'metricas' | null>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   // Cerrar al hacer clic fuera
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setDropdownAbierto(null);
+        setDropdownAbierto(null)
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   // Toggle dropdown
-  function toggleDropdown(dropdown: "fecha" | "metricas") {
-    setDropdownAbierto((prev) => (prev === dropdown ? null : dropdown));
+  function toggleDropdown(dropdown: 'fecha' | 'metricas') {
+    setDropdownAbierto((prev) => (prev === dropdown ? null : dropdown))
   }
 
   // Actualizar estado de ordenamiento
   function actualizarOrden(parcial: Partial<EstadoOrdenamiento>) {
-    const nuevoOrden: EstadoOrdenamiento = { ...orden, ...parcial };
-    setOrden(nuevoOrden);
-    onOrdenChange?.(nuevoOrden);
+    const nuevoOrden: EstadoOrdenamiento = { ...orden, ...parcial }
+    setOrden(nuevoOrden)
+    onOrdenChange?.(nuevoOrden)
   }
 
   // Labels activos
   const labelFechaActivo =
-    OPCIONES_FECHA.find((o) => o.value === orden.fecha)?.label ??
-    "Más recientes";
+    OPCIONES_FECHA.find((o) => o.value === orden.fecha)?.label ?? 'Más recientes'
 
   const labelPrecioActivo =
-    OPCIONES_DIRECCION.find((o) => o.value === orden.precio)?.label ??
-    "Menor a Mayor";
+    OPCIONES_DIRECCION.find((o) => o.value === orden.precio)?.label ?? 'Menor a Mayor'
 
   const labelSuperficieActivo =
-    OPCIONES_DIRECCION.find((o) => o.value === orden.superficie)?.label ??
-    "Menor a Mayor";
+    OPCIONES_DIRECCION.find((o) => o.value === orden.superficie)?.label ?? 'Menor a Mayor'
 
   return (
     <div ref={menuRef} className="flex flex-col gap-4 mb-6">
@@ -176,9 +169,7 @@ export function MenuOrdenamiento({
         <h2 className="text-lg font-semibold text-gray-900">
           <span className="text-orange-500">{totalResultados}</span>
           <span className="ml-1.5 text-gray-600 font-normal">
-            {totalResultados === 1
-              ? "propiedad encontrada"
-              : "propiedades encontradas"}
+            {totalResultados === 1 ? 'propiedad encontrada' : 'propiedades encontradas'}
           </span>
         </h2>
       </div>
@@ -187,9 +178,7 @@ export function MenuOrdenamiento({
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2">
           <ArrowUpDown className="w-4 h-4 text-gray-400" strokeWidth={2} />
-          <span className="text-sm font-semibold text-gray-600">
-            Ordenar por:
-          </span>
+          <span className="text-sm font-semibold text-gray-600">Ordenar por:</span>
         </div>
 
         <div className="flex flex-wrap gap-4">
@@ -198,8 +187,8 @@ export function MenuOrdenamiento({
             <span className="text-xs text-gray-400 font-medium">Fecha:</span>
             <Dropdown
               label={labelFechaActivo}
-              isOpen={dropdownAbierto === "fecha"}
-              onToggle={() => toggleDropdown("fecha")}
+              isOpen={dropdownAbierto === 'fecha'}
+              onToggle={() => toggleDropdown('fecha')}
             >
               {OPCIONES_FECHA.map((opt) => (
                 <DropdownItem
@@ -207,8 +196,8 @@ export function MenuOrdenamiento({
                   label={opt.label}
                   isSelected={orden.fecha === opt.value}
                   onClick={() => {
-                    actualizarOrden({ fecha: opt.value });
-                    setDropdownAbierto(null);
+                    actualizarOrden({ fecha: opt.value })
+                    setDropdownAbierto(null)
                   }}
                 />
               ))}
@@ -220,8 +209,8 @@ export function MenuOrdenamiento({
             <span className="text-xs text-gray-400 font-medium">Métricas:</span>
             <Dropdown
               label={`Precio: ${labelPrecioActivo}`}
-              isOpen={dropdownAbierto === "metricas"}
-              onToggle={() => toggleDropdown("metricas")}
+              isOpen={dropdownAbierto === 'metricas'}
+              onToggle={() => toggleDropdown('metricas')}
             >
               <SeccionMetrica
                 titulo="Precio"
@@ -239,5 +228,5 @@ export function MenuOrdenamiento({
         </div>
       </div>
     </div>
-  );
+  )
 }
