@@ -22,7 +22,7 @@ if (typeof window !== 'undefined') {
   })
 }
 
-// 🔥 soporta ambos: oficina y local (merge seguro)
+// soporta oficina y local
 const PIN_FILL: Record<string, string> = {
   casa: '#3b82f6',
   departamento: '#8b5cf6',
@@ -98,7 +98,6 @@ function MapMouseHandler({ onMouseLeave }: { onMouseLeave: () => void }) {
   return null
 }
 
-// 🔥 mantenemos versión con hover (mejor UX)
 function createSelectedIcon(type: string, isHover: boolean = false): L.DivIcon {
   const iconPath = SELECTED_ICONS[type]
   const scale = isHover ? 1.8 : 1.6
@@ -123,7 +122,7 @@ function formatPrice(price: number, currency: 'USD' | 'BOB'): string {
     : `Bs ${price.toLocaleString('es-BO')}`
 }
 
-// 🔥 FIX MOBILE (importante)
+// fix mobile resize
 function MapResizer() {
   const map = useMap()
 
@@ -152,16 +151,12 @@ export default function MapView({
   center = [-17.392418841841394, -66.1461583463333],
   zoom = 12,
   selectedId,
-  onSelect,
-  isLoading = false,
-  error = null
+  onSelect
 }: MapViewProps) {
   const [isMounted, setIsMounted] = useState(false)
   const [hoveredPinId, setHoveredPinId] = useState<string | null>(null)
 
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
+  useEffect(() => setIsMounted(true), [])
 
   if (!isMounted) return <div className="w-full h-full bg-gray-100 animate-pulse" />
 
@@ -169,16 +164,11 @@ export default function MapView({
 
   return (
     <div className="relative w-full h-full">
-      <MapContainer
-        center={center}
-        zoom={zoom}
-        zoomControl={false}
-        style={{ height: '100%', width: '100%' }}
-      >
+      <MapContainer center={center} zoom={zoom} zoomControl={false} style={{ height: '100%', width: '100%' }}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-        <ZoomControls />
         <MapResizer />
+        <ZoomControls />
 
         <MapMouseHandler onMouseLeave={() => setHoveredPinId(null)} />
         <MapClickHandler onMapClick={() => onSelect?.(null)} />
@@ -199,6 +189,22 @@ export default function MapView({
         <MarkerClusterGroup
           iconCreateFunction={(cluster: any) => createClusterIcon(cluster)}
           maxClusterRadius={CLUSTER_CONFIG.maxClusterRadius}
+          disableClusteringAtZoom={CLUSTER_CONFIG.disableClusteringAtZoom}
+          animate
+          animateAddingMarkers
+          chunkedLoading
+          showCoverageOnHover={false}
+          polygonOptions={{ opacity: 0 }}
+          zoomToBoundsOnClick
+          spiderfyOnMaxZoom
+          spiderfyDistanceMultiplier={2}
+          removeOutsideVisibleBounds={false}
+          clusterPane="markerPane"
+          eventHandlers={{
+            clusterclick: (e: any) => {
+              e.layer.zoomToBounds({ padding: [20, 20] })
+            }
+          }}
         >
           {properties.map((property) => {
             const isSelected = property.id === selectedId
@@ -220,11 +226,12 @@ export default function MapView({
                 }}
               >
                 <Popup>
-                  <div className="text-sm">
-                    <p className="font-semibold">{property.title}</p>
-                    <p style={{ color: PIN_LABEL[property.type] }}>
+                  <div className="text-sm min-w-[160px]">
+                    <p className="font-semibold text-gray-800 mb-1">{property.title}</p>
+                    <p className="font-bold" style={{ color: PIN_LABEL[property.type] }}>
                       {formatPrice(property.price, property.currency)}
                     </p>
+                    <p className="text-gray-500 capitalize mt-1">{property.type}</p>
                   </div>
                 </Popup>
               </Marker>
@@ -241,7 +248,15 @@ function FlyToSelected({ lat, lng }: { lat: number; lng: number }) {
 
   useEffect(() => {
     if (!lat || !lng) return
-    map.flyTo([lat, lng], 18, { duration: 1.2 })
+
+    const targetZoom = 18
+    map.flyTo([lat, lng], targetZoom, { duration: 1.2 })
+
+    const timeout = setTimeout(() => {
+      map.setView([lat, lng], targetZoom)
+    }, 1200)
+
+    return () => clearTimeout(timeout)
   }, [lat, lng, map])
 
   return null
