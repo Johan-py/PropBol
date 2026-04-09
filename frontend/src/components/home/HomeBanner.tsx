@@ -1,14 +1,15 @@
-import Image from "next/image";
+import Image from 'next/image'
 
 interface BannerProps {
-  url: string;
-  title?: string;
-  subtitle?: string;
+  url: string
+  title?: string
+  subtitle?: string
 }
 
 export const HomeBanner = ({ url, title, subtitle }: BannerProps) => {
   return (
-    <div className="relative w-full 
+    <div
+      className="relative w-full 
       h-[20vh] sm:h-[25vh] md:h-[60vh] 
       min-h-[180px] md:min-h-[300px] 
       bg-slate-100 overflow-hidden flex items-center justify-center"
@@ -37,5 +38,5 @@ export const HomeBanner = ({ url, title, subtitle }: BannerProps) => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
