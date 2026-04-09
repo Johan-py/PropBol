@@ -24,9 +24,7 @@ function guardarOrden(orden: EstadoOrdenamiento): void {
     } else {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(orden))
     }
-  } catch {
-    // sin persistencia si localStorage falla
-  }
+  } catch {}
 }
 
 interface UseOrdenamientoProps {
@@ -47,12 +45,10 @@ export const useOrdenamiento = ({
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  // Inicial simple (evita SSR issues)
   const [ordenActual, setOrdenActual] = useState<EstadoOrdenamiento>(
     ordenInicial ?? ORDENAMIENTO_DEFAULT
   )
 
-  // Control de hidratación
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
@@ -71,7 +67,6 @@ export const useOrdenamiento = ({
       setOrdenActual(nuevoOrden)
 
       const params = new URLSearchParams(searchParams.toString())
-
       params.delete('precio')
       params.delete('superficie')
       params.delete('fecha')
@@ -92,6 +87,6 @@ export const useOrdenamiento = ({
   return {
     ordenActual,
     cambiarOrden,
-    inmueblesOrdenados: inmuebles // backend ya ordena
+    inmueblesOrdenados: inmuebles
   }
 }
