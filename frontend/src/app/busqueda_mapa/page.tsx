@@ -1,223 +1,239 @@
-'use client'
+"use client";
 
-import { useState, useEffect, Suspense } from 'react'
-import nextDynamic from 'next/dynamic'
-import {
-  ChevronLeft,
-  ChevronRight,
-  List as ListIcon,
-  LayoutGrid,
-  Filter
-} from 'lucide-react'
+import "leaflet/dist/leaflet.css";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-cluster";
+import L from "leaflet";
+import { useEffect, useState } from "react";
 
-// HOOKS
-import { useProperties } from '@/hooks/useProperties'
-import { useOrdenamiento } from '@/hooks/useOrdenamiento'
+import ZoomControls from "@/components/ZoomControls";
+import { createGpsIcon } from "@/components/GpsPin";
+import { createClusterIcon, CLUSTER_CONFIG } from "@/lib/clusterIcon";
 
-// COMPONENTES
-import FilterBar from '@/components/filters/FilterBar'
-import PropertyCard from '@/components/layout/PropertyCard'
-import PropertyRow from '@/components/galeria/PropertyRow'
-import EmptyState from '@/components/galeria/EmptyState'
-import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenamiento'
+import type { PropertyMapPin } from "@/types/property";
 
-// MAPA dinámico
-const MapView = nextDynamic(() => import('./MapView'), {
-  ssr: false,
-  loading: () => (
-    <div className="h-full w-full bg-stone-100 animate-pulse flex items-center justify-center text-stone-400">
-      Cargando mapa de Bolivia...
-    </div>
-  )
-})
-
-function BusquedaMapaContent() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-
-  const { properties, isLoading, error } = useProperties()
-
-  const { ordenActual, cambiarOrden } = useOrdenamiento({
-    inmuebles: properties
-  })
-
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
-  const [hoveredId, setHoveredId] = useState<string | null>(null)
-  const [isHoveringList, setIsHoveringList] = useState(false)
-
-  // Hover con debounce
-  useEffect(() => {
-    if (!hoveredId) {
-      if (!isHoveringList) setSelectedPropertyId(null)
-      return
-    }
-
-    const timeout = setTimeout(() => {
-      if (isHoveringList) setSelectedPropertyId(hoveredId)
-    }, 200)
-
-    return () => clearTimeout(timeout)
-  }, [hoveredId, isHoveringList])
-
-  // Sync resize mapa
-  useEffect(() => {
-    const resizeTimeout = setTimeout(() => {
-      window.dispatchEvent(new Event('resize'))
-    }, 300)
-
-    return () => clearTimeout(resizeTimeout)
-  }, [isSidebarOpen])
-
-  return (
-    <div className="flex flex-col bg-white w-full h-[calc(100dvh-80px)] md:h-[calc(100dvh-99px)] overflow-hidden">
-      <FilterBar variant="map" />
-
-      <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200">
-        
-        {/* SIDEBAR */}
-        <aside
-          className={`bg-white border-r border-stone-200 flex flex-col z-10 transition-all duration-300 min-h-0 overflow-hidden ${
-            isSidebarOpen ? 'w-full md:w-[450px] h-[65dvh] md:h-full' : 'w-0'
-          }`}
-        >
-          {isSidebarOpen && (
-            <div className="flex flex-col h-full min-h-0">
-              
-              {/* HEADER */}
-              <div className="p-4 bg-white shrink-0">
-                <div className="flex justify-between items-center mb-4">
-                  <div>
-                    <div className="flex items-center gap-1">
-                      <Filter className="w-4 h-4 text-orange-500" />
-                      <h1 className="text-base font-semibold uppercase">
-                        Filtros
-                      </h1>
-                    </div>
-
-                    <h2 className="text-sm mt-2">
-                      <span className="text-orange-500 font-bold">
-                        {properties.length}
-                      </span>{' '}
-                      resultados
-                    </h2>
-                  </div>
-
-                  <button onClick={() => setIsSidebarOpen(false)}>
-                    <ChevronLeft size={20} />
-                  </button>
-                </div>
-
-                <MenuOrdenamiento
-                  totalResultados={properties.length}
-                  ordenActual={ordenActual}
-                  onOrdenChange={cambiarOrden}
-                />
-
-                {/* Toggle vista */}
-                <div className="flex gap-2 mt-2">
-                  <button onClick={() => setViewMode('grid')}>
-                    <LayoutGrid size={16} />
-                  </button>
-                  <button onClick={() => setViewMode('list')}>
-                    <ListIcon size={16} />
-                  </button>
-                </div>
-              </div>
-
-              {/* LISTA */}
-              <div
-                className="flex-1 overflow-y-auto p-4 bg-stone-50"
-                onMouseEnter={() => setIsHoveringList(true)}
-                onMouseLeave={() => {
-                  setIsHoveringList(false)
-                  setSelectedPropertyId(null)
-                  setHoveredId(null)
-                }}
-              >
-                {isLoading ? (
-                  <div className="flex justify-center items-center h-full text-stone-400">
-                    Cargando...
-                  </div>
-                ) : properties.length === 0 ? (
-                  <EmptyState />
-                ) : (
-                  <div className="flex flex-col gap-3">
-                    {properties.map((property: any) => (
-                      <div
-                        key={property.id}
-                        onMouseEnter={() => setHoveredId(property.id)}
-                        onClick={() => setSelectedPropertyId(property.id)}
-                        className={`cursor-pointer ${
-                          selectedPropertyId === property.id
-                            ? 'ring-2 ring-orange-400'
-                            : ''
-                        }`}
-                      >
-                        {viewMode === 'grid' ? (
-                          <PropertyCard
-                            imagen=""
-                            estado={property.type}
-                            precio={
-                              property.currency === 'USD'
-                                ? `$${property.price.toLocaleString('es-BO')} USD`
-                                : `Bs ${property.price.toLocaleString('es-BO')}`
-                            }
-                            descripcion={property.title}
-                            camas={3}
-                            banos={2}
-                            metros={150}
-                          />
-                        ) : (
-                          <PropertyRow
-                            title={property.title}
-                            price={
-                              property.currency === 'USD'
-                                ? `$${property.price.toLocaleString('es-BO')} USD`
-                                : `Bs ${property.price.toLocaleString('es-BO')}`
-                            }
-                            size="150m²"
-                            contactType="whatsapp"
-                            image=""
-                          />
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-        </aside>
-
-        {/* MAPA */}
-        <section className="relative bg-stone-200 w-full h-[35dvh] md:flex-1 md:h-auto">
-          {!isSidebarOpen && (
-            <button onClick={() => setIsSidebarOpen(true)}>
-              <ChevronRight />
-            </button>
-          )}
-
-          <div className="absolute inset-0">
-            <MapView
-              properties={properties}
-              selectedId={selectedPropertyId}
-              onSelect={setSelectedPropertyId}
-              isLoading={isLoading}
-              error={error}
-            />
-          </div>
-        </section>
-      </main>
-    </div>
-  )
+// Fix Leaflet SSR
+if (typeof window !== "undefined") {
+  delete (L.Icon.Default.prototype as any)._getIconUrl;
+  L.Icon.Default.mergeOptions({
+    iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  });
 }
 
-export const dynamic = 'force-dynamic'
+// 🎨 estilos
+const PIN_FILL: Record<string, string> = {
+  casa: "#3b82f6",
+  departamento: "#8b5cf6",
+  terreno: "#f59e0b",
+  oficina: "#10b981",
+  local: "#10b981",
+};
 
-export default function BusquedaMapaPage() {
+const PIN_HALO: Record<string, string> = {
+  casa: "rgba(59,130,246,0.25)",
+  departamento: "rgba(139,92,246,0.25)",
+  terreno: "rgba(245,158,11,0.25)",
+  oficina: "rgba(16,185,129,0.25)",
+  local: "rgba(16,185,129,0.25)",
+};
+
+const PIN_LABEL: Record<string, string> = {
+  casa: "#2563eb",
+  departamento: "#7c3aed",
+  terreno: "#d97706",
+  oficina: "#059669",
+  local: "#059669",
+};
+
+const SELECTED_ICONS: Record<string, string> = {
+  casa: "/house.svg",
+  departamento: "/department.svg",
+  terreno: "/land.svg",
+  oficina: "/office.svg",
+  local: "/local.svg",
+};
+
+// 🟢 Pin normal
+function createPinIcon(type: string): L.DivIcon {
+  const fill = PIN_FILL[type] ?? "#6b7280";
+  const halo = PIN_HALO[type] ?? "rgba(107,114,128,0.25)";
+
+  return L.divIcon({
+    className: "",
+    html: `
+      <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;">
+        <div style="position:absolute;width:28px;height:28px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${halo};"></div>
+        <div style="position:relative;width:20px;height:20px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${fill};border:2px solid white;"></div>
+      </div>`,
+    iconSize: [28, 28],
+    iconAnchor: [14, 28],
+  });
+}
+
+// 🔴 Pin seleccionado / hover
+function createSelectedIcon(type: string, isHover = false): L.DivIcon {
+  const scale = isHover ? 1.8 : 1.6;
+  const iconPath = SELECTED_ICONS[type];
+
+  return L.divIcon({
+    className: "",
+    html: `
+      <div style="transform:scale(${scale});display:flex;justify-content:center;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#ef4444;display:flex;align-items:center;justify-content:center;border:2px solid white;">
+          <img src="${iconPath}" style="width:20px;height:20px;" />
+        </div>
+      </div>`,
+    iconSize: [36, 36],
+    iconAnchor: [18, 36],
+  });
+}
+
+// 🧠 handlers
+function MapClickHandler({ onMapClick }: { onMapClick: () => void }) {
+  const map = useMap();
+  useEffect(() => {
+    map.on("click", onMapClick);
+    return () => map.off("click", onMapClick);
+  }, [map, onMapClick]);
+  return null;
+}
+
+function MapMouseHandler({ onLeave }: { onLeave: () => void }) {
+  const map = useMap();
+  useEffect(() => {
+    map.on("mouseout", onLeave);
+    return () => map.off("mouseout", onLeave);
+  }, [map, onLeave]);
+  return null;
+}
+
+// 🔥 FIX GRAY AREA
+function MapResizer() {
+  const map = useMap();
+  useEffect(() => {
+    const handler = () => map.invalidateSize({ animate: false });
+    window.addEventListener("resize", handler);
+    handler();
+    return () => window.removeEventListener("resize", handler);
+  }, [map]);
+  return null;
+}
+
+// 🎯 animación
+function FlyToSelected({ lat, lng }: { lat: number; lng: number }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!lat || !lng) return;
+    const zoom = 18;
+    map.flyTo([lat, lng], zoom, { duration: 1.2 });
+
+    const t = setTimeout(() => {
+      map.setView([lat, lng], zoom);
+    }, 1200);
+
+    return () => clearTimeout(t);
+  }, [lat, lng, map]);
+
+  return null;
+}
+
+function formatPrice(price: number, currency: "USD" | "BOB") {
+  return currency === "USD"
+    ? `$${price.toLocaleString("es-BO")} USD`
+    : `Bs ${price.toLocaleString("es-BO")}`;
+}
+
+interface MapViewProps {
+  properties: PropertyMapPin[];
+  center?: [number, number];
+  zoom?: number;
+  selectedId?: string | null;
+  onSelect?: (id: string | null) => void;
+  error?: string | null;
+}
+
+export default function MapView({
+  properties = [],
+  center = [-17.39, -66.15],
+  zoom = 12,
+  selectedId,
+  onSelect,
+  error,
+}: MapViewProps) {
+  const [isMounted, setIsMounted] = useState(false);
+  const [hoveredPinId, setHoveredPinId] = useState<string | null>(null);
+
+  useEffect(() => setIsMounted(true), []);
+  if (!isMounted) return <div className="w-full h-full bg-gray-100" />;
+
+  const selected = properties.find((p) => p.id === selectedId);
+
   return (
-    <Suspense fallback={<div>Cargando...</div>}>
-      <BusquedaMapaContent />
-    </Suspense>
-  )
+    <div className="relative w-full h-full">
+      {error && (
+        <div className="absolute top-2 left-1/2 -translate-x-1/2 z-50 bg-red-100 px-3 py-1 rounded">
+          {error}
+        </div>
+      )}
+
+      <MapContainer center={center} zoom={zoom} zoomControl={false} style={{ height: "100%", width: "100%" }}>
+        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+
+        <MapResizer />
+        <ZoomControls />
+
+        <MapClickHandler onMapClick={() => onSelect?.(null)} />
+        <MapMouseHandler onLeave={() => setHoveredPinId(null)} />
+
+        {selected && <FlyToSelected lat={selected.lat} lng={selected.lng} />}
+
+        <Marker position={center} icon={createGpsIcon()}>
+          <Popup>Tu ubicación</Popup>
+        </Marker>
+
+        <MarkerClusterGroup
+          iconCreateFunction={(c) => createClusterIcon(c)}
+          maxClusterRadius={CLUSTER_CONFIG.maxClusterRadius}
+          disableClusteringAtZoom={CLUSTER_CONFIG.disableClusteringAtZoom}
+          animate
+          chunkedLoading
+          showCoverageOnHover={false}
+          zoomToBoundsOnClick
+        >
+          {properties.map((p) => {
+            const isSelected = p.id === selectedId;
+            const isHover = p.id === hoveredPinId;
+
+            let icon = createPinIcon(p.type);
+            if (isSelected) icon = createSelectedIcon(p.type);
+            else if (isHover) icon = createSelectedIcon(p.type, true);
+
+            return (
+              <Marker
+                key={p.id}
+                position={[p.lat, p.lng]}
+                icon={icon}
+                eventHandlers={{
+                  click: () => onSelect?.(p.id),
+                  mouseover: () => setHoveredPinId(p.id),
+                  mouseout: () => setHoveredPinId(null),
+                }}
+              >
+                <Popup>
+                  <div className="text-sm">
+                    <p>{p.title}</p>
+                    <p style={{ color: PIN_LABEL[p.type] }}>
+                      {formatPrice(p.price, p.currency)}
+                    </p>
+                  </div>
+                </Popup>
+              </Marker>
+            );
+          })}
+        </MarkerClusterGroup>
+      </MapContainer>
+    </div>
+  );
 }
