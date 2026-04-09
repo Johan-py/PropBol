@@ -66,7 +66,7 @@ function BusquedaMapaContent() {
   }, [hoveredId, isHoveringList]);
 
   return (
-    <div className="flex flex-col h-screen bg-white overflow-hidden">
+    <div className="flex flex-col h-screen bg-white">
       <FilterBar
         variant="map"
         onSearch={(nuevosFiltros) => {
