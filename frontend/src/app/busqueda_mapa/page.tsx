@@ -286,69 +286,180 @@ function BusquedaMapaContent() {
                     <LayoutGrid size={13} />
                   </button>
                   <button
-                    onClick={() => setViewMode("list")}
-                    className={`p-1 rounded transition-colors ${viewMode === "list" ? "bg-white text-[#ea580c] shadow-sm" : "text-stone-400"}`}
+                    onClick={() => setViewMode('list')}
+                    className={`p-1 rounded ${viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'}`}
                   >
-                    <ListIcon size={16} />
+                    <ListIcon size={13} />
                   </button>
                 </div>
               </div>
-
-              {/* Lista de propiedades con hover → fly-to en mapa */}
-              <div className="flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar">
-                {isLoading ? (
-                  <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
-                    <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
-                    Actualizando resultados...
-                  </div>
-                ) : properties.length === 0 ? (
-                  <EmptyState />
-                ) : (
+              <div className="flex-1 overflow-y-auto p-2 bg-stone-50 no-scrollbar">
+                {properties.map((property: any) => (
                   <div
-                    className={`gap-4 flex flex-col ${viewMode === "list" ? "divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm" : ""}`}
+                    key={property.id}
+                    onClick={() => {
+                      setSelectedPropertyId(property.id)
+                      setPinnedProperty(property)
+                    }}
+                    className={`cursor-pointer mb-2 rounded-xl transition-all ${selectedPropertyId === property.id ? 'ring-2 ring-orange-400 ring-offset-1' : ''}`}
                   >
-                    {properties.map((property: any) => (
-                      <div
-                        key={property.id}
-                        // Hover con debounce: dispara el vuelo del mapa al marcador
-                        onMouseEnter={() => setHoveredId(property.id)}
-                        onMouseLeave={() => setHoveredId(null)}
-                        onClick={() => setSelectedPropertyId(property.id)}
-                        className={`cursor-pointer transition-all duration-200 rounded-xl ${
-                          selectedPropertyId === property.id
-                            ? "ring-2 ring-orange-400 ring-offset-1"
-                            : ""
-                        }`}
+                    <PropertyRow
+                      title={property.title}
+                      price={
+                        property.currency === 'USD'
+                          ? `$${property.price.toLocaleString('es-BO')} USD`
+                          : `Bs ${property.price.toLocaleString('es-BO')}`
+                      }
+                      size="150 m²"
+                      contactType="whatsapp"
+                      image=""
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    // ────────────────────────────────────────────────────────────────────────────
+    // RENDER PORTRAIT MÓVIL — Bottom Sheet
+    // ────────────────────────────────────────────────────────────────────────────
+    // (landscape ya fue manejado arriba)
+    return (
+      <div className="flex flex-col overflow-hidden bg-white" style={{ height: '100dvh' }}>
+        <div className="shrink-0 overflow-x-auto" style={{ zIndex: 1002, position: 'relative' }}>
+          <div className="min-w-max">
+            <FilterBar variant="map" onSearch={(f) => console.log('🔍 Filtros:', f)} />
+          </div>
+        </div>
+
+        {/* Área mapa + sheet */}
+        <div className="flex-1 relative overflow-hidden">
+          {/* Mapa — ocupa todo este bloque */}
+          <div className="absolute inset-0">
+            <MapView
+              properties={properties}
+              selectedId={selectedPropertyId}
+              onSelect={handleMapSelect}
+              isLoading={isLoading}
+              error={error}
+            />
+          </div>
+
+          {/* ── Botón flotante "Ver lista" — siempre visible cuando sheet está hidden ──
+               z-[1001] para quedar encima del mapa y de los controles de Leaflet */}
+          {sheetState === 'hidden' && (
+            <button
+              onClick={() => setSheetState('peek')}
+              className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1001] bg-white rounded-full px-5 py-3 shadow-xl border border-stone-200 flex items-center gap-2 text-sm font-semibold text-slate-700 active:scale-95 transition-transform"
+              style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.18)' }}
+            >
+              <ListIcon size={16} className="text-orange-500" />
+              Ver lista
+              {properties.length > 0 && (
+                <span className="bg-orange-100 text-orange-600 text-xs font-bold px-2 py-0.5 rounded-full">
+                  {properties.length}
+                </span>
+              )}
+              <ChevronUp size={16} className="text-stone-400" />
+            </button>
+          )}
+
+          {/* ── Bottom Sheet ── */}
+          {sheetState !== 'hidden' && (
+            <div
+              className="absolute left-0 right-0 bottom-0 z-[400] bg-white rounded-t-2xl shadow-[0_-4px_24px_rgba(0,0,0,0.12)] flex flex-col"
+              style={{
+                height: SHEET_H[sheetState],
+                transition: 'height 0.3s cubic-bezier(0.32,0.72,0,1)'
+              }}
+              onTouchStart={onTouchStart}
+              onTouchEnd={onTouchEnd}
+            >
+              {/* Handle drag + tap en el pill para toggle */}
+              <div className="shrink-0 flex flex-col items-center pt-3 pb-1 cursor-grab active:cursor-grabbing select-none">
+                <div
+                  className="w-10 h-1.5 bg-stone-300 hover:bg-orange-400 rounded-full mb-3 transition-colors"
+                  onClick={() => setSheetState((s) => (s === 'full' ? 'peek' : 'full'))}
+                  title="Tocá para expandir o reducir"
+                />
+
+                <div className="flex items-center justify-between w-full px-4 pb-2">
+                  <span className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
+                    <span className="text-orange-500">{properties.length}</span>
+                    <span className="text-gray-500 font-normal">propiedades</span>
+                  </span>
+
+                  <div className="flex items-center gap-2">
+                    {/* Botón cerrar sheet → vuelve a hidden (mapa limpio) */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setSheetState('hidden')
+                      }}
+                      className="flex items-center gap-1 text-xs text-stone-400 hover:text-stone-600 bg-stone-100 rounded-full px-2 py-1"
+                    >
+                      <X size={12} />
+                      <span>Ocultar</span>
+                    </button>
+
+                    {/* Toggle peek ↔ full */}
+                    {sheetState === 'peek' ? (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setSheetState('full')
+                        }}
+                        className="text-stone-400 hover:text-stone-600 p-1"
                       >
-                        {viewMode === "grid" ? (
-                          <PropertyCard
-                            imagen=""
-                            estado={property.type}
-                            precio={
-                              property.currency === "USD"
-                                ? `$${property.price.toLocaleString("es-BO")} USD`
-                                : `Bs ${property.price.toLocaleString("es-BO")}`
-                            }
-                            descripcion={property.title}
-                            camas={3}
-                            banos={2}
-                            metros={150}
-                          />
-                        ) : (
-                          <PropertyRow
-                            title={property.title}
-                            price={
-                              property.currency === "USD"
-                                ? `$${property.price.toLocaleString("es-BO")} USD`
-                                : `Bs ${property.price.toLocaleString("es-BO")}`
-                            }
-                            size="3 Dorm. • 150 m²"
-                            contactType="whatsapp"
-                            image=""
-                          />
-                        )}
-                      </div>
-                    ))}
+                        <ChevronUp size={18} />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setSheetState('peek')
+                        }}
+                        className="text-stone-400 hover:text-stone-600 p-1"
+                      >
+                        <ChevronDown size={18} />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Contenido scrolleable */}
+              <div className="flex flex-col flex-1 overflow-hidden">
+                {/* Card de propiedad seleccionada desde el mapa */}
+                {pinnedProperty && (
+                  <div className="mx-4 mb-3 relative shrink-0">
+                    <button
+                      onClick={() => {
+                        setPinnedProperty(null)
+                        setSelectedPropertyId(null)
+                      }}
+                      className="absolute top-2 right-2 z-10 bg-white rounded-full p-1 shadow text-stone-400 hover:text-stone-600"
+                    >
+                      <X size={14} />
+                    </button>
+                    <div className="ring-2 ring-orange-400 rounded-xl overflow-hidden">
+                      <PropertyCard
+                        imagen=""
+                        estado={pinnedProperty.type}
+                        precio={
+                          pinnedProperty.currency === 'USD'
+                            ? `$${pinnedProperty.price.toLocaleString('es-BO')} USD`
+                            : `Bs ${pinnedProperty.price.toLocaleString('es-BO')}`
+                        }
+                        descripcion={pinnedProperty.title}
+                        camas={3}
+                        banos={2}
+                        metros={150}
+                      />
+                    </div>
                   </div>
                 )}
               </div>
