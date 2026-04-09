@@ -176,13 +176,13 @@ export default function MapView({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
+        {/* Fix gray area — DEBE estar dentro de MapContainer */}
+        <MapResizer />
+
         <ZoomControls />
 
         {selectedProperty && (
-          <FlyToSelected
-            lat={selectedProperty.lat}
-            lng={selectedProperty.lng}
-          />
+          <FlyToSelected lat={selectedProperty.lat} lng={selectedProperty.lng} />
         )}
 
         <Marker position={center} icon={createGpsIcon()}>
@@ -204,66 +204,50 @@ export default function MapView({
           spiderfyDistanceMultiplier={2}
           removeOutsideVisibleBounds={false}
           clusterPane="markerPane"
+          // Fix HU-02-06: en móvil el tap de Leaflet no siempre llega al plugin
+          eventHandlers={{
+            clusterclick: (e: any) => {
+              e.layer.zoomToBounds({ padding: [20, 20] })
+            }
+          }}
         >
           {properties.map((property) => {
-            const isSelected = property.id === selectedId;
-
+            const isSelected = property.id === selectedId
             return (
               <Marker
                 key={property.id}
                 position={[property.lat, property.lng]}
-                icon={
-                  isSelected
-                    ? createSelectedIcon(property.type)
-                    : createPinIcon(property.type)
-                }
-                eventHandlers={{
-                  click: () => onSelect?.(property.id),
-                }}
+                icon={isSelected ? createSelectedIcon(property.type) : createPinIcon(property.type)}
+                eventHandlers={{ click: () => onSelect?.(property.id) }}
               >
                 <Popup>
                   <div className="text-sm min-w-[160px]">
-                    <p className="font-semibold text-gray-800 mb-1">
-                      {property.title}
-                    </p>
-                    <p
-                      className="font-bold"
-                      style={{ color: PIN_LABEL[property.type] }}
-                    >
+                    <p className="font-semibold text-gray-800 mb-1">{property.title}</p>
+                    <p className="font-bold" style={{ color: PIN_LABEL[property.type] }}>
                       {formatPrice(property.price, property.currency)}
                     </p>
-                    <p className="text-gray-500 capitalize mt-1">
-                      {property.type}
-                    </p>
+                    <p className="text-gray-500 capitalize mt-1">{property.type}</p>
                   </div>
                 </Popup>
               </Marker>
-            );
+            )
           })}
         </MarkerClusterGroup>
       </MapContainer>
     </div>
-  );
+  )
 }
 
 function FlyToSelected({ lat, lng }: { lat: number; lng: number }) {
-  const map = useMap();
+  const map = useMap()
 
   useEffect(() => {
-    if (!lat || !lng) return;
+    if (!lat || !lng) return
+    const targetZoom = 18
+    map.flyTo([lat, lng], targetZoom, { duration: 1.2 })
+    const timeout = setTimeout(() => map.setView([lat, lng], targetZoom), 1200)
+    return () => clearTimeout(timeout)
+  }, [lat, lng, map])
 
-    const targetZoom = 18;
-
-    map.flyTo([lat, lng], targetZoom, {
-      duration: 1.2,
-    });
-
-    const timeout = setTimeout(() => {
-      map.setView([lat, lng], targetZoom);
-    }, 1200);
-
-    return () => clearTimeout(timeout);
-  }, [lat, lng, map]);
-
-  return null;
+  return null
 }
