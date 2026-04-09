@@ -2,7 +2,16 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import nextDynamic from 'next/dynamic'
-import { ChevronLeft, ChevronRight, List as ListIcon, LayoutGrid, Filter } from 'lucide-react'
+import {
+  ChevronLeft,
+  ChevronRight,
+  List as ListIcon,
+  LayoutGrid,
+  Filter,
+  ChevronUp,
+  ChevronDown,
+  X
+} from 'lucide-react'
 
 // === HOOKS ===
 import { useProperties } from '@/hooks/useProperties'
@@ -25,21 +34,60 @@ const MapView = nextDynamic(() => import('./MapView'), {
   )
 })
 
-// Componente con la lógica interna (necesita Suspense por useSearchParams en useProperties)
+// Hooks mobile (no afectan si no se usan aún)
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${breakpoint - 1}px)`)
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches)
+
+    mql.addEventListener('change', handler)
+    setIsMobile(mql.matches)
+
+    return () => mql.removeEventListener('change', handler)
+  }, [breakpoint])
+
+  return isMobile
+}
+
+function useIsLandscapeMobile() {
+  const [isLandscape, setIsLandscape] = useState(false)
+
+  useEffect(() => {
+    const handler = () => {
+      setIsLandscape(window.innerWidth > window.innerHeight && window.innerHeight < 500)
+    }
+
+    window.addEventListener('resize', handler)
+    window.addEventListener('orientationchange', handler)
+
+    handler()
+
+    return () => {
+      window.removeEventListener('resize', handler)
+      window.removeEventListener('orientationchange', handler)
+    }
+  }, [])
+
+  return isLandscape
+}
+
 function BusquedaMapaContent() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
   const { properties, isLoading, error } = useProperties()
+
   const { ordenActual, cambiarOrden } = useOrdenamiento({
     inmuebles: properties
   })
 
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
-  const [isHoveringList, setIsHoveringList] = useState(false) // Controlar hover en tarjeta inmueble
+  const [isHoveringList, setIsHoveringList] = useState(false)
 
-  // Hover con debounce de 200 ms → vuela el mapa al marcador
+  // Hover con debounce → flyTo
   useEffect(() => {
     if (!hoveredId) {
       if (!isHoveringList) {
@@ -57,9 +105,8 @@ function BusquedaMapaContent() {
     return () => clearTimeout(timeout)
   }, [hoveredId, isHoveringList])
 
-  //Sincronización del mapa con el colapso del panel lateral
+  // Resize sync mapa
   useEffect(() => {
-    // 300ms es exactamente el tiempo que dura su clase 'duration-300'
     const resizeTimeout = setTimeout(() => {
       window.dispatchEvent(new Event('resize'))
     }, 300)
@@ -69,91 +116,54 @@ function BusquedaMapaContent() {
 
   return (
     <div className="flex flex-col bg-white w-full h-[calc(100dvh-80px)] md:h-[calc(100dvh-99px)] overflow-hidden">
-      <FilterBar
-        variant="map"
-        onSearch={(nuevosFiltros) => {
-          console.log('🔍 Buscando con filtros:', nuevosFiltros)
-        }}
-      />
+      <FilterBar variant="map" />
 
       <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200">
-        {/* Panel lateral colapsable */}
+        {/* SIDEBAR */}
         <aside
           className={`bg-white border-r border-stone-200 flex flex-col z-10 transition-all duration-300 min-h-0 overflow-hidden ${
-        isSidebarOpen 
-              ? "w-full md:w-[450px] h-[65dvh] md:h-full" 
-              : "w-0"
+            isSidebarOpen ? 'w-full md:w-[450px] h-[65dvh] md:h-full' : 'w-0'
           }`}
         >
           {isSidebarOpen && (
             <div className="flex flex-col h-full min-h-0">
-              {/* Cabecera del panel (FUSIONADA) */}
               <div className="p-4 bg-white shrink-0">
                 <div className="flex justify-between items-center mb-4">
-                  {/* Lado Izquierdo: Título y cantidad */}
-                  <div className="flex flex-col">
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-1">
-                        <Filter className="w-4 h-4 text-orange-500" />
-                        <h1 className="text-base font-semibold text-stone-900 uppercase tracking-wide">
-                          Filtros{' '}
-                        </h1>
-                      </div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <h1 className="text-xl font-semibold text-slate-800">
-                          Resultados de búsqueda
-                        </h1>
-                      </div>
-                      <h2 className="text-sm font-bold text-slate-900">
-                        <span className="text-orange-500">{properties.length}</span>
-                        <span className="ml-2 text-gray-600 font-normal text-sm">
-                          {properties.length === 1
-                            ? 'propiedad encontrada'
-                            : 'propiedades encontradas'}
-                        </span>
-                      </h2>
+                  <div>
+                    <div className="flex items-center gap-1">
+                      <Filter className="w-4 h-4 text-orange-500" />
+                      <h1 className="text-base font-semibold uppercase">Filtros</h1>
                     </div>
+
+                    <h2 className="text-sm mt-2">
+                      <span className="text-orange-500 font-bold">{properties.length}</span>{' '}
+                      resultados
+                    </h2>
                   </div>
 
-                  {/* Lado Derecho: SOLO Botón cerrar */}
-                  <button
-                    onClick={() => setIsSidebarOpen(false)}
-                    className="p-1 hover:bg-stone-100 rounded-full transition-colors text-stone-400"
-                  >
+                  <button onClick={() => setIsSidebarOpen(false)}>
                     <ChevronLeft size={20} />
                   </button>
                 </div>
 
-                {/* Contenedor relativo para el Menú y el Switch flotante */}
-                {/* Aumentamos pb-4 para darle espacio al posicionamiento absoluto */}
-                <div className="relative border-b border-stone-100 pb-4 [&>div]:mb-0">
-                  <MenuOrdenamiento
-                    totalResultados={properties.length}
-                    ordenActual={ordenActual}
-                    onOrdenChange={cambiarOrden}
-                  />
+                <MenuOrdenamiento
+                  totalResultados={properties.length}
+                  ordenActual={ordenActual}
+                  onOrdenChange={cambiarOrden}
+                />
 
-                  {/* NUEVO: Switch flotante alineado a la derecha de los filtros */}
-                  <div className="absolute right-0 bottom-4 flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90 origin-bottom-right">
-                    <button
-                      onClick={() => setViewMode('grid')}
-                      className={`p-1 rounded transition-colors ${viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'}`}
-                    >
-                      <LayoutGrid size={16} />
-                    </button>
-                    <button
-                      onClick={() => setViewMode('list')}
-                      className={`p-1 rounded transition-colors ${viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'}`}
-                    >
-                      <ListIcon size={16} />
-                    </button>
-                  </div>
+                <div className="flex gap-2 mt-2">
+                  <button onClick={() => setViewMode('grid')}>
+                    <LayoutGrid size={16} />
+                  </button>
+                  <button onClick={() => setViewMode('list')}>
+                    <ListIcon size={16} />
+                  </button>
                 </div>
               </div>
 
-              {/* Lista de propiedades con hover → fly-to en mapa */}
               <div
-                className="flex-1 min-h-0 overflow-y-auto p-4 bg-stone-50 no-scrollbar"
+                className="flex-1 overflow-y-auto p-4 bg-stone-50"
                 onMouseEnter={() => setIsHoveringList(true)}
                 onMouseLeave={() => {
                   setIsHoveringList(false)
@@ -161,85 +171,46 @@ function BusquedaMapaContent() {
                   setHoveredId(null)
                 }}
               >
-                {isLoading ? (
-                  <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
-                    <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
-                    Actualizando resultados...
-                  </div>
-                ) : properties.length === 0 ? (
-                  <EmptyState />
-                ) : (
+                {properties.map((property: any) => (
                   <div
-                    className={`gap-4 flex flex-col ${viewMode === 'list' ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm' : ''}`}
+                    key={property.id}
+                    onMouseEnter={() => setHoveredId(property.id)}
+                    onClick={() => setSelectedPropertyId(property.id)}
+                    className={`cursor-pointer ${
+                      selectedPropertyId === property.id ? 'ring-2 ring-orange-400' : ''
+                    }`}
                   >
-                    {properties.map((property: any) => (
-                      <div
-                        key={property.id}
-                        onMouseEnter={() => setHoveredId(property.id)}
-                        onMouseLeave={() => setHoveredId(null)}
-                        onClick={() => setSelectedPropertyId(property.id)}
-                        // 1. SOLO clases base aquí (cursor, transición, bordes)
-                        className={`cursor-pointer transition-all duration-200 rounded-xl relative ${
-                          // 2. SOLO aquí va la reducción (porque solo afecta al Grid)
-                          viewMode === 'grid'
-                            ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
-                            : // 3. Vista de lista limpia
-                              'w-full py-1 hover:bg-stone-100'
-                        } ${
-                          selectedPropertyId === property.id
-                            ? 'ring-2 ring-orange-400 ring-offset-1 z-10'
-                            : ''
-                        }`}
-                      >
-                        {viewMode === 'grid' ? (
-                          <PropertyCard
-                            imagen=""
-                            estado={property.type}
-                            precio={
-                              property.currency === 'USD'
-                                ? `$${property.price.toLocaleString('es-BO')} USD`
-                                : `Bs ${property.price.toLocaleString('es-BO')}`
-                            }
-                            descripcion={property.title}
-                            camas={3}
-                            banos={2}
-                            metros={150}
-                          />
-                        ) : (
-                          <PropertyRow
-                            title={property.title}
-                            price={
-                              property.currency === 'USD'
-                                ? `$${property.price.toLocaleString('es-BO')} USD`
-                                : `Bs ${property.price.toLocaleString('es-BO')}`
-                            }
-                            size="3 Dorm. • 150 m²"
-                            contactType="whatsapp"
-                            image=""
-                          />
-                        )}
-                      </div>
-                    ))}
+                    {viewMode === 'grid' ? (
+                      <PropertyCard
+                        imagen=""
+                        estado={property.type}
+                        precio={property.price}
+                        descripcion={property.title}
+                        camas={3}
+                        banos={2}
+                        metros={150}
+                      />
+                    ) : (
+                      <PropertyRow
+                        title={property.title}
+                        price={property.price}
+                        size="150m²"
+                        contactType="whatsapp"
+                        image=""
+                      />
+                    )}
                   </div>
-                )}
+                ))}
               </div>
             </div>
           )}
         </aside>
 
-        {/* Área del mapa */}
-<section className="relative bg-stone-200 w-full h-[35dvh] md:flex-1 md:h-auto min-w-0">
-          {/* Botón para reabrir el panel cuando está colapsado */}
+        {/* MAPA */}
+        <section className="relative bg-stone-200 w-full h-[35dvh] md:flex-1 md:h-auto">
           {!isSidebarOpen && (
-            <button
-              onClick={() => setIsSidebarOpen(true)}
-              className="absolute left-0 top-4 z-[1000] bg-white text-black shadow-md rounded-r-md flex flex-col items-center py-4 px-2 gap-4 hover:bg-stone-50 transition-colors"
-            >
-              <ChevronRight size={16} />
-              <span className="[writing-mode:vertical-lr] rotate-180 text-[10px] font-bold tracking-widest uppercase text-stone-600">
-                Inmuebles
-              </span>
-              <ListIcon size={16} className="text-stone-500" />
+            <button onClick={() => setIsSidebarOpen(true)}>
+              <ChevronRight />
             </button>
           )}
 
@@ -262,13 +233,7 @@ export const dynamic = 'force-dynamic'
 
 export default function BusquedaMapaPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="h-screen w-screen flex items-center justify-center bg-white text-gray-500 italic">
-          Cargando buscador de PropBol...
-        </div>
-      }
-    >
+    <Suspense fallback={<div>Cargando...</div>}>
       <BusquedaMapaContent />
     </Suspense>
   )
