@@ -130,68 +130,73 @@ export default function FilterBar({
       : "bg-white shadow-lg rounded-[30px] p-6 flex flex-col gap-6 w-full max-w-[921px]";
 
   return (
-    <form className={containerStyles}>
-      {/* 🔹 Modo venta/alquiler */}
-      <div className="w-full md:w-auto">
-        <TransactionModeFilter
-          modoSeleccionado={modosSeleccionados}
-          onModoChange={setModosSeleccionados}
-        />
+    <form className={containerStyles} onSubmit={handleSearch}>
+      
+      {/* =========================================
+          FILA SUPERIOR: Tipo y Ubicación (Centrada)
+          ========================================= */}
+      <div className={`flex w-full ${variant === "map" ? "justify-center" : ""}`}>
+        <div className={`flex items-end gap-3 ${variant === "map" ? "w-full max-w-2xl" : "w-full"}`}>
+           {/* 🔸 Tipo */}
+           <div className="w-full md:w-64 shrink-0">
+             <ComboBox
+               label={variant === "map" ? "" : "Tipo"}
+               placeholder="Cualquier tipo"
+               icon={Home}
+               options={["Casa", "Departamento", "Terreno", "Cuarto", "Espacios", "Cementerio"]}
+               onChange={(val: string) => setTipoInmueble(val)}
+               value={tipoInmueble}
+             />
+           </div>
+
+           {/* 🔸 Ubicación */}
+           <div className="w-full flex-1">
+             <LocationSearch
+               value={ubicacionTexto}
+               onChange={(val: LocationValue) => {
+                 const text = typeof val === "string" ? val : val?.nombre || val?.target?.value || "";
+                 setUbicacionTexto(text);
+               }}
+             />
+           </div>
+        </div>
       </div>
 
-      {/* 🔹 CONTENIDO PRINCIPAL */}
-      <div className="flex flex-col md:flex-row w-full gap-3">
-        {/* 🔸 Tipo */}
-        <div className="w-full md:w-48">
-          <ComboBox
-            label={variant === "map" ? "" : "Tipo"}
-            placeholder="Cualquier tipo"
-            icon={Home}
-            options={[
-              "Casa",
-              "Departamento",
-              "Terreno",
-              "Cuarto",
-              "Espacios",
-              "Cementerio",
-            ]}
-            onChange={(val: string) => setTipoInmueble(val)}
-          />
+      {/* =========================================
+          FILA INFERIOR: Modos, Botones Mock y Buscar
+          ========================================= */}
+      <div 
+        className={`flex items-center justify-between w-full ${
+          variant === "map"
+            ? "flex-nowrap overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] gap-4"
+            : "flex-col md:flex-row flex-wrap gap-3"
+        }`}
+      >
+        <div className="flex items-center gap-4 shrink-0">
+            {/* 🔹 Modo venta/alquiler */}
+            <TransactionModeFilter
+              modoSeleccionado={modosSeleccionados}
+              onModoChange={setModosSeleccionados}
+            />
+
+            {/* 🔸 NUEVOS BOTONES MOCKUP (Solo visibles en el mapa) */}
+            {variant === "map" && (
+              <>
+                <MockFilterBtn icon={DollarSign} text="Precio" />
+                <MockFilterBtn icon={Users} text="Capacidad" />
+                <MockFilterBtn icon={Maximize} text="Metros" />
+                <MockFilterBtn icon={SlidersHorizontal} text="Más Filtros" hasChevron={false} />
+              </>
+            )}
         </div>
 
-        {/* 🔸 Ubicación */}
-        <div className="w-full flex-1">
-          <LocationSearch
-            value={ubicacionTexto}
-            onChange={(val: LocationValue) => {
-              const text =
-                typeof val === "string"
-                  ? val
-                  : val?.nombre || val?.target?.value || "";
-              setUbicacionTexto(text);
-            }}
-          />
-        </div>
-
-        {/* 🔸 NUEVOS BOTONES ACORDE AL MOCKUP (Solo visibles en el mapa) */}
-        {variant === "map" && (
-          <>
-            <MockFilterBtn icon={DollarSign} text="Precio" />
-            <MockFilterBtn icon={Users} text="Capacidad" />
-            <MockFilterBtn icon={Maximize} text="Metros" />
-            <MockFilterBtn icon={SlidersHorizontal} text="Más Filtros" hasChevron={false} />
-          </>
-        )}
-
-        {/* 🔸 Botón */}
-        <div className="w-full md:w-auto">
+        {/* 🔸 Botón Buscar */}
+        <div className="shrink-0">
           <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              handleSearch();
-            }}
-            className="w-full md:w-auto h-[46px] px-6 bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95"
+            type="submit"
+            className={`${
+              variant === "map" ? "h-[46px] px-6" : "w-full md:w-auto h-[46px] px-10"
+            } bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95`}
           >
             <SearchIcon size={18} />
             {variant === "map" ? "" : "BUSCAR"}
