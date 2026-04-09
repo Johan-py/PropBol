@@ -105,7 +105,7 @@ function BusquedaMapaContent() {
                   </button>
                 </div>
 
-                <div className="border-b border-stone-100 pb-4">
+                <div className="border-b border-stone-100 pb-4 [&>div>div:first-child]:hidden">
                   <MenuOrdenamiento
                     totalResultados={properties.length}
                     ordenActual={ordenActual}
