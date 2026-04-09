@@ -1,27 +1,34 @@
-'use client'
+"use client";
 
-import 'leaflet/dist/leaflet.css'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import MarkerClusterGroup from 'react-leaflet-cluster'
-import L from 'leaflet'
-import { useMap } from 'react-leaflet'
-import { useEffect, useState } from 'react'
+import "leaflet/dist/leaflet.css";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-cluster";
+import L from "leaflet";
+import { useMap } from "react-leaflet";
+import { useEffect, useState } from "react";
 
-import ZoomControls from '@/components/ZoomControls'
-import { createGpsIcon } from '@/components/GpsPin'
-import { createClusterIcon, CLUSTER_CONFIG } from '@/lib/clusterIcon'
+import ZoomControls from "@/components/ZoomControls";
+import { createGpsIcon } from "@/components/GpsPin";
+import { createClusterIcon, CLUSTER_CONFIG } from "@/lib/clusterIcon";
 
-import type { PropertyMapPin } from '@/types/property'
+import type { PropertyMapPin } from "@/types/property";
 
+<<<<<<< HEAD
 // Fix íconos default de Leaflet en Next.js
 if (typeof window !== 'undefined') {
   delete (L.Icon.Default.prototype as any)._getIconUrl
+=======
+// Fix íconos default de Leaflet en Next.js (guard SSR)
+if (typeof window !== "undefined") {
+  delete (L.Icon.Default.prototype as any)._getIconUrl;
+>>>>>>> b9cba58 (fix(HU2): cambios en MapView para responsive movil)
   L.Icon.Default.mergeOptions({
-    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
-  })
+    iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  });
 }
 
+<<<<<<< HEAD
 // soporta oficina y local
 const PIN_FILL: Record<string, string> = {
   casa: '#3b82f6',
@@ -62,9 +69,45 @@ function createPinIcon(type: string): L.DivIcon {
   const outer = 28
   const inner = 20
   const half = outer / 2
+=======
+const PIN_FILL: Record<string, string> = {
+  casa: "#3b82f6",
+  departamento: "#8b5cf6",
+  terreno: "#f59e0b",
+  local: "#10b981",
+};
+
+const PIN_HALO: Record<string, string> = {
+  casa: "rgba(59,  130, 246, 0.25)",
+  departamento: "rgba(139, 92,  246, 0.25)",
+  terreno: "rgba(245, 158, 11,  0.25)",
+  local: "rgba(16,  185, 129, 0.25)",
+};
+
+const PIN_LABEL: Record<string, string> = {
+  casa: "#2563eb",
+  departamento: "#7c3aed",
+  terreno: "#d97706",
+  local: "#059669",
+};
+
+const SELECTED_ICONS: Record<string, string> = {
+  casa: "/house.svg",
+  departamento: "/department.svg",
+  terreno: "/land.svg",
+  local: "/local.svg",
+};
+
+function createPinIcon(type: string): L.DivIcon {
+  const fill = PIN_FILL[type] ?? "#6b7280";
+  const halo = PIN_HALO[type] ?? "rgba(107,114,128,0.25)";
+  const outer = 28;
+  const inner = 20;
+  const half = outer / 2;
+>>>>>>> b9cba58 (fix(HU2): cambios en MapView para responsive movil)
 
   return L.divIcon({
-    className: '',
+    className: "",
     html: `
       <div style="width:${outer}px;height:${outer}px;display:flex;align-items:center;justify-content:center;">
         <div style="position:absolute;width:${outer}px;height:${outer}px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background-color:${halo};"></div>
@@ -72,10 +115,11 @@ function createPinIcon(type: string): L.DivIcon {
       </div>`,
     iconSize: [outer, outer],
     iconAnchor: [half, outer],
-    popupAnchor: [0, -outer]
-  })
+    popupAnchor: [0, -outer],
+  });
 }
 
+<<<<<<< HEAD
 function MapClickHandler({ onMapClick }: { onMapClick: () => void }) {
   const map = useMap()
 
@@ -102,8 +146,12 @@ function createSelectedIcon(type: string, isHover: boolean = false): L.DivIcon {
   const iconPath = SELECTED_ICONS[type]
   const scale = isHover ? 1.8 : 1.6
 
+=======
+function createSelectedIcon(type: PropertyMapPin["type"]): L.DivIcon {
+  const iconPath = SELECTED_ICONS[type];
+>>>>>>> b9cba58 (fix(HU2): cambios en MapView para responsive movil)
   return L.divIcon({
-    className: '',
+    className: "",
     html: `
       <div style="display:flex;align-items:center;justify-content:center;transform:scale(${scale});">
         <div style="width:36px;height:36px;border-radius:50%;background-color:#ef4444;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.35);border:2px solid white;">
