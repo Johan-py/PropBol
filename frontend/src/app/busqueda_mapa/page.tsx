@@ -82,6 +82,11 @@ function BusquedaMapaContent() {
                       <Filter className="w-4 h-4 text-orange-500" />
                       <h1 className="text-base font-semibold text-stone-900 uppercase tracking-wide">Filtros </h1>
                       </div>
+                      <div className="flex items-center gap-2 mb-2">
+                       <h1 className="text-xl font-semibold text-slate-800">
+                          Resultados de búsqueda
+                          </h1>
+                         </div>
                     <h2 className="text-sm font-bold text-slate-900">
                       <span className="text-orange-500">
                         {properties.length}
