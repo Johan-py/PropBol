@@ -80,7 +80,9 @@ function BusquedaMapaContent() {
         {/* Panel lateral colapsable */}
         <aside
           className={`bg-white border-r border-stone-200 flex flex-col z-10 transition-all duration-300 min-h-0 overflow-hidden ${
-            isSidebarOpen ? 'w-full md:w-[450px] h-[65dvh] md:h-full' : 'w-0'
+        isSidebarOpen 
+              ? "w-full md:w-[450px] h-[65dvh] md:h-full" 
+              : "w-0"
           }`}
         >
           {isSidebarOpen && (
@@ -226,7 +228,7 @@ function BusquedaMapaContent() {
         </aside>
 
         {/* Área del mapa */}
-        <section className="relative bg-stone-200 w-full h-[35dvh] md:flex-1 md:h-auto">
+<section className="relative bg-stone-200 w-full h-[35dvh] md:flex-1 md:h-auto min-w-0">
           {/* Botón para reabrir el panel cuando está colapsado */}
           {!isSidebarOpen && (
             <button
