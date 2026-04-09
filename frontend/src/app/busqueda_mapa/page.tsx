@@ -7,6 +7,7 @@ import {
   ChevronRight,
   List as ListIcon,
   LayoutGrid,
+  Filter,
 } from "lucide-react";
 
 // === HOOKS ===
@@ -44,15 +45,25 @@ function BusquedaMapaContent() {
     null,
   );
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [isHoveringList, setIsHoveringList] = useState(false); // Controlar hover en tarjeta inmueble
 
   // Hover con debounce de 200 ms → vuela el mapa al marcador
   useEffect(() => {
-    if (!hoveredId) return;
-    const timeout = setTimeout(() => {
+  if (!hoveredId) {
+    if (!isHoveringList) {
+      setSelectedPropertyId(null);
+    }
+    return;
+  }
+  
+  const timeout = setTimeout(() => {
+    if (isHoveringList) {
       setSelectedPropertyId(hoveredId);
-    }, 200);
-    return () => clearTimeout(timeout);
-  }, [hoveredId]);
+    }
+  }, 200);
+  
+  return () => clearTimeout(timeout);
+  }, [hoveredId, isHoveringList]);
 
   //Sincronización del mapa con el colapso del panel lateral
   useEffect(() => {
@@ -87,16 +98,27 @@ function BusquedaMapaContent() {
                 <div className="flex justify-between items-center mb-4">
                   {/* Lado Izquierdo: Título y cantidad */}
                   <div className="flex flex-col">
-                    <h2 className="text-2xl font-bold text-slate-900">
+                    <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-1">
+                      <Filter className="w-4 h-4 text-orange-500" />
+                      <h1 className="text-base font-semibold text-stone-900 uppercase tracking-wide">Filtros </h1>
+                      </div>
+                      <div className="flex items-center gap-2 mb-2">
+                       <h1 className="text-xl font-semibold text-slate-800">
+                          Resultados de búsqueda
+                          </h1>
+                         </div>
+                    <h2 className="text-sm font-bold text-slate-900">
                       <span className="text-orange-500">
                         {properties.length}
                       </span>
-                      <span className="ml-2 text-gray-600 font-normal text-lg">
+                      <span className="ml-2 text-gray-600 font-normal text-sm">
                         {properties.length === 1
                           ? "propiedad encontrada"
                           : "propiedades encontradas"}
                       </span>
                     </h2>
+                    </div>
                   </div>
 
                   {/* Lado Derecho: SOLO Botón cerrar */}
@@ -137,7 +159,14 @@ function BusquedaMapaContent() {
               
 
               {/* Lista de propiedades con hover → fly-to en mapa */}
-              <div className="flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar">
+              <div className="flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar"
+                  onMouseEnter={() => setIsHoveringList(true)}
+                  onMouseLeave={() => {
+                   setIsHoveringList(false);
+                   setSelectedPropertyId(null);
+                   setHoveredId(null);
+                 }} 
+              >
                 {isLoading ? (
                   <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
                     <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
