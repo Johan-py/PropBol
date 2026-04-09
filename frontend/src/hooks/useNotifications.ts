@@ -82,7 +82,6 @@ const requestJson = async <T>(url: string, init?: RequestInit): Promise<T> => {
       timeoutError.status = 408
       throw timeoutError
     }
-
     throw error
   } finally {
     window.clearTimeout(timeout)
@@ -130,7 +129,6 @@ export function useNotifications() {
 
   const emitNotificationsUpdated = useCallback(() => {
     if (typeof window === 'undefined') return
-
     window.dispatchEvent(
       new CustomEvent(NOTIFICATIONS_UPDATED_EVENT, {
         detail: { source: instanceId.current }
@@ -234,7 +232,6 @@ export function useNotifications() {
       setTotal(response.total)
     } catch (err) {
       const error = err as Error & { status?: number }
-
       if (error.status === 401) {
         clearNotificationsState()
         return
