@@ -1,7 +1,7 @@
 // frontend/src/components/layout/PropertyCard.tsx
 import Image from "next/image";
-import { BedDouble, Bath, Square, ImageOff } from "lucide-react"; // Quité MessageSquareText porque ya viene en tu botón
-import ContactButton from "../galeria/ContactButton"; // <-- Tu botón modular importado
+import { BedDouble, Bath, Square, ImageOff } from "lucide-react";
+import ContactButton from "../galeria/ContactButton";
 import { useState } from "react";
 
 type PropsTarjeta = {
@@ -14,7 +14,6 @@ type PropsTarjeta = {
   metros: number;
 };
 
-// 1. Definimos una constante para el color gris de fondo cuando no hay imagen
 const COLOR_GRIS_PLACEHOLDER = "bg-gray-200";
 
 export default function PropertyCard({
@@ -26,28 +25,31 @@ export default function PropertyCard({
   banos,
   metros,
 }: PropsTarjeta) {
-  const [isHovered, setIsHovered] = useState(false);  // ← AGREGAR ESTADO
+
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div 
-      className="grid grid-cols-[40px_70px_minmax(0,1fr)_50px] gap-2 px-3 py-2 items-center transition-all duration-200 hover:bg-gray-50 cursor-pointer"
-      onMouseEnter={() => setIsHovered(true)}   // ← AGREGAR
-      onMouseLeave={() => setIsHovered(false)}  // ← AGREGAR
+    <div
+      className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-300 border border-gray-100 group cursor-pointer"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-    
+
+      {/* Imagen */}
       <div
-        className={`relative aspect-[16/10] overflow-hidden ${!imagen ? COLOR_GRIS_PLACEHOLDER : ""} flex items-center justify-center`}
+        className={`relative aspect-[16/10] overflow-hidden ${
+          !imagen ? COLOR_GRIS_PLACEHOLDER : ""
+        } flex items-center justify-center`}
       >
         {imagen ? (
           <Image
             src={imagen}
             alt={descripcion}
             fill
-            sizes="(max-w-7xl) 30vw"
+            sizes="(max-width: 1200px) 30vw"
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
-          /* Icono de cámara tachada si no hay foto para que no se vea feo */
           <div className="flex flex-col items-center text-gray-400">
             <ImageOff className="w-12 h-12 mb-1" />
             <span className="text-[10px] font-medium uppercase">
@@ -61,35 +63,43 @@ export default function PropertyCard({
         </span>
       </div>
 
+      {/* Contenido */}
       <div className="p-4 flex flex-col gap-3">
-        <h2 
-           className={`font-extrabold text-gray-950 tracking-tight transition-all duration-300 ease-in-out ${
+
+        {/* Precio */}
+        <h2
+          className={`font-extrabold text-gray-950 tracking-tight transition-all duration-300 ${
             isHovered ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"
           }`}
         >
           {precio}
         </h2>
 
+        {/* Descripción */}
         <p className="text-sm text-gray-800 line-clamp-2 font-medium leading-relaxed min-h-[40px]">
           {descripcion}
         </p>
 
+        {/* Características */}
         <div className="flex items-center gap-4 text-gray-600 border-t border-gray-100 pt-3">
           <span className="flex items-center gap-1.5 text-sm font-semibold">
             <BedDouble className="w-4 h-4 text-[#ea580c]" /> {camas}
           </span>
+
           <span className="flex items-center gap-1.5 text-sm font-semibold">
             <Bath className="w-4 h-4 text-[#ea580c]" /> {banos}
           </span>
+
           <span className="flex items-center gap-1.5 text-sm font-semibold border border-gray-200 bg-gray-50 px-2 py-0.5 rounded">
             <Square className="w-4 h-4 text-gray-500" /> {metros} m²
           </span>
         </div>
 
-        {/* 3. Botón de contacto modular */}
+        {/* Botón contacto */}
         <div className="mt-1 w-full">
           <ContactButton type="whatsapp" variant="grid" />
         </div>
+
       </div>
     </div>
   );
