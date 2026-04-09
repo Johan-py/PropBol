@@ -21,7 +21,7 @@ if (typeof window !== "undefined") {
   });
 }
 
-// 🎨 estilos
+
 const PIN_FILL: Record<string, string> = {
   casa: "#3b82f6",
   departamento: "#8b5cf6",
@@ -54,7 +54,6 @@ const SELECTED_ICONS: Record<string, string> = {
   local: "/local.svg",
 };
 
-// 🟢 Pin normal
 function createPinIcon(type: string): L.DivIcon {
   const fill = PIN_FILL[type] ?? "#6b7280";
   const halo = PIN_HALO[type] ?? "rgba(107,114,128,0.25)";
@@ -71,7 +70,6 @@ function createPinIcon(type: string): L.DivIcon {
   });
 }
 
-// 🔴 Pin seleccionado / hover
 function createSelectedIcon(type: string, isHover = false): L.DivIcon {
   const scale = isHover ? 1.8 : 1.6;
   const iconPath = SELECTED_ICONS[type];
@@ -89,7 +87,6 @@ function createSelectedIcon(type: string, isHover = false): L.DivIcon {
   });
 }
 
-// 🧠 handlers
 function MapClickHandler({ onMapClick }: { onMapClick: () => void }) {
   const map = useMap();
   useEffect(() => {
@@ -108,7 +105,6 @@ function MapMouseHandler({ onLeave }: { onLeave: () => void }) {
   return null;
 }
 
-// 🔥 FIX GRAY AREA
 function MapResizer() {
   const map = useMap();
   useEffect(() => {
@@ -120,7 +116,6 @@ function MapResizer() {
   return null;
 }
 
-// 🎯 animación
 function FlyToSelected({ lat, lng }: { lat: number; lng: number }) {
   const map = useMap();
 
@@ -178,7 +173,12 @@ export default function MapView({
         </div>
       )}
 
-      <MapContainer center={center} zoom={zoom} zoomControl={false} style={{ height: "100%", width: "100%" }}>
+      <MapContainer
+        center={center}
+        zoom={zoom}
+        zoomControl={false}
+        style={{ height: "100%", width: "100%" }}
+      >
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
         <MapResizer />
