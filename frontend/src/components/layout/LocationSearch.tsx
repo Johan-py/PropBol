@@ -68,7 +68,10 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
 
     // Filtro: Solo letras (incluye tildes y ñ), números, espacios y guiones.
     // Todo lo demás (emojis, @, #, $, etc.) se elimina al instante.
-    const cleanValue = rawValue.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-]/gi, "");
+    // Si el usuario presiona "Espacio" con el input vacío, el valor se mantiene en "".
+    const cleanValue = rawValue
+      .replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-]/gi, "")
+      .trimStart();
 
     onChange(cleanValue);
   };
@@ -174,7 +177,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
       {isOpen && (
         <div className="absolute z-[100] w-full mt-2 bg-white border border-stone-200 rounded-xl shadow-xl overflow-hidden">
           {/* CASO A: MOSTRAR HISTORIAL (Input vacío) */}
-          {value.trim().length === 0 && history.length > 0 && (
+          {value === "" && history.length > 0 && (
             <div>
               <div className="px-4 py-2 bg-stone-50 border-b border-stone-100">
                 <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">
