@@ -1,0 +1,96 @@
+name: API Integration Tests
+
+on:
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+    branches: ["main", "develop"]
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      # ── Node.js y pnpm ──
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - name: Instalar dependencias del backend
+        run: cd backend && pnpm install
+
+      # ── Prisma ──
+      - name: Prisma generate
+        working-directory: backend
+        run: npx prisma generate
+        env:
+          DATABASE_URL: "postgresql://postgres:password@localhost:5432/testdb"
+
+      - name: Prisma migrate deploy (crea las tablas)
+        working-directory: backend
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: "postgresql://postgres:password@localhost:5432/testdb"
+
+      # ── Levantar backend en background ──
+      - name: Instalar wait-on globalmente
+        run: npm install -g wait-on
+
+      - name: Iniciar backend
+        working-directory: backend
+        run: pnpm dev &
+        env:
+          PORT: 5000
+          NODE_ENV: test
+          DATABASE_URL: "postgresql://postgres:password@localhost:5432/testdb"
+          JWT_SECRET: "ci_test_secret_key_no_usar_en_produccion"
+          FRONTEND_URL: "http://localhost:3000"
+
+      - name: Esperar a que el backend esté listo
+        run: wait-on http://localhost:5000/health --timeout 60000
+
+      # ── Python y pytest ──
+      - name: Setup Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Instalar dependencias de Python
+        run: pip install -r tests_api/requirements.txt
+
+      - name: Ejecutar tests de API
+        run: pytest tests_api/ -v --tb=short
+        env:
+          API_URL: "http://localhost:5000"
+
+      # ── Reporte opcional ──
+      - name: Subir reporte de tests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: report.html
