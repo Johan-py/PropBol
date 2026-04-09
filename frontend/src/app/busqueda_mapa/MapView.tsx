@@ -199,6 +199,7 @@ export default function MapView({
         tap={true}
         tapTolerance={15}
         style={{ height: "100%", width: "100%" }}
+        preferCanvas={true}
         className="z-0"
       >
         <TileLayer
