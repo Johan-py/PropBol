@@ -44,6 +44,11 @@ jobs:
         run: cd backend && pnpm install
 
       # ── Prisma ──
+      - name: Parche temporal al schema (inyectar URL)
+        working-directory: backend
+        run: |
+          sed -i 's/provider = "postgresql"/provider = "postgresql"\n  url = env("DATABASE_URL")/' prisma/schema.prisma
+
       - name: Prisma generate
         working-directory: backend
         run: npx prisma generate
