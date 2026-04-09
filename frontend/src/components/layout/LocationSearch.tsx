@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { MapPin, Search, Loader2, X, History } from 'lucide-react'
 import { usePopularidad } from '@/hooks/usePopularidad'
@@ -23,51 +22,51 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [history, setHistory] = useState<string[]>([])
-  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({})
   const containerRef = useRef<HTMLDivElement>(null)
+  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({})
 
   const { updateFilters } = useSearchFilters()
   const { registrarConsulta } = usePopularidad()
 
+  // ── Dropdown position: fixed so overflow:auto parents can't clip it ────────
   const recalcDropdown = () => {
     if (!containerRef.current) return
     const rect = containerRef.current.getBoundingClientRect()
-
     setDropdownStyle({
       position: 'fixed',
       top: rect.bottom + 8,
       left: rect.left,
       width: rect.width,
-      zIndex: 99999,
+      zIndex: 9999,
     })
   }
 
   useEffect(() => {
     if (!isOpen) return
     recalcDropdown()
-  }, [isOpen, value, suggestions.length])
+  }, [isOpen])
 
   useEffect(() => {
     if (!isOpen) return
     window.addEventListener('resize', recalcDropdown)
     window.addEventListener('scroll', recalcDropdown, true)
-
     return () => {
       window.removeEventListener('resize', recalcDropdown)
       window.removeEventListener('scroll', recalcDropdown, true)
     }
   }, [isOpen])
 
+  // ── Selección de ubicación ─────────────────────────────────────────────────
   const handleSelectLocation = (loc: Location) => {
     const fullName = `${loc.nombre} - ${loc.departamento} - Bolivia`
     updateFilters({ locationId: loc.id, query: fullName })
     onChange(fullName)
     saveToHistory(fullName)
-    setSuggestions([])
     setIsOpen(false)
     registrarConsulta(loc.id, fullName)
   }
 
+  // ── Historial ──────────────────────────────────────────────────────────────
   useEffect(() => {
     const savedHistory = localStorage.getItem('searchHistory')
     if (savedHistory) setHistory(JSON.parse(savedHistory))
@@ -79,39 +78,36 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     localStorage.setItem('searchHistory', JSON.stringify(updated))
   }
 
+  // ── Input sanitizado ───────────────────────────────────────────────────────
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const clean = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-]/gi, '')
     onChange(clean)
   }
 
-  const isSelected = value.trim().endsWith(' - Bolivia')
+  const isSelected = value.includes('Bolivia')
 
+  // ── Click outside ──────────────────────────────────────────────────────────
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setIsOpen(false)
       }
     }
-
-    document.addEventListener('click', handler)
-    return () => document.removeEventListener('click', handler)
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
   }, [])
 
+  // ── Fetch sugerencias ──────────────────────────────────────────────────────
   useEffect(() => {
     const fetchLocations = async () => {
       if (value.trim().length < 2 || isSelected) {
         setSuggestions([])
         return
       }
-
       setIsLoading(true)
-
       try {
         const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
-        const res = await fetch(
-          `${API_BASE}/api/locations/search?q=${encodeURIComponent(value)}`
-        )
-
+        const res = await fetch(`${API_BASE}/api/locations/search?q=${encodeURIComponent(value)}`)
         if (res.ok) {
           const data = await res.json()
           setSuggestions(data)
@@ -123,86 +119,12 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
         setIsLoading(false)
       }
     }
-
     const t = setTimeout(fetchLocations, 300)
     return () => clearTimeout(t)
   }, [value, isSelected])
 
-  const dropdown = isOpen ? (
-    <div
-      className="bg-white border border-stone-200 rounded-xl shadow-xl overflow-hidden"
-      style={dropdownStyle}
-    >
-      {value === '' && history.length > 0 && (
-        <div>
-          <div className="px-4 py-2 bg-stone-50 border-b border-stone-100">
-            <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">
-              Búsquedas recientes
-            </span>
-          </div>
-          {history.map((item, idx) => (
-            <button
-              key={`hist-${idx}`}
-              type="button"
-              onClick={() => {
-                onChange(item)
-                setIsOpen(false)
-                updateFilters({ query: item })
-              }}
-              className="w-full px-4 py-3 flex items-center gap-3 hover:bg-amber-50 transition-colors text-left border-b border-stone-50 last:border-0"
-            >
-              <History className="w-3.5 h-3.5 text-stone-300" />
-              <span className="text-sm text-stone-600">{item}</span>
-            </button>
-          ))}
-        </div>
-      )}
-
-      {value.trim().length >= 2 && !isSelected && (
-        <>
-          {isLoading ? (
-            <div className="px-4 py-6 text-center flex flex-col items-center gap-2">
-              <Loader2 className="w-5 h-5 animate-spin text-amber-600" />
-              <span className="text-sm text-stone-500 italic">Buscando zonas...</span>
-            </div>
-          ) : suggestions.length > 0 ? (
-            <div className="max-h-[300px] overflow-y-auto">
-              {suggestions.slice(0, 5).map((loc) => (
-                <button
-                  key={loc.id}
-                  type="button"
-                  onClick={() => handleSelectLocation(loc)}
-                  className="w-full px-4 py-3 flex items-center justify-between hover:bg-amber-50 transition-colors text-left border-b border-stone-50 last:border-0"
-                >
-                  <div className="flex items-center gap-3">
-                    <Search className="w-3.5 h-3.5 text-stone-500" />
-                    <span className="text-sm font-bold text-stone-600">
-                      {loc.nombre} - {loc.departamento} - Bolivia
-                    </span>
-                  </div>
-                  <Image
-                    src="https://flagcdn.com/w20/bo.png"
-                    alt="BO"
-                    width={20}
-                    height={14}
-                    className="rounded-sm"
-                  />
-                </button>
-              ))}
-            </div>
-          ) : (
-            <div className="px-4 py-8 text-center bg-stone-50/50">
-              <p className="text-sm text-stone-600 font-medium">No se encontraron resultados</p>
-              <p className="text-xs text-stone-400 mt-1 italic">Pruebe con "Cala Cala"</p>
-            </div>
-          )}
-        </>
-      )}
-    </div>
-  ) : null
-
   return (
-    <div className="w-full relative z-[60]" ref={containerRef}>
+    <div className="w-full relative" ref={containerRef}>
       <label className="block text-sm font-medium text-stone-700 mb-2 text-left md:text-center uppercase tracking-wide font-montserrat">
         Ciudad / Zona
       </label>
