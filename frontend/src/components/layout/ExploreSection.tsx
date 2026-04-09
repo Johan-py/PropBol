@@ -10,7 +10,7 @@ import { useSearchFilters } from "@/hooks/useSearchFilters";
 const searchOptions = [
   { id: "venta", name: "Venta" },
   { id: "alquiler", name: "Alquiler" },
-  { id: "anticretico", name: "Anticrético" },
+  { id: "anticreto", name: "Anticrético" },
 ];
 
 export default function ExploreSection() {
@@ -52,16 +52,20 @@ export default function ExploreSection() {
       tipoMap[propertyType] ||
       (propertyType !== "Cualquier tipo" ? propertyType.toUpperCase() : "");
 
-    updateFilters({
-      tipoInmueble: tipoFinal ? [tipoFinal] : [],
-      modoInmueble: selectedOption.map((m) => m.toUpperCase()),
-      query: location.trim(),
+
+    const modoMapeado = selectedOption.map((m) => {
+      if (m === "anticreto") return "ANTICRETO";
+      return m.toUpperCase();
     });
 
+    updateFilters({
+    tipoInmueble: tipoFinal ? [tipoFinal] : [],
+    modoInmueble: modoMapeado,
+    query: location.trim(),
+  });
+
     const params = new URLSearchParams();
-    selectedOption.forEach((modo) =>
-      params.append("modoInmueble", modo.toUpperCase()),
-    );
+    modoMapeado.forEach((modo) => params.append("modoInmueble", modo));
     if (tipoFinal) params.set("tipoInmueble", tipoFinal);
     if (location.trim() !== "") params.set("query", location.trim());
 
@@ -141,22 +145,20 @@ export default function ExploreSection() {
                     className="flex items-center gap-2.5 transition-colors duration-200 group focus:outline-none"
                   >
                     <div
-                      className={`w-7 h-7 rounded-md border shadow-sm flex items-center justify-center transition-all ${
-                        isSelected
+                      className={`w-7 h-7 rounded-md border shadow-sm flex items-center justify-center transition-all ${isSelected
                           ? "bg-amber-500 border-amber-500"
                           : "bg-white border-stone-300"
-                      }`}
+                        }`}
                     >
                       {isSelected && (
                         <span className="text-white text-sm font-bold">✓</span>
                       )}
                     </div>
                     <span
-                      className={`font-semibold font-montserrat text-lg transition-colors ${
-                        isSelected
+                      className={`font-semibold font-montserrat text-lg transition-colors ${isSelected
                           ? "text-amber-700"
                           : "text-stone-900 group-hover:text-amber-600"
-                      }`}
+                        }`}
                     >
                       {option.name}
                     </span>
