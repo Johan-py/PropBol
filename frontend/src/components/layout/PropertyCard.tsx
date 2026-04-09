@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { BedDouble, Bath, Square, ImageOff } from "lucide-react"; // Quité MessageSquareText porque ya viene en tu botón
 import ContactButton from "../galeria/ContactButton"; // <-- Tu botón modular importado
+import { useState } from "react";
 
 type PropsTarjeta = {
   imagen?: string;
@@ -25,9 +26,15 @@ export default function PropertyCard({
   banos,
   metros,
 }: PropsTarjeta) {
+  const [isHovered, setIsHovered] = useState(false);  // ← AGREGAR ESTADO
+
   return (
-    <div className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 border border-gray-100 group">
-      {/* 2. Implementación de Imagen o Cuadro Gris (Misión Día 3) */}
+    <div 
+      className="grid grid-cols-[40px_70px_minmax(0,1fr)_50px] gap-2 px-3 py-2 items-center transition-all duration-200 hover:bg-gray-50 cursor-pointer"
+      onMouseEnter={() => setIsHovered(true)}   // ← AGREGAR
+      onMouseLeave={() => setIsHovered(false)}  // ← AGREGAR
+    >
+    
       <div
         className={`relative aspect-[16/10] overflow-hidden ${!imagen ? COLOR_GRIS_PLACEHOLDER : ""} flex items-center justify-center`}
       >
@@ -55,7 +62,11 @@ export default function PropertyCard({
       </div>
 
       <div className="p-4 flex flex-col gap-3">
-        <h2 className="text-xl md:text-2xl font-extrabold text-gray-950 tracking-tight">
+        <h2 
+           className={`font-extrabold text-gray-950 tracking-tight transition-all duration-300 ease-in-out ${
+            isHovered ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"
+          }`}
+        >
           {precio}
         </h2>
 
