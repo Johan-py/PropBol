@@ -1,19 +1,31 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "ignoreDeprecations": "5.0",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
 
+    "paths": {
+      "@prisma/client": ["./node_modules/.prisma/client"],
+      "@prisma/client/*": ["./node_modules/.prisma/client/*"],
+
+      "@config/*": ["./config/*"],
+      "@modules/*": ["./modules/*"],
+      "@middleware/*": ["./middleware/*"],
+      "@routes/*": ["./routes/*"],
+      "@services/*": ["./services/*"],
+      "@utils/*": ["./utils/*"]
+    },
+
+    "lib": ["ES2022", "DOM"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
 
-    "outDir": "./dist",
-
-    "allowImportingTsExtensions": false
+    "outDir": "dist",
+    "rootDir": "src"
   },
-  "include": ["src", "api"],
-  "exclude": ["node_modules"]
+
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "scripts"]
 }

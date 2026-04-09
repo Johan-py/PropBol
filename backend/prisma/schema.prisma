@@ -1,7 +1,6 @@
 generator client {
   provider = "prisma-client-js"
 }
-
 datasource db {
   provider = "postgresql"
 }
@@ -79,6 +78,7 @@ model Notificacion {
   fechaLectura  DateTime?
   eliminada     Boolean   @default(false)
   usuarioId     Int
+  archivada     Boolean   @default(false)
   usuario       Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   @@map("notificacion")

@@ -19,15 +19,16 @@ interface FilterSectionProps {
   itemLabel: string;
 }
 
-const FilterSection: React.FC<FilterSectionProps> = ({
+const FilterSection = ({
   title,
   data,
   logic,
   itemLabel,
-}) => {
+}: FilterSectionProps) => { 
   return (
     <section>
-      <h3 className="text-lg font-bold text-black mb-1.5 underline underline-offset-4 inline-block font-inter tracking-tight">
+      {/* Título de sección: se cambió a text-sm (más pequeño que Filtros, más grande que el contenido) */}
+      <h3 className="text-sm font-bold text-black mb-1.5 underline underline-offset-4 inline-block font-inter tracking-tight">
         {title}
       </h3>
       <div
@@ -36,30 +37,32 @@ const FilterSection: React.FC<FilterSectionProps> = ({
         {logic.visibleData.map((item: FilterItem) => (
           <div
             key={item.name}
-            className="flex justify-between items-center gap-3 group cursor-pointer transition-all"
+            className="flex justify-between items-start gap-3 group cursor-pointer transition-all"
           >
-            <span className="text-gray-600 group-hover:text-gray-900 text-sm font-medium font-inter transition-all">
+            {/* Contenido */}
+            <span
+              className="text-gray-600 group-hover:text-gray-900 text-sm font-medium font-inter transition-all flex-1 min-w-0 truncate"
+              title={formatName(item.name)}
+            >
               {formatName(item.name)}
             </span>
-            <span className="text-gray-500 text-sm font-medium font-inter">
-              {item.count.toLocaleString()} {itemLabel}
+            {/* Cantidad: se cambió de text-sm a text-xs */}
+            <span className="text-gray-500 text-xs font-medium font-inter text-right max-w-[60%] break-all leading-tight">
+              {Number(item.count).toLocaleString('es-BO')} {itemLabel}
             </span>
           </div>
         ))}
 
         {logic.viewLevel < 3 && data.length > 2 ? (
-          <button
-            onClick={logic.handleSeeMore}
-            className="text-sm text-orange-400 hover:text-orange-600 underline mt-1 w-fit font-medium font-inter transition-all"
-          >
+          <button onClick={logic.handleSeeMore}
+            // Se ajustó a text-[10px] o text-xs para mantener la proporción
+            className="text-xs text-orange-400 hover:text-orange-600 underline mt-1 w-fit font-medium font-inter transition-all">
             {logic.viewLevel === 1 ? "Ver más >" : "Mostrar todo >"}
           </button>
         ) : (
-          data.length > 2 && (
-            <button
-              onClick={logic.handleSeeLess}
-              className="text-sm text-orange-400 hover:text-orange-600 underline mt-1 w-fit ml-auto font-medium font-inter transition-all"
-            >
+          data.length > 2 && ( // Changed to text-xs to maintain proportion
+            <button onClick={logic.handleSeeLess}
+              className="text-xs text-orange-400 hover:text-orange-600 underline mt-1 w-fit ml-auto font-medium font-inter transition-all">
               {"<"} Ver menos
             </button>
           )
@@ -90,7 +93,6 @@ export default function FilterPanel() {
     try {
       const API_BASE_URL =
         process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-
       const response = await fetch(`${API_BASE_URL}/api/filters`);
       const result = await response.json();
 
@@ -119,7 +121,7 @@ export default function FilterPanel() {
 
   if (loading) {
     return (
-      <div className="w-full lg:w-80 bg-white p-8 rounded-3xl lg:rounded-2xl border border-gray-100 shadow-sm lg:shadow-[0_10px_40px_rgba(0,0,0,0.06)] mb-8 lg:sticky lg:top-20 shrink-0 flex items-center justify-center">
+      <div className="w-full md:w-80 bg-white p-8 rounded-3xl md:rounded-2xl border border-gray-100 shadow-sm md:shadow-[0_10px_40px_rgba(0,0,0,0.06)] mb-8 md:sticky md:top-20 shrink-0 flex items-center justify-center">
         <span className="text-gray-500 italic font-inter font-medium text-sm animate-pulse">
           Sincronizando filtros...
         </span>
@@ -129,7 +131,7 @@ export default function FilterPanel() {
 
   if (hasError) {
     return (
-      <div className="w-full lg:w-80 bg-white p-8 rounded-3xl lg:rounded-2xl border border-gray-100 shadow-sm lg:shadow-[0_10px_40px_rgba(0,0,0,0.06)] mb-8 lg:sticky lg:top-20 shrink-0 flex flex-col items-center justify-center text-center gap-4">
+      <div className="w-full md:w-80 bg-white p-8 rounded-3xl md:rounded-2xl border border-gray-100 shadow-sm md:shadow-[0_10px_40px_rgba(0,0,0,0.06)] mb-8 md:sticky md:top-20 shrink-0 flex flex-col items-center justify-center text-center gap-4">
         <div className="bg-orange-50 p-4 rounded-full">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -166,7 +168,7 @@ export default function FilterPanel() {
   }
 
   const FilterHeader = () => (
-    <div className="flex items-center justify-between mb-6 border-b border-gray-800 pb-3">
+    <div className="flex items-center justify-between mb-6 border-b border-gray-800 pb-3 gap-4">
       <div className="flex items-center gap-2 text-gray-900">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -185,13 +187,13 @@ export default function FilterPanel() {
         <h2 className="text-lg font-bold font-inter tracking-tight">Filtros</h2>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <button
           onClick={() => {
             setSortType("name");
             toggleGlobalSort();
           }}
-          className={`text-sm font-medium transition-all font-inter outline-none ${sortType === "name" ? "text-orange-500 hover:text-orange-600" : "text-gray-400 hover:text-gray-500"}`}
+          className={`text-xs font-medium transition-all font-inter outline-none whitespace-nowrap ${sortType === "name" ? "text-orange-500 hover:text-orange-600" : "text-gray-400 hover:text-gray-500"}`}
         >
           {sortType === "name" && globalSort === "desc"
             ? "Ordenar A↓"
@@ -203,9 +205,9 @@ export default function FilterPanel() {
             setSortType("count");
             toggleGlobalSort();
           }}
-          className={`text-sm font-medium transition-all font-inter outline-none flex items-center gap-0.5 ${sortType === "count" ? "text-orange-500 hover:text-orange-600" : "text-gray-400 hover:text-gray-500"}`}
+          className={`text-xs font-medium transition-all font-inter outline-none flex items-center gap-0.5 whitespace-nowrap ${sortType === "count" ? "text-orange-500 hover:text-orange-600" : "text-gray-400 hover:text-gray-500"}`}
         >
-          Cant.
+          Cantidad
           <span>
             {sortType === "count" && globalSort === "desc" ? "↓" : "↑"}
           </span>
@@ -216,14 +218,11 @@ export default function FilterPanel() {
 
   return (
     <>
-      {/* --- VISTA MÓVIL --- */}
-      <div className="lg:hidden w-full mb-8">
-        {/* Ahora la cabecera es igual a la de PC */}
+      <div className="md:hidden w-full mb-8">
         <div className="px-2">
           <FilterHeader />
         </div>
 
-        {/* Píldoras de selección */}
         <div className="flex gap-2 overflow-x-auto pb-4 px-2 scrollbar-hide">
           <button
             onClick={() => setMobileTab("alquiler")}
@@ -245,7 +244,6 @@ export default function FilterPanel() {
           </button>
         </div>
 
-        {/* Contenido dinámico */}
         <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm mx-2">
           {mobileTab === "alquiler" && (
             <FilterSection
@@ -274,8 +272,7 @@ export default function FilterPanel() {
         </div>
       </div>
 
-      {/* --- VISTA DESKTOP --- */}
-      <aside className="hidden lg:block w-80 bg-white p-8 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-gray-100 h-fit sticky top-20 shrink-0">
+      <aside className="hidden md:block w-80 bg-white p-8 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.06)] border border-gray-100 h-fit sticky md:top-20 shrink-0">
         <FilterHeader />
 
         <div className="space-y-6">

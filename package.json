@@ -7,10 +7,17 @@
     "frontend"
   ],
   "scripts": {
-    "install:all": "bun install",
-    "dev:back": "cd backend && bun run dev",
-    "dev:front": "cd frontend && bun run dev",
-    "dev": "concurrently \"bun run dev:back\" \"bun run dev:front\"",
+    "install:all": "pnpm install",
+
+    "dev:back": "pnpm --filter backend run dev",
+    "dev:back:setup": "pnpm --filter backend run prisma:generate && pnpm --filter backend run dev",
+
+    "dev:front": "pnpm --filter frontend run dev",
+    "dev": "concurrently \"pnpm run dev:back:setup\" \"pnpm run dev:front\"",
+    
+    "build:back": "pnpm --filter backend run build",
+    "start:back": "pnpm --filter backend run start",
+
     "lab:chaos": "cd scripts && sh chaos_devs.sh",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -28,8 +35,11 @@
     "eslint": "^10.1.0"
   },
   "dependencies": {
-    "@prisma/config": "^7.5.0",
     "cors": "^2.8.6",
     "tailwind": "^4.0.0"
-  }
+  },
+  "engines": {
+    "node": "20.x"
+  },
+  "packageManager": "pnpm@10.33.0"
 }
