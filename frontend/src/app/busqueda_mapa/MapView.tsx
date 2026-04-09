@@ -97,6 +97,26 @@ function createPinIcon(type: PropertyMapPin["type"]): L.DivIcon {
   });
 }
 
+function MapMouseHandler({ onMouseLeave }: { onMouseLeave: () => void }) {
+  const map = useMap();
+  
+  useEffect(() => {
+    if (!map) return;
+    
+    const handleMouseOut = () => {
+      onMouseLeave();
+    };
+    
+    map.on('mouseout', handleMouseOut);
+    
+    return () => {
+      map.off('mouseout', handleMouseOut);
+    };
+  }, [map, onMouseLeave]);
+  
+  return null;
+}
+
 function createSelectedIcon(type: PropertyMapPin["type"], isHover: boolean = false): L.DivIcon {
   const iconPath = SELECTED_ICONS[type];
   const scale = isHover ? 1.8 : 1.6; 
@@ -167,6 +187,7 @@ export default function MapView({
   error = null,
 }: MapViewProps) {
   const [isMounted, setIsMounted] = useState(false);
+  const [hoveredPinId, setHoveredPinId] = useState<string | null>(null); 
 
   useEffect(() => {
     setIsMounted(true);
@@ -208,13 +229,11 @@ export default function MapView({
         />
 
         <ZoomControls />
-
-        {selectedProperty && (
-          <FlyToSelected
-            lat={selectedProperty.lat}
-            lng={selectedProperty.lng}
-          />
-        )}
+         <MapMouseHandler onMouseLeave={() => setHoveredPinId(null)} />
+  
+          {selectedProperty && (
+           <FlyToSelected lat={selectedProperty.lat} lng={selectedProperty.lng} />
+          )}
 
         <Marker position={center} icon={createGpsIcon()}>
           <Popup>Tu ubicación actual</Popup>
@@ -234,18 +253,26 @@ export default function MapView({
         >
           {properties.map((property) => {
             const isSelected = property.id === selectedId;
-
+            const isHovered = property.id === hoveredPinId;
+  
+             // Prioridad: selected > hovered > normal
+            let icon;
+            if (isSelected) {
+             icon = createSelectedIcon(property.type, false);
+            } else if (isHovered) {
+             icon = createSelectedIcon(property.type, true); // Hover usa mismo estilo pero más grande
+            } else {
+             icon = createPinIcon(property.type);
+            }
             return (
               <Marker
                 key={property.id}
                 position={[property.lat, property.lng]}
-                icon={
-                  isSelected
-                    ? createSelectedIcon(property.type)
-                    : createPinIcon(property.type)
-                }
+                icon={icon}
                 eventHandlers={{
-                  click: () => onSelect?.(property.id),
+                 click: () => onSelect?.(property.id),
+                 mouseover: () => setHoveredPinId(property.id),
+                 mouseout: () => setHoveredPinId(null),
                 }}
               >
                 <Popup>
