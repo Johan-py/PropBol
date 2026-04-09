@@ -23,7 +23,7 @@ const FilterSection = ({ title, data, logic, itemLabel }: FilterSectionProps) =>
   return (
     <section>
       {/* Título de sección: se cambió a text-sm (más pequeño que Filtros, más grande que el contenido) */}
-      <h3 className="text-sm font-bold text-black mb-1.5 underline underline-offset-4 inline-block font-inter tracking-tight">
+      <h3 className="text-base font-bold text-black mb-1.5 underline underline-offset-4 inline-block font-inter tracking-tight">
         {title}
       </h3>
       <div
