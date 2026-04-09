@@ -202,6 +202,7 @@ export default function MapView({
         wheelPxPerZoomLevel={120}
         style={{ height: "100%", width: "100%" }}
         preferCanvas={true}
+        bounceAtZoomLimits={false}
         className="z-0"
       >
         <TileLayer
