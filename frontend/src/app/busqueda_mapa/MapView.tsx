@@ -1,9 +1,10 @@
 "use client";
 
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
+import { useMap } from "react-leaflet";
 import { useEffect, useState } from "react";
 
 import ZoomControls from "@/components/ZoomControls";
@@ -12,7 +13,7 @@ import { createClusterIcon, CLUSTER_CONFIG } from "@/lib/clusterIcon";
 
 import type { PropertyMapPin } from "@/types/property";
 
-// Fix SSR
+// Fix íconos default de Leaflet en Next.js (guard SSR)
 if (typeof window !== "undefined") {
   delete (L.Icon.Default.prototype as any)._getIconUrl;
   L.Icon.Default.mergeOptions({
@@ -21,41 +22,35 @@ if (typeof window !== "undefined") {
   });
 }
 
-// 🎨 estilos
-const PIN_FILL: Record<string, string> = {
+const PIN_FILL: Record<PropertyMapPin["type"], string> = {
   casa: "#3b82f6",
   departamento: "#8b5cf6",
   terreno: "#f59e0b",
   oficina: "#10b981",
-  local: "#10b981",
 };
 
-const PIN_HALO: Record<string, string> = {
-  casa: "rgba(59,130,246,0.25)",
-  departamento: "rgba(139,92,246,0.25)",
-  terreno: "rgba(245,158,11,0.25)",
-  oficina: "rgba(16,185,129,0.25)",
-  local: "rgba(16,185,129,0.25)",
+const PIN_HALO: Record<PropertyMapPin["type"], string> = {
+  casa: "rgba(59,  130, 246, 0.25)",
+  departamento: "rgba(139, 92,  246, 0.25)",
+  terreno: "rgba(245, 158, 11,  0.25)",
+  oficina: "rgba(16,  185, 129, 0.25)",
 };
 
-const PIN_LABEL: Record<string, string> = {
+const PIN_LABEL: Record<PropertyMapPin["type"], string> = {
   casa: "#2563eb",
   departamento: "#7c3aed",
   terreno: "#d97706",
   oficina: "#059669",
-  local: "#059669",
 };
 
-const SELECTED_ICONS: Record<string, string> = {
+const SELECTED_ICONS: Record<PropertyMapPin["type"], string> = {
   casa: "/house.svg",
   departamento: "/department.svg",
   terreno: "/land.svg",
-  oficina: "/office.svg",
-  local: "/local.svg",
+  oficina: "/local.svg",
 };
 
-// 🔵 normal pin
-function createPinIcon(type: string): L.DivIcon {
+function createPinIcon(type: PropertyMapPin["type"]): L.DivIcon {
   const fill = PIN_FILL[type] ?? "#6b7280";
   const halo = PIN_HALO[type] ?? "rgba(107,114,128,0.25)";
   const outer = 28;
@@ -66,88 +61,49 @@ function createPinIcon(type: string): L.DivIcon {
     className: "",
     html: `
       <div style="width:${outer}px;height:${outer}px;display:flex;align-items:center;justify-content:center;">
-        <div style="position:absolute;width:${outer}px;height:${outer}px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${halo};"></div>
-        <div style="position:relative;width:${inner}px;height:${inner}px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${fill};border:2px solid white;"></div>
+        <div style="position:absolute;width:${outer}px;height:${outer}px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background-color:${halo};"></div>
+        <div style="position:relative;width:${inner}px;height:${inner}px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background-color:${fill};border:2px solid rgba(255,255,255,0.9);box-shadow:0 1px 4px rgba(0,0,0,0.20);"></div>
       </div>`,
     iconSize: [outer, outer],
     iconAnchor: [half, outer],
+    popupAnchor: [0, -outer],
   });
 }
 
-// 🔴 seleccionado / hover
-function createSelectedIcon(type: string, isHover = false): L.DivIcon {
-  const scale = isHover ? 1.8 : 1.6;
+function createSelectedIcon(type: PropertyMapPin["type"]): L.DivIcon {
   const iconPath = SELECTED_ICONS[type];
-
   return L.divIcon({
     className: "",
     html: `
-      <div style="transform:scale(${scale});display:flex;justify-content:center;">
-        <div style="width:36px;height:36px;border-radius:50%;background:#ef4444;display:flex;align-items:center;justify-content:center;border:2px solid white;">
-          <img src="${iconPath}" style="width:20px;height:20px;" />
+      <div style="display:flex;align-items:center;justify-content:center;transform:scale(1.6);">
+        <div style="width:36px;height:36px;border-radius:50%;background-color:#ef4444;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.35);border:2px solid white;">
+          <img src="${iconPath}" style="width:20px;height:20px;object-fit:contain;display:block;" />
         </div>
       </div>`,
     iconSize: [36, 36],
     iconAnchor: [18, 36],
+    popupAnchor: [0, -36],
   });
 }
 
-// 🖱 click mapa → deseleccionar
-function MapClickHandler({ onMapClick }: { onMapClick: () => void }) {
-  const map = useMap();
-  useEffect(() => {
-    map.on("click", onMapClick);
-    return () => map.off("click", onMapClick);
-  }, [map, onMapClick]);
-  return null;
-}
-
-// 🖱 salir del mapa → quitar hover
-function MapMouseHandler({ onLeave }: { onLeave: () => void }) {
-  const map = useMap();
-  useEffect(() => {
-    map.on("mouseout", onLeave);
-    return () => map.off("mouseout", onLeave);
-  }, [map, onLeave]);
-  return null;
-}
-
-// 🔧 fix resize
-function MapResizer() {
-  const map = useMap();
-  useEffect(() => {
-    const handler = () => map.invalidateSize();
-    window.addEventListener("resize", handler);
-    handler();
-    return () => window.removeEventListener("resize", handler);
-  }, [map]);
-  return null;
-}
-
-// 🎯 fly to propiedad
-function FlyToSelected({ lat, lng }: { lat: number; lng: number }) {
-  const map = useMap();
-
-  useEffect(() => {
-    if (!lat || !lng) return;
-    const zoom = 18;
-
-    map.flyTo([lat, lng], zoom, { duration: 1.2 });
-
-    const t = setTimeout(() => {
-      map.setView([lat, lng], zoom);
-    }, 1200);
-
-    return () => clearTimeout(t);
-  }, [lat, lng, map]);
-
-  return null;
-}
-
-function formatPrice(price: number, currency: "USD" | "BOB") {
+function formatPrice(price: number, currency: "USD" | "BOB"): string {
   return currency === "USD"
     ? `$${price.toLocaleString("es-BO")} USD`
     : `Bs ${price.toLocaleString("es-BO")}`;
+}
+
+// ─── Fix gray area ────────────────────────────────────────────────────────────
+// Vive dentro de MapContainer y llama invalidateSize() directamente cuando el
+// contenedor cambia de tamaño (sidebar colapsa, sheet cambia altura, rotación).
+function MapResizer() {
+  const map = useMap();
+  useEffect(() => {
+    const handler = () => map.invalidateSize({ animate: false });
+    window.addEventListener("resize", handler);
+    handler(); // forzar invalidación inmediata al montar
+    return () => window.removeEventListener("resize", handler);
+  }, [map]);
+  return null;
 }
 
 interface MapViewProps {
@@ -155,94 +111,116 @@ interface MapViewProps {
   center?: [number, number];
   zoom?: number;
   selectedId?: string | null;
-  onSelect?: (id: string | null) => void;
+  onSelect?: (id: string) => void;
+  isLoading?: boolean;
   error?: string | null;
 }
 
 export default function MapView({
   properties = [],
-  center = [-17.39, -66.15],
+  center = [-17.392418841841394, -66.1461583463333],
   zoom = 12,
   selectedId,
   onSelect,
-  error,
+  isLoading = false,
+  error = null,
 }: MapViewProps) {
   const [isMounted, setIsMounted] = useState(false);
-  const [hoveredPinId, setHoveredPinId] = useState<string | null>(null);
 
-  useEffect(() => setIsMounted(true), []);
-  if (!isMounted) return <div className="w-full h-full bg-gray-100" />;
+  useEffect(() => { setIsMounted(true); }, []);
 
-  const selected = properties.find((p) => p.id === selectedId);
+  if (!isMounted)
+    return <div className="w-full h-full bg-gray-100 animate-pulse" />;
+
+  const selectedProperty = properties.find((p) => p.id === selectedId);
 
   return (
     <div className="relative w-full h-full">
-      {error && (
-        <div className="absolute top-2 left-1/2 -translate-x-1/2 z-50 bg-red-100 px-3 py-1 rounded">
-          {error}
+      {isLoading && (
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] bg-white px-4 py-2 rounded-full shadow text-sm text-gray-600 flex items-center gap-2 pointer-events-none">
+          <span className="animate-spin inline-block w-3 h-3 border-2 border-gray-300 border-t-blue-500 rounded-full" />
+          Cargando propiedades...
         </div>
       )}
 
-      <MapContainer center={center} zoom={zoom} zoomControl={false} style={{ height: "100%", width: "100%" }}>
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      {error && (
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[1000] bg-red-50 border border-red-200 px-4 py-2 rounded-full shadow text-sm text-red-600 pointer-events-none">
+          ⚠️ {error}
+        </div>
+      )}
 
+      <MapContainer
+        center={center}
+        zoom={zoom}
+        zoomControl={false}
+        touchZoom={true}
+        dragging={true}
+        tapTolerance={15}
+        wheelDebounceTime={150}
+        wheelPxPerZoomLevel={120}
+        style={{ height: "100%", width: "100%" }}
+        preferCanvas={true}
+        bounceAtZoomLimits={false}
+        inertia={true}
+        inertiaDeceleration={3000}
+        className="z-0"
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+
+        {/* Fix gray area — dentro de MapContainer para acceder a la instancia real */}
         <MapResizer />
+
         <ZoomControls />
 
-        <MapClickHandler onMapClick={() => onSelect?.(null)} />
-        <MapMouseHandler onLeave={() => setHoveredPinId(null)} />
-
-        {selected && <FlyToSelected lat={selected.lat} lng={selected.lng} />}
+        {selectedProperty && (
+          <FlyToSelected lat={selectedProperty.lat} lng={selectedProperty.lng} />
+        )}
 
         <Marker position={center} icon={createGpsIcon()}>
-          <Popup>Tu ubicación</Popup>
+          <Popup>Tu ubicación actual</Popup>
         </Marker>
 
         <MarkerClusterGroup
-          iconCreateFunction={(c) => createClusterIcon(c)}
+          iconCreateFunction={(cluster: any) => createClusterIcon(cluster)}
           maxClusterRadius={CLUSTER_CONFIG.maxClusterRadius}
           disableClusteringAtZoom={CLUSTER_CONFIG.disableClusteringAtZoom}
-          animate
-          animateAddingMarkers
-          chunkedLoading
+          animate={true}
+          animateAddingMarkers={true}
+          chunkedLoading={true}
           showCoverageOnHover={false}
           polygonOptions={{ opacity: 0 }}
-          zoomToBoundsOnClick
-          spiderfyOnMaxZoom
+          singleMarkerMode={false}
+          zoomToBoundsOnClick={true}
+          spiderfyOnMaxZoom={true}
           spiderfyDistanceMultiplier={2}
           removeOutsideVisibleBounds={false}
           clusterPane="markerPane"
+          // Fix HU-02-06: en móvil el tap de Leaflet no siempre llega al plugin
           eventHandlers={{
             clusterclick: (e: any) => {
               e.layer.zoomToBounds({ padding: [20, 20] });
             },
           }}
         >
-          {properties.map((p) => {
-            const isSelected = p.id === selectedId;
-            const isHover = p.id === hoveredPinId;
-
-            let icon = createPinIcon(p.type);
-            if (isSelected) icon = createSelectedIcon(p.type);
-            else if (isHover) icon = createSelectedIcon(p.type, true);
-
+          {properties.map((property) => {
+            const isSelected = property.id === selectedId;
             return (
               <Marker
-                key={p.id}
-                position={[p.lat, p.lng]}
-                icon={icon}
-                eventHandlers={{
-                  click: () => onSelect?.(p.id),
-                  mouseover: () => setHoveredPinId(p.id),
-                  mouseout: () => setHoveredPinId(null),
-                }}
+                key={property.id}
+                position={[property.lat, property.lng]}
+                icon={isSelected ? createSelectedIcon(property.type) : createPinIcon(property.type)}
+                eventHandlers={{ click: () => onSelect?.(property.id) }}
               >
                 <Popup>
-                  <div className="text-sm">
-                    <p className="font-semibold">{p.title}</p>
-                    <p style={{ color: PIN_LABEL[p.type] }}>
-                      {formatPrice(p.price, p.currency)}
+                  <div className="text-sm min-w-[160px]">
+                    <p className="font-semibold text-gray-800 mb-1">{property.title}</p>
+                    <p className="font-bold" style={{ color: PIN_LABEL[property.type] }}>
+                      {formatPrice(property.price, property.currency)}
                     </p>
+                    <p className="text-gray-500 capitalize mt-1">{property.type}</p>
                   </div>
                 </Popup>
               </Marker>
@@ -252,4 +230,16 @@ export default function MapView({
       </MapContainer>
     </div>
   );
+}
+
+function FlyToSelected({ lat, lng }: { lat: number; lng: number }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!lat || !lng) return;
+    const targetZoom = 18;
+    map.flyTo([lat, lng], targetZoom, { duration: 1.2 });
+    const timeout = setTimeout(() => map.setView([lat, lng], targetZoom), 1200);
+    return () => clearTimeout(timeout);
+  }, [lat, lng, map]);
+  return null;
 }
