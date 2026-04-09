@@ -65,8 +65,18 @@ function BusquedaMapaContent() {
   return () => clearTimeout(timeout);
   }, [hoveredId, isHoveringList]);
 
+  //Sincronización del mapa con el colapso del panel lateral
+  useEffect(() => {
+    // 300ms es exactamente el tiempo que dura su clase 'duration-300'
+    const resizeTimeout = setTimeout(() => {
+      window.dispatchEvent(new Event("resize"));
+    }, 300);
+
+    return () => clearTimeout(resizeTimeout);
+  }, [isSidebarOpen]);
+
   return (
-    <div className="flex flex-col h-screen bg-white overflow-hidden">
+    <div className="flex flex-col bg-white w-full h-[calc(100dvh-80px)] md:h-[calc(100dvh-99px)] overflow-hidden">
       <FilterBar
         variant="map"
         onSearch={(nuevosFiltros) => {
@@ -74,7 +84,7 @@ function BusquedaMapaContent() {
         }}
       />
 
-      <main className="flex flex-1 overflow-hidden relative">
+      <main className="flex w-full flex-1 relative overflow-hidden border-b border-stone-200">
         {/* Panel lateral colapsable */}
         <aside
           className={`bg-white border-r border-stone-200 flex flex-col z-10 transition-all duration-300 ${
@@ -83,9 +93,10 @@ function BusquedaMapaContent() {
         >
           {isSidebarOpen && (
             <div className="flex flex-col h-full">
-              {/* Cabecera del panel */}
+              {/* Cabecera del panel (FUSIONADA) */}
               <div className="p-4 bg-white shrink-0">
-                <div className="flex justify-between items-start mb-4">
+                <div className="flex justify-between items-center mb-4">
+                  {/* Lado Izquierdo: Título y cantidad */}
                   <div className="flex flex-col">
                     <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-1">
@@ -109,6 +120,8 @@ function BusquedaMapaContent() {
                     </h2>
                     </div>
                   </div>
+
+                  {/* Lado Derecho: SOLO Botón cerrar */}
                   <button
                     onClick={() => setIsSidebarOpen(false)}
                     className="p-1 hover:bg-stone-100 rounded-full transition-colors text-stone-400"
@@ -117,32 +130,33 @@ function BusquedaMapaContent() {
                   </button>
                 </div>
 
-                <div className="border-b border-stone-100 pb-4">
+                {/* Contenedor relativo para el Menú y el Switch flotante */}
+                {/* Aumentamos pb-4 para darle espacio al posicionamiento absoluto */}
+                <div className="relative border-b border-stone-100 pb-4 [&>div]:mb-0">
                   <MenuOrdenamiento
                     totalResultados={properties.length}
                     ordenActual={ordenActual}
                     onOrdenChange={cambiarOrden}
                   />
-                </div>
-              </div>
 
-              {/* Toggle vista grid / lista */}
-              <div className="px-4 py-2 border-b border-stone-50 flex justify-end bg-white">
-                <div className="flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90">
-                  <button
-                    onClick={() => setViewMode("grid")}
-                    className={`p-1 rounded transition-colors ${viewMode === "grid" ? "bg-white text-[#ea580c] shadow-sm" : "text-stone-400"}`}
-                  >
-                    <LayoutGrid size={16} />
-                  </button>
-                  <button
-                    onClick={() => setViewMode("list")}
-                    className={`p-1 rounded transition-colors ${viewMode === "list" ? "bg-white text-[#ea580c] shadow-sm" : "text-stone-400"}`}
-                  >
-                    <ListIcon size={16} />
-                  </button>
+                  {/* NUEVO: Switch flotante alineado a la derecha de los filtros */}
+                  <div className="absolute right-0 bottom-4 flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90 origin-bottom-right">
+                    <button
+                      onClick={() => setViewMode("grid")}
+                      className={`p-1 rounded transition-colors ${viewMode === "grid" ? "bg-white text-[#ea580c] shadow-sm" : "text-stone-400"}`}
+                    >
+                      <LayoutGrid size={16} />
+                    </button>
+                    <button
+                      onClick={() => setViewMode("list")}
+                      className={`p-1 rounded transition-colors ${viewMode === "list" ? "bg-white text-[#ea580c] shadow-sm" : "text-stone-400"}`}
+                    >
+                      <ListIcon size={16} />
+                    </button>
+                  </div>
                 </div>
               </div>
+              
 
               {/* Lista de propiedades con hover → fly-to en mapa */}
               <div className="flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar"
@@ -166,17 +180,23 @@ function BusquedaMapaContent() {
                   >
                     {properties.map((property: any) => (
                       <div
-                        key={property.id}
-                        // Hover con debounce: dispara el vuelo del mapa al marcador
-                        onMouseEnter={() => setHoveredId(property.id)}
-                        onMouseLeave={() => setHoveredId(null)}
-                        onClick={() => setSelectedPropertyId(property.id)}
-                        className={`cursor-pointer transition-all duration-200 rounded-xl ${
-                          selectedPropertyId === property.id
-                            ? "ring-2 ring-orange-400 ring-offset-1"
-                            : ""
-                        }`}
-                      >
+                      key={property.id}
+                      onMouseEnter={() => setHoveredId(property.id)}
+                      onMouseLeave={() => setHoveredId(null)}
+                      onClick={() => setSelectedPropertyId(property.id)}
+                      // 1. SOLO clases base aquí (cursor, transición, bordes)
+                      className={`cursor-pointer transition-all duration-200 rounded-xl relative ${
+                        // 2. SOLO aquí va la reducción (porque solo afecta al Grid)
+                        viewMode === "grid"
+                          ? "transform scale-95 origin-top mx-auto mb-[-4%]"
+                        // 3. Vista de lista limpia
+                          : "w-full py-1 hover:bg-stone-100" 
+                      } ${
+                        selectedPropertyId === property.id
+                          ? "ring-2 ring-orange-400 ring-offset-1 z-10"
+                          : ""
+                      }`}
+                    >
                         {viewMode === "grid" ? (
                           <PropertyCard
                             imagen=""
