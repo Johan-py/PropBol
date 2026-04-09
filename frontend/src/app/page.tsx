@@ -24,8 +24,6 @@ const fetchBanners = async (): Promise<BannerData[]> => {
     }
 
     const data = await response.json();
-    console.log("BANNERS DESDE API:", data);
-
     return data;
   } catch (error) {
     console.error("Error cargando banners:", error);
@@ -35,8 +33,6 @@ const fetchBanners = async (): Promise<BannerData[]> => {
 
 export default async function Home() {
   const banners = await fetchBanners();
-
-  console.log("BANNERS EN PAGE:", banners);
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-gray-50">
