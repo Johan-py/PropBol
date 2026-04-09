@@ -62,7 +62,6 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
   const { updateFilters } = useSearchFilters()
   const { registrarConsulta } = usePopularidad()
 
-  // FUNCIÓN MODULAR DE SELECCIÓN
   const handleSelectLocation = (loc: Location) => {
     const fullName = `${loc.nombre} - ${loc.departamento} - Bolivia`
 
@@ -79,7 +78,6 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     registrarConsulta(loc.id, fullName)
   }
 
-  // Cargar historial al montar el componente
   useEffect(() => {
     const savedHistory = localStorage.getItem('searchHistory')
     if (savedHistory) {
@@ -87,14 +85,12 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     }
   }, [])
 
-  // Guardar en historial cuando se selecciona una ubicación
   const saveToHistory = (item: string) => {
     const updatedHistory = [item, ...history.filter((i) => i !== item)].slice(0, 5)
     setHistory(updatedHistory)
     localStorage.setItem('searchHistory', JSON.stringify(updatedHistory))
   }
 
-  // --- LÓGICA DE LIMPIEZA (HU 2) --- --BitPro
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value
 
@@ -146,7 +142,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
 
   return (
     <div className="w-full relative" ref={containerRef}>
-      <label className="block text-sm font-medium text-stone-700 mb-2 text-center uppercase tracking-wide font-montserrat">
+      <label className="block text-sm font-medium text-stone-700 mb-2 text-left md:text-center uppercase tracking-wide font-montserrat">
         Ciudad / Zona
       </label>
 
@@ -161,17 +157,43 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
           className={`w-5 h-5 flex-shrink-0 ${value ? 'text-amber-600' : 'text-stone-400'}`}
         />
 
-        <div className="relative flex-1 flex items-center h-full">
-          <div className="absolute inset-0 flex items-center pointer-events-none whitespace-pre text-sm font-inter">
-            <span className="opacity-0">{value}</span>
+        <div className="relative flex-1 flex items-center w-full h-full min-w-0">
+          <input
+            type="text"
+            value={value}
+            onChange={handleInputChange}
+            onFocus={() => setIsOpen(true)}
+            placeholder="Cochabamba, La Paz..."
+            className="w-full bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 font-inter pr-[70px] md:truncate overflow-x-auto whitespace-nowrap"
+          />
+          
+          <div className="absolute right-0 flex items-center gap-2 bg-white pl-2 h-full">
             {isSelected && (
               <Image
                 src="https://flagcdn.com/w20/bo.png"
                 alt="BO"
                 width={20}
                 height={14}
-                className="ml-2 rounded-sm flex-shrink-0 mb-[1px]"
+                className="rounded-sm flex-shrink-0"
               />
+            )}
+            
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin text-amber-600" />
+            ) : (
+              value && (
+                <button 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onChange("");
+                  }} 
+                  type="button"
+                  className="p-1 hover:bg-stone-100 rounded-full transition-colors flex-shrink-0"
+                >
+                  <X className="w-4 h-4 text-stone-400 hover:text-red-500" />
+                </button>
+              )
             )}
           </div>
 
@@ -180,6 +202,12 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             value={value}
             onChange={handleInputChange}
             onFocus={() => setIsOpen(true)} // Al hacer clic, abrimos el desplegable
+            // Cerramos el panel si el usuario presiona Enter para buscar
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setIsOpen(false);
+              }
+            }}
             placeholder="Cochabamba, La Paz..."
             className="w-full bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 font-inter relative z-10"
           />
@@ -203,7 +231,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
           style={dropdownStyle}
         >
           {/* CASO A: MOSTRAR HISTORIAL (Input vacío) */}
-          {value.trim().length === 0 && history.length > 0 && (
+          {value === "" && history.length > 0 && (
             <div>
               <div className="px-4 py-2 bg-stone-50 border-b border-stone-100">
                 <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">
@@ -214,7 +242,6 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                 <button
                   key={`hist-${idx}`}
                   type="button"
-                  // Acción del botón
                   onClick={() => {
                     onChange(item)
                     setIsOpen(false)
@@ -229,7 +256,6 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             </div>
           )}
 
-          {/* CASO B: MOSTRAR SUGERENCIAS (Escribiendo) */}
           {value.trim().length >= 2 && !isSelected && (
             <>
               {isLoading ? (
