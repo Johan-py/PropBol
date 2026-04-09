@@ -428,12 +428,146 @@ function BusquedaMapaContent() {
                       </button>
                     )}
                   </div>
-                </Popup>
-              </Marker>
-            );
-          })}
-        </MarkerClusterGroup>
-      </MapContainer>
+                </div>
+              </div>
+
+              {/* Contenido scrolleable */}
+              <div className="flex flex-col flex-1 overflow-hidden">
+                {/* Card de propiedad seleccionada desde el mapa */}
+                {pinnedProperty && (
+                  <div className="mx-4 mb-3 relative shrink-0">
+                    <button
+                      onClick={() => {
+                        setPinnedProperty(null)
+                        setSelectedPropertyId(null)
+                      }}
+                      className="absolute top-2 right-2 z-10 bg-white rounded-full p-1 shadow text-stone-400 hover:text-stone-600"
+                    >
+                      <X size={14} />
+                    </button>
+                    <div className="ring-2 ring-orange-400 rounded-xl overflow-hidden">
+                      <PropertyCard
+                        imagen=""
+                        estado={pinnedProperty.type}
+                        precio={
+                          pinnedProperty.currency === 'USD'
+                            ? `$${pinnedProperty.price.toLocaleString('es-BO')} USD`
+                            : `Bs ${pinnedProperty.price.toLocaleString('es-BO')}`
+                        }
+                        descripcion={pinnedProperty.title}
+                        camas={3}
+                        banos={2}
+                        metros={150}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Ordenamiento */}
+                <div className="px-4 shrink-0 border-b border-stone-100 pb-2">
+                  <MenuOrdenamiento
+                    totalResultados={properties.length}
+                    ordenActual={ordenActual}
+                    onOrdenChange={cambiarOrden}
+                  />
+                </div>
+
+                {/* Toggle grid/lista */}
+                <div className="px-4 py-2 flex justify-end shrink-0">
+                  <div className="flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90">
+                    <button
+                      onClick={() => setViewMode('grid')}
+                      className={`p-1 rounded transition-colors ${viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'}`}
+                    >
+                      <LayoutGrid size={16} />
+                    </button>
+                    <button
+                      onClick={() => setViewMode('list')}
+                      className={`p-1 rounded transition-colors ${viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'}`}
+                    >
+                      <ListIcon size={16} />
+                    </button>
+                  </div>
+                </div>
+
+                <PropertyList
+                  onClickItem={(p) => {
+                    setPinnedProperty(p)
+                    setSheetState('peek')
+                  }}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    ) // end portrait
+  } // end if(isMobile || isLandscape)
+
+  // ────────────────────────────────────────────────────────────────────────────
+  // DESKTOP / TABLET
+  // ────────────────────────────────────────────────────────────────────────────
+  return (
+    <div
+      className="flex flex-col bg-white overflow-hidden"
+      style={{ height: 'calc(100dvh - 180px)' }}
+    >
+      <FilterBar variant="map" onSearch={(f) => console.log('🔍 Filtros:', f)} />
+      <main className="flex flex-1 overflow-hidden relative border-b border-stone-200">
+        <aside
+          className={`bg-white border-r border-stone-200 flex flex-col z-10 transition-all duration-300 overflow-hidden ${isSidebarOpen ? 'w-[450px]' : 'w-0'}`}
+        >
+          {isSidebarOpen && (
+            <div className="flex flex-col h-full w-[450px]">
+              {PanelHeader}
+              {ViewToggle}
+              <PropertyList />
+            </div>
+          )}
+        </aside>
+        <section className="flex-1 relative bg-stone-200">
+          {!isSidebarOpen && (
+            <button
+              onClick={() => setIsSidebarOpen(true)}
+              className="absolute left-0 top-4 z-[1000] bg-white text-black shadow-md rounded-r-md flex flex-col items-center py-4 px-2 gap-4 hover:bg-stone-50 transition-colors"
+            >
+              <ChevronRight size={16} />
+              <span className="[writing-mode:vertical-lr] rotate-180 text-[10px] font-bold tracking-widest uppercase text-stone-600">
+                Inmuebles
+              </span>
+              <ListIcon size={16} className="text-stone-500" />
+            </button>
+          )}
+          <div className="absolute inset-0">
+            <MapView
+              properties={properties}
+              selectedId={selectedPropertyId}
+              onSelect={setSelectedPropertyId}
+              isLoading={isLoading}
+              error={error}
+            />
+          </div>
+        </section>
+      </main>
     </div>
-  );
+  )
+}
+
+export const dynamic = 'force-dynamic'
+
+export default function BusquedaMapaPage() {
+  return (
+    <Suspense
+      fallback={
+        <div
+          className="flex items-center justify-center bg-white text-gray-500 italic"
+          style={{ height: '100dvh' }}
+        >
+          Cargando buscador de PropBol...
+        </div>
+      }
+    >
+      <BusquedaMapaContent />
+    </Suspense>
+  )
 }
