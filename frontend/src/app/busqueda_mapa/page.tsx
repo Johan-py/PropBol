@@ -42,80 +42,200 @@ function useIsMobile(breakpoint = 768) {
   return isMobile
 }
 
-function MapMouseHandler({ onLeave }: { onLeave: () => void }) {
-  const map = useMap();
+// Detecta landscape en móvil: ancho > alto Y alto < 500px
+// (tablets landscape con alto > 500 quedan como desktop)
+function useIsLandscapeMobile() {
+  const [isLandscape, setIsLandscape] = useState(false)
   useEffect(() => {
-    map.on("mouseout", onLeave);
-    return () => map.off("mouseout", onLeave);
-  }, [map, onLeave]);
-  return null;
+    const handler = () => {
+      setIsLandscape(window.innerWidth > window.innerHeight && window.innerHeight < 500)
+    }
+    window.addEventListener('resize', handler)
+    window.addEventListener('orientationchange', handler)
+    handler()
+    return () => {
+      window.removeEventListener('resize', handler)
+      window.removeEventListener('orientationchange', handler)
+    }
+  }, [])
+  return isLandscape
 }
 
-function MapResizer() {
-  const map = useMap();
+// Alturas en % del contenedor padre (el flex-1 debajo del FilterBar).
+// Usar % en vez de dvh evita que el sheet suba por encima del FilterBar.
+const SHEET_H = { peek: '50%', full: '100%' } as const
+type SheetState = 'hidden' | 'peek' | 'full'
+
+function BusquedaMapaContent() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [sheetState, setSheetState] = useState<SheetState>('peek')
+  const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
+  const [isMounted, setIsMounted] = useState(false)
+
+  const isMobile = useIsMobile()
+  const isLandscape = useIsLandscapeMobile()
+
+  // Evita hydration mismatch: el servidor siempre renderiza desktop.
+  // El cliente switcha al layout correcto después del primer mount.
   useEffect(() => {
-    const handler = () => map.invalidateSize({ animate: false });
-    window.addEventListener("resize", handler);
-    handler();
-    return () => window.removeEventListener("resize", handler);
-  }, [map]);
-  return null;
-}
+    setIsMounted(true)
+  }, [])
 
-function FlyToSelected({ lat, lng }: { lat: number; lng: number }) {
-  const map = useMap();
+  const { properties, isLoading, error } = useProperties()
+  const { ordenActual, cambiarOrden } = useOrdenamiento({ inmuebles: properties })
+
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
+
+  // Touch drag
+  const dragStartY = useRef<number | null>(null)
+  const dragStartState = useRef<SheetState>('peek')
 
   useEffect(() => {
-    if (!lat || !lng) return;
-    const zoom = 18;
-    map.flyTo([lat, lng], zoom, { duration: 1.2 });
+    if (!hoveredId) return
+    const t = setTimeout(() => setSelectedPropertyId(hoveredId), 200)
+    return () => clearTimeout(t)
+  }, [hoveredId])
 
-    const t = setTimeout(() => {
-      map.setView([lat, lng], zoom);
-    }, 1200);
+  useEffect(() => {
+    const t = setTimeout(() => window.dispatchEvent(new Event('resize')), 310)
+    return () => clearTimeout(t)
+  }, [isSidebarOpen, sheetState])
 
-    return () => clearTimeout(t);
-  }, [lat, lng, map]);
+  function handleMapSelect(id: string) {
+    setSelectedPropertyId(id)
+    const prop = properties.find((p: any) => p.id === id)
+    if (prop) {
+      setPinnedProperty(prop)
+      setSheetState('peek')
+    }
+  }
 
-  return null;
-}
+  function onTouchStart(e: React.TouchEvent) {
+    dragStartY.current = e.touches[0].clientY
+    dragStartState.current = sheetState === 'hidden' ? 'peek' : sheetState
+  }
 
-function formatPrice(price: number, currency: "USD" | "BOB") {
-  return currency === "USD"
-    ? `$${price.toLocaleString("es-BO")} USD`
-    : `Bs ${price.toLocaleString("es-BO")}`;
-}
+  function onTouchEnd(e: React.TouchEvent) {
+    if (dragStartY.current === null) return
+    const dy = dragStartY.current - e.changedTouches[0].clientY
+    if (Math.abs(dy) < 20) {
+      dragStartY.current = null
+      return
+    }
 
-interface MapViewProps {
-  properties: PropertyMapPin[];
-  center?: [number, number];
-  zoom?: number;
-  selectedId?: string | null;
-  onSelect?: (id: string | null) => void;
-  error?: string | null;
-}
+    if (dy > 40) {
+      // Arrastró hacia arriba
+      setSheetState(dragStartState.current === 'peek' ? 'full' : 'full')
+    } else if (dy < -40) {
+      // Arrastró hacia abajo
+      setSheetState(dragStartState.current === 'full' ? 'peek' : 'hidden')
+    }
+    dragStartY.current = null
+  }
 
-export default function MapView({
-  properties = [],
-  center = [-17.39, -66.15],
-  zoom = 12,
-  selectedId,
-  onSelect,
-  error,
-}: MapViewProps) {
-  const [isMounted, setIsMounted] = useState(false);
-  const [hoveredPinId, setHoveredPinId] = useState<string | null>(null);
+  // ── Shared pieces ──────────────────────────────────────────────────────────
+  const PanelHeader = (
+    <div className="p-4 bg-white shrink-0">
+      <div className="flex justify-between items-start mb-4">
+        <h2 className="text-xl font-bold text-slate-900">
+          <span className="text-orange-500">{properties.length}</span>
+          <span className="ml-2 text-gray-600 font-normal text-base">
+            {properties.length === 1 ? 'propiedad encontrada' : 'propiedades encontradas'}
+          </span>
+        </h2>
+        {!isMobile && (
+          <button
+            onClick={() => setIsSidebarOpen(false)}
+            className="p-1 hover:bg-stone-100 rounded-full transition-colors text-stone-400"
+          >
+            <ChevronLeft size={20} />
+          </button>
+        )}
+      </div>
+      <div className="border-b border-stone-100 pb-4">
+        <MenuOrdenamiento
+          totalResultados={properties.length}
+          ordenActual={ordenActual}
+          onOrdenChange={cambiarOrden}
+        />
+      </div>
+    </div>
+  )
 
-  useEffect(() => setIsMounted(true), []);
-  if (!isMounted) return <div className="w-full h-full bg-gray-100" />;
+  const ViewToggle = (
+    <div className="px-4 py-2 border-b border-stone-50 flex justify-end bg-white">
+      <div className="flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90">
+        <button
+          onClick={() => setViewMode('grid')}
+          className={`p-1 rounded transition-colors ${viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'}`}
+        >
+          <LayoutGrid size={16} />
+        </button>
+        <button
+          onClick={() => setViewMode('list')}
+          className={`p-1 rounded transition-colors ${viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'}`}
+        >
+          <ListIcon size={16} />
+        </button>
+      </div>
+    </div>
+  )
 
-  const selected = properties.find((p) => p.id === selectedId);
-
-  return (
-    <div className="relative w-full h-full">
-      {error && (
-        <div className="absolute top-2 left-1/2 -translate-x-1/2 z-50 bg-red-100 px-3 py-1 rounded">
-          {error}
+  const PropertyList = ({ onClickItem }: { onClickItem?: (p: any) => void }) => (
+    <div className="flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar">
+      {isLoading ? (
+        <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2">
+          <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+          Actualizando resultados...
+        </div>
+      ) : properties.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <div
+          className={`gap-3 flex flex-col ${viewMode === 'list' ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm' : ''}`}
+        >
+          {properties.map((property: any) => (
+            <div
+              key={property.id}
+              onMouseEnter={() => setHoveredId(property.id)}
+              onMouseLeave={() => setHoveredId(null)}
+              onClick={() => {
+                setSelectedPropertyId(property.id)
+                onClickItem?.(property)
+              }}
+              className={`cursor-pointer transition-all duration-200 rounded-xl ${selectedPropertyId === property.id ? 'ring-2 ring-orange-400 ring-offset-1' : ''}`}
+            >
+              {viewMode === 'grid' ? (
+                <PropertyCard
+                  imagen=""
+                  estado={property.type}
+                  precio={
+                    property.currency === 'USD'
+                      ? `$${property.price.toLocaleString('es-BO')} USD`
+                      : `Bs ${property.price.toLocaleString('es-BO')}`
+                  }
+                  descripcion={property.title}
+                  camas={3}
+                  banos={2}
+                  metros={150}
+                />
+              ) : (
+                <PropertyRow
+                  title={property.title}
+                  price={
+                    property.currency === 'USD'
+                      ? `$${property.price.toLocaleString('es-BO')} USD`
+                      : `Bs ${property.price.toLocaleString('es-BO')}`
+                  }
+                  size="3 Dorm. • 150 m²"
+                  contactType="whatsapp"
+                  image=""
+                />
+              )}
+            </div>
+          ))}
         </div>
       )}
 
