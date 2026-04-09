@@ -1,77 +1,121 @@
-"use client";
+'use client'
 
-import { useState, useEffect, Suspense } from "react";
-import nextDynamic from "next/dynamic";
+import { useState, useEffect, useRef, Suspense } from 'react'
+import nextDynamic from 'next/dynamic'
 import {
   ChevronLeft,
   ChevronRight,
   List as ListIcon,
   LayoutGrid,
-} from "lucide-react";
+  ChevronUp,
+  ChevronDown,
+  X
+} from 'lucide-react'
 
-// === HOOKS ===
-import { useProperties } from "@/hooks/useProperties";
-import { useOrdenamiento } from "@/hooks/useOrdenamiento";
+import { useProperties } from '@/hooks/useProperties'
+import { useOrdenamiento } from '@/hooks/useOrdenamiento'
+import FilterBar from '@/components/filters/FilterBar'
+import PropertyCard from '@/components/layout/PropertyCard'
+import PropertyRow from '@/components/galeria/PropertyRow'
+import EmptyState from '@/components/galeria/EmptyState'
+import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenamiento'
 
-// === COMPONENTES ===
-import FilterBar from "@/components/filters/FilterBar";
-import PropertyCard from "@/components/layout/PropertyCard";
-import PropertyRow from "@/components/galeria/PropertyRow";
-import EmptyState from "@/components/galeria/EmptyState";
-import { MenuOrdenamiento } from "@/components/busqueda/ordenamiento/MenuOrdenamiento";
-
-// Carga dinámica del mapa (sin SSR)
-const MapView = nextDynamic(() => import("./MapView"), {
+const MapView = nextDynamic(() => import('./MapView'), {
   ssr: false,
   loading: () => (
     <div className="h-full w-full bg-stone-100 animate-pulse flex items-center justify-center text-stone-400">
       Cargando mapa de Bolivia...
     </div>
-  ),
-});
+  )
+})
 
-// Componente con la lógica interna (necesita Suspense por useSearchParams en useProperties)
+function useIsMobile(breakpoint = 768) {
+  // Siempre false en el primer render (igual que SSR) para evitar hydration mismatch
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${breakpoint - 1}px)`)
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches)
+    mql.addEventListener('change', handler)
+    setIsMobile(mql.matches) // actualiza solo en cliente post-mount
+    return () => mql.removeEventListener('change', handler)
+  }, [breakpoint])
+  return isMobile
+}
+
+// Detecta landscape en móvil: ancho > alto Y alto < 500px
+// (tablets landscape con alto > 500 quedan como desktop)
+function useIsLandscapeMobile() {
+  const [isLandscape, setIsLandscape] = useState(false)
+  useEffect(() => {
+    const handler = () => {
+      setIsLandscape(window.innerWidth > window.innerHeight && window.innerHeight < 500)
+    }
+    window.addEventListener('resize', handler)
+    window.addEventListener('orientationchange', handler)
+    handler()
+    return () => {
+      window.removeEventListener('resize', handler)
+      window.removeEventListener('orientationchange', handler)
+    }
+  }, [])
+  return isLandscape
+}
+
+// Alturas en % del contenedor padre (el flex-1 debajo del FilterBar).
+// Usar % en vez de dvh evita que el sheet suba por encima del FilterBar.
+const SHEET_H = { peek: '50%', full: '100%' } as const
+type SheetState = 'hidden' | 'peek' | 'full'
+
 function BusquedaMapaContent() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [sheetState, setSheetState] = useState<SheetState>('peek')
+  const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
+  const [isMounted, setIsMounted] = useState(false)
 
-  const { properties, isLoading, error } = useProperties();
-  const { ordenActual, cambiarOrden } = useOrdenamiento({
-    inmuebles: properties,
-  });
+  const isMobile = useIsMobile()
+  const isLandscape = useIsLandscapeMobile()
 
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
-    null,
-  );
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
-
-  // Hover con debounce de 200 ms → vuela el mapa al marcador
+  // Evita hydration mismatch: el servidor siempre renderiza desktop.
+  // El cliente switcha al layout correcto después del primer mount.
   useEffect(() => {
-    if (!hoveredId) return;
-    const timeout = setTimeout(() => {
-      setSelectedPropertyId(hoveredId);
-    }, 200);
-    return () => clearTimeout(timeout);
-  }, [hoveredId]);
+    setIsMounted(true)
+  }, [])
 
-  // 👇 NUEVO: Sincronización del mapa con el colapso del panel lateral
+  const { properties, isLoading, error } = useProperties()
+  const { ordenActual, cambiarOrden } = useOrdenamiento({ inmuebles: properties })
+
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
+
+  // Touch drag
+  const dragStartY = useRef<number | null>(null)
+  const dragStartState = useRef<SheetState>('peek')
+
   useEffect(() => {
-    // 300ms es exactamente el tiempo que dura su clase 'duration-300'
-    const resizeTimeout = setTimeout(() => {
-      window.dispatchEvent(new Event("resize"));
-    }, 300);
+    if (!hoveredId) return
+    const t = setTimeout(() => setSelectedPropertyId(hoveredId), 200)
+    return () => clearTimeout(t)
+  }, [hoveredId])
 
-    return () => clearTimeout(resizeTimeout);
-  }, [isSidebarOpen]);
+  useEffect(() => {
+    const t = setTimeout(() => window.dispatchEvent(new Event('resize')), 310)
+    return () => clearTimeout(t)
+  }, [isSidebarOpen, sheetState])
 
-  return (
-    <div className="flex flex-col h-[calc(100vh-180px)] bg-white overflow-hidden">
-      <FilterBar
-        variant="map"
-        onSearch={(nuevosFiltros) => {
-          console.log("🔍 Buscando con filtros:", nuevosFiltros);
-        }}
-      />
+  function handleMapSelect(id: string) {
+    setSelectedPropertyId(id)
+    const prop = properties.find((p: any) => p.id === id)
+    if (prop) {
+      setPinnedProperty(prop)
+      setSheetState('peek')
+    }
+  }
+
+  function onTouchStart(e: React.TouchEvent) {
+    dragStartY.current = e.touches[0].clientY
+    dragStartState.current = sheetState === 'hidden' ? 'peek' : sheetState
+  }
 
       <main className="flex flex-1 overflow-hidden relative border-b border-stone-200">
         {/* Panel lateral colapsable */}
