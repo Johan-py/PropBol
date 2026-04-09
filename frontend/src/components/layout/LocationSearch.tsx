@@ -157,6 +157,12 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             value={value}
             onChange={handleInputChange}
             onFocus={() => setIsOpen(true)} // Al hacer clic, abrimos el desplegable
+            // Cerramos el panel si el usuario presiona Enter para buscar
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setIsOpen(false);
+              }
+            }}
             placeholder="Cochabamba, La Paz..."
             className="w-full bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 font-inter relative z-10"
           />

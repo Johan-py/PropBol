@@ -51,7 +51,8 @@ export default function FilterBar({
     }
   }, []);
 
-  const handleSearch = () => {
+  const handleSearch = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     // Mapeo para el backend
     const tipoMap: Record<string, string> = {
       Casa: "CASA",
@@ -95,7 +96,7 @@ export default function FilterBar({
       : "bg-white shadow-lg rounded-[30px] p-6 flex flex-col gap-6 w-[921px]";
 
   return (
-    <div className={containerStyles}>
+    <form className={containerStyles}>
       <div className={variant === "map" ? "shrink-0 scale-90 origin-left" : ""}>
         <TransactionModeFilter
           modoSeleccionado={modosSeleccionados}
@@ -141,6 +142,6 @@ export default function FilterBar({
           <SearchIcon size={18} /> {variant === "map" ? "" : "BUSCAR"}
         </button>
       </div>
-    </div>
+    </form>
   );
 }
