@@ -196,8 +196,6 @@ export default function MapView({
         zoomControl={false}
         touchZoom={true}
         dragging={true}
-        tap={true}
-        tapTolerance={15}
         wheelDebounceTime={150}
         wheelPxPerZoomLevel={120}
         style={{ height: "100%", width: "100%" }}
