@@ -97,6 +97,24 @@ function createPinIcon(type: PropertyMapPin["type"]): L.DivIcon {
   });
 }
 
+function MapClickHandler({ onMapClick }: { onMapClick: () => void }) {
+  const map = useMap()
+
+  useEffect(() => {
+    const handleClick = () => {
+      onMapClick()
+    }
+
+    map.on("click", handleClick)
+
+    return () => {
+      map.off("click", handleClick)
+    }
+  }, [map, onMapClick])
+
+  return null
+}
+
 function MapMouseHandler({ onMouseLeave }: { onMouseLeave: () => void }) {
   const map = useMap();
   
@@ -172,7 +190,7 @@ interface MapViewProps {
   center?: [number, number];
   zoom?: number;
   selectedId?: string | null;
-  onSelect?: (id: string) => void;
+  onSelect?: (id: string | null) => void
   isLoading?: boolean;
   error?: string | null;
 }
@@ -230,7 +248,7 @@ export default function MapView({
 
         <ZoomControls />
          <MapMouseHandler onMouseLeave={() => setHoveredPinId(null)} />
-  
+         <MapClickHandler onMapClick={() => onSelect?.(null)} />
           {selectedProperty && (
            <FlyToSelected lat={selectedProperty.lat} lng={selectedProperty.lng} />
           )}
