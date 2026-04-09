@@ -231,6 +231,8 @@ export default function MapView({
           animateAddingMarkers={true}
           chunkedLoading={true}
           showCoverageOnHover={false}
+          polygonOptions={{ opacity: 0 }}
+          singleMarkerMode={false}
           zoomToBoundsOnClick={true}
           spiderfyOnMaxZoom={true}
           spiderfyDistanceMultiplier={2}
