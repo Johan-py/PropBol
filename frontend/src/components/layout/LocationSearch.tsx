@@ -25,36 +25,10 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
   const [history, setHistory] = useState<string[]>([])
   const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({})
   const containerRef = useRef<HTMLDivElement>(null)
-  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({})
 
   const { updateFilters } = useSearchFilters()
   const { registrarConsulta } = usePopularidad()
 
-<<<<<<< HEAD
-  // ✅ POSICIÓN FIXED (clave para evitar overflow issues)
-  useEffect(() => {
-    if (!isOpen || !containerRef.current) return
-
-    const updatePosition = () => {
-      if (!containerRef.current) return
-      const rect = containerRef.current.getBoundingClientRect()
-      setDropdownStyle({
-        position: 'fixed',
-        top: rect.bottom + 8,
-        left: rect.left,
-        width: rect.width,
-        zIndex: 9999
-      })
-    }
-
-    updatePosition()
-    window.addEventListener('resize', updatePosition)
-    window.addEventListener('scroll', updatePosition, true)
-
-    return () => {
-      window.removeEventListener('resize', updatePosition)
-      window.removeEventListener('scroll', updatePosition, true)
-=======
   const recalcDropdown = () => {
     if (!containerRef.current) return
     const rect = containerRef.current.getBoundingClientRect()
@@ -81,24 +55,12 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     return () => {
       window.removeEventListener('resize', recalcDropdown)
       window.removeEventListener('scroll', recalcDropdown, true)
->>>>>>> 9d8b0ea (fix(HU2): Corregir location search para movil responsive)
     }
   }, [isOpen])
 
   const handleSelectLocation = (loc: Location) => {
     const fullName = `${loc.nombre} - ${loc.departamento} - Bolivia`
-<<<<<<< HEAD
-
-    // sync sistema
-    updateFilters({
-      locationId: loc.id,
-      query: fullName
-    })
-
-    // lógica UI
-=======
     updateFilters({ locationId: loc.id, query: fullName })
->>>>>>> 9d8b0ea (fix(HU2): Corregir location search para movil responsive)
     onChange(fullName)
     saveToHistory(fullName)
     setSuggestions([])
@@ -106,7 +68,6 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     registrarConsulta(loc.id, fullName)
   }
 
-  // historial
   useEffect(() => {
     const savedHistory = localStorage.getItem('searchHistory')
     if (savedHistory) setHistory(JSON.parse(savedHistory))
@@ -119,17 +80,8 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-<<<<<<< HEAD
-    const rawValue = e.target.value
-
-    // ✅ mejor versión: limpia chars pero NO rompe espacios iniciales raro
-    const cleanValue = rawValue.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-]/gi, '')
-
-    onChange(cleanValue)
-=======
     const clean = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-]/gi, '')
     onChange(clean)
->>>>>>> 9d8b0ea (fix(HU2): Corregir location search para movil responsive)
   }
 
   const isSelected = value.trim().endsWith(' - Bolivia')
@@ -165,19 +117,92 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
           setSuggestions(data)
           setIsOpen(true)
         }
-      } catch (error) {
-        console.error('Error buscando ubicaciones:', error)
+      } catch (err) {
+        console.error('Error buscando ubicaciones:', err)
       } finally {
         setIsLoading(false)
       }
     }
 
-    const timer = setTimeout(fetchLocations, 300)
-    return () => clearTimeout(timer)
+    const t = setTimeout(fetchLocations, 300)
+    return () => clearTimeout(t)
   }, [value, isSelected])
 
+  const dropdown = isOpen ? (
+    <div
+      className="bg-white border border-stone-200 rounded-xl shadow-xl overflow-hidden"
+      style={dropdownStyle}
+    >
+      {value === '' && history.length > 0 && (
+        <div>
+          <div className="px-4 py-2 bg-stone-50 border-b border-stone-100">
+            <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">
+              Búsquedas recientes
+            </span>
+          </div>
+          {history.map((item, idx) => (
+            <button
+              key={`hist-${idx}`}
+              type="button"
+              onClick={() => {
+                onChange(item)
+                setIsOpen(false)
+                updateFilters({ query: item })
+              }}
+              className="w-full px-4 py-3 flex items-center gap-3 hover:bg-amber-50 transition-colors text-left border-b border-stone-50 last:border-0"
+            >
+              <History className="w-3.5 h-3.5 text-stone-300" />
+              <span className="text-sm text-stone-600">{item}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {value.trim().length >= 2 && !isSelected && (
+        <>
+          {isLoading ? (
+            <div className="px-4 py-6 text-center flex flex-col items-center gap-2">
+              <Loader2 className="w-5 h-5 animate-spin text-amber-600" />
+              <span className="text-sm text-stone-500 italic">Buscando zonas...</span>
+            </div>
+          ) : suggestions.length > 0 ? (
+            <div className="max-h-[300px] overflow-y-auto">
+              {suggestions.slice(0, 5).map((loc) => (
+                <button
+                  key={loc.id}
+                  type="button"
+                  onClick={() => handleSelectLocation(loc)}
+                  className="w-full px-4 py-3 flex items-center justify-between hover:bg-amber-50 transition-colors text-left border-b border-stone-50 last:border-0"
+                >
+                  <div className="flex items-center gap-3">
+                    <Search className="w-3.5 h-3.5 text-stone-500" />
+                    <span className="text-sm font-bold text-stone-600">
+                      {loc.nombre} - {loc.departamento} - Bolivia
+                    </span>
+                  </div>
+                  <Image
+                    src="https://flagcdn.com/w20/bo.png"
+                    alt="BO"
+                    width={20}
+                    height={14}
+                    className="rounded-sm"
+                  />
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="px-4 py-8 text-center bg-stone-50/50">
+              <p className="text-sm text-stone-600 font-medium">No se encontraron resultados</p>
+              <p className="text-xs text-stone-400 mt-1 italic">Pruebe con "Cala Cala"</p>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  ) : null
+
   return (
-    <div className="w-full relative" ref={containerRef}>
+    <div className="w-full relative z-[60]" ref={containerRef}>
       <label className="block text-sm font-medium text-stone-700 mb-2 text-left md:text-center uppercase tracking-wide font-montserrat">
         Ciudad / Zona
       </label>
@@ -189,13 +214,9 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             : 'border-stone-300'
         }`}
       >
-        <MapPin
-          className={`w-5 h-5 flex-shrink-0 ${
-            value ? 'text-amber-600' : 'text-stone-400'
-          }`}
-        />
+        <MapPin className={`w-5 h-5 flex-shrink-0 ${value ? 'text-amber-600' : 'text-stone-400'}`} />
 
-        <div className="relative flex-1 flex items-center w-full h-full min-w-0">
+        <div className="relative flex-1 flex items-center h-full min-w-0 overflow-hidden">
           <input
             type="text"
             value={value}
@@ -205,121 +226,41 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
               if (e.key === 'Enter') setIsOpen(false)
             }}
             placeholder="Cochabamba, La Paz..."
-            className="w-full bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 font-inter pr-[70px] md:truncate overflow-x-auto whitespace-nowrap"
+            className="w-full min-w-0 truncate bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 font-inter"
           />
-
-          <div className="absolute right-0 flex items-center gap-2 bg-white pl-2 h-full">
-            {isSelected && (
-              <Image
-                src="https://flagcdn.com/w20/bo.png"
-                alt="BO"
-                width={20}
-                height={14}
-                className="rounded-sm flex-shrink-0"
-              />
-            )}
-
-            {isLoading ? (
-              <Loader2 className="w-4 h-4 animate-spin text-amber-600" />
-            ) : (
-              value && (
-                <button
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    onChange('')
-                  }}
-                  type="button"
-                  className="p-1 hover:bg-stone-100 rounded-full transition-colors flex-shrink-0"
-                >
-                  <X className="w-4 h-4 text-stone-400 hover:text-red-500" />
-                </button>
-              )
-            )}
-          </div>
+          {isSelected && (
+            <Image
+              src="https://flagcdn.com/w20/bo.png"
+              alt="BO"
+              width={20}
+              height={14}
+              className="rounded-sm flex-shrink-0 ml-2"
+            />
+          )}
         </div>
+
+        {isLoading ? (
+          <Loader2 className="w-4 h-4 animate-spin text-amber-600 flex-shrink-0" />
+        ) : (
+          value && (
+            <button
+              onClick={() => {
+                onChange('')
+                setSuggestions([])
+                setIsOpen(true)
+              }}
+              type="button"
+              className="flex-shrink-0"
+            >
+              <X className="w-4 h-4 text-stone-400 hover:text-red-500" />
+            </button>
+          )
+        )}
       </div>
 
-      {isOpen && (
-        <div
-          className="bg-white border border-stone-200 rounded-xl shadow-xl overflow-hidden"
-          style={dropdownStyle}
-        >
-          {/* HISTORIAL */}
-          {value === '' && history.length > 0 && (
-            <div>
-              <div className="px-4 py-2 bg-stone-50 border-b border-stone-100">
-                <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">
-                  Búsquedas recientes
-                </span>
-              </div>
-              {history.map((item, idx) => (
-                <button
-                  key={`hist-${idx}`}
-                  type="button"
-                  onClick={() => {
-                    onChange(item)
-                    setIsOpen(false)
-                    updateFilters({ query: item })
-                  }}
-                  className="w-full px-4 py-3 flex items-center gap-3 hover:bg-amber-50 transition-colors text-left border-b border-stone-50 last:border-0"
-                >
-                  <History className="w-3.5 h-3.5 text-stone-300" />
-                  <span className="text-sm text-stone-600">{item}</span>
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* RESULTADOS */}
-          {value.trim().length >= 2 && !isSelected && (
-            <>
-              {isLoading ? (
-                <div className="px-4 py-6 text-center flex flex-col items-center gap-2">
-                  <Loader2 className="w-5 h-5 animate-spin text-amber-600" />
-                  <span className="text-sm text-stone-500 italic">
-                    Buscando zonas...
-                  </span>
-                </div>
-              ) : suggestions.length > 0 ? (
-                <div className="max-h-[300px] overflow-y-auto">
-                  {suggestions.slice(0, 5).map((loc) => (
-                    <button
-                      key={loc.id}
-                      type="button"
-                      onClick={() => handleSelectLocation(loc)}
-                      className="w-full px-4 py-3 flex items-center justify-between hover:bg-amber-50 transition-colors text-left border-b border-stone-50 last:border-0"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Search className="w-3.5 h-3.5 text-stone-500" />
-                        <span className="text-sm font-bold text-stone-600">
-                          {loc.nombre} - {loc.departamento} - Bolivia
-                        </span>
-                      </div>
-                      <Image
-                        src="https://flagcdn.com/w20/bo.png"
-                        alt="BO"
-                        width={20}
-                        height={14}
-                        className="rounded-sm"
-                      />
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <div className="px-4 py-8 text-center bg-stone-50/50">
-                  <p className="text-sm text-stone-600 font-medium">
-                    No se encontraron resultados
-                  </p>
-                  <p className="text-xs text-stone-400 mt-1 italic">
-                    Pruebe con "Cala Cala"
-                  </p>
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      )}
+      {typeof document !== 'undefined' && dropdown
+        ? createPortal(dropdown, document.body)
+        : null}
     </div>
   )
 }
