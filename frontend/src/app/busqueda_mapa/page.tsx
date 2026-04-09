@@ -147,17 +147,23 @@ function BusquedaMapaContent() {
                   >
                     {properties.map((property: any) => (
                       <div
-                        key={property.id}
-                        // Hover con debounce: dispara el vuelo del mapa al marcador
-                        onMouseEnter={() => setHoveredId(property.id)}
-                        onMouseLeave={() => setHoveredId(null)}
-                        onClick={() => setSelectedPropertyId(property.id)}
-                        className={`cursor-pointer transition-all duration-200 rounded-xl ${
-                          selectedPropertyId === property.id
-                            ? "ring-2 ring-orange-400 ring-offset-1"
-                            : ""
-                        }`}
-                      >
+                      key={property.id}
+                      onMouseEnter={() => setHoveredId(property.id)}
+                      onMouseLeave={() => setHoveredId(null)}
+                      onClick={() => setSelectedPropertyId(property.id)}
+                      // 1. SOLO clases base aquí (cursor, transición, bordes)
+                      className={`cursor-pointer transition-all duration-200 rounded-xl relative ${
+                        // 2. SOLO aquí va la reducción (porque solo afecta al Grid)
+                        viewMode === "grid"
+                          ? "transform scale-95 origin-top mx-auto mb-[-4%]"
+                        // 3. Vista de lista limpia
+                          : "w-full py-1 hover:bg-stone-100" 
+                      } ${
+                        selectedPropertyId === property.id
+                          ? "ring-2 ring-orange-400 ring-offset-1 z-10"
+                          : ""
+                      }`}
+                    >
                         {viewMode === "grid" ? (
                           <PropertyCard
                             imagen=""
