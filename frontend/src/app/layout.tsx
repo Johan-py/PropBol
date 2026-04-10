@@ -3,8 +3,44 @@ import './globals.css'
 import AppShell from '@/components/layout/AppShell'
 
 export const metadata: Metadata = {
+<<<<<<< HEAD
   title: 'PropBol',
   description: 'Descripción de mi aplicación'
+=======
+  title: {
+    default: 'PropBol',
+    template: '%s | PropBol'
+  },
+  description:
+    'PropBol es una inmobiliaria boliviana con un portal para comprar, alquilar, publicar y descubrir propiedades con información clara y confiable.',
+  applicationName: 'PropBol',
+  keywords: [
+    'PropBol',
+    'inmobiliaria boliviana',
+    'propiedades en Bolivia',
+    'casas en venta',
+    'alquileres',
+    'anticrético'
+  ],
+  robots: {
+    follow: true,
+    index: true
+  },
+  openGraph: {
+    title: 'PropBol',
+    description:
+      'Portal inmobiliario boliviano para comprar, alquilar, publicar y descubrir propiedades.',
+    locale: 'es_BO',
+    siteName: 'PropBol',
+    type: 'website'
+  },
+  twitter: {
+    card: 'summary',
+    description:
+      'Portal inmobiliario boliviano para comprar, alquilar, publicar y descubrir propiedades.',
+    title: 'PropBol'
+  }
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

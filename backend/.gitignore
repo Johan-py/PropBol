@@ -34,3 +34,7 @@ Thumbs.db
 seed-datos_ub_maestra.ts
 .vercel
 .env*.local
+
+# Python
+__pycache__/
+*.pyc

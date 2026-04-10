@@ -1,6 +1,10 @@
 'use client'
 
+<<<<<<< HEAD
 import { useCallback, useEffect, useMemo, useState } from 'react'
+=======
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
 import { Eye, EyeOff, Mail, User, Phone, Lock, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -122,9 +126,17 @@ export default function SignUpForm() {
   const [touched, setTouched] = useState<Record<string, boolean>>({})
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+<<<<<<< HEAD
   const [serverError, setServerError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+=======
+  const passwordContainerRef = useRef<HTMLDivElement>(null)
+  const confirmPasswordContainerRef = useRef<HTMLDivElement>(null)
+  const [serverError, setServerError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [googleButtonResetKey, setGoogleButtonResetKey] = useState(0)
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
   const onlyLettersRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/
   const onlyNumbersRegex = /^[0-9]*$/
 
@@ -330,8 +342,25 @@ export default function SignUpForm() {
     setShowConfirmPassword(false)
     setServerError('')
     setIsSubmitting(false)
+<<<<<<< HEAD
     router.push('/')
   }
+=======
+    setGoogleButtonResetKey((prev) => prev + 1)
+  }
+
+  const hasFormContent = useMemo(() => {
+    return (
+      formData.email.trim() !== '' ||
+      formData.firstName.trim() !== '' ||
+      formData.lastName.trim() !== '' ||
+      formData.phone.trim() !== '' ||
+      formData.password.trim() !== '' ||
+      formData.confirmPassword.trim() !== '' ||
+      serverError !== ''
+    )
+  }, [formData, serverError])
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
 
   const isFormValid = useMemo(() => {
     const requiredFieldsCompleted =
@@ -507,6 +536,7 @@ export default function SignUpForm() {
                   id="email"
                   name="email"
                   type="email"
+                  autoFocus
                   value={formData.email}
                   onChange={handleChange('email')}
                   onBlur={handleBlur('email')}
@@ -587,7 +617,16 @@ export default function SignUpForm() {
 
             <div>
               <FieldLabel htmlFor="password">Contraseña</FieldLabel>
-              <div className="relative">
+              <div
+                className="relative"
+                ref={passwordContainerRef}
+                onBlur={(e) => {
+                  if (!passwordContainerRef.current?.contains(e.relatedTarget as Node)) {
+                    setShowPassword(false)
+                    handleBlur('password')()
+                  }
+                }}
+              >
                 <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#78716c]" />
                 <input
                   id="password"
@@ -595,7 +634,10 @@ export default function SignUpForm() {
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={handleChange('password')}
+<<<<<<< HEAD
                   onBlur={handleBlur('password')}
+=======
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
                   placeholder="Ingresa tu contraseña"
                   maxLength={255}
                   className={`${getInputClasses(
@@ -622,7 +664,20 @@ export default function SignUpForm() {
 
             <div>
               <FieldLabel htmlFor="confirmPassword">Confirmar contraseña</FieldLabel>
+<<<<<<< HEAD
               <div className="relative">
+=======
+              <div
+                className="relative"
+                ref={confirmPasswordContainerRef}
+                onBlur={(e) => {
+                  if (!confirmPasswordContainerRef.current?.contains(e.relatedTarget as Node)) {
+                    setShowConfirmPassword(false)
+                    handleBlur('confirmPassword')()
+                  }
+                }}
+              >
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
                 <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#78716c]" />
                 <input
                   id="confirmPassword"
@@ -630,7 +685,10 @@ export default function SignUpForm() {
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={formData.confirmPassword}
                   onChange={handleChange('confirmPassword')}
+<<<<<<< HEAD
                   onBlur={handleBlur('confirmPassword')}
+=======
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
                   placeholder="Ingresa tu contraseña"
                   maxLength={255}
                   className={`${getInputClasses(
@@ -674,6 +732,7 @@ export default function SignUpForm() {
             </div>
 
             <GoogleRegisterButton
+              key={googleButtonResetKey}
               onCredentialReceived={handleGoogleCredential}
               onError={setServerError}
               disabled={isSubmitting}
@@ -682,7 +741,12 @@ export default function SignUpForm() {
             <button
               type="button"
               onClick={handleCancel}
-              className="mx-auto block rounded-md bg-[#292524] px-4 py-2 text-[11px] font-semibold text-white transition hover:bg-[#1c1917]"
+              disabled={!hasFormContent}
+              className={`mx-auto block rounded-md px-4 py-2 text-[11px] font-semibold transition ${
+                hasFormContent
+                  ? 'bg-[#292524] text-white hover:bg-[#1c1917]'
+                  : 'cursor-not-allowed bg-[#d6d3d1] text-[#a8a29e]'
+              }`}
             >
               Cancelar registro
             </button>
@@ -696,6 +760,14 @@ export default function SignUpForm() {
                 Inicia sesión
               </Link>
             </p>
+
+            <button
+              type="button"
+              onClick={() => router.push('/')}
+              className="mt-2 w-full text-center text-[12px] font-medium text-[#57534e] underline transition hover:text-[#292524]"
+            >
+              Ir a la página principal
+            </button>
           </form>
         </div>
       </div>

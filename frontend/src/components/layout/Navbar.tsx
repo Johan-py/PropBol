@@ -18,10 +18,28 @@ export type User = {
   avatar?: string | null
 }
 
+<<<<<<< HEAD
 const USER_STORAGE_KEY = 'propbol_user'
 const SESSION_EXPIRES_KEY = 'propbol_session_expires'
 const SESSION_DURATION_MS = 60 * 60 * 1000
 
+=======
+type MeResponse = {
+  message?: string
+  user?: {
+    id: number
+    nombre?: string
+    apellido?: string
+    correo: string
+    avatar?: string | null
+  }
+}
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
+const USER_STORAGE_KEY = 'propbol_user'
+const SESSION_EXPIRES_KEY = 'propbol_session_expires'
+
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
 const filters: NotificationFilter[] = ['todas', 'leida', 'no leida']
 
 export default function Navbar() {
@@ -44,7 +62,6 @@ export default function Navbar() {
     isLoadingMore,
     error,
     isOnline,
-    notificationRef,
     toggleNotifications,
     setFilter,
     markAsRead,
@@ -81,6 +98,7 @@ export default function Navbar() {
     return Date.now() > Number(expiresAt)
   }
 
+<<<<<<< HEAD
   const restoreSession = () => {
     const savedUser = localStorage.getItem(USER_STORAGE_KEY)
     const expiresAt = localStorage.getItem(SESSION_EXPIRES_KEY)
@@ -89,6 +107,29 @@ export default function Navbar() {
     const updatedName = localStorage.getItem('nombre')
     const updatedEmail = localStorage.getItem('correo')
     const updatedAvatar = localStorage.getItem('avatar')
+=======
+  const fetchCurrentUser = async (token: string) => {
+    const response = await fetch(`${API_URL}/api/perfil/usuario`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    const data = await response.json()
+
+    if (!response.ok || !data.perfil) {
+      throw new Error(data.message || 'Sesión inválida o expirada')
+    }
+
+    return data.perfil
+  }
+
+  const restoreSession = async () => {
+    const savedUser = localStorage.getItem(USER_STORAGE_KEY)
+    const expiresAt = localStorage.getItem(SESSION_EXPIRES_KEY)
+    const token = localStorage.getItem('token')
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
 
     if (!savedUser || !expiresAt || !token) {
       clearSession(false)
@@ -98,6 +139,7 @@ export default function Navbar() {
     if (Date.now() > Number(expiresAt)) {
       clearSession(false)
       return
+<<<<<<< HEAD
     }
 
     try {
@@ -107,6 +149,41 @@ export default function Navbar() {
         email: updatedEmail || parsedUser.email,
         avatar: updatedAvatar || parsedUser.avatar || null
       }
+=======
+    }
+
+    if (!navigator.onLine) {
+      clearSession(false)
+      return
+    }
+
+    try {
+      const validatedUser = await fetchCurrentUser(token)
+
+      const finalName =
+        validatedUser.nombre && validatedUser.apellido
+          ? `${validatedUser.nombre} ${validatedUser.apellido}`
+          : validatedUser.nombre || validatedUser.correo
+
+      const finalUser: User = {
+        name: finalName,
+        email: validatedUser.correo,
+        avatar: validatedUser.avatar ?? null
+      }
+
+      localStorage.setItem(
+        USER_STORAGE_KEY,
+        JSON.stringify({
+          name: finalUser.name,
+          email: finalUser.email,
+          avatar: finalUser.avatar
+        })
+      )
+      localStorage.setItem('nombre', finalUser.name)
+      localStorage.setItem('correo', finalUser.email)
+      localStorage.setItem('avatar', finalUser.avatar ?? '')
+
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
       setUser(finalUser)
       setIsLoggedIn(true)
     } catch {
@@ -115,6 +192,7 @@ export default function Navbar() {
   }
 
   useEffect(() => {
+<<<<<<< HEAD
     restoreSession()
 
     const handleSessionChange = () => restoreSession()
@@ -122,11 +200,31 @@ export default function Navbar() {
     window.addEventListener('storage', handleSessionChange)
     window.addEventListener('propbol:login', handleSessionChange)
     window.addEventListener('propbol:session-changed', handleSessionChange)
+=======
+    void restoreSession()
+
+    const handleSessionChange = () => {
+      void restoreSession()
+    }
+
+    const handleOnline = () => {
+      void restoreSession()
+    }
+
+    window.addEventListener('storage', handleSessionChange)
+    window.addEventListener('propbol:login', handleSessionChange)
+    window.addEventListener('propbol:session-changed', handleSessionChange)
+    window.addEventListener('online', handleOnline)
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
 
     return () => {
       window.removeEventListener('storage', handleSessionChange)
       window.removeEventListener('propbol:login', handleSessionChange)
       window.removeEventListener('propbol:session-changed', handleSessionChange)
+<<<<<<< HEAD
+=======
+      window.removeEventListener('online', handleOnline)
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
     }
   }, [])
 
@@ -154,6 +252,10 @@ export default function Navbar() {
         router.push('/')
       }
     }, 10000)
+<<<<<<< HEAD
+=======
+
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
     return () => clearInterval(interval)
   }, [user, router])
 
@@ -186,6 +288,7 @@ export default function Navbar() {
 
   const handleConfirmLogout = async () => {
     if (isLoggingOut) return
+<<<<<<< HEAD
     setIsLoggingOut(true)
     const token = localStorage.getItem('token')
     if (token) {
@@ -199,6 +302,21 @@ export default function Navbar() {
         )
       } catch {}
     }
+=======
+
+    setIsLoggingOut(true)
+    const token = localStorage.getItem('token')
+
+    if (token) {
+      try {
+        await fetch(`${API_URL}/api/auth/logout`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` }
+        })
+      } catch {}
+    }
+
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
     clearSession()
     setIsLoggingOut(false)
     router.push('/')
@@ -215,7 +333,6 @@ export default function Navbar() {
             </div>
 
             <div className="flex items-center gap-4">
-              {/* NOTIFICACIONES */}
               <div className="relative" ref={notificationPanelRef}>
                 <button
                   type="button"
@@ -315,6 +432,10 @@ export default function Navbar() {
                             const target = e.currentTarget
                             const reachedBottom =
                               target.scrollTop + target.clientHeight >= target.scrollHeight - 10
+<<<<<<< HEAD
+=======
+
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
                             if (reachedBottom && hasMore && !isLoadingMore) {
                               void loadMoreNotifications()
                             }
@@ -389,6 +510,7 @@ export default function Navbar() {
                                   </div>
                                 </div>
                               ))}
+
                               {isLoadingMore && (
                                 <p className="px-4 py-3 text-center text-xs text-stone-400">
                                   Cargando más notificaciones...
@@ -397,6 +519,7 @@ export default function Navbar() {
                             </>
                           )}
                         </div>
+
                         <div className="border-t border-stone-100 px-4 py-3 text-center">
                           <Link
                             href="/notificaciones"
@@ -412,7 +535,6 @@ export default function Navbar() {
                 )}
               </div>
 
-              {/* USER MENU */}
               <div className="relative" ref={panelRef}>
                 <UserMenu
                   user={user}
@@ -424,7 +546,6 @@ export default function Navbar() {
                 />
               </div>
 
-              {/* MOBILE MENU BUTTON */}
               <button
                 type="button"
                 onClick={() => setIsMobileMenuOpen(true)}
@@ -445,7 +566,6 @@ export default function Navbar() {
         onConfirm={handleConfirmLogout}
       />
 
-      {/* MOBILE MENU PANEL */}
       {isMobileMenuOpen && (
         <div
           className="fixed inset-0 z-50 bg-black/40 md:hidden"

@@ -26,35 +26,56 @@ const PIN_FILL: Record<PropertyMapPin['type'], string> = {
   casa: '#3b82f6',
   departamento: '#8b5cf6',
   terreno: '#f59e0b',
+<<<<<<< HEAD
   local: '#10b981'
+=======
+  oficina: '#10b981'
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
 }
 
 const PIN_HALO: Record<PropertyMapPin['type'], string> = {
   casa: 'rgba(59,  130, 246, 0.25)',
   departamento: 'rgba(139, 92,  246, 0.25)',
   terreno: 'rgba(245, 158, 11,  0.25)',
+<<<<<<< HEAD
   local: 'rgba(16,  185, 129, 0.25)'
 }
 
 // Color sólido para el texto del precio en el popup
+=======
+  oficina: 'rgba(16,  185, 129, 0.25)'
+}
+
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
 const PIN_LABEL: Record<PropertyMapPin['type'], string> = {
   casa: '#2563eb',
   departamento: '#7c3aed',
   terreno: '#d97706',
+<<<<<<< HEAD
   local: '#059669'
+=======
+  oficina: '#059669'
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
 }
 
 const SELECTED_ICONS: Record<PropertyMapPin['type'], string> = {
   casa: '/house.svg',
   departamento: '/department.svg',
   terreno: '/land.svg',
+<<<<<<< HEAD
   local: '/local.svg'
+=======
+  oficina: '/local.svg'
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
 }
 
 function createPinIcon(type: PropertyMapPin['type']): L.DivIcon {
   const fill = PIN_FILL[type] ?? '#6b7280'
   const halo = PIN_HALO[type] ?? 'rgba(107,114,128,0.25)'
+<<<<<<< HEAD
 
+=======
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
   const outer = 28
   const inner = 20
   const half = outer / 2
@@ -62,35 +83,10 @@ function createPinIcon(type: PropertyMapPin['type']): L.DivIcon {
   return L.divIcon({
     className: '',
     html: `
-      <div style="
-        width: ${outer}px;
-        height: ${outer}px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      ">
-        <!-- Halo -->
-        <div style="
-          position: absolute;
-          width: ${outer}px;
-          height: ${outer}px;
-          border-radius: 50% 50% 50% 0;
-          transform: rotate(-45deg);
-          background-color: ${halo};
-        "></div>
-        <!-- Gota sólida -->
-        <div style="
-          position: relative;
-          width: ${inner}px;
-          height: ${inner}px;
-          border-radius: 50% 50% 50% 0;
-          transform: rotate(-45deg);
-          background-color: ${fill};
-          border: 2px solid rgba(255,255,255,0.9);
-          box-shadow: 0 1px 4px rgba(0,0,0,0.20);
-        "></div>
-      </div>
-    `,
+      <div style="width:${outer}px;height:${outer}px;display:flex;align-items:center;justify-content:center;">
+        <div style="position:absolute;width:${outer}px;height:${outer}px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background-color:${halo};"></div>
+        <div style="position:relative;width:${inner}px;height:${inner}px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background-color:${fill};border:2px solid rgba(255,255,255,0.9);box-shadow:0 1px 4px rgba(0,0,0,0.20);"></div>
+      </div>`,
     iconSize: [outer, outer],
     iconAnchor: [half, outer],
     popupAnchor: [0, -outer]
@@ -99,39 +95,18 @@ function createPinIcon(type: PropertyMapPin['type']): L.DivIcon {
 
 function createSelectedIcon(type: PropertyMapPin['type']): L.DivIcon {
   const iconPath = SELECTED_ICONS[type]
+<<<<<<< HEAD
 
+=======
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
   return L.divIcon({
     className: '',
     html: `
-      <div style="
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transform: scale(1.6);
-      ">
-        <div style="
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          background-color: #ef4444;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.35);
-          border: 2px solid white;
-        ">
-          <img 
-            src="${iconPath}" 
-            style="
-              width:20px;
-              height:20px;
-              object-fit: contain;
-              display: block;
-            " 
-          />
+      <div style="display:flex;align-items:center;justify-content:center;transform:scale(1.6);">
+        <div style="width:36px;height:36px;border-radius:50%;background-color:#ef4444;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.35);border:2px solid white;">
+          <img src="${iconPath}" style="width:20px;height:20px;object-fit:contain;display:block;" />
         </div>
-      </div>
-    `,
+      </div>`,
     iconSize: [36, 36],
     iconAnchor: [18, 36],
     popupAnchor: [0, -36]
@@ -142,6 +117,23 @@ function formatPrice(price: number, currency: 'USD' | 'BOB'): string {
   return currency === 'USD'
     ? `$${price.toLocaleString('es-BO')} USD`
     : `Bs ${price.toLocaleString('es-BO')}`
+<<<<<<< HEAD
+=======
+}
+
+// ─── Fix gray area ────────────────────────────────────────────────────────────
+// Vive dentro de MapContainer y llama invalidateSize() directamente cuando el
+// contenedor cambia de tamaño (sidebar colapsa, sheet cambia altura, rotación).
+function MapResizer() {
+  const map = useMap()
+  useEffect(() => {
+    const handler = () => map.invalidateSize({ animate: false })
+    window.addEventListener('resize', handler)
+    handler() // forzar invalidación inmediata al montar
+    return () => window.removeEventListener('resize', handler)
+  }, [map])
+  return null
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
 }
 
 interface MapViewProps {
@@ -169,7 +161,10 @@ export default function MapView({
     setIsMounted(true)
   }, [])
 
+<<<<<<< HEAD
   // Evita hydration mismatch: renderiza skeleton hasta que el cliente monte
+=======
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
   if (!isMounted) return <div className="w-full h-full bg-gray-100 animate-pulse" />
 
   const selectedProperty = properties.find((p) => p.id === selectedId)
@@ -195,13 +190,27 @@ export default function MapView({
         zoomControl={false}
         touchZoom={true}
         dragging={true}
+<<<<<<< HEAD
         style={{ height: '100%', width: '100%' }}
+=======
+        tapTolerance={15}
+        wheelDebounceTime={150}
+        wheelPxPerZoomLevel={120}
+        style={{ height: '100%', width: '100%' }}
+        preferCanvas={true}
+        bounceAtZoomLimits={false}
+        inertia={true}
+        inertiaDeceleration={3000}
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
         className="z-0"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+
+        {/* Fix gray area — dentro de MapContainer para acceder a la instancia real */}
+        <MapResizer />
 
         <ZoomControls />
 
@@ -221,21 +230,38 @@ export default function MapView({
           animateAddingMarkers={true}
           chunkedLoading={true}
           showCoverageOnHover={false}
+          polygonOptions={{ opacity: 0 }}
+          singleMarkerMode={false}
           zoomToBoundsOnClick={true}
-          removeOutsideVisibleBounds={true}
+          spiderfyOnMaxZoom={true}
+          spiderfyDistanceMultiplier={2}
+          removeOutsideVisibleBounds={false}
           clusterPane="markerPane"
+          // Fix HU-02-06: en móvil el tap de Leaflet no siempre llega al plugin
+          eventHandlers={{
+            clusterclick: (e: any) => {
+              e.layer.zoomToBounds({ padding: [20, 20] })
+            }
+          }}
         >
           {properties.map((property) => {
             const isSelected = property.id === selectedId
+<<<<<<< HEAD
 
+=======
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
             return (
               <Marker
                 key={property.id}
                 position={[property.lat, property.lng]}
                 icon={isSelected ? createSelectedIcon(property.type) : createPinIcon(property.type)}
+<<<<<<< HEAD
                 eventHandlers={{
                   click: () => onSelect?.(property.id)
                 }}
+=======
+                eventHandlers={{ click: () => onSelect?.(property.id) }}
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
               >
                 <Popup>
                   <div className="text-sm min-w-[160px]">
@@ -257,6 +283,7 @@ export default function MapView({
 
 function FlyToSelected({ lat, lng }: { lat: number; lng: number }) {
   const map = useMap()
+<<<<<<< HEAD
 
   useEffect(() => {
     if (!lat || !lng) return
@@ -274,5 +301,14 @@ function FlyToSelected({ lat, lng }: { lat: number; lng: number }) {
     return () => clearTimeout(timeout)
   }, [lat, lng, map])
 
+=======
+  useEffect(() => {
+    if (!lat || !lng) return
+    const targetZoom = 18
+    map.flyTo([lat, lng], targetZoom, { duration: 1.2 })
+    const timeout = setTimeout(() => map.setView([lat, lng], targetZoom), 1200)
+    return () => clearTimeout(timeout)
+  }, [lat, lng, map])
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
   return null
 }

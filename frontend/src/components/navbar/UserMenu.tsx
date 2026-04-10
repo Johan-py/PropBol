@@ -101,16 +101,12 @@ export default function UserMenu({
               </div>
             </div>
 
-            <Link
-              href="/profile"
-              onClick={onClosePanel}
-              className="flex justify-between items-center w-full text-black font-bold py-3 border-t border-b border-gray-200 hover:bg-black/5 px-2 mb-2 transition text-sm"
-            >
-              Mi perfil <span className="text-lg">›</span>
-            </Link>
-
             <div className="flex flex-col mb-4">
+<<<<<<< HEAD
               <MenuLink label="Mi cuenta" href="/cuenta" icon={UserIcon} onClick={onClosePanel} />
+=======
+              <MenuLink label="Mi cuenta" href="/profile" icon={UserIcon} onClick={onClosePanel} />
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
               {/* ✅ Se mantienen ambas opciones: la nueva y la existente */}
               <MenuLink
                 label="Mis propiedades vistas"
@@ -125,6 +121,15 @@ export default function UserMenu({
                 onClick={onClosePanel}
               />
               <MenuLink label="Mis zonas" href="/zonas" icon={Map} onClick={onClosePanel} />
+<<<<<<< HEAD
+=======
+              <MenuLink
+                label="Mis comparaciones"
+                href="/mis-comparaciones"
+                icon={FileText}
+                onClick={onClosePanel}
+              />
+>>>>>>> d035455e2b35f2177fdcfa0b99607734c0e9413e
             </div>
 
             <button
