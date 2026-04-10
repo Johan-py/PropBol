@@ -3,126 +3,79 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 export default function Page() {
-<<<<<<< HEAD
   const router = useRouter()
   const [visible, setVisible] = useState(false)
-  const [datosPlan, setDatosPlan] = useState({ total: 0, usadas: 0 });
-  const [cargando, setCargando] = useState(true);
+  const [datosPlan, setDatosPlan] = useState({ total: 0, usadas: 0 })
+  const [cargando, setCargando] = useState(true)
 
- useEffect(() => {
-  const timer = setTimeout(() => setVisible(true), 100);
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), 100)
 
-  fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/consumo/limite`) 
-    .then(res => res.json())
-    .then(data => {
-      setDatosPlan({ total: data.total, usadas: data.usadas });
-      setCargando(false);
-    })
-    .catch(err => console.error("Error:", err));
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/consumo/limite`)
+      .then((res) => res.json())
+      .then((data) => {
+        setDatosPlan({ total: data.total, usadas: data.usadas })
+        setCargando(false)
+      })
+      .catch((err) => console.error('Error:', err))
 
-  return () => clearTimeout(timer);
-}, []);
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/25 z-50">
       {/* OVERLAY */}
-=======
-  const router = useRouter();
-  const [visible, setVisible] = useState(false);
-  // --- ESTO ES LO NUEVO ---
-  const [datosPlan, setDatosPlan] = useState({ usadas: 0, total: 0 });
-
-  useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 100);
-
-    // LLAMADA AL BACKEND
-    const fetchPlan = async () => {
-      try {
-        const res = await fetch("http://localhost:5000/api/plan-limit", {
-          headers: { "Authorization": `Bearer ${localStorage.getItem('token')}` }
-        });
-        const data = await res.json();
-        setDatosPlan({ usadas: data.usadas, total: data.total });
-      } catch (err) {
-        console.error("Error cargando plan", err);
-      }
-    };
-
-    fetchPlan();
-    return () => clearTimeout(timer);
-  }, []);
-
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black/25 z-50">
->>>>>>> 020dfbafc3bb53afe20d70aa8970c1d97fd56d39
       <div className="absolute inset-0 backdrop-blur-sm"></div>
+
+      {/* FONDO PLOMO */}
       <div className="absolute w-[92%] h-[88%] bg-[#d9d9d9]/40 backdrop-blur-md rounded-2xl"></div>
 
+      {/* CONTENEDOR */}
       <div className="relative flex items-center justify-center w-full h-full">
-<<<<<<< HEAD
         {/* MODAL */}
         <div
           className={`bg-[#eeeeee] rounded-2xl px-7 py-8 w-[360px] text-center shadow-md transform transition-all duration-300
           ${visible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
         >
           {/* ICONO */}
-=======
-        <div className={`bg-[#eeeeee] rounded-2xl px-7 py-8 w-[360px] text-center shadow-md transform transition-all duration-300
-          ${visible ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}>
-          
->>>>>>> 020dfbafc3bb53afe20d70aa8970c1d97fd56d39
           <div className="flex justify-center mb-5">
             <div className="w-14 h-14 flex items-center justify-center rounded-full bg-red-100">
               <span className="text-red-500 text-2xl">🚫</span>
             </div>
           </div>
 
-<<<<<<< HEAD
           {/* TITULO */}
-=======
->>>>>>> 020dfbafc3bb53afe20d70aa8970c1d97fd56d39
           <h2 className="text-xl font-semibold text-gray-700 leading-tight">Límite alcanzado</h2>
 
+          {/* TEXTO */}
           <p className="text-sm text-gray-600 mt-3 leading-relaxed px-2">
-<<<<<<< HEAD
             Has alcanzado el límite de tus publicaciones gratuitas de este mes. Para continuar,
             amplía tu plan de membresía o revisa tus planes disponibles.
-=======
-            Has alcanzado el límite de tus publicaciones gratuitas de este mes.
->>>>>>> 020dfbafc3bb53afe20d70aa8970c1d97fd56d39
           </p>
 
-          {/* --- AQUÍ USAMOS LOS DATOS REALES --- */}
+          {/* CAJA INTERNA */}
           <div className="mt-5 bg-[#e5e5e5] rounded-lg px-4 py-3 flex items-center justify-between">
             <div className="text-left">
               <p className="text-gray-700 text-sm">Tus publicaciones restantes:</p>
               <p className="text-red-500 font-semibold text-sm">
-<<<<<<< HEAD
-                {cargando ? 'Cargando...' : `${Math.max(datosPlan.total - datosPlan.usadas, 0)} de ${datosPlan.total} restantes`}
-              </p>           
+                {cargando
+                  ? 'Cargando...'
+                  : `${Math.max(datosPlan.total - datosPlan.usadas, 0)} de ${datosPlan.total} restantes`}
+              </p>
             </div>
             <div className="w-8 h-8 flex items-center justify-center bg-orange-200 rounded-md">
               🔒
-=======
-                {datosPlan.usadas} de {datosPlan.total} utilizadas
-              </p>
->>>>>>> 020dfbafc3bb53afe20d70aa8970c1d97fd56d39
             </div>
-            <div className="w-8 h-8 flex items-center justify-center bg-orange-200 rounded-md">🔒</div>
           </div>
 
-            {/* BOTÓN PRINCIPAL */}
+          {/* BOTÓN PRINCIPAL */}
           <button
-<<<<<<< HEAD
             onClick={() => router.push('/cobros-suscripciones')}
             className="mt-5 w-full py-2.5 rounded-lg text-white font-medium bg-orange-500 hover:bg-orange-600 transition"
-=======
-            onClick={() => router.push("/planes")}
-            className="mt-5 w-full py-2.5 rounded-lg text-white font-medium bg-orange-500 hover:bg-orange-600 transition"   
->>>>>>> 020dfbafc3bb53afe20d70aa8970c1d97fd56d39
           >
             💳 ¡Ver mis planes y ampliar cupo!
           </button>
+
           {/* BOTÓN SECUNDARIO */}
           <button
             onClick={() => router.push('/mis-publicaciones')}

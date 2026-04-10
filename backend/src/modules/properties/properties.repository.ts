@@ -1,12 +1,4 @@
-import { PrismaClient, Categoria, TipoAccion } from '@prisma/client'
-import { PrismaPg } from '@prisma/adapter-pg'
-import 'dotenv/config'
-
-const databaseUrl = process.env.DATABASE_URL
-if (!databaseUrl) throw new Error('DATABASE_URL no está definido en el entorno')
-
-const adapter = new PrismaPg({ connectionString: databaseUrl })
-const prisma = new PrismaClient({ adapter })
+import { prisma } from '../../lib/prisma.config.js'
 
 export interface FiltrosBusqueda {
   categoria?: string | string[]
@@ -59,12 +51,18 @@ export const propertiesRepository = {
         // Extraemos la primera parte (Ej: Saca "Cala Cala" de "Cala Cala - Cochabamba - Bolivia")
         const textoLimpio = filtros.query.split('-')[0].trim()
 
-        where.OR.push({ titulo: { contains: textoLimpio, mode: 'insensitive' } })
-        where.OR.push({ descripcion: { contains: textoLimpio, mode: 'insensitive' } })
+        where.OR.push({
+          titulo: { contains: textoLimpio, mode: 'insensitive' }
+        })
+        where.OR.push({
+          descripcion: { contains: textoLimpio, mode: 'insensitive' }
+        })
 
         // También buscamos en la dirección textual de la ubicación
         where.OR.push({
-          ubicacion: { direccion: { contains: textoLimpio, mode: 'insensitive' } }
+          ubicacion: {
+            direccion: { contains: textoLimpio, mode: 'insensitive' }
+          }
         })
       }
     }

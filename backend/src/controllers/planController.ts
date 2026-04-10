@@ -1,36 +1,40 @@
-import { PrismaClient } from '@prisma/client'
-import { Request, Response } from 'express' // Importa los tipos
-
-const prisma = new PrismaClient()
+import type { Request, Response } from 'express'
+import { prisma } from '../lib/prisma.config.js'
 
 export const getPlanLimit = async (req: Request, res: Response) => {
   try {
-    // Usamos 'any' en req para que no chille por el .user
     const userId = (req as any).user?.id
 
     if (!userId) {
       return res.status(401).json({ message: 'No autorizado' })
     }
 
-    const userPlan = await prisma.usuario.findUnique({
-      where: { id: userId },
-      select: {
-        nro_publicaciones_plan: true,
+    const user = await prisma.usuario.findUnique({
+      where: { id: Number(userId) },
+      include: {
+        publicaciones: true,
+        suscripciones_activas: true,
         _count: {
           select: { publicaciones: true }
         }
       }
     })
 
-    if (!userPlan) {
+    if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' })
     }
 
-    res.json({
-      total: userPlan.nro_publicaciones_plan,
-      usadas: userPlan._count.publicaciones
+    const publicacionesMes = await prisma.publicacion.count({
+      where: {
+        usuarioId: Number(userId)
+      }
+    })
+
+    return res.status(200).json({
+      total: publicacionesMes
     })
   } catch (error) {
-    res.status(500).json({ error: 'Error al obtener el límite del plan' })
+    console.error('❌ getPlanLimit error:', error)
+    return res.status(500).json({ message: 'Error en el servidor' })
   }
 }

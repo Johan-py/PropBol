@@ -217,7 +217,9 @@ export function useNotifications() {
 
   const markAsRead = useCallback(
     async (id: number) => {
-      await requestJson(`${API_URL}/notificaciones/${id}/read`, { method: 'PATCH' })
+      await requestJson(`${API_URL}/notificaciones/${id}/read`, {
+        method: 'PATCH'
+      })
       await refreshNotifications(filter)
       emitNotificationsUpdated()
     },
@@ -225,14 +227,18 @@ export function useNotifications() {
   )
 
   const markAllAsRead = useCallback(async () => {
-    await requestJson(`${API_URL}/notificaciones/read-all`, { method: 'PATCH' })
+    await requestJson(`${API_URL}/notificaciones/read-all`, {
+      method: 'PATCH'
+    })
     await refreshNotifications(filter)
     emitNotificationsUpdated()
   }, [emitNotificationsUpdated, filter, refreshNotifications])
 
   const deleteNotification = useCallback(
     async (id: number) => {
-      await requestJson(`${API_URL}/notificaciones/${id}`, { method: 'DELETE' })
+      await requestJson(`${API_URL}/notificaciones/${id}`, {
+        method: 'DELETE'
+      })
       await refreshNotifications(filter)
       emitNotificationsUpdated()
     },

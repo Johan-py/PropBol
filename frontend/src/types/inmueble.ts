@@ -37,7 +37,10 @@ export const OPCIONES_FECHA: Array<{ value: OrdenFecha; label: string }> = [
   { value: 'mas-populares', label: 'Más populares' }
 ]
 
-export const OPCIONES_DIRECCION: Array<{ value: OrdenDireccion; label: string }> = [
+export const OPCIONES_DIRECCION: Array<{
+  value: OrdenDireccion
+  label: string
+}> = [
   { value: 'menor-a-mayor', label: 'Menor a Mayor' },
   { value: 'mayor-a-menor', label: 'Mayor a Menor' }
 ]

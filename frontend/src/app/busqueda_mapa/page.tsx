@@ -31,7 +31,9 @@ function BusquedaMapaContent() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
   const { properties, isLoading, error } = useProperties()
-  const { ordenActual, cambiarOrden } = useOrdenamiento({ inmuebles: properties })
+  const { ordenActual, cambiarOrden } = useOrdenamiento({
+    inmuebles: properties
+  })
 
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)

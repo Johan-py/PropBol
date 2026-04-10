@@ -142,7 +142,10 @@ export default function ProfileCard() {
     try {
       const response = await fetch(`${API_URL}/api/perfil/usuario/nombre`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getToken()}`
+        },
         body: JSON.stringify({ nombre })
       })
       const data = await response.json()
@@ -166,7 +169,10 @@ export default function ProfileCard() {
     try {
       const response = await fetch(`${API_URL}/api/perfil/usuario/pais`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getToken()}`
+        },
         body: JSON.stringify({ pais })
       })
       const data = await response.json()
@@ -188,7 +194,10 @@ export default function ProfileCard() {
     try {
       const response = await fetch(`${API_URL}/api/perfil/usuario/genero`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getToken()}`
+        },
         body: JSON.stringify({ genero })
       })
       const data = await response.json()
@@ -210,7 +219,10 @@ export default function ProfileCard() {
     try {
       const response = await fetch(`${API_URL}/api/perfil/usuario/direccion`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getToken()}`
+        },
         body: JSON.stringify({ direccion })
       })
       const data = await response.json()
@@ -650,7 +662,11 @@ export default function ProfileCard() {
                         setTelefonos(
                           telefonos.map((t) =>
                             t.id === tel.id
-                              ? { ...t, pais: seleccion.nombre, codigo: seleccion.codigo }
+                              ? {
+                                  ...t,
+                                  pais: seleccion.nombre,
+                                  codigo: seleccion.codigo
+                                }
                               : t
                           )
                         )
