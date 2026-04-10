@@ -27,7 +27,7 @@ const FilterSection = ({
 }: FilterSectionProps) => { 
   return (
     <section>
-      {/* Título de sección: se cambió a text-sm (más pequeño que Filtros, más grande que el contenido) */}
+      {/* Título de sección*/}
       <h3 className="text-sm font-bold text-black mb-1.5 underline underline-offset-4 inline-block font-inter tracking-tight">
         {title}
       </h3>
@@ -46,7 +46,7 @@ const FilterSection = ({
             >
               {formatName(item.name)}
             </span>
-            {/* Cantidad: se cambió de text-sm a text-xs */}
+            {/* Cantidad */}
             <span className="text-gray-500 text-xs font-medium font-inter text-right max-w-[60%] break-all leading-tight">
               {Number(item.count).toLocaleString('es-BO')} {itemLabel}
             </span>
@@ -60,7 +60,7 @@ const FilterSection = ({
             {logic.viewLevel === 1 ? "Ver más >" : "Mostrar todo >"}
           </button>
         ) : (
-          data.length > 2 && ( // Changed to text-xs to maintain proportion
+          data.length > 2 && (
             <button onClick={logic.handleSeeLess}
               className="text-xs text-orange-400 hover:text-orange-600 underline mt-1 w-fit ml-auto font-medium font-inter transition-all">
               {"<"} Ver menos
@@ -78,8 +78,8 @@ export default function FilterPanel() {
   const [typesData, setTypesData] = useState<FilterItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const [globalSort, setGlobalSort] = useState<"asc" | "desc">("asc");
-  const [sortType, setSortType] = useState<"name" | "count">("name");
+  const [globalSort, setGlobalSort] = useState<"asc" | "desc">("desc");
+  const [sortType, setSortType] = useState<"name" | "count">("count");
   const [mobileTab, setMobileTab] = useState<"alquiler" | "venta" | "tipo">(
     "alquiler",
   );
@@ -168,7 +168,7 @@ export default function FilterPanel() {
   }
 
   const FilterHeader = () => (
-    <div className="flex items-center justify-between mb-6 border-b border-gray-800 pb-3 gap-4">
+    <div className="flex items-center justify-between mb-3 border-b border-gray-200 pb-2 gap-4">
       <div className="flex items-center gap-2 text-gray-900">
         <svg
           xmlns="http://www.w3.org/2000/svg"
