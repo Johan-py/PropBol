@@ -1,6 +1,23 @@
 import React from "react";
 
-export default function PropertyCard({ property, canEdit, onEdit, onDelete }) {
+interface Property {
+  image: string;
+  title: string;
+  price: string | number;
+  location: string;
+  beds?: number | string;
+  baths?: number | string;
+  area?: string;
+}
+
+interface PropertyCardProps {
+  property: Property;
+  canEdit: boolean;
+  onEdit: () => void;
+  onDelete: () => void;
+}
+
+export default function PropertyCard({ property, canEdit, onEdit, onDelete }: PropertyCardProps) {
   return (
     <div className="property-card">
       <img src={property.image} alt={property.title} className="property-image" />
@@ -22,9 +39,9 @@ export default function PropertyCard({ property, canEdit, onEdit, onDelete }) {
         </div>
 
         <div className="property-features">
-          <div className="feature">🛁 {property.beds}</div>
-          <div className="feature">🚿 {property.baths}</div>
-          <div className="feature">⬜ {property.area}</div>
+          <div className="feature">🛁 {property.beds || 0}</div>
+          <div className="feature">🚿 {property.baths || 0}</div>
+          <div className="feature">⬜ {property.area || 'N/A'}</div>
         </div>
 
         <div className="property-actions">

@@ -1,6 +1,10 @@
 import React from "react";
 
-export default function Header({ userName }) {
+interface HeaderProps {
+  userName?: string; // El ? significa que es opcional
+}
+
+export default function Header({ userName = "Usuario" }: HeaderProps) {
   return (
     <header className="header">
       <div className="logo-wrap">

@@ -3,35 +3,38 @@ import { useState, useEffect } from "react";
 import PropertyCard from "@/components/PropertyCard";
 import Modal from "@/components/Modal";
 import EditForm from "@/components/EditForm";
+// @ts-ignore
 import { initialProperties, currentUser, emptyErrors } from "@/data/properties";
 import { api } from "@/lib/api";
-import { toast } from "sonner";   // ← agrega este import arriba
 
 export default function Home() {
   const [globalError, setGlobalError] = useState<string | null>(null);
   const [properties, setProperties] = useState(initialProperties);
   const [loading, setLoading] = useState(true);
-  const [editingProperty, setEditingProperty] = useState(null);
-  const [formData, setFormData] = useState(null);
+  const [editingProperty, setEditingProperty] = useState<any>(null);
+  const [formData, setFormData] = useState<any>(null);
   const [fieldErrors, setFieldErrors] = useState(emptyErrors);
   const [showConfirmEdit, setShowConfirmEdit] = useState(false);
   const [showConfirmSave, setShowConfirmSave] = useState(false);
-  const [pendingEdit, setPendingEdit] = useState(null);
+  const [pendingEdit, setPendingEdit] = useState<any>(null);
   const [successMessage, setSuccessMessage] = useState("");
 
-  // Cargar publicaciones del backend
+  // 1. CARGA DE DATOS (Backend)
   useEffect(() => {
     api.getPublicaciones(currentUser.id)
-      .then((data) => {
-        if (data && data.length > 0) setProperties(data);
+      .then((data: any) => {
+        // Solo actualizamos si el backend devuelve datos válidos
+        if (data && Array.isArray(data)) setProperties(data);
       })
-      .catch(() => console.log("Usando datos locales"))
+      .catch(() => console.warn("Modo offline: Usando datos locales"))
       .finally(() => setLoading(false));
   }, []);
 
-  const userProperties = properties.filter((p) => p.ownerId === currentUser.id);
+  // Filtramos las propiedades del usuario actual
+  const userProperties = properties.filter((p: any) => p.ownerId === currentUser.id);
 
-  const handleEditClick = (property) => {
+  // 2. MANEJO DE EVENTOS
+  const handleEditClick = (property: any) => {
     setPendingEdit(property);
     setShowConfirmEdit(true);
   };
@@ -39,176 +42,177 @@ export default function Home() {
   const handleConfirmEdit = () => {
     setFormData({ ...pendingEdit });
     setEditingProperty(pendingEdit);
-    setFieldErrors(emptyErrors);
+    setFieldErrors(emptyErrors); // Limpiamos errores previos al abrir
     setShowConfirmEdit(false);
   };
 
-  const handleChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    setFieldErrors((prev) => ({ ...prev, [field]: "" }));
+  const handleChange = (field: string, value: any) => {
+    setFormData((prev: any) => ({ ...prev, [field]: value }));
+    // Limpiamos el error específico del campo mientras el usuario escribe
+    setFieldErrors((prev: any) => ({ ...prev, [field]: "" }));
   };
 
   const handleSaveClick = () => {
+    if (!formData) return;
+
     const errors = { ...emptyErrors };
     let hasError = false;
+    
+    // Validaciones robustas
     if (!formData.title?.trim()) { errors.title = "El título es requerido"; hasError = true; }
     if (!formData.details?.trim()) { errors.details = "Los detalles son requeridos"; hasError = true; }
     if (!formData.operationType) { errors.operationType = "Seleccione un tipo"; hasError = true; }
-    if (!formData.price) { errors.price = "El precio es requerido"; hasError = true; }
+    if (!formData.price || Number(formData.price) <= 0) { errors.price = "Precio inválido"; hasError = true; }
     if (!formData.location?.trim()) { errors.location = "La ubicación es requerida"; hasError = true; }
-    if (hasError) { setFieldErrors(errors); return; }
+    
+    if (hasError) {
+      setFieldErrors(errors);
+      return;
+    }
     setShowConfirmSave(true);
   };
 
   const handleConfirmSave = async () => {
+    if (!formData) return;
     try {
       await api.updatePublicacion(formData.id, formData);
+      
+      // Actualizamos el estado local solo si la API responde bien
+      setProperties((prev: any[]) => 
+        prev.map((p) => (p.id === formData.id ? { ...formData } : p))
+      );
+      
+      setSuccessMessage("Publicación actualizada correctamente");
+      setTimeout(() => setSuccessMessage(""), 3000);
     } catch (e) {
-      console.log("Guardado local");
+      console.error("Error al guardar:", e);
+      setGlobalError("No se pudo conectar con el servidor.");
+    } finally {
+      setEditingProperty(null);
+      setFormData(null);
+      setShowConfirmSave(false);
     }
-    setProperties((prev) => prev.map((p) => (p.id === formData.id ? formData : p)));
-    setEditingProperty(null);
-    setFormData(null);
-    setShowConfirmSave(false);
-    setSuccessMessage("Publicación Actualizada con exactitud");
-    setTimeout(() => setSuccessMessage(""), 3000);
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: number | string) => {
+    const confirmDelete = window.confirm("¿Estás seguro de eliminar esta publicación?");
+    if (!confirmDelete) return;
+
     try {
       await api.deletePublicacion(id);
+      setProperties((prev: any[]) => prev.filter((p) => p.id !== id));
     } catch (e) {
-      console.log("Eliminado local");
+      console.error("Error al eliminar:", e);
     }
-    setProperties((prev) => prev.filter((p) => p.id !== id));
   };
 
+  // 3. RENDERIZADO
   if (loading) return (
-    <div className="max-w-6xl mx-auto px-6 py-8">
-      <p className="text-gray-500">Cargando publicaciones...</p>
+    <div className="max-w-6xl mx-auto px-6 py-8 text-center">
+      <div className="animate-spin inline-block w-8 h-8 border-4 border-current border-t-transparent text-gray-400 rounded-full mb-2"></div>
+      <p className="text-gray-500">Cargando tus publicaciones...</p>
     </div>
   );
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-8">
-      <h1 className="text-3xl font-bold mb-6">Mis publicaciones</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">Mis publicaciones</h1>
+      </div>
 
       {successMessage && (
-        <div className="alert success mb-6">{successMessage}</div>
+        <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 shadow-sm" role="alert">
+          <p className="font-bold">¡Éxito!</p>
+          <p>{successMessage}</p>
+        </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {userProperties.map((property) => (
-          <PropertyCard
-            key={property.id}
-            property={property}
-            canEdit={property.ownerId === currentUser.id}
-            onEdit={() => handleEditClick(property)}
-            onDelete={() => handleDelete(property.id)}
-          />
-        ))}
-      </div>
+      {userProperties.length === 0 ? (
+        <p className="text-gray-500 text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed">
+          No tienes publicaciones activas.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {userProperties.map((property: any) => (
+            <PropertyCard
+              key={property.id}
+              property={property}
+              canEdit={true}
+              onEdit={() => handleEditClick(property)}
+              onDelete={() => handleDelete(property.id)}
+            />
+          ))}
+        </div>
+      )}
 
-      {/* MODAL 1: CONFIRMAR EDICIÓN (BOTÓN NEGRO) */}
-{showConfirmEdit && (
-  <Modal onClose={() => setShowConfirmEdit(false)}>
-    <h2 className="text-xl font-bold mb-2 text-gray-800">Editar publicación</h2>
-    <p className="text-gray-500 mb-6">¿Está seguro que desea editar?</p>
-    
-    {/* justify-end: Alinea los botones a la derecha sin estirarlos */}
-    <div className="flex gap-3 justify-end mt-4">
-      <button 
-        /* px-8: Padding a los lados para dar forma rectangular / py-2: Altura pequeña */
-        /* rounded-xl: Bordes muy redondeados como en tu imagen */
-        className="px-8 py-2 rounded-xl bg-gray-200 text-gray-700 font-medium hover:bg-gray-300 transition-colors" 
-        onClick={() => setShowConfirmEdit(false)}
-      >
-        Cancelar
-      </button>
-      <button 
-        /* Eliminamos minWidth:"120px" para que no se estire como chicle */
-        className="px-10 py-2 rounded-xl text-white font-medium hover:opacity-90 transition-opacity" 
-        style={{ background: "#1a1a1a" }} // Color negro exacto
-        onClick={handleConfirmEdit}
-      >
-        Editar
-      </button>
-    </div>
-  </Modal>
-)}
+      {/* MODAL 1: PRE-CONFIRMACIÓN DE EDICIÓN */}
+      {showConfirmEdit && (
+        <Modal onClose={() => setShowConfirmEdit(false)}>
+          <div className="p-2">
+            <h2 className="text-xl font-bold mb-2 text-gray-800">Editar publicación</h2>
+            <p className="text-gray-500 mb-6">¿Quieres abrir el formulario de edición para esta propiedad?</p>
+            <div className="flex gap-3 justify-end">
+              <button 
+                className="px-6 py-2 rounded-xl bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors" 
+                onClick={() => setShowConfirmEdit(false)}
+              >
+                Cerrar
+              </button>
+              <button 
+                className="px-8 py-2 rounded-xl text-white bg-[#1a1a1a] hover:bg-black transition-colors" 
+                onClick={handleConfirmEdit}
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
 
-{/* MODAL 2: CONFIRMAR GUARDADO (BOTÓN NARANJA) */}
-{showConfirmSave && (
-  <Modal onClose={() => setShowConfirmSave(false)}>
-    <h2 className="text-xl font-bold mb-2 text-gray-800">Confirmar cambios</h2>
-    <p className="text-gray-500 mb-6">¿Desea guardar los cambios realizados en la publicación?</p>
-    
-    <div className="flex gap-3 justify-end mt-4">
-      <button 
-        className="px-8 py-2 rounded-xl bg-gray-200 text-gray-700 font-medium hover:bg-gray-300 transition-colors" 
-        onClick={() => setShowConfirmSave(false)}
-      >
-        Cancelar
-      </button>
-      <button 
-        /* px-10: Hace que el botón sea ancho pero proporcional al texto */
-        className="px-10 py-2 rounded-xl text-white font-medium hover:opacity-90 transition-opacity" 
-        style={{ background: "#e67e22" }} // Color naranja de tu referencia
-        onClick={handleConfirmSave}
-      >
-        Guardar
-      </button>
-    </div>
-  </Modal>
-)}
-
+      {/* MODAL 2: FORMULARIO DE EDICIÓN */}
       {editingProperty && formData && !showConfirmSave && (
-  <Modal onClose={() => setEditingProperty(null)}>
-    <EditForm
-      formData={formData}
-      fieldErrors={fieldErrors}
-      onChange={handleChange}
-      onSave={handleSaveClick}
-      onCancel={() => setEditingProperty(null)}
-      toast={toast}           // ← agregar
-      globalError={globalError || null}  // ← agregar
-    />
-  </Modal>
-)}
+        <Modal onClose={() => setEditingProperty(null)}>
+          <EditForm
+            formData={formData}
+            fieldErrors={fieldErrors}
+            onChange={handleChange}
+            onSave={handleSaveClick}
+            onCancel={() => setEditingProperty(null)}
+            globalError={globalError}
+          />
+        </Modal>
+      )}
 
+      {/* MODAL 3: CONFIRMAR GUARDADO FINAL */}
       {showConfirmSave && (
-  <Modal onClose={() => setShowConfirmSave(false)}>
-    {/* Contenedor principal con padding para que respire el texto */}
-    <div className="p-2"> 
-      <h2 className="text-2xl font-bold mb-3 text-gray-800">Confirmar cambios</h2>
-      <p className="text-gray-500 mb-8 text-lg">
-        ¿Desea guardar los cambios realizados en la publicación?
-      </p>
-      
-      {/* Contenedor de botones: gap-4 para separarlos bien */}
-      <div className="flex gap-4 justify-between items-center mt-6">
-        
-        {/* BOTÓN CANCELAR: Color crema/gris suave */}
-        <button 
-          className="px-8 py-3 rounded-xl bg-[#e5e1d8] text-gray-700 font-semibold hover:bg-gray-300 transition-all flex-1"
-          onClick={() => setShowConfirmSave(false)}
-        >
-          Cancelar
-        </button>
-
-        {/* BOTÓN GUARDAR: Naranja vibrante y más ancho */}
-        <button 
-          className="px-12 py-3 rounded-xl text-white font-bold hover:opacity-90 transition-all shadow-md flex-[1.5]" 
-          style={{ background: "#e67e22" }} // El naranja exacto de tu imagen
-          onClick={handleConfirmSave}
-        >
-          Guardar
-        </button>
-        
-      </div>
-    </div>
-  </Modal>
-)}
+        <Modal onClose={() => setShowConfirmSave(false)}>
+          <div className="p-2 text-center"> 
+            <div className="w-16 h-16 bg-orange-100 text-[#e67e22] rounded-full flex items-center justify-center mx-auto mb-4">
+               <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+               </svg>
+            </div>
+            <h2 className="text-2xl font-bold mb-3 text-gray-800">Confirmar cambios</h2>
+            <p className="text-gray-500 mb-8">
+              ¿Desea guardar los cambios realizados en la publicación permanentemente?
+            </p>
+            <div className="flex gap-4">
+              <button 
+                className="px-8 py-3 rounded-xl bg-[#e5e1d8] text-gray-700 font-semibold hover:bg-gray-300 transition-all flex-1"
+                onClick={() => setShowConfirmSave(false)}
+              >
+                Cancelar
+              </button>
+              <button 
+                className="px-8 py-3 rounded-xl text-white font-bold hover:opacity-90 transition-all shadow-md flex-[1.5] bg-[#e67e22]" 
+                onClick={handleConfirmSave}
+              >
+                Sí, Guardar
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }

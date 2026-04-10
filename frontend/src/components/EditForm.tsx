@@ -2,9 +2,35 @@ import React from "react";
 
 const OPERATION_TYPES = ["Venta", "Alquiler", "Anticrético"];
 
+interface FormData {
+  title: string;
+  details: string;
+  operationType: string;
+  price: string | number;
+  location: string;
+}
+
+interface FieldErrors {
+  title?: string;
+  details?: string;
+  operationType?: string;
+  price?: string;
+  location?: string;
+}
+
+interface EditFormProps {
+  formData: FormData;
+  fieldErrors: FieldErrors;
+  onChange: (field: keyof FormData, value: string) => void;
+  onSave: () => void;
+  onCancel: () => void;
+  toast?: string | null;
+  globalError?: string | null;
+}
+
 export default function EditForm({
   formData, fieldErrors, onChange, onSave, onCancel, toast, globalError,
-}) {
+}: EditFormProps) {
   return (
     <div>
       <h1 className="edit-title">Editar Publicación</h1>
@@ -85,4 +111,3 @@ export default function EditForm({
     </div>
   );
 }
-``

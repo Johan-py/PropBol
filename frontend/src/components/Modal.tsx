@@ -1,6 +1,11 @@
 import React from "react";
 
-export default function Modal({ children, onClose }) {
+interface ModalProps {
+  children: React.ReactNode;
+  onClose: () => void;
+}
+
+export default function Modal({ children, onClose }: ModalProps) {
   return (
     <div 
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" 
