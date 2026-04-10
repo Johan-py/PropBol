@@ -1,4 +1,4 @@
-name: 🚀 CI Monorepo
+name: CI Monorepo
 
 on:
   push:
@@ -7,107 +7,109 @@ on:
     branches: [develop, main]
 
 jobs:
-
   lint:
-    name: 🧹 Lint
+    name: Lint
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Instalar Bun
-        uses: oven-sh/setup-bun@v1
+      - name: Habilitar pnpm
+        run: corepack enable && corepack prepare pnpm@latest --activate
 
-      - name: Cache Bun
-        uses: actions/cache@v3
+      - name: Cache pnpm
+        uses: actions/cache@v4
         with:
           path: |
-            ~/.bun
+            ~/.pnpm-store
             node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Instalar dependencias
-        run: bun install
+        run: pnpm install
 
       - name: Lint general
-        run: bun run lint
-
+        run: pnpm run lint
 
   type-check:
-    name: 🔎 TypeScript Check
+    name: TypeScript Check
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Instalar Bun
-        uses: oven-sh/setup-bun@v1
+      - name: Habilitar pnpm
+        run: corepack enable && corepack prepare pnpm@latest --activate
 
-      - name: Cache Bun
-        uses: actions/cache@v3
+      - name: Cache pnpm
+        uses: actions/cache@v4
         with:
           path: |
-            ~/.bun
+            ~/.pnpm-store
             node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Instalar deps
-        run: bun install
+        run: pnpm install
+
+      - name: Generar Prisma Client
+        run: pnpm --filter backend prisma generate
 
       - name: Type check backend
-        run: cd backend && bunx tsc --noEmit
+        run: pnpm --filter backend tsc --noEmit
 
       - name: Type check frontend
-        run: cd frontend && bunx tsc --noEmit
-
+        run: pnpm --filter frontend tsc --noEmit
 
   build-backend:
-    name: ⚙️ Build Backend
+    name: Build Backend
     runs-on: ubuntu-latest
     needs: [lint, type-check]
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Instalar Bun
-        uses: oven-sh/setup-bun@v1
+      - name: Habilitar pnpm
+        run: corepack enable && corepack prepare pnpm@latest --activate
 
-      - name: Cache Bun
-        uses: actions/cache@v3
+      - name: Cache pnpm
+        uses: actions/cache@v4
         with:
           path: |
-            ~/.bun
+            ~/.pnpm-store
             node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Instalar deps
-        run: bun install
+        run: pnpm install
+
+      - name: Generar Prisma Client
+        run: pnpm --filter backend prisma generate
 
       - name: Build backend
-        run: cd backend && bun run build
-
+        run: pnpm --filter backend run build
 
   build-frontend:
-    name: 🌐 Build Frontend
+    name: Build Frontend
     runs-on: ubuntu-latest
     needs: [lint, type-check]
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Instalar Bun
-        uses: oven-sh/setup-bun@v1
+      - name: Habilitar pnpm
+        run: corepack enable && corepack prepare pnpm@latest --activate
 
-      - name: Cache Bun
-        uses: actions/cache@v3
+      - name: Cache pnpm
+        uses: actions/cache@v4
         with:
           path: |
-            ~/.bun
+            ~/.pnpm-store
             node_modules
-          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Instalar deps
-        run: bun install
+        run: pnpm install
 
       - name: Build frontend
-        run: cd frontend && bun run build
+        run: pnpm --filter frontend run build
