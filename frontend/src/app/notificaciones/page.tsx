@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -51,61 +51,67 @@ export default function NotificationsPage() {
 
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        router.back()
+      if (event.key === "Escape") {
+        router.back();
       }
-    }
+    };
 
-    window.addEventListener('keydown', handleEsc)
+    window.addEventListener("keydown", handleEsc);
 
     return () => {
-      window.removeEventListener('keydown', handleEsc)
-    }
-  }, [router])
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [router]);
 
   useEffect(() => {
-    const target = loadMoreRef.current
+    const target = loadMoreRef.current;
 
     if (!target || !hasMore) {
-      return
+      return;
     }
 
     const observer = new IntersectionObserver(
       (entries) => {
-        const firstEntry = entries[0]
+        const firstEntry = entries[0];
 
         if (firstEntry?.isIntersecting) {
-          void loadMoreNotifications()
+          void loadMoreNotifications();
         }
       },
       {
         root: null,
-        rootMargin: '120px',
-        threshold: 0.1
-      }
-    )
+        rootMargin: "120px",
+        threshold: 0.1,
+      },
+    );
 
-    observer.observe(target)
+    observer.observe(target);
 
     return () => {
-      observer.disconnect()
-    }
-  }, [hasMore, loadMoreNotifications, visibleNotifications.length])
+      observer.disconnect();
+    };
+  }, [hasMore, loadMoreNotifications, visibleNotifications.length]);
 
   return (
     <section className="mx-auto w-full max-w-3xl px-3 py-4 sm:px-4 sm:py-6">
       {!isOnline && (
         <div className="mb-4 flex items-center gap-2 rounded-lg bg-stone-100 px-3 py-3 text-sm text-stone-600 sm:px-4">
           <WifiOff className="h-4 w-4 shrink-0 text-stone-400" />
-          <span>Sin conexión. Las notificaciones se actualizarán cuando vuelvas a conectarte.</span>
+          <span>
+            Sin conexión. Las notificaciones se actualizarán cuando vuelvas a
+            conectarte.
+          </span>
         </div>
       )}
 
       <div className="mb-5 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl font-bold text-stone-900 sm:text-2xl">Todas las notificaciones</h1>
+          <h1 className="text-xl font-bold text-stone-900 sm:text-2xl">
+            Todas las notificaciones
+          </h1>
           <p className="mt-0.5 text-sm text-stone-500">
-            Aquí puedes revisar, marcar como leídas y eliminar tus notificaciones.
+            Aquí puedes revisar, marcar como leídas y eliminar tus
+            notificaciones.
           </p>
         </div>
 
@@ -124,8 +130,8 @@ export default function NotificationsPage() {
             onClick={() => setFilter(item)}
             className={`rounded-full px-3 py-1.5 text-sm font-medium transition sm:py-1 ${
               filter === item
-                ? 'bg-amber-600 text-white'
-                : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                ? "bg-amber-600 text-white"
+                : "bg-stone-100 text-stone-600 hover:bg-stone-200"
             }`}
           >
             {item === 'todas'
@@ -146,7 +152,9 @@ export default function NotificationsPage() {
         className="overflow-hidden rounded-xl border border-stone-200 bg-white shadow-sm"
       >
         {isLoading ? (
-          <p className="px-4 py-6 text-center text-sm text-stone-500">Cargando notificaciones...</p>
+          <p className="px-4 py-6 text-center text-sm text-stone-500">
+            Cargando notificaciones...
+          </p>
         ) : error && isOnline ? (
           <div className="px-4 py-6 text-center">
             <p className="text-sm text-red-500">{error}</p>
@@ -208,7 +216,8 @@ export default function NotificationsPage() {
                 </div>
 
                 <p className="mt-1 text-sm text-stone-600">
-                  {notification.description?.trim() || '(Sin descripción disponible)'}
+                  {notification.description?.trim() ||
+                    "(Sin descripción disponible)"}
                 </p>
 
                 <div className="mt-3 flex items-center justify-end gap-3" onClick={(e) => e.stopPropagation()}>
@@ -246,5 +255,5 @@ export default function NotificationsPage() {
         )}
       </div>
     </section>
-  )
+  );
 }

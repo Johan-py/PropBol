@@ -1,46 +1,18 @@
 name: API Integration Tests
-
 on:
   push:
     branches: ["main", "develop"]
   pull_request:
     branches: ["main", "develop"]
-
 jobs:
   api-tests:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 10
-
-      - name: Instalar dependencias
-        working-directory: backend
-        run: pnpm install
-
-      - name: Iniciar backend
-        working-directory: backend
-        run: pnpm dev &
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-
-      - name: Esperar backend
-        run: sleep 10
-
       - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
-
       - name: Instalar pytest
-        run: pip install -r tests_api/requirements.txt
-
-      - name: Ejecutar tests
-        run: pytest tests_api/ -v
+        run: pip install pytest requests
+      - name: Ejecutar tests contra Render
+        run: pytest backend/tests_api/ -v
