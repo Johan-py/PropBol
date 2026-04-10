@@ -465,10 +465,14 @@ useEffect(() => {
                                         {notification.description?.trim() ||
                                           '(Sin descripción disponible)'}
                                       </p>
-                                      <span className="mt-2 inline-block text-[10px] uppercase text-stone-400">
-                                        {notification.status}
-                                      </span>
-                                      
+                                      <div className="mt-2 flex items-center gap-2">
+                                        <span className="text-[10px] uppercase text-stone-400">
+                                          {notification.status}
+                                        </span>
+                                        <span className="text-[10px] text-stone-400">
+                                          · {formatRelativeTime(notification.fechaCreacion)}
+                                        </span>
+                                      </div>
                                     </div>
                                     <div className="flex shrink-0 items-center gap-2">
                                       {notification.status === 'no leida' && (
