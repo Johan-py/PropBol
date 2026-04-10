@@ -4,9 +4,6 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
-<<<<<<< HEAD
-// ====================== ENUMS ======================
-=======
 
 model Rol {
   id       Int       @id @default(autoincrement())
@@ -388,7 +385,6 @@ model verificacion_pago {
   usuario                Usuario        @relation(fields: [id_admin], references: [id], onDelete: NoAction, onUpdate: NoAction)
   transacciones          transacciones? @relation(fields: [id_transaccion], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
->>>>>>> c4f97a97c73c3ee3ee36481b8ce7d632fa372371
 
 enum Genero {
   MASCULINO
