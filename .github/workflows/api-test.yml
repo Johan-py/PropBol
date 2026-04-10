@@ -10,57 +10,37 @@ jobs:
   api-tests:
     runs-on: ubuntu-latest
 
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-      PORT: 5000
-      NODE_ENV: test
-      FRONTEND_URL: "http://localhost:3000"
-
     steps:
-      - name: Checkout código
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js 20
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v3
         with:
           version: 10
 
-      - name: Instalar dependencias del backend
+      - name: Instalar dependencias
         working-directory: backend
         run: pnpm install
 
-      - name: Verificar conexión a Supabase
+      - name: Iniciar backend
         working-directory: backend
-        run: |
-          npx prisma db execute --stdin <<< "SELECT 1 AS connection_test;" && echo "✅ Conexión exitosa" || (echo "❌ Error de conexión" && exit 1)
+        run: pnpm dev &
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
-      - name: Prisma generate
-        working-directory: backend
-        run: npx prisma generate
+      - name: Esperar backend
+        run: sleep 10
 
-      - name: Iniciar backend en background
-        working-directory: backend
-        run: |
-          nohup pnpm dev > /tmp/backend.log 2>&1 &
-          echo $! > /tmp/backend.pid
-
-      - name: Esperar a que el backend responda
-        run: |
-          npx wait-on http://localhost:5000/health --timeout 60000 || (echo "❌ Backend no respondió" && cat /tmp/backend.log && exit 1)
-
-      - name: Setup Python 3.10
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
-      - name: Instalar dependencias Python
+      - name: Instalar pytest
         run: pip install -r tests_api/requirements.txt
 
-      - name: Ejecutar tests de API
-        run: pytest tests_api/ -v --tb=short
+      - name: Ejecutar tests
+        run: pytest tests_api/ -v
