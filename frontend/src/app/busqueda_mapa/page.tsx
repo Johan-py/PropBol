@@ -217,9 +217,8 @@ function BusquedaMapaContent() {
     }
 
     // ────────────────────────────────────────────────────────────────────────────
-    // RENDER PORTRAIT MÓVIL — Bottom Sheet
+    // RENDER PORTRAIT MÓVIL — Bottom Sheet (Develop)
     // ────────────────────────────────────────────────────────────────────────────
-    // (landscape ya fue manejado arriba)
     return (
       <div className="flex flex-col overflow-hidden bg-white" style={{ height: '100dvh' }}>
         <div className="shrink-0 overflow-x-auto" style={{ zIndex: 1002, position: 'relative' }}>
