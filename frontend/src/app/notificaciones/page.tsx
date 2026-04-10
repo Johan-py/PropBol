@@ -173,14 +173,24 @@ export default function NotificationsPage() {
                 role="listitem"
                 tabIndex={0}
                 aria-label={`Notificación: ${notification.title}`}
+                onClick={() => {
+                  if (notification.status === 'no leida' && isOnline) {
+                    void markAsRead(notification.id)
+                  }
+                }}
                 className={`border-b border-stone-100 px-3 py-4 last:border-b-0 transition sm:px-4 ${
-                  notification.status === 'no leida' ? 'bg-amber-50' : 'bg-white hover:bg-stone-50'
+                  notification.status === 'no leida' ? 'cursor-pointer bg-amber-50' : 'bg-white hover:bg-stone-50'
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
-                  <h2 className="text-sm font-semibold leading-snug text-stone-900">
-                    {notification.title?.trim() || '(Sin título)'}
-                  </h2>
+                  <div className="flex min-w-0 flex-1 items-start gap-2">
+                    {notification.status === 'no leida' && (
+                      <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-amber-500" />
+                    )}
+                    <h2 className="text-sm font-semibold leading-snug text-stone-900">
+                      {notification.title?.trim() || '(Sin título)'}
+                    </h2>
+                  </div>
                   <div className="flex shrink-0 flex-col items-end gap-0.5">
                     <span
                       className={`text-[10px] font-medium uppercase tracking-wide ${
@@ -201,18 +211,7 @@ export default function NotificationsPage() {
                   {notification.description?.trim() || '(Sin descripción disponible)'}
                 </p>
 
-                <div className="mt-3 flex items-center justify-between gap-3">
-                  {notification.status === 'no leida' ? (
-                    <button
-                      onClick={() => void markAsRead(notification.id)}
-                      className="text-xs text-amber-600 transition hover:text-amber-700 hover:underline"
-                    >
-                      Marcar como leída
-                    </button>
-                  ) : (
-                    <span />
-                  )}
-
+                <div className="mt-3 flex items-center justify-end gap-3" onClick={(e) => e.stopPropagation()}>
                   <div className="flex items-center gap-3">
                     {!notification.archivada && ( 
                       <button

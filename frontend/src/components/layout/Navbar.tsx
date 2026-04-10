@@ -452,15 +452,25 @@ useEffect(() => {
                                 <div
                                   key={notification.id}
                                   role="listitem"
+                                  onClick={() => {
+                                    if (notification.status === 'no leida' && isOnline) {
+                                      void markAsRead(notification.id)
+                                    }
+                                  }}
                                   className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
-                                    notification.status === 'no leida' ? 'bg-amber-50' : 'bg-white'
+                                    notification.status === 'no leida' ? 'cursor-pointer bg-amber-50' : 'bg-white'
                                   }`}
                                 >
                                   <div className="flex items-start justify-between gap-3">
                                     <div className="min-w-0 flex-1">
-                                      <p className="truncate text-sm font-semibold text-stone-900">
-                                        {notification.title?.trim() || '(Sin título)'}
-                                      </p>
+                                      <div className="flex items-center gap-2">
+                                        {notification.status === 'no leida' && (
+                                          <span className="h-2 w-2 shrink-0 rounded-full bg-amber-500" />
+                                        )}
+                                        <p className="truncate text-sm font-semibold text-stone-900">
+                                          {notification.title?.trim() || '(Sin título)'}
+                                        </p>
+                                      </div>
                                       <p className="mt-1 line-clamp-2 text-sm text-stone-600">
                                         {notification.description?.trim() ||
                                           '(Sin descripción disponible)'}
@@ -474,17 +484,7 @@ useEffect(() => {
                                         </span>
                                       </div>
                                     </div>
-                                    <div className="flex shrink-0 items-center gap-2">
-                                      {notification.status === 'no leida' && (
-                                        <button
-                                          type="button"
-                                          onClick={() => void markAsRead(notification.id)}
-                                          disabled={!isOnline}
-                                          className="text-xs text-amber-600 transition hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-40"
-                                        >
-                                          Leer
-                                        </button>
-                                      )}
+                                    <div className="flex shrink-0 items-center gap-2" onClick={(e) => e.stopPropagation()}>
                                       {!notification.archivada && (
                                         <button
                                           type="button"
