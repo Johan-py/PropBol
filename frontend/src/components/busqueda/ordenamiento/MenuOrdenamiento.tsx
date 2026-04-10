@@ -126,7 +126,7 @@ function SeccionMetrica({ titulo, valor, onChange, isActive }: SeccionMetricaPro
 export function MenuOrdenamiento({
   ordenActual = ORDENAMIENTO_DEFAULT,
   onOrdenChange,
-  totalResultados
+   totalResultados
 }: MenuOrdenamientoProps) {
   const [orden, setOrden] = useState<EstadoOrdenamiento>(ordenActual)
   const [dropdownAbierto, setDropdownAbierto] = useState<'fecha' | 'metricas' | null>(null)
@@ -203,6 +203,9 @@ export function MenuOrdenamiento({
 
   return (
     <div ref={menuRef} className="flex flex-col gap-4 mb-6">
+
+=======
+
       {/* Ordenamiento */}
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2">
