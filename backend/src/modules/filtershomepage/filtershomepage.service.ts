@@ -34,9 +34,9 @@ export class FiltersHomepageService {
     });
 
     return {
-      rentals: rentalsRaw.map(mapToHomeFilter),
-      sales: salesRaw.map(mapToHomeFilter),
-      categories: categoriesMapped
+      rentals: rentalsRaw.map(mapToHomeFilter).sort((a, b) => b.count - a.count),
+      sales: salesRaw.map(mapToHomeFilter).sort((a, b) => b.count - a.count),
+      categories: categoriesMapped.sort((a, b) => b.count - a.count)
     }
   }
 }
