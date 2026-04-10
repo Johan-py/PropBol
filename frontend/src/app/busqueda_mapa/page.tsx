@@ -9,17 +9,22 @@ import {
   LayoutGrid,
   ChevronUp,
   ChevronDown,
-  X
+  X,
+  Filter
 } from 'lucide-react'
 
+// === HOOKS ===
 import { useProperties } from '@/hooks/useProperties'
 import { useOrdenamiento } from '@/hooks/useOrdenamiento'
+
+// === COMPONENTES ===
 import FilterBar from '@/components/filters/FilterBar'
 import PropertyCard from '@/components/layout/PropertyCard'
 import PropertyRow from '@/components/galeria/PropertyRow'
 import EmptyState from '@/components/galeria/EmptyState'
 import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenamiento'
 
+// Carga dinámica del mapa (sin SSR)
 const MapView = nextDynamic(() => import('./MapView'), {
   ssr: false,
   loading: () => (
@@ -29,21 +34,19 @@ const MapView = nextDynamic(() => import('./MapView'), {
   )
 })
 
+// === HOOKS DE DETECCIÓN MÓVIL (De Develop) ===
 function useIsMobile(breakpoint = 768) {
-  // Siempre false en el primer render (igual que SSR) para evitar hydration mismatch
   const [isMobile, setIsMobile] = useState(false)
   useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${breakpoint - 1}px)`)
     const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches)
     mql.addEventListener('change', handler)
-    setIsMobile(mql.matches) // actualiza solo en cliente post-mount
+    setIsMobile(mql.matches)
     return () => mql.removeEventListener('change', handler)
   }, [breakpoint])
   return isMobile
 }
 
-// Detecta landscape en móvil: ancho > alto Y alto < 500px
-// (tablets landscape con alto > 500 quedan como desktop)
 function useIsLandscapeMobile() {
   const [isLandscape, setIsLandscape] = useState(false)
   useEffect(() => {
@@ -61,12 +64,11 @@ function useIsLandscapeMobile() {
   return isLandscape
 }
 
-// Alturas en % del contenedor padre (el flex-1 debajo del FilterBar).
-// Usar % en vez de dvh evita que el sheet suba por encima del FilterBar.
 const SHEET_H = { peek: '50%', full: '100%' } as const
 type SheetState = 'hidden' | 'peek' | 'full'
 
 function BusquedaMapaContent() {
+  // === ESTADOS COMPARTIDOS ===
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [sheetState, setSheetState] = useState<SheetState>('peek')
@@ -76,8 +78,6 @@ function BusquedaMapaContent() {
   const isMobile = useIsMobile()
   const isLandscape = useIsLandscapeMobile()
 
-  // Evita hydration mismatch: el servidor siempre renderiza desktop.
-  // El cliente switcha al layout correcto después del primer mount.
   useEffect(() => {
     setIsMounted(true)
   }, [])
