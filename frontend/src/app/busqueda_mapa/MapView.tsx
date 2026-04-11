@@ -266,7 +266,7 @@ export default function MapView({
           chunkedLoading={true}
           showCoverageOnHover={false}
           zoomToBoundsOnClick={true}
-          removeOutsideVisibleBounds={true}
+          removeOutsideVisibleBounds={false}
           clusterPane="markerPane"
         >
           {properties.map((property) => {
