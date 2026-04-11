@@ -29,7 +29,7 @@ export type User = {
 
 type MeResponse = {
   message?: string;
-  user?: {
+  perfil?: {
     id: number;
     nombre?: string;
     apellido?: string;
@@ -309,17 +309,8 @@ useEffect(() => {
 
   return (
     <>
-<<<<<<< HEAD
       <nav className="sticky top-0 z-[9999] w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
-=======
-<<<<<<< HEAD
-      <nav className="sticky top-0 z-40 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
->>>>>>> 22b4cb8 (fix: cambios en la barra superior)
         <div className="container mx-auto px-4 py-4">
-=======
-      <nav className="sticky top-0 z-[60] w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
-        <div className="container mx-auto px-4 py-2">
->>>>>>> 251d4bb (fix: cambios en la barra superior)
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
               <Logo />
@@ -424,24 +415,10 @@ useEffect(() => {
                         </div>
 
                         <div
-                          ref={scrollContainerRef}
                           role="list"
                           aria-label="Lista de notificaciones"
                           aria-live="polite"
                           className="max-h-[60vh] overflow-y-auto sm:max-h-80"
-                          onScroll={(e) => {
-                            const target = e.currentTarget
-
-                            saveScrollPosition(target.scrollTop)
-
-                            const reachedBottom =
-                              target.scrollTop + target.clientHeight >=
-                              target.scrollHeight - 10;
-
-                            if (reachedBottom && hasMore && !isLoadingMore) {
-                              void loadMoreNotifications();
-                            }
-                          }}
                         >
                           {isLoading ? (
                             <div className="flex items-center justify-center gap-2 px-4 py-8 text-sm text-stone-500">
@@ -502,7 +479,7 @@ useEffect(() => {
                                           {notification.status}
                                         </span>
                                         <span className="text-[10px] text-stone-400">
-                                          · {formatRelativeTime(notification.fechaCreacion)}
+                                          · {formatRelativeTime(notification.fechaCreacion || null)}
                                         </span>
                                       </div>
                                     </div>
@@ -637,7 +614,7 @@ useEffect(() => {
             </nav>
           </div>
         </div>
-      )}
+        )}
     </>
-  )
+  );
 }
