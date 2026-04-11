@@ -161,9 +161,9 @@ export const createNotificationService = async ({
     if (user.correo) {
       await sendNotificationEmail({
         emailDestino: user.correo,
-        titulo: notification.titulo,
-        mensaje: notification.mensaje,
-        nombreUsuario: user.nombre
+        asunto: notification.titulo,
+        mensajeHtml: `<p>${notification.mensaje}</p>`,
+        mensajeTexto: notification.mensaje
       })
     }
   } catch (error) {
