@@ -309,8 +309,17 @@ useEffect(() => {
 
   return (
     <>
+<<<<<<< HEAD
       <nav className="sticky top-0 z-[9999] w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
+=======
+<<<<<<< HEAD
+      <nav className="sticky top-0 z-40 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
+>>>>>>> 22b4cb8 (fix: cambios en la barra superior)
         <div className="container mx-auto px-4 py-4">
+=======
+      <nav className="sticky top-0 z-[60] w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
+        <div className="container mx-auto px-4 py-2">
+>>>>>>> 251d4bb (fix: cambios en la barra superior)
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
               <Logo />
@@ -340,7 +349,7 @@ useEffect(() => {
                     role="dialog"
                     aria-label="Panel de notificaciones"
                     aria-modal="true"
-                    className="fixed left-0 right-0 top-[57px] z-50 mx-2 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-lg sm:absolute sm:left-auto sm:right-0 sm:top-12 sm:mx-0 sm:w-80"
+                    className="fixed left-0 right-0 top-[41px] z-50 mx-2 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-lg sm:absolute sm:left-auto sm:right-0 sm:top-10 sm:mx-0 sm:w-80"
                   >
                     <div className="flex items-center justify-between border-b border-stone-100 px-4 py-3">
                       <h3 className="text-sm font-semibold text-stone-900">
