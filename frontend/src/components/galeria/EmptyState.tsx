@@ -11,7 +11,7 @@ export default function EmptyState() {
         No hay propiedades existentes
       </h3>
       <p className="text-sm text-gray-500 max-w-[250px]">
-        Intenta quitando algunos filtros o buscando en otra zona para ver más
+        No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría para ver más
         resultados.
       </p>
     </div>
