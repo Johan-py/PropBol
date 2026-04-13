@@ -27,6 +27,9 @@ const PIN_FILL: Record<PropertyMapPin["type"], string> = {
   departamento: "#8b5cf6",
   terreno: "#f59e0b",
   oficina: "#10b981",
+  cuarto: "#ec4899",
+  cementerio: "#64748b",
+  espacios: "#06b6d4",
 };
 
 const PIN_HALO: Record<PropertyMapPin["type"], string> = {
