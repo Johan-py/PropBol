@@ -37,6 +37,9 @@ const PIN_HALO: Record<PropertyMapPin["type"], string> = {
   departamento: "rgba(139, 92,  246, 0.25)",
   terreno: "rgba(245, 158, 11,  0.25)",
   oficina: "rgba(16,  185, 129, 0.25)",
+  cuarto: "rgba(236, 72,  153, 0.25)",
+  cementerio: "rgba(100, 116, 139, 0.25)",
+  espacios: "rgba(6,   182, 212, 0.25)",
 };
 
 // Color sólido para el texto del precio en el popup
