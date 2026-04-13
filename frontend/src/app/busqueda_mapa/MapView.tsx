@@ -5,7 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import { useMap } from "react-leaflet";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef} from "react";
 
 import ZoomControls from "@/components/ZoomControls";
 import { createGpsIcon } from "@/components/GpsPin";
@@ -206,6 +206,21 @@ export default function MapView({
 }: MapViewProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [hoveredPinId, setHoveredPinId] = useState<string | null>(null); 
+  const markerRefs = useRef<{ [key: string]: L.Marker | null }>({});
+
+  useEffect(() => {
+    // Cerrar popup del marker anterior
+    Object.entries(markerRefs.current).forEach(([id, marker]) => {
+      if (marker && id !== hoveredPinId && marker.isPopupOpen()) {
+        marker.closePopup();
+      }
+    });
+    
+    // Abrir popup del marker en hover
+    if (hoveredPinId && markerRefs.current[hoveredPinId]) {
+      markerRefs.current[hoveredPinId]?.openPopup();
+    }
+  }, [hoveredPinId]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -292,6 +307,9 @@ export default function MapView({
                 key={property.id}
                 position={[property.lat, property.lng]}
                 icon={icon}
+                ref={(el) => {
+                 if (el) markerRefs.current[property.id] = el;
+                }}
                 eventHandlers={{
                  click: () => onSelect?.(property.id),
                  mouseover: () => setHoveredPinId(property.id),
