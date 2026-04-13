@@ -48,6 +48,9 @@ const PIN_LABEL: Record<PropertyMapPin["type"], string> = {
   departamento: "#7c3aed",
   terreno: "#d97706",
   oficina: "#059669",
+  cuarto: "#db2777",
+  cementerio: "#475569",
+  espacios: "#0891b2",
 };
 
 const SELECTED_ICONS: Record<PropertyMapPin["type"], string> = {
