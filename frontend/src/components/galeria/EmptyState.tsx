@@ -8,7 +8,7 @@ export default function EmptyState() {
         <SearchX className="w-8 h-8 text-orange-500" />
       </div>
       <h3 className="text-lg font-bold text-gray-900 mb-2">
-        Uy, no encontramos casas con esos filtros
+        No hay propiedades existentes
       </h3>
       <p className="text-sm text-gray-500 max-w-[250px]">
         Intenta quitando algunos filtros o buscando en otra zona para ver más
