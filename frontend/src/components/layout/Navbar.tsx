@@ -309,11 +309,6 @@ useEffect(() => {
 
   return (
     <>
-<<<<<<< HEAD
-=======
-return (
-    <>
->>>>>>> bf439bb4eea978ca538f5038baac75801cb20f9b
       <nav className="sticky top-0 z-[9999] w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -621,10 +616,5 @@ return (
         </div>
         )}
     </>
-<<<<<<< HEAD
-  );
-}
-=======
   )
 }
->>>>>>> bf439bb4eea978ca538f5038baac75801cb20f9b
