@@ -58,6 +58,9 @@ const SELECTED_ICONS: Record<PropertyMapPin["type"], string> = {
   departamento: "/department.svg",
   terreno: "/land.svg",
   oficina: "/office.svg",
+  cuarto: "/house.svg",
+  cementerio: "/land.svg",
+  espacios: "/office.svg",
 };
 
 function createPinIcon(type: PropertyMapPin["type"]): L.DivIcon {
