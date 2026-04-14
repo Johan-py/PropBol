@@ -57,9 +57,18 @@ export const useOrdenamiento = ({
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [ordenActual, setOrdenActual] = useState<EstadoOrdenamiento>(() => {
-    return ordenInicial ?? cargarOrdenGuardado();
-  });
+  const [ordenActual, setOrdenActual] = useState<EstadoOrdenamiento>(
+    ordenInicial ?? ORDENAMIENTO_DEFAULT,
+  );
+
+  useEffect(() => {
+    if (!ordenInicial) {
+      const saved = cargarOrdenGuardado();
+      if (saved.criterioActivo !== null) {
+        setOrdenActual(saved);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     guardarOrden(ordenActual);
