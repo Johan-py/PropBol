@@ -1,7 +1,7 @@
 // frontend/src/components/layout/PropertyCard.tsx
 "use client";
 import Image from "next/image";
-import { BedDouble, Bath, Square, ImageOff } from "lucide-react"; // Quité MessageSquareText porque ya viene en tu botón
+import { BedDouble, Bath, Square, ImageOff, MapPin  } from "lucide-react"; // Quité MessageSquareText porque ya viene en tu botón
 import ContactButton from "../galeria/ContactButton"; // <-- Tu botón modular importado
 import { useState } from "react";
 
@@ -30,10 +30,14 @@ export default function PropertyCard({
   const [isHovered, setIsHovered] = useState(false);
   return (
     <div 
-      className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 border border-gray-100 group"
+      className="relative bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 border border-gray-100 group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-    >
+    >{isHovered && (
+  <div className="absolute top-3 right-3 z-30 bg-white rounded-full shadow-md p-2 border border-gray-200">
+    <MapPin className="w-5 h-5 text-[#ea580c]" />
+  </div>
+     )}
       {/* 2. Implementación de Imagen o Cuadro Gris (Misión Día 3) */}
       <div
         className={`relative aspect-[16/10] overflow-hidden ${!imagen ? COLOR_GRIS_PLACEHOLDER : ""} flex items-center justify-center`}
