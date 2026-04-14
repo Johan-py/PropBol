@@ -1,10 +1,17 @@
 // Tipo base que representa una propiedad visible en el mapa.
 // Esta estructura debe coincidir con lo que devuelva el endpoint real
 
-export type PropertyType = "casa" | "departamento" | "terreno" | "oficina" | "cuarto" | "cementerio" | "espacios";
+export type PropertyType =
+  | 'casa'
+  | 'departamento'
+  | 'terreno'
+  | 'oficina'
+  | 'cuarto'
+  | 'cementerio'
+  | 'espacios'
 
 export interface PropertyMapPin {
-  id: string;
+id: string;
   lat: number;
   lng: number;
   price: number;
@@ -21,5 +28,5 @@ export interface PropertyMapPin {
 // Respuesta esperada del endpoint real futuro:
 
 export interface PropertiesMapResponse {
-  data: PropertyMapPin[];
+  data: PropertyMapPin[]
 }
