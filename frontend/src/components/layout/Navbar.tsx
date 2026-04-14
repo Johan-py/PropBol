@@ -29,7 +29,7 @@ export type User = {
 
 type MeResponse = {
   message?: string;
-  user?: {
+  perfil?: {
     id: number;
     nombre?: string;
     apellido?: string;
@@ -309,7 +309,7 @@ useEffect(() => {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
+<nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
         <div className="container mx-auto px-4 py-1.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
@@ -340,7 +340,7 @@ useEffect(() => {
                     role="dialog"
                     aria-label="Panel de notificaciones"
                     aria-modal="true"
-                    className="fixed left-0 right-0 top-[57px] z-50 mx-2 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-lg sm:absolute sm:left-auto sm:right-0 sm:top-12 sm:mx-0 sm:w-80"
+                    className="fixed left-0 right-0 top-[41px] z-50 mx-2 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-lg sm:absolute sm:left-auto sm:right-0 sm:top-10 sm:mx-0 sm:w-80"
                   >
                     <div className="flex items-center justify-between border-b border-stone-100 px-4 py-3">
                       <h3 className="text-sm font-semibold text-stone-900">
@@ -415,24 +415,10 @@ useEffect(() => {
                         </div>
 
                         <div
-                          ref={scrollContainerRef}
                           role="list"
                           aria-label="Lista de notificaciones"
                           aria-live="polite"
                           className="max-h-[60vh] overflow-y-auto sm:max-h-80"
-                          onScroll={(e) => {
-                            const target = e.currentTarget
-
-                            saveScrollPosition(target.scrollTop)
-
-                            const reachedBottom =
-                              target.scrollTop + target.clientHeight >=
-                              target.scrollHeight - 10;
-
-                            if (reachedBottom && hasMore && !isLoadingMore) {
-                              void loadMoreNotifications();
-                            }
-                          }}
                         >
                           {isLoading ? (
                             <div className="flex items-center justify-center gap-2 px-4 py-8 text-sm text-stone-500">
@@ -493,7 +479,7 @@ useEffect(() => {
                                           {notification.status}
                                         </span>
                                         <span className="text-[10px] text-stone-400">
-                                          · {formatRelativeTime(notification.fechaCreacion)}
+                                          · {formatRelativeTime(notification.fechaCreacion || null)}
                                         </span>
                                       </div>
                                     </div>
@@ -583,7 +569,7 @@ useEffect(() => {
 
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 z-50 bg-black/40 md:hidden"
+          className="fixed inset-0 z-[9999] bg-black/40 md:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
           aria-modal="true"
           role="dialog"
@@ -628,7 +614,7 @@ useEffect(() => {
             </nav>
           </div>
         </div>
-      )}
+        )}
     </>
   )
 }

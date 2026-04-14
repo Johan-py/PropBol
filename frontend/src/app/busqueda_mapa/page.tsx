@@ -275,7 +275,7 @@ function BusquedaMapaContent() {
           </div>
           <div className="flex flex-1 overflow-hidden">
             <div className="flex-1 relative">
-              <div className="absolute inset-0">
+              <div className="absolute inset-0" style={{ zIndex: 0 }}>
                 <MapView
                   properties={properties}
                   selectedId={selectedPropertyId}
@@ -339,7 +339,7 @@ function BusquedaMapaContent() {
           {sheetState === "hidden" && (
             <button
               onClick={() => setSheetState("peek")}
-              className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1001] bg-white rounded-full px-5 py-3 shadow-xl border border-stone-200 flex items-center gap-2 text-sm font-semibold text-slate-700 active:scale-95 transition-transform"
+              className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[20] bg-white rounded-full px-5 py-3 shadow-xl border border-stone-200 flex items-center gap-2 text-sm font-semibold text-slate-700 active:scale-95 transition-transform"
               style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.18)" }}
             >
               <ListIcon size={16} className="text-orange-500" /> Ver lista
@@ -353,7 +353,7 @@ function BusquedaMapaContent() {
           )}
           {sheetState !== "hidden" && (
             <div
-              className="absolute left-0 right-0 bottom-0 z-[400] bg-white rounded-t-2xl shadow-[0_-4px_24px_rgba(0,0,0,0.12)] flex flex-col"
+              className="absolute left-0 right-0 bottom-0 z-[30] bg-white rounded-t-2xl shadow-[0_-4px_24px_rgba(0,0,0,0.12)] flex flex-col"
               style={{
                 height: SHEET_H[sheetState],
                 transition: "height 0.3s cubic-bezier(0.32,0.72,0,1)",
@@ -361,7 +361,7 @@ function BusquedaMapaContent() {
               onTouchStart={onTouchStart}
               onTouchEnd={onTouchEnd}
             >
-              <div className="shrink-0 flex flex-col items-center pt-3 pb-1 cursor-grab active:cursor-grabbing select-none">
+              <div className="shrink-0 overflow-x-auto" style={{ zIndex: 10, position: "relative" }}>
                 <div
                   className="w-10 h-1.5 bg-stone-300 hover:bg-orange-400 rounded-full mb-3 transition-colors"
                   onClick={() =>
@@ -471,7 +471,7 @@ function BusquedaMapaContent() {
   // RENDER DESKTOP
   // ────────────────────────────────────────────────────────────────────────────
   return (
-    <div className="flex flex-col bg-white w-full h-[calc(100dvh-54px)] overflow-hidden">
+<div className="flex flex-col bg-white w-full h-[calc(100dvh-54px)] overflow-hidden">
       <FilterBar
         variant="map"
         onSearch={(nuevosFiltros) => {
@@ -648,7 +648,7 @@ function BusquedaMapaContent() {
           {!isSidebarOpen && (
             <button
               onClick={() => setIsSidebarOpen(true)}
-              className="absolute left-0 top-4 z-[1000] bg-white text-black shadow-md rounded-r-md flex flex-col items-center py-4 px-2 gap-4 hover:bg-stone-50 transition-colors"
+              className="absolute left-0 top-4 z-[20] bg-white text-black shadow-md rounded-r-md flex flex-col items-center py-4 px-2 gap-4 hover:bg-stone-50 transition-colors"
             >
               <ChevronRight size={16} />
               <span className="[writing-mode:vertical-lr] rotate-180 text-[10px] font-bold tracking-widest uppercase text-stone-600">
@@ -658,7 +658,7 @@ function BusquedaMapaContent() {
             </button>
           )}
 
-          <div className="absolute inset-0">
+          <div className="absolute inset-0" style={{ zIndex: 0 }}>
             <MapView
               properties={properties}
               selectedId={selectedPropertyId}
