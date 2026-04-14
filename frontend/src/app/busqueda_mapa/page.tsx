@@ -229,10 +229,10 @@ function BusquedaMapaContent() {
                       ? `$${property.price.toLocaleString("es-BO")} USD`
                       : `Bs ${property.price.toLocaleString("es-BO")}`
                   }
-                  descripcion={property.title}
-                  camas={3}
-                  banos={2}
-                  metros={150}
+                  descripcion={property.descripcion || property.title}
+                  camas={property.nroCuartos ?? 0}
+                  banos={property.nroBanos ?? 0}
+                  metros={property.superficieM2 ?? 0}
                 />
               ) : (
                 <PropertyRow
@@ -242,7 +242,7 @@ function BusquedaMapaContent() {
                       ? `$${property.price.toLocaleString("es-BO")} USD`
                       : `Bs ${property.price.toLocaleString("es-BO")}`
                   }
-                  size="3 Dorm. • 150 m²"
+                  size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
                   contactType="whatsapp"
                   image=""
                 />
@@ -435,10 +435,10 @@ function BusquedaMapaContent() {
                                 "es-BO"
                               )}`
                         }
-                        descripcion={pinnedProperty.title}
-                        camas={3}
-                        banos={2}
-                        metros={150}
+                        descripcion={pinnedProperty.descripcion || pinnedProperty.title}
+                        camas={pinnedProperty.nroCuartos ?? 0}
+                        banos={pinnedProperty.nroBanos ?? 0}
+                        metros={pinnedProperty.superficieM2 ?? 0}
                       />
                     </div>
                   </div>
@@ -598,6 +598,7 @@ function BusquedaMapaContent() {
                         {viewMode === "grid" ? (
                           <PropertyCard
                             imagen={
+                              property.thumbnailUrl ||
                               property.imagen ||
                               "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80"
                             }
@@ -609,10 +610,10 @@ function BusquedaMapaContent() {
                                   )} USD`
                                 : `Bs ${property.price.toLocaleString("es-BO")}`
                             }
-                            descripcion={property.title}
-                            camas={3}
-                            banos={2}
-                            metros={150}
+                            descripcion={property.descripcion || property.title}
+                            camas={property.nroCuartos ?? 0}
+                            banos={property.nroBanos ?? 0}
+                            metros={property.superficieM2 ?? 0}
                           />
                         ) : (
                           <PropertyRow
@@ -624,9 +625,10 @@ function BusquedaMapaContent() {
                                   )} USD`
                                 : `Bs ${property.price.toLocaleString("es-BO")}`
                             }
-                            size="3 Dorm. • 150 m²"
+                            size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
                             contactType="whatsapp"
                             image={
+                              property.thumbnailUrl ||
                               property.imagen ||
                               "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80"
                             }

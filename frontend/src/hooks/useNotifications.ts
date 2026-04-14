@@ -102,14 +102,12 @@ export function useNotifications() {
   const [notifications, setNotifications] = useState<NotificationItem[]>([])
   const [total, setTotal] = useState(0)
   const [unreadCount, setUnreadCount] = useState(0)
-  const [isLoggedIn, setIsLoggedIn] = useState(Boolean(getStoredToken()))
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [showSkeleton, setShowSkeleton] = useState(false)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [isOnline, setIsOnline] = useState(
-    typeof window !== "undefined" ? window.navigator.onLine : true,
-  );
+  const [isOnline, setIsOnline] = useState(true);
 
   const notificationRef = useRef<HTMLDivElement>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
@@ -302,6 +300,11 @@ export function useNotifications() {
   );
 
   const hasMore = notifications.length < total;
+
+  useEffect(() => {
+    setIsLoggedIn(Boolean(getStoredToken()))
+    setIsOnline(window.navigator.onLine)
+  }, [])
 
   useEffect(() => {
     const handleOnline = () => {
