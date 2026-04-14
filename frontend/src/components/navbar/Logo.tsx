@@ -48,7 +48,7 @@ export function LogoMark({
 export default function Logo({
   className = "",
   iconClassName,
-  iconSize = 44,
+  iconSize = 34,
   onClick,
   textClassName = "",
 }: LogoProps) {
@@ -56,11 +56,11 @@ export default function Logo({
     <Link
       href="/"
       onClick={onClick}
-      className={`flex items-center gap-3 p-1 transition hover:opacity-80 ${className}`}
+      className={`flex items-center gap-2 p-0.5 transition hover:opacity-80 ${className}`}
     >
       <LogoMark className={iconClassName} size={iconSize} />
       <span
-        className={`font-heading text-[1.625rem] font-bold leading-none tracking-[-0.03em] text-stone-900 ${textClassName}`}
+        className={`font-heading text-[1.2rem] font-bold leading-none tracking-[-0.03em] text-stone-900 ${textClassName}`}
       >
         Prop<span className="text-amber-600">Bol</span>
       </span>
