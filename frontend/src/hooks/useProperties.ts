@@ -38,23 +38,34 @@ export function useProperties(): UsePropertiesResult {
 
         //Actualizamos el estado con los datos reales de la BD
 if (!cancelled) {
-          const mappedData: PropertyMapPin[] = (json.data || []).map(
-            (item: any) => ({
-              id: item.id.toString(),
-              // Accedemos a la latitud/longitud según UbicacionInmueble del schema
-              lat: parseFloat(item.ubicacion?.latitud || 0),
-              lng: parseFloat(item.ubicacion?.longitud || 0),
-              price: parseFloat(item.precio),
-              currency: "USD", // O el campo que definas en el schema
-              type: (item.categoria?.toLowerCase().trim() || "casa") as any,
-              title: item.titulo,
-              descripcion: item.descripcion ?? null,
-              nroCuartos: item.nroCuartos ?? null,
-              nroBanos: item.nroBanos ?? null,
-              superficieM2: item.superficieM2 ? parseFloat(item.superficieM2) : null,
-              thumbnailUrl: item.publicaciones?.[0]?.multimedia?.[0]?.url ?? undefined,
-            }),
-          );
+          const mappedData: PropertyMapPin[] = (json.data || [])
+  .filter((item: any) => {
+    const lat = Number(item.ubicacion?.latitud)
+    const lng = Number(item.ubicacion?.longitud)
+
+    return (
+      item.ubicacion &&
+      !isNaN(lat) &&
+      !isNaN(lng) &&
+      lat !== 0 &&
+      lng !== 0
+    )
+  })
+  .map((item: any) => ({
+    id: item.id.toString(),
+    lat: Number(item.ubicacion.latitud),
+    lng: Number(item.ubicacion.longitud),
+    price: Number(item.precio),
+    currency: "USD",
+    type: (item.categoria?.toLowerCase().trim() || "casa") as any,
+    title: item.titulo,
+    descripcion: item.descripcion ?? null,
+    nroCuartos: item.nroCuartos ?? null,
+    nroBanos: item.nroBanos ?? null,
+    superficieM2: item.superficieM2 ? Number(item.superficieM2) : null,
+    thumbnailUrl:
+      item.publicaciones?.[0]?.multimedia?.[0]?.url ?? undefined,
+  }))
           setProperties(mappedData);
         }
       } catch (err) {
