@@ -46,7 +46,7 @@ export function useProperties(): UsePropertiesResult {
               lng: parseFloat(item.ubicacion?.longitud || 0),
               price: parseFloat(item.precio),
               currency: "USD", // O el campo que definas en el schema
-              type: (item.categoria?.toLowerCase() || "casa") as any,
+              type: (item.categoria?.toLowerCase().trim() || "casa") as any,
               title: item.titulo,
             }),
           );
