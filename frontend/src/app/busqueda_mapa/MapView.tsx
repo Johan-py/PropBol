@@ -5,7 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import { useMap } from "react-leaflet";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef} from "react";
 
 import ZoomControls from "@/components/ZoomControls";
 import { createGpsIcon } from "@/components/GpsPin";
@@ -218,6 +218,21 @@ export default function MapView({
 }: MapViewProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [hoveredPinId, setHoveredPinId] = useState<string | null>(null); 
+  const markerRefs = useRef<{ [key: string]: L.Marker | null }>({});
+
+  useEffect(() => {
+    // Cerrar popup del marker anterior
+    Object.entries(markerRefs.current).forEach(([id, marker]) => {
+      if (marker && id !== hoveredPinId && marker.isPopupOpen()) {
+        marker.closePopup();
+      }
+    });
+    
+    // Abrir popup del marker en hover
+    if (hoveredPinId && markerRefs.current[hoveredPinId]) {
+      markerRefs.current[hoveredPinId]?.openPopup();
+    }
+  }, [hoveredPinId]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -262,7 +277,7 @@ export default function MapView({
          <MapMouseHandler onMouseLeave={() => setHoveredPinId(null)} />
          <MapClickHandler onMapClick={() => onSelect?.(null)} />
           {selectedProperty && (
-           <FlyToSelected lat={selectedProperty.lat} lng={selectedProperty.lng} />
+           <FlyToSelected  id={selectedProperty.id} lat={selectedProperty.lat} lng={selectedProperty.lng} />
           )}
 
         <Marker position={center} icon={createGpsIcon()}>
@@ -304,6 +319,9 @@ export default function MapView({
                 key={property.id}
                 position={[property.lat, property.lng]}
                 icon={icon}
+                ref={(el) => {
+                 if (el) markerRefs.current[property.id] = el;
+                }}
                 eventHandlers={{
                  click: () => onSelect?.(property.id),
                  mouseover: () => setHoveredPinId(property.id),
@@ -335,24 +353,32 @@ export default function MapView({
   );
 }
 
-function FlyToSelected({ lat, lng }: { lat: number; lng: number }) {
+function FlyToSelected({ lat, lng, id }: { lat: number; lng: number; id: string }) {
   const map = useMap();
-
+  const [lastId, setLastId] = useState<string | null>(null)
+  
   useEffect(() => {
-    if (!lat || !lng) return;
+    if (!lat || !lng || lastId === id) return
 
-    const targetZoom = 18;
+    const currentCenter = map.getCenter()
+    const distance = currentCenter.distanceTo([lat, lng])
 
-    map.flyTo([lat, lng], targetZoom, {
-      duration: 1.2,
-    });
+    const targetZoom = 16 
+    const isFar = distance > 1000 
 
-    const timeout = setTimeout(() => {
-      map.setView([lat, lng], targetZoom);
-    }, 1200);
+    if (isFar) {
+     
+      map.flyTo([lat, lng], targetZoom, {
+        duration: 0.8,        
+        easeLinearity: 0.25,  
+      })
+    } else {
+     
+      map.setView([lat, lng], targetZoom)
+    }
 
-    return () => clearTimeout(timeout);
-  }, [lat, lng, map]);
+    setLastId(id)
+  }, [lat, lng, id, map, lastId])
 
   return null;
 }
