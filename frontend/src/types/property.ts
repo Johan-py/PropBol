@@ -11,14 +11,18 @@ export type PropertyType =
   | 'espacios'
 
 export interface PropertyMapPin {
-  id: string
-  lat: number
-  lng: number
-  price: number
-  currency: 'USD' | 'BOB'
-  type: PropertyType
-  title: string
-  thumbnailUrl?: string
+id: string;
+  lat: number;
+  lng: number;
+  price: number;
+  currency: "USD" | "BOB";
+  type: PropertyType;
+  title: string;
+  descripcion?: string | null;
+  thumbnailUrl?: string;
+  nroCuartos?: number | null;
+  nroBanos?: number | null;
+  superficieM2?: number | null;
 }
 
 // Respuesta esperada del endpoint real futuro:

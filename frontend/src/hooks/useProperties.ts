@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation'
 
 // Asegurarse de que NEXT_PUBLIC_API_URL esté en .env.local
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").replace(/\/$/, "");
 
 interface UsePropertiesResult {
   properties: PropertyMapPin[]
@@ -37,18 +37,25 @@ export function useProperties(): UsePropertiesResult {
         const json = await res.json()
 
         //Actualizamos el estado con los datos reales de la BD
-        if (!cancelled) {
-          const mappedData: PropertyMapPin[] = (json.data || []).map((item: any) => ({
-            id: item.id.toString(),
-            // Accedemos a la latitud/longitud según UbicacionInmueble del schema
-            lat: parseFloat(item.ubicacion?.latitud || 0),
-            lng: parseFloat(item.ubicacion?.longitud || 0),
-            price: parseFloat(item.precio),
-            currency: 'USD', // O el campo que definas en el schema
-            type: (item.categoria?.toLowerCase().trim() || 'casa') as any,
-            title: item.titulo
-          }))
-          setProperties(mappedData)
+if (!cancelled) {
+          const mappedData: PropertyMapPin[] = (json.data || []).map(
+            (item: any) => ({
+              id: item.id.toString(),
+              // Accedemos a la latitud/longitud según UbicacionInmueble del schema
+              lat: parseFloat(item.ubicacion?.latitud || 0),
+              lng: parseFloat(item.ubicacion?.longitud || 0),
+              price: parseFloat(item.precio),
+              currency: "USD", // O el campo que definas en el schema
+              type: (item.categoria?.toLowerCase().trim() || "casa") as any,
+              title: item.titulo,
+              descripcion: item.descripcion ?? null,
+              nroCuartos: item.nroCuartos ?? null,
+              nroBanos: item.nroBanos ?? null,
+              superficieM2: item.superficieM2 ? parseFloat(item.superficieM2) : null,
+              thumbnailUrl: item.publicaciones?.[0]?.multimedia?.[0]?.url ?? undefined,
+            }),
+          );
+          setProperties(mappedData);
         }
       } catch (err) {
         if (!cancelled)
