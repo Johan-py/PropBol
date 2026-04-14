@@ -11,7 +11,11 @@ export interface PropertyMapPin {
   currency: "USD" | "BOB";
   type: PropertyType;
   title: string;
+  descripcion?: string | null;
   thumbnailUrl?: string;
+  nroCuartos?: number | null;
+  nroBanos?: number | null;
+  superficieM2?: number | null;
 }
 
 // Respuesta esperada del endpoint real futuro:
