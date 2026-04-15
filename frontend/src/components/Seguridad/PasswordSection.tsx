@@ -1,3 +1,5 @@
+'use client'
+
 import { Eye, EyeOff, LockKeyhole } from "lucide-react";
 import { FormEvent, useState } from "react";
 
