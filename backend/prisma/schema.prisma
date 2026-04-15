@@ -5,6 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+
 }
 
 model autenticacion_social {
