@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense, useCallback } from "react";
 import nextDynamic from "next/dynamic";
 import {
   ChevronLeft,
@@ -76,6 +76,17 @@ function BusquedaMapaContent() {
   const [sheetState, setSheetState] = useState<SheetState>("peek");
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  // --- INICIO ESTADOS HU8 ---
+  const [isDrawingMode, setIsDrawingMode] = useState(false);
+  const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([]);
+  const [isPolygonClosed, setIsPolygonClosed] = useState(false);
+
+  const resetDrawing = () => {
+    setIsDrawingMode(false);
+    setIsPolygonClosed(false);
+    setPolygonPoints([]);
+  };
+  // --- FIN ESTADOS HU8 ---
 
   const isMobile = useIsMobile();
   const isLandscape = useIsLandscapeMobile();
@@ -124,8 +135,8 @@ function BusquedaMapaContent() {
     return () => clearTimeout(t);
   }, [isSidebarOpen, sheetState]);
 
-  // 🚀 FUNCIÓN ACTUALIZADA: Acepta null para manejar clics fuera del mapa
-  function handleMapSelect(id: string | null) {
+ // 🚀 FUNCIÓN ACTUALIZADA CON MEMORIZACIÓN
+  const handleMapSelect = useCallback((id: string | null) => {
     setSelectedPropertyId(id);
     
     if (id) {
@@ -137,7 +148,7 @@ function BusquedaMapaContent() {
     } else {
       setPinnedProperty(null);
     }
-  }
+  }, [properties]);
 
   // Eventos táctiles para el Bottom Sheet
   function onTouchStart(e: React.TouchEvent) {
