@@ -640,9 +640,7 @@ function BusquedaMapaContent() {
                       </div>
                       <div className="flex items-center gap-2 mb-2">
                         <h1 className="text-xl font-semibold text-slate-800">
-                          {isClusterView
-                            ? `${clusterProperties.length} propiedades en este clúster`
-                            : 'Resultados de búsqueda'}
+                          {isClusterView ? `${clusterProperties.length} propiedades en este clúster` : "Resultados de búsqueda"}
                         </h1>
                       </div>
                       <h2 className="text-sm font-bold text-slate-900">
@@ -658,17 +656,13 @@ function BusquedaMapaContent() {
                         </span>
                       </h2>
                       {isClusterView && (
-                        <button
-                          onClick={() => {
-                            setIsClusterView(false)
-                            setClusterProperties([])
-                            setActiveClusterIds([])
-                          }}
-                          className="text-sm text-orange-500 hover:underline flex items-center gap-1 mt-1 mb-2"
-                        >
-                          ← Volver a todos los resultados
-                        </button>
-                      )}
+  <button
+    onClick={() => { setIsClusterView(false); setClusterProperties([]); }}
+    className="text-sm text-orange-500 hover:underline flex items-center gap-1 mt-1 mb-2"
+  >
+    ← Volver a todos los resultados
+  </button>
+)}
                     </div>
                   </div>
                   <button
