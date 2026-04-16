@@ -217,14 +217,8 @@ interface MapViewProps {
   selectedId?: string | null
   onSelect?: (id: string | null) => void
   onClusterClick?: (properties: PropertyMapPin[]) => void
-  activeClusterIds?: string[]
-  isDrawingMode?: boolean
-  polygonPoints?: [number, number][]
-  isPolygonClosed?: boolean
-  onMapClick?: (latlng: L.LatLng) => void
-  onPointClick?: (index: number) => void
-  isLoading?: boolean
-  error?: string | null
+  isLoading?: boolean;
+  error?: string | null;
 }
 
 export default function MapView({
