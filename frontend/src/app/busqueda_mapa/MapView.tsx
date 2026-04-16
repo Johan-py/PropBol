@@ -214,6 +214,7 @@ export default function MapView({
   zoom = 12,
   selectedId,
   onSelect,
+  onClusterClick,
   isLoading = false,
   error = null,
 }: MapViewProps) {
@@ -301,6 +302,13 @@ export default function MapView({
           spiderfyDistanceMultiplier={2}
           removeOutsideVisibleBounds={false}
           clusterPane="markerPane"
+          eventHandlers={{
+            clusterclick: (cluster: any) => {
+              const markers = cluster.layer.getAllChildMarkers();
+              const props = markers.map((m: any) => m.options.property).filter(Boolean);
+              onClusterClick?.(props);
+            }
+          }}
         >
           {properties.map((property) => {
             const isSelected = property.id === selectedId;
@@ -319,6 +327,7 @@ export default function MapView({
               <Marker
                 key={property.id}
                 position={[property.lat, property.lng]}
+                property={property}
                 icon={icon}
                 ref={(el) => {
                  if (el) markerRefs.current[property.id] = el;
