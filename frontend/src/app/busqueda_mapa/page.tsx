@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef, Suspense, useCallback } from "react";
+import { point, polygon } from "@turf/helpers";
+import booleanPointInPolygon from "@turf/boolean-point-in-polygon";
+import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from "react";
 import nextDynamic from "next/dynamic";
 import {
   ChevronLeft,
@@ -95,9 +97,37 @@ function BusquedaMapaContent() {
     setIsMounted(true);
   }, []);
 
-  const { properties, isLoading, error } = useProperties();
+const { properties, isLoading, error } = useProperties();
+
+  // --- INICIO LÓGICA MATEMÁTICA HU8 ---
+  const displayedProperties = useMemo(() => {
+    if (isPolygonClosed && polygonPoints.length >= 3) {
+      try {
+        // Turf.js requiere el formato GeoJSON estándar: [longitud, latitud].
+        // Leaflet trabaja con [latitud, longitud], por lo que invertimos la matriz espacial.
+        // Además, cerramos matemáticamente el polígono repitiendo el punto inicial al final.
+        const turfCoords = [...polygonPoints, polygonPoints[0]].map(p => [p[1], p[0]]);
+        
+        const drawPoly = polygon([turfCoords]);
+
+        // Aplicamos el algoritmo Point in Polygon (Ray-casting)
+        return properties.filter((p: any) => {
+          if (!p.lat || !p.lng) return false;
+          const pt = point([p.lng, p.lat]);
+          return booleanPointInPolygon(pt, drawPoly);
+        });
+      } catch (err) {
+        console.error("Error en validación geométrica:", err);
+        return properties;
+      }
+    }
+    return properties;
+  }, [properties, isPolygonClosed, polygonPoints]);
+  // --- FIN LÓGICA MATEMÁTICA HU8 ---
+
+  // Actualizamos el hook para que ordene solo los resultados filtrados
   const { ordenActual, cambiarOrden } = useOrdenamiento({
-    inmuebles: properties,
+    inmuebles: displayedProperties,
   });
 
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
@@ -208,7 +238,7 @@ function BusquedaMapaContent() {
           <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />{" "}
           Actualizando...
         </div>
-      ) : properties.length === 0 ? (
+      ) : displayedProperties.length === 0 ? (
         <EmptyState />
       ) : (
         <div
@@ -218,7 +248,7 @@ function BusquedaMapaContent() {
               : ""
           }`}
         >
-          {properties.map((property: any) => (
+          {displayedProperties.map((property: any) => (
             <div
               key={property.id}
               onClick={() => {
@@ -288,8 +318,8 @@ function BusquedaMapaContent() {
             <div className="flex-1 relative">
               <div className="absolute inset-0" style={{ zIndex: 0 }}>
                 <MapView
-                  properties={properties}
-                  selectedId={selectedPropertyId}
+                properties={displayedProperties} 
+                selectedId={selectedPropertyId}
                   // En Landscape usa: onSelect={(id) => { ... }}
                   // En los otros usa: onSelect={handleMapSelect}
                   isLoading={isLoading}
@@ -316,7 +346,7 @@ function BusquedaMapaContent() {
             <div className="w-[280px] flex flex-col bg-white border-l border-stone-200 overflow-hidden shrink-0">
               <div className="px-3 py-2 border-b border-stone-100 flex items-center justify-between shrink-0">
                 <span className="text-sm font-semibold text-slate-700">
-                  <span className="text-orange-500">{properties.length}</span>
+                  <span className="text-orange-500">{displayedProperties.length}</span>
                   <span className="ml-1 text-gray-500 font-normal text-xs">
                     props.
                   </span>
@@ -352,7 +382,7 @@ function BusquedaMapaContent() {
         <div className="flex-1 relative overflow-hidden">
           <div className="absolute inset-0">
             <MapView
-                  properties={properties}
+                  properties={displayedProperties} 
                   selectedId={selectedPropertyId}
                   // En Landscape usa: onSelect={(id) => { ... }}
                   // En los otros usa: onSelect={handleMapSelect}
@@ -383,9 +413,9 @@ function BusquedaMapaContent() {
               style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.18)" }}
             >
               <ListIcon size={16} className="text-orange-500" /> Ver lista
-              {properties.length > 0 && (
+              {displayedProperties.length > 0 && (
                 <span className="bg-orange-100 text-orange-600 text-xs font-bold px-2 py-0.5 rounded-full">
-                  {properties.length}
+                  {displayedProperties.length}
                 </span>
               )}
               <ChevronUp size={16} className="text-stone-400" />
@@ -410,7 +440,7 @@ function BusquedaMapaContent() {
                 />
                 <div className="flex items-center justify-between w-full px-4 pb-2">
                   <span className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
-                    <span className="text-orange-500">{properties.length}</span>
+                    <span className="text-orange-500">{displayedProperties.length}</span>
                     <span className="text-gray-500 font-normal">
                       propiedades
                     </span>
@@ -485,7 +515,7 @@ function BusquedaMapaContent() {
                 )}
                 <div className="px-4 shrink-0 border-b border-stone-100 pb-2">
                   <MenuOrdenamiento
-                    totalResultados={properties.length}
+                    totalResultados={displayedProperties.length}
                     ordenActual={ordenActual}
                     onOrdenChange={cambiarOrden}
                   />
@@ -545,10 +575,10 @@ function BusquedaMapaContent() {
                       </div>
                       <h2 className="text-sm font-bold text-slate-900">
                         <span className="text-orange-500">
-                          {properties.length}
+                          {displayedProperties.length}
                         </span>
                         <span className="ml-2 text-gray-600 font-normal text-sm">
-                          {properties.length === 1
+                          {displayedProperties.length === 1
                             ? "propiedad encontrada"
                             : "propiedades encontradas"}
                         </span>
@@ -565,7 +595,7 @@ function BusquedaMapaContent() {
 
                 <div className="relative border-b border-stone-100 pb-4 [&>div]:mb-0">
                   <MenuOrdenamiento
-                    totalResultados={properties.length}
+                    totalResultados={displayedProperties.length}
                     ordenActual={ordenActual}
                     onOrdenChange={cambiarOrden}
                   />
@@ -609,7 +639,7 @@ function BusquedaMapaContent() {
                     <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
                     Actualizando resultados...
                   </div>
-                ) : properties.length === 0 ? (
+                ) : displayedProperties.length === 0 ? (
                   <EmptyState />
                 ) : (
                   <div
@@ -619,7 +649,7 @@ function BusquedaMapaContent() {
                         : ""
                     }`}
                   >
-                    {properties.map((property: any) => (
+                    {displayedProperties.map((property: any) => (
                       <div
                         key={property.id}
                         onMouseEnter={() => setHoveredId(property.id)}
@@ -746,7 +776,7 @@ function BusquedaMapaContent() {
 
           <div className="absolute inset-0" style={{ zIndex: 0 }}>
             <MapView
-                  properties={properties}
+                  properties={displayedProperties} 
                   selectedId={selectedPropertyId}
                   onSelect={handleMapSelect}
                   isLoading={isLoading}
