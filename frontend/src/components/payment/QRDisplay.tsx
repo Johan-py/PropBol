@@ -18,7 +18,6 @@ interface QRDisplayProps {
 export function QRDisplay({ value, size, id, className = "" }: QRDisplayProps) {
   if (!value) {
     return (
-      <div className="flex justify-center">
         <div className="bg-red-50 p-4 rounded-xl text-center text-red-600">
           Error: QR sin contenido
         </div>
