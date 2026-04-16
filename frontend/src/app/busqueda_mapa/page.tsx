@@ -123,6 +123,8 @@ function BusquedaMapaContent() {
     null
   );
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [clusterProperties, setClusterProperties] = useState<any[]>([]);
+  const [isClusterView, setIsClusterView] = useState(false);
 
         return properties.filter((p: any) => {
           if (p.lat == null || p.lng == null) return false
@@ -199,10 +201,24 @@ function BusquedaMapaContent() {
     return () => clearTimeout(t)
   }, [isSidebarOpen, sheetState])
 
+  // 🚀 FUNCIÓN ACTUALIZADA: Acepta null para manejar clics fuera del mapa
   function handleClusterClick(props: any[]) {
-    setClusterProperties(props)
-    setIsClusterView(true)
-    setActiveClusterIds(props.map((p: any) => p.id))
+    setClusterProperties(props);
+    setIsClusterView(true);
+  }
+
+  function handleMapSelect(id: string | null) {
+    setSelectedPropertyId(id);
+    
+    if (id) {
+      const prop = properties.find((p: any) => p.id === id);
+      if (prop) {
+        setPinnedProperty(prop);
+        setSheetState("peek");
+      }
+    } else {
+      setPinnedProperty(null);
+    }
   }
 
   const handleMapSelect = useCallback(
@@ -422,6 +438,7 @@ function BusquedaMapaContent() {
               selectedZoneId={selectedZoneId}
               onZoneSelect={setSelectedZoneId}
               onSelect={handleMapSelect}
+              onClusterClick={handleClusterClick}
               isLoading={isLoading}
               error={error}
               isDrawingMode={isDrawingMode}
@@ -845,7 +862,6 @@ function BusquedaMapaContent() {
               selectedId={selectedPropertyId}
               onSelect={handleMapSelect}
               onClusterClick={handleClusterClick}
-              activeClusterIds={activeClusterIds}
               isLoading={isLoading}
               error={error}
               zonas={zonas}
