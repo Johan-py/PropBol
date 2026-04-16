@@ -8,18 +8,13 @@ interface QRDisplayProps {
   size?: number; // si se define, tamaño fijo en px
   id?: string;
   className?: string; // clase para el contenedor exterior
-  id?: string;
-  className?: string; // clase para el contenedor exterior
-  id?: string;
-  className?: string; // clase para el contenedor exterior  id?: string;
-  className?: string; // clase para el contenedor exterior
 }
 
 export function QRDisplay({ value, size, id, className = "" }: QRDisplayProps) {
   if (!value) {
     return (
-        <div classNameClassLoop="bg-red-50 p-4 rounded-xl text-center text-red-600">
-
+      <div className="flex justify-center">
+        <div className="bg-red-50 p-4 rounded-xl text-center text-red-600">
           Error: QR sin contenido
         </div>
       </div>
@@ -54,6 +49,7 @@ export function QRDisplay({ value, size, id, className = "" }: QRDisplayProps) {
       {id && (
         <p className="text-xs text-center text-stone-500 dark:text-stone-400 mt-2">
           {id} · Escanea este código desde tu aplicación bancaria
+        </p>
       )}
     </div>
   );
