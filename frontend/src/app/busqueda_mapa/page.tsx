@@ -93,6 +93,8 @@ function BusquedaMapaContent() {
     null
   );
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [clusterProperties, setClusterProperties] = useState<any[]>([]);
+  const [isClusterView, setIsClusterView] = useState(false);
 
   // Estado para la lista en desktop
   const [isHoveringList, setIsHoveringList] = useState(false);
@@ -125,6 +127,11 @@ function BusquedaMapaContent() {
   }, [isSidebarOpen, sheetState]);
 
   // 🚀 FUNCIÓN ACTUALIZADA: Acepta null para manejar clics fuera del mapa
+  function handleClusterClick(props: any[]) {
+    setClusterProperties(props);
+    setIsClusterView(true);
+  }
+
   function handleMapSelect(id: string | null) {
     setSelectedPropertyId(id);
     
@@ -332,6 +339,7 @@ function BusquedaMapaContent() {
               properties={properties}
               selectedId={selectedPropertyId}
               onSelect={handleMapSelect}
+              onClusterClick={handleClusterClick}
               isLoading={isLoading}
               error={error}
             />
@@ -663,6 +671,7 @@ function BusquedaMapaContent() {
               properties={properties}
               selectedId={selectedPropertyId}
               onSelect={handleMapSelect}
+              onClusterClick={handleClusterClick}
               isLoading={isLoading}
               error={error}
             />
