@@ -726,60 +726,63 @@ function BusquedaMapaContent() {
                         : ''
                     }`}
                   >
-                    {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
-                        <div
-                          key={property.id}
-                          onMouseEnter={() => setHoveredId(property.id)}
-                          onMouseLeave={() => setHoveredId(null)}
-                          onClick={() => setSelectedPropertyId(property.id)}
-                          className={`cursor-pointer transition-all duration-200 rounded-xl relative ${
-                            viewMode === 'grid'
-                              ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
-                              : 'w-full py-1 hover:bg-stone-100'
-                          } ${
-                            selectedPropertyId === property.id
-                              ? 'ring-2 ring-orange-400 ring-offset-1 z-10'
-                              : ''
-                          }`}
-                        >
-                          {viewMode === 'grid' ? (
-                            <PropertyCard
-                              imagen={
-                                property.thumbnailUrl ||
-                                property.imagen ||
-                                'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
-                              }
-                              estado={property.type}
-                              precio={
-                                property.currency === 'USD'
-                                  ? `$${property.price.toLocaleString('es-BO')} USD`
-                                  : `Bs ${property.price.toLocaleString('es-BO')}`
-                              }
-                              descripcion={property.descripcion || property.title}
-                              camas={property.nroCuartos ?? 0}
-                              banos={property.nroBanos ?? 0}
-                              metros={property.superficieM2 ?? 0}
-                            />
-                          ) : (
-                            <PropertyRow
-                              title={property.title}
-                              price={
-                                property.currency === 'USD'
-                                  ? `$${property.price.toLocaleString('es-BO')} USD`
-                                  : `Bs ${property.price.toLocaleString('es-BO')}`
-                              }
-                              size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
-                              contactType="whatsapp"
-                              image={
-                                property.thumbnailUrl ||
-                                property.imagen ||
-                                'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
-                              }
-                            />
-                          )}
-                        </div>
-                      )
-                    )}
+                    {(isClusterView ? clusterProperties : properties).map((property: any) => (
+                      <div
+                        key={property.id}
+                        onMouseEnter={() => setHoveredId(property.id)}
+                        onMouseLeave={() => setHoveredId(null)}
+                        onClick={() => setSelectedPropertyId(property.id)}
+                        className={`cursor-pointer transition-all duration-200 rounded-xl relative ${
+                          viewMode === "grid"
+                            ? "transform scale-95 origin-top mx-auto mb-[-4%]"
+                            : "w-full py-1 hover:bg-stone-100"
+                        } ${
+                          selectedPropertyId === property.id
+                            ? "ring-2 ring-orange-400 ring-offset-1 z-10"
+                            : ""
+                        }`}
+                      >
+                        {viewMode === "grid" ? (
+                          <PropertyCard
+                            imagen={
+                              property.thumbnailUrl ||
+                              property.imagen ||
+                              "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80"
+                            }
+                            estado={property.type}
+                            precio={
+                              property.currency === "USD"
+                                ? `$${property.price.toLocaleString(
+                                    "es-BO"
+                                  )} USD`
+                                : `Bs ${property.price.toLocaleString("es-BO")}`
+                            }
+                            descripcion={property.descripcion || property.title}
+                            camas={property.nroCuartos ?? 0}
+                            banos={property.nroBanos ?? 0}
+                            metros={property.superficieM2 ?? 0}
+                          />
+                        ) : (
+                          <PropertyRow
+                            title={property.title}
+                            price={
+                              property.currency === "USD"
+                                ? `$${property.price.toLocaleString(
+                                    "es-BO"
+                                  )} USD`
+                                : `Bs ${property.price.toLocaleString("es-BO")}`
+                            }
+                            size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
+                            contactType="whatsapp"
+                            image={
+                              property.thumbnailUrl ||
+                              property.imagen ||
+                              "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80"
+                            }
+                          />
+                        )}
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
