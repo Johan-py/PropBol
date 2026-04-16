@@ -1,4 +1,4 @@
-import { rol_nombre } from '../../generated/prisma/client.js'
+import { RolNombre } from '@prisma/client'
 import { prisma } from '../../lib/prisma.client.js'
 
 interface CreateUserInput {
@@ -19,9 +19,9 @@ type PrismaLikeKnownError = {
 
 const ensureVisitorRole = async () => {
   return await prisma.rol.upsert({
-    where: { nombre: rol_nombre.VISITANTE },
+    where: { nombre: RolNombre.VISITANTE },
     update: {},
-    create: { nombre: rol_nombre.VISITANTE }
+    create: { nombre: RolNombre.VISITANTE }
   })
 }
 
@@ -56,11 +56,11 @@ export const createUser = async (data: CreateUserInput) => {
         apellido: data.apellido,
         correo: data.correo,
         password: data.password,
-        rol_id: rol.id,
-        telefono: data.telefono
+        rolId: rol.id,
+        telefonos: data.telefono
           ? {
               create: {
-                codigo_pais: '+591',
+                codigoPais: '+591',
                 numero: data.telefono,
                 principal: true
               }
@@ -68,7 +68,7 @@ export const createUser = async (data: CreateUserInput) => {
           : undefined
       },
       include: {
-        telefono: true
+        telefonos: true
       }
     })
   } catch (error) {
@@ -80,20 +80,23 @@ export const createUser = async (data: CreateUserInput) => {
   }
 }
 
+export const findUser = async (correo: string) => {
+  return await prisma.usuario.findUnique({
+    where: { correo }
+  })
+}
+
 export const findUserByCorreo = async (correo: string) => {
   return await prisma.usuario.findUnique({
     where: { correo }
   })
 }
 
-export const findUser = findUserByCorreo
-
 export const findUserById = async (id: number) => {
   return await prisma.usuario.findUnique({
     where: { id },
     include: {
-      rol: true,
-      telefono: true
+      rol: true
     }
   })
 }
@@ -110,8 +113,8 @@ export const createSession = async ({
   return await prisma.sesion.create({
     data: {
       token,
-      usuario_id: usuarioId,
-      fecha_expiracion: fechaExpiracion,
+      usuarioId,
+      fechaExpiracion,
       estado: true
     }
   })
@@ -122,15 +125,15 @@ export const findActiveSessionByToken = async (token: string) => {
     where: {
       token,
       estado: true,
-      fecha_expiracion: {
+
+      fechaExpiracion: {
         gt: new Date()
       }
     },
     include: {
       usuario: {
         include: {
-          rol: true,
-          telefono: true
+          rol: true
         }
       }
     }
