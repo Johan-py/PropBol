@@ -218,6 +218,8 @@ function BusquedaMapaContent() {
       }
     } else {
       setPinnedProperty(null);
+      setIsClusterView(false);
+      setClusterProperties([]);
     }
   }
 
