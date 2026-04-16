@@ -595,7 +595,7 @@ function BusquedaMapaContent() {
                         : ""
                     }`}
                   >
-                    {properties.map((property: any) => (
+                    {(isClusterView ? clusterProperties : properties).map((property: any) => (
                       <div
                         key={property.id}
                         onMouseEnter={() => setHoveredId(property.id)}
