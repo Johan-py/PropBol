@@ -1,11 +1,11 @@
 "use client";
 
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Polyline, Polygon, CircleMarker } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import { useMap } from "react-leaflet";
-import { useEffect, useState, useRef} from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 
 import ZoomControls from "@/components/ZoomControls";
 import { createGpsIcon } from "@/components/GpsPin";
@@ -109,22 +109,22 @@ function createPinIcon(type: PropertyMapPin["type"]): L.DivIcon {
   });
 }
 
-function MapClickHandler({ onMapClick }: { onMapClick: () => void }) {
-  const map = useMap()
+function MapClickHandler({ onMapClick }: { onMapClick: (latlng: L.LatLng) => void }) {
+  const map = useMap();
 
   useEffect(() => {
-    const handleClick = () => {
-      onMapClick()
-    }
+    const handleClick = (e: L.LeafletMouseEvent) => {
+      onMapClick(e.latlng);
+    };
 
-    map.on("click", handleClick)
+    map.on("click", handleClick);
 
     return () => {
-      map.off("click", handleClick)
-    }
-  }, [map, onMapClick])
+      map.off("click", handleClick);
+    };
+  }, [map, onMapClick]);
 
-  return null
+  return null;
 }
 
 function MapMouseHandler({ onMouseLeave }: { onMouseLeave: () => void }) {
@@ -205,6 +205,11 @@ interface MapViewProps {
   onSelect?: (id: string | null) => void
   isLoading?: boolean;
   error?: string | null;
+  isDrawingMode?: boolean;
+  polygonPoints?: [number, number][];
+  isPolygonClosed?: boolean;
+  onMapClick?: (latlng: L.LatLng) => void;
+  onPointClick?: (index: number) => void;
 }
 
 export default function MapView({
