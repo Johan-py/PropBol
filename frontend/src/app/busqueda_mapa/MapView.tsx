@@ -10,8 +10,10 @@ import { useEffect, useState, useRef, useMemo } from "react";
 import ZoomControls from "@/components/ZoomControls";
 import { createGpsIcon } from "@/components/GpsPin";
 import { createClusterIcon, CLUSTER_CONFIG } from "@/lib/clusterIcon";
+import ZonasOverlay from '@/components/map/ZonasOverlay';
 
 import type { PropertyMapPin } from "@/types/property";
+import type { ZonaPredefinida } from '@/types/zona';
 
 // Fix íconos default de Leaflet en Next.js (guard SSR)
 if (typeof window !== "undefined") {
@@ -199,6 +201,9 @@ function formatPrice(price: number, currency: "USD" | "BOB"): string {
 
 interface MapViewProps {
   properties: PropertyMapPin[];
+  zonas?: ZonaPredefinida[];
+  selectedZoneId?: number | null;
+  onZoneSelect?: (id: number | null) => void;
   center?: [number, number];
   zoom?: number;
   selectedId?: string | null;
@@ -225,6 +230,9 @@ export default function MapView({
   isPolygonClosed = false,
   onMapClick,
   onPointClick,
+  zonas = [],
+  selectedZoneId = null,
+  onZoneSelect,
 }: MapViewProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [hoveredPinId, setHoveredPinId] = useState<string | null>(null); 
@@ -341,8 +349,15 @@ export default function MapView({
             onMapClick(latlng);
           } else if (!isDrawingMode) {
             onSelect?.(null);
+            onZoneSelect?.(null); // criterio 10: clic neutral desactiva zona
           }
         }} />
+
+        <ZonasOverlay
+          zonas={zonas}
+          selectedZoneId={selectedZoneId}
+          onZoneSelect={onZoneSelect ?? (() => {})}
+        />
 
         {/* --- INICIO CÓDIGO HU8 --- */}
         {polygonPoints && polygonPoints.length > 0 && !isPolygonClosed && (

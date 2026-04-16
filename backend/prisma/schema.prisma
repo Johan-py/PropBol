@@ -387,6 +387,17 @@ model verificacion_pago {
   transacciones          transacciones? @relation(fields: [id_transaccion], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
+model ZonaPredefinida {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  coordenadas Json
+  color       String   @default("#ea580c")
+  activa      Boolean  @default(true)
+  creadoEn    DateTime @default(now())
+
+  @@map("zona_predefinida")
+}
+
 enum Genero {
   MASCULINO
   FEMENINO

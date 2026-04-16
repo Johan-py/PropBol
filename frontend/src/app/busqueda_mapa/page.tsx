@@ -16,6 +16,7 @@ import {
 // === HOOKS ===
 import { useProperties } from "@/hooks/useProperties";
 import { useOrdenamiento } from "@/hooks/useOrdenamiento";
+import { useZonas } from '@/hooks/useZonas';
 
 // === COMPONENTES ===
 import FilterBar from "@/components/filters/FilterBar";
@@ -99,6 +100,8 @@ function BusquedaMapaContent() {
   const { ordenActual, cambiarOrden } = useOrdenamiento({
     inmuebles: properties,
   });
+  const { zonas } = useZonas();
+  const [selectedZoneId, setSelectedZoneId] = useState<number | null>(null);
 
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
     null
@@ -290,6 +293,9 @@ function BusquedaMapaContent() {
                 <MapView
                   properties={properties}
                   selectedId={selectedPropertyId}
+                  zonas={zonas}
+                  selectedZoneId={selectedZoneId}
+                  onZoneSelect={setSelectedZoneId}
                   // En Landscape usa: onSelect={(id) => { ... }}
                   // En los otros usa: onSelect={handleMapSelect}
                   isLoading={isLoading}
@@ -354,6 +360,9 @@ function BusquedaMapaContent() {
             <MapView
                   properties={properties}
                   selectedId={selectedPropertyId}
+                  zonas={zonas}
+                  selectedZoneId={selectedZoneId}
+                  onZoneSelect={setSelectedZoneId}
                   // En Landscape usa: onSelect={(id) => { ... }}
                   // En los otros usa: onSelect={handleMapSelect}
                   isLoading={isLoading}
@@ -748,6 +757,9 @@ function BusquedaMapaContent() {
             <MapView
                   properties={properties}
                   selectedId={selectedPropertyId}
+                  zonas={zonas}
+                  selectedZoneId={selectedZoneId}
+                  onZoneSelect={setSelectedZoneId}
                   onSelect={handleMapSelect}
                   isLoading={isLoading}
                   error={error}
