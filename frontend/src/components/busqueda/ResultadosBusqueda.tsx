@@ -9,10 +9,10 @@ import { useSearchParams } from 'next/navigation'
 
 // ── Tipos de filtros globales (los que guarda FilterBar) ──────────────────────
 interface FiltrosGlobales {
-  tipoInmueble?: string; // ej: ["CASA"] o ["CUALQUIER TIPO"]
-  modoInmueble?: BigInteger; // ej: ["VENTA"] o ["VENTA", "ALQUILER"]
-  query?: number;
-  locationId?: string;
+  tipoInmueble?: string[]; // ej: ["CASA"] o ["CUALQUIER TIPO"]
+  modoInmueble?: string[]; // ej: ["VENTA"] o ["VENTA", "ALQUILER"]
+  query?: string;
+  locationId?: number;
   updatedAt?: string;
 }
 

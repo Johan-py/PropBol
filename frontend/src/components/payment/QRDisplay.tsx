@@ -8,6 +8,11 @@ interface QRDisplayProps {
   size?: number; // si se define, tamaño fijo en px
   id?: string;
   className?: string; // clase para el contenedor exterior
+  id?: string;
+  className?: string; // clase para el contenedor exterior
+  id?: string;
+  className?: string; // clase para el contenedor exterior  id?: string;
+  className?: string; // clase para el contenedor exterior
 }
 
 export function QRDisplay({ value, size, id, className = "" }: QRDisplayProps) {
