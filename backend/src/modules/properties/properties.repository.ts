@@ -1,4 +1,4 @@
-import { prisma } from '../../lib/prisma.config.js'
+import { prisma } from '../../lib/prisma.client.js'
 
 export interface FiltrosBusqueda {
   categoria?: string | string[];
@@ -23,13 +23,18 @@ export const propertiesRepository = {
     const where: any = { estado: "ACTIVO" };
 
     // 1. Filtro de Categoría / Tipo Inmueble (Soporta múltiples selecciones)
+    const CATEGORIAS_VALIDAS = ["CASA", "DEPARTAMENTO", "TERRENO", "OFICINA"];
     const rawTipo = filtros.tipoInmueble || filtros.categoria;
     if (rawTipo) {
-      const tipos = (Array.isArray(rawTipo) ? rawTipo : [rawTipo])
+      const rawArr = (Array.isArray(rawTipo) ? rawTipo : [rawTipo])
         .map((t) => String(t).toUpperCase().trim())
         .filter((t) => t && t !== "CUALQUIER TIPO");
-        
-      if (tipos.length === 1) {
+
+      const tipos = rawArr.filter((t) => CATEGORIAS_VALIDAS.includes(t));
+
+      if (rawArr.length > 0 && tipos.length === 0) {
+        return [];
+      } else if (tipos.length === 1) {
         where.categoria = tipos[0];
       } else if (tipos.length > 1) {
         where.categoria = { in: tipos };

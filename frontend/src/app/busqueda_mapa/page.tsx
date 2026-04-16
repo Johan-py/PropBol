@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense, useCallback } from "react";
 import nextDynamic from "next/dynamic";
 import {
   ChevronLeft,
@@ -76,6 +76,17 @@ function BusquedaMapaContent() {
   const [sheetState, setSheetState] = useState<SheetState>("peek");
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  // --- INICIO ESTADOS HU8 ---
+  const [isDrawingMode, setIsDrawingMode] = useState(false);
+  const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([]);
+  const [isPolygonClosed, setIsPolygonClosed] = useState(false);
+
+  const resetDrawing = () => {
+    setIsDrawingMode(false);
+    setIsPolygonClosed(false);
+    setPolygonPoints([]);
+  };
+  // --- FIN ESTADOS HU8 ---
 
   const isMobile = useIsMobile();
   const isLandscape = useIsLandscapeMobile();
@@ -124,8 +135,8 @@ function BusquedaMapaContent() {
     return () => clearTimeout(t);
   }, [isSidebarOpen, sheetState]);
 
-  // 🚀 FUNCIÓN ACTUALIZADA: Acepta null para manejar clics fuera del mapa
-  function handleMapSelect(id: string | null) {
+ // 🚀 FUNCIÓN ACTUALIZADA CON MEMORIZACIÓN
+  const handleMapSelect = useCallback((id: string | null) => {
     setSelectedPropertyId(id);
     
     if (id) {
@@ -137,7 +148,7 @@ function BusquedaMapaContent() {
     } else {
       setPinnedProperty(null);
     }
-  }
+  }, [properties]);
 
   // Eventos táctiles para el Bottom Sheet
   function onTouchStart(e: React.TouchEvent) {
@@ -229,10 +240,10 @@ function BusquedaMapaContent() {
                       ? `$${property.price.toLocaleString("es-BO")} USD`
                       : `Bs ${property.price.toLocaleString("es-BO")}`
                   }
-                  descripcion={property.title}
-                  camas={3}
-                  banos={2}
-                  metros={150}
+                  descripcion={property.descripcion || property.title}
+                  camas={property.nroCuartos ?? 0}
+                  banos={property.nroBanos ?? 0}
+                  metros={property.superficieM2 ?? 0}
                 />
               ) : (
                 <PropertyRow
@@ -242,7 +253,7 @@ function BusquedaMapaContent() {
                       ? `$${property.price.toLocaleString("es-BO")} USD`
                       : `Bs ${property.price.toLocaleString("es-BO")}`
                   }
-                  size="3 Dorm. • 150 m²"
+                  size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
                   contactType="whatsapp"
                   image=""
                 />
@@ -275,18 +286,30 @@ function BusquedaMapaContent() {
           </div>
           <div className="flex flex-1 overflow-hidden">
             <div className="flex-1 relative">
-              <div className="absolute inset-0">
+              <div className="absolute inset-0" style={{ zIndex: 0 }}>
                 <MapView
                   properties={properties}
                   selectedId={selectedPropertyId}
-                  onSelect={(id) => {
-                    setSelectedPropertyId(id);
-                    setPinnedProperty(
-                      properties.find((p: any) => p.id === id) ?? null
-                    );
-                  }}
+                  // En Landscape usa: onSelect={(id) => { ... }}
+                  // En los otros usa: onSelect={handleMapSelect}
                   isLoading={isLoading}
                   error={error}
+                  // --- INICIO PROPS HU8 ---
+                  isDrawingMode={isDrawingMode}
+                  polygonPoints={polygonPoints}
+                  isPolygonClosed={isPolygonClosed}
+                  onMapClick={(latlng) => {
+                    if (isDrawingMode && !isPolygonClosed) {
+                      setPolygonPoints(prev => [...prev, [latlng.lat, latlng.lng]]);
+                    }
+                  }}
+                  onPointClick={(index) => {
+                    if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
+                      setIsPolygonClosed(true);
+                      setIsDrawingMode(false);
+                    }
+                  }}
+                  // --- FIN PROPS HU8 ---
                 />
               </div>
             </div>
@@ -329,17 +352,34 @@ function BusquedaMapaContent() {
         <div className="flex-1 relative overflow-hidden">
           <div className="absolute inset-0">
             <MapView
-              properties={properties}
-              selectedId={selectedPropertyId}
-              onSelect={handleMapSelect}
-              isLoading={isLoading}
-              error={error}
-            />
+                  properties={properties}
+                  selectedId={selectedPropertyId}
+                  // En Landscape usa: onSelect={(id) => { ... }}
+                  // En los otros usa: onSelect={handleMapSelect}
+                  isLoading={isLoading}
+                  error={error}
+                  // --- INICIO PROPS HU8 ---
+                  isDrawingMode={isDrawingMode}
+                  polygonPoints={polygonPoints}
+                  isPolygonClosed={isPolygonClosed}
+                  onMapClick={(latlng) => {
+                    if (isDrawingMode && !isPolygonClosed) {
+                      setPolygonPoints(prev => [...prev, [latlng.lat, latlng.lng]]);
+                    }
+                  }}
+                  onPointClick={(index) => {
+                    if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
+                      setIsPolygonClosed(true);
+                      setIsDrawingMode(false);
+                    }
+                  }}
+                  // --- FIN PROPS HU8 ---
+                />
           </div>
           {sheetState === "hidden" && (
             <button
               onClick={() => setSheetState("peek")}
-              className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1001] bg-white rounded-full px-5 py-3 shadow-xl border border-stone-200 flex items-center gap-2 text-sm font-semibold text-slate-700 active:scale-95 transition-transform"
+              className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[20] bg-white rounded-full px-5 py-3 shadow-xl border border-stone-200 flex items-center gap-2 text-sm font-semibold text-slate-700 active:scale-95 transition-transform"
               style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.18)" }}
             >
               <ListIcon size={16} className="text-orange-500" /> Ver lista
@@ -353,7 +393,7 @@ function BusquedaMapaContent() {
           )}
           {sheetState !== "hidden" && (
             <div
-              className="absolute left-0 right-0 bottom-0 z-[400] bg-white rounded-t-2xl shadow-[0_-4px_24px_rgba(0,0,0,0.12)] flex flex-col"
+              className="absolute left-0 right-0 bottom-0 z-[30] bg-white rounded-t-2xl shadow-[0_-4px_24px_rgba(0,0,0,0.12)] flex flex-col"
               style={{
                 height: SHEET_H[sheetState],
                 transition: "height 0.3s cubic-bezier(0.32,0.72,0,1)",
@@ -361,7 +401,7 @@ function BusquedaMapaContent() {
               onTouchStart={onTouchStart}
               onTouchEnd={onTouchEnd}
             >
-              <div className="shrink-0 flex flex-col items-center pt-3 pb-1 cursor-grab active:cursor-grabbing select-none">
+              <div className="shrink-0 overflow-x-auto" style={{ zIndex: 10, position: "relative" }}>
                 <div
                   className="w-10 h-1.5 bg-stone-300 hover:bg-orange-400 rounded-full mb-3 transition-colors"
                   onClick={() =>
@@ -435,10 +475,10 @@ function BusquedaMapaContent() {
                                 "es-BO"
                               )}`
                         }
-                        descripcion={pinnedProperty.title}
-                        camas={3}
-                        banos={2}
-                        metros={150}
+                        descripcion={pinnedProperty.descripcion || pinnedProperty.title}
+                        camas={pinnedProperty.nroCuartos ?? 0}
+                        banos={pinnedProperty.nroBanos ?? 0}
+                        metros={pinnedProperty.superficieM2 ?? 0}
                       />
                     </div>
                   </div>
@@ -471,7 +511,7 @@ function BusquedaMapaContent() {
   // RENDER DESKTOP
   // ────────────────────────────────────────────────────────────────────────────
   return (
-    <div className="flex flex-col bg-white w-full h-[calc(100dvh-80px)] md:h-[calc(100dvh-99px)] overflow-hidden">
+<div className="flex flex-col bg-white w-full h-[calc(100dvh-54px)] overflow-hidden">
       <FilterBar
         variant="map"
         onSearch={(nuevosFiltros) => {
@@ -598,6 +638,7 @@ function BusquedaMapaContent() {
                         {viewMode === "grid" ? (
                           <PropertyCard
                             imagen={
+                              property.thumbnailUrl ||
                               property.imagen ||
                               "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80"
                             }
@@ -609,10 +650,10 @@ function BusquedaMapaContent() {
                                   )} USD`
                                 : `Bs ${property.price.toLocaleString("es-BO")}`
                             }
-                            descripcion={property.title}
-                            camas={3}
-                            banos={2}
-                            metros={150}
+                            descripcion={property.descripcion || property.title}
+                            camas={property.nroCuartos ?? 0}
+                            banos={property.nroBanos ?? 0}
+                            metros={property.superficieM2 ?? 0}
                           />
                         ) : (
                           <PropertyRow
@@ -624,9 +665,10 @@ function BusquedaMapaContent() {
                                   )} USD`
                                 : `Bs ${property.price.toLocaleString("es-BO")}`
                             }
-                            size="3 Dorm. • 150 m²"
+                            size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
                             contactType="whatsapp"
                             image={
+                              property.thumbnailUrl ||
                               property.imagen ||
                               "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80"
                             }
@@ -642,11 +684,12 @@ function BusquedaMapaContent() {
         </aside>
 
         {/* Área del mapa */}
+{/* Área del mapa */}
         <section className="relative bg-stone-200 w-full h-[35dvh] md:flex-1 md:h-auto min-w-0">
           {!isSidebarOpen && (
             <button
               onClick={() => setIsSidebarOpen(true)}
-              className="absolute left-0 top-4 z-[1000] bg-white text-black shadow-md rounded-r-md flex flex-col items-center py-4 px-2 gap-4 hover:bg-stone-50 transition-colors"
+              className="absolute left-0 top-4 z-[20] bg-white text-black shadow-md rounded-r-md flex flex-col items-center py-4 px-2 gap-4 hover:bg-stone-50 transition-colors"
             >
               <ChevronRight size={16} />
               <span className="[writing-mode:vertical-lr] rotate-180 text-[10px] font-bold tracking-widest uppercase text-stone-600">
@@ -656,14 +699,74 @@ function BusquedaMapaContent() {
             </button>
           )}
 
-          <div className="absolute inset-0">
+{/* --- INICIO BOTONES FLOTANTES HU8 --- */}
+          <div className="absolute top-3 right-4 z-[1000] flex flex-col gap-2 items-end pointer-events-none">
+            {!isDrawingMode && !isPolygonClosed && (
+              <div className="flex flex-row gap-2 pointer-events-auto">
+                <button 
+                  onClick={() => setIsDrawingMode(true)}
+                  className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
+                >
+                  Dibujar zona
+                </button>
+                <button 
+                  onClick={() => { console.log("Próximamente: Abrir barra lateral de Mis Zonas") }}
+                  className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
+                >
+                  Mis zonas
+                </button>
+              </div>
+            )}
+            {isDrawingMode && !isPolygonClosed && (
+              <div className="flex flex-col items-end gap-2 pointer-events-auto">
+                <button 
+                  onClick={resetDrawing}
+                  className="bg-white text-red-600 px-4 py-2 rounded-lg shadow-md border border-stone-200 hover:bg-red-50 transition-all text-sm font-semibold"
+                >
+                  Cancelar dibujo
+                </button>
+                <div className="bg-white/95 backdrop-blur-sm p-3 rounded-lg shadow-md border border-stone-200 text-xs text-stone-600 max-w-[220px] text-right">
+                  Haz clic en el mapa para marcar los vértices. Cierra la zona tocando el punto inicial.
+                </div>
+              </div>
+            )}
+          </div>
+
+          {isPolygonClosed && (
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000]">
+              <button 
+                onClick={resetDrawing}
+                className="bg-[#ea580c] text-white px-6 py-2.5 rounded-full shadow-[0_4px_14px_rgba(234,88,12,0.4)] hover:bg-[#c2410c] active:scale-95 transition-transform text-sm font-bold tracking-wide pointer-events-auto"
+              >
+                Borrar Dibujo
+              </button>
+            </div>
+          )}
+          {/* --- FIN BOTONES FLOTANTES HU8 --- */}
+
+          <div className="absolute inset-0" style={{ zIndex: 0 }}>
             <MapView
-              properties={properties}
-              selectedId={selectedPropertyId}
-              onSelect={handleMapSelect}
-              isLoading={isLoading}
-              error={error}
-            />
+                  properties={properties}
+                  selectedId={selectedPropertyId}
+                  onSelect={handleMapSelect}
+                  isLoading={isLoading}
+                  error={error}
+                  // --- PROPS HU8 ---
+                  isDrawingMode={isDrawingMode}
+                  polygonPoints={polygonPoints}
+                  isPolygonClosed={isPolygonClosed}
+                  onMapClick={(latlng) => {
+                    if (isDrawingMode && !isPolygonClosed) {
+                      setPolygonPoints(prev => [...prev, [latlng.lat, latlng.lng]]);
+                    }
+                  }}
+                  onPointClick={(index) => {
+                    if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
+                      setIsPolygonClosed(true);
+                      setIsDrawingMode(false);
+                    }
+                  }}
+                />
           </div>
         </section>
       </main>

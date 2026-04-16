@@ -14,21 +14,14 @@ export default function TransactionModeFilter({
     { id: "ALQUILER", label: "Alquiler" },
     { id: "ANTICRETO", label: "Anticrético" },
   ];
-  const handleToggle = (id: string) => {
-    const nuevos = modoSeleccionado.includes(id)
-      ? modoSeleccionado.filter((m) => m !== id)
-      : [...modoSeleccionado, id];
-    onModoChange(nuevos);
-  };
-
   return (
-    <div className="flex gap-16">
+    <div className="flex gap-6">
       {modos.map((modo) => (
         <label
           key={modo.id}
-          className="flex items-center gap-8 text-sm text-stone-900 font-medium cursor-pointer"
+          className="flex items-center gap-2 text-sm text-stone-900 font-medium cursor-pointer"
         >
-          <div className="relative inline-flex shadow-xl">
+          <div className="relative inline-flex shadow-sm">
             <input
               type="checkbox"
               name="modoTransaccion"
@@ -42,7 +35,7 @@ export default function TransactionModeFilter({
                 }
               }}
               className={`
-                w-[35px] h-[23px] rounded border cursor-pointer appearance-none
+                w-[28px] h-[18px] rounded border cursor-pointer appearance-none
                 ${
                   modoSeleccionado.includes(modo.id)
                     ? "bg-[#d97706] border-[#d97706]"
@@ -52,7 +45,7 @@ export default function TransactionModeFilter({
             />
             {modoSeleccionado.includes(modo.id) && (
               <svg
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[14px] h-[14px] pointer-events-none"
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[11px] h-[11px] pointer-events-none"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="#000000"
