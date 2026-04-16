@@ -53,7 +53,6 @@ export function QRDisplay({ value, size, id, className = "" }: QRDisplayProps) {
       {id && (
         <p className="text-xs text-center text-stone-500 dark:text-stone-400 mt-2">
           {id} · Escanea este código desde tu aplicación bancaria
-        </p>
       )}
     </div>
   );
