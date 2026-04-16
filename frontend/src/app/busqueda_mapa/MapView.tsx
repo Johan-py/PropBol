@@ -203,6 +203,7 @@ interface MapViewProps {
   zoom?: number;
   selectedId?: string | null;
   onSelect?: (id: string | null) => void
+  onClusterClick?: (properties: PropertyMapPin[]) => void
   isLoading?: boolean;
   error?: string | null;
 }
