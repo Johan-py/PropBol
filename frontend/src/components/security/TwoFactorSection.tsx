@@ -6,6 +6,8 @@ import { Info, Eye, EyeOff } from 'lucide-react'
 export default function TwoFactorSection() {
   const [showModal, setShowModal] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
 
   const handleOpenModal = () => {
     setShowModal(true)
@@ -14,6 +16,17 @@ export default function TwoFactorSection() {
   const handleCancel = () => {
     setShowModal(false)
     setShowPassword(false)
+    setPassword('')
+    setError('')
+  }
+
+  const handleConfirm = () => {
+    if (!password.trim()) {
+      setError('Este campo es obligatorio')
+      return
+    }
+
+    console.log('contraseña válida:', password)
   }
 
   return (
@@ -71,6 +84,11 @@ export default function TwoFactorSection() {
             <div className="relative mt-3">
               <input
                 type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                  setError('')
+                }}
                 placeholder="••••••••"
                 className="w-full rounded-lg border border-neutral-300 px-3 py-2 pr-10 text-sm"
               />
@@ -88,12 +106,27 @@ export default function TwoFactorSection() {
               </button>
             </div>
 
-            <button
-              onClick={handleCancel}
-              className="mt-4 w-full rounded-lg border py-2 text-sm"
-            >
-              Cancelar
-            </button>
+            {error && (
+              <p className="mt-1 text-xs text-red-500">{error}</p>
+            )}
+
+            <div className="mt-4 flex gap-3">
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="flex-1 rounded-lg border border-neutral-300 py-2 text-sm font-medium text-neutral-700"
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                onClick={handleConfirm}
+                className="flex-1 rounded-lg bg-orange-500 py-2 text-sm font-semibold text-white"
+              >
+                Confirmar
+              </button>
+            </div>
           </div>
         </div>
       )}
