@@ -1,5 +1,5 @@
-import DeactivateAccountSection from '@/components/Seguridad/DeactivateAccountSection'
+import DeactivateAccountSection from "@/components/security/DeactivateAccountSection";
 
 export default function DeactivateAccountPage() {
-  return <DeactivateAccountSection />
+  return <DeactivateAccountSection />;
 }

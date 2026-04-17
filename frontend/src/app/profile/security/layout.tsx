@@ -1,9 +1,9 @@
-import type { ReactNode } from 'react'
-import SecuritySidebar from '@/components/Seguridad/SecuritySidebar'
+import type { ReactNode } from "react";
+import SecuritySidebar from "@/components/security/SecuritySidebar";
 
 type SecurityLayoutProps = {
-  children: ReactNode
-}
+  children: ReactNode;
+};
 
 export default function SecurityLayout({ children }: SecurityLayoutProps) {
   return (
@@ -16,5 +16,5 @@ export default function SecurityLayout({ children }: SecurityLayoutProps) {
         </section>
       </div>
     </div>
-  )
+  );
 }
