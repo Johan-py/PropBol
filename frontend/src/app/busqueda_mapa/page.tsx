@@ -24,6 +24,7 @@ import PropertyRow from '@/components/galeria/PropertyRow'
 import EmptyState from '@/components/galeria/EmptyState'
 import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenamiento'
 import { ErrorState } from '@/components/ClusterSidebar'
+import PriceFilterSidebar from '@/components/filters/PriceFilterSidebar'
 
 // Carga dinámica del mapa (sin SSR)
 const MapView = nextDynamic(() => import('./MapView'), {
@@ -71,6 +72,7 @@ type SheetState = 'hidden' | 'peek' | 'full'
 function BusquedaMapaContent() {
   // === ESTADOS COMPARTIDOS ===
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [activeSidebarView, setActiveSidebarView] = useState<"results" | "price">("results")
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [sheetState, setSheetState] = useState<SheetState>('peek')
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
@@ -271,7 +273,14 @@ function BusquedaMapaContent() {
       return (
         <div className="flex flex-col bg-white overflow-hidden" style={{ height: '100dvh' }}>
           <div className="shrink-0" style={{ zIndex: 1002, position: 'relative' }}>
-            <FilterBar variant="map" onSearch={(f) => console.log('🔍 Filtros:', f)} />
+            <FilterBar 
+              variant="map" 
+              onSearch={(f) => console.log('🔍 Filtros:', f)} 
+              onOpenPriceFilter={() => {
+                setIsSidebarOpen(true);
+                setActiveSidebarView("price");
+              }}
+            />
           </div>
           <div className="flex flex-1 overflow-hidden">
             <div className="flex-1 relative">
@@ -310,7 +319,14 @@ function BusquedaMapaContent() {
       <div className="flex flex-col overflow-hidden bg-white" style={{ height: '100dvh' }}>
         <div className="shrink-0 overflow-x-auto" style={{ zIndex: 1002, position: 'relative' }}>
           <div className="min-w-max">
-            <FilterBar variant="map" onSearch={(f) => console.log('🔍 Filtros:', f)} />
+            <FilterBar 
+              variant="map" 
+              onSearch={(f) => console.log('🔍 Filtros:', f)} 
+              onOpenPriceFilter={() => {
+                setIsSidebarOpen(true);
+                setActiveSidebarView("price");
+              }}
+            />
           </div>
         </div>
         <div className="flex-1 relative overflow-hidden">
@@ -472,6 +488,10 @@ function BusquedaMapaContent() {
         onSearch={(nuevosFiltros) => {
           console.log('🔍 Buscando con filtros:', nuevosFiltros)
         }}
+        onOpenPriceFilter={() => {
+          setIsSidebarOpen(true);
+          setActiveSidebarView("price");
+        }}
       />
 
       <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200">
@@ -481,7 +501,7 @@ function BusquedaMapaContent() {
             isSidebarOpen ? 'w-full md:w-[450px] h-[65dvh] md:h-full' : 'w-0'
           }`}
         >
-          {isSidebarOpen && (
+          {isSidebarOpen && activeSidebarView === "results" && (
             <div className="flex flex-col h-full min-h-0">
               <div className="p-4 bg-white shrink-0">
                 <div className="flex justify-between items-center mb-4">
@@ -634,6 +654,17 @@ function BusquedaMapaContent() {
               </div>
             </div>
           )}
+
+          {/* 👇 ESTO ES LO NUEVO QUE VAS A AGREGAR 👇 */}
+          {isSidebarOpen && activeSidebarView === "price" && (
+            <div className="flex flex-col h-full min-h-0 bg-white">
+              <PriceFilterSidebar 
+                onClose={() => setActiveSidebarView("results")} 
+              />
+            </div>
+          )}
+          {/* 👆 FIN DE LO NUEVO 👆 */}
+
         </aside>
 
         {/* Área del mapa */}

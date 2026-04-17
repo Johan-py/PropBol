@@ -16,6 +16,7 @@ interface FilterBarProps {
     updatedAt: string;
   }) => void;
   variant?: "home" | "map";
+  onOpenPriceFilter?: () => void;
 }
 
 type LocationValue =
@@ -28,11 +29,18 @@ type LocationValue =
     };
 
 // Botón Mock
-const MockFilterBtn = ({ icon: Icon, text, hasChevron = true }: { icon?: any, text: string, hasChevron?: boolean }) => (
+const MockFilterBtn = ({ 
+  icon: Icon, text, hasChevron = true, onClick // <-- AGREGAR onClick AQUÍ
+}: { 
+  icon?: any, text: string, hasChevron?: boolean, onClick?: () => void // <-- AGREGAR EL TIPO AQUÍ
+}) => (
   <button
     type="button"
 className="h-[36px] flex items-center justify-between bg-white border border-stone-200 text-stone-600 px-3 rounded-xl shadow-sm hover:border-stone-300 transition-all font-inter text-sm whitespace-nowrap gap-2 shrink-0 focus:outline-none cursor-default"
-    onClick={(e) => e.preventDefault()}
+    onClick={(e) => {
+      e.preventDefault();
+      if (onClick) onClick(); // <-- EJECUTAR ACCIÓN AQUÍ
+    }}
   >
     <div className="flex items-center gap-2">
       {Icon && <Icon className="w-4 h-4 text-stone-500" />}
@@ -45,6 +53,7 @@ className="h-[36px] flex items-center justify-between bg-white border border-sto
 export default function FilterBar({
   onSearch,
   variant = "home",
+  onOpenPriceFilter,
 }: FilterBarProps) {
   const router = useRouter();
 
@@ -173,7 +182,13 @@ export default function FilterBar({
             Solo estos botones tienen overflow-x-auto. Así los menús de la izquierda no se cortan. */}
         {variant === "map" && (
           <div className="flex items-center gap-3 flex-1 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            <div className="shrink-0"><MockFilterBtn icon={DollarSign} text="Precio" /></div>
+            <div className="shrink-0">
+              <MockFilterBtn 
+                icon={DollarSign} 
+                text="Precio" 
+                onClick={onOpenPriceFilter} // <-- CONECTAR AQUÍ
+              />
+            </div>
             <div className="shrink-0"><MockFilterBtn icon={Users} text="Capacidad" /></div>
             <div className="shrink-0"><MockFilterBtn icon={Maximize} text="Metros" /></div>
             <div className="shrink-0"><MockFilterBtn icon={SlidersHorizontal} text="Más Filtros" hasChevron={false} /></div>
