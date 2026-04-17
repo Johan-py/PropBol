@@ -36,6 +36,7 @@ import { requireAuth } from "./middleware/auth.middleware.js";
 // ROUTES / HANDLERS
 // --------------------
 import locationSearchHandler from "./api/locations/search.js";
+import { getZonasController } from './modules/zonas/zonas.controller.js';
 
 import correoverificacionRoutes from "./modules/perfil/correoverificacion.routes.js";
 import perfilRoutes from "./modules/perfil/perfil.routes.js";
@@ -141,6 +142,8 @@ app.get("/api/banners", (req, res) => bannersController.getBanners(req, res));
 // --------------------
 // LOCATIONS
 // --------------------
+app.get('/api/zonas', getZonasController);
+
 app.get("/api/locations/search", async (req: Request, res: Response) => {
   await locationSearchHandler(req as any, res as any);
 });
