@@ -156,7 +156,7 @@ function BusquedaMapaContent() {
       setActiveClusterIds([])
       setClusterProperties([])
     }
-  }
+  }, [properties])
 
   // Eventos táctiles para el Bottom Sheet
   function onTouchStart(e: React.TouchEvent) {
