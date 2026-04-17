@@ -85,8 +85,8 @@ export default function ExploreSection() {
   };
 
   return (
-    <section className="bg-white py-10 md:py-16">
-      <div className="max-w-5xl mx-auto px-4">
+    <section className="bg-white py-10 md:py-16 w-full">
+      <div className="max-w-8xl mx-auto px-14">
 
         {/* MOBILE con un Selector combobox */}
         <div className="md:hidden">
