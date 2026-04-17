@@ -362,7 +362,12 @@ export default function MapView({
         </Marker>
 
         <MarkerClusterGroup
-          iconCreateFunction={(cluster: any) => createClusterIcon(cluster)}
+          iconCreateFunction={(cluster: any) => {
+            const markers = cluster.getAllChildMarkers();
+            const ids = markers.map((m: any) => String(m.options.alt ?? '')).filter(Boolean);
+            const isActive = ids.some((id: string) => activeClusterIds.includes(id));
+            return createClusterIcon(cluster, isActive);
+          }}
           maxClusterRadius={CLUSTER_CONFIG.maxClusterRadius}
           disableClusteringAtZoom={CLUSTER_CONFIG.disableClusteringAtZoom}
           animate={false}

@@ -355,6 +355,8 @@ function BusquedaMapaContent() {
                   setIsDrawingMode(false)
                 }
               }}
+              onClusterClick={handleClusterClick}
+              activeClusterIds={activeClusterIds}
             />
           </div>
           {sheetState === 'hidden' && (
@@ -685,30 +687,31 @@ function BusquedaMapaContent() {
 
           <div className="absolute inset-0" style={{ zIndex: 0 }}>
             <MapView
-                  properties={properties}
-                  selectedId={selectedPropertyId}
-                  zonas={zonas}
-                  selectedZoneId={selectedZoneId}
-                  onZoneSelect={setSelectedZoneId}
-                  onSelect={handleMapSelect}
-                  isLoading={isLoading}
-                  error={error}
-                  // --- PROPS HU8 ---
-                  isDrawingMode={isDrawingMode}
-                  polygonPoints={polygonPoints}
-                  isPolygonClosed={isPolygonClosed}
-                  onMapClick={(latlng) => {
-                    if (isDrawingMode && !isPolygonClosed) {
-                      setPolygonPoints(prev => [...prev, [latlng.lat, latlng.lng]]);
-                    }
-                  }}
-                  onPointClick={(index) => {
-                    if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
-                      setIsPolygonClosed(true);
-                      setIsDrawingMode(false);
-                    }
-                  }}
-                />
+              properties={properties}
+              selectedId={selectedPropertyId}
+              onSelect={handleMapSelect}
+              onClusterClick={handleClusterClick}
+              activeClusterIds={activeClusterIds}
+              isLoading={isLoading}
+              error={error}
+              zonas={zonas}
+              selectedZoneId={selectedZoneId}
+              onZoneSelect={setSelectedZoneId}
+              isDrawingMode={isDrawingMode}
+              polygonPoints={polygonPoints}
+              isPolygonClosed={isPolygonClosed}
+              onMapClick={(latlng) => {
+                if (isDrawingMode && !isPolygonClosed) {
+                  setPolygonPoints(prev => [...prev, [latlng.lat, latlng.lng]])
+                }
+              }}
+              onPointClick={(index) => {
+                if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
+                  setIsPolygonClosed(true)
+                  setIsDrawingMode(false)
+                }
+              }}
+            />
           </div>
         </section>
       </main>
