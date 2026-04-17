@@ -32,8 +32,8 @@ const fetchBanners = async (): Promise<BannerData[]> => {
 
 export default async function Home() {
   const banners = await fetchBanners();
-  const mainBanner = banners[0]; // Tomamos el primero de la base de datos
-// No toquen esto :v
+  // const mainBanner = banners[0]; // Tomamos el primero de la base de datos - This was removed as it's no longer used.
+  // No toquen esto :v
   return (
   <main className="flex min-h-screen flex-col items-center bg-gray-50">
     {banners.length > 0 ? (
@@ -44,19 +44,20 @@ export default async function Home() {
       </div>
     )}
 
-      {/* CONTENEDOR PRINCIPAL */}
-      <div className="w-full px-2 md:px-6 py-12">
-        <div className="flex flex-col-reverse md:flex-row items-start">
+      {/* CONTENEDOR PRINCIPAL REORGANIZADO */}
+      <div className="w-full max-w-screen-4xl mx-auto px-8 md:px-4 py-4">
+        {/* Cambiamos a flex-col para que ExploreSection esté arriba y FilterPanel abajo */}
+        <div className="flex flex-col gap-0">
 
-          {/* FILTER PANEL */}
-          <div className="w-full md:w-[240px] lg:w-[260px] shrink-0">
-            <FilterPanel />
-          </div>
-
-          {/* EXPLORE SECTION */}
-          <section className="flex-1 w-full md:pl-20 -mt-16 md:mt-0">
+          {/* EXPLORE SECTION (Ocupa el espacio superior y todo el ancho) */}
+          <section className="w-full">
             <ExploreSection />
           </section>
+
+          {/* FILTER PANEL (Se ubica debajo de los resultados) */}
+          <div className="w-full border-t border-gray-200 pt-8">
+            <FilterPanel />
+          </div>
         </div>
       </div>
     </main>
