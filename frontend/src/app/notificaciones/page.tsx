@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Archive, Trash2, WifiOff } from 'lucide-react'
+import Link from "next/link";
+import { Archive, Settings, Trash2, WifiOff } from 'lucide-react'
 import { useNotifications } from '@/hooks/useNotifications'
 import type { NotificationFilter } from '@/types/notification'
 
@@ -122,17 +123,19 @@ export default function NotificationsPage() {
           Marcar todas como leídas
         </button>
       </div>
-
-      <div className="mb-4 flex flex-wrap gap-2">
+      *
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+      <div className="flex flex-wrap gap-2">
         {filters.map((item) => (
           <button
             key={item}
             onClick={() => setFilter(item)}
-            className={`rounded-full px-3 py-1.5 text-sm font-medium transition sm:py-1 ${
-              filter === item
-                ? "bg-amber-600 text-white"
-                : "bg-stone-100 text-stone-600 hover:bg-stone-200"
-            }`}
+            className={`rounded-full px-3 py-1.5 text-sm font-medium transition-all duration-200
+              ${
+                filter === item
+                  ? "bg-amber-600 text-white shadow-sm"
+                  : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+              }`}
           >
             {item === 'todas'
               ? 'Todas'
@@ -140,10 +143,19 @@ export default function NotificationsPage() {
                 ? 'Leídas'
                 : item === 'no leida'
                   ? 'No leídas'
-                  : 'Archivadas' }
+                  : 'Archivadas'}
           </button>
         ))}
       </div>
+      <Link
+        href="/configuracion/notificaciones"
+        aria-label="Configuración de notificaciones"
+        className="flex items-center gap-2 rounded-full bg-stone-100 px-3 py-1.5 text-sm font-medium text-stone-700 transition hover:bg-stone-200"
+      >
+        <Settings className="h-4 w-4" />
+        Configuración
+      </Link>
+    </div>
 
       <div
         role="list"
