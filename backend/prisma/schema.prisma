@@ -166,46 +166,46 @@ model UbicacionInmueble {
   latitud            Decimal            @db.Decimal(10, 7)
   longitud           Decimal            @db.Decimal(10, 7)
   direccion          String?
-  inmuebleId         Int                @unique @map("inmueble_id")
-  ubicacionMaestraId Int?               @map("ubicacion_maestra_id")
   ciudad             String?
   zona               String?
-  marcadores         MarcadorMapa[]
-  inmueble           Inmueble           @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
-  ubicacion_maestra  ubicacion_maestra? @relation(fields: [ubicacionMaestraId], references: [id])
+  inmuebleId         Int                @unique @map("inmueble_id")
+  ubicacionMaestraId Int?               @map("ubicacion_maestra_id")
+  marcador_mapa      MarcadorMapa[]
+  inmueble           Inmueble           @relation(fields: [inmuebleId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  ubicacion_maestra  ubicacion_maestra? @relation(fields: [ubicacionMaestraId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("ubicacion_inmueble")
 }
 
 model Etiqueta {
-  id        Int                @id @default(autoincrement())
-  nombre    String             @unique
-  inmuebles InmuebleEtiqueta[]
+  id                Int                @id @default(autoincrement())
+  nombre            String             @unique
+  inmueble_etiqueta InmuebleEtiqueta[]
 
   @@map("etiqueta")
 }
 
 model InmuebleEtiqueta {
-  inmuebleId Int
-  etiquetaId Int
-  etiqueta   Etiqueta @relation(fields: [etiquetaId], references: [id], onDelete: Cascade)
-  inmueble   Inmueble @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
+  inmueble_id Int
+  etiqueta_id Int
+  etiqueta    Etiqueta @relation(fields: [etiqueta_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  inmueble    Inmueble @relation(fields: [inmueble_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@id([inmuebleId, etiquetaId])
+  @@id([inmueble_id, etiqueta_id])
   @@map("inmueble_etiqueta")
 }
 
 model Publicacion {
-  id               Int               @id @default(autoincrement())
+  id               Int                @id @default(autoincrement())
   titulo           String
   descripcion      String?
-  estado           EstadoPublicacion @default(ACTIVA) @map("estado")
-  fechaPublicacion DateTime          @default(now()) @map("fecha_publicacion")
-  usuarioId        Int               @map("usuario_id")
-  inmuebleId       Int               @map("inmueble_id")
+  estado           EstadoPublicacion? @default(ACTIVA) @map("estado")
+  fechaPublicacion DateTime?          @default(now()) @map("fecha_publicacion") @db.Timestamp(6)
+  usuarioId        Int                @map("usuario_id")
+  inmuebleId       Int                @map("inmueble_id")
   multimedia       Multimedia[]
-  inmueble         Inmueble          @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
-  usuario          Usuario           @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  inmueble         Inmueble           @relation(fields: [inmuebleId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  usuario          Usuario            @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("publicacion")
 }
@@ -216,113 +216,103 @@ model Multimedia {
   tipo          TipoMultimedia
   pesoMb        Decimal?       @map("peso_mb") @db.Decimal(8, 2)
   publicacionId Int            @map("publicacion_id")
-  publicacion   Publicacion    @relation(fields: [publicacionId], references: [id], onDelete: Cascade)
+  publicacion   Publicacion    @relation(fields: [publicacionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("multimedia")
 }
 
 model MarcadorMapa {
-  id            Int               @id @default(autoincrement())
-  tipo          TipoMarcador
-  esVisible     Boolean           @default(true)
-  nivelZ        Int?
-  inmuebleId    Int
-  ubicacionId   Int
-  grupos        DetalleGrupo[]
-  interacciones InteraccionMapa[]
-  inmueble      Inmueble          @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
-  ubicacion     UbicacionInmueble @relation(fields: [ubicacionId], references: [id], onDelete: Cascade)
+  id                 Int               @id @default(autoincrement())
+  tipo               TipoMarcador
+  es_visible         Boolean?          @default(true)
+  nivel_z            Int?
+  inmueble_id        Int
+  ubicacion_id       Int
+  detalle_grupo      DetalleGrupo[]
+  interaccion_mapa   InteraccionMapa[]
+  inmueble           Inmueble          @relation(fields: [inmueble_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  ubicacion_inmueble UbicacionInmueble @relation(fields: [ubicacion_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("marcador_mapa")
 }
 
 model GrupoMarcadores {
-  id                Int            @id @default(autoincrement())
-  latitudCentro     Decimal        @db.Decimal(10, 7)
-  longitudCentro    Decimal        @db.Decimal(10, 7)
-  cantidadInmuebles Int
-  nivelColor        String?
-  nivelZoom         Int
-  radioKm           Decimal?       @db.Decimal(10, 2)
-  actualizadoEn     DateTime       @updatedAt
-  marcadores        DetalleGrupo[]
+  id                 Int            @id @default(autoincrement())
+  latitud_centro     Decimal        @db.Decimal(10, 7)
+  longitud_centro    Decimal        @db.Decimal(10, 7)
+  cantidad_inmuebles Int
+  nivel_color        String?
+  nivel_zoom         Int
+  radio_km           Decimal?       @db.Decimal(10, 2)
+  actualizado_en     DateTime?      @default(now()) @db.Timestamp(6)
+  detalle_grupo      DetalleGrupo[]
 
   @@map("grupo_marcadores")
 }
 
 model DetalleGrupo {
-  grupoId    Int
-  marcadorId Int
-  grupo      GrupoMarcadores @relation(fields: [grupoId], references: [id], onDelete: Cascade)
-  marcador   MarcadorMapa    @relation(fields: [marcadorId], references: [id], onDelete: Cascade)
+  grupo_id         Int
+  marcador_id      Int
+  grupo_marcadores GrupoMarcadores @relation(fields: [grupo_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  marcador_mapa    MarcadorMapa    @relation(fields: [marcador_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@id([grupoId, marcadorId])
+  @@id([grupo_id, marcador_id])
   @@map("detalle_grupo")
 }
 
 model SesionMapa {
-  id              Int               @id @default(autoincrement())
-  token           String            @unique
-  limiteNorte     Decimal?          @db.Decimal(10, 7)
-  limiteSur       Decimal?          @db.Decimal(10, 7)
-  limiteEste      Decimal?          @db.Decimal(10, 7)
-  limiteOeste     Decimal?          @db.Decimal(10, 7)
-  nivelZoom       Int
-  latitudCentro   Decimal?          @db.Decimal(10, 7)
-  longitudCentro  Decimal?          @db.Decimal(10, 7)
-  iniciadoEn      DateTime          @default(now())
-  ultimaActividad DateTime          @updatedAt
-  interacciones   InteraccionMapa[]
+  id               Int               @id @default(autoincrement())
+  token            String            @unique
+  limite_norte     Decimal?          @db.Decimal(10, 7)
+  limite_sur       Decimal?          @db.Decimal(10, 7)
+  limite_este      Decimal?          @db.Decimal(10, 7)
+  limite_oeste     Decimal?          @db.Decimal(10, 7)
+  nivel_zoom       Int
+  latitud_centro   Decimal?          @db.Decimal(10, 7)
+  longitud_centro  Decimal?          @db.Decimal(10, 7)
+  iniciado_en      DateTime?         @default(now()) @db.Timestamp(6)
+  ultima_actividad DateTime?         @default(now()) @db.Timestamp(6)
+  interaccion_mapa InteraccionMapa[]
 
   @@map("sesion_mapa")
 }
 
 model InteraccionMapa {
-  id              Int             @id @default(autoincrement())
-  tipo            TipoInteraccion
-  latitudMomento  Decimal?        @db.Decimal(10, 7)
-  longitudMomento Decimal?        @db.Decimal(10, 7)
-  zoomMomento     Int?
-  ocurrioEn       DateTime        @default(now())
-  sesionId        Int
-  marcadorId      Int
-  marcador        MarcadorMapa    @relation(fields: [marcadorId], references: [id], onDelete: Cascade)
-  sesion          SesionMapa      @relation(fields: [sesionId], references: [id], onDelete: Cascade)
+  id               Int             @id @default(autoincrement())
+  tipo             TipoInteraccion
+  latitud_momento  Decimal?        @db.Decimal(10, 7)
+  longitud_momento Decimal?        @db.Decimal(10, 7)
+  zoom_momento     Int?
+  ocurrio_en       DateTime?       @default(now()) @db.Timestamp(6)
+  sesion_id        Int?
+  marcador_id      Int?
+  marcador_mapa    MarcadorMapa?   @relation(fields: [marcador_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  sesion_mapa      SesionMapa?     @relation(fields: [sesion_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("interaccion_mapa")
 }
 
 model BannerHome {
-  id            Int      @id @default(autoincrement())
-  urlImagen     String
-  orden         Int
-  activo        Boolean  @default(true)
-  fechaCreacion DateTime @default(now())
-  titulo        String?
-  subtitulo     String?
+  id             Int       @id @default(autoincrement())
+  url_imagen     String
+  orden          Int
+  activo         Boolean?  @default(true)
+  fecha_creacion DateTime? @default(now()) @db.Timestamp(6)
+  titulo         String?
+  subtitulo      String?
 
   @@map("banner_home")
 }
 
 model Visitor {
-  id          Int      @id @default(autoincrement())
-  ip          String
-  metaData    Json?
-  fechaVisita DateTime @default(now())
-  usuarioId   Int?
-  usuario     Usuario? @relation(fields: [usuarioId], references: [id])
+  id           Int       @id @default(autoincrement())
+  ip           String
+  meta_data    Json?
+  fecha_visita DateTime? @default(now()) @db.Timestamp(6)
+  usuario_id   Int?
+  usuario      Usuario?  @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("visitor")
-}
-
-model public_Telefono {
-  id         Int     @id @default(autoincrement())
-  numero     String
-  usuarioId  Int
-  codigoPais String
-  principal  Boolean
-
-  @@map("Telefono")
 }
 
 model ubicacion_maestra {
@@ -333,17 +323,17 @@ model ubicacion_maestra {
   nombre             String
   latitud            Decimal             @db.Decimal(10, 7)
   longitud           Decimal             @db.Decimal(10, 7)
-  popularidad        Int                 @default(0)
+  popularidad        Int?                @default(0)
   ubicacion_inmueble UbicacionInmueble[]
 
-  @@index([nombre])
+  @@index([nombre], map: "idx_ubicacion_nombre")
 }
 
 model bitacora_pagos {
-  id               Int               @id @default(autoincrement()) @db.SmallInt
-  id_usuario       Int?              @db.SmallInt
-  id_suscripcion   Int?              @db.SmallInt
-  id_transaccion   Int?              @db.SmallInt
+  id               Int               @id @default(autoincrement())
+  id_usuario       Int?
+  id_suscripcion   Int?
+  id_transaccion   Int?
   evento           String            @db.VarChar(100)
   mensaje          String?
   fecha_evento     DateTime?         @default(now()) @db.Timestamp(6)
