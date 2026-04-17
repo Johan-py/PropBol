@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense, useCallback } from "react";
 import nextDynamic from "next/dynamic";
 import {
   ChevronLeft,
@@ -76,6 +76,17 @@ function BusquedaMapaContent() {
   const [sheetState, setSheetState] = useState<SheetState>("peek");
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  // --- INICIO ESTADOS HU8 ---
+  const [isDrawingMode, setIsDrawingMode] = useState(false);
+  const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([]);
+  const [isPolygonClosed, setIsPolygonClosed] = useState(false);
+
+  const resetDrawing = () => {
+    setIsDrawingMode(false);
+    setIsPolygonClosed(false);
+    setPolygonPoints([]);
+  };
+  // --- FIN ESTADOS HU8 ---
 
   const isMobile = useIsMobile();
   const isLandscape = useIsLandscapeMobile();
@@ -93,9 +104,6 @@ function BusquedaMapaContent() {
     null
   );
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [clusterProperties, setClusterProperties] = useState<any[]>([]);
-  const [isClusterView, setIsClusterView] = useState(false);
-  const [activeClusterIds, setActiveClusterIds] = useState<string[]>([]);
 
   // Estado para la lista en desktop
   const [isHoveringList, setIsHoveringList] = useState(false);
@@ -127,14 +135,8 @@ function BusquedaMapaContent() {
     return () => clearTimeout(t);
   }, [isSidebarOpen, sheetState]);
 
-  // 🚀 FUNCIÓN ACTUALIZADA: Acepta null para manejar clics fuera del mapa
-  function handleClusterClick(props: any[]) {
-    setClusterProperties(props);
-    setIsClusterView(true);
-    setActiveClusterIds(props.map((p: any) => p.id));
-  }
-
-  function handleMapSelect(id: string | null) {
+ // 🚀 FUNCIÓN ACTUALIZADA CON MEMORIZACIÓN
+  const handleMapSelect = useCallback((id: string | null) => {
     setSelectedPropertyId(id);
     
     if (id) {
@@ -145,11 +147,8 @@ function BusquedaMapaContent() {
       }
     } else {
       setPinnedProperty(null);
-      setIsClusterView(false);
-      setActiveClusterIds([]);
-      setClusterProperties([]);
     }
-  }
+  }, [properties]);
 
   // Eventos táctiles para el Bottom Sheet
   function onTouchStart(e: React.TouchEvent) {
@@ -219,7 +218,7 @@ function BusquedaMapaContent() {
               : ""
           }`}
         >
-          {(isClusterView ? clusterProperties : properties).map((property: any) => (
+          {properties.map((property: any) => (
             <div
               key={property.id}
               onClick={() => {
@@ -291,14 +290,26 @@ function BusquedaMapaContent() {
                 <MapView
                   properties={properties}
                   selectedId={selectedPropertyId}
-                  onSelect={(id) => {
-                    setSelectedPropertyId(id);
-                    setPinnedProperty(
-                      properties.find((p: any) => p.id === id) ?? null
-                    );
-                  }}
+                  // En Landscape usa: onSelect={(id) => { ... }}
+                  // En los otros usa: onSelect={handleMapSelect}
                   isLoading={isLoading}
                   error={error}
+                  // --- INICIO PROPS HU8 ---
+                  isDrawingMode={isDrawingMode}
+                  polygonPoints={polygonPoints}
+                  isPolygonClosed={isPolygonClosed}
+                  onMapClick={(latlng) => {
+                    if (isDrawingMode && !isPolygonClosed) {
+                      setPolygonPoints(prev => [...prev, [latlng.lat, latlng.lng]]);
+                    }
+                  }}
+                  onPointClick={(index) => {
+                    if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
+                      setIsPolygonClosed(true);
+                      setIsDrawingMode(false);
+                    }
+                  }}
+                  // --- FIN PROPS HU8 ---
                 />
               </div>
             </div>
@@ -341,14 +352,29 @@ function BusquedaMapaContent() {
         <div className="flex-1 relative overflow-hidden">
           <div className="absolute inset-0">
             <MapView
-              properties={properties}
-              selectedId={selectedPropertyId}
-              onSelect={handleMapSelect}
-              onClusterClick={handleClusterClick}
-              activeClusterIds={activeClusterIds}
-              isLoading={isLoading}
-              error={error}
-            />
+                  properties={properties}
+                  selectedId={selectedPropertyId}
+                  // En Landscape usa: onSelect={(id) => { ... }}
+                  // En los otros usa: onSelect={handleMapSelect}
+                  isLoading={isLoading}
+                  error={error}
+                  // --- INICIO PROPS HU8 ---
+                  isDrawingMode={isDrawingMode}
+                  polygonPoints={polygonPoints}
+                  isPolygonClosed={isPolygonClosed}
+                  onMapClick={(latlng) => {
+                    if (isDrawingMode && !isPolygonClosed) {
+                      setPolygonPoints(prev => [...prev, [latlng.lat, latlng.lng]]);
+                    }
+                  }}
+                  onPointClick={(index) => {
+                    if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
+                      setIsPolygonClosed(true);
+                      setIsDrawingMode(false);
+                    }
+                  }}
+                  // --- FIN PROPS HU8 ---
+                />
           </div>
           {sheetState === "hidden" && (
             <button
@@ -384,19 +410,11 @@ function BusquedaMapaContent() {
                 />
                 <div className="flex items-center justify-between w-full px-4 pb-2">
                   <span className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
-                    <span className="text-orange-500">{isClusterView ? clusterProperties.length : properties.length}</span>
+                    <span className="text-orange-500">{properties.length}</span>
                     <span className="text-gray-500 font-normal">
                       propiedades
                     </span>
                   </span>
-                  {isClusterView && (
-                    <button
-                      onClick={() => { setIsClusterView(false); setClusterProperties([]); setActiveClusterIds([]); }}
-                      className="text-xs text-orange-500 hover:underline px-2"
-                    >
-                      ← Volver
-                    </button>
-                  )}
                   <div className="flex items-center gap-2">
                     <button
                       onClick={(e) => {
@@ -478,7 +496,6 @@ function BusquedaMapaContent() {
                 <PropertyListMobile
                   onClickItem={(p) => {
                     setPinnedProperty(p);
-                    setSelectedPropertyId(p.id);
                     setSheetState("peek");
                   }}
                 />
@@ -523,7 +540,7 @@ function BusquedaMapaContent() {
                       </div>
                       <div className="flex items-center gap-2 mb-2">
                         <h1 className="text-xl font-semibold text-slate-800">
-                          {isClusterView ? `${clusterProperties.length} propiedades en este clúster` : "Resultados de búsqueda"}
+                          Resultados de búsqueda
                         </h1>
                       </div>
                       <h2 className="text-sm font-bold text-slate-900">
@@ -536,14 +553,6 @@ function BusquedaMapaContent() {
                             : "propiedades encontradas"}
                         </span>
                       </h2>
-                      {isClusterView && (
-  <button
-    onClick={() => { setIsClusterView(false); setClusterProperties([]); setActiveClusterIds([]); }}
-    className="text-sm text-orange-500 hover:underline flex items-center gap-1 mt-1 mb-2"
-  >
-    ← Volver a todos los resultados
-  </button>
-)}
                     </div>
                   </div>
                   <button
@@ -610,7 +619,7 @@ function BusquedaMapaContent() {
                         : ""
                     }`}
                   >
-                    {(isClusterView ? clusterProperties : properties).map((property: any) => (
+                    {properties.map((property: any) => (
                       <div
                         key={property.id}
                         onMouseEnter={() => setHoveredId(property.id)}
@@ -675,6 +684,7 @@ function BusquedaMapaContent() {
         </aside>
 
         {/* Área del mapa */}
+{/* Área del mapa */}
         <section className="relative bg-stone-200 w-full h-[35dvh] md:flex-1 md:h-auto min-w-0">
           {!isSidebarOpen && (
             <button
@@ -689,16 +699,74 @@ function BusquedaMapaContent() {
             </button>
           )}
 
+{/* --- INICIO BOTONES FLOTANTES HU8 --- */}
+          <div className="absolute top-3 right-4 z-[1000] flex flex-col gap-2 items-end pointer-events-none">
+            {!isDrawingMode && !isPolygonClosed && (
+              <div className="flex flex-row gap-2 pointer-events-auto">
+                <button 
+                  onClick={() => setIsDrawingMode(true)}
+                  className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
+                >
+                  Dibujar zona
+                </button>
+                <button 
+                  onClick={() => { console.log("Próximamente: Abrir barra lateral de Mis Zonas") }}
+                  className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
+                >
+                  Mis zonas
+                </button>
+              </div>
+            )}
+            {isDrawingMode && !isPolygonClosed && (
+              <div className="flex flex-col items-end gap-2 pointer-events-auto">
+                <button 
+                  onClick={resetDrawing}
+                  className="bg-white text-red-600 px-4 py-2 rounded-lg shadow-md border border-stone-200 hover:bg-red-50 transition-all text-sm font-semibold"
+                >
+                  Cancelar dibujo
+                </button>
+                <div className="bg-white/95 backdrop-blur-sm p-3 rounded-lg shadow-md border border-stone-200 text-xs text-stone-600 max-w-[220px] text-right">
+                  Haz clic en el mapa para marcar los vértices. Cierra la zona tocando el punto inicial.
+                </div>
+              </div>
+            )}
+          </div>
+
+          {isPolygonClosed && (
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000]">
+              <button 
+                onClick={resetDrawing}
+                className="bg-[#ea580c] text-white px-6 py-2.5 rounded-full shadow-[0_4px_14px_rgba(234,88,12,0.4)] hover:bg-[#c2410c] active:scale-95 transition-transform text-sm font-bold tracking-wide pointer-events-auto"
+              >
+                Borrar Dibujo
+              </button>
+            </div>
+          )}
+          {/* --- FIN BOTONES FLOTANTES HU8 --- */}
+
           <div className="absolute inset-0" style={{ zIndex: 0 }}>
             <MapView
-              properties={properties}
-              selectedId={selectedPropertyId}
-              onSelect={handleMapSelect}
-              onClusterClick={handleClusterClick}
-              activeClusterIds={activeClusterIds}
-              isLoading={isLoading}
-              error={error}
-            />
+                  properties={properties}
+                  selectedId={selectedPropertyId}
+                  onSelect={handleMapSelect}
+                  isLoading={isLoading}
+                  error={error}
+                  // --- PROPS HU8 ---
+                  isDrawingMode={isDrawingMode}
+                  polygonPoints={polygonPoints}
+                  isPolygonClosed={isPolygonClosed}
+                  onMapClick={(latlng) => {
+                    if (isDrawingMode && !isPolygonClosed) {
+                      setPolygonPoints(prev => [...prev, [latlng.lat, latlng.lng]]);
+                    }
+                  }}
+                  onPointClick={(index) => {
+                    if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
+                      setIsPolygonClosed(true);
+                      setIsDrawingMode(false);
+                    }
+                  }}
+                />
           </div>
         </section>
       </main>
