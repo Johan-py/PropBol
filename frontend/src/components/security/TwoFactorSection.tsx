@@ -48,7 +48,6 @@ const handleConfirm = async () => {
     if (res.ok) {
       setShowModal(false)
       setPassword('')
-      // TODO task 4: enviar código al correo
     } else {
       const data = await res.json()
       setError(data.message ?? 'Contraseña incorrecta')
@@ -120,7 +119,9 @@ const handleConfirm = async () => {
                 onChange={(e) => { setPassword(e.target.value); setError('') }}
                 onKeyDown={(e) => { if (e.key === 'Enter') handleConfirm() }}
                 placeholder="••••••••"
-                className="w-full rounded-lg border border-neutral-300 px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+                className={`w-full rounded-lg border px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-2 ${
+                error ? 'border-red-400 focus:ring-red-400' : 'border-neutral-300 focus:ring-orange-400'
+                }`}
               />
               <button
                 type="button"
