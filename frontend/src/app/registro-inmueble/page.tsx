@@ -1,6 +1,12 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+
+const MapaPinSelector = dynamic(
+  () => import("@/components/MapaPinSelector"),
+  { ssr: false }
+);
 
 type CampoError =
   | "titulo"
@@ -12,6 +18,7 @@ type CampoError =
   | "precio"
   | "area"
   | "operacion"
+  | "ubicacion"
   | null;
 
 export default function MiRegistroPage() {
@@ -30,6 +37,9 @@ export default function MiRegistroPage() {
     ciudad: "Cochabamba",
     descripcion: "",
   });
+
+  const [pinCoords, setPinCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [modoPinActivo, setModoPinActivo] = useState(false);
 
   const [estado, setEstado] = useState<"ninguno" | "exito" | "error">(
     "ninguno",
@@ -446,6 +456,13 @@ export default function MiRegistroPage() {
       }
     }
 
+    if (!pinCoords) {
+      setMensajeError("DEBE SELECCIONAR LA UBICACIÓN EN EL MAPA");
+      setCampoError("ubicacion");
+      setEstado("error");
+      return;
+    }
+
     const incompleto =
       !datos.tipoInmueble ||
       !datos.operacion ||
@@ -473,6 +490,8 @@ export default function MiRegistroPage() {
       direccion: direccionLimpia,
       zona: zonaLimpia,
       ciudad: datos.ciudad,
+      latitud: pinCoords.lat,
+      longitud: pinCoords.lng,
     };
 
     console.log("📤 Payload enviado al backend:", payload);
@@ -525,6 +544,7 @@ export default function MiRegistroPage() {
   const errorPrecio = campoError === "precio";
   const errorArea = campoError === "area";
   const errorOperacion = campoError === "operacion";
+  const errorUbicacion = campoError === "ubicacion";
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -790,7 +810,7 @@ export default function MiRegistroPage() {
                   value={datos.descripcion}
                   onChange={manejarCambio}
                   maxLength={300}
-                  className={`w-full p-4 rounded-2xl border h-72 bg-white ${
+                  className={`w-full p-4 rounded-2xl border h-48 bg-white ${
                     errorDescripcion ? "border-red-500" : "border-gray-300"
                   }`}
                   placeholder="Casa de dos plantas, amplia y moderna ubicada en una zona tranquila..."
@@ -803,7 +823,60 @@ export default function MiRegistroPage() {
                 </p>
               </div>
 
-              <div className="mt-12 space-y-6">
+              <div className="mt-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setModoPinActivo((prev) => !prev);
+                      if (campoError === "ubicacion") limpiarError();
+                    }}
+                    className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${
+                      modoPinActivo
+                        ? "bg-orange-500 text-white"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    }`}
+                  >
+                    Pin
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={!pinCoords}
+                    onClick={() => {
+                      setPinCoords(null);
+                      setModoPinActivo(false);
+                    }}
+                    className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ml-auto ${
+                      pinCoords
+                        ? "bg-red-500 text-white hover:bg-red-600"
+                        : "bg-gray-300 text-gray-400 cursor-not-allowed"
+                    }`}
+                  >
+                    Eliminar selección
+                  </button>
+                </div>
+
+                <div
+                  className={`rounded-xl overflow-hidden border ${
+                    errorUbicacion ? "border-red-500" : "border-gray-200"
+                  }`}
+                >
+                  <MapaPinSelector
+                    pinCoords={pinCoords}
+                    onPinChange={(coords) => {
+                      setPinCoords(coords);
+                      if (campoError === "ubicacion") limpiarError();
+                    }}
+                    modoPinActivo={modoPinActivo}
+                  />
+                </div>
+                {errorUbicacion && (
+                  <p className="text-red-500 text-sm mt-1">{mensajeError}</p>
+                )}
+              </div>
+
+              <div className="mt-6 space-y-6">
                 <div className="flex justify-center md:justify-end gap-6">
                   <button
                     type="button"
