@@ -81,7 +81,7 @@ export default function VistasRecientesPage() {
                     ))}
                 </div>
 
-                {/* Paginación */}
+                {/*Paginación*/}
                 <div className="mt-10 flex justify-center items-center gap-1.5 pb-10">
                     <button className="w-9 h-9 flex items-center justify-center bg-[#E87B00] text-white rounded-md shadow-sm text-sm font-bold">1</button>
                     {[2, 3, 4, 5, 6, 7, 8, 10].map((n) => (
