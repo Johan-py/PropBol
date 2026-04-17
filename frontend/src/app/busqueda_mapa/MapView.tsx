@@ -359,6 +359,7 @@ export default function MapView({
           onZoneSelect={onZoneSelect ?? (() => {})}
         />
 
+
         {/* --- INICIO CÓDIGO HU8 --- */}
         {polygonPoints && polygonPoints.length > 0 && !isPolygonClosed && (
           <>
