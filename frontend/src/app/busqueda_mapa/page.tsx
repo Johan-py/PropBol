@@ -596,8 +596,9 @@ function BusquedaMapaContent() {
                 <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
                 <PropertyListMobile
                   onClickItem={(p) => {
-                    setPinnedProperty(p)
-                    setSheetState('peek')
+                    setPinnedProperty(p);
+                    setSelectedPropertyId(p.id);
+                    setSheetState("peek");
                   }}
                 />
                 {renderListPaginationFooter()}
