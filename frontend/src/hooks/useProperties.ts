@@ -40,11 +40,11 @@ export function useProperties(): UsePropertiesResult {
 if (!cancelled) {
           const mappedData: PropertyMapPin[] = (json.data || [])
   .filter((item: any) => {
-    const lat = Number(item.ubicacion?.latitud)
-    const lng = Number(item.ubicacion?.longitud)
+    const lat = Number(item.ubicacion_inmueble?.latitud)
+    const lng = Number(item.ubicacion_inmueble?.longitud)
 
     return (
-      item.ubicacion &&
+      item.ubicacion_inmueble &&
       !isNaN(lat) &&
       !isNaN(lng) &&
       lat !== 0 &&
@@ -53,8 +53,8 @@ if (!cancelled) {
   })
   .map((item: any) => ({
     id: item.id.toString(),
-    lat: Number(item.ubicacion.latitud),
-    lng: Number(item.ubicacion.longitud),
+    lat: Number(item.ubicacion_inmueble.latitud),
+    lng: Number(item.ubicacion_inmueble.longitud),
     price: Number(item.precio),
     currency: "USD",
     type: (item.categoria?.toLowerCase().trim() || "casa") as any,
@@ -64,7 +64,7 @@ if (!cancelled) {
     nroBanos: item.nroBanos ?? null,
     superficieM2: item.superficieM2 ? Number(item.superficieM2) : null,
     thumbnailUrl:
-      item.publicaciones?.[0]?.multimedia?.[0]?.url ?? undefined,
+      item.publicacion?.[0]?.multimedia?.[0]?.url ?? undefined,
   }))
           setProperties(mappedData);
         }

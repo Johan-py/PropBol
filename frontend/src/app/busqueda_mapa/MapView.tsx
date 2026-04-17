@@ -292,15 +292,15 @@ export default function MapView({
           iconCreateFunction={(cluster: any) => createClusterIcon(cluster)}
           maxClusterRadius={CLUSTER_CONFIG.maxClusterRadius}
           disableClusteringAtZoom={CLUSTER_CONFIG.disableClusteringAtZoom}
-          animate={true}
+          animate={false}
           preferCanvas={true}
-          animateAddingMarkers={true}
+          animateAddingMarkers={false}
           chunkedLoading={true}
           tap={true}
           tapTolerance={15}
           showCoverageOnHover={false}
-          zoomToBoundsOnClick={true}
-          spiderfyOnMaxZoom={true}
+          zoomToBoundsOnClick={false}
+          spiderfyOnMaxZoom={false}
           spiderfyDistanceMultiplier={2}
           removeOutsideVisibleBounds={false}
           clusterPane="markerPane"
