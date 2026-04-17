@@ -306,7 +306,7 @@ function BusquedaMapaContent() {
               : ''
           }`}
         >
-          {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
+          {(isClusterView ? clusterProperties : properties).map((property: any) => (
             <div
               key={property.id}
               onClick={() => {
@@ -500,18 +500,15 @@ function BusquedaMapaContent() {
                 />
                 <div className="flex items-center justify-between w-full px-4 pb-2">
                   <span className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
-                    <span className="text-orange-500">
-                      {isClusterView ? clusterProperties.length : displayedProperties.length}
+                    <span className="text-orange-500">{isClusterView ? clusterProperties.length : properties.length}</span>
+                    <span className="text-gray-500 font-normal">
+                      propiedades
                     </span>
                     <span className="text-gray-500 font-normal">propiedades</span>
                   </span>
                   {isClusterView && (
                     <button
-                      onClick={() => {
-                        setIsClusterView(false)
-                        setClusterProperties([])
-                        setActiveClusterIds([])
-                      }}
+                      onClick={() => { setIsClusterView(false); setClusterProperties([]); setActiveClusterIds([]); }}
                       className="text-xs text-orange-500 hover:underline px-2"
                     >
                       ← Volver
