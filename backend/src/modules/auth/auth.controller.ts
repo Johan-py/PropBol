@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import { forgotPasswordService } from './auth.service.js'
 import {
   AuthError,
   getMeService,
@@ -192,3 +193,17 @@ export const logoutController = async (req: Request, res: Response) => {
     return res.status(400).json({ message });
   }
 };
+
+export const forgotPasswordController = async (req: Request, res: Response) => {
+  try {
+    const result = await forgotPasswordService(req.body)
+    return res.status(200).json(result)
+  } catch (error) {
+    return res.status(400).json({
+      message:
+        error instanceof Error
+          ? error.message
+          : 'Error al solicitar recuperación de contraseña'
+    })
+  }
+}

@@ -151,3 +151,34 @@ export const desactiveSessionByToken = async (token: string) => {
     }
   })
 }
+export const desactivarRecuperacionesPasswordActivas = async (usuarioId: number) => {
+  return prisma.recuperacion_password.updateMany({
+    where: {
+      usuarioId,
+      activo: true,
+      usadoEn: null
+    },
+    data: {
+      activo: false
+    }
+  })
+}
+
+export const createPasswordRecovery = async ({
+  usuarioId,
+  token,
+  expiraEn
+}: {
+  usuarioId: number
+  token: string
+  expiraEn: Date
+}) => {
+  return prisma.recuperacion_password.create({
+    data: {
+      usuarioId,
+      token,
+      expiraEn,
+      activo: true
+    }
+  })
+}

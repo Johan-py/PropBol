@@ -2,12 +2,15 @@ import crypto from 'node:crypto'
 import jwt from 'jsonwebtoken'
 
 import { env } from '../../config/env.js'
-import { enviarCodigoRegistro } from '../../lib/email.service.js'
+import { enviarCodigoRegistro ,
+  enviarCorreoRecuperacionPassword} from '../../lib/email.service.js'
 import { generateToken, type JwtPayload } from '../../utils/jwt.js'
 import {
+  createPasswordRecovery,
   createSession,
   createUser,
   desactiveSessionByToken,
+  desactivarRecuperacionesPasswordActivas,
   findActiveSessionByToken,
   findUser,
   findUserByCorreo
@@ -551,5 +554,61 @@ export const loginWithGoogleCodeService = async (code: string) => {
       apellido: user.apellido
     },
     token
+  }
+}
+type ForgotPasswordDTO = {
+  correo: string
+}
+
+const RESET_PASSWORD_TTL_MINUTES = 15
+
+export const forgotPasswordService = async (payload: ForgotPasswordDTO) => {
+  const correo = payload.correo?.trim().toLowerCase()
+
+  if (!correo) {
+    throw new Error('El correo es obligatorio')
+  }
+
+  const emailRegex = /\S+@\S+\.\S+/
+
+  if (!emailRegex.test(correo)) {
+    throw new Error('Formato de correo inválido')
+  }
+
+  const user = await findUserByCorreo(correo)
+
+  // Respuesta genérica para no revelar si el correo existe o no
+  if (!user) {
+    return {
+      message: 'Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.'
+    }
+  }
+
+  const resetToken = crypto.randomUUID()
+  const expiraEn = new Date(Date.now() + RESET_PASSWORD_TTL_MINUTES * 60 * 1000)
+
+  await desactivarRecuperacionesPasswordActivas(user.id)
+
+  await createPasswordRecovery({
+    usuarioId: user.id,
+    token: resetToken,
+    expiraEn
+  })
+
+  const resetLink = `${env.FRONTEND_URL}/reset-password?token=${resetToken}`
+
+  const emailResult = await enviarCorreoRecuperacionPassword({
+    emailDestino: user.correo,
+    nombreUsuario: user.nombre,
+    resetLink,
+    minutosExpiracion: RESET_PASSWORD_TTL_MINUTES
+  })
+
+  if (!emailResult.success) {
+    throw new Error('No se pudo enviar el correo de recuperación. Intenta nuevamente.')
+  }
+
+  return {
+    message: 'Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.'
   }
 }

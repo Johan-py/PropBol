@@ -1,6 +1,15 @@
+import nodemailer from 'nodemailer'
 import { env } from "../config/env.js";
 
 const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
+
+export const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: env.EMAIL_USER,
+    pass: env.EMAIL_PASSWORD
+  }
+})
 
 interface EnviarCodigoParams {
   emailDestino: string;
@@ -135,3 +144,59 @@ export const enviarCodigoRegistro = async ({
     textContent: `${saludo}\n\nTu código de verificación es: ${codigo}\n\nExpira en 5 minutos.`,
   });
 };
+
+export const enviarCorreoRecuperacionPassword = async ({
+  emailDestino,
+  nombreUsuario,
+  resetLink,
+  minutosExpiracion
+}: {
+  emailDestino: string
+  nombreUsuario?: string
+  resetLink: string
+  minutosExpiracion: number
+}) => {
+  try {
+    const info = await transporter.sendMail({
+      from: `"PropBol" <${env.EMAIL_USER}>`,
+      to: emailDestino,
+      subject: 'Restablece tu contraseña - PropBol',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="background-color: #d97706; color: white; padding: 16px; text-align: center;">
+            Restablecer contraseña
+          </h2>
+
+          <div style="padding: 24px; border: 1px solid #e5e7eb;">
+            <p>Hola${nombreUsuario ? `, ${nombreUsuario}` : ''}.</p>
+            <p>Recibimos una solicitud para restablecer tu contraseña.</p>
+            <p>Haz clic en el siguiente botón:</p>
+
+            <div style="text-align: center; margin: 24px 0;">
+              <a
+                href="${resetLink}"
+                style="background-color: #f59e0b; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block;"
+              >
+                Cambiar mi contraseña
+              </a>
+            </div>
+
+            <p>Este enlace estará disponible durante ${minutosExpiracion} minutos.</p>
+            <p>Si no solicitaste este cambio, puedes ignorar este mensaje.</p>
+          </div>
+        </div>
+      `,
+      text: `Restablece tu contraseña desde este enlace: ${resetLink}`
+    })
+
+    return {
+      success: true,
+      messageId: info.messageId
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Error desconocido'
+    }
+  }
+}
