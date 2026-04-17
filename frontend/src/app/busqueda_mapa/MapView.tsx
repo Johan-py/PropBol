@@ -310,7 +310,7 @@ export default function MapView({
           tapTolerance={15}
           showCoverageOnHover={false}
           zoomToBoundsOnClick={false}
-          spiderfyOnMaxZoom={true}
+          spiderfyOnMaxZoom={false}
           spiderfyDistanceMultiplier={2}
           removeOutsideVisibleBounds={false}
           clusterPane="markerPane"
