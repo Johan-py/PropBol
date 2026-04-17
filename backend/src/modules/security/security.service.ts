@@ -17,31 +17,80 @@ type AttemptState = {
 
 const MAX_FAILED_ATTEMPTS = 3;
 const BLOCK_TIME_MS = 15 * 60 * 1000;
+const MAX_PASSWORD_LENGTH = 255;
 
 const attemptsStore = new Map<number, AttemptState>();
 
 const getAttemptState = (userId: number): AttemptState => {
-  const currentState = attemptsStore.get(userId);
+  const existingState = attemptsStore.get(userId);
 
-  if (currentState) {
-    return currentState;
+  if (existingState) {
+    return existingState;
   }
 
-  const initialState: AttemptState = {
+  const newState: AttemptState = {
     failedAttempts: 0,
     blockedUntil: null,
   };
 
-  attemptsStore.set(userId, initialState);
-  return initialState;
+  attemptsStore.set(userId, newState);
+  return newState;
+};
+
+const getBlockStatus = (userId: number) => {
+  const state = getAttemptState(userId);
+
+  if (!state.blockedUntil) {
+    return {
+      blocked: false,
+      retryAfterSeconds: 0,
+    };
+  }
+
+  const remainingMs = state.blockedUntil - Date.now();
+
+  if (remainingMs <= 0) {
+    attemptsStore.delete(userId);
+
+    return {
+      blocked: false,
+      retryAfterSeconds: 0,
+    };
+  }
+
+  return {
+    blocked: true,
+    retryAfterSeconds: Math.ceil(remainingMs / 1000),
+  };
+};
+
+const registerFailedAttempt = (userId: number) => {
+  const state = getAttemptState(userId);
+
+  state.failedAttempts += 1;
+
+  if (state.failedAttempts >= MAX_FAILED_ATTEMPTS) {
+    state.blockedUntil = Date.now() + BLOCK_TIME_MS;
+    attemptsStore.set(userId, state);
+
+    return {
+      blocked: true,
+      attemptsLeft: 0,
+      retryAfterSeconds: Math.ceil(BLOCK_TIME_MS / 1000),
+    };
+  }
+
+  attemptsStore.set(userId, state);
+
+  return {
+    blocked: false,
+    attemptsLeft: MAX_FAILED_ATTEMPTS - state.failedAttempts,
+    retryAfterSeconds: 0,
+  };
 };
 
 const clearAttemptState = (userId: number) => {
   attemptsStore.delete(userId);
-};
-
-const getRemainingMinutes = (blockedUntil: number) => {
-  return Math.ceil((blockedUntil - Date.now()) / 60000);
 };
 
 export const validateCurrentPasswordService = async (
@@ -52,26 +101,32 @@ export const validateCurrentPasswordService = async (
     throw new SecurityError("Usuario no autorizado.", 401);
   }
 
-  const state = getAttemptState(userId);
-  const now = Date.now();
+  const blockStatus = getBlockStatus(userId);
 
-  if (state.blockedUntil && now < state.blockedUntil) {
-    const remainingMinutes = getRemainingMinutes(state.blockedUntil);
+  if (blockStatus.blocked) {
+    const remainingMinutes = Math.ceil(blockStatus.retryAfterSeconds / 60);
 
     throw new SecurityError(
-      `Cuenta bloqueada temporalmente por demasiados intentos fallidos. Intenta de nuevo en ${remainingMinutes} minuto(s).`,
+      `La cuenta sigue bloqueada temporalmente por múltiples intentos fallidos. Intenta nuevamente en ${remainingMinutes} minuto(s).`,
       429,
     );
   }
 
-  if (state.blockedUntil && now >= state.blockedUntil) {
-    clearAttemptState(userId);
+  const rawPassword = typeof password === "string" ? password : "";
+  const trimmedPassword = rawPassword.trim();
+
+  if (!trimmedPassword) {
+    throw new SecurityError(
+      "La contraseña es obligatoria y no puede contener solo espacios en blanco.",
+      400,
+    );
   }
 
-  const safePassword = typeof password === "string" ? password.trim() : "";
-
-  if (!safePassword) {
-    throw new SecurityError("La contraseña es obligatoria.", 400);
+  if (rawPassword.length > MAX_PASSWORD_LENGTH) {
+    throw new SecurityError(
+      `La contraseña no puede superar ${MAX_PASSWORD_LENGTH} caracteres.`,
+      400,
+    );
   }
 
   const user = await findUserPasswordByIdRepository(userId);
@@ -84,26 +139,22 @@ export const validateCurrentPasswordService = async (
     throw new SecurityError("El usuario no tiene contraseña registrada.", 400);
   }
 
-  const isValidPassword = user.password === safePassword;
+  const isValidPassword = user.password === trimmedPassword;
 
   if (!isValidPassword) {
-    const updatedState = getAttemptState(userId);
-    updatedState.failedAttempts += 1;
+    const attemptStatus = registerFailedAttempt(userId);
 
-    if (updatedState.failedAttempts >= MAX_FAILED_ATTEMPTS) {
-      updatedState.blockedUntil = Date.now() + BLOCK_TIME_MS;
-      updatedState.failedAttempts = 0;
+    if (attemptStatus.blocked) {
+      const blockMinutes = Math.ceil(BLOCK_TIME_MS / 60000);
 
       throw new SecurityError(
-        "Cuenta bloqueada temporalmente por 15 minutos debido a 3 intentos fallidos.",
+        `Has superado el número permitido de intentos. La cuenta fue bloqueada temporalmente por ${blockMinutes} minuto(s).`,
         429,
       );
     }
 
-    const remainingAttempts = MAX_FAILED_ATTEMPTS - updatedState.failedAttempts;
-
     throw new SecurityError(
-      `Contraseña incorrecta. Te quedan ${remainingAttempts} intento(s) antes del bloqueo temporal.`,
+      `Contraseña incorrecta. Te quedan ${attemptStatus.attemptsLeft} intento(s) antes del bloqueo temporal.`,
       400,
     );
   }

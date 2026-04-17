@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const MAX_PASSWORD_LENGTH = 255;
 
 type ValidatePasswordResponse = {
   valid: boolean;
@@ -12,6 +13,7 @@ type ValidatePasswordResponse = {
 export default function DeactivateAccountSection() {
   const [showWarningModal, setShowWarningModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -22,6 +24,7 @@ export default function DeactivateAccountSection() {
     setErrorMessage("");
     setSuccessMessage("");
     setIsSubmitting(false);
+    setShowPassword(false);
   };
 
   const handleOpenWarning = () => {
@@ -43,13 +46,28 @@ export default function DeactivateAccountSection() {
     resetPasswordState();
   };
 
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword((currentValue) => !currentValue);
+  };
+
   const handleValidatePassword = async () => {
     try {
       setErrorMessage("");
       setSuccessMessage("");
 
-      if (!password.trim()) {
-        setErrorMessage("Debes ingresar tu contraseña.");
+      const trimmedPassword = password.trim();
+
+      if (!trimmedPassword) {
+        setErrorMessage(
+          "La contraseña es obligatoria y no puede contener solo espacios en blanco.",
+        );
+        return;
+      }
+
+      if (password.length > MAX_PASSWORD_LENGTH) {
+        setErrorMessage(
+          `La contraseña no puede superar ${MAX_PASSWORD_LENGTH} caracteres.`,
+        );
         return;
       }
 
@@ -192,14 +210,25 @@ export default function DeactivateAccountSection() {
                 Ingresa tu contraseña
               </label>
 
-              <input
-                id="current-password"
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                placeholder="••••••••"
-                className="h-11 w-full rounded-lg border border-neutral-300 px-3 text-sm text-neutral-900 outline-none transition focus:border-neutral-500"
-              />
+              <div className="flex h-11 items-center rounded-lg border border-neutral-300 px-3">
+                <input
+                  id="current-password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  placeholder="••••••••"
+                  maxLength={256}
+                  className="w-full border-none bg-transparent text-sm text-neutral-900 outline-none"
+                />
+
+                <button
+                  type="button"
+                  onClick={handleTogglePasswordVisibility}
+                  className="ml-3 text-sm font-medium text-neutral-600 transition hover:text-neutral-900"
+                >
+                  {showPassword ? "Ocultar" : "Ver"}
+                </button>
+              </div>
             </div>
 
             {errorMessage && (
