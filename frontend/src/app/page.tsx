@@ -9,7 +9,7 @@ interface BannerData {
   subtitulo?: string;
 }
 
-
+ 
 const fetchBanners = async (): Promise<BannerData[]> => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
