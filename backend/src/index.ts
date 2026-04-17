@@ -39,6 +39,7 @@ import locationSearchHandler from "./api/locations/search.js";
 
 import correoverificacionRoutes from "./modules/perfil/correoverificacion.routes.js";
 import perfilRoutes from "./modules/perfil/perfil.routes.js";
+import zonaRoutes from "./modules/perfil/zonaUsario.routes.js";
 
 import {
   googleCallbackController,
@@ -108,6 +109,7 @@ app.use("/api/publicaciones", publicacionRoutes);
 app.use("/api/publicaciones", multimediaRoutes);
 app.use("/api/perfil", correoverificacionRoutes);
 app.use("/api/perfil/usuario", perfilRoutes);
+app.use('/api/perfil/zonas', zonaRoutes);
 app.use("/api", router);
 
 // --------------------
