@@ -303,7 +303,7 @@ export default function MapView({
           tap={true}
           tapTolerance={15}
           showCoverageOnHover={false}
-          zoomToBoundsOnClick={true}
+          zoomToBoundsOnClick={false}
           spiderfyOnMaxZoom={true}
           spiderfyDistanceMultiplier={2}
           removeOutsideVisibleBounds={false}
