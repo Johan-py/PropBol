@@ -48,6 +48,7 @@ import {
 import multimediaRoutes from "./modules/multimedia/multimedia.routes.js";
 import publicacionRoutes from "./modules/publicacion/publicacion.routes.js";
 import router from "./modules/registro-publicacion/publicacion.routes.js";
+import securityRoutes from "./routes/security.routes.js";
 
 // --------------------
 // LEGACY
@@ -109,6 +110,7 @@ app.use("/api/publicaciones", multimediaRoutes);
 app.use("/api/perfil", correoverificacionRoutes);
 app.use("/api/perfil/usuario", perfilRoutes);
 app.use("/api", router);
+app.use("/api/security", securityRoutes);
 
 // --------------------
 // MOCK / TEST

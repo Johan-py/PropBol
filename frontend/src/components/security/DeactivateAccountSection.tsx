@@ -2,39 +2,97 @@
 
 import { useState } from "react";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+type ValidatePasswordResponse = {
+  valid: boolean;
+  message: string;
+};
+
 export default function DeactivateAccountSection() {
   const [showWarningModal, setShowWarningModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const closeAllModals = () => {
-    setShowWarningModal(false);
-    setShowPasswordModal(false);
+  const resetPasswordState = () => {
     setPassword("");
+    setErrorMessage("");
+    setSuccessMessage("");
+    setIsSubmitting(false);
   };
 
   const handleOpenWarning = () => {
     setShowWarningModal(true);
   };
 
-  const handleContinueToPassword = () => {
-    setShowWarningModal(false);
-    setShowPasswordModal(true);
-  };
-
   const handleCancelWarning = () => {
     setShowWarningModal(false);
   };
 
-  const handleCancelPassword = () => {
-    setShowPasswordModal(false);
-    setPassword("");
+  const handleContinueToPassword = () => {
+    setShowWarningModal(false);
+    setShowPasswordModal(true);
+    resetPasswordState();
   };
 
-  const handleFakeDeactivate = () => {
-    // Solo frontend, sin funcionalidad real
+  const handleCancelPassword = () => {
     setShowPasswordModal(false);
-    setPassword("");
+    resetPasswordState();
+  };
+
+  const handleValidatePassword = async () => {
+    try {
+      setErrorMessage("");
+      setSuccessMessage("");
+
+      if (!password.trim()) {
+        setErrorMessage("Debes ingresar tu contraseña.");
+        return;
+      }
+
+      if (!API_URL) {
+        setErrorMessage("No se configuró NEXT_PUBLIC_API_URL en el frontend.");
+        return;
+      }
+
+      const token =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+      if (!token) {
+        setErrorMessage("No se encontró la sesión del usuario.");
+        return;
+      }
+
+      setIsSubmitting(true);
+
+      const response = await fetch(
+        `${API_URL}/api/security/validate-password`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ password }),
+        },
+      );
+
+      const data = (await response.json()) as ValidatePasswordResponse;
+
+      if (!response.ok || !data.valid) {
+        setErrorMessage(data.message || "Contraseña incorrecta.");
+        return;
+      }
+
+      setSuccessMessage("Contraseña válida.");
+    } catch {
+      setErrorMessage("No se pudo validar la contraseña.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -78,12 +136,13 @@ export default function DeactivateAccountSection() {
           <div className="w-full max-w-md rounded-xl border border-neutral-300 bg-white p-5 shadow-xl">
             <div className="mb-4 flex items-start gap-3">
               <div className="mt-1 text-red-500">⚠</div>
+
               <div>
                 <h2 className="text-base font-bold text-neutral-900">
                   ¿Estás seguro de que quieres desactivar tu cuenta?
                 </h2>
                 <p className="mt-1 text-sm text-neutral-600">
-                  Esta acción solo es visual por ahora y no tendrá efecto real.
+                  Esta acción requiere confirmar tu contraseña.
                 </p>
               </div>
             </div>
@@ -114,18 +173,18 @@ export default function DeactivateAccountSection() {
           <div className="w-full max-w-md rounded-xl border border-neutral-300 bg-white p-5 shadow-xl">
             <div className="mb-4 flex items-start gap-3">
               <div className="mt-1 text-red-500">⚠</div>
+
               <div>
                 <h2 className="text-base font-bold text-neutral-900">
                   Confirmación final
                 </h2>
                 <p className="mt-1 text-sm text-neutral-600">
-                  Por seguridad, ingresa tu contraseña actual para desactivar tu
-                  cuenta.
+                  Ingresa tu contraseña actual para continuar.
                 </p>
               </div>
             </div>
 
-            <div className="mt-4 space-y-2">
+            <div className="space-y-2">
               <label
                 htmlFor="current-password"
                 className="text-sm font-medium text-neutral-700"
@@ -143,21 +202,35 @@ export default function DeactivateAccountSection() {
               />
             </div>
 
+            {errorMessage && (
+              <p className="mt-3 text-sm font-medium text-red-600">
+                {errorMessage}
+              </p>
+            )}
+
+            {successMessage && (
+              <p className="mt-3 text-sm font-medium text-green-600">
+                {successMessage}
+              </p>
+            )}
+
             <div className="mt-5 flex justify-end gap-3">
               <button
                 type="button"
                 onClick={handleCancelPassword}
-                className="rounded-md border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100"
+                disabled={isSubmitting}
+                className="rounded-md border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Cancelar
               </button>
 
               <button
                 type="button"
-                onClick={handleFakeDeactivate}
-                className="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
+                onClick={handleValidatePassword}
+                disabled={isSubmitting}
+                className="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Desactivar cuenta
+                {isSubmitting ? "Validando..." : "Desactivar cuenta"}
               </button>
             </div>
           </div>
