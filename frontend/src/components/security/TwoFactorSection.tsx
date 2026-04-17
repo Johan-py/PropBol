@@ -64,7 +64,8 @@ const handleConfirm = async () => {
 }
 
 const handleCodeChange = (value: string) => {
-  setCode(value.slice(0, 6))
+  const onlyNumbers = value.replace(/\D/g, '').slice(0, 6)
+  setCode(onlyNumbers)
 }
 
   return (
