@@ -390,7 +390,8 @@ export default function MapView({
           eventHandlers={{
             clusterclick: (cluster: any) => {
               const markers = cluster.layer.getAllChildMarkers();
-              const props = markers.map((m: any) => m.options.property).filter(Boolean);
+              const ids = markers.map((m: any) => m.options.alt).filter(Boolean);
+              const props = properties.filter((p) => ids.includes(p.id));
               onClusterClick?.(props);
             }
           }}
@@ -412,7 +413,7 @@ export default function MapView({
               <Marker
                 key={property.id}
                 position={[property.lat, property.lng]}
-                property={property}
+                alt={property.id}
                 icon={icon}
                 ref={(el) => {
                   if (el) markerRefs.current[property.id] = el
