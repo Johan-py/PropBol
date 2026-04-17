@@ -14,8 +14,9 @@ import {
 } from 'lucide-react'
 
 // === HOOKS ===
-import { useProperties } from '@/hooks/useProperties'
-import { useOrdenamiento } from '@/hooks/useOrdenamiento'
+import { useProperties } from "@/hooks/useProperties";
+import { useOrdenamiento } from "@/hooks/useOrdenamiento";
+import { useZonas } from '@/hooks/useZonas';
 
 // === COMPONENTES ===
 import FilterBar from '@/components/filters/FilterBar'
@@ -96,8 +97,10 @@ function BusquedaMapaContent() {
 
   const { properties, isLoading, error } = useProperties()
   const { ordenActual, cambiarOrden } = useOrdenamiento({
-    inmuebles: properties
+    inmuebles: properties,
   })
+  const { zonas } = useZonas()
+  const [selectedZoneId, setSelectedZoneId] = useState<number | null>(null)
 
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
@@ -279,12 +282,26 @@ function BusquedaMapaContent() {
                 <MapView
                   properties={properties}
                   selectedId={selectedPropertyId}
-                  onSelect={(id) => {
-                    setSelectedPropertyId(id)
-                    setPinnedProperty(properties.find((p: any) => p.id === id) ?? null)
-                  }}
+                  zonas={zonas}
+                  selectedZoneId={selectedZoneId}
+                  onZoneSelect={setSelectedZoneId}
+                  onSelect={handleMapSelect}
                   isLoading={isLoading}
                   error={error}
+                  isDrawingMode={isDrawingMode}
+                  polygonPoints={polygonPoints}
+                  isPolygonClosed={isPolygonClosed}
+                  onMapClick={(latlng) => {
+                    if (isDrawingMode && !isPolygonClosed) {
+                      setPolygonPoints(prev => [...prev, [latlng.lat, latlng.lng]])
+                    }
+                  }}
+                  onPointClick={(index) => {
+                    if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
+                      setIsPolygonClosed(true)
+                      setIsDrawingMode(false)
+                    }
+                  }}
                 />
               </div>
             </div>
@@ -318,11 +335,28 @@ function BusquedaMapaContent() {
             <MapView
               properties={properties}
               selectedId={selectedPropertyId}
+              zonas={zonas}
+              selectedZoneId={selectedZoneId}
+              onZoneSelect={setSelectedZoneId}
               onSelect={handleMapSelect}
-              onClusterClick={handleClusterClick}
-              activeClusterIds={activeClusterIds}
               isLoading={isLoading}
               error={error}
+              isDrawingMode={isDrawingMode}
+              polygonPoints={polygonPoints}
+              isPolygonClosed={isPolygonClosed}
+              onMapClick={(latlng) => {
+                if (isDrawingMode && !isPolygonClosed) {
+                  setPolygonPoints(prev => [...prev, [latlng.lat, latlng.lng]])
+                }
+              }}
+              onPointClick={(index) => {
+                if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
+                  setIsPolygonClosed(true)
+                  setIsDrawingMode(false)
+                }
+              }}
+              onClusterClick={handleClusterClick}
+              activeClusterIds={activeClusterIds}
             />
           </div>
           {sheetState === 'hidden' && (
@@ -660,6 +694,23 @@ function BusquedaMapaContent() {
               activeClusterIds={activeClusterIds}
               isLoading={isLoading}
               error={error}
+              zonas={zonas}
+              selectedZoneId={selectedZoneId}
+              onZoneSelect={setSelectedZoneId}
+              isDrawingMode={isDrawingMode}
+              polygonPoints={polygonPoints}
+              isPolygonClosed={isPolygonClosed}
+              onMapClick={(latlng) => {
+                if (isDrawingMode && !isPolygonClosed) {
+                  setPolygonPoints(prev => [...prev, [latlng.lat, latlng.lng]])
+                }
+              }}
+              onPointClick={(index) => {
+                if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
+                  setIsPolygonClosed(true)
+                  setIsDrawingMode(false)
+                }
+              }}
             />
           </div>
         </section>

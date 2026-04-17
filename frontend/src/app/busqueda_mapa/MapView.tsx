@@ -1,7 +1,7 @@
 "use client";
 
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Polyline, Polygon, CircleMarker } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import { useMap } from "react-leaflet";
@@ -10,8 +10,10 @@ import { useEffect, useState, useRef} from "react";
 import ZoomControls from "@/components/ZoomControls";
 import { createGpsIcon } from "@/components/GpsPin";
 import { createClusterIcon, CLUSTER_CONFIG } from "@/lib/clusterIcon";
+import ZonasOverlay from '@/components/map/ZonasOverlay';
 
 import type { PropertyMapPin } from "@/types/property";
+import type { ZonaPredefinida } from '@/types/zona';
 
 // Fix íconos default de Leaflet en Next.js (guard SSR)
 if (typeof window !== "undefined") {
@@ -109,12 +111,12 @@ function createPinIcon(type: PropertyMapPin["type"]): L.DivIcon {
   });
 }
 
-function MapClickHandler({ onMapClick }: { onMapClick: () => void }) {
+function MapClickHandler({ onMapClick }: { onMapClick: (latlng: L.LatLng) => void }) {
   const map = useMap()
 
   useEffect(() => {
-    const handleClick = () => {
-      onMapClick()
+    const handleClick = (e: L.LeafletMouseEvent) => {
+      onMapClick(e.latlng)
     }
 
     map.on("click", handleClick)
@@ -199,12 +201,20 @@ function formatPrice(price: number, currency: "USD" | "BOB"): string {
 
 interface MapViewProps {
   properties: PropertyMapPin[];
+  zonas?: ZonaPredefinida[];
+  selectedZoneId?: number | null;
+  onZoneSelect?: (id: number | null) => void;
   center?: [number, number];
   zoom?: number;
   selectedId?: string | null;
-  onSelect?: (id: string | null) => void
-  onClusterClick?: (properties: PropertyMapPin[]) => void
-  activeClusterIds?: string[]
+  onSelect?: (id: string | null) => void;
+  onClusterClick?: (properties: PropertyMapPin[]) => void;
+  activeClusterIds?: string[];
+  isDrawingMode?: boolean;
+  polygonPoints?: [number, number][];
+  isPolygonClosed?: boolean;
+  onMapClick?: (latlng: L.LatLng) => void;
+  onPointClick?: (index: number) => void;
   isLoading?: boolean;
   error?: string | null;
 }
@@ -219,6 +229,14 @@ export default function MapView({
   activeClusterIds = [],
   isLoading = false,
   error = null,
+  isDrawingMode = false,
+  polygonPoints = [],
+  isPolygonClosed = false,
+  onMapClick,
+  onPointClick,
+  zonas = [],
+  selectedZoneId = null,
+  onZoneSelect,
 }: MapViewProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [hoveredPinId, setHoveredPinId] = useState<string | null>(null); 
@@ -279,7 +297,62 @@ export default function MapView({
 
         <ZoomControls />
          <MapMouseHandler onMouseLeave={() => setHoveredPinId(null)} />
-         <MapClickHandler onMapClick={() => onSelect?.(null)} />
+         <MapClickHandler onMapClick={(latlng) => {
+          if (isDrawingMode && onMapClick) {
+            onMapClick(latlng);
+          } else if (!isDrawingMode) {
+            onSelect?.(null);
+            onZoneSelect?.(null); // criterio 10: clic neutral desactiva zona
+          }
+        }} />
+
+        <ZonasOverlay
+          zonas={zonas}
+          selectedZoneId={selectedZoneId}
+          onZoneSelect={onZoneSelect ?? (() => {})}
+        />
+
+
+        {/* --- INICIO CÓDIGO HU8 --- */}
+        {polygonPoints && polygonPoints.length > 0 && !isPolygonClosed && (
+          <>
+            <Polyline 
+              positions={polygonPoints} 
+              pathOptions={{ color: '#ea580c', weight: 3, dashArray: '5, 10' }} 
+            />
+            {polygonPoints.map((pt, index) => (
+              <CircleMarker
+                key={index}
+                center={pt}
+                radius={5}
+                pathOptions={{ 
+                  color: index === 0 ? '#ef4444' : '#ea580c', 
+                  fillColor: 'white', 
+                  fillOpacity: 1 
+                }}
+                eventHandlers={{
+                  click: (e) => {
+                    L.DomEvent.stopPropagation(e);
+                    if (onPointClick) onPointClick(index);
+                  }
+                }}
+              />
+            ))}
+          </>
+        )}
+
+        {isPolygonClosed && polygonPoints && polygonPoints.length >= 3 && (
+          <Polygon
+            positions={polygonPoints}
+            pathOptions={{ 
+              color: '#ea580c', 
+              fillColor: '#ea580c', 
+              fillOpacity: 0.2,
+              weight: 2
+            }}
+          />
+        )}
+        {/* --- FIN CÓDIGO HU8 --- */}
           {selectedProperty && (
            <FlyToSelected  id={selectedProperty.id} lat={selectedProperty.lat} lng={selectedProperty.lng} />
           )}
@@ -289,7 +362,12 @@ export default function MapView({
         </Marker>
 
         <MarkerClusterGroup
-          iconCreateFunction={(cluster: any) => createClusterIcon(cluster)}
+          iconCreateFunction={(cluster: any) => {
+            const markers = cluster.getAllChildMarkers();
+            const ids = markers.map((m: any) => String(m.options.alt ?? '')).filter(Boolean);
+            const isActive = ids.some((id: string) => activeClusterIds.includes(id));
+            return createClusterIcon(cluster, isActive);
+          }}
           maxClusterRadius={CLUSTER_CONFIG.maxClusterRadius}
           disableClusteringAtZoom={CLUSTER_CONFIG.disableClusteringAtZoom}
           animate={false}
@@ -316,8 +394,8 @@ export default function MapView({
           {properties.map((property) => {
             const isSelected = property.id === selectedId;
             const isHovered = property.id === hoveredPinId;
-  
-             // Prioridad: selected > hovered > normal
+
+            // Prioridad: selected > hovered > normal
             let icon;
             if (isSelected) {
              icon = createSelectedIcon(property.type, false);
