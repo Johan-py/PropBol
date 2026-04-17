@@ -1,11 +1,11 @@
 "use client";
 
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Polyline, Polygon, CircleMarker } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import { useMap } from "react-leaflet";
-import { useEffect, useState, useRef} from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 
 import ZoomControls from "@/components/ZoomControls";
 import { createGpsIcon } from "@/components/GpsPin";
@@ -109,22 +109,22 @@ function createPinIcon(type: PropertyMapPin["type"]): L.DivIcon {
   });
 }
 
-function MapClickHandler({ onMapClick }: { onMapClick: () => void }) {
-  const map = useMap()
+function MapClickHandler({ onMapClick }: { onMapClick: (latlng: L.LatLng) => void }) {
+  const map = useMap();
 
   useEffect(() => {
-    const handleClick = () => {
-      onMapClick()
-    }
+    const handleClick = (e: L.LeafletMouseEvent) => {
+      onMapClick(e.latlng);
+    };
 
-    map.on("click", handleClick)
+    map.on("click", handleClick);
 
     return () => {
-      map.off("click", handleClick)
-    }
-  }, [map, onMapClick])
+      map.off("click", handleClick);
+    };
+  }, [map, onMapClick]);
 
-  return null
+  return null;
 }
 
 function MapMouseHandler({ onMouseLeave }: { onMouseLeave: () => void }) {
@@ -203,10 +203,13 @@ interface MapViewProps {
   zoom?: number;
   selectedId?: string | null;
   onSelect?: (id: string | null) => void
-  onClusterClick?: (properties: PropertyMapPin[]) => void
-  activeClusterIds?: string[]
   isLoading?: boolean;
   error?: string | null;
+  isDrawingMode?: boolean;
+  polygonPoints?: [number, number][];
+  isPolygonClosed?: boolean;
+  onMapClick?: (latlng: L.LatLng) => void;
+  onPointClick?: (index: number) => void;
 }
 
 export default function MapView({
@@ -215,10 +218,13 @@ export default function MapView({
   zoom = 12,
   selectedId,
   onSelect,
-  onClusterClick,
-  activeClusterIds = [],
   isLoading = false,
   error = null,
+  isDrawingMode = false,
+  polygonPoints = [],
+  isPolygonClosed = false,
+  onMapClick,
+  onPointClick,
 }: MapViewProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [hoveredPinId, setHoveredPinId] = useState<string | null>(null); 
@@ -242,11 +248,62 @@ export default function MapView({
     setIsMounted(true);
   }, []);
 
+  const selectedProperty = properties.find((p) => p.id === selectedId);
+
+  // 1. REGLA DE HOOKS: El useMemo DEBE ir antes del "if (!isMounted)"
+  const renderMarkers = useMemo(() => {
+    return properties.map((property) => {
+      const isSelected = property.id === selectedId;
+      const isHovered = property.id === hoveredPinId;
+
+      let icon;
+      if (isSelected) {
+        icon = createSelectedIcon(property.type, false);
+      } else if (isHovered) {
+        icon = createSelectedIcon(property.type, true);
+      } else {
+        icon = createPinIcon(property.type);
+      }
+
+      return (
+        <Marker
+          key={property.id}
+          position={[property.lat, property.lng]}
+          icon={icon}
+          ref={(el) => {
+            if (el) markerRefs.current[property.id] = el;
+          }}
+          eventHandlers={{
+            click: () => onSelect?.(property.id),
+            mouseover: () => setHoveredPinId(property.id),
+            mouseout: () => setHoveredPinId(null),
+          }}
+        >
+          <Popup>
+            <div className="text-sm min-w-[160px]">
+              <p className="font-semibold text-gray-800 mb-1">
+                {property.title}
+              </p>
+              <p
+                className="font-bold"
+                style={{ color: PIN_LABEL[property.type] }}
+              >
+                {formatPrice(property.price, property.currency)}
+              </p>
+              <p className="text-gray-500 capitalize mt-1">
+                {property.type}
+              </p>
+            </div>
+          </Popup>
+        </Marker>
+      );
+    });
+  }, [properties, selectedId, hoveredPinId, onSelect]);
+
+  // 2. EL RETORNO TEMPRANO VA DESPUÉS DE LOS HOOKS
   // Evita hydration mismatch: renderiza skeleton hasta que el cliente monte
   if (!isMounted)
     return <div className="w-full h-full bg-gray-100 animate-pulse" />;
-
-  const selectedProperty = properties.find((p) => p.id === selectedId);
 
   return (
     <div className="relative w-full h-full">
@@ -279,7 +336,54 @@ export default function MapView({
 
         <ZoomControls />
          <MapMouseHandler onMouseLeave={() => setHoveredPinId(null)} />
-         <MapClickHandler onMapClick={() => onSelect?.(null)} />
+         <MapClickHandler onMapClick={(latlng) => {
+          if (isDrawingMode && onMapClick) {
+            onMapClick(latlng);
+          } else if (!isDrawingMode) {
+            onSelect?.(null);
+          }
+        }} />
+
+        {/* --- INICIO CÓDIGO HU8 --- */}
+        {polygonPoints && polygonPoints.length > 0 && !isPolygonClosed && (
+          <>
+            <Polyline 
+              positions={polygonPoints} 
+              pathOptions={{ color: '#ea580c', weight: 3, dashArray: '5, 10' }} 
+            />
+            {polygonPoints.map((pt, index) => (
+              <CircleMarker
+                key={index}
+                center={pt}
+                radius={5}
+                pathOptions={{ 
+                  color: index === 0 ? '#ef4444' : '#ea580c', 
+                  fillColor: 'white', 
+                  fillOpacity: 1 
+                }}
+                eventHandlers={{
+                  click: (e) => {
+                    L.DomEvent.stopPropagation(e);
+                    if (onPointClick) onPointClick(index);
+                  }
+                }}
+              />
+            ))}
+          </>
+        )}
+
+        {isPolygonClosed && polygonPoints && polygonPoints.length >= 3 && (
+          <Polygon
+            positions={polygonPoints}
+            pathOptions={{ 
+              color: '#ea580c', 
+              fillColor: '#ea580c', 
+              fillOpacity: 0.2,
+              weight: 2
+            }}
+          />
+        )}
+        {/* --- FIN CÓDIGO HU8 --- */}
           {selectedProperty && (
            <FlyToSelected  id={selectedProperty.id} lat={selectedProperty.lat} lng={selectedProperty.lng} />
           )}
@@ -292,74 +396,20 @@ export default function MapView({
           iconCreateFunction={(cluster: any) => createClusterIcon(cluster)}
           maxClusterRadius={CLUSTER_CONFIG.maxClusterRadius}
           disableClusteringAtZoom={CLUSTER_CONFIG.disableClusteringAtZoom}
-          animate={false}
+          animate={true}
           preferCanvas={true}
-          animateAddingMarkers={false}
+          animateAddingMarkers={true}
           chunkedLoading={true}
           tap={true}
           tapTolerance={15}
           showCoverageOnHover={false}
-          zoomToBoundsOnClick={false}
-          spiderfyOnMaxZoom={false}
+          zoomToBoundsOnClick={true}
+          spiderfyOnMaxZoom={true}
           spiderfyDistanceMultiplier={2}
           removeOutsideVisibleBounds={false}
           clusterPane="markerPane"
-          eventHandlers={{
-            clusterclick: (cluster: any) => {
-              const markers = cluster.layer.getAllChildMarkers();
-              const ids = markers.map((m: any) => m.options.alt).filter(Boolean);
-              const props = properties.filter((p) => ids.includes(p.id));
-              onClusterClick?.(props);
-            }
-          }}
         >
-          {properties.map((property) => {
-            const isSelected = property.id === selectedId;
-            const isHovered = property.id === hoveredPinId;
-  
-             // Prioridad: selected > hovered > normal
-            let icon;
-            if (isSelected) {
-             icon = createSelectedIcon(property.type, false);
-            } else if (isHovered) {
-             icon = createSelectedIcon(property.type, true); // Hover usa mismo estilo pero más grande
-            } else {
-             icon = createPinIcon(property.type);
-            }
-            return (
-              <Marker
-                key={property.id}
-                position={[property.lat, property.lng]}
-                alt={property.id}
-                icon={icon}
-                ref={(el) => {
-                 if (el) markerRefs.current[property.id] = el;
-                }}
-                eventHandlers={{
-                 click: () => onSelect?.(property.id),
-                 mouseover: () => setHoveredPinId(property.id),
-                 mouseout: () => setHoveredPinId(null),
-                }}
-              >
-                <Popup>
-                  <div className="text-sm min-w-[160px]">
-                    <p className="font-semibold text-gray-800 mb-1">
-                      {property.title}
-                    </p>
-                    <p
-                      className="font-bold"
-                      style={{ color: PIN_LABEL[property.type] }}
-                    >
-                      {formatPrice(property.price, property.currency)}
-                    </p>
-                    <p className="text-gray-500 capitalize mt-1">
-                      {property.type}
-                    </p>
-                  </div>
-                </Popup>
-              </Marker>
-            );
-          })}
+          {renderMarkers}
         </MarkerClusterGroup>
       </MapContainer>
     </div>
