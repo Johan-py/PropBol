@@ -70,19 +70,19 @@ const validateNotificationId = (id: number) => {
 
 const mapNotificationToFrontend = (notification: {
   id: number
-  titulo: string
-  mensaje: string
-  leida: boolean
-  archivada?: boolean
-  fechaCreacion?: Date
+  titulo: string | null
+  mensaje: string | null
+  leida: boolean | null
+  archivada: boolean | null
+  fechaCreacion: Date | null
 }) => {
   return {
     id: notification.id,
-    title: notification.titulo,
-    description: notification.mensaje,
-    status: notification.leida ? 'leida' : 'no leida',
-    archivada: notification.archivada ?? false,
-    fechaCreacion: notification.fechaCreacion ?? null
+    title: notification.titulo ?? '',
+    description: notification.mensaje ?? '',
+    status: notification.leida === true ? 'leida' : 'no leida',
+    archivada: notification.archivada === true,
+    fechaCreacion: notification.fechaCreacion ? notification.fechaCreacion.toISOString() : null
   }
 }
 
