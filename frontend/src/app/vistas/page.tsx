@@ -7,7 +7,6 @@ export default function VistasRecientesPage() {
         ...prop,
         fechaVista: index === 0 ? "Hoy" : index < 3 ? "Ayer" : `1${index}/04/2026`
     }));
-
     return (
         <main className="min-h-screen bg-[#F8F9FA] p-4 md:p-6 font-sans">
             <div className="max-w-7xl mx-auto">
