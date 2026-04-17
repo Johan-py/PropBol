@@ -1,19 +1,11 @@
 'use client'
 
-import 'leaflet/dist/leaflet.css'
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  Polyline,
-  Polygon,
-  CircleMarker
-} from 'react-leaflet'
-import MarkerClusterGroup from 'react-leaflet-cluster'
-import L from 'leaflet'
-import { useMap } from 'react-leaflet'
-import { useEffect, useState, useRef } from 'react'
+import "leaflet/dist/leaflet.css";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-cluster";
+import L from "leaflet";
+import { useMap } from "react-leaflet";
+import { useEffect, useState, useRef} from "react";
 
 import ZoomControls from '@/components/ZoomControls'
 import { createGpsIcon } from '@/components/GpsPin'
@@ -119,18 +111,18 @@ function createPinIcon(type: PropertyMapPin['type']): L.DivIcon {
   })
 }
 
-function MapClickHandler({ onMapClick }: { onMapClick: (latlng: L.LatLng) => void }) {
+function MapClickHandler({ onMapClick }: { onMapClick: () => void }) {
   const map = useMap()
 
   useEffect(() => {
-    const handleClick = (e: L.LeafletMouseEvent) => {
-      onMapClick(e.latlng)
+    const handleClick = () => {
+      onMapClick()
     }
 
-    map.on('click', handleClick)
+    map.on("click", handleClick)
 
     return () => {
-      map.off('click', handleClick)
+      map.off("click", handleClick)
     }
   }, [map, onMapClick])
 
@@ -232,14 +224,6 @@ export default function MapView({
   activeClusterIds = [],
   isLoading = false,
   error = null,
-  isDrawingMode = false,
-  polygonPoints = [],
-  isPolygonClosed = false,
-  onMapClick,
-  onPointClick,
-  zonas = [],
-  selectedZoneId = null,
-  onZoneSelect
 }: MapViewProps) {
   const [isMounted, setIsMounted] = useState(false)
   const [hoveredPinId, setHoveredPinId] = useState<string | null>(null)
@@ -267,6 +251,8 @@ export default function MapView({
   if (!isMounted) return <div className="w-full h-full bg-gray-100 animate-pulse" />
 
   const selectedProperty = properties.find((p) => p.id === selectedId)
+
+  const selectedProperty = properties.find((p) => p.id === selectedId);
 
   return (
     <div className="relative w-full h-full">
@@ -298,71 +284,11 @@ export default function MapView({
         />
 
         <ZoomControls />
-        <MapMouseHandler onMouseLeave={() => setHoveredPinId(null)} />
-        <MapClickHandler
-          onMapClick={(latlng) => {
-            if (isDrawingMode && onMapClick) {
-              onMapClick(latlng)
-            } else if (!isDrawingMode) {
-              onSelect?.(null)
-              onZoneSelect?.(null) // criterio 10: clic neutral desactiva zona
-            }
-          }}
-        />
-
-        <ZonasOverlay
-          zonas={zonas}
-          selectedZoneId={selectedZoneId}
-          onZoneSelect={onZoneSelect ?? (() => {})}
-        />
-
-        {/* --- INICIO CÓDIGO HU8 --- */}
-        {polygonPoints && polygonPoints.length > 0 && !isPolygonClosed && (
-          <>
-            <Polyline
-              positions={polygonPoints}
-              pathOptions={{ color: '#ea580c', weight: 3, dashArray: '5, 10' }}
-            />
-            {polygonPoints.map((pt, index) => (
-              <CircleMarker
-                key={index}
-                center={pt}
-                radius={5}
-                pathOptions={{
-                  color: index === 0 ? '#ef4444' : '#ea580c',
-                  fillColor: 'white',
-                  fillOpacity: 1
-                }}
-                eventHandlers={{
-                  click: (e) => {
-                    L.DomEvent.stopPropagation(e)
-                    if (onPointClick) onPointClick(index)
-                  }
-                }}
-              />
-            ))}
-          </>
-        )}
-
-        {isPolygonClosed && polygonPoints && polygonPoints.length >= 3 && (
-          <Polygon
-            positions={polygonPoints}
-            pathOptions={{
-              color: '#ea580c',
-              fillColor: '#ea580c',
-              fillOpacity: 0.2,
-              weight: 2
-            }}
-          />
-        )}
-        {/* --- FIN CÓDIGO HU8 --- */}
-        {selectedProperty && (
-          <FlyToSelected
-            id={selectedProperty.id}
-            lat={selectedProperty.lat}
-            lng={selectedProperty.lng}
-          />
-        )}
+         <MapMouseHandler onMouseLeave={() => setHoveredPinId(null)} />
+         <MapClickHandler onMapClick={() => onSelect?.(null)} />
+          {selectedProperty && (
+           <FlyToSelected  id={selectedProperty.id} lat={selectedProperty.lat} lng={selectedProperty.lng} />
+          )}
 
         <Marker position={center} icon={createGpsIcon()}>
           <Popup>Tu ubicación actual</Popup>
@@ -398,17 +324,17 @@ export default function MapView({
           }}
         >
           {properties.map((property) => {
-            const isSelected = property.id === selectedId
-            const isHovered = property.id === hoveredPinId
-
-            // Prioridad: selected > hovered > normal
-            let icon
+            const isSelected = property.id === selectedId;
+            const isHovered = property.id === hoveredPinId;
+  
+             // Prioridad: selected > hovered > normal
+            let icon;
             if (isSelected) {
-              icon = createSelectedIcon(property.type, false)
+             icon = createSelectedIcon(property.type, false);
             } else if (isHovered) {
-              icon = createSelectedIcon(property.type, true) // Hover usa mismo estilo pero más grande
+             icon = createSelectedIcon(property.type, true); // Hover usa mismo estilo pero más grande
             } else {
-              icon = createPinIcon(property.type)
+             icon = createPinIcon(property.type);
             }
             return (
               <Marker
@@ -417,25 +343,32 @@ export default function MapView({
                 alt={property.id}
                 icon={icon}
                 ref={(el) => {
-                  if (el) markerRefs.current[property.id] = el
+                 if (el) markerRefs.current[property.id] = el;
                 }}
                 eventHandlers={{
-                  click: () => onSelect?.(property.id),
-                  mouseover: () => setHoveredPinId(property.id),
-                  mouseout: () => setHoveredPinId(null)
+                 click: () => onSelect?.(property.id),
+                 mouseover: () => setHoveredPinId(property.id),
+                 mouseout: () => setHoveredPinId(null),
                 }}
               >
                 <Popup>
                   <div className="text-sm min-w-[160px]">
-                    <p className="font-semibold text-gray-800 mb-1">{property.title}</p>
-                    <p className="font-bold" style={{ color: PIN_LABEL[property.type] }}>
+                    <p className="font-semibold text-gray-800 mb-1">
+                      {property.title}
+                    </p>
+                    <p
+                      className="font-bold"
+                      style={{ color: PIN_LABEL[property.type] }}
+                    >
                       {formatPrice(property.price, property.currency)}
                     </p>
-                    <p className="text-gray-500 capitalize mt-1">{property.type}</p>
+                    <p className="text-gray-500 capitalize mt-1">
+                      {property.type}
+                    </p>
                   </div>
                 </Popup>
               </Marker>
-            )
+            );
           })}
         </MarkerClusterGroup>
       </MapContainer>
