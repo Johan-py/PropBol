@@ -5,7 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import { useMap } from "react-leaflet";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef} from "react";
 
 import ZoomControls from "@/components/ZoomControls";
 import { createGpsIcon } from "@/components/GpsPin";
@@ -27,6 +27,9 @@ const PIN_FILL: Record<PropertyMapPin["type"], string> = {
   departamento: "#8b5cf6",
   terreno: "#f59e0b",
   oficina: "#10b981",
+  cuarto: "#ec4899",
+  cementerio: "#64748b",
+  espacios: "#06b6d4",
 };
 
 const PIN_HALO: Record<PropertyMapPin["type"], string> = {
@@ -34,6 +37,9 @@ const PIN_HALO: Record<PropertyMapPin["type"], string> = {
   departamento: "rgba(139, 92,  246, 0.25)",
   terreno: "rgba(245, 158, 11,  0.25)",
   oficina: "rgba(16,  185, 129, 0.25)",
+  cuarto: "rgba(236, 72,  153, 0.25)",
+  cementerio: "rgba(100, 116, 139, 0.25)",
+  espacios: "rgba(6,   182, 212, 0.25)",
 };
 
 // Color sólido para el texto del precio en el popup
@@ -42,6 +48,9 @@ const PIN_LABEL: Record<PropertyMapPin["type"], string> = {
   departamento: "#7c3aed",
   terreno: "#d97706",
   oficina: "#059669",
+  cuarto: "#db2777",
+  cementerio: "#475569",
+  espacios: "#0891b2",
 };
 
 const SELECTED_ICONS: Record<PropertyMapPin["type"], string> = {
@@ -49,6 +58,9 @@ const SELECTED_ICONS: Record<PropertyMapPin["type"], string> = {
   departamento: "/department.svg",
   terreno: "/land.svg",
   oficina: "/office.svg",
+  cuarto: "/house.svg",
+  cementerio: "/land.svg",
+  espacios: "/office.svg",
 };
 
 function createPinIcon(type: PropertyMapPin["type"]): L.DivIcon {
@@ -191,6 +203,8 @@ interface MapViewProps {
   zoom?: number;
   selectedId?: string | null;
   onSelect?: (id: string | null) => void
+  onClusterClick?: (properties: PropertyMapPin[]) => void
+  activeClusterIds?: string[]
   isLoading?: boolean;
   error?: string | null;
 }
@@ -201,11 +215,28 @@ export default function MapView({
   zoom = 12,
   selectedId,
   onSelect,
+  onClusterClick,
+  activeClusterIds = [],
   isLoading = false,
   error = null,
 }: MapViewProps) {
   const [isMounted, setIsMounted] = useState(false);
   const [hoveredPinId, setHoveredPinId] = useState<string | null>(null); 
+  const markerRefs = useRef<{ [key: string]: L.Marker | null }>({});
+
+  useEffect(() => {
+    // Cerrar popup del marker anterior
+    Object.entries(markerRefs.current).forEach(([id, marker]) => {
+      if (marker && id !== hoveredPinId && marker.isPopupOpen()) {
+        marker.closePopup();
+      }
+    });
+    
+    // Abrir popup del marker en hover
+    if (hoveredPinId && markerRefs.current[hoveredPinId]) {
+      markerRefs.current[hoveredPinId]?.openPopup();
+    }
+  }, [hoveredPinId]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -250,7 +281,7 @@ export default function MapView({
          <MapMouseHandler onMouseLeave={() => setHoveredPinId(null)} />
          <MapClickHandler onMapClick={() => onSelect?.(null)} />
           {selectedProperty && (
-           <FlyToSelected lat={selectedProperty.lat} lng={selectedProperty.lng} />
+           <FlyToSelected  id={selectedProperty.id} lat={selectedProperty.lat} lng={selectedProperty.lng} />
           )}
 
         <Marker position={center} icon={createGpsIcon()}>
@@ -261,18 +292,26 @@ export default function MapView({
           iconCreateFunction={(cluster: any) => createClusterIcon(cluster)}
           maxClusterRadius={CLUSTER_CONFIG.maxClusterRadius}
           disableClusteringAtZoom={CLUSTER_CONFIG.disableClusteringAtZoom}
-          animate={true}
+          animate={false}
           preferCanvas={true}
-          animateAddingMarkers={true}
+          animateAddingMarkers={false}
           chunkedLoading={true}
           tap={true}
           tapTolerance={15}
           showCoverageOnHover={false}
-          zoomToBoundsOnClick={true}
-          spiderfyOnMaxZoom={true}
+          zoomToBoundsOnClick={false}
+          spiderfyOnMaxZoom={false}
           spiderfyDistanceMultiplier={2}
           removeOutsideVisibleBounds={false}
           clusterPane="markerPane"
+          eventHandlers={{
+            clusterclick: (cluster: any) => {
+              const markers = cluster.layer.getAllChildMarkers();
+              const ids = markers.map((m: any) => m.options.alt).filter(Boolean);
+              const props = properties.filter((p) => ids.includes(p.id));
+              onClusterClick?.(props);
+            }
+          }}
         >
           {properties.map((property) => {
             const isSelected = property.id === selectedId;
@@ -291,7 +330,11 @@ export default function MapView({
               <Marker
                 key={property.id}
                 position={[property.lat, property.lng]}
+                alt={property.id}
                 icon={icon}
+                ref={(el) => {
+                 if (el) markerRefs.current[property.id] = el;
+                }}
                 eventHandlers={{
                  click: () => onSelect?.(property.id),
                  mouseover: () => setHoveredPinId(property.id),
@@ -323,24 +366,32 @@ export default function MapView({
   );
 }
 
-function FlyToSelected({ lat, lng }: { lat: number; lng: number }) {
+function FlyToSelected({ lat, lng, id }: { lat: number; lng: number; id: string }) {
   const map = useMap();
-
+  const [lastId, setLastId] = useState<string | null>(null)
+  
   useEffect(() => {
-    if (!lat || !lng) return;
+    if (!lat || !lng || lastId === id) return
 
-    const targetZoom = 18;
+    const currentCenter = map.getCenter()
+    const distance = currentCenter.distanceTo([lat, lng])
 
-    map.flyTo([lat, lng], targetZoom, {
-      duration: 1.2,
-    });
+    const targetZoom = 16 
+    const isFar = distance > 1000 
 
-    const timeout = setTimeout(() => {
-      map.setView([lat, lng], targetZoom);
-    }, 1200);
+    if (isFar) {
+     
+      map.flyTo([lat, lng], targetZoom, {
+        duration: 0.8,        
+        easeLinearity: 0.25,  
+      })
+    } else {
+     
+      map.setView([lat, lng], targetZoom)
+    }
 
-    return () => clearTimeout(timeout);
-  }, [lat, lng, map]);
+    setLastId(id)
+  }, [lat, lng, id, map, lastId])
 
   return null;
 }
