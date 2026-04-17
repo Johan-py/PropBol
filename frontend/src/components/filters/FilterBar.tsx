@@ -31,7 +31,7 @@ type LocationValue =
 const MockFilterBtn = ({ icon: Icon, text, hasChevron = true }: { icon?: any, text: string, hasChevron?: boolean }) => (
   <button
     type="button"
-    className="h-[46px] flex items-center justify-between bg-white border border-stone-200 text-stone-600 px-4 rounded-xl shadow-sm hover:border-stone-300 transition-all font-inter text-sm whitespace-nowrap gap-3 shrink-0 focus:outline-none cursor-default"
+className="h-[36px] flex items-center justify-between bg-white border border-stone-200 text-stone-600 px-3 rounded-xl shadow-sm hover:border-stone-300 transition-all font-inter text-sm whitespace-nowrap gap-2 shrink-0 focus:outline-none cursor-default"
     onClick={(e) => e.preventDefault()}
   >
     <div className="flex items-center gap-2">
@@ -120,7 +120,7 @@ export default function FilterBar({
   // 🚀 FIX Z-INDEX MASIVO: Agregamos z-[99999] y !overflow-visible para aplastar al mapa
   const containerStyles =
     variant === "map"
-      ? "bg-[#faf9f6] border-b border-stone-200 py-5 px-6 w-full flex flex-col gap-5 shadow-sm sticky top-0 z-50 !overflow-visible"
+? "bg-[#faf9f6] border-b border-stone-200 py-2 px-4 w-full flex flex-col gap-2 shadow-sm sticky top-0 z-50 !overflow-visible"
       : "bg-white shadow-lg rounded-[30px] p-6 flex flex-col gap-6 w-full max-w-[921px] relative z-[99999] !overflow-visible";
 
   return (
@@ -185,7 +185,7 @@ export default function FilterBar({
           <button
             type="submit"
             className={`${
-              variant === "map" ? "h-[46px] px-8 shadow-md" : "w-full md:w-auto h-[46px] px-10"
+              variant === "map" ? "h-[36px] px-6 shadow-md" : "w-full md:w-auto h-[46px] px-10"
             } bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95`}
           >
             <SearchIcon size={18} />
