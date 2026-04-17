@@ -478,6 +478,7 @@ function BusquedaMapaContent() {
                 <PropertyListMobile
                   onClickItem={(p) => {
                     setPinnedProperty(p);
+                    setSelectedPropertyId(p.id);
                     setSheetState("peek");
                   }}
                 />
