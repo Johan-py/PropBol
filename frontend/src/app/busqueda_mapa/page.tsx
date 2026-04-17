@@ -221,6 +221,7 @@ function BusquedaMapaContent() {
     } else {
       setPinnedProperty(null);
       setIsClusterView(false);
+      setActiveClusterIds([]);
       setClusterProperties([]);
     }
   }
@@ -662,7 +663,7 @@ function BusquedaMapaContent() {
                       </h2>
                       {isClusterView && (
   <button
-    onClick={() => { setIsClusterView(false); setClusterProperties([]); }}
+    onClick={() => { setIsClusterView(false); setClusterProperties([]); setActiveClusterIds([]); }}
     className="text-sm text-orange-500 hover:underline flex items-center gap-1 mt-1 mb-2"
   >
     ← Volver a todos los resultados
