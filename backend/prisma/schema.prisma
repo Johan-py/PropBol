@@ -111,18 +111,18 @@ model Perfil {
 model Inmueble {
   id               Int                @id @default(autoincrement())
   titulo           String
-  tipoAccion       TipoAccion
-  categoria        Categoria?
+  tipoAccion       TipoAccion         @map("tipo_accion")
+  categoria        Categoria?         @map("categoria")
   precio           Decimal            @db.Decimal(12, 2)
-  superficieM2     Decimal?           @db.Decimal(10, 2)
-  nroCuartos       Int?
-  nroBanos         Int?
+  superficieM2     Decimal?           @map("superficie_m2") @db.Decimal(10, 2)
+  nroCuartos       Int?               @map("nro_cuartos")
+  nroBanos         Int?               @map("nro_banos")
   descripcion      String?
-  estado           EstadoInmueble     @default(ACTIVO)
-  fechaPublicacion DateTime           @default(now())
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
-  propietarioId    Int
+  estado           EstadoInmueble     @default(ACTIVO) @map("estado")
+  fechaPublicacion DateTime           @default(now()) @map("fecha_publicacion")
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+  propietarioId    Int                @map("propietario_id")
   propietario      Usuario            @relation(fields: [propietarioId], references: [id], onDelete: Cascade)
   etiquetas        InmuebleEtiqueta[]
   marcadores       MarcadorMapa[]
@@ -138,8 +138,8 @@ model UbicacionInmueble {
   latitud            Decimal            @db.Decimal(10, 7)
   longitud           Decimal            @db.Decimal(10, 7)
   direccion          String?
-  inmuebleId         Int                @unique
-  ubicacionMaestraId Int?
+  inmuebleId         Int                @unique @map("inmueble_id")
+  ubicacionMaestraId Int?               @map("ubicacion_maestra_id")
   ciudad             String?
   zona               String?
   marcadores         MarcadorMapa[]
@@ -171,10 +171,10 @@ model Publicacion {
   id               Int               @id @default(autoincrement())
   titulo           String
   descripcion      String?
-  estado           EstadoPublicacion @default(ACTIVA)
-  fechaPublicacion DateTime          @default(now())
-  usuarioId        Int
-  inmuebleId       Int
+  estado           EstadoPublicacion @default(ACTIVA) @map("estado")
+  fechaPublicacion DateTime          @default(now()) @map("fecha_publicacion")
+  usuarioId        Int               @map("usuario_id")
+  inmuebleId       Int               @map("inmueble_id")
   multimedia       Multimedia[]
   inmueble         Inmueble          @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
   usuario          Usuario           @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
@@ -186,8 +186,8 @@ model Multimedia {
   id            Int            @id @default(autoincrement())
   url           String
   tipo          TipoMultimedia
-  pesoMb        Decimal?       @db.Decimal(8, 2)
-  publicacionId Int
+  pesoMb        Decimal?       @map("peso_mb") @db.Decimal(8, 2)
+  publicacionId Int            @map("publicacion_id")
   publicacion   Publicacion    @relation(fields: [publicacionId], references: [id], onDelete: Cascade)
 
   @@map("multimedia")
@@ -402,12 +402,16 @@ enum Genero {
   MASCULINO
   FEMENINO
   OTRO
+
+  @@map("genero")
 }
 
 enum TipoAccion {
   VENTA
   ALQUILER
   ANTICRETO
+
+  @@map("tipo_accion")
 }
 
 enum EstadoInmueble {
@@ -416,12 +420,16 @@ enum EstadoInmueble {
   VENDIDO
   ALQUILADO
   RESERVADO
+
+  @@map("estado_inmueble")
 }
 
 enum EstadoPublicacion {
   ACTIVA
   PAUSADA
   ELIMINADA
+
+  @@map("estado_publicacion")
 }
 
 enum Categoria {
@@ -429,6 +437,8 @@ enum Categoria {
   DEPARTAMENTO
   TERRENO
   OFICINA
+
+  @@map("categoria")
 }
 
 enum RolNombre {
@@ -441,12 +451,16 @@ enum RolNombre {
 enum TipoMultimedia {
   IMAGEN
   VIDEO
+
+  @@map("tipo_multimedia")
 }
 
 enum TipoMarcador {
   NORMAL
   DESTACADO
   CLUSTER
+
+  @@map("tipo_marcador")
 }
 
 enum TipoInteraccion {
@@ -454,4 +468,6 @@ enum TipoInteraccion {
   HOVER
   ZOOM
   DRAG
+
+  @@map("tipo_interaccion")
 }

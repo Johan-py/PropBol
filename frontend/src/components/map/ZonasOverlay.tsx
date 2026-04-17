@@ -117,7 +117,7 @@ export default function ZonasOverlay({ zonas, selectedZoneId, onZoneSelect }: Pr
                 // criterio 8: cursor pointer
                 mouseover: (e) => {
                   const el = (e.target as L.Path).getElement();
-                  if (el) el.style.cursor = 'pointer';
+                  if (el) (el as HTMLElement).style.cursor = 'pointer';
                 },
               }}
             />
