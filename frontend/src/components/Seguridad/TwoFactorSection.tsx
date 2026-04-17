@@ -1,6 +1,19 @@
+'use client'
+
+import { useState } from 'react'
 import { Info } from 'lucide-react'
 
 export default function TwoFactorSection() {
+  const [showModal, setShowModal] = useState(false)
+
+  const handleOpenModal = () => {
+    setShowModal(true)
+  }
+
+  const handleCancel = () => {
+    setShowModal(false)
+  }
+
   return (
     <div className="space-y-6">
       <header>
@@ -31,6 +44,7 @@ export default function TwoFactorSection() {
 
             <button
               type="button"
+              onClick={handleOpenModal}
               className="inline-flex items-center justify-center rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-600"
             >
               Activar
@@ -38,6 +52,35 @@ export default function TwoFactorSection() {
           </div>
         </div>
       </div>
+
+      {showModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+          onClick={handleCancel}
+        >
+          <div
+            className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-base font-semibold text-neutral-900">
+              Ingresa tu contraseña actual para activar la verificación en dos pasos.
+            </h3>
+
+            <input
+              type="password"
+              placeholder="••••••••"
+              className="mt-3 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm"
+            />
+
+            <button
+              onClick={handleCancel}
+              className="mt-4 w-full rounded-lg border py-2 text-sm"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
