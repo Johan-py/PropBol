@@ -72,12 +72,13 @@ const SHEET_H = { peek: "50%", full: "100%" } as const;
 type SheetState = "hidden" | "peek" | "full";
 
 function BusquedaMapaContent() {
-  // === ESTADOS COMPARTIDOS ===
+  // === 1. ESTADOS COMPARTIDOS ===
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sheetState, setSheetState] = useState<SheetState>("peek");
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+
   // --- INICIO ESTADOS HU8 ---
   const [isDrawingMode, setIsDrawingMode] = useState(false);
   const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([]);
@@ -97,24 +98,31 @@ function BusquedaMapaContent() {
     setIsMounted(true);
   }, []);
 
-const { properties, isLoading, error } = useProperties();
+  // === 2. EXTRACCIÓN DE DATOS DE LA BASE DE DATOS ===
+  const { properties, isLoading, error } = useProperties();
 
-  // --- INICIO LÓGICA MATEMÁTICA HU8 ---
+  // === 3. LÓGICA MATEMÁTICA HU8 (Ahora sí, después de los estados) ===
   const displayedProperties = useMemo(() => {
+      if (!properties) return [];
     if (isPolygonClosed && polygonPoints.length >= 3) {
+      console.log("📐 [Turf.js] Polígono cerrado. Calculando intersecciones...");
       try {
         // Turf.js requiere el formato GeoJSON estándar: [longitud, latitud].
-        // Leaflet trabaja con [latitud, longitud], por lo que invertimos la matriz espacial.
-        // Además, cerramos matemáticamente el polígono repitiendo el punto inicial al final.
         const turfCoords = [...polygonPoints, polygonPoints[0]].map(p => [p[1], p[0]]);
-        
         const drawPoly = polygon([turfCoords]);
 
-        // Aplicamos el algoritmo Point in Polygon (Ray-casting)
         return properties.filter((p: any) => {
-          if (!p.lat || !p.lng) return false;
+          if (p.lat == null || p.lng == null) return false;
           const pt = point([p.lng, p.lat]);
-          return booleanPointInPolygon(pt, drawPoly);
+          
+          const isInside = booleanPointInPolygon(pt, drawPoly);
+          
+          // Traza de consola para depurar qué entra y qué no
+          if (isInside) {
+            console.log(`✅ Adentro: ${p.title} (Lat: ${p.lat}, Lng: ${p.lng})`);
+          }
+          
+          return isInside;
         });
       } catch (err) {
         console.error("Error en validación geométrica:", err);
@@ -123,23 +131,19 @@ const { properties, isLoading, error } = useProperties();
     }
     return properties;
   }, [properties, isPolygonClosed, polygonPoints]);
-  // --- FIN LÓGICA MATEMÁTICA HU8 ---
 
+  // === 4. ORDENAMIENTO ===
   // Actualizamos el hook para que ordene solo los resultados filtrados
-  const { ordenActual, cambiarOrden } = useOrdenamiento({
+  const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
     inmuebles: displayedProperties,
   });
 
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
-    null
-  );
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
-
-  // Estado para la lista en desktop
-  const [isHoveringList, setIsHoveringList] = useState(false);
-
+  // === 5. RESTO DE ESTADOS VISUALES ===
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
   const dragStartY = useRef<number | null>(null);
   const dragStartState = useRef<SheetState>("peek");
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [isHoveringList, setIsHoveringList] = useState(false);
 
   // Hover con debounce de 200 ms → vuela el mapa al marcador
   useEffect(() => {
@@ -170,7 +174,7 @@ const { properties, isLoading, error } = useProperties();
     setSelectedPropertyId(id);
     
     if (id) {
-      const prop = properties.find((p: any) => p.id === id);
+      const prop = inmueblesOrdenados.find((p: any) => p.id === id);
       if (prop) {
         setPinnedProperty(prop);
         setSheetState("peek");
@@ -178,7 +182,7 @@ const { properties, isLoading, error } = useProperties();
     } else {
       setPinnedProperty(null);
     }
-  }, [properties]);
+  }, [inmueblesOrdenados]);
 
   // Eventos táctiles para el Bottom Sheet
   function onTouchStart(e: React.TouchEvent) {
@@ -194,7 +198,7 @@ const { properties, isLoading, error } = useProperties();
       return;
     }
     if (dy > 40) {
-      setSheetState(dragStartState.current === "peek" ? "full" : "full");
+      setSheetState("full");
     } else if (dy < -40) {
       setSheetState(dragStartState.current === "full" ? "peek" : "hidden");
     }
@@ -248,7 +252,7 @@ const { properties, isLoading, error } = useProperties();
               : ""
           }`}
         >
-          {displayedProperties.map((property: any) => (
+          {inmueblesOrdenados.map((property: any) => (
             <div
               key={property.id}
               onClick={() => {
@@ -318,8 +322,9 @@ const { properties, isLoading, error } = useProperties();
             <div className="flex-1 relative">
               <div className="absolute inset-0" style={{ zIndex: 0 }}>
                 <MapView
-                properties={displayedProperties} 
+                properties={inmueblesOrdenados}
                 selectedId={selectedPropertyId}
+                onSelect={handleMapSelect}
                   // En Landscape usa: onSelect={(id) => { ... }}
                   // En los otros usa: onSelect={handleMapSelect}
                   isLoading={isLoading}
@@ -382,8 +387,9 @@ const { properties, isLoading, error } = useProperties();
         <div className="flex-1 relative overflow-hidden">
           <div className="absolute inset-0">
             <MapView
-                  properties={displayedProperties} 
+                  properties={inmueblesOrdenados}
                   selectedId={selectedPropertyId}
+                  onSelect={handleMapSelect}
                   // En Landscape usa: onSelect={(id) => { ... }}
                   // En los otros usa: onSelect={handleMapSelect}
                   isLoading={isLoading}
@@ -649,7 +655,7 @@ const { properties, isLoading, error } = useProperties();
                         : ""
                     }`}
                   >
-                    {displayedProperties.map((property: any) => (
+                    {inmueblesOrdenados.map((property: any) => (
                       <div
                         key={property.id}
                         onMouseEnter={() => setHoveredId(property.id)}
@@ -776,7 +782,7 @@ const { properties, isLoading, error } = useProperties();
 
           <div className="absolute inset-0" style={{ zIndex: 0 }}>
             <MapView
-                  properties={displayedProperties} 
+                  properties={inmueblesOrdenados}
                   selectedId={selectedPropertyId}
                   onSelect={handleMapSelect}
                   isLoading={isLoading}
