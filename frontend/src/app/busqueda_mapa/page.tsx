@@ -125,6 +125,7 @@ function BusquedaMapaContent() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [clusterProperties, setClusterProperties] = useState<any[]>([]);
   const [isClusterView, setIsClusterView] = useState(false);
+  const [activeClusterIds, setActiveClusterIds] = useState<string[]>([]);
 
         return properties.filter((p: any) => {
           if (p.lat == null || p.lng == null) return false
@@ -205,6 +206,7 @@ function BusquedaMapaContent() {
   function handleClusterClick(props: any[]) {
     setClusterProperties(props);
     setIsClusterView(true);
+    setActiveClusterIds(props.map((p: any) => p.id));
   }
 
   function handleMapSelect(id: string | null) {
@@ -441,6 +443,7 @@ function BusquedaMapaContent() {
               onZoneSelect={setSelectedZoneId}
               onSelect={handleMapSelect}
               onClusterClick={handleClusterClick}
+              activeClusterIds={activeClusterIds}
               isLoading={isLoading}
               error={error}
               isDrawingMode={isDrawingMode}
@@ -861,6 +864,7 @@ function BusquedaMapaContent() {
               selectedId={selectedPropertyId}
               onSelect={handleMapSelect}
               onClusterClick={handleClusterClick}
+              activeClusterIds={activeClusterIds}
               isLoading={isLoading}
               error={error}
               zonas={zonas}
