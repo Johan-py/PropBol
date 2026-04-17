@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Eye, EyeOff, Info } from 'lucide-react'
 
@@ -8,6 +9,9 @@ export default function TwoFactorSection() {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
+
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
 
   const handleOpenModal = () => {
     setShowModal(true)
@@ -23,14 +27,38 @@ export default function TwoFactorSection() {
     setError('')
   }
 
-  const handleConfirm = () => {
-    if (!password.trim()) {
-      setError('Este campo es obligatorio')
-      return
-    }
-    // TODO task 2 y 3: llamar al backend para verificar contraseña
-    console.log('contraseña a verificar:', password)
+const handleConfirm = async () => {
+  if (!password.trim()) {
+    setError('Este campo es obligatorio')
+    return
   }
+
+  setLoading(true)
+  try {
+    const token = localStorage.getItem('token')
+    const res = await fetch('/api/auth/verify-password', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ password })
+    })
+
+    if (res.ok) {
+      setShowModal(false)
+      setPassword('')
+      // TODO task 4: enviar código al correo
+    } else {
+      const data = await res.json()
+      setError(data.message ?? 'Contraseña incorrecta')
+    }
+  } catch {
+    setError('Error de conexión. Intenta de nuevo.')
+  } finally {
+    setLoading(false)
+  }
+}
 
   return (
     <div className="space-y-6">
@@ -118,9 +146,10 @@ export default function TwoFactorSection() {
               <button
                 type="button"
                 onClick={handleConfirm}
-                className="flex-1 rounded-lg bg-orange-500 py-2 text-sm font-semibold text-white transition hover:bg-orange-600"
+                disabled={loading}
+                className="flex-1 rounded-lg bg-orange-500 py-2 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:opacity-60"
               >
-                Confirmar
+                {loading ? 'Verificando...' : 'Confirmar'}
               </button>
             </div>
           </div>
