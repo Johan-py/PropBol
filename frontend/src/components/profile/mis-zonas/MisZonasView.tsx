@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import ZonesList from '@/components/profile/mis-zonas/ZonesList'
-import ZonesMapPlaceholder from '@/components/profile/mis-zonas/ZonesMapPlaceholder'
+import ZonesMap from '@/components/profile/mis-zonas/ZonesMap'
 import { mockZones } from '@/data/mockZones'
 import { Zone } from '@/types/zone'
 
@@ -30,7 +30,7 @@ export default function MisZonasView() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.3fr_0.9fr]">
-        <ZonesMapPlaceholder activeZone={activeZone} />
+        <ZonesMap zones={zones} activeZone={activeZone} />
 
         <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
           <div className="mb-4">
