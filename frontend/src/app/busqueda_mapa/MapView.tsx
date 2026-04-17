@@ -217,6 +217,7 @@ interface MapViewProps {
   selectedId?: string | null
   onSelect?: (id: string | null) => void
   onClusterClick?: (properties: PropertyMapPin[]) => void
+  activeClusterIds?: string[]
   isLoading?: boolean;
   error?: string | null;
 }
@@ -228,6 +229,7 @@ export default function MapView({
   selectedId,
   onSelect,
   onClusterClick,
+  activeClusterIds = [],
   isLoading = false,
   error = null,
   isDrawingMode = false,
@@ -368,10 +370,9 @@ export default function MapView({
 
         <MarkerClusterGroup
           iconCreateFunction={(cluster: any) => {
-            const markers = cluster.getAllChildMarkers()
-            const ids = markers.map((m: any) => String(m.options.alt ?? '')).filter(Boolean)
-            const isActive = ids.some((id: string) => activeClusterIds.includes(id))
-            return createClusterIcon(cluster, isActive)
+            const ids = cluster.getAllChildMarkers().map((m: any) => m.options.alt);
+            const isActive = ids.some((id: string) => activeClusterIds.includes(id));
+            return createClusterIcon(cluster, isActive);
           }}
           maxClusterRadius={CLUSTER_CONFIG.maxClusterRadius}
           disableClusteringAtZoom={CLUSTER_CONFIG.disableClusteringAtZoom}
