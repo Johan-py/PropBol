@@ -1,6 +1,7 @@
 import React from 'react';
 import { MOCK_PROPERTIES } from '@/data/mockProperties';
 
+
 export default function VistasRecientesPage() {
     const displayedProperties = MOCK_PROPERTIES.slice(0, 8).map((prop, index) => ({
         ...prop,
