@@ -217,6 +217,7 @@ export default function MapView({
           }
         }} />
         <ZoomHandler onZoom={() => { onSelect?.(null); setTooltipPinId(null) }} />
+        {polygonPoints && polygonPoints.length > 0 && !isPolygonClosed && (
           <>
             <Polyline positions={polygonPoints} pathOptions={{ color: "#ea580c", weight: 3, dashArray: "5, 10" }} />
             {polygonPoints.map((pt, index) => (
