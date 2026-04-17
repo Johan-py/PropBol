@@ -1,5 +1,10 @@
+import { Inmueble } from '@/types/inmueble'
+
 export interface ClusterSidebarProps {
-  clusterProperties: any[];
-  isOpen: boolean;
-  onClose: () => void;
+  clusterProperties: Inmueble[]
+  isOpen: boolean
+  onClose: () => void
+  isLoading?: boolean
+  error?: string | null
+  onRetry?: () => void
 }
