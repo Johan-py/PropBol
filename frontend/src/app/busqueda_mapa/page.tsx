@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect, useRef, Suspense, useCallback } from "react"
-import nextDynamic from "next/dynamic"
+import { useState, useEffect, useRef, Suspense, useCallback } from 'react'
+import nextDynamic from 'next/dynamic'
 import {
   ChevronLeft,
   ChevronRight,
@@ -16,6 +16,7 @@ import {
 // === HOOKS ===
 import { useProperties } from '@/hooks/useProperties'
 import { useOrdenamiento } from '@/hooks/useOrdenamiento'
+import { useZonas } from '@/hooks/useZonas'
 
 // === COMPONENTES ===
 import FilterBar from '@/components/filters/FilterBar'
@@ -72,7 +73,7 @@ type SheetState = 'hidden' | 'peek' | 'full'
 function BusquedaMapaContent() {
   // === ESTADOS COMPARTIDOS ===
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const [activeSidebarView, setActiveSidebarView] = useState<"results" | "price">("results")
+  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'price'>('results')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [sheetState, setSheetState] = useState<SheetState>('peek')
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
@@ -100,6 +101,8 @@ function BusquedaMapaContent() {
   const { ordenActual, cambiarOrden } = useOrdenamiento({
     inmuebles: properties
   })
+  const { zonas } = useZonas()
+  const [selectedZoneId, setSelectedZoneId] = useState<number | null>(null)
 
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
@@ -143,22 +146,25 @@ function BusquedaMapaContent() {
     setActiveClusterIds(props.map((p: any) => p.id))
   }
 
-  const handleMapSelect = useCallback((id: string | null) => {
-    setSelectedPropertyId(id)
+  const handleMapSelect = useCallback(
+    (id: string | null) => {
+      setSelectedPropertyId(id)
 
-    if (id) {
-      const prop = properties.find((p: any) => p.id === id)
-      if (prop) {
-        setPinnedProperty(prop)
-        setSheetState('peek')
+      if (id) {
+        const prop = properties.find((p: any) => p.id === id)
+        if (prop) {
+          setPinnedProperty(prop)
+          setSheetState('peek')
+        }
+      } else {
+        setPinnedProperty(null)
+        setIsClusterView(false)
+        setActiveClusterIds([])
+        setClusterProperties([])
       }
-    } else {
-      setPinnedProperty(null)
-      setIsClusterView(false)
-      setActiveClusterIds([])
-      setClusterProperties([])
-    }
-  }, [properties])
+    },
+    [properties]
+  )
 
   // Eventos táctiles para el Bottom Sheet
   function onTouchStart(e: React.TouchEvent) {
@@ -273,12 +279,12 @@ function BusquedaMapaContent() {
       return (
         <div className="flex flex-col bg-white overflow-hidden" style={{ height: '100dvh' }}>
           <div className="shrink-0" style={{ zIndex: 1002, position: 'relative' }}>
-            <FilterBar 
-              variant="map" 
-              onSearch={(f) => console.log('🔍 Filtros:', f)} 
+            <FilterBar
+              variant="map"
+              onSearch={(f) => console.log('🔍 Filtros:', f)}
               onOpenPriceFilter={() => {
-                setIsSidebarOpen(true);
-                setActiveSidebarView("price");
+                setIsSidebarOpen(true)
+                setActiveSidebarView('price')
               }}
             />
           </div>
@@ -288,12 +294,26 @@ function BusquedaMapaContent() {
                 <MapView
                   properties={properties}
                   selectedId={selectedPropertyId}
-                  onSelect={(id) => {
-                    setSelectedPropertyId(id)
-                    setPinnedProperty(properties.find((p: any) => p.id === id) ?? null)
-                  }}
+                  zonas={zonas}
+                  selectedZoneId={selectedZoneId}
+                  onZoneSelect={setSelectedZoneId}
+                  onSelect={handleMapSelect}
                   isLoading={isLoading}
                   error={error}
+                  isDrawingMode={isDrawingMode}
+                  polygonPoints={polygonPoints}
+                  isPolygonClosed={isPolygonClosed}
+                  onMapClick={(latlng) => {
+                    if (isDrawingMode && !isPolygonClosed) {
+                      setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
+                    }
+                  }}
+                  onPointClick={(index) => {
+                    if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
+                      setIsPolygonClosed(true)
+                      setIsDrawingMode(false)
+                    }
+                  }}
                 />
               </div>
             </div>
@@ -319,12 +339,12 @@ function BusquedaMapaContent() {
       <div className="flex flex-col overflow-hidden bg-white" style={{ height: '100dvh' }}>
         <div className="shrink-0 overflow-x-auto" style={{ zIndex: 1002, position: 'relative' }}>
           <div className="min-w-max">
-            <FilterBar 
-              variant="map" 
-              onSearch={(f) => console.log('🔍 Filtros:', f)} 
+            <FilterBar
+              variant="map"
+              onSearch={(f) => console.log('🔍 Filtros:', f)}
               onOpenPriceFilter={() => {
-                setIsSidebarOpen(true);
-                setActiveSidebarView("price");
+                setIsSidebarOpen(true)
+                setActiveSidebarView('price')
               }}
             />
           </div>
@@ -334,11 +354,28 @@ function BusquedaMapaContent() {
             <MapView
               properties={properties}
               selectedId={selectedPropertyId}
+              zonas={zonas}
+              selectedZoneId={selectedZoneId}
+              onZoneSelect={setSelectedZoneId}
               onSelect={handleMapSelect}
-              onClusterClick={handleClusterClick}
-              activeClusterIds={activeClusterIds}
               isLoading={isLoading}
               error={error}
+              isDrawingMode={isDrawingMode}
+              polygonPoints={polygonPoints}
+              isPolygonClosed={isPolygonClosed}
+              onMapClick={(latlng) => {
+                if (isDrawingMode && !isPolygonClosed) {
+                  setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
+                }
+              }}
+              onPointClick={(index) => {
+                if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
+                  setIsPolygonClosed(true)
+                  setIsDrawingMode(false)
+                }
+              }}
+              onClusterClick={handleClusterClick}
+              activeClusterIds={activeClusterIds}
             />
           </div>
           {sheetState === 'hidden' && (
@@ -376,12 +413,18 @@ function BusquedaMapaContent() {
                 />
                 <div className="flex items-center justify-between w-full px-4 pb-2">
                   <span className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
-                    <span className="text-orange-500">{isClusterView ? clusterProperties.length : properties.length}</span>
+                    <span className="text-orange-500">
+                      {isClusterView ? clusterProperties.length : properties.length}
+                    </span>
                     <span className="text-gray-500 font-normal">propiedades</span>
                   </span>
                   {isClusterView && (
                     <button
-                      onClick={() => { setIsClusterView(false); setClusterProperties([]); setActiveClusterIds([]); }}
+                      onClick={() => {
+                        setIsClusterView(false)
+                        setClusterProperties([])
+                        setActiveClusterIds([])
+                      }}
                       className="text-xs text-orange-500 hover:underline px-2"
                     >
                       ← Volver
@@ -489,8 +532,8 @@ function BusquedaMapaContent() {
           console.log('🔍 Buscando con filtros:', nuevosFiltros)
         }}
         onOpenPriceFilter={() => {
-          setIsSidebarOpen(true);
-          setActiveSidebarView("price");
+          setIsSidebarOpen(true)
+          setActiveSidebarView('price')
         }}
       />
 
@@ -501,7 +544,7 @@ function BusquedaMapaContent() {
             isSidebarOpen ? 'w-full md:w-[450px] h-[65dvh] md:h-full' : 'w-0'
           }`}
         >
-          {isSidebarOpen && activeSidebarView === "results" && (
+          {isSidebarOpen && activeSidebarView === 'results' && (
             <div className="flex flex-col h-full min-h-0">
               <div className="p-4 bg-white shrink-0">
                 <div className="flex justify-between items-center mb-4">
@@ -515,7 +558,9 @@ function BusquedaMapaContent() {
                       </div>
                       <div className="flex items-center gap-2 mb-2">
                         <h1 className="text-xl font-semibold text-slate-800">
-                          {isClusterView ? `${clusterProperties.length} propiedades en este clúster` : "Resultados de búsqueda"}
+                          {isClusterView
+                            ? `${clusterProperties.length} propiedades en este clúster`
+                            : 'Resultados de búsqueda'}
                         </h1>
                       </div>
                       <h2 className="text-sm font-bold text-slate-900">
@@ -527,13 +572,17 @@ function BusquedaMapaContent() {
                         </span>
                       </h2>
                       {isClusterView && (
-  <button
-    onClick={() => { setIsClusterView(false); setClusterProperties([]); setActiveClusterIds([]); }}
-    className="text-sm text-orange-500 hover:underline flex items-center gap-1 mt-1 mb-2"
-  >
-    ← Volver a todos los resultados
-  </button>
-)}
+                        <button
+                          onClick={() => {
+                            setIsClusterView(false)
+                            setClusterProperties([])
+                            setActiveClusterIds([])
+                          }}
+                          className="text-sm text-orange-500 hover:underline flex items-center gap-1 mt-1 mb-2"
+                        >
+                          ← Volver a todos los resultados
+                        </button>
+                      )}
                     </div>
                   </div>
                   <button
@@ -656,15 +705,12 @@ function BusquedaMapaContent() {
           )}
 
           {/* 👇 ESTO ES LO NUEVO QUE VAS A AGREGAR 👇 */}
-          {isSidebarOpen && activeSidebarView === "price" && (
+          {isSidebarOpen && activeSidebarView === 'price' && (
             <div className="flex flex-col h-full min-h-0 bg-white">
-              <PriceFilterSidebar 
-                onClose={() => setActiveSidebarView("results")} 
-              />
+              <PriceFilterSidebar onClose={() => setActiveSidebarView('results')} />
             </div>
           )}
           {/* 👆 FIN DE LO NUEVO 👆 */}
-
         </aside>
 
         {/* Área del mapa */}
@@ -691,6 +737,23 @@ function BusquedaMapaContent() {
               activeClusterIds={activeClusterIds}
               isLoading={isLoading}
               error={error}
+              zonas={zonas}
+              selectedZoneId={selectedZoneId}
+              onZoneSelect={setSelectedZoneId}
+              isDrawingMode={isDrawingMode}
+              polygonPoints={polygonPoints}
+              isPolygonClosed={isPolygonClosed}
+              onMapClick={(latlng) => {
+                if (isDrawingMode && !isPolygonClosed) {
+                  setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
+                }
+              }}
+              onPointClick={(index) => {
+                if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
+                  setIsPolygonClosed(true)
+                  setIsDrawingMode(false)
+                }
+              }}
             />
           </div>
         </section>

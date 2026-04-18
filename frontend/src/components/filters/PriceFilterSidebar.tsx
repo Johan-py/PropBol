@@ -1,58 +1,57 @@
-"use client";
+'use client'
 
-import { useState, useEffect } from "react";
-import { useSearchFilters } from "@/hooks/useSearchFilters";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from 'react'
+import { useSearchFilters } from '@/hooks/useSearchFilters'
+import { useRouter, useSearchParams } from 'next/navigation'
 interface PriceFilterSidebarProps {
-  onClose: () => void;
+  onClose: () => void
 }
 export default function PriceFilterSidebar({ onClose }: PriceFilterSidebarProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const { updateFilters } = useSearchFilters();
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const { updateFilters } = useSearchFilters()
 
-  const [moneda, setMoneda] = useState<"BOB" | "USD">("BOB");
-  const [minPrice, setMinPrice] = useState<string>("");
-  const [maxPrice, setMaxPrice] = useState<string>("");
+  const [moneda, setMoneda] = useState<'BOB' | 'USD'>('BOB')
+  const [minPrice, setMinPrice] = useState<string>('')
+  const [maxPrice, setMaxPrice] = useState<string>('')
 
   // Cargar valores iniciales si existen en la URL o SessionStorage
   useEffect(() => {
-    const saved = sessionStorage.getItem("propbol_global_filters");
+    const saved = sessionStorage.getItem('propbol_global_filters')
     if (saved) {
-      const parsed = JSON.parse(saved);
-      if (parsed.minPrice) setMinPrice(parsed.minPrice);
-      if (parsed.maxPrice) setMaxPrice(parsed.maxPrice);
-      if (parsed.currency) setMoneda(parsed.currency);
+      const parsed = JSON.parse(saved)
+      if (parsed.minPrice) setMinPrice(parsed.minPrice)
+      if (parsed.maxPrice) setMaxPrice(parsed.maxPrice)
+      if (parsed.currency) setMoneda(parsed.currency)
     }
-  }, []);
+  }, [])
 
   const handleApply = () => {
     const nuevosFiltros = {
       minPrice: minPrice || null,
       maxPrice: maxPrice || null,
       currency: moneda,
-      updatedAt: new Date().toISOString(),
-    };
+      updatedAt: new Date().toISOString()
+    }
 
-    updateFilters(nuevosFiltros);
+    updateFilters(nuevosFiltros)
 
     // Actualizar URL
-    const params = new URLSearchParams(searchParams.toString());
-    if (minPrice) params.set("minPrice", minPrice);
-    else params.delete("minPrice");
-    
-    if (maxPrice) params.set("maxPrice", maxPrice);
-    else params.delete("maxPrice");
-    
-    params.set("currency", moneda);
+    const params = new URLSearchParams(searchParams.toString())
+    if (minPrice) params.set('minPrice', minPrice)
+    else params.delete('minPrice')
 
-    router.push(`/busqueda_mapa?${params.toString()}`);
-    onClose();
-  };
+    if (maxPrice) params.set('maxPrice', maxPrice)
+    else params.delete('maxPrice')
+
+    params.set('currency', moneda)
+
+    router.push(`/busqueda_mapa?${params.toString()}`)
+    onClose()
+  }
 
   return (
     <div className="flex flex-col gap-8 p-6 w-full max-w-[350px] bg-white h-full border-r border-stone-200">
-      
       <div>
         <h3 className="font-bold text-sm text-stone-800 uppercase tracking-wide mb-1">
           Filtrar por Precio
@@ -62,21 +61,21 @@ export default function PriceFilterSidebar({ onClose }: PriceFilterSidebarProps)
         {/* Toggle de Moneda */}
         <div className="flex bg-stone-100 rounded-full p-1 w-fit mb-6 shadow-inner">
           <button
-            onClick={() => setMoneda("BOB")}
+            onClick={() => setMoneda('BOB')}
             className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
-              moneda === "BOB"
-                ? "bg-[#d97706] text-white shadow-sm"
-                : "text-stone-500 hover:text-stone-700"
+              moneda === 'BOB'
+                ? 'bg-[#d97706] text-white shadow-sm'
+                : 'text-stone-500 hover:text-stone-700'
             }`}
           >
             $BOB
           </button>
           <button
-            onClick={() => setMoneda("USD")}
+            onClick={() => setMoneda('USD')}
             className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
-              moneda === "USD"
-                ? "bg-[#d97706] text-white shadow-sm"
-                : "text-stone-500 hover:text-stone-700"
+              moneda === 'USD'
+                ? 'bg-[#d97706] text-white shadow-sm'
+                : 'text-stone-500 hover:text-stone-700'
             }`}
           >
             $USD
@@ -115,21 +114,21 @@ export default function PriceFilterSidebar({ onClose }: PriceFilterSidebarProps)
         </label>
         <div className="flex items-center gap-2 mb-2">
           <div className="border border-stone-200 rounded-md px-3 py-1.5 text-xs text-stone-600 flex-1 text-center">
-            {minPrice || "0"} {moneda}
+            {minPrice || '0'} {moneda}
           </div>
           <span className="text-stone-400">-</span>
           <div className="border border-stone-200 rounded-md px-3 py-1.5 text-xs text-stone-600 flex-1 text-center">
-            {maxPrice || "10K"} {moneda}
+            {maxPrice || '10K'} {moneda}
           </div>
         </div>
-        
+
         {/* Aquí podrías usar una librería como 'rc-slider' si necesitas un slider de dos puntos (dual thumb), 
             ya que HTML nativo solo soporta un punto. Por ahora ponemos un input range simple como placeholder */}
-        <input 
-          type="range" 
-          className="w-full accent-[#d97706]" 
-          min="0" 
-          max="10000" 
+        <input
+          type="range"
+          className="w-full accent-[#d97706]"
+          min="0"
+          max="10000"
           step="100"
           value={maxPrice || 10000}
           onChange={(e) => setMaxPrice(e.target.value)}
@@ -143,7 +142,6 @@ export default function PriceFilterSidebar({ onClose }: PriceFilterSidebarProps)
       >
         Aplicar
       </button>
-
     </div>
-  );
+  )
 }
