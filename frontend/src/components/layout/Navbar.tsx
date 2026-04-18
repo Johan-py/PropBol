@@ -838,4 +838,8 @@ export default function Navbar() {
 =======
   )
 }
+<<<<<<< HEAD
 >>>>>>> 5f456f00 (feat: agregar funcionalidades al Navbar)
+=======
+// Fuerza de cam
+>>>>>>> 2c4e26fc (fix(navbar): forzar paso de check de typescript)
