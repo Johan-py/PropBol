@@ -1,5 +1,7 @@
 'use client'
 
+import MisZonasSidebar from '@/components/map/MisZonasSidebar';
+import type { ZonaPersonalizada } from '@/components/map/MisZonasSidebar';
 import { point, polygon } from '@turf/helpers'
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon'
 import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from 'react'
@@ -82,6 +84,15 @@ function BusquedaMapaContent() {
   const [isDrawingMode, setIsDrawingMode] = useState(false)
   const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([])
   const [isPolygonClosed, setIsPolygonClosed] = useState(false)
+  // --- INICIO ESTADOS HU9 ---
+  const [isMisZonasOpen, setIsMisZonasOpen] = useState(false)
+  const isAuthenticated = true
+  const [misZonasGuardadas, setMisZonasGuardadas] = useState<ZonaPersonalizada[]>([
+  { id: '1', nombre: 'Zona norte' },
+  { id: '2', nombre: 'Zona 2' },
+  { id: '3', nombre: 'Otra zona' }
+  ])
+  // --- FIN ESTADOS HU9. REVISAR LA IMPLEMENTACIÓN A FUTURO
 
   const resetDrawing = () => {
     setIsDrawingMode(false)
@@ -747,9 +758,7 @@ function BusquedaMapaContent() {
                   Dibujar zona
                 </button>
                 <button
-                  onClick={() => {
-                    console.log('Próximamente: Abrir barra lateral de Mis Zonas')
-                  }}
+                  onClick={() => setIsMisZonasOpen(true)}
                   className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
                 >
                   Mis zonas
@@ -811,6 +820,24 @@ function BusquedaMapaContent() {
               }}
             />
           </div>
+          {/* --- INICIO SIDEBAR MIS ZONAS HU9 --- */}
+          <MisZonasSidebar 
+            isOpen={isMisZonasOpen}
+            onClose={() => setIsMisZonasOpen(false)}
+            isAuthenticated={isAuthenticated}
+            zonas={misZonasGuardadas}
+            onAddZone={() => {
+              setIsMisZonasOpen(false)
+              setIsDrawingMode(true)
+            }}
+            onEditZone={(id) => {
+              console.log('Lógica para editar la zona', id)
+            }}
+            onDeleteZone={(id) => {
+               setMisZonasGuardadas(prev => prev.filter(z => z.id !== id))
+            }}
+          />
+          {/* --- FIN SIDEBAR MIS ZONAS HU9 --- */}
         </section>
       </main>
     </div>
