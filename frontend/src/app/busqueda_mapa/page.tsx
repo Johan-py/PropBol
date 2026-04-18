@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, Suspense, useCallback } from "react";
+import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from "react";
 import nextDynamic from "next/dynamic";
 import {
   ChevronLeft,
@@ -11,6 +11,8 @@ import {
   ChevronDown,
   X,
   Filter,
+  List,
+  ListTodo,
 } from "lucide-react";
 
 // === HOOKS ===
@@ -69,6 +71,8 @@ function useIsLandscapeMobile() {
 const SHEET_H = { peek: "50%", full: "100%" } as const;
 type SheetState = "hidden" | "peek" | "full";
 
+const LISTA_PAGE_SIZES = [10, 20, 50] as const;
+
 function BusquedaMapaContent() {
   // === ESTADOS COMPARTIDOS ===
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -99,6 +103,19 @@ function BusquedaMapaContent() {
   const { ordenActual, cambiarOrden } = useOrdenamiento({
     inmuebles: properties,
   });
+
+  const [listaPage, setListPage] = useState(1);
+  const [listaPageSize, setListPageSize] = useState<typeof LISTA_PAGE_SIZES[number]>(10);
+  const listTotal = properties.length;
+  const listTotalPages = Math.max(1, Math.ceil(listTotal / listaPageSize));
+  const listSafePage = Math.min(Math.max(1, listaPage), listTotalPages);
+
+  const paginatedProperties = useMemo(() => {
+    if(listTotal === 0) return [];
+    const start = (listSafePage - 1) * listaPageSize;
+    return properties.slice(start, start + listaPageSize);
+  }, [properties, listSafePage, listaPageSize]);  
+
 
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
     null
@@ -218,7 +235,7 @@ function BusquedaMapaContent() {
               : ""
           }`}
         >
-          {properties.map((property: any) => (
+          {paginatedProperties.map((property: any) => (
             <div
               key={property.id}
               onClick={() => {
@@ -619,7 +636,7 @@ function BusquedaMapaContent() {
                         : ""
                     }`}
                   >
-                    {properties.map((property: any) => (
+                    {paginatedProperties.map((property: any) => (
                       <div
                         key={property.id}
                         onMouseEnter={() => setHoveredId(property.id)}
