@@ -228,7 +228,7 @@ export default function MisZonas() {
               Nueva zona
             </button>
           </div>
-          <div className="relative w-full" style={{ height: '420px' }}>
+          <div className="relative w-full overflow-hidden" style={{ height: '420px', zIndex: 0 }}>
             <MapaZonas
               zonas={zonas}
               zonaActiva={zonaActiva}
@@ -337,7 +337,7 @@ export default function MisZonas() {
 
       {/* MODAL */}
       {modalNuevaZona && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 px-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden">
             <div className="flex items-center justify-between px-6 py-4 border-b border-stone-200">
               <h3 className="font-bold text-stone-900 text-lg">Nueva Zona</h3>
