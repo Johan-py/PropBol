@@ -3,14 +3,15 @@
 import { useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const PAGE_SIZE_OPTIONS = [10, 20, 50] as const;
+export const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
+export type PageSize = (typeof PAGE_SIZE_OPTIONS)[number];
 
 export type MapaListadoPaginacionProps = {
   total: number;
   page: number;
-  pageSize: (typeof PAGE_SIZE_OPTIONS)[number];
+  pageSize: PageSize;
   onPageChange: (page: number) => void;
-  onPageSizeChange: (size: (typeof PAGE_SIZE_OPTIONS)[number]) => void;
+  onPageSizeChange: (size: PageSize) => void;
   /** Con 0 resultados: texto breve (p. ej. error de API) */
   hint?: string | null;
 };
@@ -49,6 +50,7 @@ export default function MapaListadoPaginacion({
           <span className="whitespace-nowrap">Por página</span>
           <select
             className="border border-stone-200 rounded-md px-2 py-1 text-xs bg-white disabled:opacity-50"
+
             value={pageSize}
             disabled={disabled}
             onChange={(e) =>
@@ -60,6 +62,7 @@ export default function MapaListadoPaginacion({
                 {n}
               </option>
             ))}
+
           </select>
         </label>
         <div className="flex items-center gap-1 shrink-0" aria-label="Paginación">

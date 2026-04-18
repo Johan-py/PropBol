@@ -25,7 +25,7 @@ import FilterBar from "@/components/filters/FilterBar";
 import PropertyCard from "@/components/layout/PropertyCard";
 import PropertyRow from "@/components/galeria/PropertyRow";
 import EmptyState from "@/components/galeria/EmptyState";
-import MapaListadoPaginacion from "@/components/galeria/MapaListadoPaginacion";
+import MapaListadoPaginacion, { PageSize } from "@/components/galeria/MapaListadoPaginacion";
 import { MenuOrdenamiento } from "@/components/busqueda/ordenamiento/MenuOrdenamiento";
 
 // Carga dinámica del mapa (sin SSR)
@@ -109,8 +109,7 @@ function BusquedaMapaContent() {
   });
 
    const [listPage, setListPage] = useState(1);
-  const [listPageSize, setListPageSize] =
-    useState<(typeof LIST_PAGE_SIZES)[number]>(10);
+  const [listPageSize, setListPageSize] = useState<(PageSize)>(10);
   const listTotal = properties.length;
   const listTotalPages = Math.max(1, Math.ceil(listTotal / listPageSize));
   const listSafePage = Math.min(Math.max(1, listPage), listTotalPages);
