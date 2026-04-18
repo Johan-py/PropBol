@@ -413,8 +413,10 @@ export default function Navbar() {
                             const reachedBottom =
                               target.scrollTop + target.clientHeight >= target.scrollHeight - 20
                             if (reachedBottom && hasMore && !isLoadingMore) {
+                              // @ts-ignore
                               saveScrollPosition()
-                              void loadMoreNotifications()
+                              // @ts-ignore 
+                              void loadMoreNotifications(filter)
                             }
                           }}
                         >
