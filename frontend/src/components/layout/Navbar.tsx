@@ -161,9 +161,24 @@ export default function Navbar() {
       clearSession(false);
       return;
     }
+<<<<<<< HEAD
  
     let parsedUser: User;
  
+=======
+
+    if (!navigator.onLine) {
+      try {
+        const parsedUser = JSON.parse(savedUser)
+        setUser(parsedUser)
+        setIsLoggedIn(true)
+      } catch {
+        clearSession(false)
+      }
+      return
+    }
+
+>>>>>>> 5f456f00 (feat: agregar funcionalidades al Navbar)
     try {
       parsedUser = JSON.parse(savedUser) as User;
     } catch {
@@ -484,6 +499,7 @@ export default function Navbar() {
                           aria-live="polite"
                           className="max-h-[60vh] overflow-y-auto sm:max-h-80"
                           onScroll={(e) => {
+<<<<<<< HEAD
                             const target = e.currentTarget;
                             const reachedBottom =
                               target.scrollTop + target.clientHeight >=
@@ -492,6 +508,14 @@ export default function Navbar() {
                             if (reachedBottom && hasMore && !isLoadingMore) {
                               saveScrollPosition(target.scrollTop);
                               void loadMoreNotifications();
+=======
+                            const target = e.currentTarget
+                            const reachedBottom =
+                              target.scrollTop + target.clientHeight >= target.scrollHeight - 20
+                            if (reachedBottom && hasMore && !isLoadingMore) {
+                              saveScrollPosition()
+                              void loadMoreNotifications()
+>>>>>>> 5f456f00 (feat: agregar funcionalidades al Navbar)
                             }
                           }}
                         >
@@ -723,15 +747,24 @@ export default function Navbar() {
               </div>
 
               <Link
+<<<<<<< HEAD
                 id="tour-blogs-mobile"
                 href="/blogs"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
                 Blogs
+=======
+                href="/propiedades"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+              >
+                Propiedades
+>>>>>>> 5f456f00 (feat: agregar funcionalidades al Navbar)
               </Link>
 
               <Link
+<<<<<<< HEAD
                 id="tour-planes-mobile"
                 href="/cobros-suscripciones"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -742,6 +775,22 @@ export default function Navbar() {
 
               <Link
                 id="tour-ayuda-mobile"
+=======
+                href="/blogs"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+              >
+                Blogs
+              </Link>
+              <Link
+                href="/cobros-suscripciones"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+              >
+                Planes de membresia
+              </Link>
+              <Link
+>>>>>>> 5f456f00 (feat: agregar funcionalidades al Navbar)
                 href="/ayuda"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
@@ -753,5 +802,10 @@ export default function Navbar() {
         </div>
       )}
     </>
+<<<<<<< HEAD
   );
 }
+=======
+  )
+}
+>>>>>>> 5f456f00 (feat: agregar funcionalidades al Navbar)
