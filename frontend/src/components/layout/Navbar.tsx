@@ -18,7 +18,9 @@ export type User = {
   avatar?: string | null
 }
 
-type _MeResponse = {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// test
+type MeResponse = {
   message?: string
   perfil?: {
     id: number
