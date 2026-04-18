@@ -22,3 +22,15 @@ interface Zona {
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+
+export default function MisZonas() {
+  const [zonas, setZonas] = useState<Zona[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [editandoId, setEditandoId] = useState<number | null>(null)
+  const [nombreEditado, setNombreEditado] = useState('')
+  const [confirmandoEliminarId, setConfirmandoEliminarId] = useState<number | null>(null)
+  const [zonaActiva, setZonaActiva] = useState<Zona | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [modalNuevaZona, setModalNuevaZona] = useState(false)
+  const [nombreNuevaZona, setNombreNuevaZona] = useState('')
+  const [referenciaNuevaZona, setReferenciaNuevaZona] = useState('')
