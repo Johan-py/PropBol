@@ -68,3 +68,13 @@ export default function MisZonas() {
   }
 
   useEffect(() => { cargarZonas() }, [])
+
+  useEffect(() => {
+    const activa = zonas.find(z => z.activa) || null
+    setZonaActiva(activa)
+  }, [zonas])
+
+  const seleccionarZona = (zona: Zona) => {
+    setZonaActiva(zona)
+    localStorage.setItem('zonaSeleccionada', JSON.stringify(zona))
+  }
