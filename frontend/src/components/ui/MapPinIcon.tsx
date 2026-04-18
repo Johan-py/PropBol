@@ -1,17 +1,17 @@
-"use client";
+'use client'
 
-import { MapPin, MapPinOff } from "lucide-react";
+import { MapPin, MapPinOff } from 'lucide-react'
 
 interface MapPinIconProps {
-  hasValidLocation: boolean;
-  className?: string;
+  hasValidLocation: boolean
+  className?: string
 }
 
-export function MapPinIcon({ hasValidLocation, className = "w-5 h-5" }: MapPinIconProps) {
+export function MapPinIcon({ hasValidLocation, className = 'w-5 h-5' }: MapPinIconProps) {
   if (hasValidLocation) {
-    return <MapPin className={`${className} text-[#ea580c]`} />;
+    return <MapPin className={`${className} text-[#ea580c]`} />
   }
-  
+
   return (
     <div className="relative">
       <MapPin className={`${className} text-gray-300`} />
@@ -19,5 +19,5 @@ export function MapPinIcon({ hasValidLocation, className = "w-5 h-5" }: MapPinIc
         <div className="w-full h-[2px] bg-red-400 rotate-45 absolute top-1/2 left-0 -translate-y-1/2" />
       </div>
     </div>
-  );
+  )
 }

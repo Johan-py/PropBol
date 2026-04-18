@@ -1,41 +1,41 @@
-"use client";
+'use client'
 
-import { useState } from "react";
+import { useState } from 'react'
 
 export default function DeactivateAccountSection() {
-  const [showWarningModal, setShowWarningModal] = useState(false);
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [password, setPassword] = useState("");
+  const [showWarningModal, setShowWarningModal] = useState(false)
+  const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [password, setPassword] = useState('')
 
   const closeAllModals = () => {
-    setShowWarningModal(false);
-    setShowPasswordModal(false);
-    setPassword("");
-  };
+    setShowWarningModal(false)
+    setShowPasswordModal(false)
+    setPassword('')
+  }
 
   const handleOpenWarning = () => {
-    setShowWarningModal(true);
-  };
+    setShowWarningModal(true)
+  }
 
   const handleContinueToPassword = () => {
-    setShowWarningModal(false);
-    setShowPasswordModal(true);
-  };
+    setShowWarningModal(false)
+    setShowPasswordModal(true)
+  }
 
   const handleCancelWarning = () => {
-    setShowWarningModal(false);
-  };
+    setShowWarningModal(false)
+  }
 
   const handleCancelPassword = () => {
-    setShowPasswordModal(false);
-    setPassword("");
-  };
+    setShowPasswordModal(false)
+    setPassword('')
+  }
 
   const handleFakeDeactivate = () => {
     // Solo frontend, sin funcionalidad real
-    setShowPasswordModal(false);
-    setPassword("");
-  };
+    setShowPasswordModal(false)
+    setPassword('')
+  }
 
   return (
     <>
@@ -52,12 +52,9 @@ export default function DeactivateAccountSection() {
               <div className="mt-1 text-red-500">⚠</div>
 
               <div>
-                <h3 className="text-sm font-semibold text-red-700">
-                  Advertencia
-                </h3>
+                <h3 className="text-sm font-semibold text-red-700">Advertencia</h3>
                 <p className="mt-1 text-sm text-red-600">
-                  Al desactivar tu cuenta ya no podrás iniciar sesión
-                  nuevamente.
+                  Al desactivar tu cuenta ya no podrás iniciar sesión nuevamente.
                 </p>
               </div>
             </div>
@@ -115,21 +112,15 @@ export default function DeactivateAccountSection() {
             <div className="mb-4 flex items-start gap-3">
               <div className="mt-1 text-red-500">⚠</div>
               <div>
-                <h2 className="text-base font-bold text-neutral-900">
-                  Confirmación final
-                </h2>
+                <h2 className="text-base font-bold text-neutral-900">Confirmación final</h2>
                 <p className="mt-1 text-sm text-neutral-600">
-                  Por seguridad, ingresa tu contraseña actual para desactivar tu
-                  cuenta.
+                  Por seguridad, ingresa tu contraseña actual para desactivar tu cuenta.
                 </p>
               </div>
             </div>
 
             <div className="mt-4 space-y-2">
-              <label
-                htmlFor="current-password"
-                className="text-sm font-medium text-neutral-700"
-              >
+              <label htmlFor="current-password" className="text-sm font-medium text-neutral-700">
                 Ingresa tu contraseña
               </label>
 
@@ -164,5 +155,5 @@ export default function DeactivateAccountSection() {
         </div>
       )}
     </>
-  );
+  )
 }
