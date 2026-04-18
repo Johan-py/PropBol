@@ -1,12 +1,8 @@
-<<<<<<< HEAD
 'use client'
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
-=======
-import Link from "next/link";
->>>>>>> 189eb9fe (feat: agregar enlaces de navegación en el navbar)
 
 export default function NavLinks() {
   const [open, setOpen] = useState(false);
@@ -32,7 +28,6 @@ export default function NavLinks() {
         Inicio
       </Link>
 
-<<<<<<< HEAD
       {/* HU-05: Propiedades con dropdown */}
       <div id="tour-propiedades" className="relative" ref={dropdownRef}>
         <button
@@ -77,34 +72,6 @@ export default function NavLinks() {
       {/* HU-05: Sobre Nosotros */}
       <Link id="tour-nosotros" href="#nosotros" className={linkStyle}>
         Sobre Nosotros
-=======
-      <Link
-        href="/propiedades"
-        className="hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition"
-      >
-        Propiedades
-      </Link>
-
-      <Link
-        href="/blogs"
-        className="hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition"
-      >
-        Blogs
-      </Link>
-
-      <Link
-        href="/cobros-suscripciones"
-        className="hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition"
-      >
-        Planes de membresia
-      </Link>
-
-      <Link
-        href="/ayuda"
-        className="hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition"
-      >
-        Ayuda
->>>>>>> 189eb9fe (feat: agregar enlaces de navegación en el navbar)
       </Link>
 
       {/* HU-05: Botón de ayuda que reactiva el tour guiado */}

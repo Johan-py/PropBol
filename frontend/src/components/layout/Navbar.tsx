@@ -31,6 +31,7 @@ export type User = {
   role?: string | null;
 };
 
+<<<<<<< HEAD
 type MeResponse = {
   message?: string;
   user?: {
@@ -63,6 +64,26 @@ const filters: NotificationFilter[] = [
   "archivada",
 ];
  
+=======
+/*type MeResponse = {
+  message?: string
+  perfil?: {
+    id: number
+    nombre?: string
+    apellido?: string
+    correo: string
+    avatar?: string | null
+  }
+}
+*/
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
+const USER_STORAGE_KEY = 'propbol_user'
+const SESSION_EXPIRES_KEY = 'propbol_session_expires'
+
+const filters: NotificationFilter[] = ['todas', 'leida', 'no leida', 'archivada']
+
+>>>>>>> ffee0b38 (feat(navbar): actualizar links y limpiar tipos no usados)
 export default function Navbar() {
   const router = useRouter();
   const panelRef = useRef<HTMLDivElement | null>(null);
