@@ -6,7 +6,8 @@ import {
   editarGenero,
   editarDireccion,
   editarFotoPerfil,
-  editarTelefonos
+  editarTelefonos,
+  editarFechaNacimiento
 } from './perfil.controller.js'
 import { validarJWT } from '../../middleware/validarJWT.js'
 import { upload } from '../../middleware/upload.js'
@@ -23,5 +24,6 @@ router.put('/genero', validarJWT, editarGenero)
 router.put('/direccion', validarJWT, editarDireccion)
 router.put('/foto-perfil', validarJWT, upload.single('foto'), editarFotoPerfil)
 router.put('/telefonos', validarJWT, editarTelefonos)
+router.put('/fecha-nacimiento', validarJWT, editarFechaNacimiento)
 
 export default router

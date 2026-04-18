@@ -28,12 +28,22 @@ export const obtenerPerfil = async (req: AuthRequest, res: Response) => {
         pais: true,
         genero: true,
         direccion: true,
-        telefonos: true
+        telefonos: true,
+        fechaNacimiento: true
       }
     })
 
     if (!usuario) {
       return res.status(404).json({ ok: false, msg: 'Usuario no encontrado' })
+    }
+    let fechaFormateada = null
+    // Verificamos que exista y que sea una instancia de Date
+    if (usuario?.fechaNacimiento instanceof Date) {
+      const d = usuario.fechaNacimiento
+      const dia = String(d.getUTCDate()).padStart(2, '0')
+      const mes = String(d.getUTCMonth() + 1).padStart(2, '0')
+      const anio = d.getUTCFullYear()
+      fechaFormateada = `${dia}/${mes}/${anio}`
     }
 
     // Mapear género a formato legible
@@ -45,7 +55,9 @@ export const obtenerPerfil = async (req: AuthRequest, res: Response) => {
 
     const perfilFormateado = {
       ...usuario,
-      genero: usuario.genero ? generoMap[usuario.genero] : null
+      //genero: usuario.genero ? generoMap[usuario.genero] : null,
+      genero: usuario.genero && generoMap[usuario.genero] ? generoMap[usuario.genero] : null,
+      fechaNacimiento: fechaFormateada
     }
 
     return res.json({
@@ -316,5 +328,34 @@ export const editarTelefonos = async (req: AuthRequest, res: Response) => {
       ok: false,
       msg: 'Error al editar los teléfonos'
     })
+  }
+}
+
+// Editar fecha de nacimiento
+export const editarFechaNacimiento = async (req: AuthRequest, res: Response) => {
+  try {
+    const usuarioId = req.usuario?.id
+    const { fechaNacimiento } = req.body // El front enviará "2002-09-16"
+
+    if (!usuarioId) {
+      return res.status(401).json({ ok: false, msg: 'No hay token válido' })
+    }
+
+    // Actualizamos en la base de datos convirtiendo el string a Date
+    const usuarioActualizado = await prisma.usuario.update({
+      where: { id: usuarioId },
+      data: {
+        fechaNacimiento: fechaNacimiento ? new Date(fechaNacimiento) : null
+      }
+    })
+
+    return res.json({
+      ok: true,
+      msg: 'Fecha de nacimiento actualizada exitosamente',
+      fechaNacimiento: usuarioActualizado.fechaNacimiento
+    })
+  } catch (error) {
+    console.error('Error en editarFechaNacimiento:', error)
+    return res.status(500).json({ ok: false, msg: 'Error al editar la fecha' })
   }
 }
