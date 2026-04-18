@@ -81,10 +81,10 @@ export const loginWithGoogleCodeService = async (code: string): Promise<GoogleLo
 
   if (!existingUser) {
     throw new GoogleAuthError(
-      "Este usuario no esta registrado. Puedes crear un cuenta para continuar.",
-      "ACCOUNT_NOT_REGISTERED",
-      404,
-    );
+      'Este usuario no esta registrado. Puedes crear un cuenta para continuar.',
+      'ACCOUNT_NOT_REGISTERED',
+      404
+    )
   }
 
   const jwtPayload: JwtPayload = {

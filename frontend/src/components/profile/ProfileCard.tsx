@@ -144,12 +144,14 @@ export default function ProfileCard() {
         syncNavbar()
 
         if (perfil.telefonos && Array.isArray(perfil.telefonos) && perfil.telefonos.length > 0) {
-          setTelefonos(perfil.telefonos.map((tel: any, i: number) => ({
-            id: Date.now() + i,
-            numero: tel.numero,
-            pais: PAISES.find(p => tel.codigoPais === p.codigo)?.nombre || 'Bolivia',
-            codigo: tel.codigoPais
-          })))
+          setTelefonos(
+            perfil.telefonos.map((tel: any, i: number) => ({
+              id: Date.now() + i,
+              numero: tel.numero,
+              pais: PAISES.find((p) => tel.codigoPais === p.codigo)?.nombre || 'Bolivia',
+              codigo: tel.codigoPais
+            }))
+          )
         } else {
           setTelefonos([{ id: Date.now(), numero: '', pais: 'Bolivia', codigo: '+591' }])
         }
@@ -161,7 +163,9 @@ export default function ProfileCard() {
     }
   }
 
-  useEffect(() => { cargarPerfil() }, [])
+  useEffect(() => {
+    cargarPerfil()
+  }, [])
 
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   const hasEmailChanged = tempEmail !== originalEmail && isValidEmail(tempEmail)
@@ -243,7 +247,7 @@ export default function ProfileCard() {
     }
 
     try {
-      const token = getToken();
+      const token = getToken()
       const body = {
         telefonos: telefonos
           .filter((t) => t.numero.trim() !== '')
@@ -252,7 +256,7 @@ export default function ProfileCard() {
             numero: t.numero,
             principal: index === 0
           }))
-      };
+      }
 
       await fetch(`${API_URL}/api/perfil/usuario/telefonos`, {
         method: 'PUT',
@@ -265,7 +269,7 @@ export default function ProfileCard() {
     } catch (error: any) {
       console.error(error.message)
     }
-  };
+  }
 
   const subirFoto = async (file: File) => {
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
@@ -438,7 +442,7 @@ export default function ProfileCard() {
           const soloNumerosYCortados = valor.replace(/\D/g, '').slice(0, maxDigitos);
           return { ...t, numero: soloNumerosYCortados };
         }
-        return t;
+        return t
       })
     )
   }
@@ -570,8 +574,8 @@ export default function ProfileCard() {
                   value={nombre}
                   onFocus={() => setCampoEditando('nombre')}
                   onChange={(e) => {
-                    setNombre(soloLetras(e.target.value));
-                    if (errorNombre) setErrorNombre("");
+                    setNombre(soloLetras(e.target.value))
+                    if (errorNombre) setErrorNombre('')
                   }}
                   className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
                     errorNombre ? "border-red-500 bg-red-50" : campoEditando === 'nombre' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
@@ -620,7 +624,9 @@ export default function ProfileCard() {
                     value={`${tel.pais} ${tel.codigo}`}
                     onFocus={() => setCampoEditando(keyCampo)}
                     onChange={(e) => {
-                      const seleccion = PAISES.find((p) => `${p.nombre} ${p.codigo}` === e.target.value)
+                      const seleccion = PAISES.find(
+                        (p) => `${p.nombre} ${p.codigo}` === e.target.value
+                      )
                       if (seleccion) {
                         setTelefonos(telefonos.map((t) => t.id === tel.id ? { ...t, pais: seleccion.nombre, codigo: seleccion.codigo } : t))
                       }
