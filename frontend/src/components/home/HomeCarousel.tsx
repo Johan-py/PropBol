@@ -16,15 +16,11 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
   const touchStartX = useRef<number | null>(null)
 
   const nextSlide = () => {
-    setCurrentIndex((prev) =>
-      prev === banners.length - 1 ? 0 : prev + 1
-    )
+    setCurrentIndex((prev) => (prev === banners.length - 1 ? 0 : prev + 1))
   }
 
   const prevSlide = () => {
-    setCurrentIndex((prev) =>
-      prev === 0 ? banners.length - 1 : prev - 1
-    )
+    setCurrentIndex((prev) => (prev === 0 ? banners.length - 1 : prev - 1))
   }
 
   // auto-slide cada 5 segundos
@@ -56,11 +52,7 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
   if (!banners || banners.length === 0) return null
 
   return (
-    <div
-      className="relative w-full"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
+    <div className="relative w-full" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <HomeBanner
         url={banners[currentIndex].urlImagen}
         title={banners[currentIndex].titulo || 'Encuentra tu lugar ideal'}
@@ -94,9 +86,7 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
           <div
             key={index}
             className={`h-2 rounded-full transition-all ${
-              currentIndex === index
-                ? 'bg-white w-4'
-                : 'bg-white/50 w-2'
+              currentIndex === index ? 'bg-white w-4' : 'bg-white/50 w-2'
             }`}
           />
         ))}
