@@ -78,3 +78,35 @@ export default function MisZonas() {
     setZonaActiva(zona)
     localStorage.setItem('zonaSeleccionada', JSON.stringify(zona))
   }
+
+  const guardarNuevaZona = async () => {
+    if (!nombreNuevaZona.trim()) return
+    setIsLoading(true)
+    try {
+      const token = getToken()
+      const nuevaZona: Zona = {
+        id: Date.now(),
+        nombre: nombreNuevaZona,
+        referencia: referenciaNuevaZona || 'Cochabamba, Bolivia',
+        activa: false,
+        coordenadas: { lat: -17.3895, lng: -66.1568, zoom: 14 }
+      }
+      if (token) {
+        const response = await fetch(`${API_URL}/api/perfil/zonas`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ nombre: nombreNuevaZona, referencia: referenciaNuevaZona })
+        })
+        const data = await response.json()
+        if (data.ok) nuevaZona.id = data.zona?.id || nuevaZona.id
+      }
+      setZonas(prev => [...prev, nuevaZona])
+      setModalNuevaZona(false)
+      setNombreNuevaZona('')
+      setReferenciaNuevaZona('')
+    } catch (err: any) {
+      alert(err.message || 'Error al guardar zona')
+    } finally {
+      setIsLoading(false)
+    }
+  }
