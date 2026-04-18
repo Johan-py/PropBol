@@ -6,14 +6,27 @@ import { useRouter } from 'next/navigation'
 export default function Verify2FAPage() {
     const router = useRouter()
     const [codigo, setCodigo] = useState('')
+    const [isVerifying, setIsVerifying] = useState(false)
 
     const handleBack = () => {
     sessionStorage.removeItem('2fa_correo')
     router.replace('/sign-in')
     }
 
+    const handleVerify = async () => {
+    if (isVerifying) return
+    if (!codigo.trim()) return
+
+    setIsVerifying(true)
+    try {
+        console.log('verificando código:', codigo)
+    } finally {
+        setIsVerifying(false)
+    }
+    }
+
     return (
-        <div className="flex min-h-screen items-center justify-center bg-[#f5f5f4] px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#f5f5f4] px-4">
         <div className="w-full max-w-sm rounded-md border border-[#e7e5e4] bg-white p-6 shadow-sm">
         <h1 className="text-center text-3xl font-bold text-[#292524]">
             Verificacion en dos pasos
@@ -32,22 +45,27 @@ export default function Verify2FAPage() {
                 type="text"
                 value={codigo}
                 onChange={(e) => setCodigo(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleVerify() }}
                 placeholder="Ingresa el código"
-                className="w-full rounded-md border border-[#e7e5e4] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+                disabled={isVerifying}
+                className="w-full rounded-md border border-[#e7e5e4] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400 disabled:opacity-60"
             />
             </div>
 
             <button
             type="button"
-            className="w-full rounded-md bg-orange-500 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-600"
+            onClick={handleVerify}
+            disabled={isVerifying}
+            className="w-full rounded-md bg-orange-500 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
             >
-            Verificar código
+            {isVerifying ? 'Verificando...' : 'Verificar código'}
             </button>
 
             <button
             type="button"
             onClick={handleBack}
-            className="w-full rounded-md bg-neutral-900 py-2.5 text-sm font-semibold text-white transition hover:bg-neutral-700"
+            disabled={isVerifying}
+            className="w-full rounded-md bg-neutral-900 py-2.5 text-sm font-semibold text-white transition hover:bg-neutral-700 disabled:opacity-60"
             >
             Volver al inicio de sesión
             </button>
