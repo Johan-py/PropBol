@@ -1,9 +1,9 @@
-import { Eye, LockKeyhole } from "lucide-react";
+import { Eye, LockKeyhole } from 'lucide-react'
 
 type PasswordFieldProps = {
-  label: string;
-  placeholder: string;
-};
+  label: string
+  placeholder: string
+}
 
 function PasswordField({ label, placeholder }: PasswordFieldProps) {
   return (
@@ -28,16 +28,14 @@ function PasswordField({ label, placeholder }: PasswordFieldProps) {
         </button>
       </div>
     </div>
-  );
+  )
 }
 
 export default function PasswordSection() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-3xl font-bold tracking-tight text-neutral-900">
-          Cambiar contraseña
-        </h1>
+        <h1 className="text-3xl font-bold tracking-tight text-neutral-900">Cambiar contraseña</h1>
         <p className="mt-2 text-sm text-neutral-500">
           Actualiza tu contraseña para mantener tu cuenta segura.
         </p>
@@ -45,20 +43,11 @@ export default function PasswordSection() {
 
       <div className="max-w-xl rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
         <form className="space-y-4">
-          <PasswordField
-            label="Ingresa tu contraseña actual"
-            placeholder="••••••••"
-          />
+          <PasswordField label="Ingresa tu contraseña actual" placeholder="••••••••" />
 
-          <PasswordField
-            label="Ingresa tu nueva contraseña"
-            placeholder="••••••••"
-          />
+          <PasswordField label="Ingresa tu nueva contraseña" placeholder="••••••••" />
 
-          <PasswordField
-            label="Confirma tu nueva contraseña"
-            placeholder="••••••••"
-          />
+          <PasswordField label="Confirma tu nueva contraseña" placeholder="••••••••" />
 
           <button
             type="submit"
@@ -69,5 +58,5 @@ export default function PasswordSection() {
         </form>
       </div>
     </div>
-  );
+  )
 }

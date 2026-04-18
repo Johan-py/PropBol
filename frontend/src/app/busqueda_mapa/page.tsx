@@ -1,9 +1,9 @@
 'use client'
 
-import { point, polygon } from "@turf/helpers";
-import booleanPointInPolygon from "@turf/boolean-point-in-polygon";
-import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from "react";
-import nextDynamic from "next/dynamic";
+import { point, polygon } from '@turf/helpers'
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon'
+import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from 'react'
+import nextDynamic from 'next/dynamic'
 import {
   ChevronLeft,
   ChevronRight,
@@ -16,9 +16,9 @@ import {
 } from 'lucide-react'
 
 // === HOOKS ===
-import { useProperties } from "@/hooks/useProperties";
-import { useOrdenamiento } from "@/hooks/useOrdenamiento";
-import { useZonas } from '@/hooks/useZonas';
+import { useProperties } from '@/hooks/useProperties'
+import { useOrdenamiento } from '@/hooks/useOrdenamiento'
+import { useZonas } from '@/hooks/useZonas'
 
 // === COMPONENTES ===
 import FilterBar from '@/components/filters/FilterBar'
@@ -72,12 +72,12 @@ const SHEET_H = { peek: '50%', full: '100%' } as const
 type SheetState = 'hidden' | 'peek' | 'full'
 
 function BusquedaMapaContent() {
-// === 1. ESTADOS COMPARTIDOS ===
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [sheetState, setSheetState] = useState<SheetState>("peek");
-  const [pinnedProperty, setPinnedProperty] = useState<any | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
+  // === 1. ESTADOS COMPARTIDOS ===
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [sheetState, setSheetState] = useState<SheetState>('peek')
+  const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
+  const [isMounted, setIsMounted] = useState(false)
   // --- INICIO ESTADOS HU8 ---
   const [isDrawingMode, setIsDrawingMode] = useState(false)
   const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([])
@@ -97,51 +97,51 @@ function BusquedaMapaContent() {
     setIsMounted(true)
   }, [])
 
-// === 2. EXTRACCIÓN DE DATOS BASE Y ZONAS (develop) ===
-  const { properties, isLoading, error } = useProperties();
-  const { zonas } = useZonas();
-  const [selectedZoneId, setSelectedZoneId] = useState<number | null>(null);
+  // === 2. EXTRACCIÓN DE DATOS BASE Y ZONAS (develop) ===
+  const { properties, isLoading, error } = useProperties()
+  const { zonas } = useZonas()
+  const [selectedZoneId, setSelectedZoneId] = useState<number | null>(null)
 
   // === 3. LÓGICA MATEMÁTICA HU8 (Filtro por polígono) ===
   const displayedProperties = useMemo(() => {
-    if (!properties) return [];
+    if (!properties) return []
     if (isPolygonClosed && polygonPoints.length >= 3) {
-      console.log("📐 [Turf.js] Polígono cerrado. Calculando intersecciones...");
+      console.log('📐 [Turf.js] Polígono cerrado. Calculando intersecciones...')
       try {
-        const turfCoords = [...polygonPoints, polygonPoints[0]].map(p => [p[1], p[0]]);
-        const drawPoly = polygon([turfCoords]);
+        const turfCoords = [...polygonPoints, polygonPoints[0]].map((p) => [p[1], p[0]])
+        const drawPoly = polygon([turfCoords])
 
         return properties.filter((p: any) => {
-          if (p.lat == null || p.lng == null) return false;
-          const pt = point([p.lng, p.lat]);
-          const isInside = booleanPointInPolygon(pt, drawPoly);
-          if (isInside) console.log(`✅ Adentro: ${p.title}`);
-          return isInside;
-        });
+          if (p.lat == null || p.lng == null) return false
+          const pt = point([p.lng, p.lat])
+          const isInside = booleanPointInPolygon(pt, drawPoly)
+          if (isInside) console.log(`✅ Adentro: ${p.title}`)
+          return isInside
+        })
       } catch (err) {
-        console.error("Error en validación geométrica:", err);
-        return properties;
+        console.error('Error en validación geométrica:', err)
+        return properties
       }
     }
-    return properties;
-  }, [properties, isPolygonClosed, polygonPoints]);
+    return properties
+  }, [properties, isPolygonClosed, polygonPoints])
 
   // === 4. ORDENAMIENTO (Usando resultados filtrados) ===
   const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
-    inmuebles: displayedProperties,
-  });
+    inmuebles: displayedProperties
+  })
 
   // === 5. ESTADOS VISUALES Y DE CLUSTERS (develop + HU8) ===
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [isHoveringList, setIsHoveringList] = useState(false);
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
+  const [isHoveringList, setIsHoveringList] = useState(false)
 
-  const [clusterProperties, setClusterProperties] = useState<any[]>([]);
-  const [isClusterView, setIsClusterView] = useState(false);
-  const [activeClusterIds, setActiveClusterIds] = useState<string[]>([]);
+  const [clusterProperties, setClusterProperties] = useState<any[]>([])
+  const [isClusterView, setIsClusterView] = useState(false)
+  const [activeClusterIds, setActiveClusterIds] = useState<string[]>([])
 
-  const dragStartY = useRef<number | null>(null);
-  const dragStartState = useRef<SheetState>("peek");
+  const dragStartY = useRef<number | null>(null)
+  const dragStartState = useRef<SheetState>('peek')
 
   // Hover con debounce de 200 ms → vuela el mapa al marcador
   useEffect(() => {
@@ -173,22 +173,25 @@ function BusquedaMapaContent() {
     setActiveClusterIds(props.map((p: any) => p.id))
   }
 
-  const handleMapSelect = useCallback((id: string | null) => {
-    setSelectedPropertyId(id)
+  const handleMapSelect = useCallback(
+    (id: string | null) => {
+      setSelectedPropertyId(id)
 
-    if (id) {
-      const prop = inmueblesOrdenados.find((p: any) => p.id === id);
-      if (prop) {
-        setPinnedProperty(prop)
-        setSheetState('peek')
+      if (id) {
+        const prop = inmueblesOrdenados.find((p: any) => p.id === id)
+        if (prop) {
+          setPinnedProperty(prop)
+          setSheetState('peek')
+        }
+      } else {
+        setPinnedProperty(null)
+        setIsClusterView(false)
+        setActiveClusterIds([])
+        setClusterProperties([])
       }
-    } else {
-      setPinnedProperty(null)
-      setIsClusterView(false)
-      setActiveClusterIds([])
-      setClusterProperties([])
-    }
-  }, [inmueblesOrdenados]);
+    },
+    [inmueblesOrdenados]
+  )
 
   // Eventos táctiles para el Bottom Sheet
   function onTouchStart(e: React.TouchEvent) {
@@ -204,7 +207,7 @@ function BusquedaMapaContent() {
       return
     }
     if (dy > 40) {
-      setSheetState(dragStartState.current === 'peek' ? 'full' : 'full');
+      setSheetState(dragStartState.current === 'peek' ? 'full' : 'full')
     } else if (dy < -40) {
       setSheetState(dragStartState.current === 'full' ? 'peek' : 'hidden')
     }
@@ -250,7 +253,7 @@ function BusquedaMapaContent() {
               : ''
           }`}
         >
-        {(isClusterView ? clusterProperties : inmueblesOrdenados).map((property: any) => (
+          {(isClusterView ? clusterProperties : inmueblesOrdenados).map((property: any) => (
             <div
               key={property.id}
               onClick={() => {
@@ -322,7 +325,7 @@ function BusquedaMapaContent() {
                   isPolygonClosed={isPolygonClosed}
                   onMapClick={(latlng) => {
                     if (isDrawingMode && !isPolygonClosed) {
-                      setPolygonPoints(prev => [...prev, [latlng.lat, latlng.lng]])
+                      setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
                     }
                   }}
                   onPointClick={(index) => {
@@ -337,7 +340,9 @@ function BusquedaMapaContent() {
             <div className="w-[280px] flex flex-col bg-white border-l border-stone-200 overflow-hidden shrink-0">
               <div className="px-3 py-2 border-b border-stone-100 flex items-center justify-between shrink-0">
                 <span className="text-sm font-semibold text-slate-700">
-                  <span className="text-orange-500">{isClusterView ? clusterProperties.length : displayedProperties.length}</span>
+                  <span className="text-orange-500">
+                    {isClusterView ? clusterProperties.length : displayedProperties.length}
+                  </span>
                   <span className="ml-1 text-gray-500 font-normal text-xs">props.</span>
                 </span>
                 {MenuToggleComponent}
@@ -375,13 +380,13 @@ function BusquedaMapaContent() {
               isPolygonClosed={isPolygonClosed}
               onMapClick={(latlng) => {
                 if (isDrawingMode && !isPolygonClosed) {
-                  setPolygonPoints(prev => [...prev, [latlng.lat, latlng.lng]]);
+                  setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
                 }
               }}
               onPointClick={(index) => {
                 if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
-                  setIsPolygonClosed(true);
-                  setIsDrawingMode(false);
+                  setIsPolygonClosed(true)
+                  setIsDrawingMode(false)
                 }
               }}
               onClusterClick={handleClusterClick}
@@ -423,12 +428,18 @@ function BusquedaMapaContent() {
                 />
                 <div className="flex items-center justify-between w-full px-4 pb-2">
                   <span className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
-                    <span className="text-orange-500">{isClusterView ? clusterProperties.length : displayedProperties.length}</span>
+                    <span className="text-orange-500">
+                      {isClusterView ? clusterProperties.length : displayedProperties.length}
+                    </span>
                     <span className="text-gray-500 font-normal">propiedades</span>
                   </span>
                   {isClusterView && (
                     <button
-                      onClick={() => { setIsClusterView(false); setClusterProperties([]); setActiveClusterIds([]); }}
+                      onClick={() => {
+                        setIsClusterView(false)
+                        setClusterProperties([])
+                        setActiveClusterIds([])
+                      }}
                       className="text-xs text-orange-500 hover:underline px-2"
                     >
                       ← Volver
@@ -558,27 +569,35 @@ function BusquedaMapaContent() {
                       </div>
                       <div className="flex items-center gap-2 mb-2">
                         <h1 className="text-xl font-semibold text-slate-800">
-                          {isClusterView ? `${clusterProperties.length} propiedades en este clúster` : "Resultados de búsqueda"}
+                          {isClusterView
+                            ? `${clusterProperties.length} propiedades en este clúster`
+                            : 'Resultados de búsqueda'}
                         </h1>
                       </div>
                       <h2 className="text-sm font-bold text-slate-900">
-                          <span className="text-orange-500">
+                        <span className="text-orange-500">
                           {isClusterView ? clusterProperties.length : displayedProperties.length}
                         </span>
                         <span className="ml-2 text-gray-600 font-normal text-sm">
-                          {(isClusterView ? clusterProperties.length : displayedProperties.length) === 1
-                            ? "propiedad encontrada"
-                            : "propiedades encontradas"}
+                          {(isClusterView
+                            ? clusterProperties.length
+                            : displayedProperties.length) === 1
+                            ? 'propiedad encontrada'
+                            : 'propiedades encontradas'}
                         </span>
                       </h2>
                       {isClusterView && (
-  <button
-    onClick={() => { setIsClusterView(false); setClusterProperties([]); setActiveClusterIds([]); }}
-    className="text-sm text-orange-500 hover:underline flex items-center gap-1 mt-1 mb-2"
-  >
-    ← Volver a todos los resultados
-  </button>
-)}
+                        <button
+                          onClick={() => {
+                            setIsClusterView(false)
+                            setClusterProperties([])
+                            setActiveClusterIds([])
+                          }}
+                          className="text-sm text-orange-500 hover:underline flex items-center gap-1 mt-1 mb-2"
+                        >
+                          ← Volver a todos los resultados
+                        </button>
+                      )}
                     </div>
                   </div>
                   <button
@@ -641,59 +660,61 @@ function BusquedaMapaContent() {
                         : ''
                     }`}
                   >
-                    {(isClusterView ? clusterProperties : inmueblesOrdenados).map((property: any) => (
-                      <div
-                        key={property.id}
-                        onMouseEnter={() => setHoveredId(property.id)}
-                        onMouseLeave={() => setHoveredId(null)}
-                        onClick={() => setSelectedPropertyId(property.id)}
-                        className={`cursor-pointer transition-all duration-200 rounded-xl relative ${
-                          viewMode === 'grid'
-                            ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
-                            : 'w-full py-1 hover:bg-stone-100'
-                        } ${
-                          selectedPropertyId === property.id
-                            ? 'ring-2 ring-orange-400 ring-offset-1 z-10'
-                            : ''
-                        }`}
-                      >
-                        {viewMode === 'grid' ? (
-                          <PropertyCard
-                            imagen={
-                              property.thumbnailUrl ||
-                              property.imagen ||
-                              'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
-                            }
-                            estado={property.type}
-                            precio={
-                              property.currency === 'USD'
-                                ? `$${property.price.toLocaleString('es-BO')} USD`
-                                : `Bs ${property.price.toLocaleString('es-BO')}`
-                            }
-                            descripcion={property.descripcion || property.title}
-                            camas={property.nroCuartos ?? 0}
-                            banos={property.nroBanos ?? 0}
-                            metros={property.superficieM2 ?? 0}
-                          />
-                        ) : (
-                          <PropertyRow
-                            title={property.title}
-                            price={
-                              property.currency === 'USD'
-                                ? `$${property.price.toLocaleString('es-BO')} USD`
-                                : `Bs ${property.price.toLocaleString('es-BO')}`
-                            }
-                            size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
-                            contactType="whatsapp"
-                            image={
-                              property.thumbnailUrl ||
-                              property.imagen ||
-                              'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
-                            }
-                          />
-                        )}
-                      </div>
-                    ))}
+                    {(isClusterView ? clusterProperties : inmueblesOrdenados).map(
+                      (property: any) => (
+                        <div
+                          key={property.id}
+                          onMouseEnter={() => setHoveredId(property.id)}
+                          onMouseLeave={() => setHoveredId(null)}
+                          onClick={() => setSelectedPropertyId(property.id)}
+                          className={`cursor-pointer transition-all duration-200 rounded-xl relative ${
+                            viewMode === 'grid'
+                              ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
+                              : 'w-full py-1 hover:bg-stone-100'
+                          } ${
+                            selectedPropertyId === property.id
+                              ? 'ring-2 ring-orange-400 ring-offset-1 z-10'
+                              : ''
+                          }`}
+                        >
+                          {viewMode === 'grid' ? (
+                            <PropertyCard
+                              imagen={
+                                property.thumbnailUrl ||
+                                property.imagen ||
+                                'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
+                              }
+                              estado={property.type}
+                              precio={
+                                property.currency === 'USD'
+                                  ? `$${property.price.toLocaleString('es-BO')} USD`
+                                  : `Bs ${property.price.toLocaleString('es-BO')}`
+                              }
+                              descripcion={property.descripcion || property.title}
+                              camas={property.nroCuartos ?? 0}
+                              banos={property.nroBanos ?? 0}
+                              metros={property.superficieM2 ?? 0}
+                            />
+                          ) : (
+                            <PropertyRow
+                              title={property.title}
+                              price={
+                                property.currency === 'USD'
+                                  ? `$${property.price.toLocaleString('es-BO')} USD`
+                                  : `Bs ${property.price.toLocaleString('es-BO')}`
+                              }
+                              size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
+                              contactType="whatsapp"
+                              image={
+                                property.thumbnailUrl ||
+                                property.imagen ||
+                                'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
+                              }
+                            />
+                          )}
+                        </div>
+                      )
+                    )}
                   </div>
                 )}
               </div>
@@ -719,14 +740,16 @@ function BusquedaMapaContent() {
           <div className="absolute top-3 right-4 z-[1000] flex flex-col gap-2 items-end pointer-events-none">
             {!isDrawingMode && !isPolygonClosed && (
               <div className="flex flex-row gap-2 pointer-events-auto">
-                <button 
+                <button
                   onClick={() => setIsDrawingMode(true)}
                   className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
                 >
                   Dibujar zona
                 </button>
-                <button 
-                  onClick={() => { console.log("Próximamente: Abrir barra lateral de Mis Zonas") }}
+                <button
+                  onClick={() => {
+                    console.log('Próximamente: Abrir barra lateral de Mis Zonas')
+                  }}
                   className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
                 >
                   Mis zonas
@@ -735,14 +758,15 @@ function BusquedaMapaContent() {
             )}
             {isDrawingMode && !isPolygonClosed && (
               <div className="flex flex-col items-end gap-2 pointer-events-auto">
-                <button 
+                <button
                   onClick={resetDrawing}
                   className="bg-white text-red-600 px-4 py-2 rounded-lg shadow-md border border-stone-200 hover:bg-red-50 transition-all text-sm font-semibold"
                 >
                   Cancelar dibujo
                 </button>
                 <div className="bg-white/95 backdrop-blur-sm p-3 rounded-lg shadow-md border border-stone-200 text-xs text-stone-600 max-w-[220px] text-right">
-                  Haz clic en el mapa para marcar los vértices. Cierra la zona tocando el punto inicial.
+                  Haz clic en el mapa para marcar los vértices. Cierra la zona tocando el punto
+                  inicial.
                 </div>
               </div>
             )}
@@ -750,7 +774,7 @@ function BusquedaMapaContent() {
 
           {isPolygonClosed && (
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000]">
-              <button 
+              <button
                 onClick={resetDrawing}
                 className="bg-[#ea580c] text-white px-6 py-2.5 rounded-full shadow-[0_4px_14px_rgba(234,88,12,0.4)] hover:bg-[#c2410c] active:scale-95 transition-transform text-sm font-bold tracking-wide pointer-events-auto"
               >
@@ -761,7 +785,7 @@ function BusquedaMapaContent() {
           {/* --- FIN BOTONES FLOTANTES HU8 --- */}
           <div className="absolute inset-0" style={{ zIndex: 0 }}>
             <MapView
-properties={inmueblesOrdenados}
+              properties={inmueblesOrdenados}
               selectedId={selectedPropertyId}
               onSelect={handleMapSelect}
               onClusterClick={handleClusterClick}
@@ -776,13 +800,13 @@ properties={inmueblesOrdenados}
               isPolygonClosed={isPolygonClosed}
               onMapClick={(latlng) => {
                 if (isDrawingMode && !isPolygonClosed) {
-                  setPolygonPoints(prev => [...prev, [latlng.lat, latlng.lng]]);
+                  setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
                 }
               }}
               onPointClick={(index) => {
                 if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
-                  setIsPolygonClosed(true);
-                  setIsDrawingMode(false);
+                  setIsPolygonClosed(true)
+                  setIsDrawingMode(false)
                 }
               }}
             />
