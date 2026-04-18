@@ -1,6 +1,6 @@
 'use client'
 
-import { X, Plus, Pencil, Trash2, Map as MapIcon } from 'lucide-react'
+import { ChevronRight, Plus, Pencil, Trash2, Map as MapIcon } from 'lucide-react'
 
 export interface ZonaPersonalizada {
   id: string
@@ -41,16 +41,13 @@ export default function MisZonasSidebar({
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between p-4 border-b border-stone-100">
-          <div className="flex items-center gap-2 text-slate-800">
-            <MapIcon className="w-5 h-5 text-orange-500" />
-            <h2 className="font-bold text-lg">Mis zonas</h2>
-          </div>
+        <div className="flex items-center justify-between px-4 pt-4 pb-2">
+          <h2 className="text-lg text-slate-800">Mis zonas</h2>
           <button
             onClick={onClose}
             className="p-1.5 text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-full transition-colors"
           >
-            <X size={20} />
+            <ChevronRight size={20} />
           </button>
         </div>
 
@@ -60,7 +57,7 @@ export default function MisZonasSidebar({
           {/* El botón ahora siempre es visible */}
           <button
             onClick={onAddZone}
-            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-orange-50 text-orange-600 rounded-lg border border-orange-200 hover:bg-orange-100 transition-colors font-semibold text-sm"
+            className="w-full flex items-center justify-center gap-2 py-2 text-orange-600 hover:text-orange-700 transition-colors font-semibold text-sm"
           >
             <Plus size={18} />
             Añadir nueva Zona
@@ -85,7 +82,7 @@ export default function MisZonasSidebar({
                   {zonas.map((zona) => (
                     <li
                       key={zona.id}
-                      className="flex items-center justify-between p-3 bg-stone-50 border border-stone-100 rounded-lg hover:border-orange-200 transition-colors group"
+                      className="flex items-center justify-between p-3 bg-stone-50 border border-stone-100 rounded-lg cursor-pointer hover:border-orange-200 hover:-translate-y-1 hover:shadow-md active:translate-y-0 active:shadow-sm transition-all duration-200 group"
                     >
                       <span className="text-sm font-medium text-stone-700 truncate pr-2">
                         {zona.nombre}
