@@ -64,6 +64,12 @@ const handleConfirm = async () => {
   }
 }
 
+const handleDisableTwoFactor = () => {
+  setIsTwoFactorEnabled(false)
+  setShowCodeStep(false)
+  setCode('')
+}
+
 const handleCodeChange = (value: string) => {
   const onlyNumbers = value.replace(/\D/g, '').slice(0, 6)
   setCode(onlyNumbers)
@@ -130,6 +136,7 @@ const handleCodePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
 
         <button
           type="button"
+          onClick={handleDisableTwoFactor}
           className="inline-flex items-center justify-center rounded-lg border border-neutral-300 bg-white px-5 py-2.5 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50"
         >
           Desactivar
