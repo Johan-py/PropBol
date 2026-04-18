@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import Link from "next/link";
 
 export default function NavLinks() {
   return (
@@ -11,18 +11,32 @@ export default function NavLinks() {
       </Link>
 
       <Link
-        href="#contacto"
+        href="/propiedades"
         className="hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition"
       >
-        Contáctanos
+        Propiedades
       </Link>
 
       <Link
-        href="#nosotros"
+        href="/blogs"
         className="hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition"
       >
-        Sobre Nosotros
+        Blogs
+      </Link>
+
+      <Link
+        href="/cobros-suscripciones"
+        className="hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition"
+      >
+        Planes de membresia
+      </Link>
+
+      <Link
+        href="/ayuda"
+        className="hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition"
+      >
+        Ayuda
       </Link>
     </div>
-  )
+  );
 }
