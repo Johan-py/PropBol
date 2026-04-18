@@ -428,7 +428,6 @@ export default function Navbar() {
                               <p className="text-sm text-red-500">{error}</p>
                               <button
                                 type="button"
-                                // @ts-ignore
                                 onClick={() => void refreshNotifications(filter)}
                                 className="mt-3 rounded border border-stone-300 px-3 py-1 text-sm text-stone-700 transition hover:bg-stone-50"
                               >
@@ -628,4 +627,3 @@ export default function Navbar() {
     </>
   )
 }
-// Fuerza de cam
