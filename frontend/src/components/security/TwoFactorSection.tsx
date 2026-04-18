@@ -1,8 +1,8 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
+
 import { useState } from 'react'
-import { Eye, EyeOff, Info } from 'lucide-react'
+import { CheckCircle2, Eye, EyeOff, Info } from 'lucide-react'
 
 export default function TwoFactorSection() {
   const [showModal, setShowModal] = useState(false)
@@ -11,7 +11,7 @@ export default function TwoFactorSection() {
   const [error, setError] = useState('')
   const [showCodeStep, setShowCodeStep] = useState(false)
   const [code, setCode] = useState('')
-  const router = useRouter()
+  const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const handleOpenModal = () => {
@@ -51,7 +51,8 @@ const handleConfirm = async () => {
       setPassword('')
       setShowCodeStep(true)
       setCode('')
-    
+      setIsTwoFactorEnabled(true) 
+      
     } else {
       const data = await res.json()
       setError(data.message ?? 'Contraseña incorrecta')
@@ -86,33 +87,57 @@ const handleCodePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
           Protege tu cuenta con un código de verificación enviado a tu correo electrónico.
         </p>
       </header>
-
       <div className="max-w-3xl rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-start gap-4">
-              <div className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-full bg-white border border-neutral-200">
-                <Info className="h-4 w-4 text-neutral-500" />
-              </div>
-              <div>
-                <h3 className="text-base font-semibold text-neutral-900">¿Cómo funciona?</h3>
-                <p className="mt-1 max-w-2xl text-sm leading-6 text-neutral-500">
-                  Cada vez que inicies sesión, recibirás un código de verificación en tu correo
-                  electrónico. Deberás ingresar ese código para completar el inicio de sesión.
-                </p>
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleOpenModal}
-              className="inline-flex items-center justify-center rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-600"
-            >
-              Activar
-            </button>
+  <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
+    {!isTwoFactorEnabled ? (
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-4">
+          <div className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 bg-white">
+            <Info className="h-4 w-4 text-neutral-500" />
+          </div>
+          <div>
+            <h3 className="text-base font-semibold text-neutral-900">¿Cómo funciona?</h3>
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-neutral-500">
+              Cada vez que inicies sesión, recibirás un código de verificación en tu correo
+              electrónico. Deberás ingresar ese código para completar el inicio de sesión.
+            </p>
           </div>
         </div>
+
+        <button
+          type="button"
+          onClick={handleOpenModal}
+          className="inline-flex items-center justify-center rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-600"
+        >
+          Activar
+        </button>
       </div>
+    ) : (
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-4">
+          <div className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-full border border-green-200 bg-green-50">
+            <CheckCircle2 className="h-5 w-5 text-green-600" />
+          </div>
+          <div>
+            <h3 className="text-base font-semibold text-neutral-900">
+              Verificación en dos pasos activado
+            </h3>
+            <p className="mt-1 max-w-2xl text-sm leading-6 text-neutral-500">
+              Tu cuenta ahora está protegida con un segundo paso de verificación al iniciar sesión.
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className="inline-flex items-center justify-center rounded-lg border border-neutral-300 bg-white px-5 py-2.5 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50"
+        >
+          Desactivar
+        </button>
+      </div>
+    )}
+  </div>
+</div>
 
       {showCodeStep && (
   <div className="max-w-3xl rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
