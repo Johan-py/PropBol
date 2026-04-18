@@ -1,9 +1,9 @@
 'use client'
 
 import 'leaflet/dist/leaflet.css'
-import { MapContainer, Polygon, TileLayer, Tooltip, useMap } from 'react-leaflet'
 import { useEffect, useMemo } from 'react'
-import { Zone } from '@/types/zone'
+import { MapContainer, Polygon, TileLayer, Tooltip, useMap } from 'react-leaflet'
+import type { Zone } from '@/types/zone'
 
 interface ZonesMapClientProps {
   zones: Zone[]
@@ -39,10 +39,8 @@ export default function ZonesMapClient({ zones, activeZone }: ZonesMapClientProp
       <MapContainer
         center={center}
         zoom={13}
-        zoomControl={true}
         scrollWheelZoom={true}
         style={{ height: '100%', width: '100%' }}
-        className="z-0"
       >
         <TileLayer
           attribution="&copy; OpenStreetMap contributors"

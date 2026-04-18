@@ -15,9 +15,10 @@ const ZonesMapDynamic = dynamic(() => import('./ZonesMapClient'), {
 interface ZonesMapProps {
   zones: Zone[]
   activeZone?: Zone
+  onCreateZone: () => void
 }
 
-export default function ZonesMap({ zones, activeZone }: ZonesMapProps) {
+export default function ZonesMap({ zones, activeZone, onCreateZone }: ZonesMapProps) {
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
@@ -25,6 +26,7 @@ export default function ZonesMap({ zones, activeZone }: ZonesMapProps) {
 
         <button
           type="button"
+          onClick={onCreateZone}
           className="rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-white hover:bg-amber-600"
         >
           Nueva zona

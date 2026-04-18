@@ -3,11 +3,13 @@
 import { useMemo, useState } from 'react'
 import ZonesList from '@/components/profile/mis-zonas/ZonesList'
 import ZonesMap from '@/components/profile/mis-zonas/ZonesMap'
+import NewZoneModal from './NewZoneModal'
 import { mockZones } from '@/data/mockZones'
 import { Zone } from '@/types/zone'
 
 export default function MisZonasView() {
   const [zones, setZones] = useState<Zone[]>(mockZones)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleSelect = (zoneId: string) => {
     setZones((prevZones) =>
@@ -16,6 +18,39 @@ export default function MisZonasView() {
         isActive: zone.id === zoneId
       }))
     )
+  }
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+  }
+
+  const handleCreateZone = ({ name, reference }: { name: string; reference: string }) => {
+    const newZone: Zone = {
+      id: `zone-${Date.now()}`,
+      name,
+      reference,
+      isActive: true,
+      polygon: [
+        { lat: -17.3825, lng: -66.1602 },
+        { lat: -17.3772, lng: -66.1524 },
+        { lat: -17.3856, lng: -66.1458 },
+        { lat: -17.3904, lng: -66.1543 }
+      ]
+    }
+
+    setZones((prevZones) => [
+      ...prevZones.map((zone) => ({
+        ...zone,
+        isActive: false
+      })),
+      newZone
+    ])
+
+    setIsModalOpen(false)
   }
 
   const activeZone = useMemo(() => zones.find((zone) => zone.isActive), [zones])
@@ -30,7 +65,7 @@ export default function MisZonasView() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1.3fr_0.9fr]">
-        <ZonesMap zones={zones} activeZone={activeZone} />
+        <ZonesMap zones={zones} activeZone={activeZone} onCreateZone={handleOpenModal} />
 
         <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm">
           <div className="mb-4">
@@ -43,6 +78,8 @@ export default function MisZonasView() {
           <ZonesList zones={zones} onSelect={handleSelect} />
         </div>
       </div>
+
+      <NewZoneModal isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleCreateZone} />
     </section>
   )
 }
