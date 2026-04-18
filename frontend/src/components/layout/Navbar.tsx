@@ -33,6 +33,7 @@ export type User = {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 type MeResponse = {
   message?: string;
   user?: {
@@ -70,6 +71,11 @@ const filters: NotificationFilter[] = [
 =======
 type _MeResponse = {
 >>>>>>> a2899c68 (feat(navbar): actualizar links y limpiar tipos no usados)
+=======
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// test
+type MeResponse = {
+>>>>>>> 9132249f (feat(navbar): actualizar links y mantener tipos originales)
   message?: string
   perfil?: {
     id: number
