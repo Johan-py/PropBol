@@ -1,7 +1,8 @@
 'use client'
 
 import "leaflet/dist/leaflet.css"
-import { MapContainer, TileLayer } from "react-leaflet"
+import { useEffect } from "react"
+import { MapContainer, TileLayer, useMap } from "react-leaflet"
 
 interface Zona {
     id: number
@@ -17,12 +18,27 @@ interface MapaZonasProps {
     onZonaClick: (zona: Zona) => void
 }
 
-export default function MapaZonas({
-    zonas,
-    zonaActiva,
-    onZonaClick,
-}: MapaZonasProps) {
+function FlyToZona({ zona }: { zona: Zona | null }) {
+    const map = useMap()
 
+    useEffect(() => {
+        if (!zona?.coordenadas) return
+
+        map.flyTo(
+            [zona.coordenadas.lat, zona.coordenadas.lng],
+            zona.coordenadas.zoom ?? 14,
+            { duration: 0.8 }
+        )
+    }, [zona, map])
+
+    return null
+}
+
+export default function MapaZonas({
+    zonas: _zonas,
+    zonaActiva,
+    onZonaClick: _onZonaClick,
+}: MapaZonasProps) {
     const center: [number, number] = [-17.3895, -66.1568]
 
     return (
@@ -35,6 +51,8 @@ export default function MapaZonas({
                 attribution='&copy; OpenStreetMap'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
+
+            <FlyToZona zona={zonaActiva} />
         </MapContainer>
     )
 }
