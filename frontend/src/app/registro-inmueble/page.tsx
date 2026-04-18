@@ -45,7 +45,7 @@ export default function MiRegistroPage() {
       const token = localStorage.getItem('token')
 
       if (!token) {
-        router.push('/sign-in')
+        router.push('/sign-in') //entra al formulario solo si inicio sesion
         return
       }
 
