@@ -19,7 +19,7 @@ interface MapaZonasProps {
     onZonaClick: (zona: Zona) => void
 }
 
-// 🔥 arreglar iconos leaflet
+// 🔧 Fix iconos leaflet
 if (typeof window !== "undefined") {
     delete (L.Icon.Default.prototype as any)._getIconUrl
     L.Icon.Default.mergeOptions({
@@ -28,6 +28,7 @@ if (typeof window !== "undefined") {
     })
 }
 
+// 🚀 FlyTo
 function FlyToZona({ zona }: { zona: Zona | null }) {
     const map = useMap()
 
@@ -42,6 +43,28 @@ function FlyToZona({ zona }: { zona: Zona | null }) {
     }, [zona, map])
 
     return null
+}
+
+// 🎨 ICONO PERSONALIZADO
+function createZonaIcon(activa: boolean): L.DivIcon {
+    const color = activa ? "#f59e0b" : "#6b7280" // amarillo vs gris
+
+    return L.divIcon({
+        className: "",
+        html: `
+      <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;">
+        <div style="
+          width:18px;height:18px;
+          border-radius:50%;
+          background:${color};
+          border:3px solid white;
+          box-shadow:0 2px 6px rgba(0,0,0,0.3);
+        "></div>
+      </div>
+    `,
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
+    })
 }
 
 export default function MapaZonas({
@@ -65,14 +88,17 @@ export default function MapaZonas({
 
             <FlyToZona zona={zonaActiva} />
 
-            {/* 🔥 MARCADORES DE ZONAS */}
+            {/* 🔥 MARCADORES */}
             {zonas.map((zona) => {
                 if (!zona.coordenadas) return null
+
+                const esActiva = zonaActiva?.id === zona.id
 
                 return (
                     <Marker
                         key={zona.id}
                         position={[zona.coordenadas.lat, zona.coordenadas.lng]}
+                        icon={createZonaIcon(esActiva)}
                         eventHandlers={{
                             click: () => onZonaClick(zona),
                         }}
@@ -82,6 +108,11 @@ export default function MapaZonas({
                                 <strong>{zona.nombre}</strong>
                                 <br />
                                 {zona.referencia}
+                                {esActiva && (
+                                    <div style={{ color: "#f59e0b", marginTop: "4px" }}>
+                                        Zona activa
+                                    </div>
+                                )}
                             </div>
                         </Popup>
                     </Marker>
