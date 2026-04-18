@@ -558,7 +558,6 @@ export default function Navbar() {
                               <p className="text-sm text-red-500">{error}</p>
                               <button
                                 type="button"
-                                // @ts-ignore
                                 onClick={() => void refreshNotifications(filter)}
                                 className="mt-3 rounded border border-stone-300 px-3 py-1 text-sm text-stone-700 transition hover:bg-stone-50"
                               >
@@ -837,9 +836,13 @@ export default function Navbar() {
 }
 =======
   )
+<<<<<<< HEAD
 }
 <<<<<<< HEAD
 >>>>>>> 5f456f00 (feat: agregar funcionalidades al Navbar)
 =======
 // Fuerza de cam
 >>>>>>> 2c4e26fc (fix(navbar): forzar paso de check de typescript)
+=======
+}
+>>>>>>> 314b6112 (fix(navbar): corregir argumentos de TypeScript en notificaciones)
