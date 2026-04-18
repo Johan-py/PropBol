@@ -110,3 +110,39 @@ export default function MisZonas() {
       setIsLoading(false)
     }
   }
+
+  const iniciarEdicion = (zona: Zona, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setEditandoId(zona.id)
+    setNombreEditado(zona.nombre)
+  }
+
+  const guardarEdicion = async (id: number, e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (!nombreEditado.trim()) return
+    setIsLoading(true)
+    try {
+      const token = getToken()
+      if (token) {
+        const response = await fetch(`${API_URL}/api/perfil/zonas/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ nombre: nombreEditado })
+        })
+        const data = await response.json()
+        if (!data.ok) throw new Error(data.msg)
+      }
+      setZonas(prev => prev.map(z => z.id === id ? { ...z, nombre: nombreEditado } : z))
+      setEditandoId(null)
+    } catch (err: any) {
+      alert(err.message || 'Error al actualizar zona')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const cancelarEdicion = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setEditandoId(null)
+    setNombreEditado('')
+  }
