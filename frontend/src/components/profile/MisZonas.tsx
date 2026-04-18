@@ -146,3 +146,25 @@ export default function MisZonas() {
     setEditandoId(null)
     setNombreEditado('')
   }
+
+  const eliminarZona = async (id: number, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsLoading(true)
+    try {
+      const token = getToken()
+      if (token) {
+        const response = await fetch(`${API_URL}/api/perfil/zonas/${id}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        const data = await response.json()
+        if (!data.ok) throw new Error(data.msg)
+      }
+      setZonas(prev => prev.filter(z => z.id !== id))
+      setConfirmandoEliminarId(null)
+    } catch (err: any) {
+      alert(err.message || 'Error al eliminar zona')
+    } finally {
+      setIsLoading(false)
+    }
+  }
