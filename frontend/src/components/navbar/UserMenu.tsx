@@ -5,6 +5,7 @@ import {
   Eye,
   FileText,
   Map,
+  Star,
   ArrowLeftRight,
 } from "lucide-react";
 
@@ -138,6 +139,12 @@ export default function UserMenu({
                 label="Mis propiedades vistas"
                 href="/vistas"
                 icon={Eye}
+                onClick={onClosePanel}
+              />
+               <MenuLink
+                label="Mis favoritos"
+                href="/mis-favoritos"
+                icon={Star}
                 onClick={onClosePanel}
               />
               <MenuLink
