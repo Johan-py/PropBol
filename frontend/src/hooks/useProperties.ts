@@ -4,7 +4,7 @@ import { useSearchParams } from 'next/navigation'
 
 // Asegurarse de que NEXT_PUBLIC_API_URL esté en .env.local
 
-const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").replace(/\/$/, "");
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
 
 interface UsePropertiesResult {
   properties: PropertyMapPin[]
@@ -45,13 +45,7 @@ export function useProperties(): UsePropertiesResult {
               const lat = Number(ubicacion?.latitud)
               const lng = Number(ubicacion?.longitud)
 
-              return (
-                ubicacion &&
-                !isNaN(lat) &&
-                !isNaN(lng) &&
-                lat !== 0 &&
-                lng !== 0
-              )
+              return ubicacion && !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0
             })
             .map((item: any) => {
               const ubicacion = item.ubicacion ?? item.ubicacion_inmueble
@@ -61,17 +55,16 @@ export function useProperties(): UsePropertiesResult {
                 lat: Number(ubicacion.latitud),
                 lng: Number(ubicacion.longitud),
                 price: Number(item.precio),
-                currency: "USD",
-                type: (item.categoria?.toLowerCase().trim() || "casa") as any,
+                currency: 'USD',
+                type: (item.categoria?.toLowerCase().trim() || 'casa') as any,
                 title: item.titulo,
                 descripcion: item.descripcion ?? null,
                 nroCuartos: item.nroCuartos ?? null,
                 nroBanos: item.nroBanos ?? null,
                 superficieM2: item.superficieM2 ? Number(item.superficieM2) : null,
-                thumbnailUrl: publicaciones?.[0]?.multimedia?.[0]?.url ?? undefined,
+                thumbnailUrl: publicaciones?.[0]?.multimedia?.[0]?.url ?? undefined
               }
             })
-
           setProperties(mappedData)
         }
       } catch (err) {
