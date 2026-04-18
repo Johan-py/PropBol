@@ -34,3 +34,37 @@ export default function MisZonas() {
   const [modalNuevaZona, setModalNuevaZona] = useState(false)
   const [nombreNuevaZona, setNombreNuevaZona] = useState('')
   const [referenciaNuevaZona, setReferenciaNuevaZona] = useState('')
+
+  const getToken = () => localStorage.getItem('token')
+
+  const cargarZonas = async () => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const token = getToken()
+      if (!token) {
+        setZonas([
+          { id: 1, nombre: 'Zona Norte - Cochabamba', referencia: 'Cochabamba, Bolivia', activa: true, coordenadas: { lat: -17.3895, lng: -66.1568, zoom: 14 } },
+          { id: 2, nombre: 'Cerca del Cristo de la Concordia', referencia: 'Cochabamba, Bolivia', activa: false, coordenadas: { lat: -17.4058, lng: -66.1423, zoom: 15 } },
+          { id: 3, nombre: 'Cerca del Parque Fidel Anze', referencia: 'Cochabamba, Bolivia', activa: false, coordenadas: { lat: -17.3950, lng: -66.1600, zoom: 15 } },
+        ])
+        setIsLoading(false)
+        return
+      }
+      const response = await fetch(`${API_URL}/api/perfil/zonas`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      const data = await response.json()
+      if (data.ok) {
+        setZonas(data.zonas || [])
+      } else {
+        throw new Error(data.msg)
+      }
+    } catch (err: any) {
+      setError(err.message || 'Error al cargar las zonas')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => { cargarZonas() }, [])
