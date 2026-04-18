@@ -54,24 +54,28 @@ export default function MisZonasSidebar({
           </button>
         </div>
 
+        {/* Contenido principal condicionado por la autenticación */}
         <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
+          
+          {/* El botón ahora siempre es visible */}
+          <button
+            onClick={onAddZone}
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-orange-50 text-orange-600 rounded-lg border border-orange-200 hover:bg-orange-100 transition-colors font-semibold text-sm"
+          >
+            <Plus size={18} />
+            Añadir nueva Zona
+          </button>
+
           {!isAuthenticated ? (
-            <div className="flex flex-col items-center justify-center h-full text-center text-stone-500 gap-3">
+            <div className="flex flex-col items-center justify-center h-full text-center text-stone-500 gap-3 mt-8">
               <MapIcon className="w-12 h-12 text-stone-300" />
               <p className="text-sm">
-                Debes iniciar sesión para crear y guardar zonas de búsqueda personalizadas.
+                Crea una cuenta para guardar tus zonas de búsqueda personalizadas.
               </p>
             </div>
           ) : (
             <>
-              <button
-                onClick={onAddZone}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-orange-50 text-orange-600 rounded-lg border border-orange-200 hover:bg-orange-100 transition-colors font-semibold text-sm"
-              >
-                <Plus size={18} />
-                Añadir nueva Zona
-              </button>
-
+              {/* Lista de zonas guardadas */}
               {zonas.length === 0 ? (
                 <div className="text-center text-sm text-stone-400 mt-10">
                   No tienes zonas guardadas.
