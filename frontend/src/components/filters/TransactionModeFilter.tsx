@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
 interface TransactionModeFilterProps {
-  modoSeleccionado: string[];
-  onModoChange: (modo: string[]) => void;
+  modoSeleccionado: string[]
+  onModoChange: (modo: string[]) => void
 }
 
 export default function TransactionModeFilter({
   modoSeleccionado,
-  onModoChange,
+  onModoChange
 }: TransactionModeFilterProps) {
   const modos = [
-    { id: "VENTA", label: "Venta" },
-    { id: "ALQUILER", label: "Alquiler" },
-    { id: "ANTICRETO", label: "Anticrético" },
-  ];
+    { id: 'VENTA', label: 'Venta' },
+    { id: 'ALQUILER', label: 'Alquiler' },
+    { id: 'ANTICRETO', label: 'Anticrético' }
+  ]
   return (
     <div className="flex gap-6">
       {modos.map((modo) => (
@@ -29,17 +29,17 @@ export default function TransactionModeFilter({
               checked={modoSeleccionado.includes(modo.id)}
               onChange={() => {
                 if (modoSeleccionado.includes(modo.id)) {
-                  onModoChange(modoSeleccionado.filter((id) => id !== modo.id));
+                  onModoChange(modoSeleccionado.filter((id) => id !== modo.id))
                 } else {
-                  onModoChange([...modoSeleccionado, modo.id]);
+                  onModoChange([...modoSeleccionado, modo.id])
                 }
               }}
               className={`
                 w-[28px] h-[18px] rounded border cursor-pointer appearance-none
                 ${
                   modoSeleccionado.includes(modo.id)
-                    ? "bg-[#d97706] border-[#d97706]"
-                    : "bg-white border-gray-400"
+                    ? 'bg-[#d97706] border-[#d97706]'
+                    : 'bg-white border-gray-400'
                 }
               `}
             />
