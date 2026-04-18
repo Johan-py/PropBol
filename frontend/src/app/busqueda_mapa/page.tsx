@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import nextDynamic from "next/dynamic";
 import {
   ChevronLeft,
@@ -24,6 +25,7 @@ import FilterBar from "@/components/filters/FilterBar";
 import PropertyCard from "@/components/layout/PropertyCard";
 import PropertyRow from "@/components/galeria/PropertyRow";
 import EmptyState from "@/components/galeria/EmptyState";
+import ListaPaginacion from "@/components/galeria/ListaPaginacion";
 import { MenuOrdenamiento } from "@/components/busqueda/ordenamiento/MenuOrdenamiento";
 
 // Carga dinámica del mapa (sin SSR)
@@ -71,7 +73,7 @@ function useIsLandscapeMobile() {
 const SHEET_H = { peek: "50%", full: "100%" } as const;
 type SheetState = "hidden" | "peek" | "full";
 
-const LISTA_PAGE_SIZES = [10, 20, 50] as const;
+const LISTA_PAGE_SIZES = [10, 20, 50, 100] as const;
 
 function BusquedaMapaContent() {
   // === ESTADOS COMPARTIDOS ===
