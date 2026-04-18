@@ -46,6 +46,8 @@ model Usuario {
   fechaNacimiento                   DateTime?
   telemetriaCompartida              Boolean?                @default(false)
   zonaConexion                      String?                 @db.VarChar(100)
+  notificacionEmail                 Boolean?                @default(true)
+  notificacionWhatsapp              Boolean?                @default(false)
   autenticacion_social              autenticacion_social[]
   bitacora_pagos                    bitacora_pagos[]
   cambio_email                      CambioEmail[]
