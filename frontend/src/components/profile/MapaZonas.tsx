@@ -1,5 +1,8 @@
 'use client'
 
+import "leaflet/dist/leaflet.css"
+import { MapContainer, TileLayer } from "react-leaflet"
+
 interface Zona {
     id: number
     nombre: string
@@ -19,9 +22,19 @@ export default function MapaZonas({
     zonaActiva,
     onZonaClick,
 }: MapaZonasProps) {
+
+    const center: [number, number] = [-17.3895, -66.1568]
+
     return (
-        <div className="w-full h-full flex items-center justify-center bg-stone-100 text-stone-500 text-sm">
-            Mapa de zonas en construcción
-        </div>
+        <MapContainer
+            center={center}
+            zoom={13}
+            style={{ height: "100%", width: "100%" }}
+        >
+            <TileLayer
+                attribution='&copy; OpenStreetMap'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+        </MapContainer>
     )
 }
