@@ -13,6 +13,16 @@ interface Zona {
     coordenadas?: { lat: number; lng: number; zoom: number }
 }
 
+interface Propiedad {
+    id: number
+    titulo: string
+    precio: string
+    tipo: string
+    lat: number
+    lng: number
+    zonaId: number
+}
+
 interface MapaZonasProps {
     zonas: Zona[]
     zonaActiva: Zona | null
@@ -26,6 +36,24 @@ if (typeof window !== "undefined") {
         iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
         shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
     })
+}
+
+// 🧪 PROPIEDADES MOCK
+const PROPIEDADES_MOCK: Propiedad[] = [
+    { id: 1, titulo: "Casa amplia zona norte", precio: "$85,000", tipo: "Casa", lat: -17.387, lng: -66.154, zonaId: 1 },
+    { id: 2, titulo: "Departamento moderno", precio: "$45,000", tipo: "Departamento", lat: -17.391, lng: -66.159, zonaId: 1 },
+    { id: 3, titulo: "Terreno en esquina", precio: "$30,000", tipo: "Terreno", lat: -17.393, lng: -66.152, zonaId: 1 },
+    { id: 4, titulo: "Casa con jardín", precio: "$95,000", tipo: "Casa", lat: -17.403, lng: -66.140, zonaId: 2 },
+    { id: 5, titulo: "Departamento 3 dorm.", precio: "$55,000", tipo: "Departamento", lat: -17.408, lng: -66.145, zonaId: 2 },
+    { id: 6, titulo: "Oficina céntrica", precio: "$40,000", tipo: "Oficina", lat: -17.405, lng: -66.142, zonaId: 2 },
+]
+
+// 🎨 colores por tipo
+const COLORES_TIPO: Record<string, string> = {
+    Casa: "#3b82f6",
+    Departamento: "#8b5cf6",
+    Terreno: "#f59e0b",
+    Oficina: "#10b981",
 }
 
 // 🚀 FlyTo
@@ -45,9 +73,9 @@ function FlyToZona({ zona }: { zona: Zona | null }) {
     return null
 }
 
-// 🎨 ICONO PERSONALIZADO
+// 🎨 ICONO ZONA
 function createZonaIcon(activa: boolean): L.DivIcon {
-    const color = activa ? "#f59e0b" : "#6b7280" // amarillo vs gris
+    const color = activa ? "#f59e0b" : "#6b7280"
 
     return L.divIcon({
         className: "",
@@ -67,6 +95,32 @@ function createZonaIcon(activa: boolean): L.DivIcon {
     })
 }
 
+// 🎨 ICONO PROPIEDAD
+function createPropiedadIcon(tipo: string): L.DivIcon {
+    const color = COLORES_TIPO[tipo] || "#6b7280"
+
+    return L.divIcon({
+        className: "",
+        html: `
+      <div style="
+        background:${color};
+        color:white;
+        font-size:10px;
+        font-weight:bold;
+        padding:3px 8px;
+        border-radius:12px;
+        white-space:nowrap;
+        box-shadow:0 2px 6px rgba(0,0,0,0.25);
+        border:2px solid white;
+      ">
+        ${tipo}
+      </div>
+    `,
+        iconSize: [80, 24],
+        iconAnchor: [40, 12],
+    })
+}
+
 export default function MapaZonas({
     zonas,
     zonaActiva,
@@ -74,6 +128,11 @@ export default function MapaZonas({
 }: MapaZonasProps) {
 
     const center: [number, number] = [-17.3895, -66.1568]
+
+    // 🔥 filtrar propiedades según zona activa
+    const propiedades = zonaActiva
+        ? PROPIEDADES_MOCK.filter(p => p.zonaId === zonaActiva.id)
+        : []
 
     return (
         <MapContainer
@@ -88,7 +147,7 @@ export default function MapaZonas({
 
             <FlyToZona zona={zonaActiva} />
 
-            {/* 🔥 MARCADORES */}
+            {/* 🔥 ZONAS */}
             {zonas.map((zona) => {
                 if (!zona.coordenadas) return null
 
@@ -99,9 +158,7 @@ export default function MapaZonas({
                         key={zona.id}
                         position={[zona.coordenadas.lat, zona.coordenadas.lng]}
                         icon={createZonaIcon(esActiva)}
-                        eventHandlers={{
-                            click: () => onZonaClick(zona),
-                        }}
+                        eventHandlers={{ click: () => onZonaClick(zona) }}
                     >
                         <Popup>
                             <div>
@@ -109,15 +166,32 @@ export default function MapaZonas({
                                 <br />
                                 {zona.referencia}
                                 {esActiva && (
-                                    <div style={{ color: "#f59e0b", marginTop: "4px" }}>
-                                        Zona activa
-                                    </div>
+                                    <div style={{ color: "#f59e0b" }}>Zona activa</div>
                                 )}
                             </div>
                         </Popup>
                     </Marker>
                 )
             })}
+
+            {/* 🔥 PROPIEDADES */}
+            {propiedades.map((prop) => (
+                <Marker
+                    key={prop.id}
+                    position={[prop.lat, prop.lng]}
+                    icon={createPropiedadIcon(prop.tipo)}
+                >
+                    <Popup>
+                        <div>
+                            <strong>{prop.titulo}</strong>
+                            <br />
+                            <span style={{ color: "#f59e0b" }}>{prop.precio}</span>
+                            <br />
+                            <small>{prop.tipo}</small>
+                        </div>
+                    </Popup>
+                </Marker>
+            ))}
         </MapContainer>
     )
 }
