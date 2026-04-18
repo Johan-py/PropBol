@@ -68,6 +68,14 @@ const handleCodeChange = (value: string) => {
   setCode(onlyNumbers)
 }
 
+const handleCodePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+  e.preventDefault()
+
+  const pasted = e.clipboardData.getData('text')
+  const cleaned = pasted.trim().replace(/\D/g, '').slice(0, 6)
+
+  setCode(cleaned)
+}
   return (
     <div className="space-y-6">
       <header>
@@ -125,6 +133,7 @@ const handleCodeChange = (value: string) => {
         onChange={(e) => handleCodeChange(e.target.value)}
         placeholder="123456"
         className="w-full max-w-xs rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+        onPaste={handleCodePaste}
       />
 
       <button
