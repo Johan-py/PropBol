@@ -1,4 +1,4 @@
-import MisZonas from '@/components/profile/MisZonas/MisZonas'
+import MisZonas from '@/components/profile/MisZonas'
 
 export default function MisZonasPage() {
     return (
