@@ -32,6 +32,7 @@ export type User = {
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 type MeResponse = {
   message?: string;
   user?: {
@@ -66,6 +67,9 @@ const filters: NotificationFilter[] = [
  
 =======
 /*type MeResponse = {
+=======
+type _MeResponse = {
+>>>>>>> a2899c68 (feat(navbar): actualizar links y limpiar tipos no usados)
   message?: string
   perfil?: {
     id: number
@@ -75,7 +79,7 @@ const filters: NotificationFilter[] = [
     avatar?: string | null
   }
 }
-*/
+
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 const USER_STORAGE_KEY = 'propbol_user'
