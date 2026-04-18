@@ -168,3 +168,26 @@ export default function MisZonas() {
       setIsLoading(false)
     }
   }
+
+  const toggleActiva = async (zona: Zona, e: React.MouseEvent) => {
+    e.stopPropagation()
+    try {
+      const token = getToken()
+      if (token) {
+        await fetch(`${API_URL}/api/perfil/zonas/${zona.id}/activa`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ activa: !zona.activa })
+        })
+      }
+      setZonas(prev => prev.map(z => z.id === zona.id ? { ...z, activa: !z.activa } : z))
+    } catch {
+      console.error('Error al cambiar estado')
+    }
+  }
+
+  const cerrarModal = () => {
+    setModalNuevaZona(false)
+    setNombreNuevaZona('')
+    setReferenciaNuevaZona('')
+  }
