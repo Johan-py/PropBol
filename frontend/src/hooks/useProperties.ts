@@ -65,7 +65,6 @@ export function useProperties(): UsePropertiesResult {
                 thumbnailUrl: publicaciones?.[0]?.multimedia?.[0]?.url ?? undefined
               }
             })
-
           setProperties(mappedData)
         }
       } catch (err) {
