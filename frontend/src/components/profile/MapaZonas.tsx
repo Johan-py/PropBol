@@ -161,12 +161,29 @@ export default function MapaZonas({
                         eventHandlers={{ click: () => onZonaClick(zona) }}
                     >
                         <Popup>
-                            <div>
-                                <strong>{zona.nombre}</strong>
-                                <br />
-                                {zona.referencia}
+                            <div style={{ minWidth: "180px" }}>
+                                <div style={{ fontWeight: "bold", fontSize: "14px" }}>
+                                    {zona.nombre}
+                                </div>
+
+                                <div style={{ fontSize: "12px", color: "#6b7280" }}>
+                                    {zona.referencia}
+                                </div>
+
                                 {esActiva && (
-                                    <div style={{ color: "#f59e0b" }}>Zona activa</div>
+                                    <div
+                                        style={{
+                                            marginTop: "6px",
+                                            fontSize: "11px",
+                                            background: "#fef3c7",
+                                            color: "#92400e",
+                                            padding: "2px 6px",
+                                            borderRadius: "6px",
+                                            display: "inline-block",
+                                        }}
+                                    >
+                                        Zona activa
+                                    </div>
                                 )}
                             </div>
                         </Popup>
@@ -182,12 +199,34 @@ export default function MapaZonas({
                     icon={createPropiedadIcon(prop.tipo)}
                 >
                     <Popup>
-                        <div>
-                            <strong>{prop.titulo}</strong>
-                            <br />
-                            <span style={{ color: "#f59e0b" }}>{prop.precio}</span>
-                            <br />
-                            <small>{prop.tipo}</small>
+                        <div style={{ minWidth: "200px" }}>
+                            <div style={{ fontWeight: "bold", fontSize: "14px" }}>
+                                {prop.titulo}
+                            </div>
+
+                            <div
+                                style={{
+                                    marginTop: "4px",
+                                    fontSize: "13px",
+                                    color: "#f59e0b",
+                                    fontWeight: "bold",
+                                }}
+                            >
+                                {prop.precio}
+                            </div>
+
+                            <div
+                                style={{
+                                    marginTop: "4px",
+                                    fontSize: "11px",
+                                    background: "#e5e7eb",
+                                    display: "inline-block",
+                                    padding: "2px 6px",
+                                    borderRadius: "6px",
+                                }}
+                            >
+                                {prop.tipo}
+                            </div>
                         </div>
                     </Popup>
                 </Marker>
