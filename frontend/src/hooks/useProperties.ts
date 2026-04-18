@@ -36,29 +36,36 @@ export function useProperties(): UsePropertiesResult {
 
         const json = await res.json()
 
-        //Actualizamos el estado con los datos reales de la BD
+        // Actualizamos el estado con los datos reales de la BD.
+        // Soportamos llaves legacy (snake_case) y actuales (camelCase).
         if (!cancelled) {
           const mappedData: PropertyMapPin[] = (json.data || [])
             .filter((item: any) => {
-              const lat = Number(item.ubicacion_inmueble?.latitud)
-              const lng = Number(item.ubicacion_inmueble?.longitud)
+              const ubicacion = item.ubicacion ?? item.ubicacion_inmueble
+              const lat = Number(ubicacion?.latitud)
+              const lng = Number(ubicacion?.longitud)
 
-              return item.ubicacion_inmueble && !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0
+              return ubicacion && !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0
             })
-            .map((item: any) => ({
-              id: item.id.toString(),
-              lat: Number(item.ubicacion_inmueble.latitud),
-              lng: Number(item.ubicacion_inmueble.longitud),
-              price: Number(item.precio),
-              currency: 'USD',
-              type: (item.categoria?.toLowerCase().trim() || 'casa') as any,
-              title: item.titulo,
-              descripcion: item.descripcion ?? null,
-              nroCuartos: item.nroCuartos ?? null,
-              nroBanos: item.nroBanos ?? null,
-              superficieM2: item.superficieM2 ? Number(item.superficieM2) : null,
-              thumbnailUrl: item.publicacion?.[0]?.multimedia?.[0]?.url ?? undefined
-            }))
+            .map((item: any) => {
+              const ubicacion = item.ubicacion ?? item.ubicacion_inmueble
+              const publicaciones = item.publicaciones ?? item.publicacion ?? []
+              return {
+                id: item.id.toString(),
+                lat: Number(ubicacion.latitud),
+                lng: Number(ubicacion.longitud),
+                price: Number(item.precio),
+                currency: 'USD',
+                type: (item.categoria?.toLowerCase().trim() || 'casa') as any,
+                title: item.titulo,
+                descripcion: item.descripcion ?? null,
+                nroCuartos: item.nroCuartos ?? null,
+                nroBanos: item.nroBanos ?? null,
+                superficieM2: item.superficieM2 ? Number(item.superficieM2) : null,
+                thumbnailUrl: publicaciones?.[0]?.multimedia?.[0]?.url ?? undefined
+              }
+            })
+
           setProperties(mappedData)
         }
       } catch (err) {

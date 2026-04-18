@@ -95,17 +95,17 @@ export default function FilterBar({
   const handleSearch = (e?: React.FormEvent) => {
     if (e) e.preventDefault()
     const tipoMap: Record<string, string> = {
-      Casa: 'CASA',
-      Departamento: 'DEPARTAMENTO',
-      Terreno: 'TERRENO',
-      Cuarto: 'CUARTO',
-      Espacios: 'ESPACIOS',
-      Cementerio: 'CEMENTERIO'
-    }
+      Casa: "CASA",
+      Departamento: "DEPARTAMENTO",
+      Terreno: "TERRENO",
+      Oficina: "OFICINA",
+    };
+    const tiposValidos = new Set(["CASA", "DEPARTAMENTO", "TERRENO", "OFICINA"]);
 
-    const tipoFinal =
+    const tipoRaw =
       tipoMap[tipoInmueble] ||
-      (tipoInmueble !== 'Cualquier tipo' ? tipoInmueble.toUpperCase() : null)
+      (tipoInmueble !== "Cualquier tipo" ? tipoInmueble.toUpperCase() : null);
+    const tipoFinal = tipoRaw && tiposValidos.has(tipoRaw) ? tipoRaw : null;
 
     const nuevosFiltros = {
       tipoInmueble: tipoFinal ? [tipoFinal] : [],
@@ -175,7 +175,7 @@ export default function FilterBar({
             label={variant === 'map' ? '' : 'Tipo'}
             placeholder="Cualquier tipo"
             icon={Home}
-            options={['Casa', 'Departamento', 'Terreno', 'Cuarto', 'Espacios', 'Cementerio']}
+            options={["Casa", "Departamento", "Terreno", "Oficina"]}
             onChange={(val: string) => setTipoInmueble(val)}
             value={tipoInmueble}
           />

@@ -70,9 +70,12 @@ const app = express()
 // --------------------
 // MIDDLEWARES
 // --------------------
+const normalizedFrontendOrigin = env.FRONTEND_URL.replace(/\/$/, '')
 const allowedOrigins = [
-  process.env.FRONTEND_URL || 'https://prop-bol-cicd.vercel.app',
-  'http://localhost:3000'
+  normalizedFrontendOrigin,
+  'https://prop-bol-cicd.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:3001'
 ]
 
 // Middleware CORS global
