@@ -13,7 +13,7 @@ export default function TwoFactorSection() {
   const [code, setCode] = useState('')
   const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(false)
   const [loading, setLoading] = useState(false)
-
+  const [showDisableModal, setShowDisableModal] = useState(false)
   const handleOpenModal = () => {
     setShowModal(true)
     setPassword('')
@@ -68,6 +68,19 @@ const handleDisableTwoFactor = () => {
   setIsTwoFactorEnabled(false)
   setShowCodeStep(false)
   setCode('')
+}
+
+const handleOpenDisableModal = () => {
+  setShowDisableModal(true)
+}
+
+const handleCloseDisableModal = () => {
+  setShowDisableModal(false)
+}
+
+const handleConfirmDisable = () => {
+  handleDisableTwoFactor()
+  setShowDisableModal(false)
 }
 
 const handleCodeChange = (value: string) => {
@@ -136,7 +149,7 @@ const handleCodePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
 
         <button
           type="button"
-          onClick={handleDisableTwoFactor}
+          onClick={handleOpenDisableModal}
           className="inline-flex items-center justify-center rounded-lg border border-neutral-300 bg-white px-5 py-2.5 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50"
         >
           Desactivar
@@ -175,6 +188,42 @@ const handleCodePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
       >
         Verificar código
       </button>
+    </div>
+  </div>
+)}
+
+{showDisableModal && (
+  <div
+    className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+    onClick={handleCloseDisableModal}
+  >
+    <div
+      className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <h3 className="text-base font-semibold text-neutral-900">
+        Confirmar desactivación
+      </h3>
+      <p className="mt-2 text-sm leading-6 text-neutral-500">
+        ¿Estás seguro de que deseas desactivar la verificación en dos pasos?
+      </p>
+
+      <div className="mt-4 flex gap-3">
+        <button
+          type="button"
+          onClick={handleCloseDisableModal}
+          className="flex-1 rounded-lg border border-neutral-300 py-2 text-sm font-medium text-neutral-700 transition hover:bg-neutral-50"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          onClick={handleConfirmDisable}
+          className="flex-1 rounded-lg bg-orange-500 py-2 text-sm font-semibold text-white transition hover:bg-orange-600"
+        >
+          Confirmar
+        </button>
+      </div>
     </div>
   </div>
 )}
