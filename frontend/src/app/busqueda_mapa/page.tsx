@@ -25,7 +25,7 @@ import FilterBar from "@/components/filters/FilterBar";
 import PropertyCard from "@/components/layout/PropertyCard";
 import PropertyRow from "@/components/galeria/PropertyRow";
 import EmptyState from "@/components/galeria/EmptyState";
-import ListaPaginacion from "@/components/galeria/ListaPaginacion";
+import MapaListadoPaginacion from "@/components/galeria/MapaListadoPaginacion";
 import { MenuOrdenamiento } from "@/components/busqueda/ordenamiento/MenuOrdenamiento";
 
 // Carga dinámica del mapa (sin SSR)
@@ -73,9 +73,11 @@ function useIsLandscapeMobile() {
 const SHEET_H = { peek: "50%", full: "100%" } as const;
 type SheetState = "hidden" | "peek" | "full";
 
-const LISTA_PAGE_SIZES = [10, 20, 50, 100] as const;
+const LIST_PAGE_SIZES = [10, 20, 50, 100] as const;
 
 function BusquedaMapaContent() {
+  const searchParams = useSearchParams();
+  const filterResetKey = searchParams.toString();
   // === ESTADOS COMPARTIDOS ===
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -106,17 +108,25 @@ function BusquedaMapaContent() {
     inmuebles: properties,
   });
 
-  const [listaPage, setListPage] = useState(1);
-  const [listaPageSize, setListPageSize] = useState<typeof LISTA_PAGE_SIZES[number]>(10);
+   const [listPage, setListPage] = useState(1);
+  const [listPageSize, setListPageSize] =
+    useState<(typeof LIST_PAGE_SIZES)[number]>(10);
   const listTotal = properties.length;
-  const listTotalPages = Math.max(1, Math.ceil(listTotal / listaPageSize));
-  const listSafePage = Math.min(Math.max(1, listaPage), listTotalPages);
-
+  const listTotalPages = Math.max(1, Math.ceil(listTotal / listPageSize));
+  const listSafePage = Math.min(Math.max(1, listPage), listTotalPages);
   const paginatedProperties = useMemo(() => {
-    if(listTotal === 0) return [];
-    const start = (listSafePage - 1) * listaPageSize;
-    return properties.slice(start, start + listaPageSize);
-  }, [properties, listSafePage, listaPageSize]);  
+    if (listTotal === 0) return [];
+    const start = (listSafePage - 1) * listPageSize;
+    return properties.slice(start, start + listPageSize);
+  }, [properties, listSafePage, listPageSize, listTotal]);
+
+    useEffect(() => {
+    setListPage(1);
+  }, [filterResetKey]);
+
+  useEffect(() => {
+    if (listPage > listTotalPages) setListPage(listTotalPages);
+  }, [listPage, listTotalPages]);
 
 
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
@@ -282,6 +292,20 @@ function BusquedaMapaContent() {
         </div>
       )}
     </div>
+  );
+
+    const renderListPaginationFooter = () => (
+    <MapaListadoPaginacion
+      total={listTotal}
+      page={listSafePage}
+      pageSize={listPageSize}
+      onPageChange={setListPage}
+      onPageSizeChange={(s) => {
+        setListPageSize(s);
+        setListPage(1);
+      }}
+      hint={listTotal === 0 && error ? `Error al cargar: ${error}` : null}
+    />
   );
 
   // ────────────────────────────────────────────────────────────────────────────
