@@ -26,52 +26,57 @@ export default function BlogCard({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter") {
-      handleClick();
-    }
+    if (e.key === "Enter") handleClick();
   };
 
   return (
-    <div
+    <article
       onClick={onClick ? handleClick : undefined}
       onKeyDown={onClick ? handleKeyDown : undefined}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
-      className={`rounded-2xl shadow-md overflow-hidden transition bg-white ${
-        onClick ? "cursor-pointer hover:shadow-lg" : ""
-      }`}
+      className={`
+        group
+        bg-white
+        rounded-xl
+        border border-gray-200
+        shadow-sm
+        overflow-hidden
+        transition-all duration-300
+        ${onClick ? "cursor-pointer hover:shadow-lg hover:-translate-y-1 hover:border-gray-300" : ""}
+      `}
     >
       {/* Imagen */}
-      <img
-        src={imageUrl || "/placeholder.png"}
-        alt={title}
-        className="w-full h-48 object-cover"
-      />
+      <div className="overflow-hidden">
+        <img
+          src={imageUrl || "/placeholder.png"}
+          alt={title}
+          className="w-full h-40 object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+      </div>
 
-      <div className="p-4">
+      <div className="p-3">
         {/* Categoría */}
-        <span className="text-xs font-semibold text-blue-600 uppercase">
+        <span className="text-[10px] font-semibold text-orange-500 uppercase tracking-wide">
           {category}
         </span>
 
         {/* Título */}
-        <h2 className="text-lg font-bold mt-1 line-clamp-2">
+        <h3 className="text-sm font-semibold mt-1 line-clamp-2">
           {title}
-        </h2>
+        </h3>
 
         {/* Resumen */}
-        <p className="text-sm text-gray-600 mt-2 line-clamp-3">
+        <p className="text-xs text-gray-500 mt-1 line-clamp-2">
           {excerpt}
         </p>
 
         {/* Footer */}
-        <div className="flex justify-between mt-4 text-xs text-gray-500">
+        <div className="flex justify-between items-center mt-3 text-[10px] text-gray-400">
           <span>{author}</span>
-          <span>
-            {new Date(date).toLocaleDateString()}
-          </span>
+          <span>{new Date(date).toLocaleDateString()}</span>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
