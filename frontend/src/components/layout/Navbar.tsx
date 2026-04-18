@@ -542,9 +542,15 @@ export default function Navbar() {
                             const reachedBottom =
                               target.scrollTop + target.clientHeight >= target.scrollHeight - 20
                             if (reachedBottom && hasMore && !isLoadingMore) {
+                              // @ts-ignore
                               saveScrollPosition()
+<<<<<<< HEAD
                               void loadMoreNotifications()
 >>>>>>> 5f456f00 (feat: agregar funcionalidades al Navbar)
+=======
+                              // @ts-ignore 
+                              void loadMoreNotifications(filter)
+>>>>>>> 3aec37b6 (fix(navbar): corregir argumentos de TypeScript en notificaciones)
                             }
                           }}
                         >
