@@ -18,7 +18,7 @@ export type User = {
   avatar?: string | null
 }
 
-type MeResponse = {
+/*type MeResponse = {
   message?: string
   perfil?: {
     id: number
@@ -28,6 +28,7 @@ type MeResponse = {
     avatar?: string | null
   }
 }
+*/
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 const USER_STORAGE_KEY = 'propbol_user'
