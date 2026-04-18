@@ -15,6 +15,7 @@ import { LocationSearch } from '../layout/LocationSearch'
 import { ComboBox } from '../ui/ComboBox'
 import TransactionModeFilter from './TransactionModeFilter'
 import { useRouter } from 'next/navigation'
+import SuperficieFilter from "./SuperficieFilter";
 
 interface FilterBarProps {
   onSearch?: (filtros: {
@@ -70,6 +71,7 @@ export default function FilterBar({
   onOpenPriceFilter
 }: FilterBarProps) {
   const router = useRouter()
+  const [showSuperficie, setShowSuperficie] = useState(false)
 
   const { updateFilters } = useSearchFilters()
   const [modosSeleccionados, setModosSeleccionados] = useState<string[]>(['VENTA'])
@@ -208,9 +210,7 @@ export default function FilterBar({
             <div className="shrink-0">
               <MockFilterBtn icon={Users} text="Capacidad" />
             </div>
-            <div className="shrink-0">
-              <MockFilterBtn icon={Maximize} text="Metros" />
-            </div>
+            <div className="shrink-0"><SuperficieFilter /></div>
             <div className="shrink-0">
               <MockFilterBtn icon={SlidersHorizontal} text="Más Filtros" hasChevron={false} />
             </div>
