@@ -366,7 +366,10 @@ function BusquedaMapaContent() {
                 </span>
                 {MenuToggleComponent}
               </div>
-              <PropertyListMobile onClickItem={(p) => setPinnedProperty(p)} />
+              <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+                <PropertyListMobile onClickItem={(p) => setPinnedProperty(p)} />
+                {renderListPaginationFooter()}
+              </div>
             </div>
           </div>
         </div>
@@ -536,12 +539,15 @@ function BusquedaMapaContent() {
                 <div className="px-4 py-2 flex justify-end shrink-0">
                   {MenuToggleComponent}
                 </div>
-                <PropertyListMobile
-                  onClickItem={(p) => {
-                    setPinnedProperty(p);
-                    setSheetState("peek");
-                  }}
+                <div className="flex flex-1 min-h-0 overflow-hidden">
+                  <PropertyListMobile
+                    onClickItem={(p) => {
+                      setPinnedProperty(p);
+                      setSheetState("peek");
+                    }}
                 />
+                {renderListPaginationFooter()}
+                </div>
               </div>
             </div>
           )}
@@ -638,14 +644,15 @@ function BusquedaMapaContent() {
               </div>
 
               {/* Lista de propiedades */}
-              <div
-                className="flex-1 min-h-0 overflow-y-auto p-4 bg-stone-50 no-scrollbar"
-                onMouseEnter={() => setIsHoveringList(true)}
-                onMouseLeave={() => {
-                  setIsHoveringList(false);
-                  setSelectedPropertyId(null);
-                  setHoveredId(null);
-                }}
+              <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+                <div
+                  className="flex-1 min-h-0 overflow-y-auto p-4 bg-stone-50 no-scrollbar"
+                  onMouseEnter={() => setIsHoveringList(true)}
+                  onMouseLeave={() => {
+                    setIsHoveringList(false);
+                    setSelectedPropertyId(null);
+                    setHoveredId(null);
+                  }}
               >
                 {isLoading ? (
                   <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
@@ -721,6 +728,8 @@ function BusquedaMapaContent() {
                     ))}
                   </div>
                 )}
+              </div>
+              {renderListPaginationFooter()}
               </div>
             </div>
           )}
