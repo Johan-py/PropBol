@@ -1,6 +1,8 @@
 'use client'
-import { useState } from 'react'
+
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import PlanModal from '../../components/ui/PlanModal'
 
 type CampoError =
   | 'titulo'
@@ -14,8 +16,11 @@ type CampoError =
   | 'operacion'
   | null
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+
 export default function MiRegistroPage() {
   const router = useRouter()
+  const [mostrarPlanModal, setMostrarPlanModal] = useState(false)
 
   const [datos, setDatos] = useState({
     titulo: '',
@@ -34,6 +39,36 @@ export default function MiRegistroPage() {
   const [estado, setEstado] = useState<'ninguno' | 'exito' | 'error'>('ninguno')
   const [mensajeError, setMensajeError] = useState('')
   const [campoError, setCampoError] = useState<CampoError>(null)
+
+  useEffect(() => {
+    const validarFlujo = async () => {
+      const token = localStorage.getItem('token')
+
+      if (!token) {
+        router.push('/sign-in')
+        return
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/api/publicaciones/flujo`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+
+        const result = await response.json()
+
+        if (!response.ok && result.message === 'LIMIT_REACHED') {
+          setMostrarPlanModal(true)
+        }
+      } catch (error) {
+        console.error('Error validando flujo de publicación:', error)
+      }
+    }
+
+    validarFlujo()
+  }, [router])
 
   const limpiarError = () => {
     setMensajeError('')
@@ -112,8 +147,6 @@ export default function MiRegistroPage() {
     }
 
     if (name === 'habitaciones') {
-      if (value !== '' && Number(value) < 0) return
-
       if (value === '') {
         setDatos({ ...datos, habitaciones: '' })
         if (campoError === 'habitaciones') limpiarError()
@@ -145,8 +178,6 @@ export default function MiRegistroPage() {
     }
 
     if (name === 'banos') {
-      if (value !== '' && Number(value) < 0) return
-
       if (value === '') {
         setDatos({ ...datos, banos: '' })
         if (campoError === 'banos') limpiarError()
@@ -469,10 +500,20 @@ export default function MiRegistroPage() {
     console.log('📤 Payload enviado al backend:', payload)
 
     try {
-      const response = await fetch('http://localhost:5000/api/properties', {
+      const token = localStorage.getItem('token')
+
+      if (!token) {
+        setMensajeError('DEBES INICIAR SESIÓN PARA REGISTRAR UNA PROPIEDAD')
+        setCampoError(null)
+        setEstado('error')
+        return
+      }
+
+      const response = await fetch(`${API_URL}/api/properties`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(payload)
       })
@@ -482,9 +523,15 @@ export default function MiRegistroPage() {
       console.log('📥 Respuesta backend:', result)
 
       if (!response.ok) {
+        if (result.message === 'LIMIT_REACHED') {
+          setMostrarPlanModal(true)
+          return
+        }
+
         const erroresBackend =
-          result.errores?.map((e: any) => `• ${e.mensaje}`).join('\n') ||
+          result.errores?.map((e: { mensaje: string }) => `• ${e.mensaje}`).join('\n') ||
           result.mensaje ||
+          result.message ||
           'ERROR AL GUARDAR LA PROPIEDAD'
 
         console.error('❌ Error backend:', erroresBackend)
@@ -494,11 +541,20 @@ export default function MiRegistroPage() {
         return
       }
 
+      const publicacionId = result?.property?.publicacion?.id
+
+      if (!publicacionId) {
+        setMensajeError('No se recibió el ID de la publicación creada')
+        setEstado('error')
+        return
+      }
+
       console.log('✅ Propiedad guardada correctamente')
       setEstado('exito')
       setMensajeError('')
       setCampoError(null)
-      router.push('/contenido-multimedia')
+
+      router.push(`/contenido-multimedia?publicacionId=${publicacionId}`)
     } catch (error) {
       console.error('🔥 Error fetch:', error)
       setMensajeError('NO SE PUDO CONECTAR CON EL BACKEND')
@@ -557,9 +613,7 @@ export default function MiRegistroPage() {
                       }`}
                     />
                     {errorTitulo && <p className="text-red-500 text-sm mt-2">{mensajeError}</p>}
-                    <p className="text-xs text-gray-500 mt-1">
-                      {datos.titulo.length}/80 caracteres
-                    </p>
+                    <p className="text-xs text-gray-500 mt-1">{datos.titulo.length}/80 caracteres</p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -587,7 +641,7 @@ export default function MiRegistroPage() {
 
                     <div>
                       <label className="block text-[15px] font-bold text-gray-900 mb-2">
-                        Tipo Inmueble *
+                        Tipo de Inmueble *
                       </label>
                       <select
                         name="tipoInmueble"
@@ -652,11 +706,20 @@ export default function MiRegistroPage() {
                     <label className="block text-[15px] font-bold mb-2">Habitaciones</label>
                     <input
                       name="habitaciones"
-                      type="number"
-                      min={1}
-                      max={50}
+                      type="text"
+                      inputMode="numeric"
                       value={datos.habitaciones}
-                      onChange={manejarCambio}
+                      onChange={(e) => {
+                        const soloNumeros = limpiarSoloNumeros(e.target.value)
+                        manejarCambio({
+                          ...e,
+                          target: {
+                            ...e.target,
+                            name: 'habitaciones',
+                            value: soloNumeros
+                          }
+                        } as React.ChangeEvent<HTMLInputElement>)
+                      }}
                       className={`w-full p-3 rounded-xl border ${
                         errorHabitaciones ? 'border-red-500' : 'border-gray-200'
                       }`}
@@ -673,11 +736,20 @@ export default function MiRegistroPage() {
                     <label className="block text-[15px] font-bold mb-2">Baños</label>
                     <input
                       name="banos"
-                      type="number"
-                      min={1}
-                      max={50}
+                      type="text"
+                      inputMode="numeric"
                       value={datos.banos}
-                      onChange={manejarCambio}
+                      onChange={(e) => {
+                        const soloNumeros = limpiarSoloNumeros(e.target.value)
+                        manejarCambio({
+                          ...e,
+                          target: {
+                            ...e.target,
+                            name: 'banos',
+                            value: soloNumeros
+                          }
+                        } as React.ChangeEvent<HTMLInputElement>)
+                      }}
                       className={`w-full p-3 rounded-xl border ${
                         errorBanos ? 'border-red-500' : 'border-gray-200'
                       }`}
@@ -736,7 +808,9 @@ export default function MiRegistroPage() {
                   }`}
                   placeholder="Casa de dos plantas, amplia y moderna ubicada en una zona tranquila..."
                 />
-                {errorDescripcion && <p className="text-red-500 text-sm mt-2">{mensajeError}</p>}
+                {errorDescripcion && (
+                  <p className="text-red-500 text-sm mt-2">{mensajeError}</p>
+                )}
                 <p className="text-xs text-gray-500 mt-1">
                   {datos.descripcion.length}/300 caracteres
                 </p>
@@ -776,6 +850,8 @@ export default function MiRegistroPage() {
           </div>
         </div>
       </main>
+
+      {mostrarPlanModal && <PlanModal onClose={() => setMostrarPlanModal(false)} />}
     </div>
   )
 }
