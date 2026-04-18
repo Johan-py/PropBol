@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { HomeBanner } from './HomeBanner'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
@@ -16,9 +16,10 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
   const [isPaused, setIsPaused] = useState(false) // Para el criterio de pausa
   const touchStartX = useRef<number | null>(null)
 
-  const nextSlide = () => {
+  // Memorizamos nextSlide para que el useEffect no se vuelva loco
+  const nextSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev === banners.length - 1 ? 0 : prev + 1))
-  }
+  }, [banners.length])
 
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev === 0 ? banners.length - 1 : prev - 1))
