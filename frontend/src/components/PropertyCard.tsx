@@ -17,50 +17,93 @@ interface PropertyCardProps {
   onDelete: () => void;
 }
 
-export default function PropertyCard({ property, canEdit, onEdit, onDelete }: PropertyCardProps) {
+export default function PropertyCard({
+  property,
+  canEdit,
+  onEdit,
+  onDelete,
+}: PropertyCardProps) {
   return (
-    <div className="property-card">
+    <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
       <img
-        src={property.image || "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=80"}
+        src={
+          property.image ||
+          "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=80"
+        }
         alt={property.title}
-        className="property-image"
+        className="w-full h-64 object-cover"
       />
 
-      <div className="property-body">
-        <div className="property-header">
-          <h2 className="property-title">{property.title}</h2>
-          <span className="property-price">
+      <div className="p-5">
+        <div className="flex items-start justify-between gap-4 mb-2">
+          <h2 className="text-2xl font-semibold text-gray-800 leading-tight">
+            {property.title}
+          </h2>
+          <span className="text-xl font-bold text-[#c97a1e] whitespace-nowrap">
             ${Number(property.price).toLocaleString("en-US")}
           </span>
         </div>
 
-        <div className="property-location">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <div className="flex items-center gap-2 text-gray-500 mb-4">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
             <circle cx="12" cy="10" r="3" />
           </svg>
-          {property.location}
+          <span>{property.location}</span>
         </div>
 
-        <div className="property-features">
-          <div className="feature">🛏️ {property.beds || 0}</div>
-          <div className="feature">🛁 {property.baths || 0}</div>
-          <div className="feature">⬜ {property.area || "N/A"}</div>
+        <div className="flex items-center gap-5 text-gray-600 mb-5">
+          <div className="flex items-center gap-1">
+            <span>🛏️</span>
+            <span>{property.beds || 0}</span>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <span>🛁</span>
+            <span>{property.baths || 0}</span>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <span>⬜</span>
+            <span>{property.area || "N/A"}</span>
+          </div>
         </div>
 
-        <div className="property-actions">
+        <div className="flex gap-3">
           {canEdit ? (
-            <button className="btn btn-outline" onClick={onEdit}>
+            <button
+              className="flex-1 py-2.5 rounded-xl border border-gray-400 bg-white text-gray-700 font-medium hover:bg-gray-100 transition"
+              onClick={onEdit}
+            >
               Editar
             </button>
           ) : (
-            <button className="btn btn-gray" disabled>
+            <button
+              className="flex-1 py-2.5 rounded-xl bg-gray-200 text-gray-500 font-medium cursor-not-allowed"
+              disabled
+            >
               Editar
             </button>
           )}
 
-          <button className="btn btn-primary" onClick={onDelete}>
+          <button
+            className="flex-1 py-2.5 rounded-xl bg-[#d8891c] text-white font-medium hover:bg-[#bf7718] transition"
+            onClick={onDelete}
+          >
             Eliminar
+          </button>
+        </div>
+
+        <div className="mt-4">
+          <button className="text-[#d8891c] font-semibold text-lg hover:underline transition">
+            + Añadir otros parámetros
           </button>
         </div>
       </div>

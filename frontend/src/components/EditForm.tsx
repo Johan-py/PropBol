@@ -38,46 +38,78 @@ export default function EditForm({
   globalError,
 }: EditFormProps) {
   return (
-    <div>
-      <h1 className="edit-title">Editar Publicación</h1>
-      <p className="edit-subtitle">INFORMACIÓN DE LA PUBLICACIÓN</p>
+    <div className="w-full">
+      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+        Editar Publicación
+      </h1>
 
-      {toast && <div className="alert success mt-20">{toast}</div>}
-      {globalError && <div className="alert error mt-20">{globalError}</div>}
+      <p className="text-[11px] font-semibold tracking-[0.18em] text-gray-500 uppercase mb-6">
+        Información de la publicación
+      </p>
 
-      <div className="form-grid">
-        <div className="form-group">
-          <label className="form-label">TÍTULO PROPIEDAD</label>
+      {toast && (
+        <div className="mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+          {toast}
+        </div>
+      )}
+
+      {globalError && (
+        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {globalError}
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div>
+          <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+            Título Propiedad
+          </label>
           <input
-            className={`form-input ${fieldErrors.title ? "input-error" : ""}`}
+            type="text"
+            className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
+              fieldErrors.title
+                ? "border-red-400 focus:ring-2 focus:ring-red-200"
+                : "border-gray-200 bg-gray-100 focus:border-gray-300 focus:ring-2 focus:ring-gray-200"
+            }`}
             value={formData.title}
             onChange={(e) => onChange("title", e.target.value)}
-            placeholder="Apartamento Centro"
+            placeholder="Residencia Moderna"
           />
-          <div className="input-line"></div>
           {fieldErrors.title && (
-            <span className="field-error">{fieldErrors.title}</span>
+            <p className="mt-1 text-sm text-red-500">{fieldErrors.title}</p>
           )}
         </div>
 
-        <div className="form-group">
-          <label className="form-label">DETALLES DE LA PROPIEDAD</label>
+        <div>
+          <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+            Detalles de la Propiedad
+          </label>
           <input
-            className={`form-input ${fieldErrors.details ? "input-error" : ""}`}
+            type="text"
+            className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
+              fieldErrors.details
+                ? "border-red-400 focus:ring-2 focus:ring-red-200"
+                : "border-gray-200 bg-gray-100 focus:border-gray-300 focus:ring-2 focus:ring-gray-200"
+            }`}
             value={formData.details}
             onChange={(e) => onChange("details", e.target.value)}
             placeholder="Descripción de la propiedad"
           />
-          <div className="input-line"></div>
           {fieldErrors.details && (
-            <span className="field-error">{fieldErrors.details}</span>
+            <p className="mt-1 text-sm text-red-500">{fieldErrors.details}</p>
           )}
         </div>
 
-        <div className="form-group">
-          <label className="form-label">TIPO OPERACIÓN</label>
+        <div>
+          <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+            Tipo Operación
+          </label>
           <select
-            className={`form-input ${fieldErrors.operationType ? "input-error" : ""}`}
+            className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
+              fieldErrors.operationType
+                ? "border-red-400 focus:ring-2 focus:ring-red-200"
+                : "border-gray-200 bg-gray-100 focus:border-gray-300 focus:ring-2 focus:ring-gray-200"
+            }`}
             value={formData.operationType}
             onChange={(e) => onChange("operationType", e.target.value)}
           >
@@ -89,44 +121,63 @@ export default function EditForm({
             ))}
           </select>
           {fieldErrors.operationType && (
-            <span className="field-error">{fieldErrors.operationType}</span>
-          )}
-
-          <label className="form-label" style={{ marginTop: "24px" }}>
-            PRECIO
-          </label>
-          <input
-            className={`form-input ${fieldErrors.price ? "input-error" : ""}`}
-            value={formData.price}
-            onChange={(e) => onChange("price", e.target.value)}
-            placeholder="230.00"
-          />
-          <div className="input-line"></div>
-          {fieldErrors.price && (
-            <span className="field-error">{fieldErrors.price}</span>
+            <p className="mt-1 text-sm text-red-500">{fieldErrors.operationType}</p>
           )}
         </div>
 
-        <div className="form-group">
-          <label className="form-label">UBICACIÓN</label>
+        <div>
+          <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+            Ubicación
+          </label>
           <input
-            className={`form-input ${fieldErrors.location ? "input-error" : ""}`}
+            type="text"
+            className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
+              fieldErrors.location
+                ? "border-red-400 focus:ring-2 focus:ring-red-200"
+                : "border-gray-200 bg-gray-100 focus:border-gray-300 focus:ring-2 focus:ring-gray-200"
+            }`}
             value={formData.location}
             onChange={(e) => onChange("location", e.target.value)}
-            placeholder="16 de julio y Av. Oquendo"
+            placeholder="Cochabamba, Sacaba"
           />
-          <div className="input-line"></div>
           {fieldErrors.location && (
-            <span className="field-error">{fieldErrors.location}</span>
+            <p className="mt-1 text-sm text-red-500">{fieldErrors.location}</p>
+          )}
+        </div>
+
+        <div className="md:col-span-1">
+          <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+            Precio
+          </label>
+          <input
+            type="text"
+            className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
+              fieldErrors.price
+                ? "border-red-400 focus:ring-2 focus:ring-red-200"
+                : "border-gray-300 bg-white focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
+            }`}
+            value={formData.price}
+            onChange={(e) => onChange("price", e.target.value)}
+            placeholder="180000"
+          />
+          {fieldErrors.price && (
+            <p className="mt-1 text-sm text-red-500">{fieldErrors.price}</p>
           )}
         </div>
       </div>
 
-      <div className="edit-actions">
-        <button className="btn btn-primary" onClick={onSave}>
+      <div className="flex flex-col sm:flex-row gap-3 mt-8">
+        <button
+          className="flex-1 rounded-xl bg-[#d8891c] px-6 py-3 text-white font-semibold shadow hover:bg-[#bf7718] transition"
+          onClick={onSave}
+        >
           GUARDAR CAMBIOS
         </button>
-        <button className="btn btn-light" onClick={onCancel}>
+
+        <button
+          className="flex-1 rounded-xl border border-gray-300 bg-white px-6 py-3 text-gray-700 font-semibold hover:bg-gray-50 transition"
+          onClick={onCancel}
+        >
           CANCELAR
         </button>
       </div>

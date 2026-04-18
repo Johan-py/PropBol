@@ -12,7 +12,7 @@ export default function Modal({ children, onClose }: ModalProps) {
       onClick={onClose}
     >
       <div 
-        className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl p-8 animate-in fade-in zoom-in duration-200" 
+        className="relative w-full max-w-3xl bg-white rounded-3xl shadow-2xl p-8 md:p-10 animate-in fade-in zoom-in duration-200" 
         onClick={(e) => e.stopPropagation()}
       >
         <button 
