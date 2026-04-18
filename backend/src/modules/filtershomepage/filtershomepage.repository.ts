@@ -7,52 +7,52 @@ export class FiltersHomepageRepository {
       where: {
         inmueble: {
           tipoAccion: tipoAccion,
-          estado: $Enums.EstadoInmueble.ACTIVO,
-        },
+          estado: $Enums.EstadoInmueble.ACTIVO
+        }
       },
       select: {
-        inmuebleId: true, 
+        inmuebleId: true,
         ubicacion_maestra: {
           select: {
-            departamento: true,
-          },
-        },
-      },
-    });
+            departamento: true
+          }
+        }
+      }
+    })
 
-    const deptCounts = new Map<string, Set<number>>();
+    const deptCounts = new Map<string, Set<number>>()
 
     for (const u of ubicaciones) {
-      const rawDept = u.ubicacion_maestra?.departamento;
-      if (!rawDept || !u.inmuebleId) continue;
+      const rawDept = u.ubicacion_maestra?.departamento
+      if (!rawDept || !u.inmuebleId) continue
 
-      const normalizedDept = rawDept.trim().toUpperCase();
+      const normalizedDept = rawDept.trim().toUpperCase()
 
       if (!deptCounts.has(normalizedDept)) {
-        deptCounts.set(normalizedDept, new Set());
+        deptCounts.set(normalizedDept, new Set())
       }
-      
-      deptCounts.get(normalizedDept)!.add(u.inmuebleId);
+
+      deptCounts.get(normalizedDept)!.add(u.inmuebleId)
     }
 
     const counts = Array.from(deptCounts.entries()).map(([dept, ids]) => ({
-      departamento: dept, 
-      count: ids.size,
-    }));
+      departamento: dept,
+      count: ids.size
+    }))
 
-    return counts.sort((a, b) => b.count - a.count);
+    return counts.sort((a, b) => b.count - a.count)
   }
 
   async getCountsByCategoria() {
     return await prisma.inmueble.groupBy({
-      by: ["categoria"],
+      by: ['categoria'],
       where: {
         estado: $Enums.EstadoInmueble.ACTIVO,
-        categoria: { not: null },
+        categoria: { not: null }
       },
       _count: {
-        id: true,
-      },
-    });
+        id: true
+      }
+    })
   }
 }
