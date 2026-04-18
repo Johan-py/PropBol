@@ -1,7 +1,7 @@
 import { HomeBanner } from "@/components/home/HomeBanner";
 import { HomeCarousel } from "@/components/home/HomeCarousel";
 import ExploreSection from "@/components/layout/ExploreSection";
-import FilterPanel from "@/components/rentals/FilterPanel";
+import VisualFiltersSection from "@/components/VisualFilters/VisualFiltersSection";
 interface BannerData {
   id: number;
   urlImagen: string;
@@ -45,20 +45,17 @@ export default async function Home() {
     )}
 
       {/* CONTENEDOR PRINCIPAL */}
-      <div className="w-full px-2 md:px-6 py-12">
-        <div className="flex flex-col-reverse md:flex-row items-start">
+      <div className="w-full px-2 md:px-6 py-12 flex flex-col items-center gap-12">
+        {/* EXPLORE SECTION */}
+        <section className="w-full flex justify-center">
+          <ExploreSection />
+        </section>
 
-          {/* FILTER PANEL */}
-          <div className="w-full md:w-[240px] lg:w-[260px] shrink-0">
-            <FilterPanel />
-          </div>
-
-          {/* EXPLORE SECTION */}
-          <section className="flex-1 w-full md:pl-20 -mt-16 md:mt-0">
-            <ExploreSection />
-          </section>
-        </div>
-      </div>
+        {/* SECCIÓN 2: TUS NUEVOS FILTROS VISUALES (HU-01) */}
+        <section className="w-full">
+          <VisualFiltersSection />
+        </section>
+      </div>
     </main>
   )
 }
