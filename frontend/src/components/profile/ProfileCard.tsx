@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, Suspense } from 'react'
 import { Plus, Trash2, Pencil, Camera, Loader2, User } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import SecurityModal from './SecurityModal'
@@ -41,7 +41,8 @@ const ofuscarEmail = (email: string) => {
   return `${usuario.substring(0, 2)}***@${dominio}`
 }
 
-export default function ProfileCard() {
+// 1. Renombramos la función interna
+function ProfileCardContent() {
   const searchParams = useSearchParams()
   const focusParam = searchParams ? searchParams.get('focus') : null
   const [isHighlighted, setIsHighlighted] = useState(false)
@@ -72,7 +73,7 @@ export default function ProfileCard() {
   
   // Estados para validaciones de error
   const [errorNombre, setErrorNombre] = useState("");
-  const [errorFechaNacimiento, setErrorFechaNacimiento] = useState(""); // <-- Nuevo estado de error
+  const [errorFechaNacimiento, setErrorFechaNacimiento] = useState("");
 
   const [originalNombre, setOriginalNombre] = useState("");
   const [originalPais, setOriginalPais] = useState("");
@@ -523,7 +524,7 @@ export default function ProfileCard() {
                />
               ) : (
                <User className="w-10 h-10 text-gray-400" />
-           )}
+            )}
           </div>
 
           <button
@@ -809,5 +810,18 @@ export default function ProfileCard() {
       <SecurityModal isOpen={isSecurityModalOpen} onClose={() => { setIsSecurityModalOpen(false); setIsLoading(false) }} onSubmit={handlePasswordSubmit} isLoading={isLoading} />
       <OtpModal isOpen={isOtpModalOpen} onClose={() => { setIsOtpModalOpen(false); setOtpError(''); setEmailToUpdate(''); setIsLoading(false); setIsEmailEditable(false); setTempEmail(originalEmail) }} onSubmit={handleOtpSubmit} onResendCode={handleResendCode} externalError={otpError} isLoading={isLoading} />
     </div>
+  )
+}
+
+// 2. Creamos el envoltorio que exporta el componente hacia el resto del proyecto
+export default function ProfileCard() {
+  return (
+    <Suspense fallback={
+      <div className="flex justify-center items-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
+      </div>
+    }>
+      <ProfileCardContent />
+    </Suspense>
   )
 }
