@@ -1,9 +1,7 @@
-// frontend/src/components/VisualFilters/PropertyTypeGrid.tsx
 "use client";
 
 import { useRouter } from "next/navigation";
 
-// Íconos SVG inline (sin dependencia externa)
 const icons: Record<string, React.ReactNode> = {
   casas: (
     <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6" stroke="currentColor" strokeWidth={1.5}>
@@ -49,14 +47,14 @@ export default function PropertyTypeGrid({ items }: PropertyTypeGridProps) {
         Por tipo de inmueble
       </h2>
 
-      <div className="flex gap-6 flex-wrap justify-center md:justify-start mt-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
         {items.map((item) => (
           <div
             key={item.key}
             onClick={() => router.push(`/propiedades?tipo=${item.key}`)}
             className="
               flex flex-col items-center justify-center
-              w-32 py-4 rounded-xl bg-white
+              w-full py-4 rounded-xl bg-white
               border border-gray-100 shadow-sm cursor-pointer
               transition-all duration-200
               hover:shadow-md hover:border-orange-300 hover:scale-105
