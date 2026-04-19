@@ -1,19 +1,33 @@
-// frontend/src/components/VisualFilters/VisualFiltersSection.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import PropertyCarousel from "./PropertyCarousel";
 import PropertyTypeGrid from "./PropertyTypeGrid";
 
-// Imágenes placeholder por ciudad (puedes reemplazar con reales)
 const CITY_IMAGES: Record<string, string> = {
   "Santa Cruz": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&q=80",
   "La Paz": "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400&q=80",
   "Cochabamba": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&q=80",
   "Oruro": "https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=400&q=80",
   "Potosí": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80",
+  "Sucre": "https://images.unsplash.com/photo-1549417229-aa67d3263ad5?w=400&q=80",
+  "Beni": "https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=400&q=80",
+  "Tarija": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=400&q=80",
+  "Pando": "https://images.unsplash.com/photo-1516939884455-1445c8652f83?w=400&q=80",
   default: "https://images.unsplash.com/photo-1560448075-bb485b067938?w=400&q=80",
 };
+
+const CIUDADES_BASE = [
+  "Santa Cruz",
+  "La Paz",
+  "Cochabamba",
+  "Oruro",
+  "Potosí",
+  "Sucre",
+  "Tarija",
+  "Beni",
+  "Pando",
+];
 
 function getCityImage(city: string): string {
   return CITY_IMAGES[city] ?? CITY_IMAGES.default;
@@ -29,6 +43,18 @@ interface FiltersResponse {
   alquileres: FilterData[];
   ventas: FilterData[];
   tipos: FilterData[];
+}
+
+function mergeCiudadesConDatos(
+  base: string[],
+  datos: FilterData[]
+): FilterData[] {
+  return base.map((ciudad) => {
+    const found = datos.find(
+      (d) => d.nombre.toLowerCase() === ciudad.toLowerCase()
+    );
+    return found ?? { nombre: ciudad, total: 0 };
+  });
 }
 
 export default function VisualFiltersSection() {
@@ -56,21 +82,20 @@ export default function VisualFiltersSection() {
     fetchFilters();
   }, []);
 
-  // Skeleton loader
   if (loading) {
     return (
-      <section className="px-6 py-8 bg-gray-50">
-        <div className="animate-pulse space-y-6">
+      <section className="w-full px-4 md:px-8 py-8 flex justify-center">
+        <div className="w-full max-w-[1100px] animate-pulse space-y-8">
           <div className="h-4 w-24 bg-gray-200 rounded" />
           <div className="flex gap-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="w-40 h-44 bg-gray-200 rounded-xl" />
+              <div key={i} className="min-w-[200px] h-[200px] bg-gray-200 rounded-xl" />
             ))}
           </div>
           <div className="h-4 w-24 bg-gray-200 rounded" />
           <div className="flex gap-3">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="w-40 h-44 bg-gray-200 rounded-xl" />
+              <div key={i} className="min-w-[160px] h-[160px] bg-gray-200 rounded-xl" />
             ))}
           </div>
         </div>
