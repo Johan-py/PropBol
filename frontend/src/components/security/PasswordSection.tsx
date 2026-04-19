@@ -1,8 +1,7 @@
-"use client";
+'use client'
 
 import { Eye, EyeOff, LockKeyhole } from "lucide-react";
-import { FormEvent, useState } from "react";
-import { validatePassword } from "@/lib/validators/auth";
+import { FormEvent, useEffect, useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 
@@ -20,6 +19,7 @@ function PasswordField({
   onChange,
 }: PasswordFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className="space-y-2">
       <label className="text-sm font-medium text-neutral-700">{label}</label>
@@ -63,66 +63,117 @@ export default function PasswordSection() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [intentosFallidos, setIntentosFallidos] = useState(0);
+  const [bloqueadoHasta, setBloqueadoHasta] = useState<number | null>(null);
+  const bloqueado = bloqueadoHasta !== null && Date.now() < bloqueadoHasta;
+
+
+  useEffect(() => {
+  const intentosGuardados = localStorage.getItem("cambio_password_intentos");
+  const bloqueoGuardado = localStorage.getItem("cambio_password_bloqueado_hasta");
+
+  if (intentosGuardados) {
+    setIntentosFallidos(Number(intentosGuardados));
+  }
+
+  if (bloqueoGuardado) {
+    const tiempoBloqueo = Number(bloqueoGuardado);
+
+    if (Date.now() < tiempoBloqueo) {
+      setBloqueadoHasta(tiempoBloqueo);
+    } else {
+      localStorage.removeItem("cambio_password_intentos");
+      localStorage.removeItem("cambio_password_bloqueado_hasta");
+    }
+  }
+}, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError("");
+  e.preventDefault();
+  setError("");
+  setSuccess("");
+
+  if (bloqueado) {
+    setError("Has superado los 5 intentos fallidos. Intenta más tarde");
+    return;
+  }
+
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    setError("No hay sesión activa");
+    return;
+  }
+
+  if (!passwordActual.trim() || !nuevaPassword.trim() || !confirmarPassword.trim()) {
     setSuccess("");
+    setError("Todos los campos son obligatorios");
+    return;
+  }
 
-    const token = localStorage.getItem("token");
+  if (nuevaPassword.trim().length < 8) {
+    setSuccess("");
+    setError("La nueva contraseña debe tener al menos 8 caracteres");
+    return;
+  }
 
-    if (!token) {
-      setError("No hay sesión activa");
-      return;
-    }
+  if (passwordActual.trim() === nuevaPassword.trim()) {
+    setSuccess("");
+    setError("La nueva contraseña no puede ser igual a la actual");
+    return;
+  }
 
-    if (!passwordActual.trim()) {
-      setError("Debes ingresar tu contraseña actual");
-      return;
-    }
+  if (nuevaPassword.trim() !== confirmarPassword.trim()) {
+    setSuccess("");
+    setError("Las contraseñas no coinciden");
+    return;
+  }
 
-    const passwordValidationError = validatePassword(nuevaPassword);
-    if (passwordValidationError) {
-      setError(passwordValidationError);
-      return;
-    }
+  setIsLoading(true);
 
-    if (nuevaPassword !== confirmarPassword) {
-      setError("Las contraseñas no coinciden");
-      return;
-    }
+  try {
+    const response = await fetch(`${API_URL}/api/perfil/verificar-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        passwordActual: passwordActual.trim(),
+      }),
+    });
 
-    setIsLoading(true);
+    const data = await response.json();
 
-    try {
-      const response = await fetch(`${API_URL}/api/perfil/cambiar-password`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          passwordActual: passwordActual.trim(),
-          nuevaPassword: nuevaPassword.trim(),
-        }),
-      });
+    if (!response.ok || !data.ok) {
+      const nuevosIntentos = intentosFallidos + 1;
+      setIntentosFallidos(nuevosIntentos);
+      localStorage.setItem("cambio_password_intentos", String(nuevosIntentos));
 
-      const data = await response.json();
-
-      if (!response.ok || !data.ok) {
-        throw new Error(data.msg || "Error al cambiar la contraseña");
+      if (nuevosIntentos >= 5) {
+        const tiempoBloqueo = Date.now() + 5 * 60 * 1000;
+        setBloqueadoHasta(tiempoBloqueo);
+        localStorage.setItem("cambio_password_bloqueado_hasta", String(tiempoBloqueo));
+        throw new Error("Has superado los 5 intentos fallidos. Intenta más tarde");
       }
 
-      setSuccess("Contraseña actualizada correctamente");
-      setPasswordActual("");
-      setNuevaPassword("");
-      setConfirmarPassword("");
-    } catch (error: any) {
-      setError(error.message || "Error al actualizar la contraseña");
-    } finally {
-      setIsLoading(false);
+      throw new Error(
+        data.msg || `Contraseña incorrecta. Intento ${nuevosIntentos} de 5`
+      );
     }
-  };
+
+    setIntentosFallidos(0);
+    setBloqueadoHasta(null);
+    localStorage.removeItem("cambio_password_intentos");
+    localStorage.removeItem("cambio_password_bloqueado_hasta");
+    setSuccess("La contraseña actual es correcta");
+  } catch (error: any) {
+    setError(error.message || "Error al verificar la contraseña actual");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
   return (
     <div className="space-y-6">
       <header>
@@ -147,24 +198,14 @@ export default function PasswordSection() {
             label="Ingresa tu nueva contraseña"
             placeholder="••••••••"
             value={nuevaPassword}
-            onChange={(val) => {
-              setNuevaPassword(val);
-              if (error === "Las contraseñas no coinciden" && val === confirmarPassword) {
-                setError("");
-              }
-            }}
+            onChange={setNuevaPassword}
           />
 
           <PasswordField
             label="Confirma tu nueva contraseña"
             placeholder="••••••••"
             value={confirmarPassword}
-            onChange={(val) => {
-              setConfirmarPassword(val);
-              if (error === "Las contraseñas no coinciden" && val === nuevaPassword) {
-                setError("");
-              }
-            }}
+            onChange={setConfirmarPassword}
           />
 
           {error && <p className="text-sm font-medium text-red-600">{error}</p>}
@@ -175,10 +216,10 @@ export default function PasswordSection() {
 
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || bloqueado}
             className="mt-2 inline-flex w-full items-center justify-center rounded-lg bg-orange-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {isLoading ? "Verificando..." : "Cambiar contraseña"}
+>
+            {isLoading ? "Verificando..." : bloqueado ? "Bloqueado" : "Cambiar contraseña"}
           </button>
         </form>
       </div>
