@@ -18,6 +18,7 @@ export type User = {
   avatar?: string | null
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type MeResponse = {
   message?: string
   perfil?: {
@@ -128,7 +129,13 @@ export default function Navbar() {
     }
 
     if (!navigator.onLine) {
-      clearSession(false)
+      try {
+        const parsedUser = JSON.parse(savedUser)
+        setUser(parsedUser)
+        setIsLoggedIn(true)
+      } catch {
+        clearSession(false)
+      }
       return
     }
 
@@ -396,10 +403,22 @@ export default function Navbar() {
                         </div>
 
                         <div
+                          ref={scrollContainerRef}
                           role="list"
                           aria-label="Lista de notificaciones"
                           aria-live="polite"
                           className="max-h-[60vh] overflow-y-auto sm:max-h-80"
+                          onScroll={(e) => {
+                            const target = e.currentTarget
+                            const reachedBottom =
+                              target.scrollTop + target.clientHeight >= target.scrollHeight - 20
+                            if (reachedBottom && hasMore && !isLoadingMore) {
+                              // @ts-ignore
+                              saveScrollPosition()
+                              // @ts-ignore 
+                              void loadMoreNotifications(filter)
+                            }
+                          }}
                         >
                           {isLoading ? (
                             <div className="flex items-center justify-center gap-2 px-4 py-8 text-sm text-stone-500">
@@ -490,7 +509,6 @@ export default function Navbar() {
                                   </div>
                                 </div>
                               ))}
-
                               {isLoadingMore && (
                                 <p className="px-4 py-3 text-center text-xs text-stone-400">
                                   Cargando más notificaciones...
@@ -577,18 +595,32 @@ export default function Navbar() {
                 Inicio
               </Link>
               <Link
-                href="#contacto"
+                href="/propiedades"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
-                Contáctanos
+                Propiedades
               </Link>
               <Link
-                href="#nosotros"
+                href="/blogs"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
-                Sobre Nosotros
+                Blogs
+              </Link>
+              <Link
+                href="/cobros-suscripciones"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+              >
+                Planes de membresia
+              </Link>
+              <Link
+                href="/ayuda"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+              >
+                Ayuda
               </Link>
             </nav>
           </div>
