@@ -1,4 +1,4 @@
-export type NotificationStatus = "leida" | "no leida";
+export type NotificationStatus = 'leida' | 'no leida'
 
 export type NotificationFilter = 'todas' | 'leida' | 'no leida' | 'archivada'
 
@@ -12,13 +12,13 @@ export type NotificationItem = {
 }
 
 export type NotificationsResponse = {
-  items: NotificationItem[];
-  total: number;
-  limit: number;
-  offset: number;
-  message?: string;
-};
+  items: NotificationItem[]
+  total: number
+  limit: number
+  offset: number
+  message?: string
+}
 
 export type UnreadCountResponse = {
-  unreadCount: number;
-};
+  unreadCount: number
+}
