@@ -174,7 +174,6 @@ export default function DeactivateAccountSection() {
           <div className="w-full max-w-md rounded-xl border border-neutral-300 bg-white p-5 shadow-xl">
             <div className="mb-4 flex items-start gap-3">
               <div className="mt-1 text-red-500">⚠</div>
-
               <div>
                 <h2 className="text-base font-bold text-neutral-900">
                   ¿Estás seguro de que quieres desactivar tu cuenta?

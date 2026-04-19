@@ -22,7 +22,7 @@ model Usuario {
   password                          String
   pais                              String?
   avatar                            String?
-  genero                            genero?
+  genero                            Genero?
   direccion                         String?
   activo                            Boolean?                @default(true)
   fechaRegistro                     DateTime?               @default(now()) @db.Timestamp(6)
@@ -35,6 +35,13 @@ model Usuario {
   two_factor_activo                 Boolean                 @default(false)
   two_factor_metodo                 String                  @default("email") @db.VarChar(20)
   two_factor_activado_en            DateTime?               @db.Timestamptz(6)
+  intentosFallidosCambioPassword    Int?                    @default(0)
+  bloqueoCambioPasswordHasta        DateTime?
+  passwordActualizadoEn             DateTime?
+  twoFactorActivo                   Boolean?                @default(false)
+  twoFactorMetodo                   String?                 @default("EMAIL") @db.VarChar(20)
+  twoFactorActivadoEn               DateTime?
+  desactivadoEn                     DateTime?
   controlador                       Boolean                 @default(false)
   fechaNacimiento                   DateTime?
   telemetriaCompartida              Boolean?                @default(false)
@@ -623,6 +630,8 @@ enum tipo_interaccion {
   HOVER
   ZOOM
   DRAG
+
+  @@map("tipo_interaccion")
 }
 
 enum tipo_marcador {
