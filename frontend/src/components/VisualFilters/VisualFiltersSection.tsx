@@ -72,7 +72,7 @@ export default function VisualFiltersSection() {
         setData(json);
       } catch (err) {
         console.error("VisualFiltersSection:", err);
-        // Si falla el backend, mostramos estructura vacía (no rompe UI)
+        
         setData({ alquileres: [], ventas: [], tipos: [] });
       } finally {
         setLoading(false);
@@ -102,8 +102,17 @@ export default function VisualFiltersSection() {
       </section>
     );
   }
-// Mapear datos a formato del carrusel (100% reales de la BD)
-  const alquilerItems = (data?.alquileres ?? []).map((item) => ({
+
+  const alquileresConBase = mergeCiudadesConDatos(
+    CIUDADES_BASE,
+    data?.alquileres ?? []
+  );
+  const ventasConBase = mergeCiudadesConDatos(
+    CIUDADES_BASE,
+    data?.ventas ?? []
+  );
+
+  const alquilerItems = alquileresConBase.map((item) => ({
     image: getCityImage(item.nombre),
     title: item.nombre,
     location: `${item.total.toLocaleString()} propiedades`,
@@ -111,7 +120,7 @@ export default function VisualFiltersSection() {
     filterParam: item.nombre,
   }));
 
-  const ventaItems = (data?.ventas ?? []).map((item) => ({
+  const ventaItems = ventasConBase.map((item) => ({
     image: getCityImage(item.nombre),
     title: item.nombre,
     location: `${item.total.toLocaleString()} propiedades`,
@@ -119,51 +128,44 @@ export default function VisualFiltersSection() {
     filterParam: item.nombre,
   }));
 
-  const tipoItems = (data?.tipos ?? []).map((item) => ({
-    key: item.nombre.toLowerCase().replace(/\s+/g, ""),
-    label: item.nombre,
-    count: item.total,
-  }));
+  const tiposBase = ["casas", "departamentos", "oficinas", "terrenos"];
+  const tipoItems = tiposBase.map((base) => {
+    const found = (data?.tipos ?? []).find((t) =>
+      t.nombre.toLowerCase().includes(base)
+    );
+    return found
+      ? {
+          key: found.nombre.toLowerCase().replace(/\s+/g, ""),
+          label: found.nombre,
+          count: found.total,
+        }
+      : {
+          key: base,
+          label: base.charAt(0).toUpperCase() + base.slice(1),
+          count: 0,
+        };
+  });
 
   return (
     <section className="w-full px-4 md:px-8 py-8 flex justify-center">
       <div className="w-full max-w-[1100px]">
 
-        {/* Alquileres */}
-        {alquilerItems.length > 0 ? (
-          <PropertyCarousel title="Alquileres" items={alquilerItems} category="alquiler" />
-        ) : (
-          <div className="mb-8">
-            <h2 className="text-sm font-extrabold text-gray-800 uppercase tracking-wide mb-3">Alquileres</h2>
-            <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm text-sm text-gray-500">
-              No hay resultados para mostrar en alquileres en este momento.
-            </div>
-          </div>
-        )}
+        {/* ALQUILERES */}
+        <PropertyCarousel
+          title="Alquileres"
+          items={alquilerItems}
+          category="alquiler"
+        />
 
-        {/* En Venta */}
-        {ventaItems.length > 0 ? (
-          <PropertyCarousel title="En Venta" items={ventaItems} category="venta" />
-        ) : (
-          <div className="mb-8">
-            <h2 className="text-sm font-extrabold text-gray-800 uppercase tracking-wide mb-3">En Venta</h2>
-            <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm text-sm text-gray-500">
-              No hay resultados para mostrar en ventas en este momento.
-            </div>
-          </div>
-        )}
+        {/* EN VENTA */}
+        <PropertyCarousel
+          title="En Venta"
+          items={ventaItems}
+          category="venta"
+        />
 
-        {/* Por tipo */}
-        {tipoItems.length > 0 ? (
-          <PropertyTypeGrid items={tipoItems} />
-        ) : (
-          <div className="mb-8">
-            <h2 className="text-sm font-extrabold text-gray-800 uppercase tracking-wide mb-3">Por tipo de inmueble</h2>
-            <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm text-sm text-gray-500">
-              No hay categorías registradas.
-            </div>
-          </div>
-        )}
+        {/* POR TIPO DE INMUEBLE */}
+        <PropertyTypeGrid items={tipoItems} />
 
       </div>
     </section>
