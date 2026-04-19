@@ -119,6 +119,7 @@ function BusquedaMapaContent() {
   const { properties, isLoading, error } = useProperties()
   const { zonas } = useZonas()
   const [selectedZoneId, setSelectedZoneId] = useState<number | null>(null)
+  const [isFilteringZone, setIsFilteringZone] = useState(false)
 
   // === 3. LÓGICA MATEMÁTICA HU8 (Filtro por polígono) ===
   const displayedProperties = useMemo(() => {
@@ -349,7 +350,7 @@ function BusquedaMapaContent() {
                   selectedId={selectedPropertyId}
                   zonas={zonas}
                   selectedZoneId={selectedZoneId}
-                  onZoneSelect={setSelectedZoneId}
+                  onZoneSelect={(id) => { setIsFilteringZone(true); setSelectedZoneId(id); setTimeout(() => setIsFilteringZone(false), 500); }}
                   onSelect={handleMapSelect}
                   isLoading={isLoading}
                   error={error}
@@ -404,7 +405,7 @@ function BusquedaMapaContent() {
               selectedId={selectedPropertyId}
               zonas={zonas}
               selectedZoneId={selectedZoneId}
-              onZoneSelect={setSelectedZoneId}
+              onZoneSelect={(id) => { setIsFilteringZone(true); setSelectedZoneId(id); setTimeout(() => setIsFilteringZone(false), 500); }}
               onSelect={handleMapSelect}
               isLoading={isLoading}
               error={error}
@@ -678,7 +679,12 @@ function BusquedaMapaContent() {
                   setHoveredId(null)
                 }}
               >
-                {isLoading ? (
+                {isFilteringZone ? (
+                  <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
+                    <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+                    Filtrando por zona...
+                  </div>
+                ) : isLoading ? (
                   <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
                     <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
                     Actualizando resultados...
@@ -825,7 +831,7 @@ function BusquedaMapaContent() {
               error={error}
               zonas={zonas}
               selectedZoneId={selectedZoneId}
-              onZoneSelect={setSelectedZoneId}
+              onZoneSelect={(id) => { setIsFilteringZone(true); setSelectedZoneId(id); setTimeout(() => setIsFilteringZone(false), 500); }}
               isDrawingMode={isDrawingMode}
               polygonPoints={polygonPoints}
               isPolygonClosed={isPolygonClosed}
