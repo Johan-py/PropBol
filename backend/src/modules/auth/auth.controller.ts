@@ -1,6 +1,8 @@
 import type { Request, Response } from 'express'
 import {
   AuthError,
+  activate2FAService,
+  deactivate2FAService,
   getMeService,
   loginService,
   logoutService,
@@ -27,6 +29,10 @@ type VerifyRegisterBody = {
 type Verify2FABody = {
   userId: number
   codigo: string
+}
+
+type VerifyPasswordBody = {
+  password: string
 }
 
 const isDuplicateEmailError = (message: string) => {
@@ -217,6 +223,67 @@ export const logoutController = async (req: Request, res: Response) => {
     return res.status(200).json(result)
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Error al cerrar sesión'
+    return res.status(400).json({ message })
+  }
+}
+
+export const activate2FAController = async (
+  req: Request<unknown, unknown, VerifyPasswordBody>,
+  res: Response
+) => {
+  try {
+    const userId = req.user?.id
+    const { password } = req.body
+
+    if (!userId) {
+      return res.status(401).json({
+        message: 'Usuario no autenticado'
+      })
+    }
+
+    const result = await activate2FAService({
+      userId,
+      password
+    })
+
+    return res.status(200).json(result)
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message
+      })
+    }
+
+    const message =
+      error instanceof Error ? error.message : 'Error al activar la verificación en dos pasos'
+
+    return res.status(400).json({ message })
+  }
+}
+
+export const deactivate2FAController = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.id
+
+    if (!userId) {
+      return res.status(401).json({
+        message: 'Usuario no autenticado'
+      })
+    }
+
+    const result = await deactivate2FAService(userId)
+
+    return res.status(200).json(result)
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message
+      })
+    }
+
+    const message =
+      error instanceof Error ? error.message : 'Error al desactivar la verificación en dos pasos'
+
     return res.status(400).json({ message })
   }
 }

@@ -33,9 +33,16 @@ const handleConfirm = async () => {
   }
 
   setLoading(true)
+
   try {
     const token = localStorage.getItem('token')
-    const res = await fetch('/api/auth/verify-password', {
+
+    if (!token) {
+      setError('No se encontró una sesión válida')
+      return
+    }
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/activate-2fa`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -44,24 +51,24 @@ const handleConfirm = async () => {
       body: JSON.stringify({ password })
     })
 
+    const data = await res.json()
+
     if (res.ok) {
       setShowModal(false)
       setPassword('')
       setShowPassword(false)
       setError('')
-      setIsTwoFactorEnabled(true) 
-      
-    } else {
-      const data = await res.json()
-      setError(data.message ?? 'Contraseña incorrecta')
+      setIsTwoFactorEnabled(true)
+      return
     }
+
+    setError(data.message ?? 'No se pudo activar la verificación en dos pasos')
   } catch {
     setError('Error de conexión. Intenta de nuevo.')
   } finally {
     setLoading(false)
   }
 }
-
 const handleDisableTwoFactor = () => {
   setIsTwoFactorEnabled(false)
   setShowModal(false)
@@ -78,10 +85,43 @@ const handleCloseDisableModal = () => {
   setShowDisableModal(false)
 }
 
-const handleConfirmDisable = () => {
-  handleDisableTwoFactor()
-  setShowDisableModal(false)
-  setError('')
+const handleConfirmDisable = async () => {
+  setLoading(true)
+
+  try {
+    const token = localStorage.getItem('token')
+
+    if (!token) {
+      setError('No se encontró una sesión válida')
+      return
+    }
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/deactivate-2fa`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    const data = await res.json()
+
+    if (res.ok) {
+      setIsTwoFactorEnabled(false)
+      setShowDisableModal(false)
+      setShowModal(false)
+      setPassword('')
+      setShowPassword(false)
+      setError('')
+      return
+    }
+
+    setError(data.message ?? 'No se pudo desactivar la verificación en dos pasos')
+  } catch {
+    setError('Error de conexión. Intenta de nuevo.')
+  } finally {
+    setLoading(false)
+  }
 }
 
 

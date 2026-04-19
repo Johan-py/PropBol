@@ -5,9 +5,11 @@ import { env } from '../../config/env.js'
 import { enviarCodigo2FA, enviarCodigoRegistro } from '../../lib/email.service.js'
 import { generateToken, type JwtPayload } from '../../utils/jwt.js'
 import {
+  activate2FAByUserId,
   create2FACode,
   createSession,
   createUser,
+  deactivate2FAByUserId,
   desactiveSessionByToken,
   expire2FACode,
   findActive2FACodeByUserId,
@@ -19,7 +21,6 @@ import {
   invalidateActive2FACodesByUserId,
   mark2FACodeAsUsed
 } from './auth.repository.js'
-
 type LoginDTO = {
   correo: string
   password: string
@@ -592,6 +593,46 @@ export const verifyPasswordService = async ({ userId, password }: VerifyPassword
   }
 
   return { valid: true }
+}
+
+export const activate2FAService = async ({ userId, password }: VerifyPasswordDTO) => {
+  const trimmed = password?.trim()
+
+  if (!trimmed) {
+    throw new AuthError('La contraseña es obligatoria', 400)
+  }
+
+  const user = await findUserById(userId)
+
+  if (!user) {
+    throw new AuthError('Usuario no encontrado', 404)
+  }
+
+  if (user.password !== trimmed) {
+    throw new AuthError('Contraseña incorrecta', 401)
+  }
+
+  await activate2FAByUserId(userId)
+
+  return {
+    message: 'Verificación en dos pasos activada correctamente',
+    twoFactorActivo: true
+  }
+}
+
+export const deactivate2FAService = async (userId: number) => {
+  const user = await findUserById(userId)
+
+  if (!user) {
+    throw new AuthError('Usuario no encontrado', 404)
+  }
+
+  await deactivate2FAByUserId(userId)
+
+  return {
+    message: 'Verificación en dos pasos desactivada correctamente',
+    twoFactorActivo: false
+  }
 }
 
 type GoogleTokenResponse = {

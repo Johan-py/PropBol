@@ -224,3 +224,23 @@ export const expire2FACode = async (id: number) => {
     }
   })
 }
+
+export const activate2FAByUserId = async (userId: number) => {
+  return await prisma.usuario.update({
+    where: { id: userId },
+    data: {
+      twoFactorActivo: true,
+      twoFactorActivadoEn: new Date(),
+      twoFactorMetodo: 'email'
+    }
+  })
+}
+
+export const deactivate2FAByUserId = async (userId: number) => {
+  return await prisma.usuario.update({
+    where: { id: userId },
+    data: {
+      twoFactorActivo: false
+    }
+  })
+}
