@@ -35,23 +35,19 @@ model Usuario {
   two_factor_activo                 Boolean                 @default(false)
   two_factor_metodo                 String                  @default("email") @db.VarChar(20)
   two_factor_activado_en            DateTime?               @db.Timestamptz(6)
-  intentosFallidosCambioPassword    Int?                    @default(0)
-  bloqueoCambioPasswordHasta        DateTime?
-  passwordActualizadoEn             DateTime?
-  twoFactorActivo                   Boolean?                @default(false)
-  twoFactorMetodo                   String?                 @default("EMAIL") @db.VarChar(20)
-  twoFactorActivadoEn               DateTime?
-  desactivadoEn                     DateTime?
   controlador                       Boolean                 @default(false)
   fechaNacimiento                   DateTime?
   telemetriaCompartida              Boolean?                @default(false)
   zonaConexion                      String?                 @db.VarChar(100)
+  notificacionEmail                 Boolean?                @default(true)
+  notificacionWhatsapp              Boolean?                @default(false)
   autenticacion_social              autenticacion_social[]
   bitacora_pagos                    bitacora_pagos[]
   cambio_email                      CambioEmail[]
   codigo_2fa                        codigo_2fa[]
   comparacion                       comparacion[]
   favorito                          favorito[]
+  historial_busqueda                historial_busqueda[]
   historial_password                historial_password[]
   inmuebles                         Inmueble[]
   notificaciones                    Notificacion[]
@@ -99,11 +95,11 @@ model Notificacion {
   id            Int       @id @default(autoincrement())
   titulo        String
   mensaje       String
-  leida         Boolean?  @default(false)
+  leida         Boolean   @default(false)
   fechaCreacion DateTime? @default(now()) @db.Timestamp(6)
   fechaLectura  DateTime? @db.Timestamp(6)
-  eliminada     Boolean?  @default(false)
-  archivada     Boolean?  @default(false)
+  eliminada     Boolean   @default(false)
+  archivada     Boolean   @default(false)
   usuarioId     Int
   usuario       Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "notificacion_usuario_id_fkey")
 
@@ -384,8 +380,11 @@ model transacciones {
   estado                 String?                 @default("PENDIENTE") @db.VarChar(20)
   verificacion_requerida Boolean?                @default(true)
   tiempo_activacion      DateTime?               @db.Timestamp(6)
+  cupon_id               Int?
+  monto_descuento        Decimal?                @default(0) @db.Decimal(10, 2)
   bitacora_pagos         bitacora_pagos[]
   suscripciones_activas  suscripciones_activas[]
+  cupon                  cupon?                  @relation(fields: [cupon_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   plan_suscripcion       plan_suscripcion        @relation(fields: [id_suscripcion], references: [id], onDelete: NoAction, onUpdate: NoAction)
   usuario                Usuario                 @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction)
   verificacion_pago      verificacion_pago[]
@@ -529,6 +528,55 @@ model zona_usuario {
   actualizadoEn DateTime
   usuarioId     Int
   usuario       Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+}
+
+model ciudad {
+  id            Int             @id @default(autoincrement())
+  nombre        String          @unique
+  slug          String          @unique
+  descripcion   String?
+  popularidad   Int?            @default(0)
+  ciudad_imagen ciudad_imagen[]
+}
+
+model ciudad_imagen {
+  id       Int    @id @default(autoincrement())
+  ciudadid Int
+  url      String
+  orden    Int?   @default(0)
+  ciudad   ciudad @relation(fields: [ciudadid], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model cupon {
+  id              Int             @id @default(autoincrement())
+  codigo          String          @unique @db.VarChar(50)
+  descripcion     String?
+  tipo_descuento  String          @default("PORCENTAJE") @db.VarChar(10)
+  valor_descuento Decimal         @db.Decimal(10, 2)
+  max_usos        Int             @default(1)
+  usos_actuales   Int             @default(0)
+  fecha_inicio    DateTime        @default(now()) @db.Timestamptz(6)
+  fecha_fin       DateTime        @db.Timestamptz(6)
+  activo          Boolean?        @default(true)
+  fecha_creacion  DateTime?       @default(now()) @db.Timestamptz(6)
+  transacciones   transacciones[]
+}
+
+model historial_busqueda {
+  id        Int       @id @default(autoincrement())
+  usuarioid Int
+  termino   String
+  creadoen  DateTime? @default(now()) @db.Timestamp(6)
+  usuario   Usuario   @relation(fields: [usuarioid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "historial_usuario_fkey")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model spatial_ref_sys {
+  srid      Int     @id
+  auth_name String? @db.VarChar(256)
+  auth_srid Int?
+  srtext    String? @db.VarChar(2048)
+  proj4text String? @db.VarChar(2048)
 }
 
 enum Genero {

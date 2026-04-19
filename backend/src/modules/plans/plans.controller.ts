@@ -13,7 +13,7 @@ const planes = [
   {
     id: 2,
     name: 'Estándar',
-    price: 9.99,
+    price: 99,
     description: 'Más publicaciones y soporte prioritario',
     tiempo: 'Por mes',
     beneficios: ['50 publicaciones', 'Soporte prioritario', 'Estadísticas básicas'],
@@ -23,7 +23,7 @@ const planes = [
   {
     id: 3,
     name: 'Pro',
-    price: 19.99,
+    price: 199,
     description: 'Publicaciones ilimitadas + estadísticas avanzadas',
     tiempo: 'Por mes',
     beneficios: [
