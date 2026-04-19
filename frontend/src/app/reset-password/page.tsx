@@ -99,7 +99,16 @@ function ResetPasswordForm() {
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
-                onChange={(e) => { setPassword(e.target.value); setError(""); }}
+                onChange={(e) => {
+                    const value = e.target.value;
+                    setPassword(value);
+
+                    if (confirmPassword && value !== confirmPassword) {
+                        setError("Las contraseñas no coinciden");
+                     } else {
+                    setError("");
+                    }
+                }}
                 placeholder="Ingresa tu nueva contraseña"
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500 pr-16"
               />
@@ -121,10 +130,20 @@ function ResetPasswordForm() {
               <input
                 type={showConfirm ? "text" : "password"}
                 value={confirmPassword}
-                onChange={(e) => { setConfirmPassword(e.target.value); setError(""); }}
+                onChange={(e) => {
+                 const value = e.target.value;
+                 setConfirmPassword(value);
+
+                  if (password && value && password !== value) {
+                     setError("Las contraseñas no coinciden");
+                     } else {
+                      setError("");
+                      }
+                      }}
                 placeholder="Ingresa tu contraseña nuevamente"
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500 pr-16"
               />
+              
               <button
                 type="button"
                 onClick={() => setShowConfirm(!showConfirm)}
