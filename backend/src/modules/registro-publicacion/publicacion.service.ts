@@ -1,6 +1,24 @@
 import { prisma } from "../../lib/prisma.client.js";
+import { validarPermisoPublicacion } from "../publicacion/publicacion.repository.js";
 
-const createProperty = async (data: any, userId: number) => {
+interface PropertyData {
+  titulo: string;
+  tipoAccion: "VENTA" | "ALQUILER" | "ANTICRETO";
+  categoria: "CASA" | "DEPARTAMENTO" | "TERRENO" | "OFICINA";
+  precio: number;
+  superficieM2?: number;
+  nroCuartos?: number;
+  nroBanos?: number;
+  descripcion: string;
+  direccion: string;
+  latitud?: number;
+  longitud?: number;
+}
+
+const createProperty = async (data: PropertyData, userId: number) => {
+  // Validar permiso de publicación (gratuitas o premium)
+  await validarPermisoPublicacion(userId);
+
   const result = await prisma.$transaction(async (tx) => {
     const inmueble = await tx.inmueble.create({
       data: {

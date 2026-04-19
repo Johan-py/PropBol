@@ -100,26 +100,67 @@ export const obtenerSuscripcionActiva = async (usuarioId: number) => {
 };
 
 /**
- * VALIDACIÓN CENTRAL PARA PERMITIR LA PUBLICACION DEL INMUEBLE
+ * Contar publicaciones activas del usuario (excluyendo eliminadas)
+ */
+export const contarPublicacionesActivasUsuario = async (
+  usuarioId: number,
+) => {
+  return prisma.publicacion.count({
+    where: {
+      usuarioId,
+      estado: {
+        not: ESTADO_PUBLICACION_ELIMINADA,
+      },
+    },
+  });
+};
+
+/**
+ * VALIDACIÓN CENTRAL PARA PERMITIR LA PUBLICACIÓN DEL INMUEBLE
+ * - Máximo 2 publicaciones gratuitas
+ * - Si se han alcanzado las 2 gratuitas, debe tener suscripción premium activa
  */
 export const validarPermisoPublicacion = async (usuarioId: number) => {
+  const LIMITE_PUBLICACIONES_GRATUITAS = 2;
+
+  // Contar publicaciones activas del usuario (excluyendo eliminadas)
+  const publicacionesActuales = await contarPublicacionesActivasUsuario(
+    usuarioId,
+  );
+
+  // Si aún tiene publicaciones gratuitas disponibles, permitir
+  if (publicacionesActuales < LIMITE_PUBLICACIONES_GRATUITAS) {
+    return {
+      permitido: true,
+      tipo: "GRATUITA",
+      publicacionesActuales,
+      publicacionesRestantes:
+        LIMITE_PUBLICACIONES_GRATUITAS - publicacionesActuales,
+    };
+  }
+
+  // Si ya alcanzó el límite de gratuitas, verificar suscripción activa
   const suscripcion = await obtenerSuscripcionActiva(usuarioId);
 
   if (!suscripcion || !suscripcion.plan_suscripcion) {
-    throw new Error("No tienes una suscripción activa");
+    throw new Error(
+      "Has alcanzado el límite de publicaciones gratuitas (2). Necesitas suscribirte a un plan premium para publicar más inmuebles.",
+    );
   }
 
-  const limite = suscripcion.plan_suscripcion.nro_publicaciones_plan;
+  const limiteDelPlan = suscripcion.plan_suscripcion.nro_publicaciones_plan;
 
-  const totalPublicaciones = await prisma.publicacion.count({
-    where: {
-      usuario_id: usuarioId,
-    },
-  });
-
-  if (limite !== null && totalPublicaciones >= limite) {
-    throw new Error("Has alcanzado el límite de publicaciones de tu plan");
+  if (limiteDelPlan !== null && publicacionesActuales >= limiteDelPlan) {
+    throw new Error(
+      `Has alcanzado el límite de publicaciones de tu plan (${limiteDelPlan}). Considera actualizar tu plan.`,
+    );
   }
 
-  return suscripcion;
+  return {
+    permitido: true,
+    tipo: "PREMIUM",
+    suscripcion,
+    publicacionesActuales,
+    limiteDelPlan,
+  };
 };
