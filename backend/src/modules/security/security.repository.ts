@@ -16,3 +16,20 @@ export const findUserPasswordByIdRepository = async (
     },
   });
 };
+export const deactivateUserAccountRepository = async (
+  userId: number,
+): Promise<void> => {
+  await prisma.$transaction([
+    prisma.usuario.update({
+      where: { id: userId },
+      data: { activo: false },
+    }),
+    prisma.sesion.updateMany({
+      where: {
+        usuarioId: userId,
+        estado: true,
+      },
+      data: { estado: false },
+    }),
+  ]);
+};

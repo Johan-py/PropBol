@@ -1,16 +1,29 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const MAX_PASSWORD_LENGTH = 255;
 
-type ValidatePasswordResponse = {
-  valid: boolean;
+type DeactivateResponse = {
   message: string;
+};
+const clearClientSession = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("propbol_user");
+  localStorage.removeItem("propbol_session_expires");
+  localStorage.removeItem("nombre");
+  localStorage.removeItem("correo");
+  localStorage.removeItem("avatar");
+
+  window.dispatchEvent(new Event("propbol:session-changed"));
+  window.dispatchEvent(new Event("auth-state-changed"));
 };
 
 export default function DeactivateAccountSection() {
+  const router = useRouter();
+
   const [showWarningModal, setShowWarningModal] = useState(false);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -47,10 +60,10 @@ export default function DeactivateAccountSection() {
   };
 
   const handleTogglePasswordVisibility = () => {
-    setShowPassword((currentValue) => !currentValue);
+    setShowPassword((current) => !current);
   };
 
-  const handleValidatePassword = async () => {
+  const handleDeactivateAccount = async () => {
     try {
       setErrorMessage("");
       setSuccessMessage("");
@@ -87,9 +100,9 @@ export default function DeactivateAccountSection() {
       setIsSubmitting(true);
 
       const response = await fetch(
-        `${API_URL}/api/security/validate-password`,
+        `${API_URL}/api/security/deactivate-account`,
         {
-          method: "POST",
+          method: "DELETE",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -98,16 +111,22 @@ export default function DeactivateAccountSection() {
         },
       );
 
-      const data = (await response.json()) as ValidatePasswordResponse;
+      const data = (await response.json()) as DeactivateResponse;
 
-      if (!response.ok || !data.valid) {
-        setErrorMessage(data.message || "Contraseña incorrecta.");
+      if (!response.ok) {
+        setErrorMessage(data.message || "No se pudo desactivar la cuenta.");
         return;
       }
 
-      setSuccessMessage("Contraseña válida.");
+      // Cuenta desactivada: mostrar mensaje, limpiar sesión y redirigir al home
+      setSuccessMessage("Tu cuenta fue desactivada. Redirigiendo...");
+      clearClientSession();
+
+      window.setTimeout(() => {
+        router.push("/");
+      }, 1500);
     } catch {
-      setErrorMessage("No se pudo validar la contraseña.");
+      setErrorMessage("No se pudo conectar con el servidor.");
     } finally {
       setIsSubmitting(false);
     }
@@ -149,6 +168,7 @@ export default function DeactivateAccountSection() {
         </div>
       </div>
 
+      {/* Modal 1: Confirmación de intención */}
       {showWarningModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           <div className="w-full max-w-md rounded-xl border border-neutral-300 bg-white p-5 shadow-xl">
@@ -186,6 +206,7 @@ export default function DeactivateAccountSection() {
         </div>
       )}
 
+      {/* Modal 2: Confirmación con contraseña */}
       {showPasswordModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           <div className="w-full max-w-md rounded-xl border border-neutral-300 bg-white p-5 shadow-xl">
@@ -197,7 +218,7 @@ export default function DeactivateAccountSection() {
                   Confirmación final
                 </h2>
                 <p className="mt-1 text-sm text-neutral-600">
-                  Ingresa tu contraseña actual para continuar.
+                  Ingresa tu contraseña actual para desactivar tu cuenta.
                 </p>
               </div>
             </div>
@@ -215,10 +236,16 @@ export default function DeactivateAccountSection() {
                   id="current-password"
                   type={showPassword ? "text" : "password"}
                   value={password}
-                  onChange={(event) => setPassword(event.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !isSubmitting) {
+                      void handleDeactivateAccount();
+                    }
+                  }}
                   placeholder="••••••••"
-                  maxLength={256}
-                  className="w-full border-none bg-transparent text-sm text-neutral-900 outline-none"
+                  maxLength={MAX_PASSWORD_LENGTH}
+                  disabled={isSubmitting || !!successMessage}
+                  className="w-full border-none bg-transparent text-sm text-neutral-900 outline-none disabled:opacity-50"
                 />
 
                 <button
@@ -247,7 +274,7 @@ export default function DeactivateAccountSection() {
               <button
                 type="button"
                 onClick={handleCancelPassword}
-                disabled={isSubmitting}
+                disabled={isSubmitting || !!successMessage}
                 className="rounded-md border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Cancelar
@@ -255,11 +282,11 @@ export default function DeactivateAccountSection() {
 
               <button
                 type="button"
-                onClick={handleValidatePassword}
-                disabled={isSubmitting}
+                onClick={handleDeactivateAccount}
+                disabled={isSubmitting || !!successMessage}
                 className="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isSubmitting ? "Validando..." : "Desactivar cuenta"}
+                {isSubmitting ? "Desactivando..." : "Desactivar cuenta"}
               </button>
             </div>
           </div>

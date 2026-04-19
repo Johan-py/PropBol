@@ -1,6 +1,9 @@
 import { Router } from "express";
 import { requireAuth } from "../middleware/auth.middleware.js";
-import { validateCurrentPasswordController } from "../modules/security/security.controller.js";
+import {
+  deactivateAccountController,
+  validateCurrentPasswordController,
+} from "../modules/security/security.controller.js";
 
 const router = Router();
 
@@ -9,5 +12,7 @@ router.post(
   requireAuth,
   validateCurrentPasswordController,
 );
+
+router.delete("/deactivate-account", requireAuth, deactivateAccountController);
 
 export default router;

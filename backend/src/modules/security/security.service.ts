@@ -1,4 +1,7 @@
-import { findUserPasswordByIdRepository } from "./security.repository.js";
+import {
+  deactivateUserAccountRepository,
+  findUserPasswordByIdRepository,
+} from "./security.repository.js";
 
 export class SecurityError extends Error {
   statusCode: number;
@@ -41,27 +44,17 @@ const getBlockStatus = (userId: number) => {
   const state = getAttemptState(userId);
 
   if (!state.blockedUntil) {
-    return {
-      blocked: false,
-      retryAfterSeconds: 0,
-    };
+    return { blocked: false, retryAfterSeconds: 0 };
   }
 
   const remainingMs = state.blockedUntil - Date.now();
 
   if (remainingMs <= 0) {
     attemptsStore.delete(userId);
-
-    return {
-      blocked: false,
-      retryAfterSeconds: 0,
-    };
+    return { blocked: false, retryAfterSeconds: 0 };
   }
 
-  return {
-    blocked: true,
-    retryAfterSeconds: Math.ceil(remainingMs / 1000),
-  };
+  return { blocked: true, retryAfterSeconds: Math.ceil(remainingMs / 1000) };
 };
 
 const registerFailedAttempt = (userId: number) => {
@@ -105,7 +98,6 @@ export const validateCurrentPasswordService = async (
 
   if (blockStatus.blocked) {
     const remainingMinutes = Math.ceil(blockStatus.retryAfterSeconds / 60);
-
     throw new SecurityError(
       `La cuenta sigue bloqueada temporalmente por múltiples intentos fallidos. Intenta nuevamente en ${remainingMinutes} minuto(s).`,
       429,
@@ -146,7 +138,6 @@ export const validateCurrentPasswordService = async (
 
     if (attemptStatus.blocked) {
       const blockMinutes = Math.ceil(BLOCK_TIME_MS / 60000);
-
       throw new SecurityError(
         `Has superado el número permitido de intentos. La cuenta fue bloqueada temporalmente por ${blockMinutes} minuto(s).`,
         429,
@@ -161,8 +152,15 @@ export const validateCurrentPasswordService = async (
 
   clearAttemptState(userId);
 
-  return {
-    valid: true,
-    message: "Contraseña válida.",
-  };
+  return { valid: true, message: "Contraseña válida." };
+};
+
+export const deactivateAccountService = async (
+  userId: number,
+  password: string,
+) => {
+  await validateCurrentPasswordService(userId, password);
+  await deactivateUserAccountRepository(userId);
+
+  return { message: "Tu cuenta ha sido desactivada correctamente." };
 };
