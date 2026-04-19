@@ -138,11 +138,26 @@ function BusquedaMapaContent() {
         })
       } catch (err) {
         console.error('Error en validación geométrica:', err)
-        return properties
+        if (selectedZoneId !== null) {
+      const zonaSeleccionada = zonas.find((z) => z.id === selectedZoneId)
+      if (zonaSeleccionada && zonaSeleccionada.coordenadas.length >= 3) {
+        try {
+          const coords = [...zonaSeleccionada.coordenadas, zonaSeleccionada.coordenadas[0]].map((c) => [c[1], c[0]])
+          const zonaPoly = polygon([coords])
+          return properties.filter((p: any) => {
+            if (p.lat == null || p.lng == null) return false
+            return booleanPointInPolygon(point([p.lng, p.lat]), zonaPoly)
+          })
+        } catch (err) {
+          console.error("Error filtrando por zona:", err)
+        }
       }
     }
     return properties
-  }, [properties, isPolygonClosed, polygonPoints])
+      }
+    }
+    return properties
+  }, [properties, isPolygonClosed, polygonPoints, selectedZoneId, zonas])
 
   // === 4. ORDENAMIENTO (Usando resultados filtrados) ===
   const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
