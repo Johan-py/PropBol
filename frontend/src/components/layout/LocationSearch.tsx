@@ -43,7 +43,8 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
 
   useEffect(() => {
     if (!isOpen) return
-    let frame1 = requestAnimationFrame(() => {
+    // CORRECCIÓN: Se usa const porque frame1 y frame2 no se reasignan
+    const frame1 = requestAnimationFrame(() => {
       requestAnimationFrame(recalcDropdown)
     })
     return () => cancelAnimationFrame(frame1)
@@ -72,6 +73,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     setHistory(updatedHistory)
     localStorage.setItem('searchHistory', JSON.stringify(updatedHistory))
   }
+  
   const handleDeleteItem = (e: React.MouseEvent, term: string) => {
     e.stopPropagation()
     const updated = history.filter((h) => h !== term)
@@ -206,7 +208,6 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             </div>
           )}
 
-          {/* SUGERENCIAS DE API */}
           {value.trim().length >= 2 && !isSelected && (
             <div className="max-h-[300px] overflow-y-auto">
               {isLoading ? (
