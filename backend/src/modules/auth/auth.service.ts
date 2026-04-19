@@ -9,11 +9,15 @@ import {
   createSession,
   createUser,
   desactiveSessionByToken,
+  expire2FACode,
+  findActive2FACodeByUserId,
   findActiveSessionByToken,
   findUser,
   findUserByCorreo,
   findUserById,
-  invalidateActive2FACodesByUserId
+  increment2FACodeAttempts,
+  invalidateActive2FACodesByUserId,
+  mark2FACodeAsUsed
 } from './auth.repository.js'
 
 type LoginDTO = {
@@ -34,6 +38,11 @@ type VerifyRegisterCodeDTO = {
   verificationToken: string
   codigo: string
   password: string
+}
+
+type Verify2FADTO = {
+  userId: number
+  codigo: string
 }
 
 type PendingRegisterPayload = {
@@ -251,6 +260,37 @@ const verifyPendingRegisterToken = (token: string) => {
   }
 }
 
+const createAuthSessionResponse = async (user: {
+  id: number
+  correo: string
+  nombre: string
+  apellido: string
+}) => {
+  const jwtPayload: JwtPayload = {
+    id: user.id,
+    correo: user.correo
+  }
+
+  const token = generateToken(jwtPayload)
+  const fechaExpiracion = new Date(Date.now() + 60 * 60 * 1000)
+
+  await createSession({
+    token,
+    usuarioId: user.id,
+    fechaExpiracion
+  })
+
+  return {
+    user: {
+      id: user.id,
+      correo: user.correo,
+      nombre: user.nombre,
+      apellido: user.apellido
+    },
+    token
+  }
+}
+
 export const loginService = async (payload: LoginDTO) => {
   const correo = payload.correo?.trim().toLowerCase()
   const password = payload.password?.trim()
@@ -331,30 +371,56 @@ export const loginService = async (payload: LoginDTO) => {
     }
   }
 
-  const jwtPayload: JwtPayload = {
-    id: user.id,
-    correo: user.correo
-  }
-
-  const token = generateToken(jwtPayload)
-  const fechaExpiracion = new Date(Date.now() + 60 * 60 * 1000)
-
-  await createSession({
-    token,
-    usuarioId: user.id,
-    fechaExpiracion
-  })
+  const sessionResponse = await createAuthSessionResponse(user)
 
   return {
     requires2FA: false,
-    user: {
-      id: user.id,
-      correo: user.correo,
-      nombre: user.nombre,
-      apellido: user.apellido
-    },
-    token
+    ...sessionResponse
   }
+}
+
+export const verify2FAService = async ({ userId, codigo }: Verify2FADTO) => {
+  const normalizedCode = codigo?.trim()
+
+  if (!userId || !normalizedCode) {
+    throw new AuthError('El usuario y el código son obligatorios', 400)
+  }
+
+  if (!/^\d{6}$/.test(normalizedCode)) {
+    throw new AuthError('El código debe tener exactamente 6 dígitos numéricos', 400)
+  }
+
+  const user = await findUserById(userId)
+
+  if (!user) {
+    throw new AuthError('Usuario no encontrado', 404)
+  }
+
+  if (!user.twoFactorActivo) {
+    throw new AuthError('El usuario no tiene autenticación en dos pasos activada', 400)
+  }
+
+  const activeCode = await findActive2FACodeByUserId(userId)
+
+  if (!activeCode) {
+    throw new AuthError('El código es incorrecto', 401)
+  }
+
+  if (activeCode.expiraEn.getTime() < Date.now()) {
+    await expire2FACode(activeCode.id)
+    throw new AuthError('El código ha expirado', 401)
+  }
+
+  const codigoHash = hash2FACode(normalizedCode)
+
+  if (codigoHash !== activeCode.codigoHash) {
+    await increment2FACodeAttempts(activeCode.id, activeCode.intentos ?? 0)
+    throw new AuthError('El código es incorrecto', 401)
+  }
+
+  await mark2FACodeAsUsed(activeCode.id)
+
+  return await createAuthSessionResponse(user)
 }
 
 export const registerUser = async (payload: RegisterDTO) => {

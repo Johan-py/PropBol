@@ -183,3 +183,44 @@ export const create2FACode = async ({
     }
   })
 }
+
+export const findActive2FACodeByUserId = async (usuarioId: number) => {
+  return await prisma.codigo2FA.findFirst({
+    where: {
+      usuarioId,
+      activo: true,
+      usadoEn: null
+    },
+    orderBy: {
+      creadoEn: 'desc'
+    }
+  })
+}
+
+export const mark2FACodeAsUsed = async (id: number) => {
+  return await prisma.codigo2FA.update({
+    where: { id },
+    data: {
+      usadoEn: new Date(),
+      activo: false
+    }
+  })
+}
+
+export const increment2FACodeAttempts = async (id: number, intentosActuales: number) => {
+  return await prisma.codigo2FA.update({
+    where: { id },
+    data: {
+      intentos: intentosActuales + 1
+    }
+  })
+}
+
+export const expire2FACode = async (id: number) => {
+  return await prisma.codigo2FA.update({
+    where: { id },
+    data: {
+      activo: false
+    }
+  })
+}
