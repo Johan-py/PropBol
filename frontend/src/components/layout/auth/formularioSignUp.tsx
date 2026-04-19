@@ -154,7 +154,7 @@ export default function SignUpForm() {
   const confirmPasswordContainerRef = useRef<HTMLDivElement>(null);
   const [serverError, setServerError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [googleButtonResetKey, setGoogleButtonResetKey] = useState(0)
+  const [googleButtonResetKey, setGoogleButtonResetKey] = useState(0);
   const onlyLettersRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
   const onlyNumbersRegex = /^[0-9]*$/;
 
@@ -357,27 +357,27 @@ export default function SignUpForm() {
   };
 
   const handleCancel = () => {
-    setFormData(initialFormData)
-    setErrors({})
-    setTouched({})
-    setShowPassword(false)
-    setShowConfirmPassword(false)
-    setServerError('')
-    setIsSubmitting(false)
-    setGoogleButtonResetKey((prev) => prev + 1)
-}
+    setFormData(initialFormData);
+    setErrors({});
+    setTouched({});
+    setShowPassword(false);
+    setShowConfirmPassword(false);
+    setServerError("");
+    setIsSubmitting(false);
+    setGoogleButtonResetKey((prev) => prev + 1);
+  };
 
   const hasFormContent = useMemo(() => {
     return (
-      formData.email.trim() !== '' ||
-      formData.firstName.trim() !== '' ||
-      formData.lastName.trim() !== '' ||
-      formData.phone.trim() !== '' ||
-      formData.password.trim() !== '' ||
-      formData.confirmPassword.trim() !== '' ||
-      serverError !== ''
-    )
-  }, [formData, serverError])
+      formData.email.trim() !== "" ||
+      formData.firstName.trim() !== "" ||
+      formData.lastName.trim() !== "" ||
+      formData.phone.trim() !== "" ||
+      formData.password.trim() !== "" ||
+      formData.confirmPassword.trim() !== "" ||
+      serverError !== ""
+    );
+  }, [formData, serverError]);
 
   const isFormValid = useMemo(() => {
     const requiredFieldsCompleted =
@@ -660,7 +660,11 @@ export default function SignUpForm() {
                 className="relative"
                 ref={passwordContainerRef}
                 onBlur={(e) => {
-                  if (!passwordContainerRef.current?.contains(e.relatedTarget as Node)) {
+                  if (
+                    !passwordContainerRef.current?.contains(
+                      e.relatedTarget as Node,
+                    )
+                  ) {
                     setShowPassword(false);
                     handleBlur("password")();
                   }
@@ -686,7 +690,9 @@ export default function SignUpForm() {
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
                   className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-[#78716c] hover:bg-[#f5f5f4] hover:text-[#292524]"
-                  aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                  aria-label={
+                    showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
+                  }
                 >
                   {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
@@ -705,7 +711,11 @@ export default function SignUpForm() {
                 className="relative"
                 ref={confirmPasswordContainerRef}
                 onBlur={(e) => {
-                  if (!confirmPasswordContainerRef.current?.contains(e.relatedTarget as Node)) {
+                  if (
+                    !confirmPasswordContainerRef.current?.contains(
+                      e.relatedTarget as Node,
+                    )
+                  ) {
                     setShowConfirmPassword(false);
                     handleBlur("confirmPassword")();
                   }
@@ -724,21 +734,33 @@ export default function SignUpForm() {
                     Boolean(touched.confirmPassword && errors.confirmPassword),
                     true,
                   )} hide-native-password-toggle`}
-                  aria-invalid={Boolean(touched.confirmPassword && errors.confirmPassword)}
+                  aria-invalid={Boolean(
+                    touched.confirmPassword && errors.confirmPassword,
+                  )}
                   aria-describedby="confirmPassword-error"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword((prev) => !prev)}
                   className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-[#78716c] hover:bg-[#f5f5f4] hover:text-[#292524]"
-                  aria-label={showConfirmPassword ? "Ocultar confirmación de contraseña" : "Mostrar confirmación de contraseña"}
+                  aria-label={
+                    showConfirmPassword
+                      ? "Ocultar confirmación de contraseña"
+                      : "Mostrar confirmación de contraseña"
+                  }
                 >
-                  {showConfirmPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                  {showConfirmPassword ? (
+                    <EyeOff size={15} />
+                  ) : (
+                    <Eye size={15} />
+                  )}
                 </button>
               </div>
               <FieldError
                 id="confirmPassword-error"
-                error={touched.confirmPassword ? errors.confirmPassword : undefined}
+                error={
+                  touched.confirmPassword ? errors.confirmPassword : undefined
+                }
               />
             </div>
 
@@ -773,7 +795,7 @@ export default function SignUpForm() {
                   : "cursor-not-allowed bg-[#d6d3d1] text-[#a8a29e]"
               }`}
             >
-               Cancelar registro
+              Cancelar registro
             </button>
 
             <p className="pt-1 text-center text-[12px] text-[#78716c]">
@@ -793,10 +815,9 @@ export default function SignUpForm() {
             >
               Ir a la página principal
             </button>
-
           </form>
         </div>
       </div>
     </div>
-  )
+  );
 }

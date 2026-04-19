@@ -109,6 +109,7 @@ app.use("/api/publicaciones", multimediaRoutes);
 app.use("/api/perfil", correoverificacionRoutes);
 app.use("/api/perfil/usuario", perfilRoutes);
 app.use("/api", router);
+app.use("/api/publicaciones", publicacionRoutes);
 
 // --------------------
 // MOCK / TEST

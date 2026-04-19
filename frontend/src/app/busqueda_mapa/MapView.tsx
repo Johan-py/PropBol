@@ -5,7 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import { useMap } from "react-leaflet";
-import { useEffect, useState, useRef} from "react";
+import { useEffect, useState, useRef } from "react";
 
 import ZoomControls from "@/components/ZoomControls";
 import { createGpsIcon } from "@/components/GpsPin";
@@ -110,47 +110,52 @@ function createPinIcon(type: PropertyMapPin["type"]): L.DivIcon {
 }
 
 function MapClickHandler({ onMapClick }: { onMapClick: () => void }) {
-  const map = useMap()
+  const map = useMap();
 
   useEffect(() => {
     const handleClick = () => {
-      onMapClick()
-    }
+      onMapClick();
+    };
 
-    map.on("click", handleClick)
+    map.on("click", handleClick);
 
     return () => {
-      map.off("click", handleClick)
-    }
-  }, [map, onMapClick])
+      map.off("click", handleClick);
+    };
+  }, [map, onMapClick]);
 
-  return null
+  return null;
 }
 
 function MapMouseHandler({ onMouseLeave }: { onMouseLeave: () => void }) {
   const map = useMap();
-  
+
   useEffect(() => {
     if (!map) return;
-    
+
     const handleMouseOut = () => {
       onMouseLeave();
     };
-    
-    map.on('mouseout', handleMouseOut);
-    
+
+    map.on("mouseout", handleMouseOut);
+
     return () => {
-      map.off('mouseout', handleMouseOut);
+      map.off("mouseout", handleMouseOut);
     };
   }, [map, onMouseLeave]);
-  
+
   return null;
 }
 
-function createSelectedIcon(type: PropertyMapPin["type"], isHover: boolean = false): L.DivIcon {
+function createSelectedIcon(
+  type: PropertyMapPin["type"],
+  isHover: boolean = false,
+): L.DivIcon {
   const iconPath = SELECTED_ICONS[type];
-  const scale = isHover ? 1.8 : 1.6; 
-  const shadowIntensity = isHover ? "0 6px 16px rgba(0,0,0,0.4)" : "0 4px 12px rgba(0,0,0,0.35)";
+  const scale = isHover ? 1.8 : 1.6;
+  const shadowIntensity = isHover
+    ? "0 6px 16px rgba(0,0,0,0.4)"
+    : "0 4px 12px rgba(0,0,0,0.35)";
 
   return L.divIcon({
     className: "",
@@ -202,7 +207,7 @@ interface MapViewProps {
   center?: [number, number];
   zoom?: number;
   selectedId?: string | null;
-  onSelect?: (id: string | null) => void
+  onSelect?: (id: string | null) => void;
   isLoading?: boolean;
   error?: string | null;
 }
@@ -217,7 +222,7 @@ export default function MapView({
   error = null,
 }: MapViewProps) {
   const [isMounted, setIsMounted] = useState(false);
-  const [hoveredPinId, setHoveredPinId] = useState<string | null>(null); 
+  const [hoveredPinId, setHoveredPinId] = useState<string | null>(null);
   const markerRefs = useRef<{ [key: string]: L.Marker | null }>({});
 
   useEffect(() => {
@@ -227,7 +232,7 @@ export default function MapView({
         marker.closePopup();
       }
     });
-    
+
     // Abrir popup del marker en hover
     if (hoveredPinId && markerRefs.current[hoveredPinId]) {
       markerRefs.current[hoveredPinId]?.openPopup();
@@ -274,11 +279,15 @@ export default function MapView({
         />
 
         <ZoomControls />
-         <MapMouseHandler onMouseLeave={() => setHoveredPinId(null)} />
-         <MapClickHandler onMapClick={() => onSelect?.(null)} />
-          {selectedProperty && (
-           <FlyToSelected  id={selectedProperty.id} lat={selectedProperty.lat} lng={selectedProperty.lng} />
-          )}
+        <MapMouseHandler onMouseLeave={() => setHoveredPinId(null)} />
+        <MapClickHandler onMapClick={() => onSelect?.(null)} />
+        {selectedProperty && (
+          <FlyToSelected
+            id={selectedProperty.id}
+            lat={selectedProperty.lat}
+            lng={selectedProperty.lng}
+          />
+        )}
 
         <Marker position={center} icon={createGpsIcon()}>
           <Popup>Tu ubicación actual</Popup>
@@ -304,15 +313,15 @@ export default function MapView({
           {properties.map((property) => {
             const isSelected = property.id === selectedId;
             const isHovered = property.id === hoveredPinId;
-  
-             // Prioridad: selected > hovered > normal
+
+            // Prioridad: selected > hovered > normal
             let icon;
             if (isSelected) {
-             icon = createSelectedIcon(property.type, false);
+              icon = createSelectedIcon(property.type, false);
             } else if (isHovered) {
-             icon = createSelectedIcon(property.type, true); // Hover usa mismo estilo pero más grande
+              icon = createSelectedIcon(property.type, true); // Hover usa mismo estilo pero más grande
             } else {
-             icon = createPinIcon(property.type);
+              icon = createPinIcon(property.type);
             }
             return (
               <Marker
@@ -320,12 +329,12 @@ export default function MapView({
                 position={[property.lat, property.lng]}
                 icon={icon}
                 ref={(el) => {
-                 if (el) markerRefs.current[property.id] = el;
+                  if (el) markerRefs.current[property.id] = el;
                 }}
                 eventHandlers={{
-                 click: () => onSelect?.(property.id),
-                 mouseover: () => setHoveredPinId(property.id),
-                 mouseout: () => setHoveredPinId(null),
+                  click: () => onSelect?.(property.id),
+                  mouseover: () => setHoveredPinId(property.id),
+                  mouseout: () => setHoveredPinId(null),
                 }}
               >
                 <Popup>
@@ -353,32 +362,38 @@ export default function MapView({
   );
 }
 
-function FlyToSelected({ lat, lng, id }: { lat: number; lng: number; id: string }) {
+function FlyToSelected({
+  lat,
+  lng,
+  id,
+}: {
+  lat: number;
+  lng: number;
+  id: string;
+}) {
   const map = useMap();
-  const [lastId, setLastId] = useState<string | null>(null)
-  
+  const [lastId, setLastId] = useState<string | null>(null);
+
   useEffect(() => {
-    if (!lat || !lng || lastId === id) return
+    if (!lat || !lng || lastId === id) return;
 
-    const currentCenter = map.getCenter()
-    const distance = currentCenter.distanceTo([lat, lng])
+    const currentCenter = map.getCenter();
+    const distance = currentCenter.distanceTo([lat, lng]);
 
-    const targetZoom = 16 
-    const isFar = distance > 1000 
+    const targetZoom = 16;
+    const isFar = distance > 1000;
 
     if (isFar) {
-     
       map.flyTo([lat, lng], targetZoom, {
-        duration: 0.8,        
-        easeLinearity: 0.25,  
-      })
+        duration: 0.8,
+        easeLinearity: 0.25,
+      });
     } else {
-     
-      map.setView([lat, lng], targetZoom)
+      map.setView([lat, lng], targetZoom);
     }
 
-    setLastId(id)
-  }, [lat, lng, id, map, lastId])
+    setLastId(id);
+  }, [lat, lng, id, map, lastId]);
 
   return null;
 }

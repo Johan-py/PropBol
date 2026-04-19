@@ -23,46 +23,46 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({})
+  const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
 
   const { updateFilters } = useSearchFilters();
   const { registrarConsulta } = usePopularidad();
 
   // ── Dropdown position: fixed so overflow:auto parents can't clip it ────────
   const recalcDropdown = () => {
-    if (!containerRef.current) return
-    const rect = containerRef.current.getBoundingClientRect()
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
     setDropdownStyle({
-      position: 'fixed',
+      position: "fixed",
       top: rect.bottom + 8,
       left: rect.left,
       width: rect.width,
-      zIndex: 9999
-    })
-  }
+      zIndex: 9999,
+    });
+  };
 
   useEffect(() => {
-    if (!isOpen) return
-    let frame1 = 0
-    let frame2 = 0
+    if (!isOpen) return;
+    let frame1 = 0;
+    let frame2 = 0;
     frame1 = requestAnimationFrame(() => {
-    frame2 = requestAnimationFrame(recalcDropdown)
-    })
+      frame2 = requestAnimationFrame(recalcDropdown);
+    });
     return () => {
-      if (frame1) cancelAnimationFrame(frame1)
-      if (frame2) cancelAnimationFrame(frame2)
-    }
-  }, [isOpen])
+      if (frame1) cancelAnimationFrame(frame1);
+      if (frame2) cancelAnimationFrame(frame2);
+    };
+  }, [isOpen]);
 
   useEffect(() => {
-    if (!isOpen) return
-    window.addEventListener('resize', recalcDropdown)
-    window.addEventListener('scroll', recalcDropdown, true)
+    if (!isOpen) return;
+    window.addEventListener("resize", recalcDropdown);
+    window.addEventListener("scroll", recalcDropdown, true);
     return () => {
-      window.removeEventListener('resize', recalcDropdown)
-      window.removeEventListener('scroll', recalcDropdown, true)
-    }
-  }, [isOpen])
+      window.removeEventListener("resize", recalcDropdown);
+      window.removeEventListener("scroll", recalcDropdown, true);
+    };
+  }, [isOpen]);
 
   // ── Selección de ubicación ─────────────────────────────────────────────────
   const handleSelectLocation = (loc: Location) => {
@@ -90,7 +90,10 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
   }, []);
 
   const saveToHistory = (item: string) => {
-    const updatedHistory = [item, ...history.filter((i) => i !== item)].slice(0, 5);
+    const updatedHistory = [item, ...history.filter((i) => i !== item)].slice(
+      0,
+      5,
+    );
     setHistory(updatedHistory);
     localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
   };
@@ -108,7 +111,10 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
@@ -124,8 +130,11 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
       }
       setIsLoading(true);
       try {
-        const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
-        const res = await fetch(`${API_BASE}/api/locations/search?q=${encodeURIComponent(value)}`);
+        const API_BASE =
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+        const res = await fetch(
+          `${API_BASE}/api/locations/search?q=${encodeURIComponent(value)}`,
+        );
         if (res.ok) {
           const data = await res.json();
           setSuggestions(data);
@@ -144,14 +153,17 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
   return (
     <div className="w-full relative" ref={containerRef}>
       {/* ELIMINADO EL LABEL CIUDAD/ZONA */}
-      
+
       <div
-        className={`h-[46px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${isOpen && suggestions.length > 0
-          ? "border-amber-600 ring-2 ring-amber-100"
-          : "border-stone-300"
-          }`}
+        className={`h-[46px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${
+          isOpen && suggestions.length > 0
+            ? "border-amber-600 ring-2 ring-amber-100"
+            : "border-stone-300"
+        }`}
       >
-        <MapPin className={`w-5 h-5 flex-shrink-0 ${value ? "text-amber-600" : "text-stone-400"}`} />
+        <MapPin
+          className={`w-5 h-5 flex-shrink-0 ${value ? "text-amber-600" : "text-stone-400"}`}
+        />
 
         <div className="relative flex-1 flex items-center w-full h-full min-w-0">
           <input
@@ -159,11 +171,11 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             value={value}
             onChange={handleInputChange}
             onFocus={() => {
-              setIsOpen(true)
+              setIsOpen(true);
               requestAnimationFrame(() => {
-                  recalcDropdown()
-                })   
-          }}
+                recalcDropdown();
+              });
+            }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 setIsOpen(false);
@@ -172,7 +184,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             placeholder="Cochabamba, La Paz..."
             className="w-full bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 font-inter pr-[70px] md:truncate overflow-x-auto whitespace-nowrap"
           />
-         
+
           <div className="absolute right-0 flex items-center gap-2 bg-white pl-2 h-full">
             {isSelected && (
               <Image
@@ -183,7 +195,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                 className="rounded-sm flex-shrink-0"
               />
             )}
-           
+
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin text-amber-600" />
             ) : (
@@ -223,7 +235,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                     setIsOpen(false);
                     updateFilters({ query: item });
                     setTimeout(() => {
-                        containerRef.current?.closest("form")?.requestSubmit();
+                      containerRef.current?.closest("form")?.requestSubmit();
                     }, 100);
                   }}
                   className="w-full px-4 py-3 flex items-center gap-3 hover:bg-amber-50 transition-colors text-left border-b border-stone-50 last:border-0"
@@ -240,7 +252,9 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
               {isLoading ? (
                 <div className="px-4 py-6 text-center flex flex-col items-center gap-2">
                   <Loader2 className="w-5 h-5 animate-spin text-amber-600" />
-                  <span className="text-sm text-stone-500 italic">Buscando zonas...</span>
+                  <span className="text-sm text-stone-500 italic">
+                    Buscando zonas...
+                  </span>
                 </div>
               ) : suggestions.length > 0 ? (
                 <div className="max-h-[300px] overflow-y-auto">
@@ -269,7 +283,9 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                 </div>
               ) : (
                 <div className="px-4 py-8 text-center bg-stone-50/50">
-                  <p className="text-sm text-stone-600 font-medium">No se encontraron resultados</p>
+                  <p className="text-sm text-stone-600 font-medium">
+                    No se encontraron resultados
+                  </p>
                 </div>
               )}
             </>
@@ -277,5 +293,5 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -1,7 +1,7 @@
 // frontend/src/components/layout/PropertyCard.tsx
 "use client";
 import Image from "next/image";
-import { BedDouble, Bath, Square, ImageOff, MapPin  } from "lucide-react"; // Quité MessageSquareText porque ya viene en tu botón
+import { BedDouble, Bath, Square, ImageOff, MapPin } from "lucide-react"; // Quité MessageSquareText porque ya viene en tu botón
 import ContactButton from "../galeria/ContactButton"; // <-- Tu botón modular importado
 import { useState } from "react";
 
@@ -29,15 +29,16 @@ export default function PropertyCard({
 }: PropsTarjeta) {
   const [isHovered, setIsHovered] = useState(false);
   return (
-    <div 
+    <div
       className="relative bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 border border-gray-100 group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-    >{isHovered && (
-  <div className="absolute top-3 right-3 z-30 bg-white rounded-full shadow-md p-2 border border-gray-200">
-    <MapPin className="w-5 h-5 text-[#ea580c]" />
-  </div>
-     )}
+    >
+      {isHovered && (
+        <div className="absolute top-3 right-3 z-30 bg-white rounded-full shadow-md p-2 border border-gray-200">
+          <MapPin className="w-5 h-5 text-[#ea580c]" />
+        </div>
+      )}
       {/* 2. Implementación de Imagen o Cuadro Gris (Misión Día 3) */}
       <div
         className={`relative aspect-[16/10] overflow-hidden ${!imagen ? COLOR_GRIS_PLACEHOLDER : ""} flex items-center justify-center`}
@@ -67,10 +68,10 @@ export default function PropertyCard({
 
       <div className="p-3 flex flex-col gap-2">
         <h2
-        className={`font-extrabold text-gray-950 tracking-tight transition-all duration-300 ${
-          isHovered ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"
-        }`}
-      >
+          className={`font-extrabold text-gray-950 tracking-tight transition-all duration-300 ${
+            isHovered ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"
+          }`}
+        >
           {precio}
         </h2>
 
@@ -96,5 +97,5 @@ export default function PropertyCard({
         </div>
       </div>
     </div>
-  )
+  );
 }

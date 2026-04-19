@@ -3,10 +3,7 @@ type SuccessModalProps = {
   onClose: () => void;
 };
 
-export default function SuccessModal({
-  open,
-  onClose,
-}: SuccessModalProps) {
+export default function SuccessModal({ open, onClose }: SuccessModalProps) {
   if (!open) return null;
 
   return (
@@ -22,9 +19,7 @@ export default function SuccessModal({
 
         <h2 style={titleStyle}>¡Inmueble publicado con éxito!</h2>
 
-        <p style={textStyle}>
-          Tu inmueble se ha publicado correctamente.
-        </p>
+        <p style={textStyle}>Tu inmueble se ha publicado correctamente.</p>
 
         <button onClick={onClose} style={acceptButtonStyle}>
           Aceptar

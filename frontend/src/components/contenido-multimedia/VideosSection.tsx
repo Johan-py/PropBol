@@ -121,18 +121,22 @@ export default function VideosSection({
                   <div style={videoBoxStyle}>🎥</div>
                   <span>Video {videos.length + index + 1}</span>
                 </div>
-              )
+              ),
             )}
           </div>
 
           {isUploading && (
-            <p style={{ color: "#f57c00", fontSize: "14px", marginTop: "12px" }}>
+            <p
+              style={{ color: "#f57c00", fontSize: "14px", marginTop: "12px" }}
+            >
               Cargando videos...
             </p>
           )}
 
           {error && (
-            <p style={{ color: "#d32f2f", fontSize: "14px", marginTop: "12px" }}>
+            <p
+              style={{ color: "#d32f2f", fontSize: "14px", marginTop: "12px" }}
+            >
               {error}
             </p>
           )}
@@ -156,8 +160,8 @@ export default function VideosSection({
           </button>
 
           <p style={{ color: "#6f6f6f", fontSize: "16px", marginTop: "16px" }}>
-            Puedes agregar 2 videos en enlace de YouTube o en formato MP4, MKV
-            o AVI.
+            Puedes agregar 2 videos en enlace de YouTube o en formato MP4, MKV o
+            AVI.
           </p>
         </div>
       </div>

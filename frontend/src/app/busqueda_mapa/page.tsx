@@ -52,7 +52,7 @@ function useIsLandscapeMobile() {
   useEffect(() => {
     const handler = () => {
       setIsLandscape(
-        window.innerWidth > window.innerHeight && window.innerHeight < 500
+        window.innerWidth > window.innerHeight && window.innerHeight < 500,
       );
     };
     window.addEventListener("resize", handler);
@@ -90,7 +90,7 @@ function BusquedaMapaContent() {
   });
 
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
-    null
+    null,
   );
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
@@ -127,7 +127,7 @@ function BusquedaMapaContent() {
   // 🚀 FUNCIÓN ACTUALIZADA: Acepta null para manejar clics fuera del mapa
   function handleMapSelect(id: string | null) {
     setSelectedPropertyId(id);
-    
+
     if (id) {
       const prop = properties.find((p: any) => p.id === id);
       if (prop) {
@@ -282,7 +282,7 @@ function BusquedaMapaContent() {
                   onSelect={(id) => {
                     setSelectedPropertyId(id);
                     setPinnedProperty(
-                      properties.find((p: any) => p.id === id) ?? null
+                      properties.find((p: any) => p.id === id) ?? null,
                     );
                   }}
                   isLoading={isLoading}
@@ -361,7 +361,10 @@ function BusquedaMapaContent() {
               onTouchStart={onTouchStart}
               onTouchEnd={onTouchEnd}
             >
-              <div className="shrink-0 overflow-x-auto" style={{ zIndex: 10, position: "relative" }}>
+              <div
+                className="shrink-0 overflow-x-auto"
+                style={{ zIndex: 10, position: "relative" }}
+              >
                 <div
                   className="w-10 h-1.5 bg-stone-300 hover:bg-orange-400 rounded-full mb-3 transition-colors"
                   onClick={() =>
@@ -429,13 +432,15 @@ function BusquedaMapaContent() {
                         precio={
                           pinnedProperty.currency === "USD"
                             ? `$${pinnedProperty.price.toLocaleString(
-                                "es-BO"
+                                "es-BO",
                               )} USD`
                             : `Bs ${pinnedProperty.price.toLocaleString(
-                                "es-BO"
+                                "es-BO",
                               )}`
                         }
-                        descripcion={pinnedProperty.descripcion || pinnedProperty.title}
+                        descripcion={
+                          pinnedProperty.descripcion || pinnedProperty.title
+                        }
                         camas={pinnedProperty.nroCuartos ?? 0}
                         banos={pinnedProperty.nroBanos ?? 0}
                         metros={pinnedProperty.superficieM2 ?? 0}
@@ -471,7 +476,7 @@ function BusquedaMapaContent() {
   // RENDER DESKTOP
   // ────────────────────────────────────────────────────────────────────────────
   return (
-<div className="flex flex-col bg-white w-full h-[calc(100dvh-54px)] overflow-hidden">
+    <div className="flex flex-col bg-white w-full h-[calc(100dvh-54px)] overflow-hidden">
       <FilterBar
         variant="map"
         onSearch={(nuevosFiltros) => {
@@ -606,7 +611,7 @@ function BusquedaMapaContent() {
                             precio={
                               property.currency === "USD"
                                 ? `$${property.price.toLocaleString(
-                                    "es-BO"
+                                    "es-BO",
                                   )} USD`
                                 : `Bs ${property.price.toLocaleString("es-BO")}`
                             }
@@ -621,7 +626,7 @@ function BusquedaMapaContent() {
                             price={
                               property.currency === "USD"
                                 ? `$${property.price.toLocaleString(
-                                    "es-BO"
+                                    "es-BO",
                                   )} USD`
                                 : `Bs ${property.price.toLocaleString("es-BO")}`
                             }

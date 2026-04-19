@@ -28,7 +28,11 @@ const exploreActions: FooterAction[] = [
     href: "/busqueda_mapa?modoInmueble=ANTICRETO",
     requiresAuth: true,
   },
-  { label: "Publica tu inmueble", href: "/registro-inmueble", requiresAuth: true },
+  {
+    label: "Publica tu inmueble",
+    href: "/registro-inmueble",
+    requiresAuth: true,
+  },
 ];
 
 const companyActions: FooterAction[] = [
@@ -215,5 +219,5 @@ export default function Footer() {
       </div>
       <FooterBottomBar />
     </footer>
-  )
+  );
 }

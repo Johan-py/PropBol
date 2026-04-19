@@ -124,8 +124,6 @@ export default function UserMenu({
               </div>
             </div>
 
-
-
             <div className="flex flex-col mb-4">
               <MenuLink
                 label="Mi cuenta"
@@ -182,5 +180,5 @@ export default function UserMenu({
         )}
       </div>
     </>
-  )
+  );
 }

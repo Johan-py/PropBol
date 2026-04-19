@@ -5,7 +5,7 @@ import { useOrdenamiento } from "../../hooks/useOrdenamiento";
 import { MenuOrdenamiento } from "./ordenamiento/MenuOrdenamiento";
 import { TarjetaInmueble } from "./TarjetaInmueble";
 import { Inmueble } from "../../types/inmueble";
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams } from "next/navigation";
 
 // ── Tipos de filtros globales (los que guarda FilterBar) ──────────────────────
 interface FiltrosGlobales {
@@ -55,7 +55,7 @@ function construirParams(filtros: FiltrosGlobales): URLSearchParams {
 }
 
 export const ResultadosBusqueda = () => {
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
   const [inmueblesRaw, setInmueblesRaw] = useState<Inmueble[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(false);
@@ -65,24 +65,28 @@ export const ResultadosBusqueda = () => {
   useEffect(() => {
     // Función reutilizable para hacer el fetch con filtros
     const fetchInmuebles = async () => {
-      setCargando(true)
-      setError(false)
+      setCargando(true);
+      setError(false);
       try {
-        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
-        
-        // Construimos la query string usando directamente lo que Next.js lee de la URL
-        const queryStr = searchParams.toString() ? `?${searchParams.toString()}` : ''
-        const url = `${API_BASE}/api/properties/inmuebles${queryStr}`
+        const API_BASE =
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
-        const res = await fetch(url)
-        if (!res.ok) throw new Error('Error de red al conectar con el servidor')
-        
-        const data = await res.json()
-        
+        // Construimos la query string usando directamente lo que Next.js lee de la URL
+        const queryStr = searchParams.toString()
+          ? `?${searchParams.toString()}`
+          : "";
+        const url = `${API_BASE}/api/properties/inmuebles${queryStr}`;
+
+        const res = await fetch(url);
+        if (!res.ok)
+          throw new Error("Error de red al conectar con el servidor");
+
+        const data = await res.json();
+
         if (data && data.ok === true && Array.isArray(data.data)) {
           console.log("✅ Datos recibidos con éxito:", data.data.length);
           // BUG-02-01 FIX: Actualiza con los nuevos datos (si es 0, setea [] y limpia la pantalla)
-          setInmueblesRaw(data.data); 
+          setInmueblesRaw(data.data);
         } else {
           console.error("❌ Formato de datos inesperado:", data);
           // Limpiamos los datos anteriores para no mostrar fantasmas
@@ -97,9 +101,9 @@ export const ResultadosBusqueda = () => {
       } finally {
         setCargando(false);
       }
-    }
-    fetchInmuebles()
-}, [searchParams])
+    };
+    fetchInmuebles();
+  }, [searchParams]);
 
   // ── Render ──────────────────────────────────────────────────────────────────
 
@@ -133,5 +137,5 @@ export const ResultadosBusqueda = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};

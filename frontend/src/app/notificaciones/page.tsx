@@ -1,30 +1,38 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Archive, Trash2, WifiOff } from 'lucide-react'
-import { useNotifications } from '@/hooks/useNotifications'
-import type { NotificationFilter } from '@/types/notification'
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Archive, Trash2, WifiOff } from "lucide-react";
+import { useNotifications } from "@/hooks/useNotifications";
+import type { NotificationFilter } from "@/types/notification";
 
-const filters: NotificationFilter[] = ['todas', 'no leida', 'leida', 'archivada'] 
+const filters: NotificationFilter[] = [
+  "todas",
+  "no leida",
+  "leida",
+  "archivada",
+];
 
 const formatRelativeTime = (fecha: string | null): string => {
-  if (!fecha) return ''
-  const diff = Date.now() - new Date(fecha).getTime()
-  const mins = Math.floor(diff / 60000)
-  if (mins < 1) return 'hace un momento'
-  if (mins < 60) return `hace ${mins} min`
-  const hours = Math.floor(mins / 60)
-  if (hours < 24) return `hace ${hours} h`
-  const days = Math.floor(hours / 24)
-  if (days < 7) return `hace ${days} d`
-  return new Date(fecha).toLocaleDateString('es-BO', { day: 'numeric', month: 'short' })
-}
+  if (!fecha) return "";
+  const diff = Date.now() - new Date(fecha).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return "hace un momento";
+  if (mins < 60) return `hace ${mins} min`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `hace ${hours} h`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `hace ${days} d`;
+  return new Date(fecha).toLocaleDateString("es-BO", {
+    day: "numeric",
+    month: "short",
+  });
+};
 export default function NotificationsPage() {
-  const router = useRouter()
-  const loadMoreRef = useRef<HTMLDivElement | null>(null)
-  const [, setTick] = useState(0)
-  
+  const router = useRouter();
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const [, setTick] = useState(0);
+
   const {
     filter,
     setFilter,
@@ -38,16 +46,16 @@ export default function NotificationsPage() {
     markAsRead,
     markAllAsRead,
     deleteNotification,
-    archiveNotification, 
-    refreshNotifications
-  } = useNotifications()
+    archiveNotification,
+    refreshNotifications,
+  } = useNotifications();
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTick((t) => t + 1)
-    }, 60000)
-    return () => clearInterval(interval)
-  }, [])
+      setTick((t) => t + 1);
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
@@ -134,13 +142,13 @@ export default function NotificationsPage() {
                 : "bg-stone-100 text-stone-600 hover:bg-stone-200"
             }`}
           >
-            {item === 'todas'
-              ? 'Todas'
-              : item === 'leida'
-                ? 'Leídas'
-                : item === 'no leida'
-                  ? 'No leídas'
-                  : 'Archivadas' }
+            {item === "todas"
+              ? "Todas"
+              : item === "leida"
+                ? "Leídas"
+                : item === "no leida"
+                  ? "No leídas"
+                  : "Archivadas"}
           </button>
         ))}
       </div>
@@ -182,32 +190,36 @@ export default function NotificationsPage() {
                 tabIndex={0}
                 aria-label={`Notificación: ${notification.title}`}
                 onClick={() => {
-                  if (notification.status === 'no leida' && isOnline) {
-                    void markAsRead(notification.id)
+                  if (notification.status === "no leida" && isOnline) {
+                    void markAsRead(notification.id);
                   }
                 }}
                 className={`border-b border-stone-100 px-3 py-4 last:border-b-0 transition sm:px-4 ${
-                  notification.status === 'no leida' ? 'cursor-pointer bg-amber-50' : 'bg-white hover:bg-stone-50'
+                  notification.status === "no leida"
+                    ? "cursor-pointer bg-amber-50"
+                    : "bg-white hover:bg-stone-50"
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex min-w-0 flex-1 items-start gap-2">
-                    {notification.status === 'no leida' && (
+                    {notification.status === "no leida" && (
                       <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-amber-500" />
                     )}
                     <h2 className="text-sm font-semibold leading-snug text-stone-900">
-                      {notification.title?.trim() || '(Sin título)'}
+                      {notification.title?.trim() || "(Sin título)"}
                     </h2>
                   </div>
                   <div className="flex shrink-0 flex-col items-end gap-0.5">
                     <span
                       className={`text-[10px] font-medium uppercase tracking-wide ${
-                        notification.status === 'no leida' ? 'text-amber-600' : 'text-stone-400'
+                        notification.status === "no leida"
+                          ? "text-amber-600"
+                          : "text-stone-400"
                       }`}
                     >
                       {notification.status}
                     </span>
-                    {notification.fechaCreacion && ( 
+                    {notification.fechaCreacion && (
                       <span className="text-[10px] text-stone-400">
                         {formatRelativeTime(notification.fechaCreacion)}
                       </span>
@@ -220,11 +232,16 @@ export default function NotificationsPage() {
                     "(Sin descripción disponible)"}
                 </p>
 
-                <div className="mt-3 flex items-center justify-end gap-3" onClick={(e) => e.stopPropagation()}>
+                <div
+                  className="mt-3 flex items-center justify-end gap-3"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <div className="flex items-center gap-3">
-                    {!notification.archivada && ( 
+                    {!notification.archivada && (
                       <button
-                        onClick={() => void archiveNotification(notification.id)}
+                        onClick={() =>
+                          void archiveNotification(notification.id)
+                        }
                         className="flex items-center gap-1 text-xs text-stone-400 transition hover:text-amber-600"
                       >
                         <Archive className="h-3 w-3" />

@@ -4,11 +4,7 @@ type PlanModalProps = {
   onPayNow?: () => void;
 };
 
-export default function PlanModal({
-  open,
-  onClose,
-  onPayNow,
-}: PlanModalProps) {
+export default function PlanModal({ open, onClose, onPayNow }: PlanModalProps) {
   if (!open) return null;
 
   return (

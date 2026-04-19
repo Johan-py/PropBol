@@ -1,4 +1,4 @@
-import { prisma } from '../../lib/prisma.client.js'
+import { prisma } from "../../lib/prisma.client.js";
 
 export interface FiltrosBusqueda {
   categoria?: string | string[];
@@ -46,11 +46,11 @@ export const propertiesRepository = {
       const modosRaw = Array.isArray(filtros.modoInmueble)
         ? filtros.modoInmueble
         : [filtros.modoInmueble];
-        
+
       const modos = modosRaw
         .filter((m) => m && String(m).trim() !== "")
         .map((m) => normalizarModoAccion(String(m)));
-        
+
       if (modos.length === 1) {
         where.tipoAccion = modos[0];
       } else if (modos.length > 1) {
@@ -114,12 +114,12 @@ export const propertiesRepository = {
       include: {
         ubicacion: {
           include: {
-            ubicacion_maestra: true, 
+            ubicacion_maestra: true,
           },
         },
         publicaciones: {
           where: { estado: "ACTIVA" },
-          include: { multimedia: true }, 
+          include: { multimedia: true },
         },
       },
     });

@@ -55,13 +55,18 @@ export default function PublicarSection({
         </label>
 
         {!canPublish && (
-          <p style={{ color: "#d32f2f", fontSize: "14px", marginBottom: "12px" }}>
-            Debes agregar al menos una imagen o un video para habilitar la publicación.
+          <p
+            style={{ color: "#d32f2f", fontSize: "14px", marginBottom: "12px" }}
+          >
+            Debes agregar al menos una imagen o un video para habilitar la
+            publicación.
           </p>
         )}
 
         {publishError && (
-          <p style={{ color: "#d32f2f", fontSize: "14px", marginBottom: "12px" }}>
+          <p
+            style={{ color: "#d32f2f", fontSize: "14px", marginBottom: "12px" }}
+          >
             {publishError}
           </p>
         )}

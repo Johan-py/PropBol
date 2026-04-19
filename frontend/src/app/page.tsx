@@ -9,7 +9,6 @@ interface BannerData {
   subtitulo?: string;
 }
 
-
 const fetchBanners = async (): Promise<BannerData[]> => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
@@ -33,21 +32,20 @@ const fetchBanners = async (): Promise<BannerData[]> => {
 export default async function Home() {
   const banners = await fetchBanners();
   const mainBanner = banners[0]; // Tomamos el primero de la base de datos
-// No toquen esto :v
+  // No toquen esto :v
   return (
-  <main className="flex min-h-screen flex-col items-center bg-gray-50">
-    {banners.length > 0 ? (
-      <HomeCarousel banners={banners} />
-    ) : (
-      <div className="w-full h-[300px] flex items-center justify-center bg-gray-200">
-        <p className="text-gray-600">No hay banners disponibles</p>
-      </div>
-    )}
+    <main className="flex min-h-screen flex-col items-center bg-gray-50">
+      {banners.length > 0 ? (
+        <HomeCarousel banners={banners} />
+      ) : (
+        <div className="w-full h-[300px] flex items-center justify-center bg-gray-200">
+          <p className="text-gray-600">No hay banners disponibles</p>
+        </div>
+      )}
 
       {/* CONTENEDOR PRINCIPAL */}
       <div className="w-full px-2 md:px-6 py-12">
         <div className="flex flex-col-reverse md:flex-row items-start">
-
           {/* FILTER PANEL */}
           <div className="w-full md:w-[240px] lg:w-[260px] shrink-0">
             <FilterPanel />
@@ -60,5 +58,5 @@ export default async function Home() {
         </div>
       </div>
     </main>
-  )
+  );
 }

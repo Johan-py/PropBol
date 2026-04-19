@@ -22,7 +22,7 @@ export const TarjetaInmueble = ({ inmueble }: TarjetaInmuebleProps) => {
       : "";
 
   return (
-    <div 
+    <div
       className="group flex flex-col w-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300 cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -48,7 +48,7 @@ export const TarjetaInmueble = ({ inmueble }: TarjetaInmuebleProps) => {
           <h3 className="font-semibold text-lg text-gray-900 leading-tight line-clamp-1">
             {inmueble.titulo}
           </h3>
-          <span 
+          <span
             className={`whitespace-nowrap ml-2 font-bold transition-all duration-300 ${
               isHovered ? "text-base text-[#ea580c]" : "text-xs text-gray-900"
             }`}

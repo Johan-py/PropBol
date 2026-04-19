@@ -137,7 +137,7 @@ function SeccionMetrica({
 export function MenuOrdenamiento({
   ordenActual = ORDENAMIENTO_DEFAULT,
   onOrdenChange,
-   totalResultados
+  totalResultados,
 }: MenuOrdenamientoProps) {
   const [orden, setOrden] = useState<EstadoOrdenamiento>(ordenActual);
   const [dropdownAbierto, setDropdownAbierto] = useState<

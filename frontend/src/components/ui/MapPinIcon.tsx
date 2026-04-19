@@ -7,11 +7,14 @@ interface MapPinIconProps {
   className?: string;
 }
 
-export function MapPinIcon({ hasValidLocation, className = "w-5 h-5" }: MapPinIconProps) {
+export function MapPinIcon({
+  hasValidLocation,
+  className = "w-5 h-5",
+}: MapPinIconProps) {
   if (hasValidLocation) {
     return <MapPin className={`${className} text-[#ea580c]`} />;
   }
-  
+
   return (
     <div className="relative">
       <MapPin className={`${className} text-gray-300`} />

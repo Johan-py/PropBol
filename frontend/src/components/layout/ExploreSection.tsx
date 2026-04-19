@@ -52,7 +52,6 @@ export default function ExploreSection() {
       tipoMap[propertyType] ||
       (propertyType !== "Cualquier tipo" ? propertyType.toUpperCase() : "");
 
-
     const modoMapeado = selectedOption.map((m) => {
       if (m === "anticreto") return "ANTICRETO";
       return m.toUpperCase();
@@ -87,11 +86,9 @@ export default function ExploreSection() {
   return (
     <section className="bg-white py-10 md:py-16">
       <div className="max-w-5xl mx-auto px-4">
-
         {/* MOBILE con un Selector combobox */}
         <div className="md:hidden">
           <div className="rounded-2xl bg-white p-4 shadow-xl border border-stone-100 flex flex-col gap-4">
-
             <ComboBox
               label="Operación"
               placeholder="Selecciona"
@@ -128,9 +125,7 @@ export default function ExploreSection() {
             </button>
 
             {errorMessage && (
-              <p className="text-sm text-red-500 font-medium">
-                {errorMessage}
-              </p>
+              <p className="text-sm text-red-500 font-medium">{errorMessage}</p>
             )}
           </div>
         </div>
@@ -138,7 +133,6 @@ export default function ExploreSection() {
         {/*  DESKTOP  */}
         <div className="hidden md:block">
           <div className="rounded-2xl bg-white p-6 shadow-xl border border-stone-100 flex flex-col gap-6">
-
             <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
               {searchOptions.map((option) => {
                 const isSelected = selectedOption.includes(option.id);
@@ -155,20 +149,22 @@ export default function ExploreSection() {
                     className="flex items-center gap-2.5 transition-colors duration-200 group focus:outline-none"
                   >
                     <div
-                      className={`w-7 h-7 rounded-md border shadow-sm flex items-center justify-center transition-all ${isSelected
+                      className={`w-7 h-7 rounded-md border shadow-sm flex items-center justify-center transition-all ${
+                        isSelected
                           ? "bg-amber-500 border-amber-500"
                           : "bg-white border-stone-300"
-                        }`}
+                      }`}
                     >
                       {isSelected && (
                         <span className="text-white text-sm font-bold">✓</span>
                       )}
                     </div>
                     <span
-                      className={`font-semibold font-montserrat text-lg transition-colors ${isSelected
+                      className={`font-semibold font-montserrat text-lg transition-colors ${
+                        isSelected
                           ? "text-amber-700"
                           : "text-stone-900 group-hover:text-amber-600"
-                        }`}
+                      }`}
                     >
                       {option.name}
                     </span>
@@ -208,13 +204,11 @@ export default function ExploreSection() {
             </div>
 
             {errorMessage && (
-              <p className="text-sm text-red-500 font-medium">
-                {errorMessage}
-              </p>
+              <p className="text-sm text-red-500 font-medium">{errorMessage}</p>
             )}
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }

@@ -67,7 +67,7 @@ function ContenidoMultimediaPageContent() {
   };
 
   const handleImageChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const files = Array.from(event.target.files || []);
     if (!files.length) return;
@@ -120,7 +120,7 @@ function ContenidoMultimediaPageContent() {
   };
 
   const handleVideoFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const files = Array.from(event.target.files || []);
     if (!files.length) return;
@@ -178,7 +178,7 @@ function ContenidoMultimediaPageContent() {
     const trimmed = url.trim();
 
     const shortMatch = trimmed.match(
-      /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/
+      /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/,
     );
 
     if (shortMatch) {
@@ -189,7 +189,7 @@ function ContenidoMultimediaPageContent() {
     }
 
     const normalMatch = trimmed.match(
-      /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/
+      /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
     );
 
     if (normalMatch) {
@@ -200,7 +200,7 @@ function ContenidoMultimediaPageContent() {
     }
 
     const embedMatch = trimmed.match(
-      /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/
+      /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
     );
 
     if (embedMatch) {
@@ -263,7 +263,7 @@ function ContenidoMultimediaPageContent() {
 
     if (!hasMultimedia) {
       setPublishError(
-        "Debes agregar al menos una imagen o un video antes de publicar el inmueble."
+        "Debes agregar al menos una imagen o un video antes de publicar el inmueble.",
       );
       return;
     }
@@ -359,5 +359,5 @@ function ContenidoMultimediaPageContent() {
         />
       </div>
     </main>
-  )
+  );
 }

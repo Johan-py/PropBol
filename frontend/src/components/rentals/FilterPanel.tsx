@@ -24,7 +24,7 @@ const FilterSection = ({
   data,
   logic,
   itemLabel,
-}: FilterSectionProps) => { 
+}: FilterSectionProps) => {
   return (
     <section>
       {/* Título de sección: se cambió a text-sm (más pequeño que Filtros, más grande que el contenido) */}
@@ -48,21 +48,25 @@ const FilterSection = ({
             </span>
             {/* Cantidad: se cambió de text-sm a text-xs */}
             <span className="text-gray-500 text-xs font-medium font-inter text-right max-w-[60%] break-all leading-tight">
-              {Number(item.count).toLocaleString('es-BO')} {itemLabel}
+              {Number(item.count).toLocaleString("es-BO")} {itemLabel}
             </span>
           </div>
         ))}
 
         {logic.viewLevel < 3 && data.length > 2 ? (
-          <button onClick={logic.handleSeeMore}
+          <button
+            onClick={logic.handleSeeMore}
             // Se ajustó a text-[10px] o text-xs para mantener la proporción
-            className="text-xs text-orange-400 hover:text-orange-600 underline mt-1 w-fit font-medium font-inter transition-all">
+            className="text-xs text-orange-400 hover:text-orange-600 underline mt-1 w-fit font-medium font-inter transition-all"
+          >
             {logic.viewLevel === 1 ? "Ver más >" : "Mostrar todo >"}
           </button>
         ) : (
           data.length > 2 && ( // Changed to text-xs to maintain proportion
-            <button onClick={logic.handleSeeLess}
-              className="text-xs text-orange-400 hover:text-orange-600 underline mt-1 w-fit ml-auto font-medium font-inter transition-all">
+            <button
+              onClick={logic.handleSeeLess}
+              className="text-xs text-orange-400 hover:text-orange-600 underline mt-1 w-fit ml-auto font-medium font-inter transition-all"
+            >
               {"<"} Ver menos
             </button>
           )
@@ -297,5 +301,5 @@ export default function FilterPanel() {
         </div>
       </aside>
     </>
-  )
+  );
 }

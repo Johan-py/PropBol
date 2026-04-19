@@ -517,7 +517,9 @@ export default function LoginForm() {
             className="relative"
             ref={passwordContainerRef}
             onBlur={(e) => {
-              if (!passwordContainerRef.current?.contains(e.relatedTarget as Node)) {
+              if (
+                !passwordContainerRef.current?.contains(e.relatedTarget as Node)
+              ) {
                 setShowPassword(false);
               }
             }}
@@ -608,5 +610,5 @@ export default function LoginForm() {
         </Link>
       </p>
     </div>
-  )
+  );
 }
