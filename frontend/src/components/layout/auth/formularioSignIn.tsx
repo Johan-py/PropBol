@@ -7,6 +7,10 @@ import { useRouter } from "next/navigation";
 type LoginResponse = {
   message?: string;
   token?: string;
+  requires2FA?: boolean;
+  userId?: number;
+  email?: string;
+  expiresInMinutes?: number;
   user?: {
     id: number;
     correo: string;
@@ -70,6 +74,7 @@ const clearClientSession = () => {
   localStorage.removeItem("nombre");
   localStorage.removeItem("correo");
   localStorage.removeItem("avatar");
+  localStorage.removeItem("pending2FA");
 
   window.dispatchEvent(new Event("propbol:session-changed"));
   window.dispatchEvent(new Event("auth-state-changed"));
@@ -126,6 +131,28 @@ const getRedirectAfterLogin = () => {
 
 const clearRedirectAfterLogin = () => {
   localStorage.removeItem(REDIRECT_AFTER_LOGIN_KEY);
+};
+
+const PENDING_2FA_KEY = "pending2FA";
+
+const savePending2FA = (data: {
+  userId: number;
+  email?: string;
+  expiresInMinutes?: number;
+}) => {
+  localStorage.setItem(
+    PENDING_2FA_KEY,
+    JSON.stringify({
+      userId: data.userId,
+      email: data.email ?? "",
+      expiresInMinutes: data.expiresInMinutes ?? 5,
+      createdAt: Date.now(),
+    }),
+  );
+};
+
+const clearPending2FA = () => {
+  localStorage.removeItem(PENDING_2FA_KEY);
 };
 
 const isGooglePopupMessage = (value: unknown): value is GooglePopupMessage => {
@@ -454,6 +481,28 @@ export default function LoginForm() {
         }
 
         setErrorMessage(data.message || "Error al iniciar sesión");
+        return;
+        }
+
+
+       if (data.requires2FA) {
+        if (!data.userId) {
+          clearClientSession();
+          setErrorMessage("No se pudo iniciar la verificación en dos pasos.");
+          return;
+        }
+
+        savePending2FA({
+          userId: data.userId,
+          email: data.email,
+          expiresInMinutes: data.expiresInMinutes,
+        });
+
+        setSuccessMessage(
+          data.message || "Te enviamos un código de verificación a tu correo.",
+        );
+
+        router.push("/sign-in/verify-2fa");
         return;
       }
 
