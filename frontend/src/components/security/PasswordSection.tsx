@@ -80,6 +80,16 @@ export default function PasswordSection() {
       return;
     }
 
+    if (!nuevaPassword.trim()) {
+      setError("Debes ingresar la nueva contraseña");
+      return;
+    }
+
+    if (nuevaPassword !== confirmarPassword) {
+      setError("Las contraseñas no coinciden");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -131,14 +141,24 @@ export default function PasswordSection() {
             label="Ingresa tu nueva contraseña"
             placeholder="••••••••"
             value={nuevaPassword}
-            onChange={setNuevaPassword}
+            onChange={(val) => {
+              setNuevaPassword(val);
+              if (error === "Las contraseñas no coinciden" && val === confirmarPassword) {
+                setError("");
+              }
+            }}
           />
 
           <PasswordField
             label="Confirma tu nueva contraseña"
             placeholder="••••••••"
             value={confirmarPassword}
-            onChange={setConfirmarPassword}
+            onChange={(val) => {
+              setConfirmarPassword(val);
+              if (error === "Las contraseñas no coinciden" && val === nuevaPassword) {
+                setError("");
+              }
+            }}
           />
 
           {error && <p className="text-sm font-medium text-red-600">{error}</p>}
