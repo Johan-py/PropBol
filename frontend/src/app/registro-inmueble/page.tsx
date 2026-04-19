@@ -1,6 +1,5 @@
-<<<<<<< HEAD
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 
@@ -8,6 +7,8 @@ const MapaPinSelector = dynamic(
   () => import("@/components/MapaPinSelector"),
   { ssr: false }
 );
+
+import PlanModal from '../../components/ui/PlanModal';
 
 type CampoError =
   | "titulo"
@@ -21,28 +22,8 @@ type CampoError =
   | "operacion"
   | "ubicacion"
   | null;
-=======
-'use client'
-
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import PlanModal from '../../components/ui/PlanModal'
-
-type CampoError =
-  | 'titulo'
-  | 'descripcion'
-  | 'direccion'
-  | 'zona'
-  | 'habitaciones'
-  | 'banos'
-  | 'precio'
-  | 'area'
-  | 'operacion'
-  | null
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
->>>>>>> b0e48dd1cab4a96f3652e6bba7b4db3f909c8f26
-
 export default function MiRegistroPage() {
   const router = useRouter()
   const [mostrarPlanModal, setMostrarPlanModal] = useState(false)
@@ -61,20 +42,22 @@ export default function MiRegistroPage() {
     descripcion: ''
   })
 
-<<<<<<< HEAD
-  const [pinCoords, setPinCoords] = useState<{ lat: number; lng: number } | null>(null);
-  const [modoPinActivo, setModoPinActivo] = useState(false);
+const [pinCoords, setPinCoords] = useState<{ lat: number; lng: number } | null>(null);
+const [modoPinActivo, setModoPinActivo] = useState(false);
 
-  const [estado, setEstado] = useState<"ninguno" | "exito" | "error">(
-    "ninguno",
-  );
-  const [mensajeError, setMensajeError] = useState("");
-  const [campoError, setCampoError] = useState<CampoError>(null);
-=======
-  const [estado, setEstado] = useState<'ninguno' | 'exito' | 'error'>('ninguno')
-  const [mensajeError, setMensajeError] = useState('')
-  const [campoError, setCampoError] = useState<CampoError>(null)
->>>>>>> b0e48dd1cab4a96f3652e6bba7b4db3f909c8f26
+const [estado, setEstado] = useState<"ninguno" | "exito" | "error">("ninguno");
+const [mensajeError, setMensajeError] = useState("");
+const [campoError, setCampoError] = useState<CampoError>(null);
+const errorTitulo = campoError === "titulo";
+const errorDescripcion = campoError === "descripcion";
+const errorDireccion = campoError === "direccion";
+const errorZona = campoError === "zona";
+const errorHabitaciones = campoError === "habitaciones";
+const errorBanos = campoError === "banos";
+const errorPrecio = campoError === "precio";
+const errorArea = campoError === "area";
+const errorOperacion = campoError === "operacion";
+const errorUbicacion = campoError === "ubicacion";
 
   useEffect(() => {
     const validarFlujo = async () => {
@@ -537,15 +520,10 @@ export default function MiRegistroPage() {
       descripcion: descripcionLimpia,
       direccion: direccionLimpia,
       zona: zonaLimpia,
-<<<<<<< HEAD
       ciudad: datos.ciudad,
       latitud: pinCoords.lat,
       longitud: pinCoords.lng,
     };
-=======
-      ciudad: datos.ciudad
-    }
->>>>>>> b0e48dd1cab4a96f3652e6bba7b4db3f909c8f26
 
     console.log('📤 Payload enviado al backend:', payload)
 
@@ -591,50 +569,27 @@ export default function MiRegistroPage() {
         return
       }
 
-      const publicacionId = result?.property?.publicacion?.id
+      const publicacionId = result?.property?.publicacion?.id;
 
       if (!publicacionId) {
-        setMensajeError('No se recibió el ID de la publicación creada')
-        setEstado('error')
-        return
+        setMensajeError('No se recibió el ID de la publicación creada');
+        setEstado('error');
+        return;
       }
 
-      console.log('✅ Propiedad guardada correctamente')
-      setEstado('exito')
-      setMensajeError('')
-      setCampoError(null)
-
-<<<<<<< HEAD
-  const errorTitulo = campoError === "titulo";
-  const errorDescripcion = campoError === "descripcion";
-  const errorDireccion = campoError === "direccion";
-  const errorZona = campoError === "zona";
-  const errorHabitaciones = campoError === "habitaciones";
-  const errorBanos = campoError === "banos";
-  const errorPrecio = campoError === "precio";
-  const errorArea = campoError === "area";
-  const errorOperacion = campoError === "operacion";
-  const errorUbicacion = campoError === "ubicacion";
-=======
-      router.push(`/contenido-multimedia?publicacionId=${publicacionId}`)
+      console.log('✅ Propiedad guardada correctamente');
+      setEstado('exito');
+      setMensajeError('');
+      setCampoError(null);
+      router.push(`/contenido-multimedia?publicacionId=${publicacionId}`);
+      
     } catch (error) {
-      console.error('🔥 Error fetch:', error)
-      setMensajeError('NO SE PUDO CONECTAR CON EL BACKEND')
-      setCampoError(null)
-      setEstado('error')
+      console.error('🔥 Error fetch:', error);
+      setMensajeError('NO SE PUDO CONECTAR CON EL BACKEND');
+      setCampoError(null);
+      setEstado('error');
     }
-  }
-
-  const errorTitulo = campoError === 'titulo'
-  const errorDescripcion = campoError === 'descripcion'
-  const errorDireccion = campoError === 'direccion'
-  const errorZona = campoError === 'zona'
-  const errorHabitaciones = campoError === 'habitaciones'
-  const errorBanos = campoError === 'banos'
-  const errorPrecio = campoError === 'precio'
-  const errorArea = campoError === 'area'
-  const errorOperacion = campoError === 'operacion'
->>>>>>> b0e48dd1cab4a96f3652e6bba7b4db3f909c8f26
+  };
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -866,13 +821,8 @@ export default function MiRegistroPage() {
                   value={datos.descripcion}
                   onChange={manejarCambio}
                   maxLength={300}
-<<<<<<< HEAD
-                  className={`w-full p-4 rounded-2xl border h-48 bg-white ${
-                    errorDescripcion ? "border-red-500" : "border-gray-300"
-=======
                   className={`w-full p-4 rounded-2xl border h-72 bg-white ${
                     errorDescripcion ? 'border-red-500' : 'border-gray-300'
->>>>>>> b0e48dd1cab4a96f3652e6bba7b4db3f909c8f26
                   }`}
                   placeholder="Casa de dos plantas, amplia y moderna ubicada en una zona tranquila..."
                 />
