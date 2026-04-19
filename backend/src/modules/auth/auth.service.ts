@@ -300,7 +300,7 @@ export const loginService = async (payload: LoginDTO) => {
 
   clearFailedAttempts(correo)
 
-  if (user.two_factor_activo) {
+  if (user.twoFactorActivo) {
     const codigo = generate2FACode()
     const codigoHash = hash2FACode(codigo)
     const expiraEn = new Date(Date.now() + TWO_FACTOR_CODE_TTL_MINUTES * 60 * 1000)

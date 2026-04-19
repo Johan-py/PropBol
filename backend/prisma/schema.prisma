@@ -29,8 +29,12 @@ model Usuario {
   createdAt             DateTime                @default(now())
   updatedAt             DateTime                @updatedAt
   rolId                 Int
+  twoFactorActivo       Boolean                 @default(false) @map("two_factor_activo")
+  twoFactorActivadoEn   DateTime?               @map("two_factor_activado_en")
+  twoFactorMetodo       String                  @default("email") @map("two_factor_metodo")
   bitacora_pagos        bitacora_pagos[]
   cambioEmails          CambioEmail[]
+  codigos2FA            Codigo2FA[]
   inmuebles             Inmueble[]
   notificaciones        Notificacion[]
   perfil                Perfil?
@@ -45,6 +49,22 @@ model Usuario {
 
   @@index([correo])
   @@map("usuario")
+}
+
+model Codigo2FA {
+  id         Int       @id @default(autoincrement())
+  usuarioId  Int       @map("usuarioId")
+  codigoHash String
+  creadoEn   DateTime? @default(now())
+  expiraEn   DateTime
+  usadoEn    DateTime?
+  intentos   Int?      @default(0)
+  activo     Boolean?  @default(true)
+
+  usuario    Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId, creadoEn], map: "codigo_2fa_usuario_fecha_idx")
+  @@map("codigo_2fa")
 }
 
 model Telefono {

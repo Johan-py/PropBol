@@ -152,7 +152,7 @@ export const desactiveSessionByToken = async (token: string) => {
   })
 }
 export const invalidateActive2FACodesByUserId = async (usuarioId: number) => {
-  return await prisma.codigo_2fa.updateMany({
+  return await prisma.codigo2FA.updateMany({
     where: {
       usuarioId,
       activo: true,
@@ -173,7 +173,7 @@ export const create2FACode = async ({
   codigoHash: string
   expiraEn: Date
 }) => {
-  return await prisma.codigo_2fa.create({
+  return await prisma.codigo2FA.create({
     data: {
       usuarioId,
       codigoHash,
