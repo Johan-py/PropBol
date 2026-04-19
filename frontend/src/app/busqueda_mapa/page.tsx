@@ -83,11 +83,17 @@ function BusquedaMapaContent() {
   const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([])
   const [isPolygonClosed, setIsPolygonClosed] = useState(false)
 
+  // -- barra lateral de mapas
+  const [showMisZonas, setShowMisZonas] = useState(false)
+  const [zoneName, setZoneName] = useState('')
+
   const resetDrawing = () => {
-    setIsDrawingMode(false)
-    setIsPolygonClosed(false)
-    setPolygonPoints([])
-  }
+  setIsDrawingMode(false)
+  setIsPolygonClosed(false)
+  setPolygonPoints([])
+  setZoneName('')
+  setIsSidebarOpen(true)
+}
   // --- FIN ESTADOS HU8 ---
 
   const isMobile = useIsMobile()
@@ -166,6 +172,12 @@ function BusquedaMapaContent() {
     const t = setTimeout(() => window.dispatchEvent(new Event('resize')), 310)
     return () => clearTimeout(t)
   }, [isSidebarOpen, sheetState])
+
+  useEffect(() => {
+  if (isPolygonClosed) {
+    setShowMisZonas(true)
+  }
+}, [isPolygonClosed])
 
   function handleClusterClick(props: any[]) {
     setClusterProperties(props)
@@ -740,21 +752,24 @@ function BusquedaMapaContent() {
           <div className="absolute top-3 right-4 z-[1000] flex flex-col gap-2 items-end pointer-events-none">
             {!isDrawingMode && !isPolygonClosed && (
               <div className="flex flex-row gap-2 pointer-events-auto">
-                <button
-                  onClick={() => setIsDrawingMode(true)}
-                  className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
-                >
-                  Dibujar zona
-                </button>
-                <button
-                  onClick={() => {
-                    console.log('Próximamente: Abrir barra lateral de Mis Zonas')
-                  }}
-                  className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
-                >
-                  Mis zonas
-                </button>
-              </div>
+              <button
+                onClick={() => {
+                  setIsDrawingMode(true)
+                  setIsSidebarOpen(false)
+                }}
+                className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
+              >
+                Dibujar zona
+              </button>
+                {!showMisZonas && (
+                  <button
+                    onClick={() => setShowMisZonas(true)}
+                    className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
+                  >
+                    Mis zonas
+                  </button>
+                )}
+  </div>
             )}
             {isDrawingMode && !isPolygonClosed && (
               <div className="flex flex-col items-end gap-2 pointer-events-auto">
@@ -810,12 +825,88 @@ function BusquedaMapaContent() {
                 }
               }}
             />
-          </div>
+          </div>           
         </section>
+
+        {/* Panel derecho fijo — Mis Zonas */}
+      <aside className={`hidden md:flex flex-col shrink-0 bg-white border-l border-stone-200 min-h-0 transition-all duration-300 overflow-hidden ${
+    showMisZonas ? 'w-[280px]' : 'w-0'}`}
+>
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-stone-100 shrink-0">
+          <h2 className="text-sm font-semibold text-slate-800 whitespace-nowrap">Mis zonas</h2>
+          <button
+            onClick={() => setShowMisZonas(false)}
+            className="text-stone-400 hover:text-stone-600"
+          >
+            <X size={16} />
+          </button>
+  </div>
+        {/* Botón añadir */}
+        <div className="px-4 py-3 border-b border-stone-100 shrink-0">
+          <button
+            onClick={() => {
+              setIsDrawingMode(true)
+              setIsSidebarOpen(false)
+            }}
+            className="flex items-center gap-1 text-orange-500 hover:text-orange-600 text-sm font-semibold"
+          >
+            <span className="text-lg leading-none">+</span> Añadir nueva Zona
+          </button>
+        </div>
+
+        {/* Contenido */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+
+          {/* Tarjeta zona pendiente */}
+          {isPolygonClosed && (
+            <div className="border-2 border-red-400 rounded-xl p-3 bg-red-50 flex flex-col gap-2">
+              <p className="text-xs font-semibold text-red-500 uppercase tracking-wide">
+                Nueva zona
+              </p>
+              <input
+                type="text"
+                placeholder="Nombre de la zona..."
+                value={zoneName}
+                onChange={(e) => setZoneName(e.target.value)}
+                className="w-full border border-stone-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+              />
+              <div className="flex gap-2 justify-end">
+                <button
+                  onClick={() => {
+                    console.log('✅ Zona guardada:', zoneName, polygonPoints)
+                    resetDrawing()
+                  }}
+                  className="flex items-center gap-1 bg-green-100 hover:bg-green-200 text-green-700 font-semibold text-sm px-3 py-1.5 rounded-lg border border-green-300 transition-colors"
+                >
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M2 7l4 4 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Guardar
+                </button>
+                <button
+                  onClick={resetDrawing}
+                  className="flex items-center gap-1 bg-red-100 hover:bg-red-200 text-red-600 font-semibold text-sm px-3 py-1.5 rounded-lg border border-red-300 transition-colors"
+                >
+                  <X size={14} />
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Estado vacío */}
+          {!isPolygonClosed && (
+            <p className="text-sm text-stone-400 text-center mt-8">No tienes zonas guardadas.</p>
+          )}
+        </div>
+      </aside>
       </main>
-    </div>
+    </div> 
+    
   )
 }
+
 
 export const dynamic = 'force-dynamic'
 
