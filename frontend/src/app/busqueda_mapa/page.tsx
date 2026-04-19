@@ -3,6 +3,7 @@
 import { point, polygon } from '@turf/helpers'
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon'
 import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from 'react'
+import { useSearchParams } from "next/navigation";
 import nextDynamic from 'next/dynamic'
 import {
   ChevronLeft,
@@ -25,6 +26,7 @@ import FilterBar from '@/components/filters/FilterBar'
 import PropertyCard from '@/components/layout/PropertyCard'
 import PropertyRow from '@/components/galeria/PropertyRow'
 import EmptyState from '@/components/galeria/EmptyState'
+import MapaListadoPaginacion, { PageSize } from "@/components/galeria/MapaListadoPaginacion";
 import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenamiento'
 import { ErrorState } from '@/components/ClusterSidebar'
 
@@ -71,13 +73,19 @@ function useIsLandscapeMobile() {
 const SHEET_H = { peek: '50%', full: '100%' } as const
 type SheetState = 'hidden' | 'peek' | 'full'
 
+const LIST_PAGE_SIZES = [10, 20, 50, 100] as const;
+
 function BusquedaMapaContent() {
+  const searchParams = useSearchParams();
+  const filterResetKey = searchParams.toString();
+
   // === 1. ESTADOS COMPARTIDOS ===
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [sheetState, setSheetState] = useState<SheetState>('peek')
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
   const [isMounted, setIsMounted] = useState(false)
+
   // --- INICIO ESTADOS HU8 ---
   const [isDrawingMode, setIsDrawingMode] = useState(false)
   const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([])
@@ -110,6 +118,11 @@ function BusquedaMapaContent() {
       try {
         const turfCoords = [...polygonPoints, polygonPoints[0]].map((p) => [p[1], p[0]])
         const drawPoly = polygon([turfCoords])
+        
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
+    null
+  );
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
         return properties.filter((p: any) => {
           if (p.lat == null || p.lng == null) return false
@@ -125,6 +138,25 @@ function BusquedaMapaContent() {
     }
     return properties
   }, [properties, isPolygonClosed, polygonPoints])
+
+    const [listPage, setListPage] = useState(1);
+  const [listPageSize, setListPageSize] = useState<(PageSize)>(10);
+  const listTotal = properties.length;
+  const listTotalPages = Math.max(1, Math.ceil(listTotal / listPageSize));
+  const listSafePage = Math.min(Math.max(1, listPage), listTotalPages);
+  const paginatedProperties = useMemo(() => {
+    if (listTotal === 0) return [];
+    const start = (listSafePage - 1) * listPageSize;
+    return properties.slice(start, start + listPageSize);
+  }, [properties, listSafePage, listPageSize, listTotal]);
+
+    useEffect(() => {
+    setListPage(1);
+  }, [filterResetKey]);
+
+  useEffect(() => {
+    if (listPage > listTotalPages) setListPage(listTotalPages);
+  }, [listPage, listTotalPages]);
 
   // === 4. ORDENAMIENTO (Usando resultados filtrados) ===
   const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
@@ -253,7 +285,7 @@ function BusquedaMapaContent() {
               : ''
           }`}
         >
-          {(isClusterView ? clusterProperties : inmueblesOrdenados).map((property: any) => (
+          {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
             <div
               key={property.id}
               onClick={() => {
@@ -297,6 +329,20 @@ function BusquedaMapaContent() {
       )}
     </div>
   )
+
+    const renderListPaginationFooter = () => (
+    <MapaListadoPaginacion
+      total={listTotal}
+      page={listSafePage}
+      pageSize={listPageSize}
+      onPageChange={setListPage}
+      onPageSizeChange={(s) => {
+        setListPageSize(s);
+        setListPage(1);
+      }}
+      hint={listTotal === 0 && error ? `Error al cargar: ${error}` : null}
+    />
+  );
 
   // ────────────────────────────────────────────────────────────────────────────
   // RENDER LANDSCAPE MÓVIL
@@ -347,7 +393,10 @@ function BusquedaMapaContent() {
                 </span>
                 {MenuToggleComponent}
               </div>
-              <PropertyListMobile onClickItem={(p) => setPinnedProperty(p)} />
+              <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+                <PropertyListMobile onClickItem={(p) => setPinnedProperty(p)} />
+                {renderListPaginationFooter()}
+              </div>
             </div>
           </div>
         </div>
@@ -521,13 +570,18 @@ function BusquedaMapaContent() {
                     onOrdenChange={cambiarOrden}
                   />
                 </div>
-                <div className="px-4 py-2 flex justify-end shrink-0">{MenuToggleComponent}</div>
+                <div className="px-4 py-2 flex justify-end shrink-0">
+                  {MenuToggleComponent}
+                </div>
+                <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
                 <PropertyListMobile
                   onClickItem={(p) => {
                     setPinnedProperty(p)
                     setSheetState('peek')
                   }}
                 />
+                {renderListPaginationFooter()}
+                </div>
               </div>
             </div>
           )}
@@ -636,15 +690,16 @@ function BusquedaMapaContent() {
               </div>
 
               {/* Lista de propiedades */}
-              <div
-                className="flex-1 min-h-0 overflow-y-auto p-4 bg-stone-50 no-scrollbar"
-                onMouseEnter={() => setIsHoveringList(true)}
-                onMouseLeave={() => {
-                  setIsHoveringList(false)
-                  setSelectedPropertyId(null)
-                  setHoveredId(null)
-                }}
-              >
+              <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+                <div
+                  className="flex-1 min-h-0 overflow-y-auto p-4 bg-stone-50 no-scrollbar"
+                  onMouseEnter={() => setIsHoveringList(true)}
+                  onMouseLeave={() => {
+                    setIsHoveringList(false)
+                    setSelectedPropertyId(null)
+                    setHoveredId(null)
+                  }}
+                >
                 {isLoading ? (
                   <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
                     <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
@@ -660,8 +715,7 @@ function BusquedaMapaContent() {
                         : ''
                     }`}
                   >
-                    {(isClusterView ? clusterProperties : inmueblesOrdenados).map(
-                      (property: any) => (
+                    {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
                         <div
                           key={property.id}
                           onMouseEnter={() => setHoveredId(property.id)}
@@ -717,6 +771,8 @@ function BusquedaMapaContent() {
                     )}
                   </div>
                 )}
+              </div>
+              {renderListPaginationFooter()}
               </div>
             </div>
           )}
