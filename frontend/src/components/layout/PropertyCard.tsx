@@ -1,22 +1,22 @@
 // frontend/src/components/layout/PropertyCard.tsx
-"use client";
-import Image from "next/image";
-import { BedDouble, Bath, Square, ImageOff } from "lucide-react"; // Quité MessageSquareText porque ya viene en tu botón
-import ContactButton from "../galeria/ContactButton"; // <-- Tu botón modular importado
-import { useState } from "react";
+'use client'
+import Image from 'next/image'
+import { BedDouble, Bath, Square, ImageOff, MapPin } from 'lucide-react' // Quité MessageSquareText porque ya viene en tu botón
+import ContactButton from '../galeria/ContactButton' // <-- Tu botón modular importado
+import { useState } from 'react'
 
 type PropsTarjeta = {
-  imagen?: string;
-  estado: string;
-  precio: string;
-  descripcion: string;
-  camas: number;
-  banos: number;
-  metros: number;
-};
+  imagen?: string
+  estado: string
+  precio: string
+  descripcion: string
+  camas: number
+  banos: number
+  metros: number
+}
 
 // 1. Definimos una constante para el color gris de fondo cuando no hay imagen
-const COLOR_GRIS_PLACEHOLDER = "bg-gray-200";
+const COLOR_GRIS_PLACEHOLDER = 'bg-gray-200'
 
 export default function PropertyCard({
   imagen,
@@ -25,18 +25,23 @@ export default function PropertyCard({
   descripcion,
   camas,
   banos,
-  metros,
+  metros
 }: PropsTarjeta) {
-  const [isHovered, setIsHovered] = useState(false);
+  const [isHovered, setIsHovered] = useState(false)
   return (
-    <div 
-      className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 border border-gray-100 group"
+    <div
+      className="relative bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300 border border-gray-100 group"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {isHovered && (
+        <div className="absolute top-3 right-3 z-30 bg-white rounded-full shadow-md p-2 border border-gray-200">
+          <MapPin className="w-5 h-5 text-[#ea580c]" />
+        </div>
+      )}
       {/* 2. Implementación de Imagen o Cuadro Gris (Misión Día 3) */}
       <div
-        className={`relative aspect-[16/10] overflow-hidden ${!imagen ? COLOR_GRIS_PLACEHOLDER : ""} flex items-center justify-center`}
+        className={`relative aspect-[16/10] overflow-hidden ${!imagen ? COLOR_GRIS_PLACEHOLDER : ''} flex items-center justify-center`}
       >
         {imagen ? (
           <Image
@@ -50,9 +55,7 @@ export default function PropertyCard({
           /* Icono de cámara tachada si no hay foto para que no se vea feo */
           <div className="flex flex-col items-center text-gray-400">
             <ImageOff className="w-12 h-12 mb-1" />
-            <span className="text-[10px] font-medium uppercase">
-              Sin foto disponible
-            </span>
+            <span className="text-[10px] font-medium uppercase">Sin foto disponible</span>
           </div>
         )}
 
@@ -63,16 +66,14 @@ export default function PropertyCard({
 
       <div className="p-3 flex flex-col gap-2">
         <h2
-        className={`font-extrabold text-gray-950 tracking-tight transition-all duration-300 ${
-          isHovered ? "text-2xl md:text-3xl" : "text-xl md:text-2xl"
-        }`}
-      >
+          className={`font-extrabold text-gray-950 tracking-tight transition-all duration-300 ${
+            isHovered ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl'
+          }`}
+        >
           {precio}
         </h2>
 
-        <p className="text-sm text-gray-900 line-clamp-2 font-medium leading-snug">
-          {descripcion}
-        </p>
+        <p className="text-sm text-gray-900 line-clamp-2 font-medium leading-snug">{descripcion}</p>
 
         <div className="flex items-center gap-4 text-gray-600 border-t border-gray-100 pt-3">
           <span className="flex items-center gap-1.5 text-sm font-semibold">
