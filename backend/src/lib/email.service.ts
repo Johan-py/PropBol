@@ -1,15 +1,6 @@
-import nodemailer from 'nodemailer'
 import { env } from "../config/env.js";
 
 const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email'
-
-export const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: env.EMAIL_USER,
-    pass: env.EMAIL_PASSWORD
-  }
-})
 
 interface EnviarCodigoParams {
   emailDestino: string
@@ -155,48 +146,38 @@ export const enviarCorreoRecuperacionPassword = async ({
   nombreUsuario?: string
   resetLink: string
   minutosExpiracion: number
-}) => {
-  try {
-    const info = await transporter.sendMail({
-      from: `"PropBol" <${env.EMAIL_USER}>`,
-      to: emailDestino,
-      subject: 'Restablece tu contraseña - PropBol',
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="background-color: #d97706; color: white; padding: 16px; text-align: center;">
-            Restablecer contraseña
-          </h2>
+}): Promise<EmailSendResult> => {
+  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : 'Hola,'
 
-          <div style="padding: 24px; border: 1px solid #e5e7eb;">
-            <p>Hola${nombreUsuario ? `, ${nombreUsuario}` : ''}.</p>
-            <p>Recibimos una solicitud para restablecer tu contraseña.</p>
-            <p>Haz clic en el siguiente botón:</p>
-
-            <div style="text-align: center; margin: 24px 0;">
-              <a
-                href="${resetLink}"
-                style="background-color: #f59e0b; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; display: inline-block;"
-              >
+  return sendBrevoEmail({
+    to: emailDestino,
+    subject: 'Restablece tu contraseña - PropBol',
+    htmlContent: `
+      <!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
+      <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
+        <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:10px;overflow:hidden;">
+          <div style="background:#d97706;padding:20px;text-align:center;">
+            <h1 style="color:#fff;margin:0;font-size:24px;">Restablecer contraseña</h1>
+          </div>
+          <div style="padding:30px;">
+            <p style="font-size:16px;color:#333;">${saludo}</p>
+            <p style="font-size:16px;color:#333;">Recibimos una solicitud para restablecer la contraseña de tu cuenta.</p>
+            <div style="text-align:center;margin:25px 0;">
+              <a href="${resetLink}" style="background-color:#f59e0b;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;display:inline-block;font-size:16px;font-weight:bold;">
                 Cambiar mi contraseña
               </a>
             </div>
-
-            <p>Este enlace estará disponible durante ${minutosExpiracion} minutos.</p>
-            <p>Si no solicitaste este cambio, puedes ignorar este mensaje.</p>
+            <p style="font-size:14px;color:#666;">Este enlace estará disponible durante <strong style="color:#d97706;">${minutosExpiracion} minutos</strong>.</p>
+            <div style="background:#fffbeb;border-left:4px solid #d97706;padding:12px;margin:20px 0;">
+              <p style="margin:0;font-size:13px;color:#78350f;">Si no solicitaste este cambio, puedes ignorar este mensaje.</p>
+            </div>
+          </div>
+          <div style="background:#f9fafb;padding:20px;text-align:center;border-top:1px solid #e5e7eb;">
+            <p style="font-size:12px;color:#9ca3af;margin:0;">© 2026 PropBol Inmobiliaria · Todos los derechos reservados</p>
           </div>
         </div>
-      `,
-      text: `Restablece tu contraseña desde este enlace: ${resetLink}`
-    })
-
-    return {
-      success: true,
-      messageId: info.messageId
-    }
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Error desconocido'
-    }
-  }
+      </body></html>
+    `,
+    textContent: `${saludo}\n\nRestablece tu contraseña desde este enlace: ${resetLink}\n\nExpira en ${minutosExpiracion} minutos.`
+  })
 }
