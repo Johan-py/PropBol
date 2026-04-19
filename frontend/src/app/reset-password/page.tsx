@@ -35,51 +35,83 @@ function ResetPasswordForm() {
     );
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError("");
+  setSuccess("");
 
-    if (!password || !confirmPassword) {
-      setError("Todos los campos son obligatorios");
-      return;
+  if (!token) {
+    setError("Token inválido o faltante");
+    return;
+  }
+
+  if (!password || !confirmPassword) {
+    setError("Todos los campos son obligatorios");
+    return;
+  }
+
+  const errorContrasena = obtenerErrorContrasena(password);
+  if (errorContrasena) {
+    setError(errorContrasena);
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    setError("Las contraseñas no coinciden");
+    return;
+  }
+
+  setIsLoading(true);
+
+  try {
+    const response = await fetch(`${API_URL}/api/auth/reset-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token,
+        password,
+        confirmPassword,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "No se pudo restablecer la contraseña");
     }
 
-    if (password.length < 8) {
-      setError("La contraseña debe tener al menos 8 caracteres");
-      return;
+    setSuccess("Contraseña restablecida correctamente");
+    setTimeout(() => {
+      router.push("/sign-in");
+    }, 2000);
+  } catch (error) {
+    if (error instanceof Error) {
+      setError(error.message);
+    } else {
+      setError("Ocurrió un error inesperado");
     }
+  } finally {
+    setIsLoading(false);
+  }
+};
 
-    if (password !== confirmPassword) {
-      setError("Las contraseñas no coinciden");
-      return;
-    }
+  const obtenerErrorContrasena = (value: string) => {
+      if (!value) return "";
 
-    setIsLoading(true);
+      const errores: string[] = [];
 
-    try {
-      const response = await fetch(`${API_URL}/api/auth/reset-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, password, confirmPassword }),
-      });
+      if (value.length < 8) errores.push("mínimo 8 caracteres");
+      if (!/[A-Z]/.test(value)) errores.push("una mayúscula");
+      if (!/[0-9]/.test(value)) errores.push("un número");
+      if (!/[^A-Za-z0-9]/.test(value)) errores.push("un carácter especial");
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setError(data.message || "No se pudo restablecer la contraseña");
-        return;
+     if (errores.length > 0) {
+      return `La contraseña debe cumplir con: ${errores.join(", ")}`;
       }
-
-      setSuccess(data.message);
-      setTimeout(() => router.push("/sign-in"), 2500);
-    } catch {
-      setError("No se pudo conectar con el servidor. Intenta nuevamente.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+      return "";
+     }; 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md rounded-md bg-white p-8 shadow-md">
@@ -102,19 +134,23 @@ function ResetPasswordForm() {
                 onChange={(e) => {
                     const value = e.target.value;
                     setPassword(value);
+                    if (!value) {
+                     setError("");
+                     return;
+                     }
 
-                    if (confirmPassword && value !== confirmPassword) {
-                        setError("Las contraseñas no coinciden");
-                     } else {
-                    setError("");
-                    }
-                    if (value && value.length < 8) {
-                        setError("La contraseña debe tener al menos 8 caracteres");
-                        } else if (confirmPassword && value !== confirmPassword) {
-                         setError("Las contraseñas no coinciden");
-                         } else {
-                         setError("");
-                           }
+                      const errorContrasena = obtenerErrorContrasena(value);
+
+                       if (errorContrasena) {
+                        setError(errorContrasena);
+                        return;
+                      }
+
+                      if (confirmPassword && value !== confirmPassword) {
+                       setError("Las contraseñas no coinciden");
+                       return;
+                       }
+                       setError("");
                           }}
                 placeholder="Ingresa tu nueva contraseña"
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500 pr-16"
@@ -140,19 +176,29 @@ function ResetPasswordForm() {
                 onChange={(e) => {
                  const value = e.target.value;
                  setConfirmPassword(value);
+                  if (!password) {
+                     setError("");
+                    return;
+                     }
 
-                  if (password && value && password !== value) {
-                     setError("Las contraseñas no coinciden");
-                     } else {
-                      setError("");
-                      }
-                      if (password && password.length < 8) {
-                         setError("La contraseña debe tener al menos 8 caracteres");
-                         } else if (password && value && password !== value) {
-                          setError("Las contraseñas no coinciden");
-                         } else {
-                         setError("");
-                          }
+                     const errorContrasena = obtenerErrorContrasena(password);
+
+                    if (errorContrasena) {
+                      setError(errorContrasena);
+                     return;
+                    }
+
+                     if (!value) {
+                     setError("");
+                     return;
+                   }
+
+                    if (password !== value) {
+                      setError("Las contraseñas no coinciden");
+                    return;
+                    }
+
+                     setError("");
                       }}
                 placeholder="Ingresa tu contraseña nuevamente"
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500 pr-16"
