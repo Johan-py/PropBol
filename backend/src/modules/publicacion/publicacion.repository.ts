@@ -1,14 +1,8 @@
-// backend/src/modules/publicaciones/publicacion.repository.ts
 import { prisma } from '../../lib/prisma.client.js'
 
 const ESTADO_PUBLICACION_ELIMINADA = 'ELIMINADA' as const
 const ESTADO_INMUEBLE_INACTIVO = 'INACTIVO' as const
 
-/**
- * Buscar todas las publicaciones activas de un usuario
- * - No debe incluir publicaciones eliminadas
- * - Ordenadas por fecha de publicación descendente
- */
 export const buscarPublicacionesPorUsuarioRepository = async (usuarioId: number) => {
   return prisma.publicacion.findMany({
     where: {
@@ -40,25 +34,67 @@ export const buscarPublicacionesPorUsuarioRepository = async (usuarioId: number)
   })
 }
 
-/**
- * Buscar una publicación por ID
- * - Incluye datos del inmueble asociado
- */
 export const buscarPublicacionPorIdRepository = async (id: number) => {
   return prisma.publicacion.findUnique({
     where: { id },
     include: {
-      inmueble: true,
+      inmueble: {
+        include: {
+          ubicacion: true
+        }
+      },
       multimedia: true
     }
   })
 }
 
-/**
- * Eliminar lógicamente una publicación
- * - Cambia estado de publicación a ELIMINADA
- * - Cambia estado de inmueble a INACTIVO
- */
+export const actualizarPublicacionRepository = async (publicacionId: number, data: any) => {
+  const titulo = data.titulo ?? data.title
+  const descripcion = data.descripcion ?? data.details
+  const tipoAccion = data.tipoAccion ?? data.operationType
+  const direccion = data.ubicacion ?? data.location
+
+  const precioRaw = data.precio ?? data.price
+  const precio =
+    precioRaw !== undefined && precioRaw !== null && precioRaw !== ''
+      ? Number(precioRaw)
+      : undefined
+
+  const dataToUpdate: any = {}
+  const inmuebleData: any = {}
+
+  if (titulo !== undefined) dataToUpdate.titulo = titulo
+  if (descripcion !== undefined) dataToUpdate.descripcion = descripcion
+  if (tipoAccion !== undefined) inmuebleData.tipoAccion = tipoAccion
+  if (precio !== undefined && !Number.isNaN(precio)) inmuebleData.precio = precio
+  if (direccion !== undefined) {
+    inmuebleData.ubicacion = {
+      update: {
+        direccion
+      }
+    }
+  }
+
+  if (Object.keys(inmuebleData).length > 0) {
+    dataToUpdate.inmueble = {
+      update: inmuebleData
+    }
+  }
+
+  return prisma.publicacion.update({
+    where: { id: publicacionId },
+    data: dataToUpdate,
+    include: {
+      multimedia: true,
+      inmueble: {
+        include: {
+          ubicacion: true
+        }
+      }
+    }
+  })
+}
+
 export const eliminarLogicamentePublicacionRepository = async (
   publicacionId: number,
   inmuebleId: number
