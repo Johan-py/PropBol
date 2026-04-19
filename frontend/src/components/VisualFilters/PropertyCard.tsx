@@ -1,11 +1,12 @@
-// frontend/src/components/VisualFilters/PropertyCard.tsx
-
+"use client";
 interface PropertyCardProps {
   image: string;
   title: string;
   location: string;
   count?: number;
   onClick?: () => void;
+  variant?: "alquiler" | "venta";
+  isEmpty?: boolean;
 }
 
 export default function PropertyCard({
@@ -14,7 +15,11 @@ export default function PropertyCard({
   location,
   count,
   onClick,
+  variant = "alquiler",
+  isEmpty = false,
 }: PropertyCardProps) {
+   const isAlquiler = variant === "alquiler";
+   
   return (
     <div
       onClick={onClick}
