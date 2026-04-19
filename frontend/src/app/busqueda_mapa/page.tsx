@@ -854,6 +854,7 @@ function BusquedaMapaContent() {
             }}
             onDeleteZone={(id) => {
                setMisZonasGuardadas(prev => prev.filter(z => z.id !== id))
+               setSelectedZoneId(null)
             }}
           />
           {/* --- FIN SIDEBAR MIS ZONAS HU9 --- */}
