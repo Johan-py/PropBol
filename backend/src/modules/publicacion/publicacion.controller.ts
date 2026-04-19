@@ -1,20 +1,21 @@
-// backend/src/modules/publicacion/publicacion.controller.ts
-import type { Response } from 'express'
-import { eliminarPublicacionService, listarMisPublicacionesService } from './publicacion.service.js'
-
-// Extiende Request para incluir el usuario autenticado
-import type { Request } from 'express'
+import type { Request, Response } from 'express'
+import {
+  eliminarPublicacionService,
+  listarMisPublicacionesService,
+  editarPublicacionService
+} from './publicacion.service.js'
 
 interface AuthRequest extends Request {
-  usuario?: {
+  user?: {
     id: number
+    correo?: string
     nombre?: string
     rol?: string
   }
 }
 
 export const listarMisPublicacionesController = async (req: AuthRequest, res: Response) => {
-  const usuarioId = req.usuario?.id
+  const usuarioId = req.user?.id
 
   try {
     const publicaciones = await listarMisPublicacionesService(Number(usuarioId))
@@ -40,9 +41,60 @@ export const listarMisPublicacionesController = async (req: AuthRequest, res: Re
   }
 }
 
+export const editarPublicacionController = async (req: AuthRequest, res: Response) => {
+  const publicacionId = Number(req.params.id)
+  const usuarioSolicitanteId = req.user?.id
+
+  try {
+    const resultado = await editarPublicacionService(
+      publicacionId,
+      Number(usuarioSolicitanteId),
+      req.body
+    )
+
+    return res.status(200).json({
+      ok: true,
+      message: 'Publicación actualizada correctamente',
+      data: resultado
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      switch (error.message) {
+        case 'ID_INVALIDO':
+          return res.status(400).json({
+            ok: false,
+            message: 'El id de la publicación es inválido'
+          })
+        case 'USUARIO_INVALIDO':
+          return res.status(401).json({
+            ok: false,
+            message: 'Usuario no autenticado'
+          })
+        case 'PUBLICACION_NO_EXISTE':
+          return res.status(404).json({
+            ok: false,
+            message: 'La publicación no existe'
+          })
+        case 'NO_AUTORIZADO':
+          return res.status(403).json({
+            ok: false,
+            message: 'No puede editar publicaciones de otros usuarios'
+          })
+      }
+    }
+
+    console.error('Error al editar publicación:', error)
+
+    return res.status(500).json({
+      ok: false,
+      message: 'No se pudo actualizar la publicación'
+    })
+  }
+}
+
 export const eliminarPublicacionController = async (req: AuthRequest, res: Response) => {
   const publicacionId = Number(req.params.id)
-  const usuarioSolicitanteId = req.usuario?.id
+  const usuarioSolicitanteId = req.user?.id
 
   try {
     const resultado = await eliminarPublicacionService(publicacionId, Number(usuarioSolicitanteId))
@@ -61,16 +113,25 @@ export const eliminarPublicacionController = async (req: AuthRequest, res: Respo
             message: 'El id de la publicación es inválido'
           })
         case 'USUARIO_INVALIDO':
-          return res.status(401).json({ ok: false, message: 'Usuario no autenticado' })
+          return res.status(401).json({
+            ok: false,
+            message: 'Usuario no autenticado'
+          })
         case 'PUBLICACION_NO_EXISTE':
-          return res.status(404).json({ ok: false, message: 'La publicación no existe' })
+          return res.status(404).json({
+            ok: false,
+            message: 'La publicación no existe'
+          })
         case 'NO_AUTORIZADO':
           return res.status(403).json({
             ok: false,
             message: 'No puede eliminar publicaciones de otros usuarios'
           })
         case 'PUBLICACION_YA_ELIMINADA':
-          return res.status(409).json({ ok: false, message: 'La publicación ya fue eliminada' })
+          return res.status(409).json({
+            ok: false,
+            message: 'La publicación ya fue eliminada'
+          })
       }
     }
 
