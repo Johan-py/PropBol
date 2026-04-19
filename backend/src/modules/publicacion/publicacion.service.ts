@@ -1,9 +1,30 @@
 import {
   buscarPublicacionesPorUsuarioRepository,
   buscarPublicacionPorIdRepository,
+  buscarResumenFinalPorIdRepository,
   actualizarPublicacionRepository,
   eliminarLogicamentePublicacionRepository
 } from './publicacion.repository.js'
+
+type PublicacionesPorUsuario = Awaited<ReturnType<typeof buscarPublicacionesPorUsuarioRepository>>
+type ResumenFinalRecord = NonNullable<
+  Awaited<ReturnType<typeof buscarResumenFinalPorIdRepository>>
+>
+type ResumenEtiquetaItem = ResumenFinalRecord['inmueble']['inmueble_etiqueta'][number]
+type ResumenMultimediaItem = ResumenFinalRecord['multimedia'][number]
+
+type EditarPublicacionInput = {
+  titulo?: unknown
+  title?: unknown
+  descripcion?: unknown
+  details?: unknown
+  tipoAccion?: unknown
+  operationType?: unknown
+  ubicacion?: unknown
+  location?: unknown
+  precio?: unknown
+  price?: unknown
+}
 
 export const listarMisPublicacionesService = async (usuarioId: number) => {
   if (Number.isNaN(usuarioId) || usuarioId <= 0) {
@@ -11,8 +32,6 @@ export const listarMisPublicacionesService = async (usuarioId: number) => {
   }
 
   const publicaciones = await buscarPublicacionesPorUsuarioRepository(usuarioId)
-
-  type PublicacionesPorUsuario = Awaited<ReturnType<typeof buscarPublicacionesPorUsuarioRepository>>
 
   return publicaciones.map((publicacion: PublicacionesPorUsuario[number]) => ({
     id: publicacion.id,
@@ -28,10 +47,102 @@ export const listarMisPublicacionesService = async (usuarioId: number) => {
   }))
 }
 
+export const obtenerResumenFinalService = async (
+  publicacionId: number,
+  usuarioSolicitanteId: number
+) => {
+  if (Number.isNaN(publicacionId) || publicacionId <= 0) {
+    throw new Error('ID_INVALIDO')
+  }
+
+  if (Number.isNaN(usuarioSolicitanteId) || usuarioSolicitanteId <= 0) {
+    throw new Error('USUARIO_INVALIDO')
+  }
+
+  const resumen = await buscarResumenFinalPorIdRepository(publicacionId)
+
+  if (!resumen) {
+    throw new Error('PUBLICACION_NO_EXISTE')
+  }
+
+  if (resumen.usuarioId !== usuarioSolicitanteId) {
+    throw new Error('NO_AUTORIZADO')
+  }
+
+  if (resumen.estado === 'ELIMINADA') {
+    throw new Error('PUBLICACION_YA_ELIMINADA')
+  }
+
+  const parametrosPersonalizados = resumen.inmueble.inmueble_etiqueta.map(
+    (item: ResumenEtiquetaItem) => item.etiqueta.nombre
+  )
+
+  const imagenes = resumen.multimedia
+    .filter((item: ResumenMultimediaItem) => item.tipo === 'IMAGEN')
+    .map((item: ResumenMultimediaItem) => ({
+      id: item.id,
+      url: item.url,
+      pesoMb: item.pesoMb === null || item.pesoMb === undefined ? null : Number(item.pesoMb)
+    }))
+
+  const videos = resumen.multimedia
+    .filter((item: ResumenMultimediaItem) => item.tipo === 'VIDEO')
+    .map((item: ResumenMultimediaItem) => ({
+      id: item.id,
+      url: item.url,
+      pesoMb: item.pesoMb === null || item.pesoMb === undefined ? null : Number(item.pesoMb)
+    }))
+
+  return {
+    publicacion: {
+      id: resumen.id,
+      titulo: resumen.titulo,
+      descripcion: resumen.descripcion,
+      estado: resumen.estado,
+      fechaPublicacion: resumen.fechaPublicacion
+    },
+    datosGenerales: {
+      tipoOperacion: resumen.inmueble.tipoAccion,
+      tipoInmueble: resumen.inmueble.categoria,
+      precio: Number(resumen.inmueble.precio),
+      areaM2:
+        resumen.inmueble.superficieM2 === null || resumen.inmueble.superficieM2 === undefined
+          ? null
+          : Number(resumen.inmueble.superficieM2)
+    },
+    ubicacion: {
+      direccion: resumen.inmueble.ubicacion?.direccion ?? 'No especificado',
+      ciudad: resumen.inmueble.ubicacion?.ciudad ?? 'No especificado',
+      zona: resumen.inmueble.ubicacion?.zona ?? 'No especificado',
+      latitud:
+        resumen.inmueble.ubicacion?.latitud === null ||
+        resumen.inmueble.ubicacion?.latitud === undefined
+          ? null
+          : Number(resumen.inmueble.ubicacion.latitud),
+      longitud:
+        resumen.inmueble.ubicacion?.longitud === null ||
+        resumen.inmueble.ubicacion?.longitud === undefined
+          ? null
+          : Number(resumen.inmueble.ubicacion.longitud)
+    },
+    caracteristicas: {
+      habitaciones: resumen.inmueble.nroCuartos ?? null,
+      banos: resumen.inmueble.nroBanos ?? null,
+      estacionamiento: 'No especificado'
+    },
+    parametrosPersonalizados,
+    multimedia: {
+      imagenes,
+      videos
+    },
+    soloLectura: true
+  }
+}
+
 export const editarPublicacionService = async (
   publicacionId: number,
   usuarioSolicitanteId: number,
-  data: any
+  data: EditarPublicacionInput
 ) => {
   if (Number.isNaN(publicacionId) || publicacionId <= 0) {
     throw new Error('ID_INVALIDO')
