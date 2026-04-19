@@ -44,7 +44,7 @@ export default async function Home() {
       )}
 
       {/* CONTENEDOR PRINCIPAL */}
-      <div className="w-full  max-w-screen-4xl mx-auto px-8 md:px-4 py-4">
+      <div className="w-full  max-w-[1600px] mx-auto px-0 md:px-4 py-4">
         <div className="flex flex-col gap-0">
 
           {/* EXPLORE SECTION */}
