@@ -2,6 +2,7 @@
 
 import { Eye, EyeOff, LockKeyhole } from "lucide-react";
 import { FormEvent, useState } from "react";
+import { validatePassword } from "@/lib/validators/auth";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 
@@ -80,8 +81,9 @@ export default function PasswordSection() {
       return;
     }
 
-    if (!nuevaPassword.trim()) {
-      setError("Debes ingresar la nueva contraseña");
+    const passwordValidationError = validatePassword(nuevaPassword);
+    if (passwordValidationError) {
+      setError(passwordValidationError);
       return;
     }
 
