@@ -25,7 +25,7 @@ export default function BlogCard({
     onClick?.(id);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
     if (e.key === "Enter") handleClick();
   };
 
@@ -35,15 +35,20 @@ export default function BlogCard({
       onKeyDown={onClick ? handleKeyDown : undefined}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
+      aria-label={onClick ? `Abrir blog: ${title}` : undefined}
       className={`
         group
         bg-white
-        rounded-xl
+        rounded-2xl
         border border-gray-200
         shadow-sm
         overflow-hidden
         transition-all duration-300
-        ${onClick ? "cursor-pointer hover:shadow-lg hover:-translate-y-1 hover:border-gray-300" : ""}
+        ${
+          onClick
+            ? "cursor-pointer hover:shadow-lg hover:-translate-y-1 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            : ""
+        }
       `}
     >
       {/* Imagen */}
@@ -51,28 +56,28 @@ export default function BlogCard({
         <img
           src={imageUrl || "/placeholder.png"}
           alt={title}
-          className="w-full h-40 object-cover transition-transform duration-300 group-hover:scale-105"
+          className="w-full h-44 object-cover transition-transform duration-300 group-hover:scale-105"
         />
       </div>
 
-      <div className="p-3">
+      <div className="p-4">
         {/* Categoría */}
-        <span className="text-[10px] font-semibold text-orange-500 uppercase tracking-wide">
+        <span className="text-xs font-semibold text-orange-500 uppercase tracking-wide">
           {category}
         </span>
 
         {/* Título */}
-        <h3 className="text-sm font-semibold mt-1 line-clamp-2">
+        <h2 className="text-base font-bold mt-1 line-clamp-2">
           {title}
-        </h3>
+        </h2>
 
         {/* Resumen */}
-        <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+        <p className="text-sm text-gray-600 mt-2 line-clamp-3">
           {excerpt}
         </p>
 
         {/* Footer */}
-        <div className="flex justify-between items-center mt-3 text-[10px] text-gray-400">
+        <div className="flex justify-between items-center mt-4 text-xs text-gray-500">
           <span>{author}</span>
           <span>{new Date(date).toLocaleDateString()}</span>
         </div>
