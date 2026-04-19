@@ -1,15 +1,32 @@
-import { prisma } from '../../lib/prisma.client.js'
+import { prisma } from "../../lib/prisma.client.js";
 
-const ESTADO_PUBLICACION_ELIMINADA = 'ELIMINADA' as const
-const ESTADO_INMUEBLE_INACTIVO = 'INACTIVO' as const
+const ESTADO_PUBLICACION_ELIMINADA = "ELIMINADA" as const;
+const ESTADO_INMUEBLE_INACTIVO = "INACTIVO" as const;
 
-export const buscarPublicacionesPorUsuarioRepository = async (usuarioId: number) => {
+type TipoAccionValue = "VENTA" | "ALQUILER" | "ANTICRETO";
+
+type ActualizarPublicacionInput = {
+  titulo?: unknown;
+  title?: unknown;
+  descripcion?: unknown;
+  details?: unknown;
+  tipoAccion?: unknown;
+  operationType?: unknown;
+  ubicacion?: unknown;
+  location?: unknown;
+  precio?: unknown;
+  price?: unknown;
+};
+
+export const buscarPublicacionesPorUsuarioRepository = async (
+  usuarioId: number,
+) => {
   return prisma.publicacion.findMany({
     where: {
       usuarioId,
       estado: {
-        not: ESTADO_PUBLICACION_ELIMINADA
-      }
+        not: ESTADO_PUBLICACION_ELIMINADA,
+      },
     },
     include: {
       multimedia: true,
@@ -22,17 +39,17 @@ export const buscarPublicacionesPorUsuarioRepository = async (usuarioId: number)
               latitud: true,
               longitud: true,
               inmuebleId: true,
-              ubicacionMaestraId: true
-            }
-          }
-        }
-      }
+              ubicacionMaestraId: true,
+            },
+          },
+        },
+      },
     },
     orderBy: {
-      fechaPublicacion: 'desc'
-    }
-  })
-}
+      fechaPublicacion: "desc",
+    },
+  });
+};
 
 export const buscarPublicacionPorIdRepository = async (id: number) => {
   return prisma.publicacion.findUnique({
@@ -40,45 +57,146 @@ export const buscarPublicacionPorIdRepository = async (id: number) => {
     include: {
       inmueble: {
         include: {
-          ubicacion: true
-        }
+          ubicacion: true,
+        },
       },
-      multimedia: true
-    }
-  })
-}
+      multimedia: true,
+    },
+  });
+};
 
-export const actualizarPublicacionRepository = async (publicacionId: number, data: any) => {
-  const titulo = data.titulo ?? data.title
-  const descripcion = data.descripcion ?? data.details
-  const tipoAccion = data.tipoAccion ?? data.operationType
-  const direccion = data.ubicacion ?? data.location
+export const buscarResumenFinalPorIdRepository = async (
+  publicacionId: number,
+) => {
+  return prisma.publicacion.findUnique({
+    where: { id: publicacionId },
+    select: {
+      id: true,
+      titulo: true,
+      descripcion: true,
+      estado: true,
+      fechaPublicacion: true,
+      usuarioId: true,
+      inmuebleId: true,
+      inmueble: {
+        select: {
+          id: true,
+          titulo: true,
+          tipoAccion: true,
+          categoria: true,
+          precio: true,
+          superficieM2: true,
+          nroCuartos: true,
+          nroBanos: true,
+          descripcion: true,
+          estado: true,
+          ubicacion: {
+            select: {
+              direccion: true,
+              ciudad: true,
+              zona: true,
+              latitud: true,
+              longitud: true,
+            },
+          },
+          inmueble_etiqueta: {
+            select: {
+              etiqueta: {
+                select: {
+                  id: true,
+                  nombre: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      multimedia: {
+        select: {
+          id: true,
+          url: true,
+          tipo: true,
+          pesoMb: true,
+        },
+        orderBy: {
+          id: "asc",
+        },
+      },
+    },
+  });
+};
 
-  const precioRaw = data.precio ?? data.price
-  const precio =
-    precioRaw !== undefined && precioRaw !== null && precioRaw !== ''
-      ? Number(precioRaw)
-      : undefined
+export const actualizarPublicacionRepository = async (
+  publicacionId: number,
+  data: ActualizarPublicacionInput,
+) => {
+  const tituloRaw = data.titulo ?? data.title;
+  const descripcionRaw = data.descripcion ?? data.details;
+  const tipoAccionRaw = data.tipoAccion ?? data.operationType;
+  const direccionRaw = data.ubicacion ?? data.location;
+  const precioRaw = data.precio ?? data.price;
 
-  const dataToUpdate: any = {}
-  const inmuebleData: any = {}
+  const dataToUpdate: {
+    titulo?: string;
+    descripcion?: string;
+    inmueble?: {
+      update: {
+        tipoAccion?: TipoAccionValue;
+        precio?: number;
+        ubicacion?: {
+          update: {
+            direccion: string;
+          };
+        };
+      };
+    };
+  } = {};
 
-  if (titulo !== undefined) dataToUpdate.titulo = titulo
-  if (descripcion !== undefined) dataToUpdate.descripcion = descripcion
-  if (tipoAccion !== undefined) inmuebleData.tipoAccion = tipoAccion
-  if (precio !== undefined && !Number.isNaN(precio)) inmuebleData.precio = precio
-  if (direccion !== undefined) {
+  const inmuebleData: {
+    tipoAccion?: TipoAccionValue;
+    precio?: number;
+    ubicacion?: {
+      update: {
+        direccion: string;
+      };
+    };
+  } = {};
+
+  if (tituloRaw !== undefined) {
+    dataToUpdate.titulo = String(tituloRaw).trim();
+  }
+
+  if (descripcionRaw !== undefined) {
+    dataToUpdate.descripcion = String(descripcionRaw).trim();
+  }
+
+  if (tipoAccionRaw !== undefined) {
+    inmuebleData.tipoAccion = String(tipoAccionRaw)
+      .trim()
+      .toUpperCase() as TipoAccionValue;
+  }
+
+  if (
+    precioRaw !== undefined &&
+    precioRaw !== null &&
+    precioRaw !== "" &&
+    !Number.isNaN(Number(precioRaw))
+  ) {
+    inmuebleData.precio = Number(precioRaw);
+  }
+
+  if (direccionRaw !== undefined) {
     inmuebleData.ubicacion = {
       update: {
-        direccion
-      }
-    }
+        direccion: String(direccionRaw).trim(),
+      },
+    };
   }
 
   if (Object.keys(inmuebleData).length > 0) {
     dataToUpdate.inmueble = {
-      update: inmuebleData
-    }
+      update: inmuebleData,
+    };
   }
 
   return prisma.publicacion.update({
@@ -88,29 +206,29 @@ export const actualizarPublicacionRepository = async (publicacionId: number, dat
       multimedia: true,
       inmueble: {
         include: {
-          ubicacion: true
-        }
-      }
-    }
-  })
-}
+          ubicacion: true,
+        },
+      },
+    },
+  });
+};
 
 export const eliminarLogicamentePublicacionRepository = async (
   publicacionId: number,
-  inmuebleId: number
+  inmuebleId: number,
 ) => {
   return prisma.$transaction([
     prisma.publicacion.update({
       where: { id: publicacionId },
       data: {
-        estado: ESTADO_PUBLICACION_ELIMINADA
-      }
+        estado: ESTADO_PUBLICACION_ELIMINADA,
+      },
     }),
     prisma.inmueble.update({
       where: { id: inmuebleId },
       data: {
-        estado: ESTADO_INMUEBLE_INACTIVO
-      }
-    })
-  ])
-}
+        estado: ESTADO_INMUEBLE_INACTIVO,
+      },
+    }),
+  ]);
+};

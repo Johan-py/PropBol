@@ -60,6 +60,9 @@ const LOGIN_TIMEOUT_MESSAGE = 'La solicitud tardó demasiado. Por favor intenta 
 const GOOGLE_TIMEOUT_MESSAGE =
   'La autenticación con Google tardó demasiado. Por favor intenta nuevamente.'
 
+// Mensaje exacto que devuelve el backend para cuenta desactivada
+const DEACTIVATED_ACCOUNT_MESSAGE = "Esta cuenta está desactivada";
+
 const clearClientSession = () => {
   localStorage.removeItem('token')
   localStorage.removeItem('propbol_user')
@@ -412,6 +415,11 @@ export default function LoginForm() {
       if (!response.ok) {
         setPassword('')
 
+        if (response.status === 403) {
+          setErrorMessage(DEACTIVATED_ACCOUNT_MESSAGE);
+          return;
+        }
+
         if (response.status === 404) {
           setErrorMessage(
             'Esta cuenta no está registrada. Puedes registrarte para crear una cuenta.'
@@ -477,8 +485,10 @@ export default function LoginForm() {
             className="relative"
             ref={passwordContainerRef}
             onBlur={(e) => {
-              if (!passwordContainerRef.current?.contains(e.relatedTarget as Node)) {
-                setShowPassword(false)
+              if (
+                !passwordContainerRef.current?.contains(e.relatedTarget as Node)
+              ) {
+                setShowPassword(false);
               }
             }}
           >
@@ -563,5 +573,5 @@ export default function LoginForm() {
         </Link>
       </p>
     </div>
-  )
+  );
 }
