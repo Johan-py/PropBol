@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { HomeBanner } from './HomeBanner'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
@@ -13,19 +13,22 @@ interface BannerData {
 
 export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
+<<<<<<< HEAD
   const [isPaused, setIsPaused] = useState(false) // Para el criterio de pausa
+=======
+>>>>>>> 32b7f93a (feat(home): se agrego indicadores visuales para mostrar la posicion)
   const touchStartX = useRef<number | null>(null)
 
-  // Memorizamos nextSlide para que el useEffect no se vuelva loco
-  const nextSlide = useCallback(() => {
+  const nextSlide = () => {
     setCurrentIndex((prev) => (prev === banners.length - 1 ? 0 : prev + 1))
-  }, [banners.length])
+  }
 
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev === 0 ? banners.length - 1 : prev - 1))
   }
 
   useEffect(() => {
+<<<<<<< HEAD
     if (isPaused) return;
 
     const timer = setInterval(() => {
@@ -34,6 +37,13 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
 
     return () => clearInterval(timer)
   }, [currentIndex, banners.length, isPaused])
+=======
+    const timer = setInterval(() => {
+      nextSlide()
+    }, 5000)
+    return () => clearInterval(timer)
+  }, [currentIndex, banners.length])
+>>>>>>> 32b7f93a (feat(home): se agrego indicadores visuales para mostrar la posicion)
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX
@@ -51,6 +61,7 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
   if (!banners || banners.length === 0) return null
 
   return (
+<<<<<<< HEAD
     <div 
       className="relative w-full overflow-hidden" 
       onTouchStart={handleTouchStart} 
@@ -58,6 +69,9 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
       onMouseEnter={() => setIsPaused(true)} 
       onMouseLeave={() => setIsPaused(false)} 
     >
+=======
+    <div className="relative w-full" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+>>>>>>> 32b7f93a (feat(home): se agrego indicadores visuales para mostrar la posicion)
       <HomeBanner
         url={banners[currentIndex].urlImagen}
         title={banners[currentIndex].titulo || 'Encuentra tu lugar ideal'}
@@ -82,7 +96,7 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
             key={index}
             onClick={() => setCurrentIndex(index)}
             className={`h-2 rounded-full transition-all duration-300 ${
-              currentIndex === index ? 'bg-white w-8' : 'bg-white/50 w-2'
+              currentIndex === index ? 'bg-white w-4' : 'bg-white/50 w-2'
             }`}
           />
         ))}
