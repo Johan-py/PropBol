@@ -79,7 +79,6 @@ const allowedOrigins = [
   "http://localhost:3001",
 ];
 
-// Middleware CORS global
 app.use(
   cors({
     origin: (origin, callback) => {
