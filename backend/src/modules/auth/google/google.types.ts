@@ -28,15 +28,16 @@ export type GoogleLoginSuccess = {
   };
 };
 
+export type GoogleAuthErrorCode =
+  | "GOOGLE_AUTH_FAILED"
+  | "ACCOUNT_NOT_REGISTERED"
+  | "ACCOUNT_ALREADY_REGISTERED";
+
 export class GoogleAuthError extends Error {
-  code: "GOOGLE_AUTH_FAILED" | "ACCOUNT_NOT_REGISTERED";
+  code: GoogleAuthErrorCode;
   statusCode: number;
 
-  constructor(
-    message: string,
-    code: "GOOGLE_AUTH_FAILED" | "ACCOUNT_NOT_REGISTERED",
-    statusCode = 400,
-  ) {
+  constructor(message: string, code: GoogleAuthErrorCode, statusCode = 400) {
     super(message);
     this.name = "GoogleAuthError";
     this.code = code;
