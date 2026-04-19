@@ -6,15 +6,16 @@ import {
 } from './publicacion.service.js'
 
 interface AuthRequest extends Request {
-  usuario?: {
+  user?: {
     id: number
+    correo?: string
     nombre?: string
     rol?: string
   }
 }
 
 export const listarMisPublicacionesController = async (req: AuthRequest, res: Response) => {
-  const usuarioId = req.usuario?.id
+  const usuarioId = req.user?.id
 
   try {
     const publicaciones = await listarMisPublicacionesService(Number(usuarioId))
@@ -42,7 +43,7 @@ export const listarMisPublicacionesController = async (req: AuthRequest, res: Re
 
 export const editarPublicacionController = async (req: AuthRequest, res: Response) => {
   const publicacionId = Number(req.params.id)
-  const usuarioSolicitanteId = req.usuario?.id
+  const usuarioSolicitanteId = req.user?.id
 
   try {
     const resultado = await editarPublicacionService(
@@ -93,7 +94,7 @@ export const editarPublicacionController = async (req: AuthRequest, res: Respons
 
 export const eliminarPublicacionController = async (req: AuthRequest, res: Response) => {
   const publicacionId = Number(req.params.id)
-  const usuarioSolicitanteId = req.usuario?.id
+  const usuarioSolicitanteId = req.user?.id
 
   try {
     const resultado = await eliminarPublicacionService(publicacionId, Number(usuarioSolicitanteId))
@@ -112,16 +113,25 @@ export const eliminarPublicacionController = async (req: AuthRequest, res: Respo
             message: 'El id de la publicación es inválido'
           })
         case 'USUARIO_INVALIDO':
-          return res.status(401).json({ ok: false, message: 'Usuario no autenticado' })
+          return res.status(401).json({
+            ok: false,
+            message: 'Usuario no autenticado'
+          })
         case 'PUBLICACION_NO_EXISTE':
-          return res.status(404).json({ ok: false, message: 'La publicación no existe' })
+          return res.status(404).json({
+            ok: false,
+            message: 'La publicación no existe'
+          })
         case 'NO_AUTORIZADO':
           return res.status(403).json({
             ok: false,
             message: 'No puede eliminar publicaciones de otros usuarios'
           })
         case 'PUBLICACION_YA_ELIMINADA':
-          return res.status(409).json({ ok: false, message: 'La publicación ya fue eliminada' })
+          return res.status(409).json({
+            ok: false,
+            message: 'La publicación ya fue eliminada'
+          })
       }
     }
 
