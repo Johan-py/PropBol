@@ -433,6 +433,10 @@ export const getMeService = async (token: string) => {
     throw new Error("Sesión inválida o expirada");
   }
 
+  if (session.usuario.activo === false) {
+    throw new AuthError("Esta cuenta está desactivada", 403);
+  }
+
   return {
     user: {
       id: session.usuario.id,

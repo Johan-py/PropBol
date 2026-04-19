@@ -167,6 +167,13 @@ export const getMeController = async (req: Request, res: Response) => {
       ...result,
     });
   } catch (error) {
+    // ✅ Si es AuthError (ej: cuenta desactivada = 403), reenviar el status correcto
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
     const message =
       error instanceof Error ? error.message : "Sesión inválida o expirada";
 
