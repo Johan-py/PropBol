@@ -1,4 +1,3 @@
-// frontend/src/components/VisualFilters/PropertyCarousel.tsx
 "use client";
 
 import { useRef } from "react";
@@ -10,7 +9,7 @@ interface CarouselItem {
   title: string;
   location: string;
   count?: number;
-  filterParam: string; // param para la URL al hacer clic
+  filterParam: string;
 }
 
 interface PropertyCarouselProps {
@@ -27,16 +26,14 @@ export default function PropertyCarousel({
   const scrollRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  // Scroll con botones
   const scroll = (dir: "left" | "right") => {
     if (!scrollRef.current) return;
     scrollRef.current.scrollBy({
-      left: dir === "right" ? 180 : -180,
+      left: dir === "right" ? 220 : -220,
       behavior: "smooth",
     });
   };
 
-  // Scroll con rueda del mouse
   const handleWheel = (e: React.WheelEvent) => {
     if (!scrollRef.current) return;
     e.preventDefault();
@@ -48,13 +45,11 @@ export default function PropertyCarousel({
   };
 
   return (
-    <div className="mb-8">
-      {/* Título de sección */}
+    <div className="mb-10">
       <h2 className="text-sm font-extrabold text-gray-800 uppercase tracking-wide mb-3">
         {title}
       </h2>
 
-      {/* Carrusel */}
       <div className="relative flex items-center">
         {/* Botón izquierda */}
         <button
@@ -63,7 +58,7 @@ export default function PropertyCarousel({
             absolute left-0 z-10 bg-white border border-gray-200
             rounded-full w-7 h-7 flex items-center justify-center
             shadow hover:bg-orange-500 hover:text-white hover:border-orange-500
-            transition-colors duration-150 text-gray-600 text-xs
+            transition-colors duration-150 text-gray-500 text-base font-bold
           "
         >
           ‹
@@ -73,11 +68,7 @@ export default function PropertyCarousel({
         <div
           ref={scrollRef}
           onWheel={handleWheel}
-          className="
-            flex gap-3 overflow-x-auto scroll-smooth
-            px-8 py-1
-            scrollbar-hide
-          "
+          className=" flex gap-3 overflow-x-auto scroll-smooth px-9 py-2"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {items.map((item, i) => (
@@ -87,6 +78,8 @@ export default function PropertyCarousel({
               title={item.title}
               location={item.location}
               count={item.count}
+              variant={category}
+              isEmpty={item.count === 0}
               onClick={() => handleCardClick(item.filterParam)}
             />
           ))}
@@ -99,7 +92,7 @@ export default function PropertyCarousel({
             absolute right-0 z-10 bg-white border border-gray-200
             rounded-full w-7 h-7 flex items-center justify-center
             shadow hover:bg-orange-500 hover:text-white hover:border-orange-500
-            transition-colors duration-150 text-gray-600 text-xs
+            transition-colors duration-150 text-gray-600 text-base font-bold
           "
         >
           ›
