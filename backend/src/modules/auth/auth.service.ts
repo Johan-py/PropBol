@@ -2,16 +2,18 @@ import crypto from 'node:crypto'
 import jwt from 'jsonwebtoken'
 
 import { env } from '../../config/env.js'
-import { enviarCodigoRegistro } from '../../lib/email.service.js'
+import { enviarCodigo2FA, enviarCodigoRegistro } from '../../lib/email.service.js'
 import { generateToken, type JwtPayload } from '../../utils/jwt.js'
 import {
+  create2FACode,
   createSession,
   createUser,
   desactiveSessionByToken,
   findActiveSessionByToken,
   findUser,
   findUserByCorreo,
-  findUserById
+  findUserById,
+  invalidateActive2FACodesByUserId
 } from './auth.repository.js'
 
 type LoginDTO = {
@@ -68,6 +70,8 @@ const LOGIN_BLOCK_TIME_MS = 15 * 60 * 1000
 
 const REGISTER_CODE_TTL_MINUTES = 5
 const REGISTER_CODE_TTL_SECONDS = REGISTER_CODE_TTL_MINUTES * 60
+
+const TWO_FACTOR_CODE_TTL_MINUTES = 5
 
 const loginAttempts = new Map<string, LoginAttemptState>()
 
@@ -193,6 +197,14 @@ const generateRegisterCode = () => {
   return Math.floor(100000 + Math.random() * 900000).toString()
 }
 
+const generate2FACode = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString()
+}
+
+const hash2FACode = (codigo: string) => {
+  return crypto.createHash('sha256').update(codigo).digest('hex')
+}
+
 const signRegisterCode = ({
   codigo,
   correo,
@@ -288,6 +300,37 @@ export const loginService = async (payload: LoginDTO) => {
 
   clearFailedAttempts(correo)
 
+  if (user.two_factor_activo) {
+    const codigo = generate2FACode()
+    const codigoHash = hash2FACode(codigo)
+    const expiraEn = new Date(Date.now() + TWO_FACTOR_CODE_TTL_MINUTES * 60 * 1000)
+
+    await invalidateActive2FACodesByUserId(user.id)
+
+    await create2FACode({
+      usuarioId: user.id,
+      codigoHash,
+      expiraEn
+    })
+
+    const emailResult = await enviarCodigo2FA({
+      emailDestino: user.correo,
+      codigo,
+      nombreUsuario: user.nombre
+    })
+
+    if (!emailResult.success) {
+      throw new Error('No se pudo enviar el código de verificación 2FA. Intenta nuevamente.')
+    }
+
+    return {
+      requires2FA: true,
+      userId: user.id,
+      email: user.correo,
+      expiresInMinutes: TWO_FACTOR_CODE_TTL_MINUTES
+    }
+  }
+
   const jwtPayload: JwtPayload = {
     id: user.id,
     correo: user.correo
@@ -303,6 +346,7 @@ export const loginService = async (payload: LoginDTO) => {
   })
 
   return {
+    requires2FA: false,
     user: {
       id: user.id,
       correo: user.correo,
@@ -459,7 +503,7 @@ export const logoutService = async (token: string) => {
   }
 }
 
-  type VerifyPasswordDTO = {
+type VerifyPasswordDTO = {
   userId: number
   password: string
 }
