@@ -10,9 +10,37 @@ interface AuthRequest extends Request {
   }
 }
 
-// TODO: Implementar controlador de verificación de correo
-export const verifyEmailController = async () => {
-  // Placeholder para futuras implementaciones
+export const cambiarPassword = async (req: AuthRequest, res: Response) => {
+  try {
+    const { passwordActual, nuevaPassword } = req.body
+    const usuarioId = req.usuario?.id
+
+    if (!usuarioId) {
+      return res.status(401).json({ ok: false, msg: 'No autorizado' })
+    }
+
+    if (!passwordActual || !nuevaPassword) {
+      return res.status(400).json({ ok: false, msg: 'Datos incompletos' })
+    }
+
+    const usuario = await prisma.usuario.findUnique({
+      where: { id: usuarioId }
+    })
+
+    if (!usuario || usuario.password !== passwordActual) {
+      return res.status(401).json({ ok: false, msg: 'La contraseña actual es incorrecta' })
+    }
+
+    await prisma.usuario.update({
+      where: { id: usuarioId },
+      data: { password: nuevaPassword }
+    })
+
+    return res.json({ ok: true, msg: 'Contraseña actualizada correctamente' })
+  } catch (error) {
+    console.error('Error en cambiarPassword:', error)
+    return res.status(500).json({ ok: false, msg: 'Error al actualizar la contraseña' })
+  }
 }
 
 export const verificarPassword = async (req: AuthRequest, res: Response) => {
