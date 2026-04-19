@@ -182,3 +182,31 @@ export const createPasswordRecovery = async ({
     }
   })
 }
+
+export const findPasswordRecoveryByToken = async (token: string) => {
+  return prisma.recuperacion_password.findUnique({
+    where: { token },
+    include: { usuario: true }
+  })
+}
+
+export const markPasswordRecoveryAsUsed = async (id: number) => {
+  return prisma.recuperacion_password.update({
+    where: { id },
+    data: { usadoEn: new Date(), activo: false }
+  })
+}
+
+export const updateUserPassword = async (usuarioId: number, password: string) => {
+  return prisma.usuario.update({
+    where: { id: usuarioId },
+    data: { password }
+  })
+}
+
+export const invalidateAllUserSessions = async (usuarioId: number) => {
+  return prisma.sesion.updateMany({
+    where: { usuarioId, estado: true },
+    data: { estado: false }
+  })
+}

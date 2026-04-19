@@ -12,8 +12,12 @@ import {
   desactiveSessionByToken,
   desactivarRecuperacionesPasswordActivas,
   findActiveSessionByToken,
+  findPasswordRecoveryByToken,
   findUser,
-  findUserByCorreo
+  findUserByCorreo,
+  invalidateAllUserSessions,
+  markPasswordRecoveryAsUsed,
+  updateUserPassword
 } from './auth.repository.js'
 
 type LoginDTO = {
@@ -611,4 +615,44 @@ export const forgotPasswordService = async (payload: ForgotPasswordDTO) => {
   return {
     message: 'Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.'
   }
+}
+
+type ResetPasswordDTO = {
+  token: string
+  password: string
+  confirmPassword: string
+}
+
+export const resetPasswordService = async (payload: ResetPasswordDTO) => {
+  const token = payload.token?.trim()
+  const password = payload.password?.trim()
+  const confirmPassword = payload.confirmPassword?.trim()
+
+  if (!token || !password || !confirmPassword) {
+    throw new AuthError('Todos los campos son obligatorios', 400)
+  }
+
+  if (password !== confirmPassword) {
+    throw new AuthError('Las contraseñas no coinciden', 400)
+  }
+
+  if (password.length < 8) {
+    throw new AuthError('La contraseña debe tener al menos 8 caracteres', 400)
+  }
+
+  const recovery = await findPasswordRecoveryByToken(token)
+
+  if (!recovery || !recovery.activo) {
+    throw new AuthError('El enlace no es válido o ya fue utilizado', 400)
+  }
+
+  if (new Date() > recovery.expiraEn) {
+    throw new AuthError('El enlace ha expirado. Solicita uno nuevo.', 400)
+  }
+
+  await markPasswordRecoveryAsUsed(recovery.id)
+  await updateUserPassword(recovery.usuarioId, password)
+  await invalidateAllUserSessions(recovery.usuarioId)
+
+  return { message: 'Contraseña actualizada correctamente. Ya puedes iniciar sesión.' }
 }

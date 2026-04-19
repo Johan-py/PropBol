@@ -1,11 +1,12 @@
 import type { Request, Response } from "express";
-import { forgotPasswordService } from './auth.service.js'
 import {
   AuthError,
+  forgotPasswordService,
   getMeService,
   loginService,
   logoutService,
   registerUser,
+  resetPasswordService,
   verifyRegisterCodeService
 } from './auth.service.js'
 
@@ -198,5 +199,18 @@ export const forgotPasswordController = async (req: Request, res: Response) => {
           ? error.message
           : 'Error al solicitar recuperación de contraseña'
     })
+  }
+}
+
+export const resetPasswordController = async (req: Request, res: Response) => {
+  try {
+    const result = await resetPasswordService(req.body)
+    return res.status(200).json(result)
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({ message: error.message })
+    }
+    const message = error instanceof Error ? error.message : 'Error al restablecer contraseña'
+    return res.status(400).json({ message })
   }
 }
