@@ -93,17 +93,24 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       Departamento: 'DEPARTAMENTO',
       Terreno: 'TERRENO',
       Cuarto: 'CUARTO',
-      Espacios: 'ESPACIOS',
-      Cementerio: 'CEMENTERIO'
+      Cementerio: 'TERRENO_MORTUORIO'
     }
 
     const tipoFinal =
       tipoMap[tipoInmueble] ||
       (tipoInmueble !== 'Cualquier tipo' ? tipoInmueble.toUpperCase() : null)
 
+    const esTerreno = tipoFinal === 'TERRENO' || tipoFinal === 'TERRENO_MORTUORIO';
+
+    if (esTerreno) {
+      setModosSeleccionados(['VENTA']);
+    }
+
+    const modosFinales = esTerreno ? ['VENTA'] : modosSeleccionados;
+
     const nuevosFiltros = {
       tipoInmueble: tipoFinal ? [tipoFinal] : [],
-      modoInmueble: modosSeleccionados,
+      modoInmueble: modosFinales,
       query: ubicacionTexto,
       updatedAt: new Date().toISOString()
     }
