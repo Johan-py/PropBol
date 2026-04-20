@@ -4,7 +4,7 @@ import express from 'express'
 import cors from 'cors'
 import { env } from './config/env.js'
 import type { Request, Response } from 'express'
-
+import zonaRoutes from "./modules/perfil/zonaUsario.routes.js";
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -126,6 +126,7 @@ app.post('/api/users', (req, res) => {
   const user = req.body
   res.json({ message: 'User created', user })
 })
+app.use('/api/perfil/zonas', zonaRoutes);
 
 // --------------------
 // AUTH
