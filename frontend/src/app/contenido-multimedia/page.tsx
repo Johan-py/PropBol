@@ -25,6 +25,16 @@ type VideoItem = {
   sourceUrl?: string
 }
 
+function getApiUrl() {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL
+
+  if (!apiUrl) {
+    throw new Error('Falta NEXT_PUBLIC_API_URL en el entorno')
+  }
+
+  return apiUrl
+}
+
 export default function ContenidoMultimediaPage() {
   return (
     <Suspense fallback={<div style={{ padding: '24px' }}>Cargando...</div>}>
@@ -49,6 +59,7 @@ function ContenidoMultimediaPageContent() {
 
   const [isUploadingImages, setIsUploadingImages] = useState(false)
   const [isUploadingVideos, setIsUploadingVideos] = useState(false)
+  const [isPublishing, setIsPublishing] = useState(false)
 
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [showPlanModal, setShowPlanModal] = useState(false)
@@ -130,7 +141,6 @@ function ContenidoMultimediaPageContent() {
     }
 
     const allowedTypes = ['video/mp4', 'video/x-matroska', 'video/avi', 'video/x-msvideo']
-
     const maxSize = 20 * 1024 * 1024
 
     setIsUploadingVideos(true)
@@ -242,6 +252,62 @@ function ContenidoMultimediaPageContent() {
     })
   }
 
+  const uploadImages = async (token: string) => {
+    if (!images.length) return
+
+    const formData = new FormData()
+
+    images.forEach((image) => {
+      formData.append('images', image.file)
+    })
+
+    const response = await fetch(
+      `${getApiUrl()}/api/publicaciones/${publicacionId}/multimedia/images`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        body: formData
+      }
+    )
+
+    const data = await response.json().catch(() => null)
+
+    if (!response.ok) {
+      throw new Error(data?.message || 'No se pudieron registrar las imágenes.')
+    }
+  }
+
+  const uploadYoutubeLinks = async (token: string) => {
+    const youtubeVideos = videos.filter(
+      (video): video is VideoItem & { sourceUrl: string } =>
+        video.type === 'youtube' && typeof video.sourceUrl === 'string' && video.sourceUrl.length > 0
+    )
+
+    for (const video of youtubeVideos) {
+      const response = await fetch(
+        `${getApiUrl()}/api/publicaciones/${publicacionId}/multimedia/video-link`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            url: video.sourceUrl
+          })
+        }
+      )
+
+      const data = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        throw new Error(data?.message || 'No se pudo registrar el enlace del video.')
+      }
+    }
+  }
+
   const handlePublish = async () => {
     setPublishError('')
 
@@ -260,9 +326,36 @@ function ContenidoMultimediaPageContent() {
       return
     }
 
-    // Aquí luego irá tu llamada real al backend
-    // Si todo sale bien, abrimos el modal de éxito
-    setShowSuccessModal(true)
+    const token = localStorage.getItem('token')
+
+    if (!token) {
+      setPublishError('No se encontró la sesión del usuario.')
+      return
+    }
+
+    const hasLocalVideoFiles = videos.some((video) => video.type === 'file')
+
+    if (hasLocalVideoFiles) {
+      setPublishError(
+        'Por ahora el backend solo permite registrar enlaces de video. Los videos subidos como archivo aún no están soportados.'
+      )
+      return
+    }
+
+    try {
+      setIsPublishing(true)
+
+      await uploadImages(token)
+      await uploadYoutubeLinks(token)
+
+      setShowSuccessModal(true)
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : 'Ocurrió un error al registrar el contenido multimedia.'
+      setPublishError(message)
+    } finally {
+      setIsPublishing(false)
+    }
   }
 
   return (
@@ -325,8 +418,8 @@ function ContenidoMultimediaPageContent() {
           confirmed={confirmed}
           onConfirmedChange={setConfirmed}
           onPublish={handlePublish}
-          publishError={publishError}
-          canPublish={hasMultimedia}
+          publishError={isPublishing ? 'Publicando contenido multimedia...' : publishError}
+          canPublish={hasMultimedia && !isPublishing}
         />
 
         <SuccessModal
