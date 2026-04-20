@@ -19,6 +19,7 @@ import {
 } from "./modules/notificaciones/notificaciones.controller.js";
 import { BannersController } from "./modules/banners/banners.controller.js";
 import { FiltersHomepageController } from "./modules/filtershomepage/filtershomepage.controller.js";
+import favoritesRoutes from "./modules/favorites/favorites.routes.js";
 
 // --------------------
 // AUTH
