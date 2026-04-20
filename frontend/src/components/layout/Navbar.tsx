@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -25,17 +25,6 @@ export type User = {
   name: string;
   email: string;
   avatar?: string | null;
-};
-
-type MeResponse = {
-  message?: string;
-  perfil?: {
-    id: number;
-    nombre?: string;
-    apellido?: string;
-    correo: string;
-    avatar?: string | null;
-  };
 };
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
@@ -80,7 +69,8 @@ export default function Navbar() {
     setIsLoggedIn,
   } = useNotifications();
 
-  const clearSession = (emitEvent = true) => {
+  // FIX #3: clearSession envuelto en useCallback para evitar re-renders infinitos
+  const clearSession = useCallback((emitEvent = true) => {
     localStorage.removeItem(USER_STORAGE_KEY);
     localStorage.removeItem(SESSION_EXPIRES_KEY);
     localStorage.removeItem("token");
@@ -96,7 +86,7 @@ export default function Navbar() {
       window.dispatchEvent(new Event("propbol:session-changed"));
       window.dispatchEvent(new Event("auth-state-changed"));
     }
-  };
+  }, [setIsLoggedIn]);
 
   const isSessionExpired = () => {
     const expiresAt = localStorage.getItem(SESSION_EXPIRES_KEY);
@@ -121,7 +111,7 @@ export default function Navbar() {
     return data.perfil;
   };
 
-  const restoreSession = async () => {
+  const restoreSession = useCallback(async () => {
     const savedUser = localStorage.getItem(USER_STORAGE_KEY);
     const expiresAt = localStorage.getItem(SESSION_EXPIRES_KEY);
     const token = localStorage.getItem("token");
@@ -136,8 +126,15 @@ export default function Navbar() {
       return;
     }
 
+    // FIX #4: Si no hay conexión, usar los datos cacheados en lugar de limpiar la sesión
     if (!navigator.onLine) {
-      clearSession(false);
+      try {
+        const cached = JSON.parse(savedUser) as User;
+        setUser(cached);
+        setIsLoggedIn(true);
+      } catch {
+        clearSession(false);
+      }
       return;
     }
 
@@ -172,7 +169,7 @@ export default function Navbar() {
     } catch {
       clearSession(false);
     }
-  };
+  }, [clearSession, setIsLoggedIn]);
 
   const formatRelativeTime = (fecha: string | null): string => {
     if (!fecha) return "";
@@ -194,6 +191,7 @@ export default function Navbar() {
     });
   };
 
+  // Refresca los tiempos relativos cada minuto
   useEffect(() => {
     const interval = setInterval(() => {
       setTick((t) => t + 1);
@@ -202,6 +200,7 @@ export default function Navbar() {
     return () => clearInterval(interval);
   }, []);
 
+  // Restaura la sesión al montar y escucha cambios de sesión/conectividad
   useEffect(() => {
     void restoreSession();
 
@@ -221,14 +220,12 @@ export default function Navbar() {
     return () => {
       window.removeEventListener("storage", handleSessionChange);
       window.removeEventListener("propbol:login", handleSessionChange);
-      window.removeEventListener(
-        "propbol:session-changed",
-        handleSessionChange,
-      );
+      window.removeEventListener("propbol:session-changed", handleSessionChange);
       window.removeEventListener("online", handleOnline);
     };
-  }, []);
+  }, [restoreSession]);
 
+  // Cierra paneles al hacer click fuera de ellos
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -249,6 +246,7 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open, toggleNotifications]);
 
+  // FIX #2: clearSession agregado como dependencia del useEffect
   useEffect(() => {
     const interval = setInterval(() => {
       if (user && isSessionExpired()) {
@@ -258,8 +256,9 @@ export default function Navbar() {
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [user, router]);
+  }, [user, router, clearSession]);
 
+  // Cierra el panel de notificaciones con Escape
   useEffect(() => {
     if (!open) return;
     const handleEsc = (event: KeyboardEvent) => {
@@ -299,7 +298,10 @@ export default function Navbar() {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
         });
-      } catch {}
+      } catch (err) {
+        // FIX #5: Log del error en lugar de catch vacío
+        console.warn("Error al cerrar sesión en el servidor:", err);
+      }
     }
 
     clearSession();
@@ -312,11 +314,9 @@ export default function Navbar() {
       <nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
         <div className="container mx-auto px-4 py-1.5">
           <div className="flex items-center justify-between">
+            {/* FIX #1: Estructura JSX corregida — Logo y NavLinks correctamente anidados */}
             <div className="flex items-center gap-10">
-              {}
-              <div />
-                <Logo />
-              </div>
+              <Logo />
               <NavLinks />
             </div>
 
@@ -407,13 +407,13 @@ export default function Navbar() {
                                   : "bg-stone-100 text-stone-700 hover:bg-stone-200"
                               }`}
                             >
-                              {item === 'todas'
-                                ? 'Todas'
-                                : item === 'leida'
-                                  ? 'Leídas'
-                                  : item === 'no leida'
-                                    ? 'No leídas'
-                                    : 'Archivadas'}
+                              {item === "todas"
+                                ? "Todas"
+                                : item === "leida"
+                                  ? "Leídas"
+                                  : item === "no leida"
+                                    ? "No leídas"
+                                    : "Archivadas"}
                             </button>
                           ))}
                         </div>
@@ -434,9 +434,7 @@ export default function Navbar() {
                               <p className="text-sm text-red-500">{error}</p>
                               <button
                                 type="button"
-                                onClick={() =>
-                                  void refreshNotifications(filter)
-                                }
+                                onClick={() => void refreshNotifications(filter)}
                                 className="mt-3 rounded border border-stone-300 px-3 py-1 text-sm text-stone-700 transition hover:bg-stone-50"
                               >
                                 Reintentar
@@ -456,22 +454,24 @@ export default function Navbar() {
                                   key={notification.id}
                                   role="listitem"
                                   onClick={() => {
-                                    if (notification.status === 'no leida' && isOnline) {
-                                      void markAsRead(notification.id)
+                                    if (notification.status === "no leida" && isOnline) {
+                                      void markAsRead(notification.id);
                                     }
                                   }}
                                   className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
-                                    notification.status === 'no leida' ? 'cursor-pointer bg-amber-50' : 'bg-white'
+                                    notification.status === "no leida"
+                                      ? "cursor-pointer bg-amber-50"
+                                      : "bg-white"
                                   }`}
                                 >
                                   <div className="flex items-start justify-between gap-3">
                                     <div className="min-w-0 flex-1">
                                       <div className="flex items-center gap-2">
-                                        {notification.status === 'no leida' && (
+                                        {notification.status === "no leida" && (
                                           <span className="h-2 w-2 shrink-0 rounded-full bg-amber-500" />
                                         )}
                                         <p className="truncate text-sm font-semibold text-stone-900">
-                                          {notification.title?.trim() || '(Sin título)'}
+                                          {notification.title?.trim() || "(Sin título)"}
                                         </p>
                                       </div>
                                       <p className="mt-1 line-clamp-2 text-sm text-stone-600">
@@ -487,7 +487,10 @@ export default function Navbar() {
                                         </span>
                                       </div>
                                     </div>
-                                    <div className="flex shrink-0 items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                                    <div
+                                      className="flex shrink-0 items-center gap-2"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
                                       {!notification.archivada && (
                                         <button
                                           type="button"
@@ -500,11 +503,7 @@ export default function Navbar() {
                                       )}
                                       <button
                                         type="button"
-                                        onClick={() =>
-                                          void deleteNotification(
-                                            notification.id,
-                                          )
-                                        }
+                                        onClick={() => void deleteNotification(notification.id)}
                                         disabled={!isOnline}
                                         className="text-xs text-red-500 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-40"
                                       >
@@ -539,7 +538,6 @@ export default function Navbar() {
                 )}
               </div>
 
-              {}
               <div className="relative" ref={panelRef}>
                 <UserMenu
                   user={user}
@@ -550,9 +548,9 @@ export default function Navbar() {
                   onOpenLogoutModal={handleOpenLogoutModal}
                 />
               </div>
- 
+
               <button
-              /* HU-05: ID de referencia para el tour guiado - Paso "Menú móvil" (solo visible en mobile) */
+                /* HU-05: ID de referencia para el tour guiado - Paso "Menú móvil" (solo visible en mobile) */
                 id="tour-menu-mobile"
                 type="button"
                 onClick={() => setIsMobileMenuOpen(true)}
