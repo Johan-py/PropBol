@@ -2,9 +2,10 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Archive, Trash2, WifiOff } from 'lucide-react'
+import { Archive, Trash2, Settings, WifiOff } from 'lucide-react'
 import { useNotifications } from '@/hooks/useNotifications'
 import type { NotificationFilter } from '@/types/notification'
+import Link from "next/link";
 
 const filters: NotificationFilter[] = ['todas', 'no leida', 'leida', 'archivada']
 
@@ -117,26 +118,37 @@ export default function NotificationsPage() {
         </button>
       </div>
 
-      <div className="mb-4 flex flex-wrap gap-2">
-        {filters.map((item) => (
-          <button
-            key={item}
-            onClick={() => setFilter(item)}
-            className={`rounded-full px-3 py-1.5 text-sm font-medium transition sm:py-1 ${
-              filter === item
-                ? 'bg-amber-600 text-white'
-                : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-            }`}
-          >
-            {item === 'todas'
-              ? 'Todas'
-              : item === 'leida'
-                ? 'Leídas'
-                : item === 'no leida'
-                  ? 'No leídas'
-                  : 'Archivadas'}
-          </button>
-        ))}
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap gap-2">
+          {filters.map((item) => (
+            <button
+              key={item}
+              onClick={() => setFilter(item)}
+              className={`rounded-full px-3 py-1.5 text-sm font-medium transition sm:py-1 ${
+                filter === item
+                  ? "bg-amber-600 text-white"
+                  : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+              }`}
+            >
+              {item === 'todas'
+                ? 'Todas'
+                : item === 'leida'
+                  ? 'Leídas'
+                  : item === 'no leida'
+                    ? 'No leídas'
+                    : 'Archivadas'}
+            </button>
+          ))}
+        </div>
+
+        <Link
+          href="/configuracion/notificaciones"
+          aria-label="Configuración de notificaciones"
+          className="flex items-center gap-1 rounded-full px-3 py-1.5 text-sm text-stone-500 transition hover:bg-stone-100 hover:text-stone-700"
+        >
+          <Settings className="h-4 w-4" />
+          Configuración
+        </Link>
       </div>
 
       <div
