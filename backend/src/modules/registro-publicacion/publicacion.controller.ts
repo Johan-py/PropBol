@@ -9,6 +9,13 @@ interface AuthenticatedRequest extends Request {
   };
 }
 
+interface AuthenticatedRequest extends Request {
+  user?: {
+    id: number
+    correo: string
+  }
+}
+
 export const createProperty = async (req: Request, res: Response) => {
   const errors = validationResult(req);
 
@@ -45,6 +52,13 @@ export const createProperty = async (req: Request, res: Response) => {
         message: "LIMIT_REACHED",
         mensaje: "Has alcanzado el límite de publicaciones gratuitas.",
       });
+    }
+
+    if (error instanceof Error && error.message === 'LIMIT_REACHED') {
+      return res.status(403).json({
+        message: 'LIMIT_REACHED',
+        mensaje: 'Has alcanzado el límite de publicaciones gratuitas.'
+      })
     }
 
     return res.status(500).json({
