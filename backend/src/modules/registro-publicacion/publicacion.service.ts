@@ -34,16 +34,17 @@ const createProperty = async (data: any, userId: number) => {
       }
     })
 
-    await tx.ubicacionInmueble.create({
-      data: {
-        inmuebleId: inmueble.id,
-        direccion: data.direccion,
-        latitud: data.latitud ?? 0,
-        longitud: data.longitud ?? 0,
-        ciudad: data.ciudad ?? 'Cochabamba',
-        zona: data.zona ?? null
-      }
-    })
+    await tx.$executeRaw`
+      INSERT INTO ubicacion_inmueble ("inmuebleId", "direccion", "latitud", "longitud", "poligono", "modoUbicacion")
+      VALUES (
+        ${inmueble.id},
+        ${data.direccion},
+        ${data.latitud ?? 0},
+        ${data.longitud ?? 0},
+        ${data.poligono ?? null},
+        ${data.modoUbicacion ?? 'PIN'}
+      )
+    `
 
     return { inmueble, publicacion }
   })

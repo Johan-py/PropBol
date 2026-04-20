@@ -168,9 +168,11 @@ model UbicacionInmueble {
   direccion          String?
   ciudad             String?
   zona               String?
+  poligono           String?
+  modoUbicacion      String?
   inmuebleId         Int                @unique @map("inmueble_id")
   ubicacionMaestraId Int?               @map("ubicacion_maestra_id")
-  marcador_mapa      MarcadorMapa[]
+  marcadores         MarcadorMapa[]
   inmueble           Inmueble           @relation(fields: [inmuebleId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   ubicacion_maestra  ubicacion_maestra? @relation(fields: [ubicacionMaestraId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
