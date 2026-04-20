@@ -29,6 +29,8 @@ import {
   logoutController,
   verifyRegisterCodeController,
   getMeController,
+  forgotPasswordController,
+  resetPasswordController,
 } from "./modules/auth/auth.controller.js";
 import { requireAuth } from "./middleware/auth.middleware.js";
 
@@ -101,6 +103,8 @@ app.use("/uploads", express.static(path.resolve("uploads")));
 // RUTAS LEGACY
 // --------------------
 app.use("/api/auth-legacy", authRoutes);
+app.post("/api/auth/forgot-password", forgotPasswordController);
+app.post("/api/auth/reset-password", resetPasswordController);
 app.get("/api/users/:id/publicaciones/free", authMiddleware, (_req, res) => {
   res.json({ restantes: 2 });
 });
