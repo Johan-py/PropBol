@@ -11,7 +11,7 @@ export const HomeBanner = ({ url, title, subtitle }: BannerProps) => {
      // HU-05: ID de referencia para el tour guiado - Paso "Bienvenida"
     // Este contenedor será resaltado como primer paso del tour al ingresar al sistema
     <div
-      id="tour-banner"
+       id="tour-banner"
       className="relative w-full 
       h-[20vh] sm:h-[25vh] md:h-[60vh] 
       min-h-[180px] md:min-h-[300px] 
