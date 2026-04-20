@@ -97,7 +97,7 @@ function BusquedaMapaContent() {
       router.push('/sign-up') // Redirige a la página de registro
       return
     }
-    setIsMisZonasOpen(false)
+    setIsMisZonasOpen(true)
     setIsDrawingMode(true)
   }
 
