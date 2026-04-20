@@ -118,7 +118,7 @@ app.use("/api/publicaciones", publicacionRoutes);
 app.use("/api/publicaciones", multimediaRoutes);
 app.use("/api/perfil", correoverificacionRoutes);
 app.use("/api/perfil/usuario", perfilRoutes);
-app.use('/api/perfil/zonas', zonaRoutes);
+app.use("/api/perfil/zonas", zonaRoutes);
 app.use("/api", router);
 app.use("/api/security", securityRoutes);
 
@@ -141,7 +141,7 @@ app.get("/api/auth/me", getMeController);
 app.get("/api/auth/google/login", StratGoogleLoginController);
 app.get("/api/auth/google/register", StartGoogleRegisterController);
 app.get("/api/auth/google/callback", googleCallbackController);
-
+//comentario
 // --------------------
 // BANNERS & FILTERS
 // --------------------
