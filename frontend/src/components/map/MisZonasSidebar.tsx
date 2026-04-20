@@ -1,6 +1,6 @@
 'use client'
 
-import { ChevronRight, Plus, Pencil, Trash2, Map as MapIcon } from 'lucide-react'
+import { ChevronRight, Plus, Pencil, Trash2, Map as MapIcon, Lock } from 'lucide-react'
 
 export interface ZonaPersonalizada {
   id: string
@@ -99,14 +99,14 @@ export default function MisZonasSidebar({
                           className="p-1.5 text-stone-400 hover:text-orange-500 hover:bg-orange-50 rounded-md transition-colors"
                           title="Editar zona"
                         >
-                          <Pencil size={16} />
+                          {currentUserId && zona.usuarioId && zona.usuarioId !== currentUserId ? <Lock size={16} /> : <Pencil size={16} />}
                         </button>
                         <button
                           onClick={() => { if (currentUserId && zona.usuarioId && zona.usuarioId !== currentUserId) { alert("No puedes eliminar una zona que no es tuya"); return; } onDeleteZone(zona.id); }}
                           className="p-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
                           title="Eliminar zona"
                         >
-                          <Trash2 size={16} />
+                          {currentUserId && zona.usuarioId && zona.usuarioId !== currentUserId ? <Lock size={16} /> : <Trash2 size={16} />}
                         </button>
                       </div>
                     </li>
