@@ -1,6 +1,15 @@
-import { prisma } from '../../lib/prisma.config.js'
+import { prisma } from '../../lib/prisma.client.js'
+import { publicacionesRepository } from '../publicaciones/publicaciones.repository.js'
 
 const createProperty = async (data: any, userId: number) => {
+  const count = await publicacionesRepository.countByUser(userId)
+
+  console.log('📊 Publicaciones actuales del usuario:', count)
+
+  if (count >= 2) {
+    throw new Error('LIMIT_REACHED')
+  }
+
   const result = await prisma.$transaction(async (tx) => {
     const inmueble = await tx.inmueble.create({
       data: {
@@ -25,15 +34,16 @@ const createProperty = async (data: any, userId: number) => {
       }
     })
 
-    await tx.$executeRaw`
-      INSERT INTO ubicacion_inmueble ("inmuebleId", "direccion", "latitud", "longitud")
-      VALUES (
-        ${inmueble.id},
-        ${data.direccion},
-        ${data.latitud ?? 0},
-        ${data.longitud ?? 0}
-      )
-    `
+    await tx.ubicacionInmueble.create({
+      data: {
+        inmuebleId: inmueble.id,
+        direccion: data.direccion,
+        latitud: data.latitud ?? 0,
+        longitud: data.longitud ?? 0,
+        ciudad: data.ciudad ?? 'Cochabamba',
+        zona: data.zona ?? null
+      }
+    })
 
     return { inmueble, publicacion }
   })
