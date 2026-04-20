@@ -5,14 +5,14 @@ export const createParametroPersonalizadoRules = [
     .trim()
     .notEmpty()
     .withMessage('El nombre es obligatorio')
-    .isLength({ min: 2, max: 255 })
-    .withMessage('El nombre debe tener entre 2 y 255 caracteres'),
+    .isLength({ min: 5, max: 200 })
+    .withMessage('El nombre debe tener entre 2 y 200 caracteres'),
 
   body('descripcion')
     .optional({ nullable: true })
     .trim()
-    .isLength({ max: 500 })
-    .withMessage('La descripción no puede exceder 500 caracteres')
+    .isLength({ min: 10, max: 300 })
+    .withMessage('La descripción no puede exceder 300 caracteres')
 ]
 
 export const replacePublicationParametersRules = [
