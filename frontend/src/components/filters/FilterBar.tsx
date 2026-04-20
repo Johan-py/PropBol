@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { CapacidadButton } from '../busqueda/capacidad/CapacidadButton'
 import {
   Home,
   Search as SearchIcon,
@@ -191,12 +192,12 @@ options={['Casa', 'Departamento', 'Terreno', 'Cuarto', 'Espacios', 'Cementerio']
         {/* 🚀 FIX AISLAMIENTO DE SCROLL: 
             Solo estos botones tienen overflow-x-auto. Así los menús de la izquierda no se cortan. */}
         {variant === 'map' && (
-          <div className="flex items-center gap-3 flex-1 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="flex items-center gap-3 flex-1 overflow-visible pb-1">
             <div className="shrink-0">
               <MockFilterBtn icon={DollarSign} text="Precio" onClick={onOpenPriceFilter} />
             </div>
             <div className="shrink-0">
-              <MockFilterBtn icon={Users} text="Capacidad" />
+              <CapacidadButton variant={variant} />
             </div>
             <div className="shrink-0">
               <MockFilterBtn icon={Maximize} text="Metros" />
