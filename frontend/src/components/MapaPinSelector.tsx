@@ -77,16 +77,40 @@ export default function MapaPinSelector({
       />
       <MapEventos modoPinActivo={modoPinActivo} onPinChange={onPinChange} />
       {pinCoords && (
-        <Marker
-          position={[pinCoords.lat, pinCoords.lng]}
-          icon={pinIcon}
-          draggable
-          eventHandlers={{
-            dragend(e) {
-              const pos = (e.target as L.Marker).getLatLng();
-              onPinChange({ lat: pos.lat, lng: pos.lng });
-            },
-          }}
+  <Marker
+    position={[pinCoords.lat, pinCoords.lng]}
+    icon={pinIcon}
+    draggable
+    eventHandlers={{
+      drag(e) {
+        const marker = e.target as L.Marker;
+        const map = (marker as any)._map;
+
+        const bounds = map.getBounds();
+        const pos = marker.getLatLng();
+
+        const nuevaLat = Math.max(
+          bounds.getSouth(),
+          Math.min(bounds.getNorth(), pos.lat)
+        );
+
+        const nuevaLng = Math.max(
+          bounds.getWest(),
+          Math.min(bounds.getEast(), pos.lng)
+        );
+
+        marker.setLatLng([nuevaLat, nuevaLng]);
+      },
+
+      dragend(e) {
+        const pos = (e.target as L.Marker).getLatLng();
+
+        onPinChange({
+          lat: pos.lat,
+          lng: pos.lng,
+        });
+      },
+    }}
         />
       )}
     </MapContainer>
