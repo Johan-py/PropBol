@@ -5,6 +5,7 @@ import { ChevronRight, Plus, Pencil, Trash2, Map as MapIcon } from 'lucide-react
 export interface ZonaPersonalizada {
   id: string
   nombre: string
+  usuarioId?: number
 }
 
 interface MisZonasSidebarProps {
@@ -16,6 +17,7 @@ interface MisZonasSidebarProps {
   onEditZone: (id: string) => void
   onDeleteZone: (id: string) => void
   onZoneSelect?: (id: number) => void
+  currentUserId?: number
 }
 
 // Asegúrate de que tenga "export default function"
@@ -27,6 +29,7 @@ export default function MisZonasSidebar({
   onAddZone,
   onEditZone,
   onZoneSelect,
+  currentUserId,
   onDeleteZone
 }: MisZonasSidebarProps) {
   return (
@@ -92,14 +95,14 @@ export default function MisZonasSidebar({
                       </span>
                       <div className="flex items-center gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
-                          onClick={() => onEditZone(zona.id)}
+                          onClick={() => { if (currentUserId && zona.usuarioId && zona.usuarioId !== currentUserId) { alert("No puedes editar una zona que no es tuya"); return; } onEditZone(zona.id); }}
                           className="p-1.5 text-stone-400 hover:text-orange-500 hover:bg-orange-50 rounded-md transition-colors"
                           title="Editar zona"
                         >
                           <Pencil size={16} />
                         </button>
                         <button
-                          onClick={() => onDeleteZone(zona.id)}
+                          onClick={() => { if (currentUserId && zona.usuarioId && zona.usuarioId !== currentUserId) { alert("No puedes eliminar una zona que no es tuya"); return; } onDeleteZone(zona.id); }}
                           className="p-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
                           title="Eliminar zona"
                         >
