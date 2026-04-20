@@ -6,14 +6,6 @@ datasource db {
   provider = "postgresql"
 }
 
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model amenidad {
-  id                Int                 @id @default(autoincrement())
-  nombre            String              @unique
-  inmueble_amenidad inmueble_amenidad[]
-}
-
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model audit_log {
   id          Int       @default(autoincrement())
@@ -47,17 +39,6 @@ model banner_home {
   subtitulo      String?
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model barrio {
-  id                 Int                  @id @default(autoincrement())
-  nombre             String
-  zona_id            Int
-  zona               zona                 @relation(fields: [zona_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  ubicacion_inmueble ubicacion_inmueble[]
-
-  @@unique([nombre, zona_id])
-}
-
 model bitacora_pagos {
   id               Int               @id @default(autoincrement())
   id_usuario       Int?
@@ -73,7 +54,6 @@ model bitacora_pagos {
   @@index([fecha_evento], map: "idx_bitacora_fecha")
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model blog {
   id                Int            @id @default(autoincrement())
   titulo            String
@@ -81,29 +61,25 @@ model blog {
   imagen            String?
   estado            estado_blog
   eliminado         Boolean?       @default(false)
-  fecha_creacion    DateTime       @default(now()) @db.Timestamp(6)
+  fecha_creacion    DateTime?      @default(now()) @db.Timestamp(6)
   fecha_publicacion DateTime?      @db.Timestamp(6)
   usuario_id        Int
   categoria_id      Int
-  categoria_blog    categoria_blog @relation(fields: [categoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  usuario           usuario        @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  categoria_blog    categoria_blog @relation(fields: [categoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "blog_categoria_fk")
+  usuario           usuario        @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "blog_usuario_fk")
   blog_rechazo      blog_rechazo[]
   comentario        comentario[]
 
-  @@index([categoria_id])
   @@index([estado])
   @@index([usuario_id], map: "blog_usuario_idx")
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model blog_rechazo {
-  id         Int      @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   comentario String
-  fecha      DateTime @default(now()) @db.Timestamp(6)
+  fecha      DateTime? @default(now()) @db.Timestamp(6)
   blog_id    Int
-  blog       blog     @relation(fields: [blog_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@index([blog_id])
+  blog       blog      @relation(fields: [blog_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "blog_rechazo_blog_fk")
 }
 
 model cambio_email {
@@ -115,11 +91,8 @@ model cambio_email {
   completado_en DateTime? @db.Timestamp(6)
   usuario_id    Int
   usuario       usuario   @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@index([usuario_id])
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model categoria_blog {
   id     Int    @id @default(autoincrement())
   nombre String @unique @db.VarChar(100)
@@ -157,34 +130,30 @@ model codigo_2fa {
   @@index([usuarioId, creadoEn], map: "codigo_2fa_usuario_fecha_idx")
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model comentario {
   id                  Int               @id @default(autoincrement())
   contenido           String
-  fecha_creacion      DateTime          @default(now()) @db.Timestamp(6)
+  fecha_creacion      DateTime?         @default(now()) @db.Timestamp(6)
   usuario_id          Int
   blog_id             Int
   comentario_padre_id Int?
-  blog                blog              @relation(fields: [blog_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  comentario          comentario?       @relation("comentarioTocomentario", fields: [comentario_padre_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "comentario_padre_fkey")
+  blog                blog              @relation(fields: [blog_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "comentario_blog_fk")
+  comentario          comentario?       @relation("comentarioTocomentario", fields: [comentario_padre_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "comentario_padre_fk")
   other_comentario    comentario[]      @relation("comentarioTocomentario")
-  usuario             usuario           @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  usuario             usuario           @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "comentario_usuario_fk")
   comentario_like     comentario_like[]
 
   @@index([blog_id], map: "comentario_blog_idx")
-  @@index([usuario_id])
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model comentario_like {
   id            Int        @id @default(autoincrement())
   usuario_id    Int
   comentario_id Int
-  comentario    comentario @relation(fields: [comentario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  usuario       usuario    @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  comentario    comentario @relation(fields: [comentario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "comentario_like_comentario_fk")
+  usuario       usuario    @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "comentario_like_usuario_fk")
 
   @@unique([usuario_id, comentario_id], map: "comentario_like_unique")
-  @@index([comentario_id])
 }
 
 model comparacion {
@@ -211,13 +180,6 @@ model cupon {
   transacciones   transacciones[]
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model departamento {
-  id        Int         @id @default(autoincrement())
-  nombre    String      @unique
-  provincia provincia[]
-}
-
 model detalle_comparacion {
   id            Int         @id @default(autoincrement())
   comparacionId Int
@@ -236,7 +198,6 @@ model detalle_grupo {
   marcador_mapa    marcador_mapa    @relation(fields: [marcador_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@id([grupo_id, marcador_id])
-  @@index([marcador_id])
 }
 
 model etiqueta {
@@ -305,7 +266,6 @@ model inmueble {
   detalle_comparacion detalle_comparacion[]
   favorito            favorito[]
   usuario             usuario               @relation(fields: [propietario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "inmueble_propietario_fk")
-  inmueble_amenidad   inmueble_amenidad[]
   inmueble_etiqueta   inmueble_etiqueta[]
   marcador_mapa       marcador_mapa[]
   propiedad_vista     propiedad_vista[]
@@ -315,17 +275,6 @@ model inmueble {
   @@index([estado], map: "idx_inmueble_estado")
   @@index([propietario_id], map: "idx_inmueble_propietario")
   @@index([tipo_accion], map: "idx_inmueble_tipo_accion")
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model inmueble_amenidad {
-  inmueble_id Int
-  amenidad_id Int
-  amenidad    amenidad @relation(fields: [amenidad_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  inmueble    inmueble @relation(fields: [inmueble_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@id([inmueble_id, amenidad_id])
-  @@index([amenidad_id])
 }
 
 model inmueble_etiqueta {
@@ -375,17 +324,6 @@ model multimedia {
   @@index([publicacion_id], map: "idx_multimedia_publicacion")
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model municipio {
-  id           Int       @id @default(autoincrement())
-  nombre       String
-  provincia_id Int
-  provincia    provincia @relation(fields: [provincia_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  zona         zona[]
-
-  @@unique([nombre, provincia_id])
-}
-
 model notificacion {
   id            Int       @id @default(autoincrement())
   titulo        String
@@ -396,7 +334,7 @@ model notificacion {
   eliminada     Boolean   @default(false)
   archivada     Boolean   @default(false)
   usuarioId     Int
-  usuario       usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  usuario       usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "notificacion_usuario_id_fkey")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -439,17 +377,6 @@ model propiedad_vista {
 
   @@unique([usuarioId, inmuebleId])
   @@index([usuarioId, vistaEn])
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model provincia {
-  id              Int          @id @default(autoincrement())
-  nombre          String
-  departamento_id Int
-  municipio       municipio[]
-  departamento    departamento @relation(fields: [departamento_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@unique([nombre, departamento_id])
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -502,22 +429,19 @@ model recuperacion_password {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model rol {
-  id                          Int       @id @default(autoincrement())
-  nombre                      RolNombre @unique
-  usuario_usuario_rolIdTorol  usuario[] @relation("usuario_rolIdTorol")
-  usuario_usuario_rol_idTorol usuario[] @relation("usuario_rol_idTorol")
+  id      Int       @id @default(autoincrement())
+  nombre  RolNombre @unique
+  usuario usuario[]
 }
 
 model sesion {
-  id               Int       @id @default(autoincrement())
-  token            String    @unique
-  fechaInicio      DateTime? @default(now()) @db.Timestamp(6)
-  fechaExpiracion  DateTime  @db.Timestamp(6)
-  estado           Boolean?  @default(true)
-  usuarioId        Int
-  fecha_inicio     DateTime? @default(now()) @db.Timestamp(6)
-  fecha_expiracion DateTime? @db.Timestamp(6)
-  usuario          usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id              Int       @id @default(autoincrement())
+  token           String    @unique
+  fechaInicio     DateTime? @default(now()) @db.Timestamp(6)
+  fechaExpiracion DateTime  @db.Timestamp(6)
+  estado          Boolean?  @default(true)
+  usuarioId       Int
+  usuario         usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "sesion_usuario_id_fkey")
 }
 
 model sesion_mapa {
@@ -611,7 +535,6 @@ model ubicacion_inmueble {
   ubicacion_maestra_id Int?
   barrio_id            Int?
   marcador_mapa        marcador_mapa[]
-  barrio               barrio?            @relation(fields: [barrio_id], references: [id], onUpdate: NoAction)
   inmueble             inmueble           @relation(fields: [inmueble_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "ubicacion_inmueble_fk")
   ubicacion_maestra    ubicacion_maestra? @relation(fields: [ubicacion_maestra_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
@@ -668,9 +591,6 @@ model usuario {
   fecha_nacimiento                      DateTime?               @db.Timestamp(6)
   telemetria_compartida                 Boolean?                @default(false)
   zona_conexion                         String?                 @db.VarChar(100)
-  created_at                            DateTime?               @default(now()) @db.Timestamp(6)
-  updated_at                            DateTime?               @default(now()) @db.Timestamp(6)
-  rol_id                                Int?
   autenticacion_social                  autenticacion_social[]
   bitacora_pagos                        bitacora_pagos[]
   blog                                  blog[]
@@ -693,8 +613,7 @@ model usuario {
   telefono_telefono_usuarioIdTousuario  telefono[]              @relation("telefono_usuarioIdTousuario")
   telefono_telefono_usuario_idTousuario telefono[]              @relation("telefono_usuario_idTousuario")
   transacciones                         transacciones[]
-  rol_usuario_rolIdTorol                rol?                    @relation("usuario_rolIdTorol", fields: [rolId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  rol_usuario_rol_idTorol               rol?                    @relation("usuario_rol_idTorol", fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  rol                                   rol?                    @relation(fields: [rolId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   verificacion_pago                     verificacion_pago[]
   visitor                               visitor[]
   zona_usuario                          zona_usuario[]
@@ -703,7 +622,6 @@ model usuario {
   @@index([rolId], map: "idx_usuario_rol")
   @@index([rolId], map: "idx_usuario_rol_id")
   @@index([correo])
-  @@index([rol_id])
 }
 
 model verificacion_pago {
@@ -723,17 +641,6 @@ model visitor {
   fecha_visita DateTime? @default(now()) @db.Timestamp(6)
   usuario_id   Int?
   usuario      usuario?  @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model zona {
-  id           Int       @id @default(autoincrement())
-  nombre       String
-  municipio_id Int
-  barrio       barrio[]
-  municipio    municipio @relation(fields: [municipio_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "zona_geografica_municipio_id_fkey")
-
-  @@unique([nombre, municipio_id], map: "zona_geografica_nombre_municipio_id_key")
 }
 
 model zona_predefinida {
@@ -832,9 +739,9 @@ enum categoria {
 
 enum estado_blog {
   BORRADOR
+  PENDIENTE
   PUBLICADO
   RECHAZADO
-  PENDIENTE
 }
 
 enum estado_inmueble {
@@ -856,13 +763,6 @@ enum genero {
   FEMENINO
   OTRO
   PREFIERO_NO_DECIR
-}
-
-enum rolnombre {
-  ADMIN
-  PROPIETARIO
-  AGENTE
-  VISITANTE
 }
 
 enum tipo_accion {
