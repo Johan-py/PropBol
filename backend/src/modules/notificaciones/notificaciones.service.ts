@@ -181,12 +181,12 @@ export const createNotificationService = async ({
   emitNotificationEvent(user.id, 'created', notification.id)
 
   try {
-    if (user.correo) {
-      await sendNotificationEmail({
-        emailDestino: user.correo,
-        asunto: notification.titulo,
-        mensajeHtml: `<p>${notification.mensaje}</p>`,
-        mensajeTexto: notification.mensaje
+    if (user.correo && user.notificacion_email === true) {
+        await sendNotificationEmail({
+          emailDestino: user.correo,
+          asunto: notification.titulo,
+          mensajeHtml: `<p>${notification.mensaje}</p>`,
+          mensajeTexto: notification.mensaje
       })
     }
   } catch (error) {
