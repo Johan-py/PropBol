@@ -1,6 +1,7 @@
 "use client";
 
 import BlogCard from "@/components/blog/BlogCard";
+import MyRecentBlogsPanel from "@/components/blog/MyRecentBlogsPanel";
 
 type Blog = {
   id: string;
@@ -60,8 +61,11 @@ export default function BlogsPage() {
     <div className="bg-[#f7f5f2] min-h-screen">
       <div className="max-w-7xl mx-auto px-10 py-16">
 
+        {/* Panel de blogs recientes — siempre visible arriba del título */}
+        <MyRecentBlogsPanel />
+
         {/* 🔥 HEADER */}
-        <div className="mb-20">
+        <div className="mb-20 mt-10">
           <span className="text-xs uppercase tracking-widest text-gray-500">
             Blog
           </span>
