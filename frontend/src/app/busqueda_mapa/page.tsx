@@ -99,6 +99,7 @@ function BusquedaMapaContent() {
     }
     setIsMisZonasOpen(true)
     setIsDrawingMode(true)
+    setIsSidebarOpen(false)
   }
 
   const resetDrawing = () => {
