@@ -49,6 +49,7 @@ import {
 import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
 import publicacionRoutes from './modules/publicacion/publicacion.routes.js'
 import router from './modules/registro-publicacion/publicacion.routes.js'
+import parametrosRoutes from './modules/parametros-publicacion/parametros.routes.js'
 
 // --------------------
 // LEGACY
@@ -64,7 +65,7 @@ import { verifyEmailTransport } from './lib/email.service.js'
 
 // FAVORITES
 
-import favoritesRoutes from "./modules/favorites/favorites.routes.js";
+import favoritesRoutes from './modules/favorites/favorites.routes.js'
 // --------------------
 // SERVER
 // --------------------
@@ -116,7 +117,8 @@ app.use('/api/publicaciones', multimediaRoutes)
 app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
 app.use('/api', router)
-app.use("/api/favorites", favoritesRoutes);
+app.use('/api', parametrosRoutes)
+app.use('/api/favorites', favoritesRoutes)
 // --------------------
 // MOCK / TEST
 // --------------------
