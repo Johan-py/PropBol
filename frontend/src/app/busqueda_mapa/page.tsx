@@ -29,6 +29,7 @@ import EmptyState from '@/components/galeria/EmptyState'
 import MapaListadoPaginacion, { PageSize } from "@/components/galeria/MapaListadoPaginacion";
 import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenamiento'
 import { ErrorState } from '@/components/ClusterSidebar'
+import SuperficieFilterSidebar from '@/components/filters/SuperficieFilterSidebar'
 
 // Carga dinámica del mapa (sin SSR)
 const MapView = nextDynamic(() => import('./MapView'), {
@@ -85,6 +86,7 @@ function BusquedaMapaContent() {
   const [sheetState, setSheetState] = useState<SheetState>('peek')
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
   const [isMounted, setIsMounted] = useState(false)
+  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie'>('results')
 
   // --- INICIO ESTADOS HU8 ---
   const [isDrawingMode, setIsDrawingMode] = useState(false)
@@ -352,7 +354,12 @@ function BusquedaMapaContent() {
       return (
         <div className="flex flex-col bg-white overflow-hidden" style={{ height: '100dvh' }}>
           <div className="shrink-0" style={{ zIndex: 1002, position: 'relative' }}>
-            <FilterBar variant="map" onSearch={(f) => console.log('🔍 Filtros:', f)} />
+            <FilterBar variant="map" onSearch={(f) => console.log('🔍 Filtros:', f)}
+            onOpenSuperficieFilter={() => {
+             setIsSidebarOpen(true)
+             setActiveSidebarView('superficie')
+              }} 
+             />
           </div>
           <div className="flex flex-1 overflow-hidden">
             <div className="flex-1 relative">
@@ -410,7 +417,11 @@ function BusquedaMapaContent() {
       <div className="flex flex-col overflow-hidden bg-white" style={{ height: '100dvh' }}>
         <div className="shrink-0 overflow-x-auto" style={{ zIndex: 1002, position: 'relative' }}>
           <div className="min-w-max">
-            <FilterBar variant="map" onSearch={(f) => console.log('🔍 Filtros:', f)} />
+            <FilterBar variant="map" onSearch={(f) => console.log('🔍 Filtros:', f)}
+            onOpenSuperficieFilter={() => {
+            setIsSidebarOpen(true)
+             setActiveSidebarView('superficie')
+            }} />
           </div>
         </div>
         <div className="flex-1 relative overflow-hidden">
@@ -600,6 +611,10 @@ function BusquedaMapaContent() {
         onSearch={(nuevosFiltros) => {
           console.log('🔍 Buscando con filtros:', nuevosFiltros)
         }}
+        onOpenSuperficieFilter={() => {
+         setIsSidebarOpen(true)
+         setActiveSidebarView('superficie')
+         }}
       />
 
       <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200">
@@ -609,7 +624,7 @@ function BusquedaMapaContent() {
             isSidebarOpen ? 'w-full md:w-[450px] h-[65dvh] md:h-full' : 'w-0'
           }`}
         >
-          {isSidebarOpen && (
+          {isSidebarOpen && activeSidebarView === 'results' && (
             <div className="flex flex-col h-full min-h-0">
               <div className="p-4 bg-white shrink-0">
                 <div className="flex justify-between items-center mb-4">
@@ -774,6 +789,11 @@ function BusquedaMapaContent() {
               </div>
               {renderListPaginationFooter()}
               </div>
+            </div>
+          )}
+          {isSidebarOpen && activeSidebarView === 'superficie' && (
+            <div className="flex flex-col h-full min-h-0 bg-white">
+              <SuperficieFilterSidebar onClose={() => setActiveSidebarView('results')} />
             </div>
           )}
         </aside>
