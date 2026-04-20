@@ -13,6 +13,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const USER_STORAGE_KEY = "propbol_user";
 const SESSION_EXPIRES_KEY = "propbol_session_expires";
 const TOKEN_STORAGE_KEY = "token";
+const SESSION_DURATION_MS = 60 * 60 * 1000;
 
 function SessionManager() {
   const [showWarning, setShowWarning] = useState(false);
@@ -20,7 +21,6 @@ function SessionManager() {
   const handleWarning = useCallback(() => {
     setShowWarning(true);
   }, []);
-
   const handleLogout = useCallback(() => {
     setShowWarning(false);
   }, []);
@@ -30,7 +30,6 @@ function SessionManager() {
     onLogout: handleLogout,
   });
 
-  // ✅ Polling global — detecta cuenta desactivada en todos los tabs/dispositivos
   useAccountStatus();
 
   if (!showWarning) return null;
@@ -40,7 +39,6 @@ function SessionManager() {
       <p className="text-sm font-medium text-gray-800">
         Tu sesión cerrará en 1 minuto por inactividad.
       </p>
-
       <button
         onClick={() => {
           setShowWarning(false);
@@ -67,35 +65,34 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const validateSession = async () => {
       const token = localStorage.getItem(TOKEN_STORAGE_KEY);
-      const expiresAt = localStorage.getItem(SESSION_EXPIRES_KEY);
 
-      if (!token || !expiresAt) {
+      if (!token) {
         clearSession();
         window.dispatchEvent(new Event("propbol:session-changed"));
         return;
       }
 
-      if (Date.now() > Number(expiresAt)) {
-        clearSession();
-        window.dispatchEvent(new Event("propbol:session-changed"));
-        return;
-      }
+      if (!navigator.onLine) return;
 
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
+
         const response = await fetch(`${API_URL}/api/auth/me`, {
           method: "GET",
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
+          headers: { authorization: `Bearer ${token}` },
+          signal: controller.signal,
         });
 
-        // ✅ 403 = cuenta desactivada — limpiar sesión y dejar que
-        // useAccountStatus haga el redirect al home
-        if (!response.ok) {
+        clearTimeout(timeoutId);
+
+        if (response.status === 403 || response.status === 401) {
           clearSession();
           window.dispatchEvent(new Event("propbol:session-changed"));
           return;
         }
+
+        if (!response.ok) return;
 
         const data = await response.json();
 
@@ -104,6 +101,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             ? `${data.user.nombre} ${data.user.apellido}`
             : (data.user?.correo ?? "");
 
+        localStorage.setItem(
+          SESSION_EXPIRES_KEY,
+          String(Date.now() + SESSION_DURATION_MS),
+        );
         localStorage.setItem(
           USER_STORAGE_KEY,
           JSON.stringify({
@@ -114,17 +115,14 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
         window.dispatchEvent(new Event("propbol:session-changed"));
       } catch {
-        clearSession();
-        window.dispatchEvent(new Event("propbol:session-changed"));
+        // Timeout o error de red — NO limpiar sesión
       }
     };
 
     validateSession();
-  }, [pathname, API_URL]);
+  }, [pathname]);
 
-  if (isAuthRoute) {
-    return <>{children}</>;
-  }
+  if (isAuthRoute) return <>{children}</>;
 
   return (
     <>
