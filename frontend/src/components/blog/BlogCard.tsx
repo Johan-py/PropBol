@@ -4,10 +4,11 @@ type BlogCardProps = {
   id: string;
   title: string;
   excerpt: string;
-  imageUrl?: string;
+  imageUrl: string;
   category: string;
-  author: string;
-  date: string;
+  categoryLabel?: string;
+  authorName: string;
+  publishedAt: string;
   onClick?: (id: string) => void;
 };
 
@@ -17,16 +18,19 @@ export default function BlogCard({
   excerpt,
   imageUrl,
   category,
-  author,
-  date,
+  categoryLabel,
+  authorName,
+  publishedAt,
   onClick,
 }: BlogCardProps) {
   const handleClick = () => {
     onClick?.(id);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-    if (e.key === "Enter") handleClick();
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+    if (event.key === "Enter") {
+      handleClick();
+    }
   };
 
   return (
@@ -38,48 +42,55 @@ export default function BlogCard({
       aria-label={onClick ? `Abrir blog: ${title}` : undefined}
       className={`
         group
-        bg-white
-        rounded-2xl
-        border border-gray-200
-        shadow-sm
         overflow-hidden
-        transition-all duration-300
+        rounded-[28px]
+        border
+        border-stone-200
+        bg-white
+        shadow-[0_16px_60px_-40px_rgba(41,37,36,0.45)]
+        transition-all
+        duration-300
         ${
           onClick
-            ? "cursor-pointer hover:shadow-lg hover:-translate-y-1 hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            ? "cursor-pointer hover:-translate-y-1 hover:border-stone-300 hover:shadow-[0_20px_70px_-38px_rgba(41,37,36,0.5)] focus:outline-none focus:ring-2 focus:ring-amber-500"
             : ""
         }
       `}
     >
-      {/* Imagen */}
       <div className="overflow-hidden">
         <img
-          src={imageUrl || "/placeholder.png"}
+          src={imageUrl}
           alt={title}
-          className="w-full h-44 object-cover transition-transform duration-300 group-hover:scale-105"
+          className="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </div>
 
-      <div className="p-4">
+      <div className="space-y-4 p-5">
         {/* Categoría */}
-        <span className="text-xs font-semibold text-orange-500 uppercase tracking-wide">
-          {category}
-        </span>
+        <div className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
+          <span className="text-amber-700">
+            {categoryLabel ?? category}
+          </span>
+        </div>
 
         {/* Título */}
-        <h2 className="text-base font-bold mt-1 line-clamp-2">
+        <h2 className="font-heading line-clamp-2 text-xl font-bold leading-snug text-stone-900">
           {title}
         </h2>
 
         {/* Resumen */}
-        <p className="text-sm text-gray-600 mt-2 line-clamp-3">
+        <p className="line-clamp-3 text-sm leading-6 text-stone-600">
           {excerpt}
         </p>
 
         {/* Footer */}
-        <div className="flex justify-between items-center mt-4 text-xs text-gray-500">
-          <span>{author}</span>
-          <span>{new Date(date).toLocaleDateString()}</span>
+        <div className="flex items-center justify-between pt-2 text-xs text-stone-500">
+          <span className="font-semibold uppercase tracking-[0.16em] text-stone-700">
+            {authorName}
+          </span>
+          <span>
+            {new Date(publishedAt).toLocaleDateString()}
+          </span>
         </div>
       </div>
     </article>
