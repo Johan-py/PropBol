@@ -8,7 +8,11 @@ interface BannerProps {
 //Se mantenio la version anterior del banner desktop, pero la responsive de mantuvo del actual
 export const HomeBanner = ({ url, title, subtitle }: BannerProps) => {
   return (
-    <div className="relative w-full 
+     // HU-05: ID de referencia para el tour guiado - Paso "Bienvenida"
+    // Este contenedor será resaltado como primer paso del tour al ingresar al sistema
+    <div
+      id="tour-banner"
+      className="relative w-full 
       h-[20vh] sm:h-[25vh] md:h-[60vh] 
       min-h-[180px] md:min-h-[300px] 
       bg-slate-100 overflow-hidden flex items-center justify-center"
