@@ -132,14 +132,14 @@ export default function PasswordSection() {
   setIsLoading(true);
 
   try {
-    const response = await fetch(`${API_URL}/api/perfil/verificar-password`, {
+    const response = await fetch(`${API_URL}/api/perfil/cambiar-password`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        passwordActual: passwordActual.trim(),
+        nuevaPassword: nuevaPassword.trim(),
       }),
     });
 
@@ -166,9 +166,12 @@ export default function PasswordSection() {
     setBloqueadoHasta(null);
     localStorage.removeItem("cambio_password_intentos");
     localStorage.removeItem("cambio_password_bloqueado_hasta");
-    setSuccess("La contraseña actual es correcta");
+    setSuccess("Contraseña actualizada correctamente");
+    setPasswordActual("");
+    setNuevaPassword("");
+    setConfirmarPassword("");
   } catch (error: any) {
-    setError(error.message || "Error al verificar la contraseña actual");
+    setError(error.message || "Error al actualizar la contraseña");
   } finally {
     setIsLoading(false);
   }

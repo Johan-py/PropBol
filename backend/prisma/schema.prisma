@@ -39,7 +39,7 @@ model Usuario {
   zonaConexion                          String?                 @db.VarChar(100)
   notificacionWhatsapp                  Boolean?                @default(false)
   rolId                                 Int?
-  notificacion_email                    Boolean?                @default(true)
+  notificacionEmail                     Boolean?                @default(true)
   notificacion_whatsapp                 Boolean?                @default(false)
   fecha_registro                        DateTime?               @default(now()) @db.Timestamp(6)
   updatedAt                             DateTime?               @updatedAt @db.Timestamp(6)
@@ -49,8 +49,11 @@ model Usuario {
   zona_conexion                         String?                 @db.VarChar(100)
   autenticacion_social                  autenticacion_social[]
   bitacora_pagos                        bitacora_pagos[]
+  blog                                  blog[]
   cambio_email                          CambioEmail[]
   codigo_2fa                            codigo_2fa[]
+  comentario                            comentario[]
+  comentario_like                       comentario_like[]
   comparacion                           comparacion[]
   favorito                              favorito[]
   historial_busqueda                    historial_busqueda[]
@@ -74,6 +77,7 @@ model Usuario {
   @@index([correo], map: "idx_usuario_correo")
   @@index([rolId], map: "idx_usuario_rol")
   @@index([rolId], map: "idx_usuario_rol_id")
+  @@index([correo])
   @@map("usuario")
 }
 
@@ -187,6 +191,7 @@ model UbicacionInmueble {
   ubicacion_maestra  ubicacion_maestra? @relation(fields: [ubicacionMaestraId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([ubicacionMaestraId], map: "idx_ubicacion_maestra")
+  @@index([ubicacionMaestraId])
   @@map("ubicacion_inmueble")
 }
 
@@ -625,6 +630,66 @@ model spatial_ref_sys {
   proj4text String? @db.VarChar(2048)
 }
 
+model blog {
+  id                Int            @id @default(autoincrement())
+  titulo            String
+  contenido         String
+  imagen            String?
+  estado            estado_blog
+  eliminado         Boolean?       @default(false)
+  fecha_creacion    DateTime?      @default(now()) @db.Timestamp(6)
+  fecha_publicacion DateTime?      @db.Timestamp(6)
+  usuario_id        Int
+  categoria_id      Int
+  categoria_blog    categoria_blog @relation(fields: [categoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "blog_categoria_fk")
+  usuario           Usuario        @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "blog_usuario_fk")
+  blog_rechazo      blog_rechazo[]
+  comentario        comentario[]
+
+  @@index([estado])
+  @@index([usuario_id], map: "blog_usuario_idx")
+}
+
+model blog_rechazo {
+  id         Int       @id @default(autoincrement())
+  comentario String
+  fecha      DateTime? @default(now()) @db.Timestamp(6)
+  blog_id    Int
+  blog       blog      @relation(fields: [blog_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "blog_rechazo_blog_fk")
+}
+
+model categoria_blog {
+  id     Int    @id @default(autoincrement())
+  nombre String @unique @db.VarChar(100)
+  blog   blog[]
+}
+
+model comentario {
+  id                  Int               @id @default(autoincrement())
+  contenido           String
+  fecha_creacion      DateTime?         @default(now()) @db.Timestamp(6)
+  usuario_id          Int
+  blog_id             Int
+  comentario_padre_id Int?
+  blog                blog              @relation(fields: [blog_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "comentario_blog_fk")
+  comentario          comentario?       @relation("comentarioTocomentario", fields: [comentario_padre_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "comentario_padre_fk")
+  other_comentario    comentario[]      @relation("comentarioTocomentario")
+  usuario             Usuario           @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "comentario_usuario_fk")
+  comentario_like     comentario_like[]
+
+  @@index([blog_id], map: "comentario_blog_idx")
+}
+
+model comentario_like {
+  id            Int        @id @default(autoincrement())
+  usuario_id    Int
+  comentario_id Int
+  comentario    comentario @relation(fields: [comentario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "comentario_like_comentario_fk")
+  usuario       Usuario    @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "comentario_like_usuario_fk")
+
+  @@unique([usuario_id, comentario_id], map: "comentario_like_unique")
+}
+
 enum Genero {
   MASCULINO
   FEMENINO
@@ -773,4 +838,11 @@ enum public_TipoMultimedia {
   VIDEO
 
   @@map("TipoMultimedia")
+}
+
+enum estado_blog {
+  BORRADOR
+  PENDIENTE
+  PUBLICADO
+  RECHAZADO
 }
