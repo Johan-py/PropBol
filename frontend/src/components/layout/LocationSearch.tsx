@@ -1,32 +1,32 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect, useRef } from 'react'
-import Image from 'next/image'
-import { MapPin, Search, Loader2, X, History } from 'lucide-react'
-import { usePopularidad } from '@/hooks/usePopularidad'
-import { useSearchFilters } from '@/hooks/useSearchFilters'
+import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import { MapPin, Search, Loader2, X, History } from "lucide-react";
+import { usePopularidad } from "@/hooks/usePopularidad";
+import { useSearchFilters } from "@/hooks/useSearchFilters";
 
 type Location = {
-  id: string | number
-  nombre: string
-  departamento: string
-}
+  id: string | number;
+  nombre: string;
+  departamento: string;
+};
 
 type LocationSearchProps = {
-  value: string
-  onChange: (value: string) => void
-}
+  value: string;
+  onChange: (value: string) => void;
+};
 
 export function LocationSearch({ value, onChange }: LocationSearchProps) {
-  const [suggestions, setSuggestions] = useState<Location[]>([])
-  const [isOpen, setIsOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [history, setHistory] = useState<string[]>([])
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [suggestions, setSuggestions] = useState<Location[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [history, setHistory] = useState<string[]>([]);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({})
 
-  const { updateFilters } = useSearchFilters()
-  const { registrarConsulta } = usePopularidad()
+  const { updateFilters } = useSearchFilters();
+  const { registrarConsulta } = usePopularidad();
 
   // ── Dropdown position: fixed so overflow:auto parents can't clip it ────────
   const recalcDropdown = () => {
@@ -46,7 +46,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     let frame1 = 0
     let frame2 = 0
     frame1 = requestAnimationFrame(() => {
-      frame2 = requestAnimationFrame(recalcDropdown)
+    frame2 = requestAnimationFrame(recalcDropdown)
     })
     return () => {
       if (frame1) cancelAnimationFrame(frame1)
@@ -66,93 +66,92 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
 
   // ── Selección de ubicación ─────────────────────────────────────────────────
   const handleSelectLocation = (loc: Location) => {
-    const fullName = `${loc.nombre} - ${loc.departamento} - Bolivia`
+    const fullName = `${loc.nombre} - ${loc.departamento} - Bolivia`;
     updateFilters({
       locationId: loc.id,
-      query: fullName
-    })
-    onChange(fullName)
-    saveToHistory(fullName)
-    setIsOpen(false)
-    registrarConsulta(loc.id, fullName)
+      query: fullName,
+    });
+    onChange(fullName);
+    saveToHistory(fullName);
+    setIsOpen(false);
+    registrarConsulta(loc.id, fullName);
 
     // Auto-submit tras elegir sugerencia
     setTimeout(() => {
-      containerRef.current?.closest('form')?.requestSubmit()
-    }, 100)
-  }
+      containerRef.current?.closest("form")?.requestSubmit();
+    }, 100);
+  };
 
   useEffect(() => {
-    const savedHistory = localStorage.getItem('searchHistory')
+    const savedHistory = localStorage.getItem("searchHistory");
     if (savedHistory) {
-      setHistory(JSON.parse(savedHistory))
+      setHistory(JSON.parse(savedHistory));
     }
-  }, [])
+  }, []);
 
   const saveToHistory = (item: string) => {
-    const updatedHistory = [item, ...history.filter((i) => i !== item)].slice(0, 5)
-    setHistory(updatedHistory)
-    localStorage.setItem('searchHistory', JSON.stringify(updatedHistory))
-  }
+    const updatedHistory = [item, ...history.filter((i) => i !== item)].slice(0, 5);
+    setHistory(updatedHistory);
+    localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawValue = e.target.value
-    const cleanValue = rawValue.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-]/gi, '').trimStart()
+    const rawValue = e.target.value;
+    const cleanValue = rawValue
+      .replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-]/gi, "")
+      .trimStart();
 
-    onChange(cleanValue)
-  }
+    onChange(cleanValue);
+  };
 
-  const isSelected = value.includes('Bolivia')
+  const isSelected = value.includes("Bolivia");
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setIsOpen(false)
+        setIsOpen(false);
       }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const fetchLocations = async () => {
       if (value.trim().length < 2 || isSelected) {
-        setSuggestions([])
-        return
+        setSuggestions([]);
+        return;
       }
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
-        const res = await fetch(`${API_BASE}/api/locations/search?q=${encodeURIComponent(value)}`)
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+        const res = await fetch(`${API_BASE}/api/locations/search?q=${encodeURIComponent(value)}`);
         if (res.ok) {
-          const data = await res.json()
-          setSuggestions(data)
-          setIsOpen(true)
+          const data = await res.json();
+          setSuggestions(data);
+          setIsOpen(true);
         }
       } catch (error) {
-        console.error('Error buscando ubicaciones:', error)
+        console.error("Error buscando ubicaciones:", error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
-    const timer = setTimeout(fetchLocations, 300)
-    return () => clearTimeout(timer)
-  }, [value, isSelected])
+    };
+    const timer = setTimeout(fetchLocations, 300);
+    return () => clearTimeout(timer);
+  }, [value, isSelected]);
 
   return (
     <div className="w-full relative" ref={containerRef}>
       {/* ELIMINADO EL LABEL CIUDAD/ZONA */}
-
+      
       <div
-        className={`h-[46px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${
-          isOpen && suggestions.length > 0
-            ? 'border-amber-600 ring-2 ring-amber-100'
-            : 'border-stone-300'
-        }`}
+        className={`h-[46px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${isOpen && suggestions.length > 0
+          ? "border-amber-600 ring-2 ring-amber-100"
+          : "border-stone-300"
+          }`}
       >
-        <MapPin
-          className={`w-5 h-5 flex-shrink-0 ${value ? 'text-amber-600' : 'text-stone-400'}`}
-        />
+        <MapPin className={`w-5 h-5 flex-shrink-0 ${value ? "text-amber-600" : "text-stone-400"}`} />
 
         <div className="relative flex-1 flex items-center w-full h-full min-w-0">
           <input
@@ -162,18 +161,18 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             onFocus={() => {
               setIsOpen(true)
               requestAnimationFrame(() => {
-                recalcDropdown()
-              })
-            }}
+                  recalcDropdown()
+                })   
+          }}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                setIsOpen(false)
+              if (e.key === "Enter") {
+                setIsOpen(false);
               }
             }}
             placeholder="Cochabamba, La Paz..."
             className="w-full bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 font-inter pr-[70px] md:truncate overflow-x-auto whitespace-nowrap"
           />
-
+         
           <div className="absolute right-0 flex items-center gap-2 bg-white pl-2 h-full">
             {isSelected && (
               <Image
@@ -184,16 +183,16 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                 className="rounded-sm flex-shrink-0"
               />
             )}
-
+           
             {isLoading ? (
               <Loader2 className="w-4 h-4 animate-spin text-amber-600" />
             ) : (
               value && (
                 <button
                   onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    onChange('')
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onChange("");
                   }}
                   type="button"
                   className="p-1 hover:bg-stone-100 rounded-full transition-colors flex-shrink-0"
@@ -208,7 +207,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
 
       {isOpen && (
         <div className="absolute z-[100] w-full mt-2 bg-white border border-stone-200 rounded-xl shadow-xl overflow-hidden">
-          {value === '' && history.length > 0 && (
+          {value === "" && history.length > 0 && (
             <div>
               <div className="px-4 py-2 bg-stone-50 border-b border-stone-100">
                 <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">
@@ -220,12 +219,12 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                   key={`hist-${idx}`}
                   type="button"
                   onClick={() => {
-                    onChange(item)
-                    setIsOpen(false)
-                    updateFilters({ query: item })
+                    onChange(item);
+                    setIsOpen(false);
+                    updateFilters({ query: item });
                     setTimeout(() => {
-                      containerRef.current?.closest('form')?.requestSubmit()
-                    }, 100)
+                        containerRef.current?.closest("form")?.requestSubmit();
+                    }, 100);
                   }}
                   className="w-full px-4 py-3 flex items-center gap-3 hover:bg-amber-50 transition-colors text-left border-b border-stone-50 last:border-0"
                 >

@@ -11,31 +11,17 @@ export default function NavLinks() {
       </Link>
 
       <Link
-        href="/propiedades"
+        href="#contacto"
         className="hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition"
       >
-        Propiedades
+        Contáctanos
       </Link>
 
       <Link
-        href="/blogs"
+        href="#nosotros"
         className="hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition"
       >
-        Blogs
-      </Link>
-
-      <Link
-        href="/cobros-suscripciones"
-        className="hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition"
-      >
-        Planes de membresia
-      </Link>
-
-      <Link
-        href="/ayuda"
-        className="hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition"
-      >
-        Ayuda
+        Sobre Nosotros
       </Link>
     </div>
   );
