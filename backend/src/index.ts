@@ -78,7 +78,9 @@ const allowedOrigins = [
   normalizedFrontendOrigin,
   'https://prop-bol-cicd.vercel.app',
   'http://localhost:3000',
-  'http://localhost:3001'
+  'http://localhost:3001',
+  'http://localhost:2000'
+
 ]
 
 // Middleware CORS global
