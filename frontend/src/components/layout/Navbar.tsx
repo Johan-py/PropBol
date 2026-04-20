@@ -48,7 +48,7 @@ export default function Navbar() {
   const router = useRouter();
   const panelRef = useRef<HTMLDivElement | null>(null);
   const notificationPanelRef = useRef<HTMLDivElement | null>(null);
- const [, setTick] = useState(0)
+  const [, setTick] = useState(0);
 
   const [user, setUser] = useState<User | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -174,33 +174,33 @@ export default function Navbar() {
     }
   };
 
- const formatRelativeTime = (fecha: string | null): string => {
-  if (!fecha) return "";
-  const diff = Date.now() - new Date(fecha).getTime();
-  const mins = Math.floor(diff / 60000);
+  const formatRelativeTime = (fecha: string | null): string => {
+    if (!fecha) return "";
+    const diff = Date.now() - new Date(fecha).getTime();
+    const mins = Math.floor(diff / 60000);
 
-  if (mins < 1) return "hace un momento";
-  if (mins < 60) return `hace ${mins} min`;
+    if (mins < 1) return "hace un momento";
+    if (mins < 60) return `hace ${mins} min`;
 
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `hace ${hours} h`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `hace ${hours} h`;
 
-  const days = Math.floor(hours / 24);
-  if (days < 7) return `hace ${days} d`;
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `hace ${days} d`;
 
-  return new Date(fecha).toLocaleDateString("es-BO", {
-    day: "numeric",
-    month: "short",
-  });
-};
+    return new Date(fecha).toLocaleDateString("es-BO", {
+      day: "numeric",
+      month: "short",
+    });
+  };
 
-useEffect(() => {
-  const interval = setInterval(() => {
-    setTick((t) => t + 1);
-  }, 60000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTick((t) => t + 1);
+    }, 60000);
 
-  return () => clearInterval(interval);
-}, []);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     void restoreSession();
@@ -309,17 +309,21 @@ useEffect(() => {
 
   return (
     <>
-<nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
+      <nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
         <div className="container mx-auto px-4 py-1.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
-              <Logo />
+              {/* HU-05: ID para tour guiado - paso "Logo" */}
+              <div id="tour-logo">
+                <Logo />
+              </div>
               <NavLinks />
             </div>
 
             <div className="flex items-center gap-4">
               <div className="relative" ref={notificationPanelRef}>
                 <button
+                  id="tour-notificaciones"
                   type="button"
                   onClick={toggleNotifications}
                   aria-label="Abrir notificaciones"
@@ -488,11 +492,10 @@ useEffect(() => {
                                         <button
                                           type="button"
                                           onClick={() => void archiveNotification(notification.id)}
-                                          
                                           aria-label="Archivar notificación"
                                           className="text-stone-400 transition hover:text-amber-600 disabled:cursor-not-allowed disabled:opacity-40"
                                         >
-                                          <Archive className="h-4 w-4" /> 
+                                          <Archive className="h-4 w-4" />
                                         </button>
                                       )}
                                       <button
@@ -536,7 +539,8 @@ useEffect(() => {
                 )}
               </div>
 
-              <div className="relative" ref={panelRef}>
+              {/* HU-05: ID para tour guiado - paso "Tu cuenta" */}
+              <div id="tour-user" className="relative" ref={panelRef}>
                 <UserMenu
                   user={user}
                   isPanelOpen={isPanelOpen}
@@ -548,6 +552,7 @@ useEffect(() => {
               </div>
 
               <button
+                id="tour-menu-mobile"
                 type="button"
                 onClick={() => setIsMobileMenuOpen(true)}
                 className="rounded-full p-2 transition duration-200 hover:bg-black/5 hover:shadow-sm md:hidden"
@@ -614,7 +619,7 @@ useEffect(() => {
             </nav>
           </div>
         </div>
-        )}
+      )}
     </>
-  )
+  );
 }
