@@ -82,6 +82,8 @@ function BusquedaMapaContent() {
   const [isDrawingMode, setIsDrawingMode] = useState(false)
   const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([])
   const [isPolygonClosed, setIsPolygonClosed] = useState(false)
+  // --- Función para reiniciar el dibujo del polígono ---
+  const [drawingError, setDrawingError] = useState(false)
 
   const resetDrawing = () => {
     setIsDrawingMode(false)
@@ -757,20 +759,49 @@ function BusquedaMapaContent() {
               </div>
             )}
             {isDrawingMode && !isPolygonClosed && (
-              <div className="flex flex-col items-end gap-2 pointer-events-auto">
-                <button
-                  onClick={resetDrawing}
-                  className="bg-white text-red-600 px-4 py-2 rounded-lg shadow-md border border-stone-200 hover:bg-red-50 transition-all text-sm font-semibold"
-                >
-                  Cancelar dibujo
-                </button>
-                <div className="bg-white/95 backdrop-blur-sm p-3 rounded-lg shadow-md border border-stone-200 text-xs text-stone-600 max-w-[220px] text-right">
-                  Haz clic en el mapa para marcar los vértices. Cierra la zona tocando el punto
-                  inicial.
-                </div>
-              </div>
-            )}
-          </div>
+          <div className="flex flex-col items-end gap-2 pointer-events-auto">
+            <div className="flex flex-row gap-2">
+              {/* Botón finalizar dibujo */}
+              <button
+                onClick={() => {
+                  if (polygonPoints.length < 3) {
+                    setDrawingError(true)
+                    setTimeout(() => setDrawingError(false), 3000)
+                  } else {
+                    setIsPolygonClosed(true)
+                    setIsDrawingMode(false)
+                  }
+                }}
+                className="bg-[#ea580c] text-white px-4 py-2 rounded-lg shadow-md border border-orange-600 hover:bg-[#c2410c] transition-all text-sm font-semibold"
+              >
+        Finalizar dibujo
+      </button>
+      {/* Botón cancelar */}
+      <button
+        onClick={resetDrawing}
+        className="bg-white text-red-600 px-4 py-2 rounded-lg shadow-md border border-stone-200 hover:bg-red-50 transition-all text-sm font-semibold"
+      >
+        Cancelar dibujo
+      </button>
+    </div>
+
+    {/* Mensaje de error si menos de 3 puntos */}
+    {drawingError && (
+      <div className="bg-red-50 border border-red-300 text-red-600 px-3 py-2 rounded-lg text-xs font-medium shadow-md max-w-[220px] text-right">
+        ⚠️ Debes marcar al menos 3 puntos para finalizar la zona.
+      </div>
+    )}
+
+    {/* Instrucciones */}
+    {!drawingError && (
+      <div className="bg-white/95 backdrop-blur-sm p-3 rounded-lg shadow-md border border-stone-200 text-xs text-stone-600 max-w-[220px] text-right">
+        Haz clic en el mapa para marcar los vértices. Cierra la zona tocando el punto inicial.
+      </div>
+    )}
+  </div>
+)}
+          
+</div>
 
           {isPolygonClosed && (
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000]">
