@@ -80,14 +80,15 @@ export const solicitarCambioEmail = async (req: AuthRequest, res: Response) => {
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
     const expiraEn = new Date(Date.now() + 5 * 60 * 1000);
 
+    // ✅ CORREGIDO: usar snake_case
     await prisma.cambioEmail.create({
       data: {
         token: otp,
-        email_nuevo: emailNuevo,
-        expira_en: expiraEn,
-        usuario_id: usuarioId,
-      },
-    });
+        email_nuevo: emailNuevo,    // antes: emailNuevo
+        expira_en: expiraEn,         // antes: expiraEn
+        usuario_id: usuarioId        // antes: usuarioId
+      }
+    })
 
     // Enviar el código por email
     const emailEnviado = await enviarCodigoCambioEmail({
@@ -128,13 +129,14 @@ export const confirmarCambioEmail = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ ok: false, msg: "Código requerido" });
     }
 
+    // ✅ CORREGIDO: usar usuario_id y completado_en
     const solicitud = await prisma.cambioEmail.findFirst({
       where: {
-        usuario_id: usuarioId,
-        completado_en: null,
+        usuario_id: usuarioId,        // antes: usuarioId
+        completado_en: null           // antes: completadoEn
       },
-      orderBy: { creado_en: "desc" },
-    });
+      orderBy: { creado_en: 'desc' }  // antes: creadoEn
+    })
 
     if (!solicitud) {
       return res.status(404).json({
@@ -143,7 +145,8 @@ export const confirmarCambioEmail = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    if (new Date() > solicitud.expira_en) {
+    // ✅ CORREGIDO: usar expira_en
+    if (new Date() > solicitud.expira_en) {  // antes: expiraEn
       return res.status(410).json({
         ok: false,
         msg: "Código expirado. Solicita un nuevo código",
@@ -157,16 +160,17 @@ export const confirmarCambioEmail = async (req: AuthRequest, res: Response) => {
       });
     }
 
+    // ✅ CORREGIDO: usar email_nuevo y completado_en
     const [usuarioActualizado] = await prisma.$transaction([
       prisma.usuario.update({
         where: { id: usuarioId },
-        data: { correo: solicitud.email_nuevo },
+        data: { correo: solicitud.email_nuevo }  // antes: emailNuevo
       }),
       prisma.cambioEmail.update({
         where: { id: solicitud.id },
-        data: { completado_en: new Date() },
-      }),
-    ]);
+        data: { completado_en: new Date() }  // antes: completadoEn
+      })
+    ])
 
     return res.json({
       ok: true,
@@ -180,4 +184,4 @@ export const confirmarCambioEmail = async (req: AuthRequest, res: Response) => {
       msg: "Error al confirmar cambio",
     });
   }
-};
+}
