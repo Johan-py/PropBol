@@ -1,10 +1,10 @@
-import path from "path";
-import "dotenv/config";
-import express from "express";
-import cors from "cors";
-import { env } from "./config/env.js";
-import type { Request, Response } from "express";
-
+import path from 'path'
+import 'dotenv/config'
+import express from 'express'
+import cors from 'cors'
+import { env } from './config/env.js'
+import type { Request, Response } from 'express'
+import zonaRoutes from "./modules/perfil/zonaUsario.routes.js";
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -30,9 +30,9 @@ import {
   verifyRegisterCodeController,
   getMeController,
   forgotPasswordController,
-  resetPasswordController,
-} from "./modules/auth/auth.controller.js";
-import { requireAuth } from "./middleware/auth.middleware.js";
+  resetPasswordController
+} from './modules/auth/auth.controller.js'
+import { requireAuth } from './middleware/auth.middleware.js'
 
 // --------------------
 // ROUTES / HANDLERS
@@ -42,19 +42,19 @@ import { getZonasController } from "./modules/zonas/zonas.controller.js";
 
 import correoverificacionRoutes from "./modules/perfil/correoverificacion.routes.js";
 import perfilRoutes from "./modules/perfil/perfil.routes.js";
-import zonaRoutes from "./modules/perfil/zonaUsario.routes.js";
 
 import {
   googleCallbackController,
-  StartGoogleRegisterController,
   StratGoogleLoginController,
-} from "./modules/auth/google/google.controller.js";
+  StartGoogleRegisterController
+} from './modules/auth/google/google.controller.js'
+ 
 
-import multimediaRoutes from "./modules/multimedia/multimedia.routes.js";
-import publicacionRoutes from "./modules/publicacion/publicacion.routes.js";
-import router from "./modules/registro-publicacion/publicacion.routes.js";
+
+import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
+import publicacionRoutes from './modules/publicacion/publicacion.routes.js'
+import router from './modules/registro-publicacion/publicacion.routes.js'
 import securityRoutes from "./routes/security.routes.js";
-
 // --------------------
 // LEGACY
 // --------------------
@@ -77,13 +77,13 @@ const app = express();
 // --------------------
 const normalizedFrontendOrigin = env.FRONTEND_URL.replace(/\/$/, "");
 const allowedOrigins = [
-  normalizedFrontendOrigin,
-  "https://prop-bol-cicd.vercel.app",
-  "http://localhost:3000",
-  "http://localhost:3001",
-  "http://localhost:2000",
 
-];
+  'https://prop-bol-cicd.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://localhost:2000'
+
+]
 
 app.use(
   cors({
@@ -105,13 +105,13 @@ app.use("/uploads", express.static(path.resolve("uploads")));
 // --------------------
 // RUTAS LEGACY
 // --------------------
-app.use("/api/auth-legacy", authRoutes);
 app.post("/api/auth/forgot-password", forgotPasswordController);
 app.post("/api/auth/reset-password", resetPasswordController);
-app.get("/api/users/:id/publicaciones/free", authMiddleware, (_req, res) => {
-  res.json({ restantes: 2 });
-});
-app.use("/api/publicaciones-legacy", publicacionesRoutes);
+app.use('/api/auth-legacy', authRoutes)
+app.get('/api/users/:id/publicaciones/free', authMiddleware, (_req, res) => {
+  res.json({ restantes: 2 })
+})
+app.use('/api/publicaciones-legacy', publicacionesRoutes)
 
 // --------------------
 // RUTAS PRINCIPALES
@@ -120,17 +120,18 @@ app.use("/api/publicaciones", publicacionRoutes);
 app.use("/api/publicaciones", multimediaRoutes);
 app.use("/api/perfil", correoverificacionRoutes);
 app.use("/api/perfil/usuario", perfilRoutes);
-app.use('/api/perfil/zonas', zonaRoutes);
+app.use("/api/perfil/zonas", zonaRoutes);
 app.use("/api", router);
 app.use("/api/security", securityRoutes);
-
+app.use("/api/favorites", favoritesRoutes);
 // --------------------
 // MOCK / TEST
 // --------------------
-app.post("/api/users", (req, res) => {
-  const user = req.body;
-  res.json({ message: "User created", user });
-});
+app.post('/api/users', (req, res) => {
+  const user = req.body
+  res.json({ message: 'User created', user })
+})
+app.use('/api/perfil/zonas', zonaRoutes);
 
 // --------------------
 // AUTH
@@ -143,6 +144,7 @@ app.get("/api/auth/me", getMeController);
 app.get("/api/auth/google/login", StratGoogleLoginController);
 app.get("/api/auth/google/register", StartGoogleRegisterController);
 app.get("/api/auth/google/callback", googleCallbackController);
+//comentario
 
 // --------------------
 // BANNERS & FILTERS
