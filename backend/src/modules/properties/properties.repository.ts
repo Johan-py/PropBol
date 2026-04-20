@@ -58,33 +58,35 @@ export const propertiesRepository = {
       }
     }
 
-    // 3. Filtro de Ubicación (ID exacto o Búsqueda de texto)
-    if (filtros.locationId || (filtros.query && filtros.query.trim() !== "")) {
-      where.OR = [];
+    // 3. Filtro de Ubicación (EL CEREBRO JERÁRQUICO)
+    if (filtros.query && filtros.query.trim() !== '') {
+      const texto = filtros.query.trim()
 
-      // Búsqueda por ID de zona exacta
-      if (filtros.locationId) {
-        where.OR.push({
-          ubicacion: { ubicacionMaestraId: Number(filtros.locationId) },
-        });
-      }
-
-      // Búsqueda textual
-      if (filtros.query && filtros.query.trim() !== "") {
-        const textoLimpio = filtros.query.split("-")[0].trim();
-
-        where.OR.push({
-          titulo: { contains: textoLimpio, mode: "insensitive" },
-        });
-        where.OR.push({
-          descripcion: { contains: textoLimpio, mode: "insensitive" },
-        });
-        where.OR.push({
+      where.OR = [
+        { titulo: { contains: texto, mode: 'insensitive' } },
+        { descripcion: { contains: texto, mode: 'insensitive' } },
+        {
           ubicacion: {
-            direccion: { contains: textoLimpio, mode: "insensitive" },
-          },
-        });
-      }
+            OR: [
+              // Nivel Micro
+              { direccion: { contains: texto, mode: 'insensitive' } },
+              // Jerarquía Nueva Completa
+              { barrio: { nombre: { contains: texto, mode: 'insensitive' } } },
+              { barrio: { zona: { nombre: { contains: texto, mode: 'insensitive' } } } },
+              { barrio: { zona: { municipio: { nombre: { contains: texto, mode: 'insensitive' } } } } },
+              { barrio: { zona: { municipio: { provincia: { nombre: { contains: texto, mode: 'insensitive' } } } } } },
+              { barrio: { zona: { municipio: { provincia: { departamento: { nombre: { contains: texto, mode: 'insensitive' } } } } } } },
+              // Tabla Maestra Legacy (Por compatibilidad con datos viejos)
+              { ubicacion_maestra: { nombre: { contains: texto, mode: 'insensitive' } } },
+              { ubicacion_maestra: { municipio: { contains: texto, mode: 'insensitive' } } },
+              { ubicacion_maestra: { departamento: { contains: texto, mode: 'insensitive' } } }
+            ]
+          }
+        }
+      ]
+    } else if (filtros.locationId) {
+      // Fallback: Si no hay texto, asumimos que viene de un botón antiguo de "Ciudades Destacadas"
+      where.ubicacion = { ubicacionMaestraId: Number(filtros.locationId) }
     }
 
     // ── ORDER BY ───────────────────────────────────────────────────────────
