@@ -3,7 +3,16 @@
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useEffect } from "react";
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  CircleMarker,
+  Polyline,
+  Polygon,
+  useMapEvents,
+  useMap,
+} from "react-leaflet";
 
 if (typeof window !== "undefined") {
   delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -32,28 +41,61 @@ interface Props {
   pinCoords: PinCoords | null;
   onPinChange: (coords: PinCoords) => void;
   modoPinActivo: boolean;
+  vertices: [number, number][];
+  onVerticesChange: (v: [number, number][]) => void;
+  poligonoCerrado: boolean;
+  onPoligonoCerrar: () => void;
+  modoDifuminadoActivo: boolean;
+}
+
+function MapControles({
+  modoPinActivo,
+  modoDifuminadoActivo,
+}: {
+  modoPinActivo: boolean;
+  modoDifuminadoActivo: boolean;
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    const container = map.getContainer();
+    container.style.cursor =
+      modoPinActivo || modoDifuminadoActivo ? "crosshair" : "";
+
+    if (modoDifuminadoActivo) {
+      map.doubleClickZoom.disable();
+    } else {
+      map.doubleClickZoom.enable();
+    }
+  }, [modoPinActivo, modoDifuminadoActivo, map]);
+
+  return null;
 }
 
 function MapEventos({
   modoPinActivo,
+  modoDifuminadoActivo,
   onPinChange,
+  vertices,
+  onVerticesChange,
+  poligonoCerrado,
 }: {
   modoPinActivo: boolean;
+  modoDifuminadoActivo: boolean;
   onPinChange: (coords: PinCoords) => void;
+  vertices: [number, number][];
+  onVerticesChange: (v: [number, number][]) => void;
+  poligonoCerrado: boolean;
 }) {
-  const map = useMapEvents({
+  useMapEvents({
     click(e) {
       if (modoPinActivo) {
         onPinChange({ lat: e.latlng.lat, lng: e.latlng.lng });
+      } else if (modoDifuminadoActivo && !poligonoCerrado) {
+        onVerticesChange([...vertices, [e.latlng.lat, e.latlng.lng]]);
       }
     },
   });
-
-  useEffect(() => {
-    const container = map.getContainer();
-    container.style.cursor = modoPinActivo ? "crosshair" : "";
-  }, [modoPinActivo, map]);
-
   return null;
 }
 
@@ -63,20 +105,49 @@ export default function MapaPinSelector({
   pinCoords,
   onPinChange,
   modoPinActivo,
+  vertices,
+  onVerticesChange,
+  poligonoCerrado,
+  onPoligonoCerrar,
+  modoDifuminadoActivo,
 }: Props) {
+  const puedesCerrar = vertices.length >= 3 && !poligonoCerrado;
+
+  const instruccion =
+    vertices.length === 0
+      ? "Haz clic para agregar el primer vértice"
+      : vertices.length < 3
+        ? `${vertices.length} vértice${vertices.length > 1 ? "s" : ""} — agrega al menos 3`
+        : "Haz clic en el punto verde para cerrar el polígono";
+
   return (
-    <MapContainer
-      center={COCHABAMBA}
-      zoom={14}
-      style={{ height: "220px", width: "100%", borderRadius: "12px" }}
-      zoomControl
-    >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-      />
-      <MapEventos modoPinActivo={modoPinActivo} onPinChange={onPinChange} />
-      {pinCoords && (
+    <div className="relative">
+      <MapContainer
+        center={COCHABAMBA}
+        zoom={14}
+        style={{ height: "220px", width: "100%", borderRadius: "12px" }}
+        zoomControl
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        
+        />
+        <MapControles
+          modoPinActivo={modoPinActivo}
+          modoDifuminadoActivo={modoDifuminadoActivo}
+        />
+        <MapEventos
+          modoPinActivo={modoPinActivo}
+          modoDifuminadoActivo={modoDifuminadoActivo}
+          onPinChange={onPinChange}
+          vertices={vertices}
+          onVerticesChange={onVerticesChange}
+          poligonoCerrado={poligonoCerrado}
+        />
+
+        {/* Pin mode */}
+        {pinCoords && (
   <Marker
     position={[pinCoords.lat, pinCoords.lng]}
     icon={pinIcon}
@@ -111,8 +182,72 @@ export default function MapaPinSelector({
         });
       },
     }}
-        />
+  />
+)}
+
+        {/* Difuminado — polígono en construcción */}
+        {modoDifuminadoActivo && vertices.length > 0 && !poligonoCerrado && (
+          <>
+            {vertices.length >= 2 && (
+              <Polyline
+                positions={vertices}
+                pathOptions={{ color: "#f97316", weight: 2, dashArray: "5,5" }}
+              />
+            )}
+
+            {/* Primer vértice — verde cuando se puede cerrar */}
+            <CircleMarker
+              center={vertices[0]}
+              radius={8}
+              pathOptions={{
+                color: puedesCerrar ? "#22c55e" : "#f97316",
+                fillColor: puedesCerrar ? "#22c55e" : "#f97316",
+                fillOpacity: 1,
+              }}
+              eventHandlers={{
+                click(e) {
+                  (e as any).originalEvent?.stopPropagation();
+                  if (puedesCerrar) onPoligonoCerrar();
+                },
+              }}
+            />
+
+            {/* Vértices intermedios */}
+            {vertices.slice(1).map((v, i) => (
+              <CircleMarker
+                key={i + 1}
+                center={v}
+                radius={5}
+                pathOptions={{
+                  color: "#f97316",
+                  fillColor: "#f97316",
+                  fillOpacity: 1,
+                }}
+              />
+            ))}
+          </>
+        )}
+
+        {/* Polígono cerrado */}
+        {poligonoCerrado && vertices.length >= 3 && (
+          <Polygon
+            positions={vertices}
+            pathOptions={{
+              color: "#f97316",
+              fillColor: "#f97316",
+              fillOpacity: 0.3,
+              weight: 2,
+            }}
+          />
+        )}
+      </MapContainer>
+
+      {/* Instrucciones */}
+      {modoDifuminadoActivo && !poligonoCerrado && (
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-3 py-1 rounded-full pointer-events-none z-[1000] whitespace-nowrap">
+          {instruccion}
+        </div>
       )}
-    </MapContainer>
+    </div>
   );
 }

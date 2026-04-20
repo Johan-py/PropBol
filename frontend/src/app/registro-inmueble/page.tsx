@@ -42,8 +42,11 @@ export default function MiRegistroPage() {
     descripcion: ''
   })
 
-const [pinCoords, setPinCoords] = useState<{ lat: number; lng: number } | null>(null);
-const [modoPinActivo, setModoPinActivo] = useState(false);
+  const [pinCoords, setPinCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [modoPinActivo, setModoPinActivo] = useState(false);
+  const [vertices, setVertices] = useState<[number, number][]>([]);
+  const [poligonoCerrado, setPoligonoCerrado] = useState(false);
+  const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false);
 
 const [estado, setEstado] = useState<"ninguno" | "exito" | "error">("ninguno");
 const [mensajeError, setMensajeError] = useState("");
@@ -64,7 +67,7 @@ const errorUbicacion = campoError === "ubicacion";
       const token = localStorage.getItem('token')
 
       if (!token) {
-        router.push('/sign-in') //entra al formulario solo si inicio sesion
+        router.push('/sign-in')
         return
       }
 
@@ -88,6 +91,22 @@ const errorUbicacion = campoError === "ubicacion";
 
     validarFlujo()
   }, [router])
+
+  const calcularCentroide = (verts: [number, number][]) => ({
+    lat: verts.reduce((s, v) => s + v[0], 0) / verts.length,
+    lng: verts.reduce((s, v) => s + v[1], 0) / verts.length,
+  })
+
+  const limpiarPin = () => {
+    setPinCoords(null)
+    setModoPinActivo(false)
+  }
+
+  const limpiarDifuminado = () => {
+    setVertices([])
+    setPoligonoCerrado(false)
+    setModoDifuminadoActivo(false)
+  }
 
   const limpiarError = () => {
     setMensajeError('')
@@ -487,7 +506,10 @@ const errorUbicacion = campoError === "ubicacion";
       }
     }
 
-    if (!pinCoords) {
+    const tienePin = pinCoords !== null;
+    const tienePoligono = poligonoCerrado && vertices.length >= 3;
+
+    if (!tienePin && !tienePoligono) {
       setMensajeError("DEBE SELECCIONAR LA UBICACIÓN EN EL MAPA");
       setCampoError("ubicacion");
       setEstado("error");
@@ -509,6 +531,8 @@ const errorUbicacion = campoError === "ubicacion";
       return
     }
 
+    const centroide = tienePoligono ? calcularCentroide(vertices) : null;
+
     const payload = {
       titulo: tituloLimpio,
       tipoAccion: datos.operacion,
@@ -521,8 +545,10 @@ const errorUbicacion = campoError === "ubicacion";
       direccion: direccionLimpia,
       zona: zonaLimpia,
       ciudad: datos.ciudad,
-      latitud: pinCoords.lat,
-      longitud: pinCoords.lng,
+      latitud: tienePin ? pinCoords!.lat : centroide!.lat,
+      longitud: tienePin ? pinCoords!.lng : centroide!.lng,
+      modoUbicacion: tienePin ? "PIN" : "DIFUMINADO",
+      poligono: tienePoligono ? JSON.stringify(vertices) : undefined,
     };
 
     console.log('📤 Payload enviado al backend:', payload)
@@ -839,6 +865,7 @@ const errorUbicacion = campoError === "ubicacion";
                   <button
                     type="button"
                     onClick={() => {
+                      limpiarDifuminado();
                       setModoPinActivo((prev) => !prev);
                       if (campoError === "ubicacion") limpiarError();
                     }}
@@ -853,13 +880,29 @@ const errorUbicacion = campoError === "ubicacion";
 
                   <button
                     type="button"
-                    disabled={!pinCoords}
                     onClick={() => {
-                      setPinCoords(null);
-                      setModoPinActivo(false);
+                      limpiarPin();
+                      setModoDifuminadoActivo((prev) => !prev);
+                      if (campoError === "ubicacion") limpiarError();
+                    }}
+                    className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${
+                      modoDifuminadoActivo
+                        ? "bg-orange-500 text-white"
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    }`}
+                  >
+                    Difuminado
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={!pinCoords && !poligonoCerrado}
+                    onClick={() => {
+                      limpiarPin();
+                      limpiarDifuminado();
                     }}
                     className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ml-auto ${
-                      pinCoords
+                      pinCoords || poligonoCerrado
                         ? "bg-red-500 text-white hover:bg-red-600"
                         : "bg-gray-300 text-gray-400 cursor-not-allowed"
                     }`}
@@ -880,6 +923,18 @@ const errorUbicacion = campoError === "ubicacion";
                       if (campoError === "ubicacion") limpiarError();
                     }}
                     modoPinActivo={modoPinActivo}
+                    vertices={vertices}
+                    onVerticesChange={(v) => {
+                      setVertices(v);
+                      if (campoError === "ubicacion") limpiarError();
+                    }}
+                    poligonoCerrado={poligonoCerrado}
+                    onPoligonoCerrar={() => {
+                      setPoligonoCerrado(true);
+                      setModoDifuminadoActivo(false);
+                      if (campoError === "ubicacion") limpiarError();
+                    }}
+                    modoDifuminadoActivo={modoDifuminadoActivo}
                   />
                 </div>
                 {errorUbicacion && (
