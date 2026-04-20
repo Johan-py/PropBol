@@ -17,7 +17,7 @@ export interface Inmueble {
   categoria?: string | null
 }
 
-export type OrdenFecha = 'mas-recientes' | 'mas-populares' | 'mas-antiguos'
+export type OrdenFecha = 'mas-recientes' | 'mas-populares' | 'mas-antiguos' | 'mas-recomendados'
 export type OrdenDireccion = 'menor-a-mayor' | 'mayor-a-menor'
 
 // Qué criterio está manejando el usuario en este momento.
@@ -34,7 +34,8 @@ export interface EstadoOrdenamiento {
 export const OPCIONES_FECHA: Array<{ value: OrdenFecha; label: string }> = [
   { value: 'mas-recientes', label: 'Más recientes' },
   { value: 'mas-antiguos', label: 'Más antiguos' },
-  { value: 'mas-populares', label: 'Más populares' }
+  { value: 'mas-populares', label: 'Más populares' },
+  { value: 'mas-recomendados', label: 'Más recomendados' }
 ]
 
 export const OPCIONES_DIRECCION: Array<{
