@@ -23,6 +23,7 @@ import { useZonas } from '@/hooks/useZonas'
 
 // === COMPONENTES ===
 import FilterBar from '@/components/filters/FilterBar'
+import PriceFilterSidebar from '@/components/filters/PriceFilterSidebar'
 import PropertyCard from '@/components/layout/PropertyCard'
 import PropertyRow from '@/components/galeria/PropertyRow'
 import EmptyState from '@/components/galeria/EmptyState'
@@ -85,6 +86,7 @@ function BusquedaMapaContent() {
   const [sheetState, setSheetState] = useState<SheetState>('peek')
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
   const [isMounted, setIsMounted] = useState(false)
+  const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false)
 
   // --- INICIO ESTADOS HU8 ---
   const [isDrawingMode, setIsDrawingMode] = useState(false)
@@ -600,6 +602,10 @@ function BusquedaMapaContent() {
         onSearch={(nuevosFiltros) => {
           console.log('🔍 Buscando con filtros:', nuevosFiltros)
         }}
+        onOpenPriceFilter={() => { 
+          setIsPriceFilterOpen(true)
+          setIsSidebarOpen(true)
+        }}
       />
 
       <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200">
@@ -609,7 +615,18 @@ function BusquedaMapaContent() {
             isSidebarOpen ? 'w-full md:w-[450px] h-[65dvh] md:h-full' : 'w-0'
           }`}
         >
-          {isSidebarOpen && (
+        {/* ✅ MODIFICADO: ternario que alterna entre filtro de precio y resultados */}
+        {isPriceFilterOpen ? (
+          // Vista del filtro de precio — reemplaza temporalmente los resultados
+          <PriceFilterSidebar
+            isOpen={isPriceFilterOpen}
+            onClose={() => {
+              setIsPriceFilterOpen(false) // cierra el filtro
+              setIsSidebarOpen(true)      // asegura que el aside siga visible
+            }}
+          />
+        ) : (
+          isSidebarOpen && (
             <div className="flex flex-col h-full min-h-0">
               <div className="p-4 bg-white shrink-0">
                 <div className="flex justify-between items-center mb-4">
@@ -775,6 +792,7 @@ function BusquedaMapaContent() {
               {renderListPaginationFooter()}
               </div>
             </div>
+            )  
           )}
         </aside>
 
