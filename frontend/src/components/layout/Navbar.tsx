@@ -29,7 +29,7 @@ export type User = {
 
 type MeResponse = {
   message?: string;
-  perfil?: {
+  user?: {
     id: number;
     nombre?: string;
     apellido?: string;
@@ -38,17 +38,32 @@ type MeResponse = {
   };
 };
 
+class SessionValidationError extends Error {
+  statusCode: number;
+
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.name = "SessionValidationError";
+    this.statusCode = statusCode;
+  }
+}
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const USER_STORAGE_KEY = "propbol_user";
 const SESSION_EXPIRES_KEY = "propbol_session_expires";
 
-const filters: NotificationFilter[] = ["todas", "leida", "no leida", "archivada"];
+const filters: NotificationFilter[] = [
+  "todas",
+  "leida",
+  "no leida",
+  "archivada",
+];
 
 export default function Navbar() {
   const router = useRouter();
   const panelRef = useRef<HTMLDivElement | null>(null);
   const notificationPanelRef = useRef<HTMLDivElement | null>(null);
- const [, setTick] = useState(0)
+  const [, setTick] = useState(0);
 
   const [user, setUser] = useState<User | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -105,20 +120,23 @@ export default function Navbar() {
   };
 
   const fetchCurrentUser = async (token: string) => {
-    const response = await fetch(`${API_URL}/api/perfil/usuario`, {
+    const response = await fetch(`${API_URL}/api/auth/me`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    const data = await response.json();
+    const data = (await response.json()) as MeResponse;
 
-    if (!response.ok || !data.perfil) {
-      throw new Error(data.message || "Sesión inválida o expirada");
+    if (!response.ok || !data.user) {
+      throw new SessionValidationError(
+        data.message || "Sesión inválida o expirada",
+        response.status,
+      );
     }
 
-    return data.perfil;
+    return data.user;
   };
 
   const restoreSession = async () => {
@@ -136,8 +154,18 @@ export default function Navbar() {
       return;
     }
 
-    if (!navigator.onLine) {
+    let parsedUser: User;
+
+    try {
+      parsedUser = JSON.parse(savedUser) as User;
+    } catch {
       clearSession(false);
+      return;
+    }
+
+    if (!navigator.onLine) {
+      setUser(parsedUser);
+      setIsLoggedIn(true);
       return;
     }
 
@@ -169,38 +197,47 @@ export default function Navbar() {
 
       setUser(finalUser);
       setIsLoggedIn(true);
-    } catch {
-      clearSession(false);
+    } catch (error) {
+      if (
+        error instanceof SessionValidationError &&
+        (error.statusCode === 401 || error.statusCode === 403)
+      ) {
+        clearSession(false);
+        return;
+      }
+
+      setUser(parsedUser);
+      setIsLoggedIn(true);
     }
   };
 
- const formatRelativeTime = (fecha: string | null): string => {
-  if (!fecha) return "";
-  const diff = Date.now() - new Date(fecha).getTime();
-  const mins = Math.floor(diff / 60000);
+  const formatRelativeTime = (fecha: string | null): string => {
+    if (!fecha) return "";
+    const diff = Date.now() - new Date(fecha).getTime();
+    const mins = Math.floor(diff / 60000);
 
-  if (mins < 1) return "hace un momento";
-  if (mins < 60) return `hace ${mins} min`;
+    if (mins < 1) return "hace un momento";
+    if (mins < 60) return `hace ${mins} min`;
 
-  const hours = Math.floor(mins / 60);
-  if (hours < 24) return `hace ${hours} h`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `hace ${hours} h`;
 
-  const days = Math.floor(hours / 24);
-  if (days < 7) return `hace ${days} d`;
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `hace ${days} d`;
 
-  return new Date(fecha).toLocaleDateString("es-BO", {
-    day: "numeric",
-    month: "short",
-  });
-};
+    return new Date(fecha).toLocaleDateString("es-BO", {
+      day: "numeric",
+      month: "short",
+    });
+  };
 
-useEffect(() => {
-  const interval = setInterval(() => {
-    setTick((t) => t + 1);
-  }, 60000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTick((t) => t + 1);
+    }, 60000);
 
-  return () => clearInterval(interval);
-}, []);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     void restoreSession();
@@ -230,6 +267,17 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
+    const interval = setInterval(() => {
+      if (user && isSessionExpired()) {
+        clearSession();
+        router.push("/");
+      }
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [user, router]);
+
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         panelRef.current &&
@@ -245,26 +293,18 @@ useEffect(() => {
         toggleNotifications();
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open, toggleNotifications]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (user && isSessionExpired()) {
-        clearSession();
-        router.push("/");
-      }
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, [user, router]);
-
-  useEffect(() => {
     if (!open) return;
+
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === "Escape") toggleNotifications();
     };
+
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [open, toggleNotifications]);
@@ -275,11 +315,11 @@ useEffect(() => {
       router.push("/");
       return;
     }
+
     setIsPanelOpen((prev) => !prev);
   };
 
   const handleLoginRedirect = () => router.push("/sign-in");
-
   const handleOpenLogoutModal = () => setShowLogoutModal(true);
 
   const handleCancelLogout = () => {
@@ -309,7 +349,7 @@ useEffect(() => {
 
   return (
     <>
-<nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
+      <nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
         <div className="container mx-auto px-4 py-1.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
@@ -403,22 +443,36 @@ useEffect(() => {
                                   : "bg-stone-100 text-stone-700 hover:bg-stone-200"
                               }`}
                             >
-                              {item === 'todas'
-                                ? 'Todas'
-                                : item === 'leida'
-                                  ? 'Leídas'
-                                  : item === 'no leida'
-                                    ? 'No leídas'
-                                    : 'Archivadas'}
+                              {item === "todas"
+                                ? "Todas"
+                                : item === "leida"
+                                  ? "Leídas"
+                                  : item === "no leida"
+                                    ? "No leídas"
+                                    : "Archivadas"}
                             </button>
                           ))}
                         </div>
 
                         <div
+                          ref={scrollContainerRef}
                           role="list"
                           aria-label="Lista de notificaciones"
                           aria-live="polite"
                           className="max-h-[60vh] overflow-y-auto sm:max-h-80"
+                          onScroll={(e) => {
+                            const target = e.currentTarget;
+                            const reachedBottom =
+                              target.scrollTop + target.clientHeight >=
+                              target.scrollHeight - 20;
+
+                            if (reachedBottom && hasMore && !isLoadingMore) {
+                              // @ts-ignore
+                              saveScrollPosition();
+                              // @ts-ignore
+                              void loadMoreNotifications(filter);
+                            }
+                          }}
                         >
                           {isLoading ? (
                             <div className="flex items-center justify-center gap-2 px-4 py-8 text-sm text-stone-500">
@@ -452,49 +506,68 @@ useEffect(() => {
                                   key={notification.id}
                                   role="listitem"
                                   onClick={() => {
-                                    if (notification.status === 'no leida' && isOnline) {
-                                      void markAsRead(notification.id)
+                                    if (
+                                      notification.status === "no leida" &&
+                                      isOnline
+                                    ) {
+                                      void markAsRead(notification.id);
                                     }
                                   }}
                                   className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
-                                    notification.status === 'no leida' ? 'cursor-pointer bg-amber-50' : 'bg-white'
+                                    notification.status === "no leida"
+                                      ? "cursor-pointer bg-amber-50"
+                                      : "bg-white"
                                   }`}
                                 >
                                   <div className="flex items-start justify-between gap-3">
                                     <div className="min-w-0 flex-1">
                                       <div className="flex items-center gap-2">
-                                        {notification.status === 'no leida' && (
+                                        {notification.status === "no leida" && (
                                           <span className="h-2 w-2 shrink-0 rounded-full bg-amber-500" />
                                         )}
                                         <p className="truncate text-sm font-semibold text-stone-900">
-                                          {notification.title?.trim() || '(Sin título)'}
+                                          {notification.title?.trim() ||
+                                            "(Sin título)"}
                                         </p>
                                       </div>
+
                                       <p className="mt-1 line-clamp-2 text-sm text-stone-600">
                                         {notification.description?.trim() ||
                                           "(Sin descripción disponible)"}
                                       </p>
+
                                       <div className="mt-2 flex items-center gap-2">
                                         <span className="text-[10px] uppercase text-stone-400">
                                           {notification.status}
                                         </span>
                                         <span className="text-[10px] text-stone-400">
-                                          · {formatRelativeTime(notification.fechaCreacion || null)}
+                                          ·{" "}
+                                          {formatRelativeTime(
+                                            notification.fechaCreacion || null,
+                                          )}
                                         </span>
                                       </div>
                                     </div>
-                                    <div className="flex shrink-0 items-center gap-2" onClick={(e) => e.stopPropagation()}>
+
+                                    <div
+                                      className="flex shrink-0 items-center gap-2"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
                                       {!notification.archivada && (
                                         <button
                                           type="button"
-                                          onClick={() => void archiveNotification(notification.id)}
-                                          
+                                          onClick={() =>
+                                            void archiveNotification(
+                                              notification.id,
+                                            )
+                                          }
                                           aria-label="Archivar notificación"
                                           className="text-stone-400 transition hover:text-amber-600 disabled:cursor-not-allowed disabled:opacity-40"
                                         >
-                                          <Archive className="h-4 w-4" /> 
+                                          <Archive className="h-4 w-4" />
                                         </button>
                                       )}
+
                                       <button
                                         type="button"
                                         onClick={() =>
@@ -589,6 +662,7 @@ useEffect(() => {
                 <X className="h-6 w-6 text-stone-600" />
               </button>
             </div>
+
             <nav className="mt-10 flex flex-col gap-4">
               <Link
                 href="/"
@@ -597,24 +671,42 @@ useEffect(() => {
               >
                 Inicio
               </Link>
+
               <Link
-                href="#contacto"
+                href="/propiedades"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
-                Contáctanos
+                Propiedades
               </Link>
+
               <Link
-                href="#nosotros"
+                href="/blogs"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
-                Sobre Nosotros
+                Blogs
+              </Link>
+
+              <Link
+                href="/cobros-suscripciones"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+              >
+                Planes de membresia
+              </Link>
+
+              <Link
+                href="/ayuda"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+              >
+                Ayuda
               </Link>
             </nav>
           </div>
         </div>
-        )}
+      )}
     </>
-  )
+  );
 }
