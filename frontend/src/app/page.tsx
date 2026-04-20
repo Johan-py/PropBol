@@ -2,6 +2,13 @@ import { HomeBanner } from '@/components/home/HomeBanner'
 import { HomeCarousel } from '@/components/home/HomeCarousel'
 import ExploreSection from '@/components/layout/ExploreSection'
 import FilterPanel from '@/components/rentals/FilterPanel'
+interface BannerRaw {
+  id: number
+  url_imagen: string
+  titulo?: string
+  subtitulo?: string
+}
+
 interface BannerData {
   id: number
   urlImagen: string
@@ -15,14 +22,22 @@ const fetchBanners = async (): Promise<BannerData[]> => {
   try {
     const response = await fetch(`${apiUrl}/api/banners`, {
       // Revalidación ISR
-      next: { revalidate: 3600 }
+      cache: 'no-store'
     })
 
     if (!response.ok) {
       throw new Error(`Error HTTP al obtener banners: ${response.status}`)
     }
 
-    return await response.json()
+    const data: BannerRaw[] = await response.json()
+
+    // Mapear snake_case del backend → camelCase esperado por los componentes
+    return data.map((b) => ({
+      id: b.id,
+      urlImagen: b.url_imagen,
+      titulo: b.titulo,
+      subtitulo: b.subtitulo,
+    }))
   } catch (error) {
     console.error('Error cargando el banner:', error)
     return []
