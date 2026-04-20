@@ -28,7 +28,9 @@ import {
   loginController,
   logoutController,
   verifyRegisterCodeController,
-  getMeController
+  getMeController,
+  forgotPasswordController,
+  resetPasswordController
 } from './modules/auth/auth.controller.js'
 import { requireAuth } from './middleware/auth.middleware.js'
 
@@ -43,13 +45,16 @@ import perfilRoutes from './modules/perfil/perfil.routes.js'
 
 import {
   googleCallbackController,
-  StratGoogleLoginController
+  StratGoogleLoginController,
+  StartGoogleRegisterController
 } from './modules/auth/google/google.controller.js'
+ 
+
 
 import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
 import publicacionRoutes from './modules/publicacion/publicacion.routes.js'
 import router from './modules/registro-publicacion/publicacion.routes.js'
-
+import securityRoutes from "./routes/security.routes.js";
 // --------------------
 // LEGACY
 // --------------------
@@ -104,6 +109,8 @@ app.use('/uploads', express.static(path.resolve('uploads')))
 // --------------------
 // RUTAS LEGACY
 // --------------------
+app.post("/api/auth/forgot-password", forgotPasswordController);
+app.post("/api/auth/reset-password", resetPasswordController);
 app.use('/api/auth-legacy', authRoutes)
 app.get('/api/users/:id/publicaciones/free', authMiddleware, (_req, res) => {
   res.json({ restantes: 2 })
