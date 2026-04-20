@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import PropertyCard from "./PropertyCard";
 import { useRouter } from "next/navigation";
 
@@ -34,11 +34,20 @@ export default function PropertyCarousel({
     });
   };
 
-  const handleWheel = (e: React.WheelEvent) => {
-    if (!scrollRef.current) return;
-    e.preventDefault();
-    scrollRef.current.scrollBy({ left: e.deltaY * 2, behavior: "smooth" });
-  };
+    useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+       const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        e.preventDefault(); 
+        el.scrollLeft += e.deltaY;
+      }
+    };
+    
+    el.addEventListener("wheel", onWheel, { passive: false });
+
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
 
   const handleCardClick = (filterParam: string) => {
     router.push(`/propiedades?categoria=${category}&zona=${filterParam}`);
@@ -67,9 +76,8 @@ export default function PropertyCarousel({
         {/* Items */}
         <div
           ref={scrollRef}
-          onWheel={handleWheel}
           className=" flex gap-3 overflow-x-auto scroll-smooth px-9 py-2"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none", overscrollBehaviorX: "contain", touchAction: "pan-x"}}
         >
           {items.map((item, i) => (
             <PropertyCard
