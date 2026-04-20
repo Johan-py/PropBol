@@ -7,6 +7,7 @@ import {
   DollarSign,
   Users,
   Maximize,
+  Award,
   SlidersHorizontal,
   ChevronDown
 } from 'lucide-react'
@@ -199,6 +200,9 @@ options={['Casa', 'Departamento', 'Terreno', 'Cuarto', 'Espacios', 'Cementerio']
             </div>
             <div className="shrink-0">
               <MockFilterBtn icon={SlidersHorizontal} text="Más Filtros" hasChevron={false} />
+            </div>
+             <div className="shrink-0">
+              <MockFilterBtn icon={Award} text="Recomendados" hasChevron={false} />
             </div>
           </div>
         )}

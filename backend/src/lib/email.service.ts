@@ -1,78 +1,78 @@
 import { env } from "../config/env.js";
 
-const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email'
+const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
 
 interface EnviarCodigoParams {
-  emailDestino: string
-  codigo: string
-  nombreUsuario?: string
+  emailDestino: string;
+  codigo: string;
+  nombreUsuario?: string;
 }
 
 interface EmailSendResult {
-  success: boolean
-  messageId?: string
-  error?: unknown
+  success: boolean;
+  messageId?: string;
+  error?: unknown;
 }
 
 const sendBrevoEmail = async ({
   to,
   subject,
   htmlContent,
-  textContent
+  textContent,
 }: {
-  to: string
-  subject: string
-  htmlContent: string
-  textContent: string
+  to: string;
+  subject: string;
+  htmlContent: string;
+  textContent: string;
 }): Promise<EmailSendResult> => {
   try {
     const response = await fetch(BREVO_API_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'api-key': env.EMAIL_PASSWORD
+        "Content-Type": "application/json",
+        "api-key": env.EMAIL_PASSWORD,
       },
       body: JSON.stringify({
-        sender: { name: 'PropBol', email: env.EMAIL_USER },
+        sender: { name: "PropBol", email: env.EMAIL_USER },
         to: [{ email: to }],
         subject,
         htmlContent,
-        textContent
-      })
-    })
+        textContent,
+      }),
+    });
 
     if (!response.ok) {
-      const errorData = await response.json()
-      console.error('❌ Error al enviar email:', errorData)
-      return { success: false, error: errorData }
+      const errorData = await response.json();
+      console.error("❌ Error al enviar email:", errorData);
+      return { success: false, error: errorData };
     }
 
-    const data = (await response.json()) as { messageId?: string }
-    console.log(`✅ Email enviado a ${to} - ID: ${data.messageId}`)
-    return { success: true, messageId: data.messageId }
+    const data = (await response.json()) as { messageId?: string };
+    console.log(`✅ Email enviado a ${to} - ID: ${data.messageId}`);
+    return { success: true, messageId: data.messageId };
   } catch (error) {
-    console.error('❌ Error al enviar email:', error)
-    return { success: false, error }
+    console.error("❌ Error al enviar email:", error);
+    return { success: false, error };
   }
-}
+};
 
 export const verifyEmailTransport = async (): Promise<void> => {
   if (!env.EMAIL_USER || !env.EMAIL_PASSWORD) {
-    throw new Error('Credenciales de email no configuradas')
+    throw new Error("Credenciales de email no configuradas");
   }
-  console.log('✅ Servicio de email listo (Brevo API)')
-}
+  console.log("✅ Servicio de email listo (Brevo API)");
+};
 
 export const enviarCodigoCambioEmail = async ({
   emailDestino,
   codigo,
-  nombreUsuario
+  nombreUsuario,
 }: EnviarCodigoParams): Promise<EmailSendResult> => {
-  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : 'Hola,'
+  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : "Hola,";
 
   return sendBrevoEmail({
     to: emailDestino,
-    subject: 'Código de verificación - Cambio de email',
+    subject: "Código de verificación - Cambio de email",
     htmlContent: `
       <!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
       <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
@@ -97,20 +97,20 @@ export const enviarCodigoCambioEmail = async ({
         </div>
       </body></html>
     `,
-    textContent: `${saludo}\n\nTu código de verificación es: ${codigo}\n\nExpira en 5 minutos.`
-  })
-}
+    textContent: `${saludo}\n\nTu código de verificación es: ${codigo}\n\nExpira en 5 minutos.`,
+  });
+};
 
 export const enviarCodigoRegistro = async ({
   emailDestino,
   codigo,
-  nombreUsuario
+  nombreUsuario,
 }: EnviarCodigoParams): Promise<EmailSendResult> => {
-  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : 'Hola,'
+  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : "Hola,";
 
   return sendBrevoEmail({
     to: emailDestino,
-    subject: 'Código de verificación - Registro PropBol',
+    subject: "Código de verificación - Registro PropBol",
     htmlContent: `
       <!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
       <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
