@@ -9,7 +9,11 @@ import {
   Maximize,
   Award,
   SlidersHorizontal,
-  ChevronDown
+  ChevronDown,
+  Building, 
+  Bed,      
+  Trees,    
+  Flower2   
 } from 'lucide-react'
 import { useSearchFilters } from '@/hooks/useSearchFilters'
 import { LocationSearch } from '../layout/LocationSearch'
@@ -86,14 +90,22 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     }
   }, [])
 
+  const propertyTypes = [
+    { label: 'Casas', icon: Home },
+    { label: 'Departamentos', icon: Building },
+    { label: 'Cuartos', icon: Bed },
+    { label: 'Terrenos', icon: Trees },
+    { label: 'Espacios Cementerio', icon: Flower2 }
+  ]
+
   const handleSearch = (e?: React.FormEvent) => {
     if (e) e.preventDefault()
     const tipoMap: Record<string, string> = {
-      Casa: 'CASA',
-      Departamento: 'DEPARTAMENTO',
-      Terreno: 'TERRENO',
-      Cuarto: 'CUARTO',
-      Cementerio: 'TERRENO_MORTUORIO'
+      Casas: 'CASA',
+      Departamentos: 'DEPARTAMENTO',
+      Terrenos: 'TERRENO',
+      Cuartos: 'CUARTO',
+      "Espacios Cementerio": 'TERRENO_MORTUORIO'
     }
 
     const tipoFinal =
@@ -176,7 +188,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
             label={variant === 'map' ? '' : 'Tipo'}
             placeholder="Cualquier tipo"
             icon={Home}
-options={['Casa', 'Departamento', 'Terreno', 'Cuarto', 'Espacios', 'Cementerio']}
+            options={propertyTypes}
             onChange={(val: string) => setTipoInmueble(val)}
             value={tipoInmueble}
           />
