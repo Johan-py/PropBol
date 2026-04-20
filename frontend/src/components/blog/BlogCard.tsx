@@ -20,6 +20,7 @@ export default function BlogCard({
   category,
   categoryLabel,
   authorName,
+  publishedAt,
   onClick,
 }: BlogCardProps) {
   const handleClick = () => {
@@ -40,6 +41,7 @@ export default function BlogCard({
       tabIndex={onClick ? 0 : undefined}
       aria-label={onClick ? `Abrir blog: ${title}` : undefined}
       className={`
+        group
         overflow-hidden
         rounded-[28px]
         border
@@ -59,26 +61,37 @@ export default function BlogCard({
         <img
           src={imageUrl}
           alt={title}
-          className="h-52 w-full object-cover transition-transform duration-500 hover:scale-105"
+          className="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </div>
 
       <div className="space-y-4 p-5">
+        {/* Categoría */}
         <div className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
-          <span className="text-amber-700">{categoryLabel ?? category}</span>
+          <span className="text-amber-700">
+            {categoryLabel ?? category}
+          </span>
         </div>
 
+        {/* Título */}
         <h2 className="font-heading line-clamp-2 text-xl font-bold leading-snug text-stone-900">
           {title}
         </h2>
 
+        {/* Resumen */}
         <p className="line-clamp-3 text-sm leading-6 text-stone-600">
           {excerpt}
         </p>
 
-        <p className="pt-1 text-sm font-semibold uppercase tracking-[0.16em] text-stone-700">
-          {authorName}
-        </p>
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-2 text-xs text-stone-500">
+          <span className="font-semibold uppercase tracking-[0.16em] text-stone-700">
+            {authorName}
+          </span>
+          <span>
+            {new Date(publishedAt).toLocaleDateString()}
+          </span>
+        </div>
       </div>
     </article>
   );

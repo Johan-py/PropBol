@@ -139,7 +139,7 @@ export default function UserMenu({
               />
               <MenuLink
                 label="Mis zonas"
-                href="/zonas"
+                href="/profile/mis-zonas"
                 icon={Map}
                 onClick={onClosePanel}
               />
