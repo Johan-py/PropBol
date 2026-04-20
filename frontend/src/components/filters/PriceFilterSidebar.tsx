@@ -54,15 +54,15 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
   }
 
   return (
-    <div className="flex flex-col gap-8 p-6 w-full max-w-[350px] bg-white h-full border-r border-stone-200">
+    <div className="flex flex-col gap-8 p-6 w-full bg-white h-full overflow-y-auto">
       <div>
-        <h3 className="font-bold text-sm text-stone-800 uppercase tracking-wide mb-1">
+        <h3 className="font-bold text-sm text-stone-800 uppercase tracking-wide mb-1 text-center">
           Filtrar por Precio
         </h3>
-        <p className="text-sm text-stone-500 mb-4">Seleccione el tipo de moneda:</p>
+        <p className="text-sm text-stone-500 mb-4 text-center">Seleccione el tipo de moneda:</p>
 
         {/* Toggle de Moneda */}
-        <div className="flex bg-stone-100 rounded-full p-1 w-fit mb-6 shadow-inner">
+        <div className="flex bg-stone-100 rounded-full p-1 w-fit mb-6 shadow-inner mx-auto">
           <button
             onClick={() => setMoneda('BOB')}
             className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
