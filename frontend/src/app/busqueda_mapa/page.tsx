@@ -855,6 +855,7 @@ function BusquedaMapaContent() {
             onClose={() => setIsMisZonasOpen(false)}
             isAuthenticated={isAuthenticated}
             zonas={misZonasGuardadas}
+            currentUserId={isAuthenticated ? 1 : undefined}
             onAddZone={handleIntentarDibujarZona}
             onEditZone={(id) => {
               console.log('Lógica para editar la zona', id)
