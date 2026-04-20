@@ -1,10 +1,12 @@
 import type { Request, Response } from 'express'
 import {
   AuthError,
+  forgotPasswordService,
   getMeService,
   loginService,
   logoutService,
   registerUser,
+  resetPasswordService,
   verifyRegisterCodeService
 } from './auth.service.js'
 
@@ -162,7 +164,15 @@ export const getMeController = async (req: Request, res: Response) => {
       ...result
     })
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Sesión inválida o expirada'
+    // ✅ Si es AuthError (ej: cuenta desactivada = 403), reenviar el status correcto
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
+    const message =
+      error instanceof Error ? error.message : "Sesión inválida o expirada";
 
     return res.status(401).json({ message })
   }
@@ -182,6 +192,33 @@ export const logoutController = async (req: Request, res: Response) => {
     return res.status(200).json(result)
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Error al cerrar sesión'
+    return res.status(400).json({ message })
+  }
+};
+
+export const forgotPasswordController = async (req: Request, res: Response) => {
+  try {
+    const result = await forgotPasswordService(req.body)
+    return res.status(200).json(result)
+  } catch (error) {
+    return res.status(400).json({
+      message:
+        error instanceof Error
+          ? error.message
+          : 'Error al solicitar recuperación de contraseña'
+    })
+  }
+}
+
+export const resetPasswordController = async (req: Request, res: Response) => {
+  try {
+    const result = await resetPasswordService(req.body)
+    return res.status(200).json(result)
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({ message: error.message })
+    }
+    const message = error instanceof Error ? error.message : 'Error al restablecer contraseña'
     return res.status(400).json({ message })
   }
 }

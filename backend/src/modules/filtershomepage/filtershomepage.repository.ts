@@ -1,5 +1,5 @@
-import { $Enums } from '@prisma/client'
-import { prisma } from '../../lib/prisma.client.js'
+import { $Enums } from "@prisma/client";
+import { prisma } from "../../lib/prisma.client.js";
 
 export class FiltersHomepageRepository {
   async getCountsByCity(tipoAccion: $Enums.TipoAccion) {
@@ -32,13 +32,13 @@ export class FiltersHomepageRepository {
         deptCounts.set(normalizedDept, new Set())
       }
 
-      deptCounts.get(normalizedDept)!.add(u.inmuebleId)
+      deptCounts.get(normalizedDept)!.add(u.inmuebleId);
     }
 
     const counts = Array.from(deptCounts.entries()).map(([dept, ids]) => ({
       departamento: dept,
-      count: ids.size
-    }))
+      count: ids.size,
+    }));
 
     return counts.sort((a, b) => b.count - a.count)
   }

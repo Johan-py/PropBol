@@ -47,18 +47,20 @@ type GooglePopupErrorMessage = {
 
 type GooglePopupMessage = GooglePopupSuccessMessage | GooglePopupErrorMessage
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
-const LOGIN_TIMEOUT_MS = 10000
-const GOOGLE_LOGIN_TIMEOUT_MS = 2 * 60 * 1000
-const DEFAULT_POST_LOGIN_REDIRECT = '/'
-const REDIRECT_AFTER_LOGIN_KEY = 'redirectAfterLogin'
-const SESSION_DURATION_MS = 3 * 60 * 1000
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+const LOGIN_TIMEOUT_MS = 10000;
+const GOOGLE_LOGIN_TIMEOUT_MS = 2 * 60 * 1000;
+const DEFAULT_POST_LOGIN_REDIRECT = "/";
+const REDIRECT_AFTER_LOGIN_KEY = "redirectAfterLogin";
+const SESSION_DURATION_MS = 60 * 60 * 1000;
 
 const NO_CONNECTION_MESSAGE = 'Sin conexión a internet. Verifica tu red e intenta nuevamente.'
 const SERVER_CONNECTION_MESSAGE = 'No se pudo conectar con el servidor. Intenta nuevamente.'
 const LOGIN_TIMEOUT_MESSAGE = 'La solicitud tardó demasiado. Por favor intenta nuevamente.'
 const GOOGLE_TIMEOUT_MESSAGE =
   'La autenticación con Google tardó demasiado. Por favor intenta nuevamente.'
+
+const DEACTIVATED_ACCOUNT_MESSAGE = "Esta cuenta está desactivada";
 
 const clearClientSession = () => {
   localStorage.removeItem('token')
@@ -412,6 +414,11 @@ export default function LoginForm() {
       if (!response.ok) {
         setPassword('')
 
+        if (response.status === 403) {
+          setErrorMessage(DEACTIVATED_ACCOUNT_MESSAGE);
+          return;
+        }
+
         if (response.status === 404) {
           setErrorMessage(
             'Esta cuenta no está registrada. Puedes registrarte para crear una cuenta.'
@@ -477,8 +484,10 @@ export default function LoginForm() {
             className="relative"
             ref={passwordContainerRef}
             onBlur={(e) => {
-              if (!passwordContainerRef.current?.contains(e.relatedTarget as Node)) {
-                setShowPassword(false)
+              if (
+                !passwordContainerRef.current?.contains(e.relatedTarget as Node)
+              ) {
+                setShowPassword(false);
               }
             }}
           >
@@ -505,6 +514,15 @@ export default function LoginForm() {
           </div>
 
           {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
+        </div>
+        
+         <div className="-mt-2 text-left">
+          <Link
+            href="/forgot-password"
+            className="text-sm font-medium text-orange-500 hover:underline"
+          >
+            ¿Olvidaste tu contraseña?
+          </Link>
         </div>
 
         {errorMessage && (
@@ -563,5 +581,5 @@ export default function LoginForm() {
         </Link>
       </p>
     </div>
-  )
+  );
 }

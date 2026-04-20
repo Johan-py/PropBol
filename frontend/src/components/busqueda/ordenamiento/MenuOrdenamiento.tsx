@@ -216,7 +216,7 @@ export function MenuOrdenamiento({
             className={`flex flex-col gap-1.5 transition-opacity duration-200
             ${fechaApagada ? 'opacity-40 pointer-events-none' : ''}`}
           >
-            <span className="text-xs text-gray-400 font-medium">Fecha:</span>
+            <span className="text-xs text-gray-400 font-medium">Más:</span>
             <Dropdown
               label={labelFecha}
               isOpen={dropdownAbierto === 'fecha'}

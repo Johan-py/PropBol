@@ -20,5 +20,7 @@ export const env = {
   FRONTEND_URL: process.env.FRONTEND_URL ?? 'http://localhost:3000',
   EMAIL_USER: requireEnv('EMAIL_USER'),
   EMAIL_PASSWORD:
-    process.env.EMAIL_PASSWORD ?? process.env.BREVO_API_KEY ?? requireEnv('EMAIL_PASSWORD')
-}
+    process.env.EMAIL_PASSWORD ??
+    process.env.BREVO_API_KEY ??
+    requireEnv("EMAIL_PASSWORD"),
+};
