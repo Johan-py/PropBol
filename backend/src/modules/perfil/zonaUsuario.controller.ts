@@ -7,9 +7,10 @@ export const getZonasUsuario = async (req: Request, res: Response): Promise<Resp
     const usuario = (req as any).usuario;
     if (!usuario) return res.status(401).json({ message: 'No autenticado' });
 
+    // ✅ CORREGIDO: usar camelCase según Prisma
     const zonas = await prisma.zona_usuario.findMany({
-      where: { usuarioId: usuario.id }, // CamelCase según sugerencia de Prisma
-      orderBy: { creadoEn: 'desc' }     // CamelCase para evitar error TS2561
+      where: { usuarioId: usuario.id },
+      orderBy: { creadoEn: 'desc' }
     })
 
     return res.json(zonas)
@@ -26,10 +27,11 @@ export const getZonaById = async (req: Request, res: Response): Promise<Response
     const usuario = (req as any).usuario;
     if (!usuario) return res.status(401).json({ message: 'No autenticado' });
 
+    // ✅ CORREGIDO: usar camelCase según Prisma
     const zona = await prisma.zona_usuario.findFirst({
       where: {
         id: Number(id),
-        usuarioId: usuario.id // CamelCase
+        usuarioId: usuario.id
       }
     })
 
@@ -58,14 +60,16 @@ export const createZona = async (req: Request, res: Response): Promise<Response>
       })
     }
 
+    // ✅ CORREGIDO: usar camelCase según Prisma
     const nuevaZona = await prisma.zona_usuario.create({
       data: {
         nombre,
         descripcion,
         geometria,
         area,
-        usuarioId: usuario.id,    // CamelCase
-        actualizadoEn: new Date() // CamelCase
+        usuarioId: usuario.id,
+        actualizadoEn: new Date(),
+        creadoEn: new Date()
       }
     })
 
@@ -83,9 +87,9 @@ export const updateZona = async (req: Request, res: Response): Promise<Response>
     const usuario = (req as any).usuario;
     if (!usuario) return res.status(401).json({ message: 'No autenticado' });
 
-    // 🚩 LA CORRECCIÓN ESTÁ AQUÍ: Extraer los datos del cuerpo de la petición
     const { nombre, descripcion, geometria, area } = req.body;
 
+    // ✅ CORREGIDO: usar camelCase según Prisma
     const zona = await prisma.zona_usuario.findFirst({
       where: {
         id: Number(id),
@@ -97,6 +101,7 @@ export const updateZona = async (req: Request, res: Response): Promise<Response>
       return res.status(404).json({ message: 'Zona no encontrada' });
     }
 
+    // ✅ CORREGIDO: usar camelCase según Prisma
     const zonaActualizada = await prisma.zona_usuario.update({
       where: { id: Number(id) },
       data: {
@@ -122,6 +127,7 @@ export const deleteZona = async (req: Request, res: Response): Promise<Response>
     const usuario = (req as any).usuario;
     if (!usuario) return res.status(401).json({ message: 'No autenticado' });
 
+    // ✅ CORREGIDO: usar camelCase según Prisma
     const zona = await prisma.zona_usuario.findFirst({
       where: {
         id: Number(id),
@@ -153,6 +159,7 @@ export const getPropiedadesEnZona = async (req: Request, res: Response): Promise
 
     const zonaId = Number(id)
 
+    // ✅ CORREGIDO: usar camelCase según Prisma
     const zona = await prisma.zona_usuario.findFirst({
       where: {
         id: zonaId,
@@ -166,7 +173,7 @@ export const getPropiedadesEnZona = async (req: Request, res: Response): Promise
 
     const geoJsonText = JSON.stringify(zona.geometria)
 
-    // SQL RAW: Aquí SÍ usamos snake_case porque hablamos con PostgreSQL directamente
+    // SQL RAW: Aquí usamos snake_case porque hablamos con PostgreSQL directamente
     const inmueblesIds = await prisma.$queryRaw<{ id: number }[]>`
       SELECT DISTINCT i.id
       FROM "inmueble" i
@@ -187,21 +194,22 @@ export const getPropiedadesEnZona = async (req: Request, res: Response): Promise
       return res.json({ success: true, data: [], total: 0 })
     }
 
+    // ✅ CORREGIDO: usar camelCase según Prisma
     const propiedades = await prisma.inmueble.findMany({
       where: {
         id: { in: ids },
         estado: 'ACTIVO'
       },
       include: {
-        ubicacion_inmueble: true,
-        usuario: {
+        ubicacion: true,              // ✅ relación correcta
+        propietario: {                // ✅ relación correcta (no "usuario")
           select: {
             nombre: true,
             apellido: true,
             correo: true
           }
         },
-        publicacion: {
+        publicaciones: {              // ✅ relación correcta (plural)
           where: { estado: 'ACTIVA' },
           take: 1,
           include: {
@@ -215,22 +223,23 @@ export const getPropiedadesEnZona = async (req: Request, res: Response): Promise
       }
     })
 
+    // ✅ CORREGIDO: mapeo correcto de campos
     const propiedadesFormateadas = propiedades.map(prop => ({
       id: prop.id,
       titulo: prop.titulo,
-      tipo_accion: prop.tipo_accion,
+      tipo_accion: prop.tipoAccion,        // campo: tipoAccion
       precio: prop.precio,
-      superficie_m2: prop.superficie_m2,
-      nro_cuartos: prop.nro_cuartos,
-      nro_banos: prop.nro_banos,
-      direccion: prop.ubicacion_inmueble?.direccion,
-      ciudad: prop.ubicacion_inmueble?.ciudad,
-      zona: prop.ubicacion_inmueble?.zona,
-      latitud: prop.ubicacion_inmueble?.latitud ? Number(prop.ubicacion_inmueble.latitud) : null,
-      longitud: prop.ubicacion_inmueble?.longitud ? Number(prop.ubicacion_inmueble.longitud) : null,
-      imagen: prop.publicacion[0]?.multimedia[0]?.url || null,
-      propietario: `${prop.usuario.nombre} ${prop.usuario.apellido}`,
-      contacto: prop.usuario.correo
+      superficie_m2: prop.superficieM2,    // campo: superficieM2
+      nro_cuartos: prop.nroCuartos,        // campo: nroCuartos
+      nro_banos: prop.nroBanos,            // campo: nroBanos
+      direccion: prop.ubicacion?.direccion,
+      ciudad: prop.ubicacion?.ciudad,
+      zona: prop.ubicacion?.zona,
+      latitud: prop.ubicacion?.latitud ? Number(prop.ubicacion.latitud) : null,
+      longitud: prop.ubicacion?.longitud ? Number(prop.ubicacion.longitud) : null,
+      imagen: prop.publicaciones[0]?.multimedia[0]?.url || null,
+      propietario: `${prop.propietario.nombre} ${prop.propietario.apellido}`,
+      contacto: prop.propietario.correo
     }))
 
     return res.json({

@@ -72,17 +72,17 @@ const mapNotificationToFrontend = (notification: {
   id: number
   titulo: string
   mensaje: string
-  leida: boolean
-  archivada?: boolean
-  fechaCreacion?: Date
+  leida: boolean | null
+  archivada?: boolean | null
+  fechaCreacion?: Date | null
 }) => {
   return {
     id: notification.id,
     title: notification.titulo,
     description: notification.mensaje,
-    status: notification.leida ? 'leida' : 'no leida',
-    archivada: notification.archivada ?? false,
-    fechaCreacion: notification.fechaCreacion ?? null
+    status: notification.leida === true ? 'leida' : 'no leida',
+    archivada: notification.archivada === true ? true : false,
+    fechaCreacion: notification.fechaCreacion || null
   }
 }
 
@@ -205,7 +205,7 @@ export const markNotificationAsReadService = async (id: number, usuarioId: numbe
       title: notification.titulo,
       description: notification.mensaje,
       status: 'leida',
-      archivada: notification.archivada ?? false
+      archivada: notification.archivada === true ? true : false
     }
   }
 }
