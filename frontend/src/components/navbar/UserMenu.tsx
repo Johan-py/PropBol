@@ -50,7 +50,10 @@ export default function UserMenu({
 }: UserMenuProps) {
   return (
     <>
+      {/* HU-05: ID de referencia para el tour guiado - Paso "Tu cuenta" */}
+      {/* Este botón será resaltado para mostrar dónde gestionar perfil y sesión */}
       <button
+        id="tour-user"
         onClick={onTogglePanel}
         className="p-2 text-gray-700 rounded-full hover:bg-black/5 transition focus:outline-none"
         aria-label="Abrir menú de usuario"
@@ -133,7 +136,7 @@ export default function UserMenu({
                 icon={UserIcon}
                 onClick={onClosePanel}
               />
-              {/* ✅ Se mantienen ambas opciones: la nueva y la existente */}
+              {/*  Se mantienen ambas opciones: la nueva y la existente */}
               <MenuLink
                 label="Mis propiedades vistas"
                 href="/vistas"
