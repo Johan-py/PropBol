@@ -285,27 +285,27 @@ function ContenidoMultimediaPageContent() {
         video.type === 'youtube' && typeof video.sourceUrl === 'string' && video.sourceUrl.length > 0
     )
 
-    for (const video of youtubeVideos) {
-      const response = await fetch(
-        `${getApiUrl()}/api/publicaciones/${publicacionId}/multimedia/video-link`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            url: video.sourceUrl
-          })
-        }
-      )
-
-      const data = await response.json().catch(() => null)
-
-      if (!response.ok) {
-        throw new Error(data?.message || 'No se pudo registrar el enlace del video.')
-      }
+  for (const video of youtubeVideos) {
+    const response = await fetch(
+    `${getApiUrl()}/api/publicaciones/${publicacionId}/multimedia/video-link`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        videoUrl: video.sourceUrl
+      })
     }
+  )
+
+  const data = await response.json().catch(() => null)
+
+  if (!response.ok) {
+    throw new Error(data?.message || 'No se pudo registrar el enlace del video.')
+  }
+}
   }
 
   const handlePublish = async () => {
