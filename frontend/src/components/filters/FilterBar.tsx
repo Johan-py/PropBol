@@ -21,6 +21,8 @@ import { LocationSearch } from '../layout/LocationSearch'
 import { ComboBox } from '../ui/ComboBox'
 import TransactionModeFilter from './TransactionModeFilter'
 import { useRouter } from 'next/navigation'
+import SuperficieFilter from './SuperficieFilter'
+
 
 interface FilterBarProps {
   onSearch?: (filtros: {
@@ -31,6 +33,7 @@ interface FilterBarProps {
   }) => void
   variant?: 'home' | 'map'
   onOpenPriceFilter?: () => void
+   onOpenSuperficieFilter?: () => void 
 }
 
 type LocationValue =
@@ -58,6 +61,7 @@ const MockFilterBtn = ({
     type="button"
     className="h-[36px] flex items-center justify-between bg-white border border-stone-200 text-stone-600 px-3 rounded-xl shadow-sm hover:border-stone-300 transition-all font-inter text-sm whitespace-nowrap gap-2 shrink-0 focus:outline-none cursor-default"
      onClick={(e) => { e.preventDefault(); if (onClick) onClick() }}
+   
   >
     <div className="flex items-center gap-2">
       {Icon && <Icon className="w-4 h-4 text-stone-500" />}
@@ -67,7 +71,7 @@ const MockFilterBtn = ({
   </button>
 )
 
-export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter }: FilterBarProps) {
+export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter }: FilterBarProps){
   const router = useRouter()
 
   const { updateFilters } = useSearchFilters()
@@ -219,8 +223,16 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
               <CapacidadButton variant={variant} />
             </div>
             <div className="shrink-0">
-              <MockFilterBtn icon={Maximize} text="Metros" />
-            </div>
+  <button
+    type="button"
+    onClick={() => onOpenSuperficieFilter?.()}
+    className="h-[36px] flex items-center gap-2 px-3 rounded-xl shadow-sm transition-all text-sm whitespace-nowrap focus:outline-none border bg-white text-stone-600 border-stone-200 hover:border-stone-300"
+  >
+    <Maximize className="w-4 h-4 text-stone-500" />
+    <span>Metros</span>
+    <ChevronDown className="w-4 h-4 text-stone-400" />
+  </button>
+</div>
             <div className="shrink-0">
               <MockFilterBtn icon={SlidersHorizontal} text="Más Filtros" hasChevron={false} />
             </div>
