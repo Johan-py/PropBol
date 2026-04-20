@@ -31,7 +31,7 @@ export class LocationsService {
       })
     ])
 
-    let sugerencias: any[] = []
+    const sugerencias: any[] = []
 
     // 2. Procesamos en orden de prioridad para búsquedas inmobiliarias
     municipios.forEach(m => {
