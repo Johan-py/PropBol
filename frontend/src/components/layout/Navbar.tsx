@@ -313,8 +313,8 @@ export default function Navbar() {
         <div className="container mx-auto px-4 py-1.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
-              {/* HU-05: ID para tour guiado - paso "Logo" */}
-              <div id="tour-logo">
+              {}
+              <div />
                 <Logo />
               </div>
               <NavLinks />
@@ -539,8 +539,8 @@ export default function Navbar() {
                 )}
               </div>
 
-              {/* HU-05: ID para tour guiado - paso "Tu cuenta" */}
-              <div id="tour-user" className="relative" ref={panelRef}>
+              {}
+              <div className="relative" ref={panelRef}>
                 <UserMenu
                   user={user}
                   isPanelOpen={isPanelOpen}
@@ -550,8 +550,9 @@ export default function Navbar() {
                   onOpenLogoutModal={handleOpenLogoutModal}
                 />
               </div>
-
+ 
               <button
+              /* HU-05: ID de referencia para el tour guiado - Paso "Menú móvil" (solo visible en mobile) */
                 id="tour-menu-mobile"
                 type="button"
                 onClick={() => setIsMobileMenuOpen(true)}
