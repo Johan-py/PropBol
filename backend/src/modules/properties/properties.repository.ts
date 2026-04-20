@@ -1,3 +1,4 @@
+import type { Categoria, Prisma, TipoAccion } from "@prisma/client";
 import { prisma } from "../../lib/prisma.client.js";
 
 export interface FiltrosBusqueda {
@@ -11,16 +12,30 @@ export interface FiltrosBusqueda {
   superficie?: "menor-a-mayor" | "mayor-a-menor";
 }
 
-// Helper para limpiar las variaciones de Anticrético
-function normalizarModoAccion(m: string): string {
+const CATEGORIAS_VALIDAS: readonly Categoria[] = [
+  "CASA",
+  "DEPARTAMENTO",
+  "TERRENO",
+  "OFICINA",
+];
+const TIPOS_ACCION_VALIDOS: readonly TipoAccion[] = [
+  "VENTA",
+  "ALQUILER",
+  "ANTICRETO",
+];
+
+function normalizarModoAccion(m: string): TipoAccion | null {
   const v = m.toUpperCase().trim();
-  return v.includes("ANTICR") ? "ANTICRETO" : v;
+  if (v.includes("ANTICR")) return "ANTICRETO";
+  if (v === "VENTA") return "VENTA";
+  if (v === "ALQUILER") return "ALQUILER";
+  return null;
 }
 
 export const propertiesRepository = {
   async getAll(filtros: FiltrosBusqueda = {}) {
     // ── WHERE ──────────────────────────────────────────────────────────────
-    const where: any = { estado: "ACTIVO" };
+    const where: Prisma.InmuebleWhereInput = { estado: "ACTIVO" };
 
     // 1. Filtro de Categoría / Tipo Inmueble (Soporta múltiples selecciones)
     const CATEGORIAS_VALIDAS = ["CASA", "DEPARTAMENTO", "TERRENO", "OFICINA"];
@@ -30,7 +45,9 @@ export const propertiesRepository = {
         .map((t) => String(t).toUpperCase().trim())
         .filter((t) => t && t !== "CUALQUIER TIPO");
 
-      const tipos = rawArr.filter((t) => CATEGORIAS_VALIDAS.includes(t));
+      const tipos = rawArr.filter((t): t is Categoria =>
+        CATEGORIAS_VALIDAS.includes(t as Categoria),
+      );
 
       if (rawArr.length > 0 && tipos.length === 0) {
         return [];
@@ -48,8 +65,8 @@ export const propertiesRepository = {
         : [filtros.modoInmueble];
 
       const modos = modosRaw
-        .filter((m) => m && String(m).trim() !== "")
-        .map((m) => normalizarModoAccion(String(m)));
+        .map((m) => normalizarModoAccion(String(m)))
+        .filter((m): m is TipoAccion => m !== null);
 
       if (modos.length === 1) {
         where.tipoAccion = modos[0];
@@ -88,7 +105,7 @@ export const propertiesRepository = {
     }
 
     // ── ORDER BY ───────────────────────────────────────────────────────────
-    const orderBy: any[] = [];
+    const orderBy: Prisma.InmuebleOrderByWithRelationInput[] = [];
 
     if (filtros.precio === "menor-a-mayor") {
       orderBy.push({ precio: "asc" });

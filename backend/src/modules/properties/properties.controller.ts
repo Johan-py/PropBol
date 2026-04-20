@@ -15,20 +15,29 @@ export const propertiesController = {
         superficie,
       } = req.query;
 
+      const validFecha =
+        fecha === "mas-recientes" ||
+        fecha === "mas-populares" ||
+        fecha === "mas-antiguos"
+          ? fecha
+          : undefined;
+      const validPrecio =
+        precio === "menor-a-mayor" || precio === "mayor-a-menor"
+          ? precio
+          : undefined;
+      const validSuperficie =
+        superficie === "menor-a-mayor" || superficie === "mayor-a-menor"
+          ? superficie
+          : undefined;
+
       const filtros: FiltrosBusqueda = {
-        tipoInmueble: tipoInmueble as string | string[],
-        modoInmueble: modoInmueble as string | string[],
+        tipoInmueble: tipoInmueble as any,
+        modoInmueble: modoInmueble as any,
         query: query as string,
         locationId: locationId ? Number(locationId) : undefined,
-        fecha: fecha as any,
-        precio: precio as any,
-        superficie: superficie as any,
-      };
-
-      const orden = {
-        fecha: fecha as "mas-recientes" | "mas-populares" | undefined,
-        precio: precio as "menor-a-mayor" | "mayor-a-menor" | undefined,
-        superficie: superficie as "menor-a-mayor" | "mayor-a-menor" | undefined,
+        fecha: validFecha,
+        precio: validPrecio,
+        superficie: validSuperficie,
       };
 
       const inmuebles = await propertiesService.getAll(filtros);

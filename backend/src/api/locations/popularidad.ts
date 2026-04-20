@@ -1,7 +1,8 @@
+import type { Request, Response } from "express";
 import { LocationsService } from "../../modules/locations/locations.service.js";
 
 const locationsService = new LocationsService();
-const popularidadHandler = async (req: any, res: any) => {
+const popularidadHandler = async (req: Request, res: Response) => {
   // 1. Validar el método (solo permitimos POST desde tu Hook)
   if (req.method !== "POST") {
     return res.status(405).json({ message: "Método no permitido" });
@@ -29,11 +30,10 @@ const popularidadHandler = async (req: any, res: any) => {
       id: actualizado.id,
       nuevaPopularidad: actualizado.popularidad,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("[DATABASE_ERROR] Error al subir popularidad:", error);
     return res.status(500).json({
       error: "Error interno del servidor",
-      details: error.message,
     });
   }
 };

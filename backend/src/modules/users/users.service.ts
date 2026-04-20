@@ -28,7 +28,7 @@ export const createUserService = async (data: payload) => {
     throw new Error("Las contraseñas no coinciden");
   }
 
-  const { confirmPassword, ...userData } = data;
+  const { confirmPassword: _confirmPassword, ...userData } = data;
 
   return createUserRepository(userData);
 };

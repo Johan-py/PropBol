@@ -1,6 +1,16 @@
 import { $Enums } from "@prisma/client";
 import { FiltersHomepageRepository } from "./filtershomepage.repository.js";
 
+type RawHomeCount = {
+  departamento?: string | null;
+  count: number;
+};
+
+type RawCategoryCount = {
+  categoria?: string | null;
+  _count: { id: number };
+};
+
 export class FiltersHomepageService {
   private repository = new FiltersHomepageRepository();
 
@@ -11,7 +21,7 @@ export class FiltersHomepageService {
       this.repository.getCountsByCategoria(),
     ]);
 
-    const mapToHomeFilter = (item: any) => ({
+    const mapToHomeFilter = (item: RawHomeCount) => ({
       name: item.departamento || "Sin nombre",
       count: item.count,
     });
@@ -26,7 +36,7 @@ export class FiltersHomepageService {
     ];
 
     const categoriesMapped = requiredCategories.map((reqCat) => {
-      const found = categoriesRaw.find((c: any) => c.categoria === reqCat.id);
+      const found = categoriesRaw.find((c) => c.categoria === reqCat.id);
       return {
         name: reqCat.label,
         count: found ? found._count.id : 0,

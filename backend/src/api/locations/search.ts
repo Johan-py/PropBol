@@ -1,11 +1,11 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+import type { Request, Response } from "express";
 import { LocationsService } from "../../modules/locations/locations.service.js";
 
 const locationsService = new LocationsService();
 
 export default async function locationSearchHandler(
-  req: VercelRequest,
-  res: VercelResponse,
+  req: Request,
+  res: Response,
 ) {
   try {
     const query = req.query.q as string;

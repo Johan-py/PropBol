@@ -1,7 +1,4 @@
 import { getUsersService, createUserService } from "./users.service.js";
-type payload = {
-  name: string;
-};
 export const getUsersController = async () => {
   return getUsersService();
 };

@@ -2,7 +2,6 @@ import path from "path";
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import { env } from "./config/env.js";
 import type { Request, Response } from "express";
 
 // --------------------
@@ -107,6 +106,7 @@ app.use("/api/publicaciones-legacy", publicacionesRoutes);
 app.use("/api/publicaciones", publicacionRoutes);
 app.use("/api/publicaciones", multimediaRoutes);
 app.use("/api/perfil", correoverificacionRoutes);
+app.use("/api/perfil", perfilRoutes);
 app.use("/api/perfil/usuario", perfilRoutes);
 app.use("/api", router);
 app.use("/api/publicaciones", publicacionRoutes);
@@ -143,7 +143,7 @@ app.get("/api/banners", (req, res) => bannersController.getBanners(req, res));
 // LOCATIONS
 // --------------------
 app.get("/api/locations/search", async (req: Request, res: Response) => {
-  await locationSearchHandler(req as any, res as any);
+  await locationSearchHandler(req, res);
 });
 
 // --------------------

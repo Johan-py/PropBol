@@ -5,7 +5,7 @@ import { prisma } from "../lib/prisma.client.js";
 export const crearPublicacion = async (req: Request, res: Response) => {
   try {
     const { titulo, descripcion } = req.body;
-    const userId = (req as any).user.id; // viene del middleware JWT
+    const userId = (req as unknown as { user?: { id: number } }).user?.id;
 
     // validar límite de publicaciones gratuitas
     const publicaciones = await prisma.publicacion.count({
@@ -28,7 +28,7 @@ export const crearPublicacion = async (req: Request, res: Response) => {
     });
 
     res.status(201).json(nueva);
-  } catch (_error) {
+  } catch {
     res.status(500).json({ error: "Error al crear publicación" });
   }
 };
@@ -38,7 +38,7 @@ export const listarPublicaciones = async (req: Request, res: Response) => {
   try {
     const publicaciones = await prisma.publicacion.findMany();
     res.json(publicaciones);
-  } catch (_error) {
+  } catch {
     res.status(500).json({ error: "Error al listar publicaciones" });
   }
 };
@@ -55,7 +55,7 @@ export const validarPublicacionesFree = async (req: Request, res: Response) => {
     const restantes = Math.max(limiteGratis - publicaciones, 0);
 
     res.json({ restantes });
-  } catch (_error) {
+  } catch {
     res.status(500).json({ error: "Error al validar publicaciones gratuitas" });
   }
 };

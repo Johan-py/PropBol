@@ -4,7 +4,11 @@ import { findActiveSessionByToken } from "../modules/auth/auth.repository.js";
 
 // Extender Request
 export interface AuthRequest extends Request {
-  usuario?: any;
+  usuario?: {
+    id: number;
+    nombre?: string;
+    correo?: string;
+  };
 }
 
 export const validarJWT = async (
@@ -47,7 +51,7 @@ export const validarJWT = async (
     req.usuario = session.usuario;
 
     next();
-  } catch (error) {
+  } catch {
     return res.status(401).json({
       message: "Token inválido",
     });

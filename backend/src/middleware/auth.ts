@@ -18,7 +18,17 @@ export function verificarToken(
 
   try {
     const secret = process.env.JWT_SECRET || "mi-secreto-temporal";
-    const decoded = jwt.verify(token, secret) as any;
+    const decoded = jwt.verify(token, secret) as {
+      id: number;
+      correo?: string;
+    };
+
+    if (!decoded || typeof decoded.id !== "number") {
+      return res.status(403).json({
+        error: "Token inválido",
+        message: "No pudimos validar tu sesión",
+      });
+    }
 
     req.user = {
       id: decoded.id,

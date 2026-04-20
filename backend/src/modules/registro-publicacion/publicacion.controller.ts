@@ -6,9 +6,15 @@ export const createProperty = async (req: Request, res: Response) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
+    const errorItems = errors.array() as Array<{
+      param?: string;
+      path?: string;
+      msg: string;
+    }>;
+
     return res.status(400).json({
-      errores: errors.array().map((error: ValidationError) => ({
-        campo: error.path,
+      errores: errorItems.map((error) => ({
+        campo: error.param ?? error.path ?? "unknown",
         mensaje: error.msg,
       })),
     });

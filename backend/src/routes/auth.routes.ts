@@ -15,7 +15,7 @@ router.get("/validate", (req, res) => {
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET) as { userId: number };
     return res.json({ valid: true, userId: decoded.userId });
-  } catch (error) {
+  } catch {
     return res.status(401).json({ valid: false, message: "Invalid token" });
   }
 });

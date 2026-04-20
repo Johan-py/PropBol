@@ -3,8 +3,12 @@ import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { env } from "../config/env.js";
 
+type AuthRequest = Request & {
+  userId?: number;
+};
+
 export const authMiddleware = (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction,
 ) => {
@@ -16,9 +20,9 @@ export const authMiddleware = (
 
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET) as { userId: number };
-    (req as any).userId = decoded.userId;
+    req.userId = decoded.userId;
     next();
-  } catch (error) {
+  } catch {
     return res.status(401).json({ message: "Invalid token" });
   }
 };
