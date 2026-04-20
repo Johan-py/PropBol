@@ -2,6 +2,7 @@
 import type { Request, Response } from "express";
 import { prisma } from "../../lib/prisma.client.js";
 import { enviarCodigoCambioEmail } from "../../lib/email.service.js";
+import { invalidateOtherUserSessions } from "../auth/auth.repository.js";
 
 interface AuthRequest extends Request {
   usuario?: {
@@ -14,8 +15,10 @@ export const cambiarPassword = async (req: AuthRequest, res: Response) => {
   try {
     const { passwordActual, nuevaPassword } = req.body
     const usuarioId = req.usuario?.id
+    const authHeader = req.headers.authorization;
+    const currentToken = authHeader && authHeader.split(" ")[1];
 
-    if (!usuarioId) {
+    if (!usuarioId || !currentToken) {
       return res.status(401).json({ ok: false, msg: 'No autorizado' })
     }
 
@@ -35,6 +38,8 @@ export const cambiarPassword = async (req: AuthRequest, res: Response) => {
       where: { id: usuarioId },
       data: { password: nuevaPassword }
     })
+
+    await invalidateOtherUserSessions(usuarioId, currentToken);
 
     return res.json({ ok: true, msg: 'Contraseña actualizada correctamente' })
   } catch (error) {

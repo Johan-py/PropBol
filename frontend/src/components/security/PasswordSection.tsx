@@ -139,6 +139,7 @@ export default function PasswordSection() {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
+        passwordActual: passwordActual.trim(),
         nuevaPassword: nuevaPassword.trim(),
       }),
     });
@@ -146,7 +147,7 @@ export default function PasswordSection() {
     const data = await response.json();
 
     if (!response.ok || !data.ok) {
-      const nuevosIntentos = intentosFallidos + 1;
+      const nuevosIntentos = 0 + 1;
       setIntentosFallidos(nuevosIntentos);
       localStorage.setItem("cambio_password_intentos", String(nuevosIntentos));
 
