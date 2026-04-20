@@ -1,4 +1,4 @@
-import { prisma } from '../../lib/prisma.config'
+import { prisma } from '../../lib/prisma.client.js'
 
 export class TelemetriaRepository {
   async guardarBusqueda(usuarioId: number | null, ip: string, metaData: any) {
