@@ -15,80 +15,71 @@ model Rol {
 }
 
 model Usuario {
-  id                                    Int                     @id @default(autoincrement())
-  nombre                                String
-  apellido                              String
-  correo                                String                  @unique
-  password                              String
-  pais                                  String?
-  avatar                                String?
-  genero                                genero?
-  direccion                             String?
-  activo                                Boolean?                @default(true)
-  fechaRegistro                         DateTime?               @default(now()) @db.Timestamp(6)
-  createdAt                             DateTime?               @default(now()) @db.Timestamp(6)
-  intentos_fallidos_cambio_password     Int                     @default(0)
-  bloqueo_cambio_password_hasta         DateTime?               @db.Timestamptz(6)
-  password_actualizado_en               DateTime                @default(now()) @db.Timestamptz(6)
-  two_factor_activo                     Boolean                 @default(false)
-  two_factor_metodo                     String                  @default("email") @db.VarChar(20)
-  two_factor_activado_en                DateTime?               @db.Timestamptz(6)
-  controlador                           Boolean                 @default(false)
-  fechaNacimiento                       DateTime?
-  telemetriaCompartida                  Boolean?                @default(false)
-  zonaConexion                          String?                 @db.VarChar(100)
-  notificacionWhatsapp                  Boolean?                @default(false)
-  rolId                                 Int?
-  notificacion_email                    Boolean?                @default(true)
-  notificacion_whatsapp                 Boolean?                @default(false)
-  fecha_registro                        DateTime?               @default(now()) @db.Timestamp(6)
-  updatedAt                             DateTime?               @updatedAt @db.Timestamp(6)
-  desactivado_en                        DateTime?               @db.Timestamp(6)
-  fecha_nacimiento                      DateTime?               @db.Timestamp(6)
-  telemetria_compartida                 Boolean?                @default(false)
-  zona_conexion                         String?                 @db.VarChar(100)
-  autenticacion_social                  autenticacion_social[]
-  bitacora_pagos                        bitacora_pagos[]
-  cambio_email                          CambioEmail[]
-  codigo_2fa                            codigo_2fa[]
-  comparacion                           comparacion[]
-  favorito                              favorito[]
-  historial_busqueda                    historial_busqueda[]
-  historial_password                    historial_password[]
-  inmueble                              Inmueble[]
-  notificaciones                        Notificacion[]
-  perfil                                Perfil?
-  propiedad_vista                       propiedad_vista[]
-  publicacion                           Publicacion[]
-  recuperacion_password                 recuperacion_password[]
-  sesiones                              Sesion[]
-  suscripciones_activas                 suscripciones_activas[]
-  telefonos                             Telefono[]
-  telefono_telefono_usuario_idTousuario Telefono[]              @relation("telefono_usuario_idTousuario")
-  transacciones                         transacciones[]
-  rol                                   Rol?                    @relation(fields: [rolId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  verificacion_pago                     verificacion_pago[]
-  visitor                               Visitor[]
-  zona_usuario                          zona_usuario[]
+  id                                Int                     @id @default(autoincrement())
+  nombre                            String
+  apellido                          String
+  correo                            String                  @unique
+  password                          String
+  pais                              String?
+  avatar                            String?
+  genero                            Genero?
+  direccion                         String?
+  activo                            Boolean?                @default(true)
+  fechaRegistro                     DateTime?               @default(now()) @db.Timestamp(6)
+  createdAt                         DateTime?               @default(now()) @db.Timestamp(6)
+  updatedAt                         DateTime?               @default(now()) @updatedAt @db.Timestamp(6)
+  rolId                             Int
+  intentos_fallidos_cambio_password Int                     @default(0)
+  bloqueo_cambio_password_hasta     DateTime?               @db.Timestamptz(6)
+  password_actualizado_en           DateTime                @default(now()) @db.Timestamptz(6)
+  two_factor_activo                 Boolean                 @default(false)
+  two_factor_metodo                 String                  @default("email") @db.VarChar(20)
+  two_factor_activado_en            DateTime?               @db.Timestamptz(6)
+  intentosFallidosCambioPassword    Int?                    @default(0)
+  bloqueoCambioPasswordHasta        DateTime?
+  passwordActualizadoEn             DateTime?
+  twoFactorActivo                   Boolean?                @default(false)
+  twoFactorMetodo                   String?                 @default("EMAIL") @db.VarChar(20)
+  twoFactorActivadoEn               DateTime?
+  desactivadoEn                     DateTime?
+  controlador                       Boolean                 @default(false)
+  fechaNacimiento                   DateTime?
+  telemetriaCompartida              Boolean?                @default(false)
+  zonaConexion                      String?                 @db.VarChar(100)
+  autenticacion_social              autenticacion_social[]
+  bitacora_pagos                    bitacora_pagos[]
+  cambio_email                      CambioEmail[]
+  codigo_2fa                        codigo_2fa[]
+  comparacion                       comparacion[]
+  favorito                          favorito[]
+  historial_password                historial_password[]
+  inmuebles                         Inmueble[]
+  notificaciones                    Notificacion[]
+  perfil                            Perfil?
+  propiedad_vista                   propiedad_vista[]
+  publicaciones                     Publicacion[]
+  recuperacion_password             recuperacion_password[]
+  sesiones                          Sesion[]
+  suscripciones_activas             suscripciones_activas[]
+  telefonos                         Telefono[]
+  transacciones                     transacciones[]
+  rol                               Rol                     @relation(fields: [rolId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  verificacion_pago                 verificacion_pago[]
+  visitor                           Visitor[]
+  zona_usuario                      zona_usuario[]
 
   @@index([correo], map: "idx_usuario_correo")
-  @@index([rolId], map: "idx_usuario_rol")
-  @@index([rolId], map: "idx_usuario_rol_id")
   @@map("usuario")
 }
 
 model Telefono {
-  id                                   Int      @id @default(autoincrement())
-  codigoPais                           String
-  numero                               String
-  principal                            Boolean? @default(false)
-  usuarioId                            Int
-  codigo_pais                          String?
-  usuario_id                           Int?
-  usuario                              Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  usuario_telefono_usuario_idTousuario Usuario? @relation("telefono_usuario_idTousuario", fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "telefono_usuario_fk")
+  id         Int      @id @default(autoincrement())
+  codigoPais String
+  numero     String
+  principal  Boolean? @default(false)
+  usuarioId  Int
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@index([usuario_id], map: "idx_telefono_usuario")
   @@map("telefono")
 }
 
@@ -108,11 +99,11 @@ model Notificacion {
   id            Int       @id @default(autoincrement())
   titulo        String
   mensaje       String
-  leida         Boolean   @default(false)
+  leida         Boolean?  @default(false)
   fechaCreacion DateTime? @default(now()) @db.Timestamp(6)
   fechaLectura  DateTime? @db.Timestamp(6)
-  eliminada     Boolean   @default(false)
-  archivada     Boolean   @default(false)
+  eliminada     Boolean?  @default(false)
+  archivada     Boolean?  @default(false)
   usuarioId     Int
   usuario       Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "notificacion_usuario_id_fkey")
 
@@ -145,48 +136,44 @@ model Perfil {
 model Inmueble {
   id                  Int                   @id @default(autoincrement())
   titulo              String
-  tipo_accion         tipo_accion
-  categoria           categoria?
+  tipoAccion          TipoAccion            @map("tipo_accion")
+  categoria           Categoria?            @map("categoria")
   precio              Decimal               @db.Decimal(12, 2)
-  superficie_m2       Decimal?              @db.Decimal(10, 2)
-  nro_cuartos         Int?
-  nro_banos           Int?
+  superficieM2        Decimal?              @map("superficie_m2") @db.Decimal(10, 2)
+  nroCuartos          Int?                  @map("nro_cuartos")
+  nroBanos            Int?                  @map("nro_banos")
   descripcion         String?
-  estado              estado_inmueble?      @default(ACTIVO)
-  fecha_publicacion   DateTime?             @default(now()) @db.Timestamp(6)
-  created_at          DateTime?             @default(now()) @db.Timestamp(6)
-  updated_at          DateTime?             @default(now()) @db.Timestamp(6)
-  propietario_id      Int
+  estado              EstadoInmueble?       @default(ACTIVO) @map("estado")
+  fechaPublicacion    DateTime?             @default(now()) @map("fecha_publicacion") @db.Timestamp(6)
+  createdAt           DateTime?             @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt           DateTime?             @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  propietarioId       Int                   @map("propietario_id")
   detalle_comparacion detalle_comparacion[]
   favorito            favorito[]
-  usuario             Usuario               @relation(fields: [propietario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "inmueble_propietario_fk")
+  propietario         Usuario               @relation(fields: [propietarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
   inmueble_etiqueta   InmuebleEtiqueta[]
   marcador_mapa       MarcadorMapa[]
   propiedad_vista     propiedad_vista[]
-  publicacion         Publicacion[]
-  ubicacion_inmueble  UbicacionInmueble?
+  publicaciones       Publicacion[]
+  ubicacion           UbicacionInmueble?
 
-  @@index([propietario_id], map: "idx_inmueble_propietario")
-  @@index([estado], map: "idx_inmueble_estado")
-  @@index([tipo_accion], map: "idx_inmueble_tipo_accion")
+  @@index([propietarioId], map: "idx_inmueble_propietario")
   @@map("inmueble")
 }
 
 model UbicacionInmueble {
-  id                   Int                @id @default(autoincrement())
-  latitud              Decimal            @db.Decimal(10, 7)
-  longitud             Decimal            @db.Decimal(10, 7)
-  direccion            String?
-  ciudad               String?
-  zona                 String?
-  inmueble_id          Int                @unique
-  ubicacion_maestra_id Int?
-  barrio_id            Int?
-  marcador_mapa        MarcadorMapa[]
-  inmueble             Inmueble           @relation(fields: [inmueble_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "ubicacion_inmueble_fk")
-  ubicacion_maestra    ubicacion_maestra? @relation(fields: [ubicacion_maestra_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id                 Int                @id @default(autoincrement())
+  latitud            Decimal            @db.Decimal(10, 7)
+  longitud           Decimal            @db.Decimal(10, 7)
+  direccion          String?
+  ciudad             String?
+  zona               String?
+  inmuebleId         Int                @unique @map("inmueble_id")
+  ubicacionMaestraId Int?               @map("ubicacion_maestra_id")
+  marcador_mapa      MarcadorMapa[]
+  inmueble           Inmueble           @relation(fields: [inmuebleId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  ubicacion_maestra  ubicacion_maestra? @relation(fields: [ubicacionMaestraId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@index([ubicacion_maestra_id], map: "idx_ubicacion_maestra")
   @@map("ubicacion_inmueble")
 }
 
@@ -201,47 +188,42 @@ model Etiqueta {
 model InmuebleEtiqueta {
   inmueble_id Int
   etiqueta_id Int
-  etiqueta    Etiqueta @relation(fields: [etiqueta_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "inmueble_etiqueta_etiqueta_fk")
-  inmueble    Inmueble @relation(fields: [inmueble_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "inmueble_etiqueta_inmueble_fk")
+  etiqueta    Etiqueta @relation(fields: [etiqueta_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  inmueble    Inmueble @relation(fields: [inmueble_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@id([inmueble_id, etiqueta_id])
   @@map("inmueble_etiqueta")
 }
 
 model Publicacion {
-  id                    Int                     @id @default(autoincrement())
-  titulo                String
-  descripcion           String?
-  estado                estado_publicacion?     @default(ACTIVA)
-  fecha_publicacion     DateTime?               @default(now()) @db.Timestamp(6)
-  usuario_id            Int
-  inmueble_id           Int
-  multimedia            Multimedia[]
-  inmueble              Inmueble                @relation(fields: [inmueble_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "publicacion_inmueble_fk")
-  usuario               Usuario                 @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "publicacion_usuario_fk")
-  publicacion_parametro publicacion_parametro[]
+  id               Int                @id @default(autoincrement())
+  titulo           String
+  descripcion      String?
+  estado           EstadoPublicacion? @default(ACTIVA) @map("estado")
+  fechaPublicacion DateTime?          @default(now()) @map("fecha_publicacion") @db.Timestamp(6)
+  usuarioId        Int                @map("usuario_id")
+  inmuebleId       Int                @map("inmueble_id")
+  multimedia       Multimedia[]
+  inmueble         Inmueble           @relation(fields: [inmuebleId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  usuario          Usuario            @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@index([estado], map: "idx_publicacion_estado")
-  @@index([inmueble_id], map: "idx_publicacion_inmueble")
-  @@index([usuario_id], map: "idx_publicacion_usuario")
   @@map("publicacion")
 }
 
 model Multimedia {
-  id             Int             @id @default(autoincrement())
-  url            String
-  tipo           tipo_multimedia
-  peso_mb        Decimal?        @db.Decimal(8, 2)
-  publicacion_id Int
-  publicacion    Publicacion     @relation(fields: [publicacion_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "multimedia_publicacion_fk")
+  id            Int            @id @default(autoincrement())
+  url           String
+  tipo          TipoMultimedia
+  pesoMb        Decimal?       @map("peso_mb") @db.Decimal(8, 2)
+  publicacionId Int            @map("publicacion_id")
+  publicacion   Publicacion    @relation(fields: [publicacionId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@index([publicacion_id], map: "idx_multimedia_publicacion")
   @@map("multimedia")
 }
 
 model MarcadorMapa {
   id                 Int               @id @default(autoincrement())
-  tipo               tipo_marcador
+  tipo               TipoMarcador
   es_visible         Boolean?          @default(true)
   nivel_z            Int?
   inmueble_id        Int
@@ -296,16 +278,16 @@ model SesionMapa {
 }
 
 model InteraccionMapa {
-  id               Int              @id @default(autoincrement())
-  tipo             tipo_interaccion
-  latitud_momento  Decimal?         @db.Decimal(10, 7)
-  longitud_momento Decimal?         @db.Decimal(10, 7)
+  id               Int             @id @default(autoincrement())
+  tipo             TipoInteraccion
+  latitud_momento  Decimal?        @db.Decimal(10, 7)
+  longitud_momento Decimal?        @db.Decimal(10, 7)
   zoom_momento     Int?
-  ocurrio_en       DateTime?        @default(now()) @db.Timestamp(6)
+  ocurrio_en       DateTime?       @default(now()) @db.Timestamp(6)
   sesion_id        Int?
   marcador_id      Int?
-  marcador_mapa    MarcadorMapa?    @relation(fields: [marcador_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  sesion_mapa      SesionMapa?      @relation(fields: [sesion_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  marcador_mapa    MarcadorMapa?   @relation(fields: [marcador_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  sesion_mapa      SesionMapa?     @relation(fields: [sesion_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("interaccion_mapa")
 }
@@ -402,11 +384,8 @@ model transacciones {
   estado                 String?                 @default("PENDIENTE") @db.VarChar(20)
   verificacion_requerida Boolean?                @default(true)
   tiempo_activacion      DateTime?               @db.Timestamp(6)
-  cupon_id               Int?
-  monto_descuento        Decimal?                @default(0) @db.Decimal(10, 2)
   bitacora_pagos         bitacora_pagos[]
   suscripciones_activas  suscripciones_activas[]
-  cupon                  cupon?                  @relation(fields: [cupon_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   plan_suscripcion       plan_suscripcion        @relation(fields: [id_suscripcion], references: [id], onDelete: NoAction, onUpdate: NoAction)
   usuario                Usuario                 @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction)
   verificacion_pago      verificacion_pago[]
@@ -423,6 +402,17 @@ model verificacion_pago {
   resultado_verificacion String?        @default("VERIFICADO") @db.VarChar(20)
   usuario                Usuario        @relation(fields: [id_admin], references: [id], onDelete: NoAction, onUpdate: NoAction)
   transacciones          transacciones? @relation(fields: [id_transaccion], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model ZonaPredefinida {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  coordenadas Json
+  color       String   @default("#ea580c")
+  activa      Boolean  @default(true)
+  creadoEn    DateTime @default(now())
+
+  @@map("zona_predefinida")
 }
 
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -446,23 +436,6 @@ model autenticacion_social {
 
   @@unique([proveedor, idExterno], map: "autenticacion_social_proveedor_idexterno_key")
   @@unique([usuarioId, proveedor], map: "autenticacion_social_usuario_proveedor_key")
-}
-
-model ciudad {
-  id            Int             @id @default(autoincrement())
-  nombre        String          @unique
-  slug          String          @unique
-  descripcion   String?
-  popularidad   Int?            @default(0)
-  ciudad_imagen ciudad_imagen[]
-}
-
-model ciudad_imagen {
-  id       Int    @id @default(autoincrement())
-  ciudadid Int
-  url      String
-  orden    Int?   @default(0)
-  ciudad   ciudad @relation(fields: [ciudadid], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model codigo_2fa {
@@ -510,14 +483,6 @@ model favorito {
   @@unique([usuarioId, inmuebleId])
 }
 
-model historial_busqueda {
-  id        Int       @id @default(autoincrement())
-  usuarioid Int
-  termino   String
-  creadoen  DateTime? @default(now()) @db.Timestamp(6)
-  usuario   Usuario   @relation(fields: [usuarioid], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "historial_usuario_fkey")
-}
-
 model historial_password {
   id           Int       @id @default(autoincrement())
   usuarioId    Int
@@ -554,24 +519,6 @@ model recuperacion_password {
   @@index([usuarioId, creadoEn], map: "recuperacion_password_usuario_fecha_idx")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model spatial_ref_sys {
-  srid      Int     @id
-  auth_name String? @db.VarChar(256)
-  auth_srid Int?
-  srtext    String? @db.VarChar(2048)
-  proj4text String? @db.VarChar(2048)
-}
-
-model zona_predefinida {
-  id          Int      @id @default(autoincrement())
-  nombre      String
-  coordenadas Json
-  color       String   @default("#ea580c")
-  activa      Boolean  @default(true)
-  creadoEn    DateTime @default(now())
-}
-
 model zona_usuario {
   id            Int      @id @default(autoincrement())
   nombre        String   @db.VarChar(100)
@@ -584,43 +531,48 @@ model zona_usuario {
   usuario       Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 }
 
-model cupon {
-  id              Int             @id @default(autoincrement())
-  codigo          String          @unique @db.VarChar(50)
-  descripcion     String?
-  tipo_descuento  String          @default("PORCENTAJE") @db.VarChar(10)
-  valor_descuento Decimal         @db.Decimal(10, 2)
-  max_usos        Int             @default(1)
-  usos_actuales   Int             @default(0)
-  fecha_inicio    DateTime        @default(now()) @db.Timestamptz(6)
-  fecha_fin       DateTime        @db.Timestamptz(6)
-  activo          Boolean?        @default(true)
-  fecha_creacion  DateTime?       @default(now()) @db.Timestamptz(6)
-  transacciones   transacciones[]
+enum Genero {
+  MASCULINO
+  FEMENINO
+  OTRO
+  PREFIERO_NO_DECIR
+
+  @@map("genero")
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model parametros_personalizados {
-  id                    Int                     @id @default(autoincrement())
-  nombre                String?                 @db.VarChar(255)
-  descripcion           String?
-  creado_en             DateTime?               @default(now()) @db.Timestamptz(6)
-  publicacion_parametro publicacion_parametro[]
+enum TipoAccion {
+  VENTA
+  ALQUILER
+  ANTICRETO
+
+  @@map("tipo_accion")
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model publicacion_parametro {
-  id                        Int                        @id @default(autoincrement())
-  publicacion_id            Int?
-  parametro_id              Int?
-  valor                     String?
-  creado_en                 DateTime?                  @default(now()) @db.Timestamptz(6)
-  parametros_personalizados parametros_personalizados? @relation(fields: [parametro_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "pub_param_parametro_fk")
-  publicacion               Publicacion?               @relation(fields: [publicacion_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "pub_param_publicacion_fk")
+enum EstadoInmueble {
+  ACTIVO
+  INACTIVO
+  VENDIDO
+  ALQUILADO
+  RESERVADO
 
-  @@unique([publicacion_id, parametro_id], map: "uq_publicacion_parametro")
-  @@index([parametro_id], map: "idx_pub_param_parametro")
-  @@index([publicacion_id], map: "idx_pub_param_publicacion")
+  @@map("estado_inmueble")
+}
+
+enum EstadoPublicacion {
+  ACTIVA
+  PAUSADA
+  ELIMINADA
+
+  @@map("estado_publicacion")
+}
+
+enum Categoria {
+  CASA
+  DEPARTAMENTO
+  TERRENO
+  OFICINA
+
+  @@map("categoria")
 }
 
 enum RolNombre {
@@ -630,97 +582,19 @@ enum RolNombre {
   VISITANTE
 }
 
-enum categoria {
-  CASA
-  DEPARTAMENTO
-  TERRENO
-  OFICINA
+enum TipoMultimedia {
+  IMAGEN
+  VIDEO
+
+  @@map("tipo_multimedia")
 }
 
-enum estado_inmueble {
-  ACTIVO
-  INACTIVO
-  VENDIDO
-  ALQUILADO
-  RESERVADO
-}
-
-enum estado_publicacion {
-  ACTIVA
-  PAUSADA
-  ELIMINADA
-}
-
-enum genero {
-  MASCULINO
-  FEMENINO
-  OTRO
-  PREFIERO_NO_DECIR
-}
-
-enum tipo_accion {
-  VENTA
-  ALQUILER
-  ANTICRETO
-}
-
-enum tipo_interaccion {
-  CLICK
-  HOVER
-  ZOOM
-  DRAG
-}
-
-enum tipo_marcador {
+enum TipoMarcador {
   NORMAL
   DESTACADO
   CLUSTER
-}
 
-enum tipo_multimedia {
-  IMAGEN
-  VIDEO
-}
-
-enum Categoria {
-  CASA
-  DEPARTAMENTO
-  TERRENO
-  OFICINA
-}
-
-enum EstadoBlog {
-  BORRADOR
-  PENDIENTE
-  PUBLICADO
-  RECHAZADO
-}
-
-enum EstadoInmueble {
-  ACTIVO
-  INACTIVO
-  VENDIDO
-  ALQUILADO
-  RESERVADO
-}
-
-enum EstadoPublicacion {
-  ACTIVA
-  PAUSADA
-  ELIMINADA
-}
-
-enum Genero {
-  MASCULINO
-  FEMENINO
-  OTRO
-  PREFIERO_NO_DECIR
-}
-
-enum TipoAccion {
-  VENTA
-  ALQUILER
-  ANTICRETO
+  @@map("tipo_marcador")
 }
 
 enum TipoInteraccion {
@@ -728,15 +602,6 @@ enum TipoInteraccion {
   HOVER
   ZOOM
   DRAG
-}
 
-enum TipoMarcador {
-  NORMAL
-  DESTACADO
-  CLUSTER
-}
-
-enum TipoMultimedia {
-  IMAGEN
-  VIDEO
+  @@map("tipo_interaccion")
 }
