@@ -30,7 +30,8 @@ import {
   verify2FAController,
   getMeController,
   activate2FAController,
-  deactivate2FAController
+  deactivate2FAController,
+  get2FAStatusController
 } from './modules/auth/auth.controller.js'
 import { requireAuth } from './middleware/auth.middleware.js'
 
@@ -128,6 +129,7 @@ app.post('/api/auth/login', loginController)
 app.post('/api/auth/verify-2fa', verify2FAController)
 app.post('/api/auth/activate-2fa', requireAuth, activate2FAController)
 app.post('/api/auth/deactivate-2fa', requireAuth, deactivate2FAController)
+app.get('/api/auth/2fa-status', requireAuth, get2FAStatusController)
 app.post('/api/auth/logout', logoutController)
 app.post('/api/auth/verify-register', verifyRegisterCodeController)
 app.get('/api/auth/me', getMeController)

@@ -1,7 +1,7 @@
 'use client'
 
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CheckCircle2, Eye, EyeOff, Info } from 'lucide-react'
 
 export default function TwoFactorSection() {
@@ -11,6 +11,7 @@ export default function TwoFactorSection() {
   const [error, setError] = useState('')
   const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [loadingStatus, setLoadingStatus] = useState(true)
   const [showDisableModal, setShowDisableModal] = useState(false)
   const handleOpenModal = () => {
     setShowModal(true)
@@ -25,6 +26,39 @@ export default function TwoFactorSection() {
     setShowPassword(false)
     setError('')
   }
+
+  useEffect(() => {
+  const fetch2FAStatus = async () => {
+    try {
+      const token = localStorage.getItem('token')
+
+      if (!token) {
+        setLoadingStatus(false)
+        return
+      }
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/2fa-status`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        setIsTwoFactorEnabled(Boolean(data.twoFactorActivo))
+      }
+    } catch {
+      console.error('No se pudo obtener el estado 2FA')
+    } finally {
+      setLoadingStatus(false)
+    }
+  }
+
+  fetch2FAStatus()
+}, [])
 
 const handleConfirm = async () => {
   if (!password.trim()) {
@@ -69,13 +103,7 @@ const handleConfirm = async () => {
     setLoading(false)
   }
 }
-const handleDisableTwoFactor = () => {
-  setIsTwoFactorEnabled(false)
-  setShowModal(false)
-  setPassword('')
-  setShowPassword(false)
-  setError('')
-}
+
 
 const handleOpenDisableModal = () => {
   setShowDisableModal(true)
@@ -124,7 +152,27 @@ const handleConfirmDisable = async () => {
   }
 }
 
-
+if (loadingStatus) {
+  return (
+    <div className="space-y-6">
+      <header>
+        <h1 className="text-3xl font-bold tracking-tight text-neutral-900">
+          Verificación en dos pasos
+        </h1>
+        <p className="mt-2 text-sm text-neutral-500">
+          Protege tu cuenta con un código de verificación enviado a tu correo electrónico.
+        </p>
+      </header>
+      <div className="max-w-3xl rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
+          <p className="text-sm text-neutral-500">
+            Cargando estado de verificación en dos pasos...
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
 
   return (
     <div className="space-y-6">

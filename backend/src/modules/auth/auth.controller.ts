@@ -3,6 +3,7 @@ import {
   AuthError,
   activate2FAService,
   deactivate2FAService,
+  get2FAStatusService,
   getMeService,
   loginService,
   logoutService,
@@ -283,6 +284,35 @@ export const deactivate2FAController = async (req: Request, res: Response) => {
 
     const message =
       error instanceof Error ? error.message : 'Error al desactivar la verificación en dos pasos'
+
+    return res.status(400).json({ message })
+  }
+}
+
+export const get2FAStatusController = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.id
+
+    if (!userId) {
+      return res.status(401).json({
+        message: 'Usuario no autenticado'
+      })
+    }
+
+    const result = await get2FAStatusService(userId)
+
+    return res.status(200).json(result)
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message
+      })
+    }
+
+    const message =
+      error instanceof Error
+        ? error.message
+        : 'Error al obtener el estado de la verificación en dos pasos'
 
     return res.status(400).json({ message })
   }

@@ -635,6 +635,18 @@ export const deactivate2FAService = async (userId: number) => {
   }
 }
 
+export const get2FAStatusService = async (userId: number) => {
+  const user = await findUserById(userId)
+
+  if (!user) {
+    throw new AuthError('Usuario no encontrado', 404)
+  }
+
+  return {
+    twoFactorActivo: user.twoFactorActivo
+  }
+}
+
 type GoogleTokenResponse = {
   access_token?: string
   expires_in?: number
