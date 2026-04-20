@@ -9,22 +9,22 @@ export class LocationsService {
 
     // 1. Ejecutamos las 4 búsquedas en paralelo (Optimización de rendimiento)
     const [deptos, provincias, municipios, zonas] = await Promise.all([
-      prisma.departamento.findMany({
+      (prisma as any).departamento.findMany({
         where: { nombre: { contains: query, mode: 'insensitive' } },
         include: { provincias: { take: 4 } },
         take: 1
       }),
-      prisma.provincia.findMany({
+      (prisma as any).provincia.findMany({
         where: { nombre: { contains: query, mode: 'insensitive' } },
         include: { departamento: true, municipios: { take: 4 } },
         take: 1
       }),
-      prisma.municipio.findMany({
+      (prisma as any).municipio.findMany({
         where: { nombre: { contains: query, mode: 'insensitive' } },
         include: { provincia: true, zonas: { take: 4 } },
         take: 1
       }),
-      prisma.zona.findMany({
+      (prisma as any).zona.findMany({
         where: { nombre: { contains: query, mode: 'insensitive' } },
         include: { municipio: true, barrios: { take: 4 } },
         take: 2
@@ -34,25 +34,25 @@ export class LocationsService {
     const sugerencias: any[] = []
 
     // 2. Procesamos en orden de prioridad para búsquedas inmobiliarias
-    municipios.forEach(m => {
+    municipios.forEach((m: any) => {
       sugerencias.push({ id: m.id, nivel: 'MUNICIPIO', nombre: m.nombre, contexto: `Municipio en ${m.provincia.nombre}` })
-      m.zonas.forEach(z => {
+      m.zonas.forEach((z: any) => {
         sugerencias.push({ id: z.id, nivel: 'ZONA', nombre: z.nombre, contexto: `Zona de ${m.nombre}` })
       })
     })
 
-    zonas.forEach(z => {
-      if (!sugerencias.find(s => s.nivel === 'ZONA' && s.id === z.id)) {
+    zonas.forEach((z: any) => {
+      if (!sugerencias.find((s: any) => s.nivel === 'ZONA' && s.id === z.id)) {
         sugerencias.push({ id: z.id, nivel: 'ZONA', nombre: z.nombre, contexto: `Zona en ${z.municipio.nombre}` })
-        z.barrios.forEach(b => {
+        z.barrios.forEach((b: any) => {
           sugerencias.push({ id: b.id, nivel: 'BARRIO', nombre: b.nombre, contexto: `Barrio en ${z.nombre}` })
         })
       }
     })
 
-    deptos.forEach(d => {
+    deptos.forEach((d: any) => {
       sugerencias.push({ id: d.id, nivel: 'DEPARTAMENTO', nombre: d.nombre, contexto: 'Departamento de Bolivia' })
-      d.provincias.forEach(p => {
+      d.provincias.forEach((p: any) => {
         sugerencias.push({ id: p.id, nivel: 'PROVINCIA', nombre: p.nombre, contexto: `Provincia en ${d.nombre}` })
       })
     })
