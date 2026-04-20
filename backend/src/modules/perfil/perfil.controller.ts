@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { prisma } from "../../lib/prisma.client.js";
+import { publicacionesService } from "../publicaciones/publicaciones.service.js";
 
 interface AuthRequest extends Request {
   usuario?: {
@@ -318,6 +319,43 @@ export const editarTelefonos = async (req: AuthRequest, res: Response) => {
     return res.status(500).json({
       ok: false,
       msg: "Error al editar los teléfonos",
+    });
+  }
+};
+
+// Listar mis publicaciones
+export const listarMisPublicaciones = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  try {
+    const usuarioId = req.usuario?.id;
+
+    if (!usuarioId) {
+      return res.status(401).json({
+        ok: false,
+        msg: "No hay token válido",
+      });
+    }
+
+    // Obtener las publicaciones del usuario
+    const publicaciones =
+      await publicacionesService.listarMisPublicaciones(usuarioId);
+
+    // Obtener estadísticas de publicaciones y suscripción
+    const estadisticas =
+      await publicacionesService.obtenerEstadisticasPublicaciones(usuarioId);
+
+    return res.json({
+      ok: true,
+      publicaciones,
+      estadisticas,
+    });
+  } catch (error) {
+    console.error("Error en listarMisPublicaciones:", error);
+    return res.status(500).json({
+      ok: false,
+      msg: "Error al obtener las publicaciones",
     });
   }
 };

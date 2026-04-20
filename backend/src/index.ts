@@ -119,6 +119,8 @@ app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
 app.use('/api', router)
 app.use("/api/favorites", favoritesRoutes);
+app.use("/api/perfil", perfilRoutes);
+
 // --------------------
 // MOCK / TEST
 // --------------------
