@@ -65,6 +65,7 @@ import { verifyEmailTransport } from './lib/email.service.js'
 // FAVORITES
 
 import favoritesRoutes from "./modules/favorites/favorites.routes.js";
+import zonaRoutes from "./modules/perfil/zonaUsario.routes.js";
 // --------------------
 // SERVER
 // --------------------
@@ -117,6 +118,7 @@ app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
 app.use('/api', router)
 app.use("/api/favorites", favoritesRoutes);
+app.use('/api/perfil/zonas', zonaRoutes);
 // --------------------
 // MOCK / TEST
 // --------------------
