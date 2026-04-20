@@ -1,6 +1,6 @@
 // correoverificacion.controller.ts
 import type { Request, Response } from 'express'
-import { prisma } from '../../lib/prisma.client.js'
+import { prisma } from '../../lib/prisma.config.js'
 import { enviarCodigoCambioEmail } from '../../lib/email.service.js'
 
 interface AuthRequest extends Request {
@@ -83,9 +83,9 @@ export const solicitarCambioEmail = async (req: AuthRequest, res: Response) => {
     await prisma.cambioEmail.create({
       data: {
         token: otp,
-        email_nuevo: emailNuevo,
-        expira_en: expiraEn,
-        usuario_id: usuarioId
+        emailNuevo,
+        expiraEn,
+        usuarioId
       }
     })
 
@@ -128,10 +128,10 @@ export const confirmarCambioEmail = async (req: AuthRequest, res: Response) => {
 
     const solicitud = await prisma.cambioEmail.findFirst({
       where: {
-        usuario_id: usuarioId,
-        completado_en: null
+        usuarioId,
+        completadoEn: null
       },
-      orderBy: { creado_en: 'desc' }
+      orderBy: { creadoEn: 'desc' }
     })
 
     if (!solicitud) {
@@ -141,7 +141,7 @@ export const confirmarCambioEmail = async (req: AuthRequest, res: Response) => {
       })
     }
 
-    if (new Date() > solicitud.expira_en) {
+    if (new Date() > solicitud.expiraEn) {
       return res.status(410).json({
         ok: false,
         msg: 'Código expirado. Solicita un nuevo código'
@@ -158,11 +158,11 @@ export const confirmarCambioEmail = async (req: AuthRequest, res: Response) => {
     const [usuarioActualizado] = await prisma.$transaction([
       prisma.usuario.update({
         where: { id: usuarioId },
-        data: { correo: solicitud.email_nuevo }
+        data: { correo: solicitud.emailNuevo }
       }),
       prisma.cambioEmail.update({
         where: { id: solicitud.id },
-        data: { completado_en: new Date() }
+        data: { completadoEn: new Date() }
       })
     ])
 

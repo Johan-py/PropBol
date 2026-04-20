@@ -1,4 +1,4 @@
-import { SearchX } from 'lucide-react'
+import { SearchX } from "lucide-react";
 
 export default function EmptyState() {
   return (
@@ -7,11 +7,13 @@ export default function EmptyState() {
       <div className="bg-orange-100 p-4 rounded-full mb-4">
         <SearchX className="w-8 h-8 text-orange-500" />
       </div>
-      <h3 className="text-lg font-bold text-gray-900 mb-2">No hay propiedades existentes</h3>
+      <h3 className="text-lg font-bold text-gray-900 mb-2">
+        Uy, no encontramos casas con esos filtros
+      </h3>
       <p className="text-sm text-gray-500 max-w-[250px]">
-        No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o
-        categoría para ver más resultados.
+        Intenta quitando algunos filtros o buscando en otra zona para ver más
+        resultados.
       </p>
     </div>
-  )
+  );
 }
