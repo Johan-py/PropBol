@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Archive, Trash2, Settings, WifiOff } from 'lucide-react'
 import { useNotifications } from '@/hooks/useNotifications'
 import type { NotificationFilter } from '@/types/notification'
-import Link from "next/link";
+import Link from 'next/link'
 
 const filters: NotificationFilter[] = ['todas', 'no leida', 'leida', 'archivada']
 
@@ -126,8 +126,8 @@ export default function NotificationsPage() {
               onClick={() => setFilter(item)}
               className={`rounded-full px-3 py-1.5 text-sm font-medium transition sm:py-1 ${
                 filter === item
-                  ? "bg-amber-600 text-white"
-                  : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                  ? 'bg-amber-600 text-white'
+                  : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
               }`}
             >
               {item === 'todas'
@@ -189,11 +189,20 @@ export default function NotificationsPage() {
                   if (notification.status === 'no leida' && isOnline) {
                     void markAsRead(notification.id)
                   }
+
+                  router.push(`/notificaciones/${notification.id}`)
                 }}
-                className={`border-b border-stone-100 px-3 py-4 last:border-b-0 transition sm:px-4 ${
-                  notification.status === 'no leida'
-                    ? 'cursor-pointer bg-amber-50'
-                    : 'bg-white hover:bg-stone-50'
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    if (notification.status === 'no leida' && isOnline) {
+                      void markAsRead(notification.id)
+                    }
+
+                    router.push(`/notificaciones/${notification.id}`)
+                  }
+                }}
+                className={`cursor-pointer border-b border-stone-100 px-3 py-4 last:border-b-0 transition hover:bg-stone-50 sm:px-4 ${
+                  notification.status === 'no leida' ? 'bg-amber-50' : 'bg-white'
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">
