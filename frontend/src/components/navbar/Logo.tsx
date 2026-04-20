@@ -58,6 +58,7 @@ export default function Logo({
     <Link
       href="/"
         id="tour-logo"
+        
       onClick={onClick}
       className={`flex items-center gap-2 p-0.5 transition hover:opacity-80 ${className}`}
     >
