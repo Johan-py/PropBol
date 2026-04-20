@@ -69,22 +69,22 @@ const validateNotificationId = (id: number) => {
 };
 
 const mapNotificationToFrontend = (notification: {
-  id: number;
-  titulo: string;
-  mensaje: string;
-  leida: boolean | null;
-  archivada?: boolean | null;
-  fechaCreacion?: Date | null;
+  id: number
+  titulo: string
+  mensaje: string
+  leida: boolean | null
+  archivada?: boolean | null
+  fechaCreacion?: Date | null
 }) => {
   return {
     id: notification.id,
     title: notification.titulo,
     description: notification.mensaje,
-    status: notification.leida ? "leida" : "no leida",
-    archivada: notification.archivada ?? false,
-    fechaCreacion: notification.fechaCreacion ?? null,
-  };
-};
+    status: notification.leida === true ? 'leida' : 'no leida',
+    archivada: notification.archivada === true ? true : false,
+    fechaCreacion: notification.fechaCreacion || null
+  }
+}
 
 export const getNotificationsService = async (
   usuarioId: number,
@@ -207,11 +207,11 @@ export const markNotificationAsReadService = async (
       id: notification.id,
       title: notification.titulo,
       description: notification.mensaje,
-      status: "leida",
-      archivada: notification.archivada ?? false,
-    },
-  };
-};
+      status: 'leida',
+      archivada: notification.archivada === true ? true : false
+    }
+  }
+}
 
 export const markAllNotificationsAsReadService = async (usuarioId: number) => {
   const result = await markAllNotificationsAsReadRepository({
@@ -282,7 +282,7 @@ export const archiveNotificationService = async (
   emitNotificationEvent(usuarioId, "archived", id);
 
   return {
-    message: "Notificación archivada correctamente",
-    item: mapNotificationToFrontend({ ...notification, archivada: true }),
-  };
-};
+    message: 'Notificación archivada correctamente',
+    item: mapNotificationToFrontend({ ...notification, archivada: true })
+  }
+}

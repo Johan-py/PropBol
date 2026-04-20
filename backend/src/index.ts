@@ -29,6 +29,8 @@ import {
   logoutController,
   verifyRegisterCodeController,
   getMeController,
+  forgotPasswordController,
+  resetPasswordController,
 } from "./modules/auth/auth.controller.js";
 import { requireAuth } from "./middleware/auth.middleware.js";
 
@@ -40,6 +42,7 @@ import { getZonasController } from "./modules/zonas/zonas.controller.js";
 
 import correoverificacionRoutes from "./modules/perfil/correoverificacion.routes.js";
 import perfilRoutes from "./modules/perfil/perfil.routes.js";
+import zonaRoutes from "./modules/perfil/zonaUsario.routes.js";
 
 import {
   googleCallbackController,
@@ -101,6 +104,8 @@ app.use("/uploads", express.static(path.resolve("uploads")));
 // RUTAS LEGACY
 // --------------------
 app.use("/api/auth-legacy", authRoutes);
+app.post("/api/auth/forgot-password", forgotPasswordController);
+app.post("/api/auth/reset-password", resetPasswordController);
 app.get("/api/users/:id/publicaciones/free", authMiddleware, (_req, res) => {
   res.json({ restantes: 2 });
 });
@@ -113,6 +118,7 @@ app.use("/api/publicaciones", publicacionRoutes);
 app.use("/api/publicaciones", multimediaRoutes);
 app.use("/api/perfil", correoverificacionRoutes);
 app.use("/api/perfil/usuario", perfilRoutes);
+app.use('/api/perfil/zonas', zonaRoutes);
 app.use("/api", router);
 app.use("/api/security", securityRoutes);
 
