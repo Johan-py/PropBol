@@ -4,7 +4,7 @@ import express from 'express'
 import cors from 'cors'
 import { env } from './config/env.js'
 import type { Request, Response } from 'express'
-
+import zonaRoutes from "./modules/perfil/zonaUsario.routes.js";
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -79,7 +79,9 @@ const allowedOrigins = [
   normalizedFrontendOrigin,
   'https://prop-bol-cicd.vercel.app',
   'http://localhost:3000',
-  'http://localhost:3001'
+  'http://localhost:3001',
+  'http://localhost:2000'
+
 ]
 
 // Middleware CORS global
@@ -126,6 +128,7 @@ app.post('/api/users', (req, res) => {
   const user = req.body
   res.json({ message: 'User created', user })
 })
+app.use('/api/perfil/zonas', zonaRoutes);
 
 // --------------------
 // AUTH
