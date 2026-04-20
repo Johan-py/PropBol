@@ -96,14 +96,14 @@ export default function MisZonasSidebar({
                       <div className="flex items-center gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
                           onClick={() => { if (currentUserId && zona.usuarioId && zona.usuarioId !== currentUserId) { alert("No puedes editar una zona que no es tuya"); return; } onEditZone(zona.id); }}
-                          className="p-1.5 text-stone-400 hover:text-orange-500 hover:bg-orange-50 rounded-md transition-colors"
+                          className={`p-1.5 rounded-md transition-colors ${currentUserId && zona.usuarioId && zona.usuarioId !== currentUserId ? "text-stone-300 cursor-not-allowed" : "text-stone-400 hover:text-orange-500 hover:bg-orange-50"}`}
                           title="Editar zona"
                         >
                           {currentUserId && zona.usuarioId && zona.usuarioId !== currentUserId ? <Lock size={16} /> : <Pencil size={16} />}
                         </button>
                         <button
                           onClick={() => { if (currentUserId && zona.usuarioId && zona.usuarioId !== currentUserId) { alert("No puedes eliminar una zona que no es tuya"); return; } onDeleteZone(zona.id); }}
-                          className="p-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                          className={`p-1.5 rounded-md transition-colors ${currentUserId && zona.usuarioId && zona.usuarioId !== currentUserId ? "text-stone-300 cursor-not-allowed" : "text-stone-400 hover:text-red-500 hover:bg-red-50"}`}
                           title="Eliminar zona"
                         >
                           {currentUserId && zona.usuarioId && zona.usuarioId !== currentUserId ? <Lock size={16} /> : <Trash2 size={16} />}
