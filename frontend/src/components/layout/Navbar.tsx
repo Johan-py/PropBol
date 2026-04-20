@@ -113,18 +113,18 @@ export default function Navbar() {
     return data.perfil
   }
 
-  const restoreSession = async () => {
+  const restoreSession = async (fromExternalTab = false) => {
     const savedUser = localStorage.getItem(USER_STORAGE_KEY)
     const expiresAt = localStorage.getItem(SESSION_EXPIRES_KEY)
     const token = localStorage.getItem('token')
 
     if (!savedUser || !expiresAt || !token) {
-      clearSession(false)
+      if (!fromExternalTab) clearSession(false)
       return
     }
 
     if (Date.now() > Number(expiresAt)) {
-      clearSession(false)
+      if (!fromExternalTab) clearSession(false)
       return
     }
 
@@ -153,17 +153,15 @@ export default function Navbar() {
         avatar: validatedUser.avatar ?? null
       }
 
-      localStorage.setItem(
-        USER_STORAGE_KEY,
-        JSON.stringify({
-          name: finalUser.name,
-          email: finalUser.email,
-          avatar: finalUser.avatar
-        })
-      )
-      localStorage.setItem('nombre', finalUser.name)
-      localStorage.setItem('correo', finalUser.email)
-      localStorage.setItem('avatar', finalUser.avatar ?? '')
+      const currentStored = localStorage.getItem(USER_STORAGE_KEY)
+      const newStored = JSON.stringify({ name: finalUser.name, email: finalUser.email, avatar: finalUser.avatar })
+
+      if (currentStored !== newStored) {
+        localStorage.setItem(USER_STORAGE_KEY, newStored)
+        localStorage.setItem('nombre', finalUser.name)
+        localStorage.setItem('correo', finalUser.email)
+        localStorage.setItem('avatar', finalUser.avatar ?? '')
+      }
 
       setUser(finalUser)
       setIsLoggedIn(true)
@@ -207,17 +205,27 @@ export default function Navbar() {
       void restoreSession()
     }
 
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'token' || e.key === USER_STORAGE_KEY) {
+        if (e.newValue !== null) {
+          void restoreSession(true)
+        } else {
+          clearSession(false)
+        }
+      }
+    }
+
     const handleOnline = () => {
       void restoreSession()
     }
 
-    window.addEventListener('storage', handleSessionChange)
+    window.addEventListener('storage', handleStorageChange)
     window.addEventListener('propbol:login', handleSessionChange)
     window.addEventListener('propbol:session-changed', handleSessionChange)
     window.addEventListener('online', handleOnline)
 
     return () => {
-      window.removeEventListener('storage', handleSessionChange)
+      window.removeEventListener('storage', handleStorageChange)
       window.removeEventListener('propbol:login', handleSessionChange)
       window.removeEventListener('propbol:session-changed', handleSessionChange)
       window.removeEventListener('online', handleOnline)
