@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { User } from "../layout/Navbar";
-import { User as UserIcon, Eye, FileText, Map, Shield } from "lucide-react";
+import { User as UserIcon, Eye, FileText, Map, Star, Shield } from "lucide-react";
 
 type UserMenuProps = {
   user: User | null;
@@ -132,6 +132,12 @@ export default function UserMenu({
                 onClick={onClosePanel}
               />
               <MenuLink
+                label="Mis favoritos"
+                href="/mis-favoritos"
+                icon={Star}
+                onClick={onClosePanel}
+              />
+              <MenuLink
                 label="Mis publicaciones"
                 href="/mis-publicaciones"
                 icon={FileText}
@@ -139,7 +145,7 @@ export default function UserMenu({
               />
               <MenuLink
                 label="Mis zonas"
-                href="/zonas"
+                href="/profile/mis-zonas"
                 icon={Map}
                 onClick={onClosePanel}
               />
