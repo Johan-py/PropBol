@@ -43,6 +43,7 @@ import perfilRoutes from "./modules/perfil/perfil.routes.js";
 
 import {
   googleCallbackController,
+  StartGoogleRegisterController,
   StratGoogleLoginController,
 } from "./modules/auth/google/google.controller.js";
 
@@ -79,7 +80,6 @@ const allowedOrigins = [
   "http://localhost:3001",
 ];
 
-// Middleware CORS global
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -133,6 +133,7 @@ app.post("/api/auth/logout", logoutController);
 app.post("/api/auth/verify-register", verifyRegisterCodeController);
 app.get("/api/auth/me", getMeController);
 app.get("/api/auth/google/login", StratGoogleLoginController);
+app.get("/api/auth/google/register", StartGoogleRegisterController);
 app.get("/api/auth/google/callback", googleCallbackController);
 
 // --------------------
