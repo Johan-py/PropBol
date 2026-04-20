@@ -116,26 +116,18 @@ function BusquedaMapaContent() {
   const { zonas } = useZonas()
   const [selectedZoneId, setSelectedZoneId] = useState<number | null>(null)
 
-  // === 3. LÓGICA MATEMÁTICA HU8 (Filtro por polígono) ===
+ // === 3. LÓGICA MATEMÁTICA HU8 (Filtro por polígono) ===
   const displayedProperties = useMemo(() => {
     if (!properties) return []
     if (isPolygonClosed && polygonPoints.length >= 3) {
-      console.log('📐 [Turf.js] Polígono cerrado. Calculando intersecciones...')
       try {
         const turfCoords = [...polygonPoints, polygonPoints[0]].map((p) => [p[1], p[0]])
         const drawPoly = polygon([turfCoords])
-        
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
-    null
-  );
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
 
         return properties.filter((p: any) => {
           if (p.lat == null || p.lng == null) return false
           const pt = point([p.lng, p.lat])
-          const isInside = booleanPointInPolygon(pt, drawPoly)
-          if (isInside) console.log(`✅ Adentro: ${p.title}`)
-          return isInside
+          return booleanPointInPolygon(pt, drawPoly)
         })
       } catch (err) {
         console.error('Error en validación geométrica:', err)
@@ -145,30 +137,32 @@ function BusquedaMapaContent() {
     return properties
   }, [properties, isPolygonClosed, polygonPoints])
 
-    const [listPage, setListPage] = useState(1);
-  const [listPageSize, setListPageSize] = useState<(PageSize)>(10);
-  const listTotal = properties.length;
-  const listTotalPages = Math.max(1, Math.ceil(listTotal / listPageSize));
-  const listSafePage = Math.min(Math.max(1, listPage), listTotalPages);
-  const paginatedProperties = useMemo(() => {
-    if (listTotal === 0) return [];
-    const start = (listSafePage - 1) * listPageSize;
-    return properties.slice(start, start + listPageSize);
-  }, [properties, listSafePage, listPageSize, listTotal]);
-
-    useEffect(() => {
-    setListPage(1);
-  }, [filterResetKey]);
-
-  useEffect(() => {
-    if (listPage > listTotalPages) setListPage(listTotalPages);
-  }, [listPage, listTotalPages]);
-
-  // === 4. ORDENAMIENTO (Usando resultados filtrados) ===
+  // === 4. ORDENAMIENTO (Debe ir antes de la paginación para procesar la lista filtrada) ===
   const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
     inmuebles: displayedProperties
   })
 
+  // === LÓGICA DE PAGINACIÓN (Sincronizada con polígono y ordenamiento) ===
+  const [listPage, setListPage] = useState(1)
+  const [listPageSize, setListPageSize] = useState<PageSize>(10)
+
+  const listTotal = inmueblesOrdenados.length
+  const listTotalPages = Math.max(1, Math.ceil(listTotal / listPageSize))
+  const listSafePage = Math.min(Math.max(1, listPage), listTotalPages)
+
+  const paginatedProperties = useMemo(() => {
+    if (listTotal === 0) return []
+    const start = (listSafePage - 1) * listPageSize
+    return inmueblesOrdenados.slice(start, start + listPageSize)
+  }, [inmueblesOrdenados, listSafePage, listPageSize, listTotal])
+
+  useEffect(() => {
+    setListPage(1)
+  }, [filterResetKey, isPolygonClosed])
+
+  useEffect(() => {
+    if (listPage > listTotalPages) setListPage(listTotalPages)
+  }, [listPage, listTotalPages])
   // === 5. ESTADOS VISUALES Y DE CLUSTERS (develop + HU8) ===
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
