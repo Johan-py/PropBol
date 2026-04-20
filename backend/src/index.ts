@@ -4,7 +4,7 @@ import express from 'express'
 import cors from 'cors'
 import { env } from './config/env.js'
 import type { Request, Response } from 'express'
-
+import zonaRoutes from "./modules/perfil/zonaUsario.routes.js";
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -62,6 +62,9 @@ import { authMiddleware } from './middleware/authMiddleware.js'
 // --------------------
 import { verifyEmailTransport } from './lib/email.service.js'
 
+// FAVORITES
+
+import favoritesRoutes from "./modules/favorites/favorites.routes.js";
 // --------------------
 // SERVER
 // --------------------
@@ -75,7 +78,9 @@ const allowedOrigins = [
   normalizedFrontendOrigin,
   'https://prop-bol-cicd.vercel.app',
   'http://localhost:3000',
-  'http://localhost:3001'
+  'http://localhost:3001',
+  'http://localhost:2000'
+
 ]
 
 // Middleware CORS global
@@ -113,7 +118,7 @@ app.use('/api/publicaciones', multimediaRoutes)
 app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
 app.use('/api', router)
-
+app.use("/api/favorites", favoritesRoutes);
 // --------------------
 // MOCK / TEST
 // --------------------
@@ -121,6 +126,7 @@ app.post('/api/users', (req, res) => {
   const user = req.body
   res.json({ message: 'User created', user })
 })
+app.use('/api/perfil/zonas', zonaRoutes);
 
 // --------------------
 // AUTH
