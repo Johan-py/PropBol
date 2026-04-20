@@ -1,5 +1,6 @@
 import { prisma } from '../../lib/prisma.client.js'
 import { publicacionesRepository } from '../publicaciones/publicaciones.repository.js'
+import { Prisma } from '@prisma/client'
 
 const createProperty = async (data: any, userId: number) => {
   const count = await publicacionesRepository.countByUser(userId)
@@ -16,8 +17,8 @@ const createProperty = async (data: any, userId: number) => {
         titulo: data.titulo,
         tipoAccion: data.tipoAccion,
         categoria: data.categoria,
-        precio: data.precio,
-        superficieM2: data.superficieM2,
+        precio: new Prisma.Decimal(data.precio),
+        superficieM2: data.superficieM2 ? new Prisma.Decimal(data.superficieM2) : null,
         nroCuartos: data.nroCuartos,
         nroBanos: data.nroBanos,
         descripcion: data.descripcion,
@@ -38,8 +39,8 @@ const createProperty = async (data: any, userId: number) => {
       data: {
         inmuebleId: inmueble.id,
         direccion: data.direccion,
-        latitud: data.latitud ?? 0,
-        longitud: data.longitud ?? 0,
+        latitud: new Prisma.Decimal(data.latitud ?? 0),
+        longitud: new Prisma.Decimal(data.longitud ?? 0),
         ciudad: data.ciudad ?? 'Cochabamba',
         zona: data.zona ?? null
       }
