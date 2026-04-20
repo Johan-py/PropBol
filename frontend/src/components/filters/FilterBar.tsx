@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { CapacidadButton } from '../busqueda/capacidad/CapacidadButton'
 import {
   Home,
   Search as SearchIcon,
@@ -9,7 +10,11 @@ import {
   Maximize,
   Award,
   SlidersHorizontal,
-  ChevronDown
+  ChevronDown,
+  Building, 
+  Bed,      
+  Trees,    
+  Flower2   
 } from 'lucide-react'
 import { useSearchFilters } from '@/hooks/useSearchFilters'
 import { LocationSearch } from '../layout/LocationSearch'
@@ -90,24 +95,39 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     }
   }, [])
 
+  const propertyTypes = [
+    { label: 'Casas', icon: Home },
+    { label: 'Departamentos', icon: Building },
+    { label: 'Cuartos', icon: Bed },
+    { label: 'Terrenos', icon: Trees },
+    { label: 'Espacios Cementerio', icon: Flower2 }
+  ]
+
   const handleSearch = (e?: React.FormEvent) => {
     if (e) e.preventDefault()
     const tipoMap: Record<string, string> = {
-      Casa: 'CASA',
-      Departamento: 'DEPARTAMENTO',
-      Terreno: 'TERRENO',
-      Cuarto: 'CUARTO',
-      Espacios: 'ESPACIOS',
-      Cementerio: 'CEMENTERIO'
+      Casas: 'CASA',
+      Departamentos: 'DEPARTAMENTO',
+      Terrenos: 'TERRENO',
+      Cuartos: 'CUARTO',
+      "Espacios Cementerio": 'TERRENO_MORTUORIO'
     }
 
     const tipoFinal =
       tipoMap[tipoInmueble] ||
       (tipoInmueble !== 'Cualquier tipo' ? tipoInmueble.toUpperCase() : null)
 
+    const esTerreno = tipoFinal === 'TERRENO' || tipoFinal === 'TERRENO_MORTUORIO';
+
+    if (esTerreno) {
+      setModosSeleccionados(['VENTA']);
+    }
+
+    const modosFinales = esTerreno ? ['VENTA'] : modosSeleccionados;
+
     const nuevosFiltros = {
       tipoInmueble: tipoFinal ? [tipoFinal] : [],
-      modoInmueble: modosSeleccionados,
+      modoInmueble: modosFinales,
       query: ubicacionTexto,
       updatedAt: new Date().toISOString()
     }
@@ -173,7 +193,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
             label={variant === 'map' ? '' : 'Tipo'}
             placeholder="Cualquier tipo"
             icon={Home}
-options={['Casa', 'Departamento', 'Terreno', 'Cuarto', 'Espacios', 'Cementerio']}
+            options={propertyTypes}
             onChange={(val: string) => setTipoInmueble(val)}
             value={tipoInmueble}
           />
@@ -195,12 +215,12 @@ options={['Casa', 'Departamento', 'Terreno', 'Cuarto', 'Espacios', 'Cementerio']
         {/* 🚀 FIX AISLAMIENTO DE SCROLL: 
             Solo estos botones tienen overflow-x-auto. Así los menús de la izquierda no se cortan. */}
         {variant === 'map' && (
-          <div className="flex items-center gap-3 flex-1 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="flex items-center gap-3 flex-1 overflow-visible pb-1">
             <div className="shrink-0">
               <MockFilterBtn icon={DollarSign} text="Precio" onClick={onOpenPriceFilter} />
             </div>
             <div className="shrink-0">
-              <MockFilterBtn icon={Users} text="Capacidad" />
+              <CapacidadButton variant={variant} />
             </div>
             <div className="shrink-0">
   <button
