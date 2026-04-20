@@ -62,6 +62,9 @@ import { authMiddleware } from './middleware/authMiddleware.js'
 // --------------------
 import { verifyEmailTransport } from './lib/email.service.js'
 
+// FAVORITES
+
+import favoritesRoutes from "./modules/favorites/favorites.routes.js";
 // --------------------
 // SERVER
 // --------------------
@@ -113,7 +116,7 @@ app.use('/api/publicaciones', multimediaRoutes)
 app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
 app.use('/api', router)
-
+app.use("/api/favorites", favoritesRoutes);
 // --------------------
 // MOCK / TEST
 // --------------------

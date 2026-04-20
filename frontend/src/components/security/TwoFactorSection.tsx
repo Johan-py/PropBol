@@ -1,4 +1,4 @@
-import { Info } from 'lucide-react'
+import { Info } from "lucide-react";
 
 export default function TwoFactorSection() {
   return (
@@ -8,7 +8,8 @@ export default function TwoFactorSection() {
           Verificación en dos pasos
         </h1>
         <p className="mt-2 text-sm text-neutral-500">
-          Protege tu cuenta con un código de verificación enviado a tu correo electrónico.
+          Protege tu cuenta con un código de verificación enviado a tu correo
+          electrónico.
         </p>
       </header>
 
@@ -21,10 +22,13 @@ export default function TwoFactorSection() {
               </div>
 
               <div>
-                <h3 className="text-base font-semibold text-neutral-900">¿Cómo funciona?</h3>
+                <h3 className="text-base font-semibold text-neutral-900">
+                  ¿Cómo funciona?
+                </h3>
                 <p className="mt-1 max-w-2xl text-sm leading-6 text-neutral-500">
-                  Cada vez que inicies sesión, recibirás un código de verificación en tu correo
-                  electrónico. Deberás ingresar ese código para completar el inicio de sesión.
+                  Cada vez que inicies sesión, recibirás un código de
+                  verificación en tu correo electrónico. Deberás ingresar ese
+                  código para completar el inicio de sesión.
                 </p>
               </div>
             </div>
@@ -39,5 +43,5 @@ export default function TwoFactorSection() {
         </div>
       </div>
     </div>
-  )
+  );
 }
