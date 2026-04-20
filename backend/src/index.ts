@@ -28,7 +28,9 @@ import {
   loginController,
   logoutController,
   verifyRegisterCodeController,
-  getMeController
+  getMeController,
+  forgotPasswordController,
+  resetPasswordController
 } from './modules/auth/auth.controller.js'
 import { requireAuth } from './middleware/auth.middleware.js'
 
@@ -43,13 +45,16 @@ import perfilRoutes from './modules/perfil/perfil.routes.js'
 
 import {
   googleCallbackController,
-  StratGoogleLoginController
+  StratGoogleLoginController,
+  StartGoogleRegisterController
 } from './modules/auth/google/google.controller.js'
+ 
+
 
 import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
 import publicacionRoutes from './modules/publicacion/publicacion.routes.js'
 import router from './modules/registro-publicacion/publicacion.routes.js'
-
+import securityRoutes from "./routes/security.routes.js";
 // --------------------
 // LEGACY
 // --------------------
@@ -104,6 +109,8 @@ app.use('/uploads', express.static(path.resolve('uploads')))
 // --------------------
 // RUTAS LEGACY
 // --------------------
+app.post("/api/auth/forgot-password", forgotPasswordController);
+app.post("/api/auth/reset-password", resetPasswordController);
 app.use('/api/auth-legacy', authRoutes)
 app.get('/api/users/:id/publicaciones/free', authMiddleware, (_req, res) => {
   res.json({ restantes: 2 })
@@ -113,11 +120,13 @@ app.use('/api/publicaciones-legacy', publicacionesRoutes)
 // --------------------
 // RUTAS PRINCIPALES
 // --------------------
-app.use('/api/publicaciones', publicacionRoutes)
-app.use('/api/publicaciones', multimediaRoutes)
-app.use('/api/perfil', correoverificacionRoutes)
-app.use('/api/perfil/usuario', perfilRoutes)
-app.use('/api', router)
+app.use("/api/publicaciones", publicacionRoutes);
+app.use("/api/publicaciones", multimediaRoutes);
+app.use("/api/perfil", correoverificacionRoutes);
+app.use("/api/perfil/usuario", perfilRoutes);
+app.use("/api/perfil/zonas", zonaRoutes);
+app.use("/api", router);
+app.use("/api/security", securityRoutes);
 app.use("/api/favorites", favoritesRoutes);
 app.use("/api/perfil", perfilRoutes);
 
@@ -133,13 +142,15 @@ app.use('/api/perfil/zonas', zonaRoutes);
 // --------------------
 // AUTH
 // --------------------
-app.post('/api/auth/register', registerController)
-app.post('/api/auth/login', loginController)
-app.post('/api/auth/logout', logoutController)
-app.post('/api/auth/verify-register', verifyRegisterCodeController)
-app.get('/api/auth/me', getMeController)
-app.get('/api/auth/google/login', StratGoogleLoginController)
-app.get('/api/auth/google/callback', googleCallbackController)
+app.post("/api/auth/register", registerController);
+app.post("/api/auth/login", loginController);
+app.post("/api/auth/logout", logoutController);
+app.post("/api/auth/verify-register", verifyRegisterCodeController);
+app.get("/api/auth/me", getMeController);
+app.get("/api/auth/google/login", StratGoogleLoginController);
+app.get("/api/auth/google/register", StartGoogleRegisterController);
+app.get("/api/auth/google/callback", googleCallbackController);
+//comentario
 
 // --------------------
 // BANNERS & FILTERS

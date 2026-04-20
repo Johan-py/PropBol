@@ -25,6 +25,7 @@ interface FilterBarProps {
     updatedAt: string
   }) => void
   variant?: 'home' | 'map'
+  onOpenPriceFilter?: () => void
 }
 
 type LocationValue =
@@ -40,16 +41,18 @@ type LocationValue =
 const MockFilterBtn = ({
   icon: Icon,
   text,
-  hasChevron = true
+  hasChevron = true,
+  onClick
 }: {
   icon?: any
   text: string
   hasChevron?: boolean
+  onClick?: () => void
 }) => (
   <button
     type="button"
     className="h-[36px] flex items-center justify-between bg-white border border-stone-200 text-stone-600 px-3 rounded-xl shadow-sm hover:border-stone-300 transition-all font-inter text-sm whitespace-nowrap gap-2 shrink-0 focus:outline-none cursor-default"
-    onClick={(e) => e.preventDefault()}
+     onClick={(e) => { e.preventDefault(); if (onClick) onClick() }}
   >
     <div className="flex items-center gap-2">
       {Icon && <Icon className="w-4 h-4 text-stone-500" />}
@@ -59,7 +62,7 @@ const MockFilterBtn = ({
   </button>
 )
 
-export default function FilterBar({ onSearch, variant = 'home' }: FilterBarProps) {
+export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter }: FilterBarProps) {
   const router = useRouter()
 
   const { updateFilters } = useSearchFilters()
@@ -190,7 +193,7 @@ options={['Casa', 'Departamento', 'Terreno', 'Cuarto', 'Espacios', 'Cementerio']
         {variant === 'map' && (
           <div className="flex items-center gap-3 flex-1 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <div className="shrink-0">
-              <MockFilterBtn icon={DollarSign} text="Precio" />
+              <MockFilterBtn icon={DollarSign} text="Precio" onClick={onOpenPriceFilter} />
             </div>
             <div className="shrink-0">
               <MockFilterBtn icon={Users} text="Capacidad" />
