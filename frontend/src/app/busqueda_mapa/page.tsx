@@ -208,7 +208,7 @@ function BusquedaMapaContent() {
           <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />{' '}
           Actualizando...
         </div>
-      ) : displayedProperties.length === 0 ? (
+      ) : properties.length === 0 ? (
         <EmptyState />
       ) : (
         <div
@@ -277,7 +277,7 @@ function BusquedaMapaContent() {
             <div className="flex-1 relative">
               <div className="absolute inset-0" style={{ zIndex: 0 }}>
                 <MapView
-                  properties={inmueblesOrdenados}
+                  properties={properties}
                   selectedId={selectedPropertyId}
                   onSelect={(id) => {
                     setSelectedPropertyId(id)
@@ -296,10 +296,7 @@ function BusquedaMapaContent() {
                 </span>
                 {MenuToggleComponent}
               </div>
-              <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
-                <PropertyListMobile onClickItem={(p) => setPinnedProperty(p)} />
-                {renderListPaginationFooter()}
-              </div>
+              <PropertyListMobile onClickItem={(p) => setPinnedProperty(p)} />
             </div>
           </div>
         </div>
@@ -335,9 +332,9 @@ function BusquedaMapaContent() {
               style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.18)' }}
             >
               <ListIcon size={16} className="text-orange-500" /> Ver lista
-              {displayedProperties.length > 0 && (
+              {properties.length > 0 && (
                 <span className="bg-orange-100 text-orange-600 text-xs font-bold px-2 py-0.5 rounded-full">
-                  {displayedProperties.length}
+                  {properties.length}
                 </span>
               )}
               <ChevronUp size={16} className="text-stone-400" />
@@ -445,7 +442,7 @@ function BusquedaMapaContent() {
                 )}
                 <div className="px-4 shrink-0 border-b border-stone-100 pb-2">
                   <MenuOrdenamiento
-                    totalResultados={displayedProperties.length}
+                    totalResultados={properties.length}
                     ordenActual={ordenActual}
                     onOrdenChange={cambiarOrden}
                   />
@@ -457,8 +454,6 @@ function BusquedaMapaContent() {
                     setSheetState('peek')
                   }}
                 />
-                {renderListPaginationFooter()}
-                </div>
               </div>
             </div>
           )}
@@ -531,7 +526,7 @@ function BusquedaMapaContent() {
 
                 <div className="relative border-b border-stone-100 pb-4 [&>div]:mb-0">
                   <MenuOrdenamiento
-                    totalResultados={displayedProperties.length}
+                    totalResultados={properties.length}
                     ordenActual={ordenActual}
                     onOrdenChange={cambiarOrden}
                   />
@@ -571,7 +566,7 @@ function BusquedaMapaContent() {
                     <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
                     Actualizando resultados...
                   </div>
-                ) : displayedProperties.length === 0 ? (
+                ) : properties.length === 0 ? (
                   <EmptyState />
                 ) : (
                   <div
@@ -636,8 +631,6 @@ function BusquedaMapaContent() {
                     ))}
                   </div>
                 )}
-              </div>
-              {renderListPaginationFooter()}
               </div>
             </div>
           )}
