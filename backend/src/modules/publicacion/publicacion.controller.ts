@@ -2,19 +2,21 @@ import type { Request, Response } from 'express'
 import {
   eliminarPublicacionService,
   listarMisPublicacionesService,
-  editarPublicacionService
+  editarPublicacionService,
+  obtenerDetallePublicacionService
 } from './publicacion.service.js'
 
 interface AuthRequest extends Request {
-  usuario?: {
+  user?: {
     id: number
+    correo?: string
     nombre?: string
     rol?: string
   }
 }
 
 export const listarMisPublicacionesController = async (req: AuthRequest, res: Response) => {
-  const usuarioId = req.usuario?.id
+  const usuarioId = req.user?.id
 
   try {
     const publicaciones = await listarMisPublicacionesService(Number(usuarioId))
@@ -42,7 +44,7 @@ export const listarMisPublicacionesController = async (req: AuthRequest, res: Re
 
 export const editarPublicacionController = async (req: AuthRequest, res: Response) => {
   const publicacionId = Number(req.params.id)
-  const usuarioSolicitanteId = req.usuario?.id
+  const usuarioSolicitanteId = req.user?.id
 
   try {
     const resultado = await editarPublicacionService(
@@ -64,20 +66,53 @@ export const editarPublicacionController = async (req: AuthRequest, res: Respons
             ok: false,
             message: 'El id de la publicación es inválido'
           })
+
         case 'USUARIO_INVALIDO':
           return res.status(401).json({
             ok: false,
             message: 'Usuario no autenticado'
           })
+
         case 'PUBLICACION_NO_EXISTE':
           return res.status(404).json({
             ok: false,
             message: 'La publicación no existe'
           })
+
         case 'NO_AUTORIZADO':
           return res.status(403).json({
             ok: false,
             message: 'No puede editar publicaciones de otros usuarios'
+          })
+
+        case 'TITULO_INVALIDO':
+          return res.status(400).json({
+            ok: false,
+            message: 'El título es inválido'
+          })
+
+        case 'DESCRIPCION_INVALIDA':
+          return res.status(400).json({
+            ok: false,
+            message: 'La descripción es inválida'
+          })
+
+        case 'TIPO_ACCION_INVALIDO':
+          return res.status(400).json({
+            ok: false,
+            message: 'El tipo de acción es inválido'
+          })
+
+        case 'UBICACION_INVALIDA':
+          return res.status(400).json({
+            ok: false,
+            message: 'La ubicación es inválida'
+          })
+
+        case 'PRECIO_INVALIDO':
+          return res.status(400).json({
+            ok: false,
+            message: 'El precio es inválido'
           })
       }
     }
@@ -93,10 +128,13 @@ export const editarPublicacionController = async (req: AuthRequest, res: Respons
 
 export const eliminarPublicacionController = async (req: AuthRequest, res: Response) => {
   const publicacionId = Number(req.params.id)
-  const usuarioSolicitanteId = req.usuario?.id
+  const usuarioSolicitanteId = req.user?.id
 
   try {
-    const resultado = await eliminarPublicacionService(publicacionId, Number(usuarioSolicitanteId))
+    const resultado = await eliminarPublicacionService(
+      publicacionId,
+      Number(usuarioSolicitanteId)
+    )
 
     return res.status(200).json({
       ok: true,
@@ -111,17 +149,30 @@ export const eliminarPublicacionController = async (req: AuthRequest, res: Respo
             ok: false,
             message: 'El id de la publicación es inválido'
           })
+
         case 'USUARIO_INVALIDO':
-          return res.status(401).json({ ok: false, message: 'Usuario no autenticado' })
+          return res.status(401).json({
+            ok: false,
+            message: 'Usuario no autenticado'
+          })
+
         case 'PUBLICACION_NO_EXISTE':
-          return res.status(404).json({ ok: false, message: 'La publicación no existe' })
+          return res.status(404).json({
+            ok: false,
+            message: 'La publicación no existe'
+          })
+
         case 'NO_AUTORIZADO':
           return res.status(403).json({
             ok: false,
             message: 'No puede eliminar publicaciones de otros usuarios'
           })
+
         case 'PUBLICACION_YA_ELIMINADA':
-          return res.status(409).json({ ok: false, message: 'La publicación ya fue eliminada' })
+          return res.status(409).json({
+            ok: false,
+            message: 'La publicación ya fue eliminada'
+          })
       }
     }
 
@@ -130,6 +181,42 @@ export const eliminarPublicacionController = async (req: AuthRequest, res: Respo
     return res.status(500).json({
       ok: false,
       message: 'No se puede eliminar la publicación, intente nuevamente'
+    })
+  }
+}
+
+export const obtenerDetallePublicacionController = async (req: Request, res: Response) => {
+  const publicacionId = Number(req.params.id)
+
+  try {
+    const detalle = await obtenerDetallePublicacionService(publicacionId)
+
+    return res.status(200).json({
+      ok: true,
+      data: detalle
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      switch (error.message) {
+        case 'ID_INVALIDO':
+          return res.status(400).json({
+            ok: false,
+            message: 'El id de la publicación es inválido'
+          })
+
+        case 'PUBLICACION_NO_EXISTE':
+          return res.status(404).json({
+            ok: false,
+            message: 'La publicación no existe'
+          })
+      }
+    }
+
+    console.error('Error al obtener detalle de publicación:', error)
+
+    return res.status(500).json({
+      ok: false,
+      message: 'No se pudo obtener el detalle de la propiedad'
     })
   }
 }
