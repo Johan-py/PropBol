@@ -176,36 +176,52 @@ if (esReutilizada) {
   });
 }
 
-await prisma.$transaction([
-  prisma.usuario.update({
-    where: { id: usuarioId },
-    data: {
-      password: nuevaPassword,
-      intentos_fallidos_cambio_password: 0,
-      bloqueo_cambio_password_hasta: null,
-      password_actualizado_en: ahora,
-    },
-  }),
-  prisma.historial_password.create({
-    data: {
-      usuarioId,
-      passwordHash: nuevaPassword,
-      creadoEn: ahora,
-    },
-  }),
-]);
+    await prisma.$transaction([
+      prisma.usuario.update({
+        where: { id: usuarioId },
+        data: {
+          password: nuevaPassword,
+          intentos_fallidos_cambio_password: 0,
+          bloqueo_cambio_password_hasta: null,
+          password_actualizado_en: ahora,
+        },
+      }),
+      prisma.historial_password.create({
+        data: {
+          usuarioId,
+          passwordHash: nuevaPassword,
+          creadoEn: ahora,
+        },
+      }),
+    ]);
 
-await invalidateOtherUserSessions(usuarioId, currentToken);
+    try {
+      await invalidateOtherUserSessions(usuarioId, currentToken);
+    } catch (sessionError) {
+      console.error("Error no crítico al invalidar otras sesiones:", sessionError);
+    }
 
-return res.json({
-  ok: true,
-  msg: "Contraseña actualizada correctamente",
-});
-  } catch (error) {
+    return res.json({
+      ok: true,
+      msg: "Contraseña actualizada correctamente",
+    });
+  } catch (error: any) {
     console.error("Error en cambiarPassword:", error);
+
+    if (error.code === 'P2002') {
+      return res.status(400).json({
+        ok: false,
+        msg: "Error de duplicidad en la base de datos.",
+      });
+    }
+
+    const errorMsg = error instanceof Error ? error.message : "Error inesperado en el servidor";
+
     return res.status(500).json({
       ok: false,
-      msg: "Error al actualizar la contraseña",
+      msg: errorMsg.includes("Prisma") 
+        ? "Error de conexión con la base de datos" 
+        : "No se pudo completar el cambio de contraseña. Intenta de nuevo.",
     });
   }
 };
