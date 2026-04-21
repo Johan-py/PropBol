@@ -70,8 +70,7 @@ import { authMiddleware } from './middleware/authMiddleware.js'
 import { verifyEmailTransport } from './lib/email.service.js'
 
 // FAVORITES
-
-import favoritesRoutes from './modules/favorites/favorites.routes.js'
+import favoritesRoutes from "./modules/favorites/favorites.routes.js";
 // --------------------
 // SERVER
 // --------------------
@@ -137,7 +136,6 @@ app.post('/api/users', (req, res) => {
   const user = req.body
   res.json({ message: 'User created', user })
 })
-app.use('/api/perfil/zonas', zonaRoutes)
 
 // --------------------
 // AUTH
