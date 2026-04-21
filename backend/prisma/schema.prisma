@@ -704,10 +704,3 @@ enum tipo_multimedia {
   IMAGEN
   VIDEO
 }
-
-enum estado_blog {
-  BORRADOR
-  PENDIENTE
-  PUBLICADO
-  RECHAZADO
-}
