@@ -9,7 +9,13 @@ import { initialProperties, currentUser, emptyErrors } from "@/data/properties";
 
 export default function EditarPublicacionPage() {
   const searchParams = useSearchParams();
-  const id = Number(searchParams.get("id"));
+  const [id, setId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const param = searchParams.get("id");
+    setId(param ? Number(param) : null);
+  }, [searchParams]);
+
 
   const [properties, setProperties] = useState(initialProperties);
   const [formData, setFormData] = useState<any>(null);
@@ -40,6 +46,11 @@ export default function EditarPublicacionPage() {
   };
 
   if (!formData) return <p>Cargando...</p>;
+
+  if (id === null) {
+    return <p>Cargando...</p>;
+  }
+
 
   return (
     <div className="max-w-3xl mx-auto py-10">
