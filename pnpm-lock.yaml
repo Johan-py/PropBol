@@ -154,6 +154,9 @@ importers:
       clsx:
         specifier: ^2.1.0
         version: 2.1.1
+      csvtojson:
+        specifier: ^2.0.14
+        version: 2.0.14
       framer-motion:
         specifier: ^11.0.3
         version: 11.18.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1792,6 +1795,11 @@ packages:
 
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
+
+  csvtojson@2.0.14:
+    resolution: {integrity: sha512-F7NNvhhDyob7OsuEGRsH0FM1aqLs/WYITyza3l+hTEEmOK9sGPBlYQZwlVG0ezCojXYpE17lhS5qL6BCOZSPyA==}
+    engines: {node: '>=8.0.0'}
+    hasBin: true
 
   damerau-levenshtein@1.0.8:
     resolution: {integrity: sha512-sdQSFB7+llfUcQHUQO3+B8ERRj0Oa4w9POWMI/puGtuf7gFywGmkaLCElnudfTiKZV+NvHqL0ifzdrI8Ro7ESA==}
@@ -5588,6 +5596,10 @@ snapshots:
   cssesc@3.0.0: {}
 
   csstype@3.2.3: {}
+
+  csvtojson@2.0.14:
+    dependencies:
+      lodash: 4.18.1
 
   damerau-levenshtein@1.0.8: {}
 
