@@ -102,9 +102,9 @@ function BusquedaMapaContent() {
       router.push('/sign-up') // Redirige a la página de registro
       return
     }
-    setIsMisZonasOpen(true)
+    setIsMisZonasOpen(false)
     setIsDrawingMode(true)
-    setIsSidebarOpen(false)
+    setIsSidebarOpen(true)
   }
 
   const resetDrawing = () => {
