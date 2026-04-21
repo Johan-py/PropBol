@@ -3,21 +3,17 @@
 export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 
 import Modal from "@/components/Modal";
 import EditForm from "@/components/EditForm";
-import { initialProperties, currentUser, emptyErrors } from "@/data/properties";
+import { initialProperties, emptyErrors } from "@/data/properties";
 
-export default function EditarPublicacionPage() {
-  const searchParams = useSearchParams();
+export default function EditarPublicacionPage({
+  searchParams,
+}: {
+  searchParams: { id?: string };
+}) {
   const [id, setId] = useState<number | null>(null);
-
-  useEffect(() => {
-    const param = searchParams.get("id");
-    setId(param ? Number(param) : null);
-  }, [searchParams]);
-
 
   const [properties, setProperties] = useState(initialProperties);
   const [formData, setFormData] = useState<any>(null);
@@ -25,11 +21,19 @@ export default function EditarPublicacionPage() {
   const [showConfirmSave, setShowConfirmSave] = useState(false);
 
   useEffect(() => {
+    if (searchParams?.id) {
+      setId(Number(searchParams.id));
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (id === null) return;
+
     const property = properties.find((p: any) => p.id === id);
     if (property) {
       setFormData(property);
     }
-  }, [id]);
+  }, [id, properties]);
 
   const handleChange = (field: string, value: any) => {
     setFormData((prev: any) => ({ ...prev, [field]: value }));
@@ -47,12 +51,9 @@ export default function EditarPublicacionPage() {
     alert("Guardado correctamente");
   };
 
-  if (!formData) return <p>Cargando...</p>;
-
-  if (id === null) {
+  if (id === null || !formData) {
     return <p>Cargando...</p>;
   }
-
 
   return (
     <div className="max-w-3xl mx-auto py-10">
@@ -66,9 +67,18 @@ export default function EditarPublicacionPage() {
 
       {showConfirmSave && (
         <Modal onClose={() => setShowConfirmSave(false)}>
-          <button onClick={handleConfirmSave}>Confirmar Guardado</button>
+          <div className="p-4 text-center">
+            <p className="mb-4">¿Confirmar guardado?</p>
+            <button
+              onClick={handleConfirmSave}
+              className="px-4 py-2 bg-orange-500 text-white rounded"
+            >
+              Confirmar Guardado
+            </button>
+          </div>
         </Modal>
       )}
     </div>
   );
 }
+
