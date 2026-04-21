@@ -1,15 +1,17 @@
-import { Router } from 'express'
-import { requireAuth } from '../../middleware/auth.middleware.js'
+import { Router } from "express";
+import { requireAuth } from "../../middleware/auth.middleware.js";
 import {
   listarMisPublicacionesController,
+  obtenerResumenFinalController,
   editarPublicacionController,
-  eliminarPublicacionController
-} from './publicacion.controller.js'
+  eliminarPublicacionController,
+} from "./publicacion.controller.js";
 
-const router = Router()
+const router = Router();
 
-router.get('/mias', requireAuth, listarMisPublicacionesController)
-router.put('/:id', requireAuth, editarPublicacionController)
-router.delete('/:id', requireAuth, eliminarPublicacionController)
+router.get("/mias", requireAuth, listarMisPublicacionesController);
+router.get("/:id/resumen-final", requireAuth, obtenerResumenFinalController);
+router.put("/:id", requireAuth, editarPublicacionController);
+router.delete("/:id", requireAuth, eliminarPublicacionController);
 
-export default router
+export default router;
