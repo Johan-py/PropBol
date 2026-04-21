@@ -1,7 +1,10 @@
 // correoverificacion.controller.ts
 import type { Request, Response } from "express";
 import { prisma } from "../../lib/prisma.client.js";
-import { enviarCodigoCambioEmail } from "../../lib/email.service.js";
+import { 
+  enviarCodigoCambioEmail, 
+  enviarNotificacionCambioPassword 
+} from "../../lib/email.service.js";
 import { invalidateOtherUserSessions } from "../auth/auth.repository.js";
 
 interface AuthRequest extends Request {
@@ -199,6 +202,15 @@ if (esReutilizada) {
       await invalidateOtherUserSessions(usuarioId, currentToken);
     } catch (sessionError) {
       console.error("Error no crítico al invalidar otras sesiones:", sessionError);
+    }
+
+    try {
+      await enviarNotificacionCambioPassword({
+        emailDestino: usuario.correo,
+        nombreUsuario: usuario.nombre,
+      });
+    } catch (emailError) {
+      console.error("Error no crítico al enviar notificación de cambio de password:", emailError);
     }
 
     return res.json({
