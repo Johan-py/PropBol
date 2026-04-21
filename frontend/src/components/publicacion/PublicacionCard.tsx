@@ -1,6 +1,7 @@
 'use client'
 
 import { Bath, BedDouble, MapPin, Square } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useDeletePublicacion } from '@/hooks/useDeletePublicacion'
 import type { MisPublicacionesItem } from '@/types/publicacion'
 import ConfirmDeleteModal from './ConfirmDeleteModal'
@@ -13,6 +14,8 @@ interface Props {
 }
 
 export default function PublicacionCard({ publicacion, onDeleted }: Props) {
+  const router = useRouter()
+
   const {
     modalConfirmacionAbierto,
     modalExitoAbierto,
@@ -28,6 +31,10 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
 
   const precioFormateado = `$${publicacion.precio.toLocaleString()}`
   const areaFormateada = publicacion.superficieM2 ? `${publicacion.superficieM2}m²` : '-'
+
+  const irAEditar = () => {
+    router.push(`/mis-publicaciones/${publicacion.id}/editar`)
+  }
 
   return (
     <>
@@ -76,7 +83,10 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
           </div>
 
           <div className="flex gap-3">
-            <button className="h-11 flex-1 rounded-lg border border-[#9a9a9a] bg-white text-[14px] font-medium text-[#2c2c2c] transition hover:bg-gray-50">
+            <button
+              onClick={irAEditar}
+              className="h-11 flex-1 rounded-lg border border-[#9a9a9a] bg-white text-[14px] font-medium text-[#2c2c2c] transition hover:bg-gray-50"
+            >
               Editar
             </button>
 
