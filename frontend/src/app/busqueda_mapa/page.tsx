@@ -30,6 +30,7 @@ import PriceFilterSidebar from '@/components/filters/PriceFilterSidebar'
 import PropertyCard from '@/components/layout/PropertyCard'
 import PropertyRow from '@/components/galeria/PropertyRow'
 import EmptyState from '@/components/galeria/EmptyState'
+import MapaListadoPaginacion, { PageSize } from "@/components/galeria/MapaListadoPaginacion";
 import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenamiento'
 import { ErrorState } from '@/components/ClusterSidebar'
 import SuperficieFilterSidebar from '@/components/filters/SuperficieFilterSidebar'
@@ -77,7 +78,11 @@ function useIsLandscapeMobile() {
 const SHEET_H = { peek: '50%', full: '100%' } as const
 type SheetState = 'hidden' | 'peek' | 'full'
 
+const LIST_PAGE_SIZES = [10, 20, 50, 100] as const;
+
 function BusquedaMapaContent() {
+  const searchParams = useSearchParams();
+  const filterResetKey = searchParams.toString();
   //Instanciamos el router para autenticar al usuario
   const router = useRouter()
   // === 1. ESTADOS COMPARTIDOS ===
@@ -139,6 +144,11 @@ function BusquedaMapaContent() {
         const turfCoords = [...polygonPoints, polygonPoints[0]].map((p) => [p[1], p[0]])
         const drawPoly = polygon([turfCoords])
 
+          /*const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
+            null
+          );
+          const [hoveredId, setHoveredId] = useState<string | null>(null);*/
+
         return properties.filter((p: any) => {
           if (p.lat == null || p.lng == null) return false
           const pt = point([p.lng, p.lat])
@@ -173,6 +183,21 @@ function BusquedaMapaContent() {
   const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
     inmuebles: displayedProperties
   })
+
+  const [listPage, setListPage] = useState(1);
+  const [listPageSize, setListPageSize] = useState<(PageSize)>(10);
+  const listTotal = inmueblesOrdenados.length; 
+  const listTotalPages = Math.max(1, Math.ceil(listTotal / listPageSize));
+  const listSafePage = Math.min(Math.max(1, listPage), listTotalPages);
+  
+  const paginatedProperties = useMemo(() => {
+    if (listTotal === 0) return [];
+    const start = (listSafePage - 1) * listPageSize;
+    return inmueblesOrdenados.slice(start, start + listPageSize); 
+  }, [inmueblesOrdenados, listSafePage, listPageSize, listTotal]);
+
+  useEffect(() => { setListPage(1); }, [filterResetKey]);
+  useEffect(() => { if (listPage > listTotalPages) setListPage(listTotalPages); }, [listPage, listTotalPages]);
 
   // === 5. ESTADOS VISUALES Y DE CLUSTERS (develop + HU8) ===
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
@@ -296,7 +321,7 @@ function BusquedaMapaContent() {
               : ''
           }`}
         >
-          {(isClusterView ? clusterProperties : inmueblesOrdenados).map((property: any) => (
+          {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
             <div
               key={property.id}
               onClick={() => {
@@ -340,6 +365,20 @@ function BusquedaMapaContent() {
       )}
     </div>
   )
+
+const renderListPaginationFooter = () => (
+    <MapaListadoPaginacion
+      total={listTotal}
+      page={listSafePage}
+      pageSize={listPageSize}
+      onPageChange={setListPage}
+      onPageSizeChange={(s) => {
+        setListPageSize(s);
+        setListPage(1);
+      }}
+      hint={listTotal === 0 && error ? `Error al cargar: ${error}` : null}
+    />
+  );
 
   // ────────────────────────────────────────────────────────────────────────────
   // RENDER LANDSCAPE MÓVIL
@@ -573,12 +612,15 @@ function BusquedaMapaContent() {
                   />
                 </div>
                 <div className="px-4 py-2 flex justify-end shrink-0">{MenuToggleComponent}</div>
+                 <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
                 <PropertyListMobile
                   onClickItem={(p) => {
                     setPinnedProperty(p)
                     setSheetState('peek')
                   }}
                 />
+                {renderListPaginationFooter()}
+                </div>
               </div>
             </div>
           )}
@@ -736,8 +778,7 @@ function BusquedaMapaContent() {
                         : ''
                     }`}
                   >
-                    {(isClusterView ? clusterProperties : inmueblesOrdenados).map(
-                      (property: any) => (
+                      {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
                         <div
                           key={property.id}
                           onMouseEnter={() => setHoveredId(property.id)}
@@ -794,6 +835,7 @@ function BusquedaMapaContent() {
                   </div>
                 )}
               </div>
+              {renderListPaginationFooter()}
             </div>
             )  
           : isSidebarOpen && activeSidebarView === 'superficie' ? (
