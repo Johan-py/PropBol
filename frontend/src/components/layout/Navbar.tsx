@@ -696,7 +696,6 @@ export default function Navbar() {
 
               <Link
                 href="/propiedades"
-                href="/blogs"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
