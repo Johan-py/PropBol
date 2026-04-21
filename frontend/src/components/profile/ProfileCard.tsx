@@ -70,16 +70,16 @@ function ProfileCardContent() {
   const [avatar, setAvatar] = useState<string | null>(null)
   const [tempAvatar, setTempAvatar] = useState<File | null>(null)
   const [previewAvatar, setPreviewAvatar] = useState<string | null>(null)
-  
-  // Estados para validaciones de error
-  const [errorNombre, setErrorNombre] = useState("");
-  const [errorFechaNacimiento, setErrorFechaNacimiento] = useState("");
 
-  const [originalNombre, setOriginalNombre] = useState("");
-  const [originalPais, setOriginalPais] = useState("");
-  const [originalGenero, setOriginalGenero] = useState("");
-  const [originalDireccion, setOriginalDireccion] = useState("");
-  const [originalFechaNacimiento, setOriginalFechaNacimiento] = useState("");
+  // Estados para validaciones de error
+  const [errorNombre, setErrorNombre] = useState('')
+  const [errorFechaNacimiento, setErrorFechaNacimiento] = useState('')
+
+  const [originalNombre, setOriginalNombre] = useState('')
+  const [originalPais, setOriginalPais] = useState('')
+  const [originalGenero, setOriginalGenero] = useState('')
+  const [originalDireccion, setOriginalDireccion] = useState('')
+  const [originalFechaNacimiento, setOriginalFechaNacimiento] = useState('')
 
   const [isSecurityModalOpen, setIsSecurityModalOpen] = useState(false)
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false)
@@ -119,19 +119,19 @@ function ProfileCardContent() {
         const perfil = data.perfil
         const foto = perfil.avatar || perfil.fotoPerfil || null
         setPerfilData(perfil)
-        
+
         setNombre(perfil.nombre || '')
         setOriginalNombre(perfil.nombre || '')
-        
+
         setPais(perfil.pais || '')
         setOriginalPais(perfil.pais || '')
-        
+
         setGenero(perfil.genero || '')
         setOriginalGenero(perfil.genero || '')
-        
+
         setDireccion(perfil.direccion || '')
         setOriginalDireccion(perfil.direccion || '')
-        
+
         setFechaNacimiento(perfil.fechaNacimiento || '')
         setOriginalFechaNacimiento(perfil.fechaNacimiento || '')
 
@@ -145,12 +145,14 @@ function ProfileCardContent() {
         syncNavbar()
 
         if (perfil.telefonos && Array.isArray(perfil.telefonos) && perfil.telefonos.length > 0) {
-          setTelefonos(perfil.telefonos.map((tel: any, i: number) => ({
-            id: Date.now() + i,
-            numero: tel.numero,
-            pais: PAISES.find(p => tel.codigoPais === p.codigo)?.nombre || 'Bolivia',
-            codigo: tel.codigoPais
-          })))
+          setTelefonos(
+            perfil.telefonos.map((tel: any, i: number) => ({
+              id: Date.now() + i,
+              numero: tel.numero,
+              pais: PAISES.find((p) => tel.codigoPais === p.codigo)?.nombre || 'Bolivia',
+              codigo: tel.codigoPais
+            }))
+          )
         } else {
           setTelefonos([{ id: Date.now(), numero: '', pais: 'Bolivia', codigo: '+591' }])
         }
@@ -162,7 +164,9 @@ function ProfileCardContent() {
     }
   }
 
-  useEffect(() => { cargarPerfil() }, [])
+  useEffect(() => {
+    cargarPerfil()
+  }, [])
 
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   const hasEmailChanged = tempEmail !== originalEmail && isValidEmail(tempEmail)
@@ -235,16 +239,16 @@ function ProfileCardContent() {
   }
 
   const guardarTelefonos = async () => {
-    const numerosLimpios = telefonos.map((t) => t.numero.trim()).filter((num) => num !== '');
-    const tieneDuplicados = new Set(numerosLimpios).size !== numerosLimpios.length;
+    const numerosLimpios = telefonos.map((t) => t.numero.trim()).filter((num) => num !== '')
+    const tieneDuplicados = new Set(numerosLimpios).size !== numerosLimpios.length
 
     if (tieneDuplicados) {
-      alert('No puedes guardar números de teléfono duplicados. Por favor, verifica la información.');
-      return; 
+      alert('No puedes guardar números de teléfono duplicados. Por favor, verifica la información.')
+      return
     }
 
     try {
-      const token = getToken();
+      const token = getToken()
       const body = {
         telefonos: telefonos
           .filter((t) => t.numero.trim() !== '')
@@ -253,7 +257,7 @@ function ProfileCardContent() {
             numero: t.numero,
             principal: index === 0
           }))
-      };
+      }
 
       await fetch(`${API_URL}/api/perfil/usuario/telefonos`, {
         method: 'PUT',
@@ -262,11 +266,11 @@ function ProfileCardContent() {
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(body)
-      });
+      })
     } catch (error: any) {
       console.error(error.message)
     }
-  };
+  }
 
   const subirFoto = async (file: File) => {
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
@@ -434,19 +438,19 @@ function ProfileCardContent() {
     setTelefonos(
       telefonos.map((t) => {
         if (t.id === id) {
-          const configPais = PAISES.find(p => p.nombre === t.pais);
-          const maxDigitos = configPais?.digitos || 15;
-          const soloNumerosYCortados = valor.replace(/\D/g, '').slice(0, maxDigitos);
-          return { ...t, numero: soloNumerosYCortados };
+          const configPais = PAISES.find((p) => p.nombre === t.pais)
+          const maxDigitos = configPais?.digitos || 15
+          const soloNumerosYCortados = valor.replace(/\D/g, '').slice(0, maxDigitos)
+          return { ...t, numero: soloNumerosYCortados }
         }
-        return t;
+        return t
       })
     )
   }
 
   const handleSaveAll = async () => {
-    setIsLoading(true);
-    
+    setIsLoading(true)
+
     if (tempAvatar) {
       await subirFoto(tempAvatar)
       setTempAvatar(null)
@@ -458,17 +462,17 @@ function ProfileCardContent() {
       setIsEmailEditable(false)
     }
 
-    if (nombre !== originalNombre) await guardarNombre();
-    if (pais !== originalPais) await guardarPais();
-    if (genero !== originalGenero) await guardarGenero();
-    if (direccion !== originalDireccion) await guardarDireccion();
-    if (fechaNacimiento !== originalFechaNacimiento) await guardarFechaNacimiento();
-    
-    await guardarTelefonos();
+    if (nombre !== originalNombre) await guardarNombre()
+    if (pais !== originalPais) await guardarPais()
+    if (genero !== originalGenero) await guardarGenero()
+    if (direccion !== originalDireccion) await guardarDireccion()
+    if (fechaNacimiento !== originalFechaNacimiento) await guardarFechaNacimiento()
 
-    setCampoEditando(null);
-    setIsLoading(false);
-    alert('Cambios guardados exitosamente');
+    await guardarTelefonos()
+
+    setCampoEditando(null)
+    setIsLoading(false)
+    alert('Cambios guardados exitosamente')
   }
 
   const handleCancelAll = () => {
@@ -480,8 +484,8 @@ function ProfileCardContent() {
     setFechaNacimiento(originalFechaNacimiento)
     setTempEmail(originalEmail)
     setIsEmailEditable(false)
-    setErrorNombre("")
-    setErrorFechaNacimiento("")
+    setErrorNombre('')
+    setErrorFechaNacimiento('')
   }
 
   const handleEditEmailClick = () => {
@@ -495,7 +499,7 @@ function ProfileCardContent() {
     direccion !== originalDireccion ||
     fechaNacimiento !== originalFechaNacimiento ||
     tempEmail !== originalEmail ||
-    tempAvatar !== null;
+    tempAvatar !== null
 
   if (isLoading && !perfilData) {
     return (
@@ -506,24 +510,26 @@ function ProfileCardContent() {
   }
 
   return (
-    <div 
-      id="personal-data-form" 
+    <div
+      id="personal-data-form"
       className={`bg-[#fdf6e6] border border-[#e5dfd7] p-8 rounded-xl flex flex-col md:flex-row gap-10 items-center transition-all duration-700 ${
-        isHighlighted ? 'ring-4 ring-amber-400 shadow-xl shadow-amber-100 scale-[1.01]' : 'shadow-sm'
+        isHighlighted
+          ? 'ring-4 ring-amber-400 shadow-xl shadow-amber-100 scale-[1.01]'
+          : 'shadow-sm'
       }`}
     >
       {/* PERFIL */}
       <div className="flex flex-col items-center justify-center w-full md:w-1/3">
         <div className="relative mb-10">
           <div className="w-28 h-28 rounded-full bg-white border border-gray-300 flex items-center justify-center shadow-sm overflow-hidden">
-             {(previewAvatar || (avatar && avatar.trim() !== "")) ? (
+            {previewAvatar || (avatar && avatar.trim() !== '') ? (
               <img
-                 src={previewAvatar || (avatar?.startsWith('http') ? avatar : `${API_URL}${avatar}`)}
-                 alt="Foto de perfil"
-                 className="w-full h-full object-cover"
-               />
-              ) : (
-               <User className="w-10 h-10 text-gray-400" />
+                src={previewAvatar || (avatar?.startsWith('http') ? avatar : `${API_URL}${avatar}`)}
+                alt="Foto de perfil"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <User className="w-10 h-10 text-gray-400" />
             )}
           </div>
 
@@ -552,7 +558,9 @@ function ProfileCardContent() {
         </div>
 
         <p className="mt-4 font-semibold text-lg">{nombre}</p>
-        <p className="text-sm text-gray-500">{isEmailEditable ? originalEmail : ofuscarEmail(originalEmail)}</p>
+        <p className="text-sm text-gray-500">
+          {isEmailEditable ? originalEmail : ofuscarEmail(originalEmail)}
+        </p>
       </div>
 
       {/* FORMULARIO */}
@@ -560,7 +568,6 @@ function ProfileCardContent() {
         <h2 className="text-xl font-bold mb-6 text-stone-900">Datos Personales</h2>
 
         <div className="flex flex-col gap-4">
-          
           {/* NOMBRE */}
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
             <label className="w-full md:w-40 font-medium text-stone-700">Nombre Completo:</label>
@@ -571,11 +578,15 @@ function ProfileCardContent() {
                   value={nombre}
                   onFocus={() => setCampoEditando('nombre')}
                   onChange={(e) => {
-                    setNombre(soloLetras(e.target.value));
-                    if (errorNombre) setErrorNombre("");
+                    setNombre(soloLetras(e.target.value))
+                    if (errorNombre) setErrorNombre('')
                   }}
                   className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                    errorNombre ? "border-red-500 bg-red-50" : campoEditando === 'nombre' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                    errorNombre
+                      ? 'border-red-500 bg-red-50'
+                      : campoEditando === 'nombre'
+                        ? 'border-amber-500 ring-1 ring-amber-500'
+                        : 'border-stone-300 hover:border-amber-400'
                   }`}
                 />
               </div>
@@ -605,14 +616,19 @@ function ProfileCardContent() {
             </div>
           </div>
           {isEmailEditable && tempEmail.length > 0 && !isValidEmail(tempEmail) && (
-            <div className="md:ml-44"><span className="text-red-500 text-xs mt-1">Formato de correo inválido</span></div>
+            <div className="md:ml-44">
+              <span className="text-red-500 text-xs mt-1">Formato de correo inválido</span>
+            </div>
           )}
 
           {/* TELÉFONOS */}
           {telefonos.map((tel, index) => {
             const keyCampo = `telefono-${tel.id}`
             return (
-              <div key={tel.id} className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+              <div
+                key={tel.id}
+                className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4"
+              >
                 <label className="w-full md:w-40 font-medium text-stone-700">
                   {index === 0 ? 'Teléfono:' : `Teléfono ${index + 1}:`}
                 </label>
@@ -621,17 +637,29 @@ function ProfileCardContent() {
                     value={`${tel.pais} ${tel.codigo}`}
                     onFocus={() => setCampoEditando(keyCampo)}
                     onChange={(e) => {
-                      const seleccion = PAISES.find((p) => `${p.nombre} ${p.codigo}` === e.target.value)
+                      const seleccion = PAISES.find(
+                        (p) => `${p.nombre} ${p.codigo}` === e.target.value
+                      )
                       if (seleccion) {
-                        setTelefonos(telefonos.map((t) => t.id === tel.id ? { ...t, pais: seleccion.nombre, codigo: seleccion.codigo } : t))
+                        setTelefonos(
+                          telefonos.map((t) =>
+                            t.id === tel.id
+                              ? { ...t, pais: seleccion.nombre, codigo: seleccion.codigo }
+                              : t
+                          )
+                        )
                       }
                     }}
                     className={`px-2 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                      campoEditando === keyCampo ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                      campoEditando === keyCampo
+                        ? 'border-amber-500 ring-1 ring-amber-500'
+                        : 'border-stone-300 hover:border-amber-400'
                     }`}
                   >
                     {PAISES.map((p) => (
-                      <option key={p.nombre} value={`${p.nombre} ${p.codigo}`}>{p.flag} {p.codigo}</option>
+                      <option key={p.nombre} value={`${p.nombre} ${p.codigo}`}>
+                        {p.flag} {p.codigo}
+                      </option>
                     ))}
                   </select>
                   <input
@@ -641,7 +669,9 @@ function ProfileCardContent() {
                     onFocus={() => setCampoEditando(keyCampo)}
                     onChange={(e) => actualizarTelefono(tel.id, e.target.value)}
                     className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                      campoEditando === keyCampo ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                      campoEditando === keyCampo
+                        ? 'border-amber-500 ring-1 ring-amber-500'
+                        : 'border-stone-300 hover:border-amber-400'
                     }`}
                   />
                   {index === 0 && (
@@ -654,7 +684,10 @@ function ProfileCardContent() {
                     </button>
                   )}
                   {index > 0 && (
-                    <button onClick={() => eliminarTelefono(tel.id)} className="text-stone-500 hover:text-red-500 transition-colors">
+                    <button
+                      onClick={() => eliminarTelefono(tel.id)}
+                      className="text-stone-500 hover:text-red-500 transition-colors"
+                    >
                       <Trash2 size={18} />
                     </button>
                   )}
@@ -679,14 +712,20 @@ function ProfileCardContent() {
                   onFocus={() => setCampoEditando('fechaNacimiento')}
                   onChange={(e) => {
                     setFechaNacimiento(e.target.value)
-                    if (errorFechaNacimiento) setErrorFechaNacimiento("")
+                    if (errorFechaNacimiento) setErrorFechaNacimiento('')
                   }}
                   className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                    errorFechaNacimiento ? "border-red-500 bg-red-50" : campoEditando === 'fechaNacimiento' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                    errorFechaNacimiento
+                      ? 'border-red-500 bg-red-50'
+                      : campoEditando === 'fechaNacimiento'
+                        ? 'border-amber-500 ring-1 ring-amber-500'
+                        : 'border-stone-300 hover:border-amber-400'
                   }`}
                 />
               </div>
-              {errorFechaNacimiento && <span className="text-red-500 text-xs mt-1">{errorFechaNacimiento}</span>}
+              {errorFechaNacimiento && (
+                <span className="text-red-500 text-xs mt-1">{errorFechaNacimiento}</span>
+              )}
             </div>
           </div>
 
@@ -699,7 +738,9 @@ function ProfileCardContent() {
                 onFocus={() => setCampoEditando('pais')}
                 onChange={(e) => setPais(e.target.value)}
                 className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                  campoEditando === 'pais' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                  campoEditando === 'pais'
+                    ? 'border-amber-500 ring-1 ring-amber-500'
+                    : 'border-stone-300 hover:border-amber-400'
                 }`}
               >
                 <option value="">Seleccione un país</option>
@@ -720,7 +761,9 @@ function ProfileCardContent() {
                 onFocus={() => setCampoEditando('genero')}
                 onChange={(e) => setGenero(e.target.value)}
                 className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                  campoEditando === 'genero' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                  campoEditando === 'genero'
+                    ? 'border-amber-500 ring-1 ring-amber-500'
+                    : 'border-stone-300 hover:border-amber-400'
                 }`}
               >
                 <option value="">Seleccione género</option>
@@ -741,7 +784,9 @@ function ProfileCardContent() {
                 onFocus={() => setCampoEditando('direccion')}
                 onChange={(e) => setDireccion(e.target.value)}
                 className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                  campoEditando === 'direccion' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                  campoEditando === 'direccion'
+                    ? 'border-amber-500 ring-1 ring-amber-500'
+                    : 'border-stone-300 hover:border-amber-400'
                 }`}
               />
             </div>
@@ -758,57 +803,80 @@ function ProfileCardContent() {
             </button>
             <button
               onClick={() => {
-                let hasError = false;
+                let hasError = false
 
                 // Validación 1: Nombre
                 if (!nombre.trim()) {
-                  setErrorNombre("El nombre es obligatorio");
-                  hasError = true;
+                  setErrorNombre('El nombre es obligatorio')
+                  hasError = true
                 } else {
-                  setErrorNombre("");
+                  setErrorNombre('')
                 }
 
                 // Validación 2: Edad mínima 18 años (tomando en cuenta el año actual 2026)
                 if (fechaNacimiento) {
-                  const dob = new Date(fechaNacimiento);
-                  const today = new Date(); // El sistema usa 2026 como fecha base
-                  let age = today.getFullYear() - dob.getFullYear();
-                  const m = today.getMonth() - dob.getMonth();
-                  
+                  const dob = new Date(fechaNacimiento)
+                  const today = new Date() // El sistema usa 2026 como fecha base
+                  let age = today.getFullYear() - dob.getFullYear()
+                  const m = today.getMonth() - dob.getMonth()
+
                   // Ajuste si el mes/día actual es anterior al de cumpleaños
                   if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-                    age--;
+                    age--
                   }
 
                   if (age < 18) {
-                    setErrorFechaNacimiento("Debes ser mayor de 18 años para registrarte.");
-                    hasError = true;
+                    setErrorFechaNacimiento('Debes ser mayor de 18 años para registrarte.')
+                    hasError = true
                   } else {
-                    setErrorFechaNacimiento("");
+                    setErrorFechaNacimiento('')
                   }
                 } else {
-                  setErrorFechaNacimiento(""); // Permite pasar porque es un dato opcional
+                  setErrorFechaNacimiento('') // Permite pasar porque es un dato opcional
                 }
 
-                if (hasError) return; // Si hay errores, detenemos el guardado
+                if (hasError) return // Si hay errores, detenemos el guardado
 
-                handleSaveAll();
+                handleSaveAll()
               }}
               disabled={isLoading || !hayCambios}
               className={`px-6 py-2 rounded-lg text-sm font-medium shadow-sm transition ${
-                !hayCambios ? "bg-orange-300 cursor-not-allowed text-white" : "bg-orange-500 hover:bg-orange-600 text-white"
+                !hayCambios
+                  ? 'bg-orange-300 cursor-not-allowed text-white'
+                  : 'bg-orange-500 hover:bg-orange-600 text-white'
               }`}
             >
               {isLoading ? 'Guardando...' : 'Guardar Cambios'}
             </button>
           </div>
-
         </div>
       </div>
 
       {/* MODALES */}
-      <SecurityModal isOpen={isSecurityModalOpen} onClose={() => { setIsSecurityModalOpen(false); setIsLoading(false) }} onSubmit={handlePasswordSubmit} isLoading={isLoading} />
-      <OtpModal isOpen={isOtpModalOpen} onClose={() => { setIsOtpModalOpen(false); setOtpError(''); setEmailToUpdate(''); setIsLoading(false); setIsEmailEditable(false); setTempEmail(originalEmail) }} onSubmit={handleOtpSubmit} onResendCode={handleResendCode} externalError={otpError} isLoading={isLoading} />
+      <SecurityModal
+        isOpen={isSecurityModalOpen}
+        onClose={() => {
+          setIsSecurityModalOpen(false)
+          setIsLoading(false)
+        }}
+        onSubmit={handlePasswordSubmit}
+        isLoading={isLoading}
+      />
+      <OtpModal
+        isOpen={isOtpModalOpen}
+        onClose={() => {
+          setIsOtpModalOpen(false)
+          setOtpError('')
+          setEmailToUpdate('')
+          setIsLoading(false)
+          setIsEmailEditable(false)
+          setTempEmail(originalEmail)
+        }}
+        onSubmit={handleOtpSubmit}
+        onResendCode={handleResendCode}
+        externalError={otpError}
+        isLoading={isLoading}
+      />
     </div>
   )
 }
@@ -816,11 +884,13 @@ function ProfileCardContent() {
 // 2. Creamos el envoltorio que exporta el componente hacia el resto del proyecto
 export default function ProfileCard() {
   return (
-    <Suspense fallback={
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center h-64">
+          <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
+        </div>
+      }
+    >
       <ProfileCardContent />
     </Suspense>
   )

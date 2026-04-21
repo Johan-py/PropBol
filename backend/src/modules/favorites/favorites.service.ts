@@ -1,7 +1,6 @@
 import { prisma } from '../../lib/prisma.client.js'
 
 export class FavoritesService {
-
   static async getAll(usuarioId: number, page: number, perPage: number) {
     const skip = (page - 1) * perPage
 
@@ -18,19 +17,19 @@ export class FavoritesService {
               ubicacion: true,
               publicaciones: {
                 include: { multimedia: true },
-                take: 1,
-              },
-            },
-          },
-        },
-      }),
+                take: 1
+              }
+            }
+          }
+        }
+      })
     ])
 
     return {
       total,
       page,
       per_page: perPage,
-      inmuebles: favoritos.map((f) => f.inmueble),
+      inmuebles: favoritos.map((f) => f.inmueble)
     }
   }
 
@@ -41,14 +40,14 @@ export class FavoritesService {
         inmuebleId: inmuebleId
       }
     })
-    
+
     if (existing) throw new Error('ALREADY_EXISTS')
 
     return await prisma.favorito.create({
-      data: { 
-        usuarioId: usuarioId, 
-        inmuebleId: inmuebleId 
-      },
+      data: {
+        usuarioId: usuarioId,
+        inmuebleId: inmuebleId
+      }
     })
   }
 
@@ -59,11 +58,11 @@ export class FavoritesService {
         inmuebleId: inmuebleId
       }
     })
-    
+
     if (!existing) throw new Error('NOT_FOUND')
 
     return await prisma.favorito.delete({
-      where: { id: existing.id },
+      where: { id: existing.id }
     })
   }
 

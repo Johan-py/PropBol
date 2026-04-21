@@ -1,8 +1,8 @@
-"use client";
+'use client'
 
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-import { useEffect } from "react";
+import 'leaflet/dist/leaflet.css'
+import L from 'leaflet'
+import { useEffect } from 'react'
 import {
   MapContainer,
   TileLayer,
@@ -11,15 +11,15 @@ import {
   Polyline,
   Polygon,
   useMapEvents,
-  useMap,
-} from "react-leaflet";
+  useMap
+} from 'react-leaflet'
 
-if (typeof window !== "undefined") {
-  delete (L.Icon.Default.prototype as any)._getIconUrl;
+if (typeof window !== 'undefined') {
+  delete (L.Icon.Default.prototype as any)._getIconUrl
 }
 
 const pinIcon = L.divIcon({
-  className: "",
+  className: '',
   html: `<div style="
     width:20px;height:20px;
     background:#f97316;
@@ -29,47 +29,46 @@ const pinIcon = L.divIcon({
     box-shadow:0 2px 5px rgba(0,0,0,0.35);
   "></div>`,
   iconSize: [20, 20],
-  iconAnchor: [10, 20],
-});
+  iconAnchor: [10, 20]
+})
 
 interface PinCoords {
-  lat: number;
-  lng: number;
+  lat: number
+  lng: number
 }
 
 interface Props {
-  pinCoords: PinCoords | null;
-  onPinChange: (coords: PinCoords) => void;
-  modoPinActivo: boolean;
-  vertices: [number, number][];
-  onVerticesChange: (v: [number, number][]) => void;
-  poligonoCerrado: boolean;
-  onPoligonoCerrar: () => void;
-  modoDifuminadoActivo: boolean;
+  pinCoords: PinCoords | null
+  onPinChange: (coords: PinCoords) => void
+  modoPinActivo: boolean
+  vertices: [number, number][]
+  onVerticesChange: (v: [number, number][]) => void
+  poligonoCerrado: boolean
+  onPoligonoCerrar: () => void
+  modoDifuminadoActivo: boolean
 }
 
 function MapControles({
   modoPinActivo,
-  modoDifuminadoActivo,
+  modoDifuminadoActivo
 }: {
-  modoPinActivo: boolean;
-  modoDifuminadoActivo: boolean;
+  modoPinActivo: boolean
+  modoDifuminadoActivo: boolean
 }) {
-  const map = useMap();
+  const map = useMap()
 
   useEffect(() => {
-    const container = map.getContainer();
-    container.style.cursor =
-      modoPinActivo || modoDifuminadoActivo ? "crosshair" : "";
+    const container = map.getContainer()
+    container.style.cursor = modoPinActivo || modoDifuminadoActivo ? 'crosshair' : ''
 
     if (modoDifuminadoActivo) {
-      map.doubleClickZoom.disable();
+      map.doubleClickZoom.disable()
     } else {
-      map.doubleClickZoom.enable();
+      map.doubleClickZoom.enable()
     }
-  }, [modoPinActivo, modoDifuminadoActivo, map]);
+  }, [modoPinActivo, modoDifuminadoActivo, map])
 
-  return null;
+  return null
 }
 
 function MapEventos({
@@ -78,28 +77,28 @@ function MapEventos({
   onPinChange,
   vertices,
   onVerticesChange,
-  poligonoCerrado,
+  poligonoCerrado
 }: {
-  modoPinActivo: boolean;
-  modoDifuminadoActivo: boolean;
-  onPinChange: (coords: PinCoords) => void;
-  vertices: [number, number][];
-  onVerticesChange: (v: [number, number][]) => void;
-  poligonoCerrado: boolean;
+  modoPinActivo: boolean
+  modoDifuminadoActivo: boolean
+  onPinChange: (coords: PinCoords) => void
+  vertices: [number, number][]
+  onVerticesChange: (v: [number, number][]) => void
+  poligonoCerrado: boolean
 }) {
   useMapEvents({
     click(e) {
       if (modoPinActivo) {
-        onPinChange({ lat: e.latlng.lat, lng: e.latlng.lng });
+        onPinChange({ lat: e.latlng.lat, lng: e.latlng.lng })
       } else if (modoDifuminadoActivo && !poligonoCerrado) {
-        onVerticesChange([...vertices, [e.latlng.lat, e.latlng.lng]]);
+        onVerticesChange([...vertices, [e.latlng.lat, e.latlng.lng]])
       }
-    },
-  });
-  return null;
+    }
+  })
+  return null
 }
 
-const COCHABAMBA: [number, number] = [-17.3895, -66.1568];
+const COCHABAMBA: [number, number] = [-17.3895, -66.1568]
 
 export default function MapaPinSelector({
   pinCoords,
@@ -109,34 +108,30 @@ export default function MapaPinSelector({
   onVerticesChange,
   poligonoCerrado,
   onPoligonoCerrar,
-  modoDifuminadoActivo,
+  modoDifuminadoActivo
 }: Props) {
-  const puedesCerrar = vertices.length >= 3 && !poligonoCerrado;
+  const puedesCerrar = vertices.length >= 3 && !poligonoCerrado
 
   const instruccion =
     vertices.length === 0
-      ? "Haz clic para agregar el primer vértice"
+      ? 'Haz clic para agregar el primer vértice'
       : vertices.length < 3
-        ? `${vertices.length} vértice${vertices.length > 1 ? "s" : ""} — agrega al menos 3`
-        : "Haz clic en el punto verde para cerrar el polígono";
+        ? `${vertices.length} vértice${vertices.length > 1 ? 's' : ''} — agrega al menos 3`
+        : 'Haz clic en el punto verde para cerrar el polígono'
 
   return (
     <div className="relative">
       <MapContainer
         center={COCHABAMBA}
         zoom={14}
-        style={{ height: "220px", width: "100%", borderRadius: "12px" }}
+        style={{ height: '220px', width: '100%', borderRadius: '12px' }}
         zoomControl
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        
         />
-        <MapControles
-          modoPinActivo={modoPinActivo}
-          modoDifuminadoActivo={modoDifuminadoActivo}
-        />
+        <MapControles modoPinActivo={modoPinActivo} modoDifuminadoActivo={modoDifuminadoActivo} />
         <MapEventos
           modoPinActivo={modoPinActivo}
           modoDifuminadoActivo={modoDifuminadoActivo}
@@ -148,42 +143,36 @@ export default function MapaPinSelector({
 
         {/* Pin mode */}
         {pinCoords && (
-  <Marker
-    position={[pinCoords.lat, pinCoords.lng]}
-    icon={pinIcon}
-    draggable
-    eventHandlers={{
-      drag(e) {
-        const marker = e.target as L.Marker;
-        const map = (marker as any)._map;
+          <Marker
+            position={[pinCoords.lat, pinCoords.lng]}
+            icon={pinIcon}
+            draggable
+            eventHandlers={{
+              drag(e) {
+                const marker = e.target as L.Marker
+                const map = (marker as any)._map
 
-        const bounds = map.getBounds();
-        const pos = marker.getLatLng();
+                const bounds = map.getBounds()
+                const pos = marker.getLatLng()
 
-        const nuevaLat = Math.max(
-          bounds.getSouth(),
-          Math.min(bounds.getNorth(), pos.lat)
-        );
+                const nuevaLat = Math.max(bounds.getSouth(), Math.min(bounds.getNorth(), pos.lat))
 
-        const nuevaLng = Math.max(
-          bounds.getWest(),
-          Math.min(bounds.getEast(), pos.lng)
-        );
+                const nuevaLng = Math.max(bounds.getWest(), Math.min(bounds.getEast(), pos.lng))
 
-        marker.setLatLng([nuevaLat, nuevaLng]);
-      },
+                marker.setLatLng([nuevaLat, nuevaLng])
+              },
 
-      dragend(e) {
-        const pos = (e.target as L.Marker).getLatLng();
+              dragend(e) {
+                const pos = (e.target as L.Marker).getLatLng()
 
-        onPinChange({
-          lat: pos.lat,
-          lng: pos.lng,
-        });
-      },
-    }}
-  />
-)}
+                onPinChange({
+                  lat: pos.lat,
+                  lng: pos.lng
+                })
+              }
+            }}
+          />
+        )}
 
         {/* Difuminado — polígono en construcción */}
         {modoDifuminadoActivo && vertices.length > 0 && !poligonoCerrado && (
@@ -191,7 +180,7 @@ export default function MapaPinSelector({
             {vertices.length >= 2 && (
               <Polyline
                 positions={vertices}
-                pathOptions={{ color: "#f97316", weight: 2, dashArray: "5,5" }}
+                pathOptions={{ color: '#f97316', weight: 2, dashArray: '5,5' }}
               />
             )}
 
@@ -200,15 +189,15 @@ export default function MapaPinSelector({
               center={vertices[0]}
               radius={8}
               pathOptions={{
-                color: puedesCerrar ? "#22c55e" : "#f97316",
-                fillColor: puedesCerrar ? "#22c55e" : "#f97316",
-                fillOpacity: 1,
+                color: puedesCerrar ? '#22c55e' : '#f97316',
+                fillColor: puedesCerrar ? '#22c55e' : '#f97316',
+                fillOpacity: 1
               }}
               eventHandlers={{
                 click(e) {
-                  (e as any).originalEvent?.stopPropagation();
-                  if (puedesCerrar) onPoligonoCerrar();
-                },
+                  ;(e as any).originalEvent?.stopPropagation()
+                  if (puedesCerrar) onPoligonoCerrar()
+                }
               }}
             />
 
@@ -219,9 +208,9 @@ export default function MapaPinSelector({
                 center={v}
                 radius={5}
                 pathOptions={{
-                  color: "#f97316",
-                  fillColor: "#f97316",
-                  fillOpacity: 1,
+                  color: '#f97316',
+                  fillColor: '#f97316',
+                  fillOpacity: 1
                 }}
               />
             ))}
@@ -233,10 +222,10 @@ export default function MapaPinSelector({
           <Polygon
             positions={vertices}
             pathOptions={{
-              color: "#f97316",
-              fillColor: "#f97316",
+              color: '#f97316',
+              fillColor: '#f97316',
               fillOpacity: 0.3,
-              weight: 2,
+              weight: 2
             }}
           />
         )}
@@ -249,5 +238,5 @@ export default function MapaPinSelector({
         </div>
       )}
     </div>
-  );
+  )
 }

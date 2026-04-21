@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { FavoritesController } from './favorites.controller.js'
-import { validarJWT } from '../../middleware/validarJWT.js'  // ← Cambiar a validarJWT
+import { validarJWT } from '../../middleware/validarJWT.js' // ← Cambiar a validarJWT
 
 const router = Router()
 

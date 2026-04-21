@@ -1,29 +1,26 @@
-"use client";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
+'use client'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
 
-const MapaPinSelector = dynamic(
-  () => import("@/components/MapaPinSelector"),
-  { ssr: false }
-);
+const MapaPinSelector = dynamic(() => import('@/components/MapaPinSelector'), { ssr: false })
 
-import PlanModal from '../../components/ui/PlanModal';
+import PlanModal from '../../components/ui/PlanModal'
 
 type CampoError =
-  | "titulo"
-  | "descripcion"
-  | "direccion"
-  | "zona"
-  | "habitaciones"
-  | "banos"
-  | "precio"
-  | "area"
-  | "operacion"
-  | "ubicacion"
-  | null;
+  | 'titulo'
+  | 'descripcion'
+  | 'direccion'
+  | 'zona'
+  | 'habitaciones'
+  | 'banos'
+  | 'precio'
+  | 'area'
+  | 'operacion'
+  | 'ubicacion'
+  | null
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 export default function MiRegistroPage() {
   const router = useRouter()
   const [mostrarPlanModal, setMostrarPlanModal] = useState(false)
@@ -42,25 +39,25 @@ export default function MiRegistroPage() {
     descripcion: ''
   })
 
-  const [pinCoords, setPinCoords] = useState<{ lat: number; lng: number } | null>(null);
-  const [modoPinActivo, setModoPinActivo] = useState(false);
-  const [vertices, setVertices] = useState<[number, number][]>([]);
-  const [poligonoCerrado, setPoligonoCerrado] = useState(false);
-  const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false);
+  const [pinCoords, setPinCoords] = useState<{ lat: number; lng: number } | null>(null)
+  const [modoPinActivo, setModoPinActivo] = useState(false)
+  const [vertices, setVertices] = useState<[number, number][]>([])
+  const [poligonoCerrado, setPoligonoCerrado] = useState(false)
+  const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
 
-const [estado, setEstado] = useState<"ninguno" | "exito" | "error">("ninguno");
-const [mensajeError, setMensajeError] = useState("");
-const [campoError, setCampoError] = useState<CampoError>(null);
-const errorTitulo = campoError === "titulo";
-const errorDescripcion = campoError === "descripcion";
-const errorDireccion = campoError === "direccion";
-const errorZona = campoError === "zona";
-const errorHabitaciones = campoError === "habitaciones";
-const errorBanos = campoError === "banos";
-const errorPrecio = campoError === "precio";
-const errorArea = campoError === "area";
-const errorOperacion = campoError === "operacion";
-const errorUbicacion = campoError === "ubicacion";
+  const [estado, setEstado] = useState<'ninguno' | 'exito' | 'error'>('ninguno')
+  const [mensajeError, setMensajeError] = useState('')
+  const [campoError, setCampoError] = useState<CampoError>(null)
+  const errorTitulo = campoError === 'titulo'
+  const errorDescripcion = campoError === 'descripcion'
+  const errorDireccion = campoError === 'direccion'
+  const errorZona = campoError === 'zona'
+  const errorHabitaciones = campoError === 'habitaciones'
+  const errorBanos = campoError === 'banos'
+  const errorPrecio = campoError === 'precio'
+  const errorArea = campoError === 'area'
+  const errorOperacion = campoError === 'operacion'
+  const errorUbicacion = campoError === 'ubicacion'
 
   useEffect(() => {
     const validarFlujo = async () => {
@@ -94,7 +91,7 @@ const errorUbicacion = campoError === "ubicacion";
 
   const calcularCentroide = (verts: [number, number][]) => ({
     lat: verts.reduce((s, v) => s + v[0], 0) / verts.length,
-    lng: verts.reduce((s, v) => s + v[1], 0) / verts.length,
+    lng: verts.reduce((s, v) => s + v[1], 0) / verts.length
   })
 
   const limpiarPin = () => {
@@ -506,14 +503,14 @@ const errorUbicacion = campoError === "ubicacion";
       }
     }
 
-    const tienePin = pinCoords !== null;
-    const tienePoligono = poligonoCerrado && vertices.length >= 3;
+    const tienePin = pinCoords !== null
+    const tienePoligono = poligonoCerrado && vertices.length >= 3
 
     if (!tienePin && !tienePoligono) {
-      setMensajeError("DEBE SELECCIONAR LA UBICACIÓN EN EL MAPA");
-      setCampoError("ubicacion");
-      setEstado("error");
-      return;
+      setMensajeError('DEBE SELECCIONAR LA UBICACIÓN EN EL MAPA')
+      setCampoError('ubicacion')
+      setEstado('error')
+      return
     }
 
     const incompleto =
@@ -531,7 +528,7 @@ const errorUbicacion = campoError === "ubicacion";
       return
     }
 
-    const centroide = tienePoligono ? calcularCentroide(vertices) : null;
+    const centroide = tienePoligono ? calcularCentroide(vertices) : null
 
     const payload = {
       titulo: tituloLimpio,
@@ -547,9 +544,9 @@ const errorUbicacion = campoError === "ubicacion";
       ciudad: datos.ciudad,
       latitud: tienePin ? pinCoords!.lat : centroide!.lat,
       longitud: tienePin ? pinCoords!.lng : centroide!.lng,
-      modoUbicacion: tienePin ? "PIN" : "DIFUMINADO",
-      poligono: tienePoligono ? JSON.stringify(vertices) : undefined,
-    };
+      modoUbicacion: tienePin ? 'PIN' : 'DIFUMINADO',
+      poligono: tienePoligono ? JSON.stringify(vertices) : undefined
+    }
 
     console.log('📤 Payload enviado al backend:', payload)
 
@@ -595,27 +592,26 @@ const errorUbicacion = campoError === "ubicacion";
         return
       }
 
-      const publicacionId = result?.property?.publicacion?.id;
+      const publicacionId = result?.property?.publicacion?.id
 
       if (!publicacionId) {
-        setMensajeError('No se recibió el ID de la publicación creada');
-        setEstado('error');
-        return;
+        setMensajeError('No se recibió el ID de la publicación creada')
+        setEstado('error')
+        return
       }
 
-      console.log('✅ Propiedad guardada correctamente');
-      setEstado('exito');
-      setMensajeError('');
-      setCampoError(null);
-      router.push(`/contenido-multimedia?publicacionId=${publicacionId}`);
-      
+      console.log('✅ Propiedad guardada correctamente')
+      setEstado('exito')
+      setMensajeError('')
+      setCampoError(null)
+      router.push(`/contenido-multimedia?publicacionId=${publicacionId}`)
     } catch (error) {
-      console.error('🔥 Error fetch:', error);
-      setMensajeError('NO SE PUDO CONECTAR CON EL BACKEND');
-      setCampoError(null);
-      setEstado('error');
+      console.error('🔥 Error fetch:', error)
+      setMensajeError('NO SE PUDO CONECTAR CON EL BACKEND')
+      setCampoError(null)
+      setEstado('error')
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -657,7 +653,9 @@ const errorUbicacion = campoError === "ubicacion";
                       }`}
                     />
                     {errorTitulo && <p className="text-red-500 text-sm mt-2">{mensajeError}</p>}
-                    <p className="text-xs text-gray-500 mt-1">{datos.titulo.length}/80 caracteres</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {datos.titulo.length}/80 caracteres
+                    </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -852,9 +850,7 @@ const errorUbicacion = campoError === "ubicacion";
                   }`}
                   placeholder="Casa de dos plantas, amplia y moderna ubicada en una zona tranquila..."
                 />
-                {errorDescripcion && (
-                  <p className="text-red-500 text-sm mt-2">{mensajeError}</p>
-                )}
+                {errorDescripcion && <p className="text-red-500 text-sm mt-2">{mensajeError}</p>}
                 <p className="text-xs text-gray-500 mt-1">
                   {datos.descripcion.length}/300 caracteres
                 </p>
@@ -865,14 +861,14 @@ const errorUbicacion = campoError === "ubicacion";
                   <button
                     type="button"
                     onClick={() => {
-                      limpiarDifuminado();
-                      setModoPinActivo((prev) => !prev);
-                      if (campoError === "ubicacion") limpiarError();
+                      limpiarDifuminado()
+                      setModoPinActivo((prev) => !prev)
+                      if (campoError === 'ubicacion') limpiarError()
                     }}
                     className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${
                       modoPinActivo
-                        ? "bg-orange-500 text-white"
-                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                        ? 'bg-orange-500 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                     }`}
                   >
                     Pin
@@ -881,14 +877,14 @@ const errorUbicacion = campoError === "ubicacion";
                   <button
                     type="button"
                     onClick={() => {
-                      limpiarPin();
-                      setModoDifuminadoActivo((prev) => !prev);
-                      if (campoError === "ubicacion") limpiarError();
+                      limpiarPin()
+                      setModoDifuminadoActivo((prev) => !prev)
+                      if (campoError === 'ubicacion') limpiarError()
                     }}
                     className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${
                       modoDifuminadoActivo
-                        ? "bg-orange-500 text-white"
-                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                        ? 'bg-orange-500 text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                     }`}
                   >
                     Difuminado
@@ -898,13 +894,13 @@ const errorUbicacion = campoError === "ubicacion";
                     type="button"
                     disabled={!pinCoords && !poligonoCerrado}
                     onClick={() => {
-                      limpiarPin();
-                      limpiarDifuminado();
+                      limpiarPin()
+                      limpiarDifuminado()
                     }}
                     className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ml-auto ${
                       pinCoords || poligonoCerrado
-                        ? "bg-red-500 text-white hover:bg-red-600"
-                        : "bg-gray-300 text-gray-400 cursor-not-allowed"
+                        ? 'bg-red-500 text-white hover:bg-red-600'
+                        : 'bg-gray-300 text-gray-400 cursor-not-allowed'
                     }`}
                   >
                     Eliminar selección
@@ -913,33 +909,31 @@ const errorUbicacion = campoError === "ubicacion";
 
                 <div
                   className={`rounded-xl overflow-hidden border ${
-                    errorUbicacion ? "border-red-500" : "border-gray-200"
+                    errorUbicacion ? 'border-red-500' : 'border-gray-200'
                   }`}
                 >
                   <MapaPinSelector
                     pinCoords={pinCoords}
                     onPinChange={(coords) => {
-                      setPinCoords(coords);
-                      if (campoError === "ubicacion") limpiarError();
+                      setPinCoords(coords)
+                      if (campoError === 'ubicacion') limpiarError()
                     }}
                     modoPinActivo={modoPinActivo}
                     vertices={vertices}
                     onVerticesChange={(v) => {
-                      setVertices(v);
-                      if (campoError === "ubicacion") limpiarError();
+                      setVertices(v)
+                      if (campoError === 'ubicacion') limpiarError()
                     }}
                     poligonoCerrado={poligonoCerrado}
                     onPoligonoCerrar={() => {
-                      setPoligonoCerrado(true);
-                      setModoDifuminadoActivo(false);
-                      if (campoError === "ubicacion") limpiarError();
+                      setPoligonoCerrado(true)
+                      setModoDifuminadoActivo(false)
+                      if (campoError === 'ubicacion') limpiarError()
                     }}
                     modoDifuminadoActivo={modoDifuminadoActivo}
                   />
                 </div>
-                {errorUbicacion && (
-                  <p className="text-red-500 text-sm mt-1">{mensajeError}</p>
-                )}
+                {errorUbicacion && <p className="text-red-500 text-sm mt-1">{mensajeError}</p>}
               </div>
 
               <div className="mt-6 space-y-6">

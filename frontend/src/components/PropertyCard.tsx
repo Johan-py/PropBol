@@ -1,34 +1,29 @@
-import React from "react";
+import React from 'react'
 
 interface Property {
-  image?: string;
-  title: string;
-  price: string | number;
-  location: string;
-  beds?: number | string;
-  baths?: number | string;
-  area?: string;
+  image?: string
+  title: string
+  price: string | number
+  location: string
+  beds?: number | string
+  baths?: number | string
+  area?: string
 }
 
 interface PropertyCardProps {
-  property: Property;
-  canEdit: boolean;
-  onEdit: () => void;
-  onDelete: () => void;
+  property: Property
+  canEdit: boolean
+  onEdit: () => void
+  onDelete: () => void
 }
 
-export default function PropertyCard({
-  property,
-  canEdit,
-  onEdit,
-  onDelete,
-}: PropertyCardProps) {
+export default function PropertyCard({ property, canEdit, onEdit, onDelete }: PropertyCardProps) {
   return (
     <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
       <img
         src={
           property.image ||
-          "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=80"
+          'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=80'
         }
         alt={property.title}
         className="w-full h-64 object-cover"
@@ -36,11 +31,9 @@ export default function PropertyCard({
 
       <div className="p-5">
         <div className="flex items-start justify-between gap-4 mb-2">
-          <h2 className="text-2xl font-semibold text-gray-800 leading-tight">
-            {property.title}
-          </h2>
+          <h2 className="text-2xl font-semibold text-gray-800 leading-tight">{property.title}</h2>
           <span className="text-xl font-bold text-[#c97a1e] whitespace-nowrap">
-            ${Number(property.price).toLocaleString("en-US")}
+            ${Number(property.price).toLocaleString('en-US')}
           </span>
         </div>
 
@@ -72,7 +65,7 @@ export default function PropertyCard({
 
           <div className="flex items-center gap-1">
             <span>⬜</span>
-            <span>{property.area || "N/A"}</span>
+            <span>{property.area || 'N/A'}</span>
           </div>
         </div>
 
@@ -108,5 +101,5 @@ export default function PropertyCard({
         </div>
       </div>
     </div>
-  );
+  )
 }

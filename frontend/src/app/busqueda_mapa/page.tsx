@@ -3,7 +3,7 @@
 import { point, polygon } from '@turf/helpers'
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon'
 import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from 'react'
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from 'next/navigation'
 import nextDynamic from 'next/dynamic'
 import {
   ChevronLeft,
@@ -23,12 +23,14 @@ import { useZonas } from '@/hooks/useZonas'
 
 // === COMPONENTES ===
 import FilterBar from '@/components/filters/FilterBar'
+import PriceFilterSidebar from '@/components/filters/PriceFilterSidebar'
 import PropertyCard from '@/components/layout/PropertyCard'
 import PropertyRow from '@/components/galeria/PropertyRow'
 import EmptyState from '@/components/galeria/EmptyState'
-import MapaListadoPaginacion, { PageSize } from "@/components/galeria/MapaListadoPaginacion";
+import MapaListadoPaginacion, { PageSize } from '@/components/galeria/MapaListadoPaginacion'
 import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenamiento'
 import { ErrorState } from '@/components/ClusterSidebar'
+import SuperficieFilterSidebar from '@/components/filters/SuperficieFilterSidebar'
 
 // Carga dinámica del mapa (sin SSR)
 const MapView = nextDynamic(() => import('./MapView'), {
@@ -73,11 +75,11 @@ function useIsLandscapeMobile() {
 const SHEET_H = { peek: '50%', full: '100%' } as const
 type SheetState = 'hidden' | 'peek' | 'full'
 
-const LIST_PAGE_SIZES = [10, 20, 50, 100] as const;
+const LIST_PAGE_SIZES = [10, 20, 50, 100] as const
 
 function BusquedaMapaContent() {
-  const searchParams = useSearchParams();
-  const filterResetKey = searchParams.toString();
+  const searchParams = useSearchParams()
+  const filterResetKey = searchParams.toString()
 
   // === 1. ESTADOS COMPARTIDOS ===
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
@@ -85,6 +87,8 @@ function BusquedaMapaContent() {
   const [sheetState, setSheetState] = useState<SheetState>('peek')
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
   const [isMounted, setIsMounted] = useState(false)
+  const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false)
+  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie'>('results')
 
   // --- INICIO ESTADOS HU8 ---
   const [isDrawingMode, setIsDrawingMode] = useState(false)
@@ -100,6 +104,8 @@ function BusquedaMapaContent() {
 
   const isMobile = useIsMobile()
   const isLandscape = useIsLandscapeMobile()
+
+  const [isSuperficieSidebarOpen, setIsSuperficieSidebarOpen] = useState(false)
 
   useEffect(() => {
     setIsMounted(true)
@@ -118,11 +124,9 @@ function BusquedaMapaContent() {
       try {
         const turfCoords = [...polygonPoints, polygonPoints[0]].map((p) => [p[1], p[0]])
         const drawPoly = polygon([turfCoords])
-        
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
-    null
-  );
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
+
+        const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
+        const [hoveredId, setHoveredId] = useState<string | null>(null)
 
         return properties.filter((p: any) => {
           if (p.lat == null || p.lng == null) return false
@@ -139,24 +143,24 @@ function BusquedaMapaContent() {
     return properties
   }, [properties, isPolygonClosed, polygonPoints])
 
-    const [listPage, setListPage] = useState(1);
-  const [listPageSize, setListPageSize] = useState<(PageSize)>(10);
-  const listTotal = properties.length;
-  const listTotalPages = Math.max(1, Math.ceil(listTotal / listPageSize));
-  const listSafePage = Math.min(Math.max(1, listPage), listTotalPages);
+  const [listPage, setListPage] = useState(1)
+  const [listPageSize, setListPageSize] = useState<PageSize>(10)
+  const listTotal = properties.length
+  const listTotalPages = Math.max(1, Math.ceil(listTotal / listPageSize))
+  const listSafePage = Math.min(Math.max(1, listPage), listTotalPages)
   const paginatedProperties = useMemo(() => {
-    if (listTotal === 0) return [];
-    const start = (listSafePage - 1) * listPageSize;
-    return properties.slice(start, start + listPageSize);
-  }, [properties, listSafePage, listPageSize, listTotal]);
-
-    useEffect(() => {
-    setListPage(1);
-  }, [filterResetKey]);
+    if (listTotal === 0) return []
+    const start = (listSafePage - 1) * listPageSize
+    return properties.slice(start, start + listPageSize)
+  }, [properties, listSafePage, listPageSize, listTotal])
 
   useEffect(() => {
-    if (listPage > listTotalPages) setListPage(listTotalPages);
-  }, [listPage, listTotalPages]);
+    setListPage(1)
+  }, [filterResetKey])
+
+  useEffect(() => {
+    if (listPage > listTotalPages) setListPage(listTotalPages)
+  }, [listPage, listTotalPages])
 
   // === 4. ORDENAMIENTO (Usando resultados filtrados) ===
   const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
@@ -330,19 +334,19 @@ function BusquedaMapaContent() {
     </div>
   )
 
-    const renderListPaginationFooter = () => (
+  const renderListPaginationFooter = () => (
     <MapaListadoPaginacion
       total={listTotal}
       page={listSafePage}
       pageSize={listPageSize}
       onPageChange={setListPage}
       onPageSizeChange={(s) => {
-        setListPageSize(s);
-        setListPage(1);
+        setListPageSize(s)
+        setListPage(1)
       }}
       hint={listTotal === 0 && error ? `Error al cargar: ${error}` : null}
     />
-  );
+  )
 
   // ────────────────────────────────────────────────────────────────────────────
   // RENDER LANDSCAPE MÓVIL
@@ -352,7 +356,14 @@ function BusquedaMapaContent() {
       return (
         <div className="flex flex-col bg-white overflow-hidden" style={{ height: '100dvh' }}>
           <div className="shrink-0" style={{ zIndex: 1002, position: 'relative' }}>
-            <FilterBar variant="map" onSearch={(f) => console.log('🔍 Filtros:', f)} />
+            <FilterBar
+              variant="map"
+              onSearch={(f) => console.log('🔍 Filtros:', f)}
+              onOpenSuperficieFilter={() => {
+                setIsSidebarOpen(true)
+                setActiveSidebarView('superficie')
+              }}
+            />
           </div>
           <div className="flex flex-1 overflow-hidden">
             <div className="flex-1 relative">
@@ -410,7 +421,14 @@ function BusquedaMapaContent() {
       <div className="flex flex-col overflow-hidden bg-white" style={{ height: '100dvh' }}>
         <div className="shrink-0 overflow-x-auto" style={{ zIndex: 1002, position: 'relative' }}>
           <div className="min-w-max">
-            <FilterBar variant="map" onSearch={(f) => console.log('🔍 Filtros:', f)} />
+            <FilterBar
+              variant="map"
+              onSearch={(f) => console.log('🔍 Filtros:', f)}
+              onOpenSuperficieFilter={() => {
+                setIsSidebarOpen(true)
+                setActiveSidebarView('superficie')
+              }}
+            />
           </div>
         </div>
         <div className="flex-1 relative overflow-hidden">
@@ -570,17 +588,15 @@ function BusquedaMapaContent() {
                     onOrdenChange={cambiarOrden}
                   />
                 </div>
-                <div className="px-4 py-2 flex justify-end shrink-0">
-                  {MenuToggleComponent}
-                </div>
+                <div className="px-4 py-2 flex justify-end shrink-0">{MenuToggleComponent}</div>
                 <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
-                <PropertyListMobile
-                  onClickItem={(p) => {
-                    setPinnedProperty(p)
-                    setSheetState('peek')
-                  }}
-                />
-                {renderListPaginationFooter()}
+                  <PropertyListMobile
+                    onClickItem={(p) => {
+                      setPinnedProperty(p)
+                      setSheetState('peek')
+                    }}
+                  />
+                  {renderListPaginationFooter()}
                 </div>
               </div>
             </div>
@@ -600,6 +616,14 @@ function BusquedaMapaContent() {
         onSearch={(nuevosFiltros) => {
           console.log('🔍 Buscando con filtros:', nuevosFiltros)
         }}
+        onOpenPriceFilter={() => {
+          setIsPriceFilterOpen(true)
+          setIsSidebarOpen(true)
+        }}
+        onOpenSuperficieFilter={() => {
+          setIsSidebarOpen(true)
+          setActiveSidebarView('superficie')
+        }}
       />
 
       <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200">
@@ -609,7 +633,17 @@ function BusquedaMapaContent() {
             isSidebarOpen ? 'w-full md:w-[450px] h-[65dvh] md:h-full' : 'w-0'
           }`}
         >
-          {isSidebarOpen && (
+          {/* ✅ MODIFICADO: ternario que alterna entre filtro de precio y resultados */}
+          {isPriceFilterOpen ? (
+            // Vista del filtro de precio — reemplaza temporalmente los resultados
+            <PriceFilterSidebar
+              isOpen={isPriceFilterOpen}
+              onClose={() => {
+                setIsPriceFilterOpen(false) // cierra el filtro
+                setIsSidebarOpen(true) // asegura que el aside siga visible
+              }}
+            />
+          ) : isSidebarOpen && activeSidebarView === 'results' ? (
             <div className="flex flex-col h-full min-h-0">
               <div className="p-4 bg-white shrink-0">
                 <div className="flex justify-between items-center mb-4">
@@ -700,82 +734,87 @@ function BusquedaMapaContent() {
                     setHoveredId(null)
                   }}
                 >
-                {isLoading ? (
-                  <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
-                    <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
-                    Actualizando resultados...
-                  </div>
-                ) : displayedProperties.length === 0 ? (
-                  <EmptyState />
-                ) : (
-                  <div
-                    className={`gap-4 flex flex-col ${
-                      viewMode === 'list'
-                        ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-                        : ''
-                    }`}
-                  >
-                    {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
-                        <div
-                          key={property.id}
-                          onMouseEnter={() => setHoveredId(property.id)}
-                          onMouseLeave={() => setHoveredId(null)}
-                          onClick={() => setSelectedPropertyId(property.id)}
-                          className={`cursor-pointer transition-all duration-200 rounded-xl relative ${
-                            viewMode === 'grid'
-                              ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
-                              : 'w-full py-1 hover:bg-stone-100'
-                          } ${
-                            selectedPropertyId === property.id
-                              ? 'ring-2 ring-orange-400 ring-offset-1 z-10'
-                              : ''
-                          }`}
-                        >
-                          {viewMode === 'grid' ? (
-                            <PropertyCard
-                              imagen={
-                                property.thumbnailUrl ||
-                                property.imagen ||
-                                'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
-                              }
-                              estado={property.type}
-                              precio={
-                                property.currency === 'USD'
-                                  ? `$${property.price.toLocaleString('es-BO')} USD`
-                                  : `Bs ${property.price.toLocaleString('es-BO')}`
-                              }
-                              descripcion={property.descripcion || property.title}
-                              camas={property.nroCuartos ?? 0}
-                              banos={property.nroBanos ?? 0}
-                              metros={property.superficieM2 ?? 0}
-                            />
-                          ) : (
-                            <PropertyRow
-                              title={property.title}
-                              price={
-                                property.currency === 'USD'
-                                  ? `$${property.price.toLocaleString('es-BO')} USD`
-                                  : `Bs ${property.price.toLocaleString('es-BO')}`
-                              }
-                              size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
-                              contactType="whatsapp"
-                              image={
-                                property.thumbnailUrl ||
-                                property.imagen ||
-                                'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
-                              }
-                            />
-                          )}
-                        </div>
-                      )
-                    )}
-                  </div>
-                )}
-              </div>
-              {renderListPaginationFooter()}
+                  {isLoading ? (
+                    <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
+                      <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+                      Actualizando resultados...
+                    </div>
+                  ) : displayedProperties.length === 0 ? (
+                    <EmptyState />
+                  ) : (
+                    <div
+                      className={`gap-4 flex flex-col ${
+                        viewMode === 'list'
+                          ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
+                          : ''
+                      }`}
+                    >
+                      {(isClusterView ? clusterProperties : paginatedProperties).map(
+                        (property: any) => (
+                          <div
+                            key={property.id}
+                            onMouseEnter={() => setHoveredId(property.id)}
+                            onMouseLeave={() => setHoveredId(null)}
+                            onClick={() => setSelectedPropertyId(property.id)}
+                            className={`cursor-pointer transition-all duration-200 rounded-xl relative ${
+                              viewMode === 'grid'
+                                ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
+                                : 'w-full py-1 hover:bg-stone-100'
+                            } ${
+                              selectedPropertyId === property.id
+                                ? 'ring-2 ring-orange-400 ring-offset-1 z-10'
+                                : ''
+                            }`}
+                          >
+                            {viewMode === 'grid' ? (
+                              <PropertyCard
+                                imagen={
+                                  property.thumbnailUrl ||
+                                  property.imagen ||
+                                  'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
+                                }
+                                estado={property.type}
+                                precio={
+                                  property.currency === 'USD'
+                                    ? `$${property.price.toLocaleString('es-BO')} USD`
+                                    : `Bs ${property.price.toLocaleString('es-BO')}`
+                                }
+                                descripcion={property.descripcion || property.title}
+                                camas={property.nroCuartos ?? 0}
+                                banos={property.nroBanos ?? 0}
+                                metros={property.superficieM2 ?? 0}
+                              />
+                            ) : (
+                              <PropertyRow
+                                title={property.title}
+                                price={
+                                  property.currency === 'USD'
+                                    ? `$${property.price.toLocaleString('es-BO')} USD`
+                                    : `Bs ${property.price.toLocaleString('es-BO')}`
+                                }
+                                size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
+                                contactType="whatsapp"
+                                image={
+                                  property.thumbnailUrl ||
+                                  property.imagen ||
+                                  'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
+                                }
+                              />
+                            )}
+                          </div>
+                        )
+                      )}
+                    </div>
+                  )}
+                </div>
+                {renderListPaginationFooter()}
               </div>
             </div>
-          )}
+          ) : isSidebarOpen && activeSidebarView === 'superficie' ? (
+            <div className="flex flex-col h-full min-h-0 bg-white">
+              <SuperficieFilterSidebar onClose={() => setActiveSidebarView('results')} />
+            </div>
+          ) : null}
         </aside>
 
         {/* Área del mapa */}

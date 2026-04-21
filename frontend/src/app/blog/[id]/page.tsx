@@ -52,15 +52,11 @@ export default function BlogDetailPage({ params }: { params: { id: string } }) {
               'Este es un resumen del artículo que captura la atención del lector desde el primer momento.'}
           </p>
 
-          <p>
-            Resumen.
-          </p>
+          <p>Resumen.</p>
 
           <h2 className="text-2xl font-bold text-gray-900 pt-4">El impacto en el mercado actual</h2>
 
-          <p>
-            Resumen zzz.
-          </p>
+          <p>Resumen zzz.</p>
         </div>
       </main>
 

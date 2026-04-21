@@ -1,12 +1,10 @@
-import { PublicBlogCard } from "@/types/publicBlog";
+import { PublicBlogCard } from '@/types/publicBlog'
 
 type FeaturedBlogSpotlightProps = {
-  blog: PublicBlogCard;
-};
+  blog: PublicBlogCard
+}
 
-export default function FeaturedBlogSpotlight({
-  blog,
-}: FeaturedBlogSpotlightProps) {
+export default function FeaturedBlogSpotlight({ blog }: FeaturedBlogSpotlightProps) {
   return (
     <article className="grid gap-6 overflow-hidden rounded-[32px] border border-stone-200 bg-white shadow-[0_24px_80px_-48px_rgba(41,37,36,0.45)] lg:grid-cols-[1.15fr_0.85fr]">
       <div className="overflow-hidden">
@@ -41,5 +39,5 @@ export default function FeaturedBlogSpotlight({
         </p>
       </div>
     </article>
-  );
+  )
 }

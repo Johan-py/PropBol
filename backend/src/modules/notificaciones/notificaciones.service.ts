@@ -7,66 +7,71 @@ import {
   findNotificationsByUserRepository,
   markAllNotificationsAsReadRepository,
   markNotificationAsReadRepository,
-  softDeleteNotificationRepository,
-} from "../notificaciones/notificaciones.repository.js";
-import { findUserByCorreo } from "../auth/auth.repository.js";
-import { sendNotificationEmail } from "../email/notification-email.service.js";
-import { emitNotificationEvent } from "./notificaciones.events.js";
+  softDeleteNotificationRepository
+} from '../notificaciones/notificaciones.repository.js'
+import { findUserByCorreo } from '../auth/auth.repository.js'
+import { sendNotificationEmail } from '../email/notification-email.service.js'
+import { emitNotificationEvent } from './notificaciones.events.js'
 
-type NotificationFilter = "todas" | "leida" | "no leida" | "archivada";
+type NotificationFilter = 'todas' | 'leida' | 'no leida' | 'archivada'
 
 type GetNotificationsParams = {
-  filter?: string;
-  limit?: number;
-  offset?: number;
-};
+  filter?: string
+  limit?: number
+  offset?: number
+}
+
+type GetNotificationByIdParams = {
+  id: number
+  usuarioId: number
+}
 
 type CreateNotificationParams = {
-  correo: string;
-  titulo: string;
-  mensaje: string;
-};
+  correo: string
+  titulo: string
+  mensaje: string
+}
 
-const DEFAULT_LIMIT = 20;
-const MAX_LIMIT = 100;
-const DEFAULT_OFFSET = 0;
+const DEFAULT_LIMIT = 20
+const MAX_LIMIT = 100
+const DEFAULT_OFFSET = 0
 
 export class ServiceError extends Error {
-  statusCode: number;
+  statusCode: number
 
   constructor(message: string, statusCode = 400) {
-    super(message);
-    this.name = "ServiceError";
-    this.statusCode = statusCode;
+    super(message)
+    this.name = 'ServiceError'
+    this.statusCode = statusCode
   }
 }
 
 const normalizeFilter = (filter?: string): NotificationFilter => {
-  if (filter === "leida") return "leida";
-  if (filter === "no leida") return "no leida";
-  if (filter === "archivada") return "archivada";
-  return "todas";
-};
+  if (filter === 'leida') return 'leida'
+  if (filter === 'no leida') return 'no leida'
+  if (filter === 'archivada') return 'archivada'
+  return 'todas'
+}
 
 const normalizeLimit = (limit?: number) => {
   if (!Number.isFinite(limit) || !limit || limit < 1) {
-    return DEFAULT_LIMIT;
+    return DEFAULT_LIMIT
   }
-  return Math.min(limit, MAX_LIMIT);
-};
+  return Math.min(limit, MAX_LIMIT)
+}
 
 const normalizeOffset = (offset?: number) => {
   if (!Number.isFinite(offset) || offset === undefined || offset < 0) {
-    return DEFAULT_OFFSET;
+    return DEFAULT_OFFSET
   }
-  return offset;
-};
+  return offset
+}
 
 const validateNotificationId = (id: number) => {
   if (!Number.isInteger(id) || id <= 0) {
-    throw new ServiceError("El id de la notificación no es válido", 400);
+    throw new ServiceError('El id de la notificación no es válido', 400)
   }
-};
+}
 
 const mapNotificationToFrontend = (notification: {
   id: number
@@ -88,121 +93,136 @@ const mapNotificationToFrontend = (notification: {
 
 export const getNotificationsService = async (
   usuarioId: number,
-  params: GetNotificationsParams,
+  params: GetNotificationsParams
 ) => {
-  const filter = normalizeFilter(params.filter);
-  const limit = normalizeLimit(params.limit);
-  const offset = normalizeOffset(params.offset);
+  const filter = normalizeFilter(params.filter)
+  const limit = normalizeLimit(params.limit)
+  const offset = normalizeOffset(params.offset)
 
   const [notifications, total] = await Promise.all([
     findNotificationsByUserRepository({
       usuarioId,
       filter,
       limit,
-      offset,
+      offset
     }),
     countNotificationsByUserRepository({
       usuarioId,
-      filter,
-    }),
-  ]);
+      filter
+    })
+  ])
 
   return {
     items: notifications.map(mapNotificationToFrontend),
     total,
     limit,
-    offset,
-  };
-};
+    offset
+  }
+}
+
+export const getNotificationByIdService = async ({ id, usuarioId }: GetNotificationByIdParams) => {
+  const notification = await findNotificationByIdRepository({
+    id,
+    usuarioId
+  })
+
+  if (!notification) return null
+
+  return {
+    id: notification.id,
+    title: notification.titulo,
+    description: notification.mensaje,
+    status: notification.leida ? 'leida' : 'no leida',
+    archivada: notification.archivada,
+    fechaCreacion: notification.fechaCreacion
+  }
+}
 
 export const getUnreadCountService = async (usuarioId: number) => {
-  const unreadCount = await countUnreadNotificationsRepository(usuarioId);
+  const unreadCount = await countUnreadNotificationsRepository(usuarioId)
   return {
-    unreadCount,
-  };
-};
+    unreadCount
+  }
+}
 
 export const createNotificationService = async ({
   correo,
   titulo,
-  mensaje,
+  mensaje
 }: CreateNotificationParams) => {
-  const normalizedCorreo = correo.trim().toLowerCase();
-  const normalizedTitle = titulo.trim();
-  const normalizedMessage = mensaje.trim();
+  const normalizedCorreo = correo.trim().toLowerCase()
+  const normalizedTitle = titulo.trim()
+  const normalizedMessage = mensaje.trim()
 
   if (!normalizedCorreo) {
-    throw new ServiceError("El correo del destinatario es obligatorio", 400);
+    throw new ServiceError('El correo del destinatario es obligatorio', 400)
   }
 
   if (!normalizedTitle) {
-    throw new ServiceError("El título de la notificación es obligatorio", 400);
+    throw new ServiceError('El título de la notificación es obligatorio', 400)
   }
 
   if (!normalizedMessage) {
-    throw new ServiceError("El mensaje de la notificación es obligatorio", 400);
+    throw new ServiceError('El mensaje de la notificación es obligatorio', 400)
   }
 
-  const user = await findUserByCorreo(normalizedCorreo);
+  const user = await findUserByCorreo(normalizedCorreo)
 
   if (!user) {
-    throw new ServiceError("No existe un usuario con ese correo", 404);
+    throw new ServiceError('No existe un usuario con ese correo', 404)
   }
 
   const notification = await createNotificationRepository({
     usuarioId: user.id,
     titulo: normalizedTitle,
-    mensaje: normalizedMessage,
-  });
+    mensaje: normalizedMessage
+  })
 
-  emitNotificationEvent(user.id, "created", notification.id);
+  emitNotificationEvent(user.id, 'created', notification.id)
 
   try {
-    if (user.correo) {
+    if (user.correo && user.notificacion_email === true) {
       await sendNotificationEmail({
         emailDestino: user.correo,
         asunto: notification.titulo,
         mensajeHtml: `<p>${notification.mensaje}</p>`,
-        mensajeTexto: notification.mensaje,
-      });
+        mensajeTexto: notification.mensaje
+      })
     }
   } catch (error) {
-    console.error("Error enviando correo de notificación:", error);
+    console.error('Error enviando correo de notificación:', error)
   }
 
   return {
-    message: "Notificación creada correctamente",
-    item: mapNotificationToFrontend(notification),
-  };
-};
+    message: 'Notificación creada correctamente',
+    item: mapNotificationToFrontend(notification)
+  }
+}
 
-export const markNotificationAsReadService = async (
-  id: number,
-  usuarioId: number,
-) => {
-  validateNotificationId(id);
+export const markNotificationAsReadService = async (id: number, usuarioId: number) => {
+  validateNotificationId(id)
 
   const notification = await findNotificationByIdRepository({
     id,
-    usuarioId,
-  });
+    usuarioId
+  })
 
   if (!notification) {
-    throw new ServiceError("Notificación no encontrada", 404);
+    throw new ServiceError('Notificación no encontrada', 404)
   }
 
   if (!notification.leida) {
     await markNotificationAsReadRepository({
       id,
       usuarioId,
-      fechaLectura: new Date(),
-    });
+      fechaLectura: new Date()
+    })
 
-    emitNotificationEvent(usuarioId, "read", id);
+    emitNotificationEvent(usuarioId, 'read', id)
   }
 
   return {
-    message: "Notificación marcada como leída",
+    message: 'Notificación marcada como leída',
     item: {
       id: notification.id,
       title: notification.titulo,
@@ -216,70 +236,64 @@ export const markNotificationAsReadService = async (
 export const markAllNotificationsAsReadService = async (usuarioId: number) => {
   const result = await markAllNotificationsAsReadRepository({
     usuarioId,
-    fechaLectura: new Date(),
-  });
+    fechaLectura: new Date()
+  })
 
   if (result.count > 0) {
-    emitNotificationEvent(usuarioId, "read-all");
+    emitNotificationEvent(usuarioId, 'read-all')
   }
 
   return {
-    message: "Notificaciones marcadas como leídas",
-    updatedCount: result.count,
-  };
-};
+    message: 'Notificaciones marcadas como leídas',
+    updatedCount: result.count
+  }
+}
 
-export const deleteNotificationService = async (
-  id: number,
-  usuarioId: number,
-) => {
-  validateNotificationId(id);
+export const deleteNotificationService = async (id: number, usuarioId: number) => {
+  validateNotificationId(id)
 
   const notification = await findNotificationByIdRepository({
     id,
-    usuarioId,
-  });
+    usuarioId
+  })
 
   if (!notification) {
-    throw new ServiceError("Notificación no encontrada", 404);
+    throw new ServiceError('Notificación no encontrada', 404)
   }
 
   await softDeleteNotificationRepository({
     id,
-    usuarioId,
-  });
+    usuarioId
+  })
 
-  emitNotificationEvent(usuarioId, "deleted", id);
+  emitNotificationEvent(usuarioId, 'deleted', id)
 
   return {
-    message: "Notificación eliminada correctamente",
-  };
-};
+    message: 'Notificación eliminada correctamente'
+  }
+}
 
-export const archiveNotificationService = async (
-  id: number,
-  usuarioId: number,
-) => {
-  validateNotificationId(id);
+export const archiveNotificationService = async (id: number, usuarioId: number) => {
+  validateNotificationId(id)
 
   const notification = await findNotificationByIdRepository({
     id,
-    usuarioId,
-  });
+    usuarioId
+  })
 
   if (!notification) {
-    throw new ServiceError("Notificación no encontrada", 404);
+    throw new ServiceError('Notificación no encontrada', 404)
   }
 
   if (notification.archivada) {
     return {
-      message: "La notificación ya estaba archivada",
-      item: mapNotificationToFrontend(notification),
-    };
+      message: 'La notificación ya estaba archivada',
+      item: mapNotificationToFrontend(notification)
+    }
   }
 
-  await archiveNotificationRepository({ id, usuarioId });
-  emitNotificationEvent(usuarioId, "archived", id);
+  await archiveNotificationRepository({ id, usuarioId })
+  emitNotificationEvent(usuarioId, 'archived', id)
 
   return {
     message: 'Notificación archivada correctamente',

@@ -1,13 +1,13 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import BlogCard from "@/components/blog/BlogCard";
-import MyRecentBlogsPanel from "@/components/blog/MyRecentBlogsPanel";
-import BlogFilterChips from "@/components/blog/BlogFilterChips";
-import FeaturedBlogSpotlight from "@/components/blog/FeaturedBlogSpotlight";
-import { useBlogFeed } from "@/hooks/useBlogFeed";
+import { useEffect, useState } from 'react'
+import BlogCard from '@/components/blog/BlogCard'
+import MyRecentBlogsPanel from '@/components/blog/MyRecentBlogsPanel'
+import BlogFilterChips from '@/components/blog/BlogFilterChips'
+import FeaturedBlogSpotlight from '@/components/blog/FeaturedBlogSpotlight'
+import { useBlogFeed } from '@/hooks/useBlogFeed'
 
-const USER_STORAGE_KEY = "propbol_user";
+const USER_STORAGE_KEY = 'propbol_user'
 
 export default function BlogsPage() {
   const {
@@ -18,30 +18,29 @@ export default function BlogsPage() {
     canLoadMore,
     hasResults,
     toggleCategory,
-    loadMore,
-  } = useBlogFeed();
+    loadMore
+  } = useBlogFeed()
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   useEffect(() => {
     const syncAuthState = () => {
-      setIsAuthenticated(Boolean(localStorage.getItem(USER_STORAGE_KEY)));
-    };
+      setIsAuthenticated(Boolean(localStorage.getItem(USER_STORAGE_KEY)))
+    }
 
-    syncAuthState();
-    window.addEventListener("storage", syncAuthState);
-    window.addEventListener("propbol:session-changed", syncAuthState);
+    syncAuthState()
+    window.addEventListener('storage', syncAuthState)
+    window.addEventListener('propbol:session-changed', syncAuthState)
 
     return () => {
-      window.removeEventListener("storage", syncAuthState);
-      window.removeEventListener("propbol:session-changed", syncAuthState);
-    };
-  }, []);
+      window.removeEventListener('storage', syncAuthState)
+      window.removeEventListener('propbol:session-changed', syncAuthState)
+    }
+  }, [])
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#fbf6ef_0%,#f5efe7_45%,#ffffff_100%)]">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-
         {/* ✅ Panel de blogs recientes (feature/blogsRecientes) */}
         <MyRecentBlogsPanel />
 
@@ -66,13 +65,13 @@ export default function BlogsPage() {
               aria-disabled={!isAuthenticated}
               title={
                 isAuthenticated
-                  ? "La creacion de blogs se habilitara cuando el flujo este integrado."
-                  : "Disponible solo para usuarios registrados."
+                  ? 'La creacion de blogs se habilitara cuando el flujo este integrado.'
+                  : 'Disponible solo para usuarios registrados.'
               }
               className={`inline-flex min-h-[54px] items-center justify-center self-start px-8 text-sm font-semibold uppercase tracking-[0.22em] transition-colors lg:self-auto ${
                 isAuthenticated
-                  ? "bg-[#a56400] text-white hover:bg-[#8e5800]"
-                  : "cursor-not-allowed bg-[#a56400] text-white/75 opacity-80"
+                  ? 'bg-[#a56400] text-white hover:bg-[#8e5800]'
+                  : 'cursor-not-allowed bg-[#a56400] text-white/75 opacity-80'
               }`}
             >
               AÑADIR POST
@@ -93,8 +92,7 @@ export default function BlogsPage() {
             </h2>
 
             <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-stone-600">
-              Prueba con otra etiqueta para seguir explorando las publicaciones
-              disponibles.
+              Prueba con otra etiqueta para seguir explorando las publicaciones disponibles.
             </p>
           </section>
         )}
@@ -126,5 +124,5 @@ export default function BlogsPage() {
         </section>
       </div>
     </div>
-  );
+  )
 }

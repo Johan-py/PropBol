@@ -10,7 +10,7 @@ const MapaZonas = nextDynamic(() => import('./MapaZonas'), {
     <div className="w-full h-full bg-stone-100 animate-pulse flex items-center justify-center text-stone-400 text-sm">
       Cargando mapa...
     </div>
-  ),
+  )
 })
 
 // Tipo Zona que coincide con el esperado por MapaZonas
@@ -37,7 +37,9 @@ export default function MisZonas() {
   const getToken = () => localStorage.getItem('token')
 
   // Extraer coordenadas del centro del polígono real
-  const extraerCoordenadasDeGeometria = (geometria: any): { lat: number; lng: number; zoom: number } => {
+  const extraerCoordenadasDeGeometria = (
+    geometria: any
+  ): { lat: number; lng: number; zoom: number } => {
     if (!geometria) {
       return { lat: -17.3895, lng: -66.1568, zoom: 14 }
     }
@@ -111,11 +113,11 @@ export default function MisZonas() {
 
   const toggleMostrarPropiedades = (zonaId: number, event: React.MouseEvent) => {
     event.stopPropagation()
-    setZonas(prev => prev.map(zona =>
-      zona.id === zonaId
-        ? { ...zona, mostrarPropiedades: !zona.mostrarPropiedades }
-        : zona
-    ))
+    setZonas((prev) =>
+      prev.map((zona) =>
+        zona.id === zonaId ? { ...zona, mostrarPropiedades: !zona.mostrarPropiedades } : zona
+      )
+    )
   }
 
   const iniciarEdicion = (zona: Zona, event: React.MouseEvent) => {
@@ -152,15 +154,17 @@ export default function MisZonas() {
 
       const zonaActualizada = await response.json()
 
-      setZonas(prev => prev.map(z =>
-        z.id === id
-          ? {
-            ...z,
-            nombre: zonaActualizada.nombre,
-            referencia: zonaActualizada.descripcion || 'Sin referencia'
-          }
-          : z
-      ))
+      setZonas((prev) =>
+        prev.map((z) =>
+          z.id === id
+            ? {
+                ...z,
+                nombre: zonaActualizada.nombre,
+                referencia: zonaActualizada.descripcion || 'Sin referencia'
+              }
+            : z
+        )
+      )
 
       setEditandoId(null)
     } catch (err: any) {
@@ -194,7 +198,7 @@ export default function MisZonas() {
         throw new Error('Error al eliminar')
       }
 
-      setZonas(prev => prev.filter(z => z.id !== id))
+      setZonas((prev) => prev.filter((z) => z.id !== id))
       setConfirmandoEliminarId(null)
     } catch (err: any) {
       console.error('Error eliminando:', err)
@@ -213,9 +217,7 @@ export default function MisZonas() {
   }
 
   // Obtener IDs de zonas donde mostrar propiedades
-  const zonasConPropiedades = zonas
-    .filter(zona => zona.mostrarPropiedades)
-    .map(zona => zona.id)
+  const zonasConPropiedades = zonas.filter((zona) => zona.mostrarPropiedades).map((zona) => zona.id)
 
   if (isLoading && zonas.length === 0) {
     return (
@@ -230,17 +232,15 @@ export default function MisZonas() {
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-stone-900">Mis Zonas</h1>
         <p className="text-sm text-stone-500 mt-1">
-          Todas tus zonas se muestran en el mapa. Activa el checkbox para ver las propiedades dentro de cada zona.
+          Todas tus zonas se muestran en el mapa. Activa el checkbox para ver las propiedades dentro
+          de cada zona.
         </p>
       </div>
 
       {error && (
         <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
           {error}
-          <button
-            onClick={cargarZonas}
-            className="ml-3 text-red-700 underline hover:no-underline"
-          >
+          <button onClick={cargarZonas} className="ml-3 text-red-700 underline hover:no-underline">
             Reintentar
           </button>
         </div>
@@ -256,10 +256,7 @@ export default function MisZonas() {
             </div>
           </div>
           <div className="relative w-full overflow-hidden" style={{ height: '420px', zIndex: 0 }}>
-            <MapaZonas
-              zonas={zonas}
-              zonasConPropiedades={zonasConPropiedades}
-            />
+            <MapaZonas zonas={zonas} zonasConPropiedades={zonasConPropiedades} />
           </div>
         </div>
 
@@ -283,9 +280,10 @@ export default function MisZonas() {
                 <div
                   key={zona.id}
                   className={`rounded-xl border p-4 transition-all
-                    ${zona.mostrarPropiedades
-                      ? 'border-amber-400 bg-amber-50 shadow-sm'
-                      : 'border-[#e5dfd7] bg-white hover:border-amber-300 hover:bg-stone-50'
+                    ${
+                      zona.mostrarPropiedades
+                        ? 'border-amber-400 bg-amber-50 shadow-sm'
+                        : 'border-[#e5dfd7] bg-white hover:border-amber-300 hover:bg-stone-50'
                     }`}
                 >
                   <div className="flex items-start justify-between gap-2 mb-3">
@@ -314,8 +312,12 @@ export default function MisZonas() {
                         </div>
                       ) : (
                         <>
-                          <p className="font-semibold text-stone-800 text-sm truncate">{zona.nombre}</p>
-                          <p className="text-xs text-stone-500 mt-0.5 truncate">{zona.referencia}</p>
+                          <p className="font-semibold text-stone-800 text-sm truncate">
+                            {zona.nombre}
+                          </p>
+                          <p className="text-xs text-stone-500 mt-0.5 truncate">
+                            {zona.referencia}
+                          </p>
                         </>
                       )}
                     </div>
@@ -328,26 +330,54 @@ export default function MisZonas() {
                   <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                     {editandoId === zona.id ? (
                       <>
-                        <button onClick={(e) => guardarEdicion(zona.id, e)} className="flex items-center gap-1 px-3 py-1 text-xs border border-green-400 text-green-600 hover:bg-green-50 rounded-md">
+                        <button
+                          onClick={(e) => guardarEdicion(zona.id, e)}
+                          className="flex items-center gap-1 px-3 py-1 text-xs border border-green-400 text-green-600 hover:bg-green-50 rounded-md"
+                        >
                           <Check size={12} /> Guardar
                         </button>
-                        <button onClick={cancelarEdicion} className="flex items-center gap-1 px-3 py-1 text-xs border border-stone-300 text-stone-500 rounded-md">
+                        <button
+                          onClick={cancelarEdicion}
+                          className="flex items-center gap-1 px-3 py-1 text-xs border border-stone-300 text-stone-500 rounded-md"
+                        >
                           <X size={12} /> Cancelar
                         </button>
                       </>
                     ) : (
                       <>
-                        <button onClick={(e) => iniciarEdicion(zona, e)} className="flex items-center gap-1 px-3 py-1 text-xs border border-stone-300 text-stone-600 hover:border-amber-400 hover:text-amber-600 rounded-md transition-colors">
+                        <button
+                          onClick={(e) => iniciarEdicion(zona, e)}
+                          className="flex items-center gap-1 px-3 py-1 text-xs border border-stone-300 text-stone-600 hover:border-amber-400 hover:text-amber-600 rounded-md transition-colors"
+                        >
                           <Pencil size={12} /> Editar
                         </button>
                         {confirmandoEliminarId === zona.id ? (
                           <div className="flex items-center gap-1">
                             <span className="text-xs text-stone-500">¿Eliminar?</span>
-                            <button onClick={(e) => eliminarZona(zona.id, e)} className="px-2 py-1 text-xs bg-red-500 hover:bg-red-600 text-white rounded-md">Sí</button>
-                            <button onClick={(e) => { e.stopPropagation(); setConfirmandoEliminarId(null) }} className="px-2 py-1 text-xs border border-stone-300 text-stone-500 rounded-md">No</button>
+                            <button
+                              onClick={(e) => eliminarZona(zona.id, e)}
+                              className="px-2 py-1 text-xs bg-red-500 hover:bg-red-600 text-white rounded-md"
+                            >
+                              Sí
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setConfirmandoEliminarId(null)
+                              }}
+                              className="px-2 py-1 text-xs border border-stone-300 text-stone-500 rounded-md"
+                            >
+                              No
+                            </button>
                           </div>
                         ) : (
-                          <button onClick={(e) => { e.stopPropagation(); setConfirmandoEliminarId(zona.id) }} className="flex items-center gap-1 px-3 py-1 text-xs border border-stone-300 text-stone-600 hover:border-red-400 hover:text-red-500 rounded-md transition-colors">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setConfirmandoEliminarId(zona.id)
+                            }}
+                            className="flex items-center gap-1 px-3 py-1 text-xs border border-stone-300 text-stone-600 hover:border-red-400 hover:text-red-500 rounded-md transition-colors"
+                          >
                             <Trash2 size={12} /> Eliminar
                           </button>
                         )}
@@ -358,7 +388,7 @@ export default function MisZonas() {
                           <input
                             type="checkbox"
                             checked={zona.mostrarPropiedades}
-                            onChange={() => { }}
+                            onChange={() => {}}
                             onClick={(e) => toggleMostrarPropiedades(zona.id, e)}
                             className="accent-amber-500 w-4 h-4 cursor-pointer"
                           />

@@ -1,5 +1,5 @@
-import { MOCK_PUBLIC_BLOGS } from "@/lib/mock/publicBlogs.mock";
-import { PublicBlogCard } from "@/types/publicBlog";
+import { MOCK_PUBLIC_BLOGS } from '@/lib/mock/publicBlogs.mock'
+import { PublicBlogCard } from '@/types/publicBlog'
 
 export const getPublishedBlogs = (): PublicBlogCard[] => {
   /*
@@ -18,5 +18,5 @@ export const getPublishedBlogs = (): PublicBlogCard[] => {
       .filter((blog): blog is PublicBlogCard => blog !== null);
   */
 
-  return MOCK_PUBLIC_BLOGS;
-};
+  return MOCK_PUBLIC_BLOGS
+}

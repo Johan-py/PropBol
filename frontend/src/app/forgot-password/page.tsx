@@ -1,81 +1,79 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 
 type ForgotPasswordResponse = {
-  message: string;
-};
+  message: string
+}
 
 export default function ForgotPasswordPage() {
-  const router = useRouter();
+  const router = useRouter()
 
-  const [correo, setCorreo] = useState("");
-  const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [correo, setCorreo] = useState('')
+  const [error, setError] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    const correoNormalizado = correo.trim().toLowerCase();
-    setError("");
-    setSuccessMessage("");
+    const correoNormalizado = correo.trim().toLowerCase()
+    setError('')
+    setSuccessMessage('')
 
     if (!correoNormalizado) {
-      setError("El correo es obligatorio");
-      return;
+      setError('El correo es obligatorio')
+      return
     }
 
     if (!/\S+@\S+\.\S+/.test(correoNormalizado)) {
-      setError("Formato de correo inválido");
-      return;
+      setError('Formato de correo inválido')
+      return
     }
 
-    setIsLoading(true);
+    setIsLoading(true)
 
     try {
       const response = await fetch(`${API_URL}/api/auth/forgot-password`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          correo: correoNormalizado,
-        }),
-      });
+          correo: correoNormalizado
+        })
+      })
 
-      const data = (await response.json()) as ForgotPasswordResponse;
+      const data = (await response.json()) as ForgotPasswordResponse
 
       if (!response.ok) {
-        setError(data.message || "No se pudo procesar la solicitud.");
-        return;
+        setError(data.message || 'No se pudo procesar la solicitud.')
+        return
       }
 
       setSuccessMessage(
         data.message ||
-          "Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña."
-      );
-      setCorreo("");
+          'Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.'
+      )
+      setCorreo('')
     } catch (err) {
-      setError("No se pudo conectar con el servidor. Intenta nuevamente.");
+      setError('No se pudo conectar con el servidor. Intenta nuevamente.')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md rounded-md bg-white p-8 shadow-md">
-        <h1 className="mb-3 text-3xl font-bold text-gray-900">
-          ¿Olvidaste tu contraseña?
-        </h1>
+        <h1 className="mb-3 text-3xl font-bold text-gray-900">¿Olvidaste tu contraseña?</h1>
 
         <p className="mb-6 text-sm text-gray-600">
-          Ingresa el correo electrónico de tu cuenta para que podamos enviarte
-          un enlace para restablecer tu contraseña.
+          Ingresa el correo electrónico de tu cuenta para que podamos enviarte un enlace para
+          restablecer tu contraseña.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -88,9 +86,9 @@ export default function ForgotPasswordPage() {
               type="email"
               value={correo}
               onChange={(e) => {
-                setCorreo(e.target.value);
-                if (error) setError("");
-                if (successMessage) setSuccessMessage("");
+                setCorreo(e.target.value)
+                if (error) setError('')
+                if (successMessage) setSuccessMessage('')
               }}
               placeholder="Ingresa tu correo electrónico"
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500"
@@ -109,17 +107,15 @@ export default function ForgotPasswordPage() {
             type="submit"
             disabled={isLoading}
             className={`w-full rounded-md py-2 text-sm font-semibold text-white ${
-              isLoading
-                ? "cursor-not-allowed bg-orange-300"
-                : "bg-orange-400 hover:bg-orange-500"
+              isLoading ? 'cursor-not-allowed bg-orange-300' : 'bg-orange-400 hover:bg-orange-500'
             }`}
           >
-            {isLoading ? "Enviando..." : "Enviar correo electrónico"}
+            {isLoading ? 'Enviando...' : 'Enviar correo electrónico'}
           </button>
 
           <button
             type="button"
-            onClick={() => router.push("/sign-in")}
+            onClick={() => router.push('/sign-in')}
             className="w-full rounded-md bg-gray-700 py-2 text-sm font-semibold text-white hover:bg-gray-800"
           >
             Regresar
@@ -127,5 +123,5 @@ export default function ForgotPasswordPage() {
         </form>
       </div>
     </main>
-  );
+  )
 }
