@@ -6,7 +6,7 @@
     "dev": "tsx src/index.ts",
     "build": "tsc",
     "lint": "eslint . --quiet",
-    "tsc": "tsc --noEmit",
+    "tsc": "prisma generate --schema=./prisma/schema.prisma && tsc --noEmit",
     "start": "node dist/index.js",
     "prisma:generate": "prisma generate --schema=./prisma/schema.prisma",
     "prisma:migrate": "prisma migrate dev",
