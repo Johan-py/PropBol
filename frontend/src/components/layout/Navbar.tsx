@@ -415,7 +415,7 @@ export default function Navbar() {
                             if (reachedBottom && hasMore && !isLoadingMore) {
                               // @ts-ignore
                               saveScrollPosition()
-                              // @ts-ignore 
+                              // @ts-ignore
                               void loadMoreNotifications(filter)
                             }
                           }}

@@ -1,20 +1,20 @@
-"use client";
+'use client'
 
-import { useMemo } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useMemo } from 'react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-export const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
-export type PageSize = (typeof PAGE_SIZE_OPTIONS)[number];
+export const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const
+export type PageSize = (typeof PAGE_SIZE_OPTIONS)[number]
 
 export type MapaListadoPaginacionProps = {
-  total: number;
-  page: number;
-  pageSize: PageSize;
-  onPageChange: (page: number) => void;
-  onPageSizeChange: (size: PageSize) => void;
+  total: number
+  page: number
+  pageSize: PageSize
+  onPageChange: (page: number) => void
+  onPageSizeChange: (size: PageSize) => void
   /** Con 0 resultados: texto breve (p. ej. error de API) */
-  hint?: string | null;
-};
+  hint?: string | null
+}
 
 export default function MapaListadoPaginacion({
   total,
@@ -22,26 +22,26 @@ export default function MapaListadoPaginacion({
   pageSize,
   onPageChange,
   onPageSizeChange,
-  hint,
+  hint
 }: MapaListadoPaginacionProps) {
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
-  const safePage = Math.min(Math.max(1, page), totalPages);
-  const disabled = total === 0;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize))
+  const safePage = Math.min(Math.max(1, page), totalPages)
+  const disabled = total === 0
 
   const visiblePages = useMemo(() => {
-    const w = 9;
-    if (totalPages <= w) return Array.from({ length: totalPages }, (_, i) => i + 1);
-    let lo = Math.max(1, safePage - Math.floor(w / 2));
-    let hi = lo + w - 1;
+    const w = 9
+    if (totalPages <= w) return Array.from({ length: totalPages }, (_, i) => i + 1)
+    let lo = Math.max(1, safePage - Math.floor(w / 2))
+    let hi = lo + w - 1
     if (hi > totalPages) {
-      hi = totalPages;
-      lo = hi - w + 1;
+      hi = totalPages
+      lo = hi - w + 1
     }
-    return Array.from({ length: hi - lo + 1 }, (_, i) => lo + i);
-  }, [safePage, totalPages]);
+    return Array.from({ length: hi - lo + 1 }, (_, i) => lo + i)
+  }, [safePage, totalPages])
 
-  const from = disabled ? 0 : (safePage - 1) * pageSize + 1;
-  const to = disabled ? 0 : Math.min(safePage * pageSize, total);
+  const from = disabled ? 0 : (safePage - 1) * pageSize + 1
+  const to = disabled ? 0 : Math.min(safePage * pageSize, total)
 
   return (
     <div className="shrink-0 border-t border-stone-100 bg-stone-50 px-3 py-2 flex flex-col gap-2">
@@ -50,7 +50,6 @@ export default function MapaListadoPaginacion({
           <span className="whitespace-nowrap">Por página</span>
           <select
             className="border border-stone-200 rounded-md px-2 py-1 text-xs bg-white disabled:opacity-50"
-
             value={pageSize}
             disabled={disabled}
             onChange={(e) =>
@@ -62,7 +61,6 @@ export default function MapaListadoPaginacion({
                 {n}
               </option>
             ))}
-
           </select>
         </label>
         <div className="flex items-center gap-1 shrink-0" aria-label="Paginación">
@@ -84,8 +82,8 @@ export default function MapaListadoPaginacion({
                 onClick={() => onPageChange(n)}
                 className={`min-w-[1.75rem] h-7 text-xs rounded-md border transition-colors ${
                   n === safePage
-                    ? "bg-orange-500 text-white border-orange-500 font-semibold shadow-sm"
-                    : "bg-white border-stone-200 text-stone-600 hover:border-orange-300"
+                    ? 'bg-orange-500 text-white border-orange-500 font-semibold shadow-sm'
+                    : 'bg-white border-stone-200 text-stone-600 hover:border-orange-300'
                 }`}
               >
                 {n}
@@ -105,15 +103,17 @@ export default function MapaListadoPaginacion({
       </div>
       <p className="text-[11px] text-stone-500 text-center sm:text-left">
         {disabled
-          ? "Sin inmuebles en esta búsqueda — la paginación se activará al haber resultados."
+          ? 'Sin inmuebles en esta búsqueda — la paginación se activará al haber resultados.'
           : `Mostrando ${from}–${to} de ${total}`}
       </p>
       {!disabled && totalPages > 1 && safePage >= totalPages && (
-        <p className="text-[11px] text-stone-400 text-center">No hay más resultados para mostrar.</p>
+        <p className="text-[11px] text-stone-400 text-center">
+          No hay más resultados para mostrar.
+        </p>
       )}
       {disabled && hint ? (
         <p className="text-[11px] text-red-600/90 text-center sm:text-left break-words">{hint}</p>
       ) : null}
     </div>
-  );
+  )
 }

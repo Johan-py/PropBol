@@ -1,126 +1,123 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import PropertyCard from "@/components/PropertyCard";
-import Modal from "@/components/Modal";
-import EditForm from "@/components/EditForm";
-import { initialProperties, currentUser, emptyErrors } from "@/data/properties";
+import { useState } from 'react'
+import PropertyCard from '@/components/PropertyCard'
+import Modal from '@/components/Modal'
+import EditForm from '@/components/EditForm'
+import { initialProperties, currentUser, emptyErrors } from '@/data/properties'
 
 const normalizeProperty = (property: any) => ({
   id: property.id,
   ownerId: property.ownerId ?? currentUser.id,
-  title: property.title ?? "",
-  details: property.details ?? "",
-  operationType: property.operationType ?? "",
-  price: property.price ?? "",
-  location: property.location ?? "",
+  title: property.title ?? '',
+  details: property.details ?? '',
+  operationType: property.operationType ?? '',
+  price: property.price ?? '',
+  location: property.location ?? '',
   image:
-    property.image ??
-    "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=80",
+    property.image ?? 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=80',
   beds: property.beds ?? 0,
   baths: property.baths ?? 0,
-  area: property.area ?? "N/A",
-});
+  area: property.area ?? 'N/A'
+})
 
 export default function Home() {
-  const [globalError, setGlobalError] = useState<string | null>(null);
+  const [globalError, setGlobalError] = useState<string | null>(null)
   const [properties, setProperties] = useState(
     initialProperties.map((p: any) => normalizeProperty(p))
-  );
-  const [editingProperty, setEditingProperty] = useState<any>(null);
-  const [formData, setFormData] = useState<any>(null);
-  const [fieldErrors, setFieldErrors] = useState(emptyErrors);
-  const [showConfirmEdit, setShowConfirmEdit] = useState(false);
-  const [showConfirmSave, setShowConfirmSave] = useState(false);
-  const [pendingEdit, setPendingEdit] = useState<any>(null);
-  const [successMessage, setSuccessMessage] = useState("");
+  )
+  const [editingProperty, setEditingProperty] = useState<any>(null)
+  const [formData, setFormData] = useState<any>(null)
+  const [fieldErrors, setFieldErrors] = useState(emptyErrors)
+  const [showConfirmEdit, setShowConfirmEdit] = useState(false)
+  const [showConfirmSave, setShowConfirmSave] = useState(false)
+  const [pendingEdit, setPendingEdit] = useState<any>(null)
+  const [successMessage, setSuccessMessage] = useState('')
 
-  const userProperties = properties.filter((p: any) => p.ownerId === currentUser.id);
+  const userProperties = properties.filter((p: any) => p.ownerId === currentUser.id)
 
   const handleEditClick = (property: any) => {
-    setPendingEdit(property);
-    setShowConfirmEdit(true);
-  };
+    setPendingEdit(property)
+    setShowConfirmEdit(true)
+  }
 
   const handleConfirmEdit = () => {
-    const normalized = normalizeProperty(pendingEdit);
-    setFormData({ ...normalized });
-    setEditingProperty(normalized);
-    setFieldErrors(emptyErrors);
-    setGlobalError(null);
-    setShowConfirmEdit(false);
-  };
+    const normalized = normalizeProperty(pendingEdit)
+    setFormData({ ...normalized })
+    setEditingProperty(normalized)
+    setFieldErrors(emptyErrors)
+    setGlobalError(null)
+    setShowConfirmEdit(false)
+  }
 
   const handleChange = (field: string, value: any) => {
-    setFormData((prev: any) => ({ ...prev, [field]: value }));
-    setFieldErrors((prev: any) => ({ ...prev, [field]: "" }));
-  };
+    setFormData((prev: any) => ({ ...prev, [field]: value }))
+    setFieldErrors((prev: any) => ({ ...prev, [field]: '' }))
+  }
 
   const handleSaveClick = () => {
-    if (!formData) return;
+    if (!formData) return
 
-    const errors = { ...emptyErrors };
-    let hasError = false;
+    const errors = { ...emptyErrors }
+    let hasError = false
 
     if (!formData.title?.trim()) {
-      errors.title = "El título es requerido";
-      hasError = true;
+      errors.title = 'El título es requerido'
+      hasError = true
     }
     if (!formData.details?.trim()) {
-      errors.details = "Los detalles son requeridos";
-      hasError = true;
+      errors.details = 'Los detalles son requeridos'
+      hasError = true
     }
     if (!formData.operationType) {
-      errors.operationType = "Seleccione un tipo";
-      hasError = true;
+      errors.operationType = 'Seleccione un tipo'
+      hasError = true
     }
     if (!formData.price || Number(formData.price) <= 0) {
-      errors.price = "Precio inválido";
-      hasError = true;
+      errors.price = 'Precio inválido'
+      hasError = true
     }
     if (!formData.location?.trim()) {
-      errors.location = "La ubicación es requerida";
-      hasError = true;
+      errors.location = 'La ubicación es requerida'
+      hasError = true
     }
 
     if (hasError) {
-      setFieldErrors(errors);
-      return;
+      setFieldErrors(errors)
+      return
     }
 
-    setShowConfirmSave(true);
-  };
+    setShowConfirmSave(true)
+  }
 
   const handleConfirmSave = async () => {
-    if (!formData) return;
+    if (!formData) return
 
     try {
-      const updatedProperty = normalizeProperty(formData);
+      const updatedProperty = normalizeProperty(formData)
 
-      setProperties((prev: any[]) =>
-        prev.map((p) => (p.id === formData.id ? updatedProperty : p))
-      );
+      setProperties((prev: any[]) => prev.map((p) => (p.id === formData.id ? updatedProperty : p)))
 
-      setSuccessMessage("Publicación actualizada correctamente");
-      setTimeout(() => setSuccessMessage(""), 3000);
+      setSuccessMessage('Publicación actualizada correctamente')
+      setTimeout(() => setSuccessMessage(''), 3000)
 
-      setEditingProperty(null);
-      setFormData(null);
-      setShowConfirmSave(false);
-      setGlobalError(null);
+      setEditingProperty(null)
+      setFormData(null)
+      setShowConfirmSave(false)
+      setGlobalError(null)
     } catch (e) {
-      console.error("Error al guardar:", e);
-      setGlobalError("No se pudo actualizar la publicación");
-      setShowConfirmSave(false);
+      console.error('Error al guardar:', e)
+      setGlobalError('No se pudo actualizar la publicación')
+      setShowConfirmSave(false)
     }
-  };
+  }
 
   const handleDelete = (id: any) => {
-    const confirmDelete = window.confirm("¿Estás seguro de eliminar esta publicación?");
-    if (!confirmDelete) return;
+    const confirmDelete = window.confirm('¿Estás seguro de eliminar esta publicación?')
+    if (!confirmDelete) return
 
-    setProperties((prev: any[]) => prev.filter((p) => p.id !== id));
-  };
+    setProperties((prev: any[]) => prev.filter((p) => p.id !== id))
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-8">
@@ -245,5 +242,5 @@ export default function Home() {
         </Modal>
       )}
     </div>
-  );
+  )
 }

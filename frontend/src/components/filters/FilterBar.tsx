@@ -165,7 +165,7 @@ export default function FilterBar({ onSearch, variant = 'home' }: FilterBarProps
             label={variant === 'map' ? '' : 'Tipo'}
             placeholder="Cualquier tipo"
             icon={Home}
-options={['Casa', 'Departamento', 'Terreno', 'Cuarto', 'Espacios', 'Cementerio']}
+            options={['Casa', 'Departamento', 'Terreno', 'Cuarto', 'Espacios', 'Cementerio']}
             onChange={(val: string) => setTipoInmueble(val)}
             value={tipoInmueble}
           />
