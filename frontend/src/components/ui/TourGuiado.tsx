@@ -77,6 +77,30 @@ export default function TourGuiado() {
     }
   }, [showTour]);
 
+  // Navegación con teclado (flechas izquierda/derecha)
+  useEffect(() => {
+    if (!showTour) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        e.preventDefault();
+      }
+
+      if (e.key === "ArrowLeft" && currentStep > 0) {
+        setCurrentStep((prev) => prev - 1);
+      } else if (e.key === "ArrowRight") {
+        if (currentStep < TOUR_STEPS.length - 1) {
+          setCurrentStep((prev) => prev + 1);
+        } else {
+          setShowTour(false);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showTour, currentStep]);
+
   useEffect(() => {
     if (!showTour) return;
 
@@ -84,18 +108,13 @@ export default function TourGuiado() {
     const el = document.getElementById(step.id);
     if (!el) return;
 
-    // Decidir cómo hacer scroll: si es footer (pasos 7 en adelante) usar "start" para dejar espacio al tooltip
-    // También podemos detectar si el elemento está cerca del fondo
-    const isFooterStep = currentStep >= 7; // los pasos del footer
+    const isFooterStep = currentStep >= 7;
     const scrollBlock = isFooterStep ? "start" : "center";
 
-    // Scroll automático al elemento
     el.scrollIntoView({ behavior: "smooth", block: scrollBlock });
 
-    // Limpiar timeout anterior si existe
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
-    // Esperar un tiempo corto para que termine el scroll y actualizar el rect
     timeoutRef.current = setTimeout(() => {
       requestAnimationFrame(() => {
         const rect = el.getBoundingClientRect();
@@ -120,37 +139,26 @@ export default function TourGuiado() {
     setShowTour(false);
   };
 
-  // Si el tour no está activo, no renderizamos nada
   if (!showTour) return null;
 
   const PADDING = 8;
   const hasValidHighlight = highlight !== null;
   
-  // Calcular posición del tooltip (arriba o abajo) para que no se salga
   let tooltipTop = 100;
-  let tooltipPosition = "bottom"; // por defecto abajo
-
   if (hasValidHighlight) {
-    const TOOLTIP_HEIGHT = 180; // altura aproximada del tooltip
+    const TOOLTIP_HEIGHT = 180;
     const spaceBelow = window.innerHeight - highlight.bottom;
     const spaceAbove = highlight.top;
     
-    // Si hay más espacio abajo que arriba, y espacio abajo suficiente, mostrar abajo
     if (spaceBelow >= TOOLTIP_HEIGHT + 20 || spaceBelow > spaceAbove) {
-      tooltipPosition = "bottom";
       tooltipTop = highlight.bottom + PADDING + 12;
-      // Si aún así se sale por abajo, ajustar hacia arriba
       if (tooltipTop + TOOLTIP_HEIGHT > window.innerHeight) {
         tooltipTop = highlight.top - TOOLTIP_HEIGHT - PADDING - 12;
-        tooltipPosition = "top";
       }
     } else {
-      tooltipPosition = "top";
       tooltipTop = highlight.top - TOOLTIP_HEIGHT - PADDING - 12;
-      // Si se sale por arriba, mostrar abajo
       if (tooltipTop < 10) {
         tooltipTop = highlight.bottom + PADDING + 12;
-        tooltipPosition = "bottom";
       }
     }
   }
@@ -161,18 +169,8 @@ export default function TourGuiado() {
 
   return (
     <>
-      {/* OVERLAY - SIEMPRE visible mientras el tour esté activo */}
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 9998,
-          pointerEvents: "all",
-        }}
-      >
-        <svg
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
-        >
+      <div style={{ position: "fixed", inset: 0, zIndex: 9998, pointerEvents: "all" }}>
+        <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
           <defs>
             <mask id="tour-mask">
               <rect width="100%" height="100%" fill="white" />
@@ -188,16 +186,10 @@ export default function TourGuiado() {
               )}
             </mask>
           </defs>
-          <rect
-            width="100%"
-            height="100%"
-            fill="rgba(0,0,0,0.75)"
-            mask="url(#tour-mask)"
-          />
+          <rect width="100%" height="100%" fill="rgba(0,0,0,0.75)" mask="url(#tour-mask)" />
         </svg>
       </div>
 
-      {/* TOOLTIP - Solo se muestra cuando hay highlight válido */}
       {hasValidHighlight && (
         <div
           style={{
@@ -212,7 +204,6 @@ export default function TourGuiado() {
             boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
           }}
         >
-          {/* Indicador de pasos */}
           <div style={{ display: "flex", gap: 4, marginBottom: 10 }}>
             {TOUR_STEPS.map((_, i) => (
               <span
@@ -235,54 +226,17 @@ export default function TourGuiado() {
             {TOUR_STEPS[currentStep].description}
           </p>
 
-          {/* Botones */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <button
-              onClick={handleSkip}
-              style={{
-                fontSize: 12,
-                color: "#9ca3af",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: "4px 0",
-              }}
-            >
+            <button onClick={handleSkip} style={{ fontSize: 12, color: "#9ca3af", background: "none", border: "none", cursor: "pointer", padding: "4px 0" }}>
               Saltar tour
             </button>
-
             <div style={{ display: "flex", gap: 8 }}>
               {currentStep > 0 && (
-                <button
-                  onClick={() => setCurrentStep((prev) => prev - 1)}
-                  style={{
-                    background: "none",
-                    color: "#E68B25",
-                    border: "1px solid #E68B25",
-                    borderRadius: 8,
-                    padding: "8px 14px",
-                    fontSize: 13,
-                    fontWeight: 600,
-                    cursor: "pointer",
-                  }}
-                >
+                <button onClick={() => setCurrentStep((prev) => prev - 1)} style={{ background: "none", color: "#E68B25", border: "1px solid #E68B25", borderRadius: 8, padding: "8px 14px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
                   ← Anterior
                 </button>
               )}
-
-              <button
-                onClick={handleNext}
-                style={{
-                  background: "#E68B25",
-                  color: "#fff",
-                  border: "none",
-                  borderRadius: 8,
-                  padding: "8px 18px",
-                  fontSize: 13,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
+              <button onClick={handleNext} style={{ background: "#E68B25", color: "#fff", border: "none", borderRadius: 8, padding: "8px 18px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
                 {currentStep < TOUR_STEPS.length - 1 ? "Siguiente →" : "Finalizar"}
               </button>
             </div>
