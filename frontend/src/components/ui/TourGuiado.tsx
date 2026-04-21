@@ -10,8 +10,23 @@ const TOUR_STEPS = [
   },
   {
     id: "tour-logo",
-    title: "Inicio",
+    title: "Logo - Inicio",
     description: "Haz clic en el logo para volver a la página principal.",
+  },
+  {
+    id: "tour-inicio",
+    title: "Inicio",
+    description: "Navega a la página principal desde aquí.",
+  },
+  {
+    id: "tour-contacto",
+    title: "Contáctanos",
+    description: "¿Tienes dudas? Escríbenos y te ayudamos.",
+  },
+  {
+    id: "tour-nosotros",
+    title: "Sobre Nosotros",
+    description: "Conoce más sobre el equipo detrás de PropBol.",
   },
   {
     id: "tour-notificaciones",
@@ -153,22 +168,42 @@ export default function TourGuiado() {
           >
             Saltar tour
           </button>
- 
-          <button
-            onClick={handleNext}
-            style={{
-              background: "#E68B25",
-              color: "#fff",
-              border: "none",
-              borderRadius: 8,
-              padding: "8px 18px",
-              fontSize: 13,
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-          >
-            {currentStep < TOUR_STEPS.length - 1 ? "Siguiente →" : "Finalizar"}
-          </button>
+
+          <div style={{ display: "flex", gap: 8 }}>
+            {currentStep > 0 && (
+              <button
+                onClick={() => setCurrentStep((prev) => prev - 1)}
+                style={{
+                  background: "none",
+                  color: "#E68B25",
+                  border: "1px solid #E68B25",
+                  borderRadius: 8,
+                  padding: "8px 14px",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                }}
+              >
+                ← Anterior
+              </button>
+            )}
+
+            <button
+              onClick={handleNext}
+              style={{
+                background: "#E68B25",
+                color: "#fff",
+                border: "none",
+                borderRadius: 8,
+                padding: "8px 18px",
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              {currentStep < TOUR_STEPS.length - 1 ? "Siguiente →" : "Finalizar"}
+            </button>
+          </div>
         </div>
       </div>
     </>
