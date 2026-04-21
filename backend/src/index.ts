@@ -13,6 +13,8 @@ import {
   createNotificationController,
   deleteNotificationController,
   getNotificationsController,
+  getNotificationByIdController,
+  archiveNotificationController,
   getUnreadCountController,
   markAllNotificationsAsReadController,
   markNotificationAsReadController
@@ -188,9 +190,11 @@ app.get('/api/properties/inmuebles', propertiesController.getAll)
 app.post('/notificaciones', requireAuth, createNotificationController)
 app.get('/notificaciones', requireAuth, getNotificationsController)
 app.get('/notificaciones/unread-count', requireAuth, getUnreadCountController)
+app.get('/notificaciones/:id', requireAuth, getNotificationByIdController)
 app.patch('/notificaciones/:id/read', requireAuth, markNotificationAsReadController)
 app.patch('/notificaciones/read-all', requireAuth, markAllNotificationsAsReadController)
 app.delete('/notificaciones/:id', requireAuth, deleteNotificationController)
+app.patch('/notificaciones/:id/archivar', requireAuth, archiveNotificationController)
 
 // --------------------
 // PUBLICACIONES MOCK

@@ -11,6 +11,7 @@ import {
   Menu,
   Trash2,
   WifiOff,
+  Settings,
   X,
 } from "lucide-react";
 
@@ -404,15 +405,25 @@ export default function Navbar() {
                         Notificaciones
                       </h3>
                       {isLoggedIn && (
-                        <button
-                          type="button"
-                          onClick={() => void markAllAsRead()}
-                          disabled={!isOnline}
-                          className="inline-flex items-center gap-1 text-xs text-amber-600 transition hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-40"
-                        >
-                          <CheckCheck className="h-4 w-4" />
-                          Marcar todas
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <Link
+                            href="/configuracion/notificaciones"
+                            onClick={toggleNotifications}
+                            aria-label="Configuración de notificaciones"
+                            className="rounded-full p-2 text-stone-500 transition hover:bg-stone-100 hover:text-stone-700"
+                          >
+                            <Settings className="h-4 w-4" />
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => void markAllAsRead()}
+                            disabled={!isOnline}
+                            className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 transition hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-40"
+                          >
+                            <CheckCheck className="h-4 w-4" />
+                            Marcar todas
+                          </button>
+                        </div>
                       )}
                     </div>
 
@@ -529,6 +540,9 @@ export default function Navbar() {
                                     ) {
                                       void markAsRead(notification.id);
                                     }
+
+                                    toggleNotifications()
+                                    router.push(`/notificaciones/${notification.id}`)
                                   }}
                                   className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
                                     notification.status === "no leida"
