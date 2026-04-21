@@ -125,11 +125,6 @@ function BusquedaMapaContent() {
         const turfCoords = [...polygonPoints, polygonPoints[0]].map((p) => [p[1], p[0]])
         const drawPoly = polygon([turfCoords])
         
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
-    null
-  );
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
-
         return properties.filter((p: any) => {
           if (p.lat == null || p.lng == null) return false
           const pt = point([p.lng, p.lat])
@@ -145,29 +140,32 @@ function BusquedaMapaContent() {
     return properties
   }, [properties, isPolygonClosed, polygonPoints])
 
-    const [listPage, setListPage] = useState(1);
-  const [listPageSize, setListPageSize] = useState<(PageSize)>(10);
-  const listTotal = properties.length;
-  const listTotalPages = Math.max(1, Math.ceil(listTotal / listPageSize));
-  const listSafePage = Math.min(Math.max(1, listPage), listTotalPages);
-  const paginatedProperties = useMemo(() => {
-    if (listTotal === 0) return [];
-    const start = (listSafePage - 1) * listPageSize;
-    return properties.slice(start, start + listPageSize);
-  }, [properties, listSafePage, listPageSize, listTotal]);
-
-    useEffect(() => {
-    setListPage(1);
-  }, [filterResetKey]);
-
-  useEffect(() => {
-    if (listPage > listTotalPages) setListPage(listTotalPages);
-  }, [listPage, listTotalPages]);
-
   // === 4. ORDENAMIENTO (Usando resultados filtrados) ===
   const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
     inmuebles: displayedProperties
   })
+
+  // === LÓGICA DE PAGINACIÓN ===
+  const [listPage, setListPage] = useState(1);
+  const [listPageSize, setListPageSize] = useState<PageSize>(10);
+  
+  const listTotal = inmueblesOrdenados.length;
+  const listTotalPages = Math.max(1, Math.ceil(listTotal / listPageSize));
+  const listSafePage = Math.min(Math.max(1, listPage), listTotalPages);
+  
+  const paginatedProperties = useMemo(() => {
+    if (listTotal === 0) return [];
+    const start = (listSafePage - 1) * listPageSize;
+    return inmueblesOrdenados.slice(start, start + listPageSize);
+  }, [inmueblesOrdenados, listSafePage, listPageSize, listTotal]);
+
+  useEffect(() => {
+    setListPage(1);
+  }, [filterResetKey, isPolygonClosed]);
+
+  useEffect(() => {
+    if (listPage > listTotalPages) setListPage(listTotalPages);
+  }, [listPage, listTotalPages]);
 
   // === 5. ESTADOS VISUALES Y DE CLUSTERS (develop + HU8) ===
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
