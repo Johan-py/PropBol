@@ -36,7 +36,7 @@ model Usuario {
   controlador                           Boolean                 @default(false)
   notificacionWhatsapp                  Boolean?                @default(false)
   rolId                                 Int?
-  notificacion_email                     Boolean?                @default(true)
+  notificacion_email                    Boolean?                @default(true)
   notificacion_whatsapp                 Boolean?                @default(false)
   fecha_registro                        DateTime?               @default(now()) @db.Timestamp(6)
   updatedAt                             DateTime?               @updatedAt @db.Timestamp(6)
@@ -74,7 +74,6 @@ model Usuario {
   @@index([correo], map: "idx_usuario_correo")
   @@index([rolId], map: "idx_usuario_rol")
   @@index([rolId], map: "idx_usuario_rol_id")
-  @@index([correo])
   @@map("usuario")
 }
 
@@ -191,7 +190,6 @@ model UbicacionInmueble {
   ubicacion_maestra  ubicacion_maestra? @relation(fields: [ubicacionMaestraId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([ubicacionMaestraId], map: "idx_ubicacion_maestra")
-  @@index([ubicacionMaestraId])
   @@map("ubicacion_inmueble")
 }
 
