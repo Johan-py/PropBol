@@ -15,6 +15,7 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
   const [moneda, setMoneda] = useState<'BOB' | 'USD'>('USD')
   const [minPrice, setMinPrice] = useState<string>('')
   const [maxPrice, setMaxPrice] = useState<string>('')
+  const [error, setError] = useState<string>('')
 
   // Cargar valores iniciales si existen en la URL o SessionStorage
   useEffect(() => {
@@ -30,6 +31,14 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
   if (!isOpen) return null;
 
   const handleApply = () => {
+    if (Number(minPrice) < 0 || Number(maxPrice) < 0) {
+      setError('Solo se permiten números positivos')
+      return
+    }
+    if (minPrice && maxPrice && Number(minPrice) > Number(maxPrice)) {
+      setError('El precio mínimo no puede ser mayor al máximo')
+      return
+    }
     const nuevosFiltros = {
       minPrice: minPrice || null,
       maxPrice: maxPrice || null,
@@ -92,8 +101,19 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
             <input
               type="number"
               placeholder="Min"
+              min="0"
               value={minPrice}
-              onChange={(e) => setMinPrice(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value
+                if (Number(val) < 0) { setError('Solo se permiten números positivos'); return }
+                setError('')
+                setMinPrice(val)
+              }}
+              onKeyDown={(e) => { if (e.key === '-') e.preventDefault() }}
+              onPaste={(e) => {
+                const texto = e.clipboardData.getData('text')
+                if (!/^\d*\.?\d*$/.test(texto)) { e.preventDefault(); setError('Formato no válido') }
+              }}
               className="border border-stone-300 rounded-lg px-3 py-2 text-sm w-full outline-none focus:border-[#d97706] focus:ring-1 focus:ring-[#d97706] transition-all"
             />
           </div>
@@ -102,12 +122,31 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
             <input
               type="number"
               placeholder="Máx"
+              min="0"
               value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value
+                if (Number(val) < 0) { setError('Solo se permiten números positivos'); return }
+                setError('')
+                setMaxPrice(val)
+              }}
+              onKeyDown={(e) => { if (e.key === '-') e.preventDefault() }}
+              onPaste={(e) => {
+                const texto = e.clipboardData.getData('text')
+                if (!/^\d*\.?\d*$/.test(texto)) { e.preventDefault(); setError('Formato no válido') }
+              }}
               className="border border-stone-300 rounded-lg px-3 py-2 text-sm w-full outline-none focus:border-[#d97706] focus:ring-1 focus:ring-[#d97706] transition-all"
             />
           </div>
         </div>
+        {error && (
+          <p className="text-red-500 text-xs mt-2">{error}</p>
+        )}
+        {!error && minPrice && maxPrice && Number(minPrice) > Number(maxPrice) && (
+          <p className="text-red-500 text-xs mt-1">
+            El precio mínimo no puede ser mayor al máximo
+          </p>
+        )}
       </div>
 
       {/* Input de Rango Visual (Opcional, usando input type="range" nativo) */}
