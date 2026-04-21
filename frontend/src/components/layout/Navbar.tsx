@@ -11,6 +11,7 @@ import {
   Menu,
   Trash2,
   WifiOff,
+  Settings,
   X,
 } from "lucide-react";
 
@@ -27,6 +28,7 @@ export type User = {
   avatar?: string | null;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type MeResponse = {
   message?: string;
   user?: {
@@ -387,15 +389,25 @@ export default function Navbar() {
                         Notificaciones
                       </h3>
                       {isLoggedIn && (
-                        <button
-                          type="button"
-                          onClick={() => void markAllAsRead()}
-                          disabled={!isOnline}
-                          className="inline-flex items-center gap-1 text-xs text-amber-600 transition hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-40"
-                        >
-                          <CheckCheck className="h-4 w-4" />
-                          Marcar todas
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <Link
+                            href="/configuracion/notificaciones"
+                            onClick={toggleNotifications}
+                            aria-label="Configuración de notificaciones"
+                            className="rounded-full p-2 text-stone-500 transition hover:bg-stone-100 hover:text-stone-700"
+                          >
+                            <Settings className="h-4 w-4" />
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => void markAllAsRead()}
+                            disabled={!isOnline}
+                            className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 transition hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-40"
+                          >
+                            <CheckCheck className="h-4 w-4" />
+                            Marcar todas
+                          </button>
+                        </div>
                       )}
                     </div>
 
@@ -512,6 +524,9 @@ export default function Navbar() {
                                     ) {
                                       void markAsRead(notification.id);
                                     }
+
+                                    toggleNotifications()
+                                    router.push(`/notificaciones/${notification.id}`)
                                   }}
                                   className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
                                     notification.status === "no leida"
@@ -584,7 +599,6 @@ export default function Navbar() {
                                   </div>
                                 </div>
                               ))}
-
                               {isLoadingMore && (
                                 <p className="px-4 py-3 text-center text-xs text-stone-400">
                                   Cargando más notificaciones...
@@ -681,7 +695,7 @@ export default function Navbar() {
               </Link>
 
               <Link
-                href="/blogs"
+                href="/propiedades"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
@@ -696,6 +710,20 @@ export default function Navbar() {
                 Planes de membresia
               </Link>
 
+              <Link
+                href="/blogs"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+              >
+                Blogs
+              </Link>
+              <Link
+                href="/cobros-suscripciones"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+              >
+                Planes de membresia
+              </Link>
               <Link
                 href="/ayuda"
                 onClick={() => setIsMobileMenuOpen(false)}
