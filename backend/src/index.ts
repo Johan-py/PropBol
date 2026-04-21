@@ -70,7 +70,7 @@ import { authMiddleware } from './middleware/authMiddleware.js'
 import { verifyEmailTransport } from './lib/email.service.js'
 
 // FAVORITES
-import zonaRoutes from "./modules/perfil/zonaUsario.routes.js";
+app.use('/api/perfil/zonas', zonaRoutes);
 // --------------------
 // SERVER
 // --------------------
