@@ -4,7 +4,7 @@ import MisZonasSidebar from '@/components/map/MisZonasSidebar'
 import { point, polygon } from '@turf/helpers'
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon'
 import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from 'react'
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import nextDynamic from 'next/dynamic'
 import {
   ChevronLeft,
@@ -80,8 +80,17 @@ const LIST_PAGE_SIZES = [10, 20, 50, 100] as const;
 
 function BusquedaMapaContent() {
   const [isMisZonasOpen, setIsMisZonasOpen] = useState(false)
+  const router = useRouter();
   const searchParams = useSearchParams();
   const filterResetKey = searchParams.toString();
+
+  //estado para controlar la autenticación
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsAuthenticated(!!token);
+  }, []);
 
   // === 1. ESTADOS COMPARTIDOS ===
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
@@ -842,7 +851,13 @@ function BusquedaMapaContent() {
                   Dibujar zona
                 </button>
                 <button
-                  onClick={() => setIsMisZonasOpen(true)}
+                  onClick={() => {
+                    if (!isAuthenticated) {
+                      router.push('/sign-in');
+                    } else {
+                      setIsMisZonasOpen(true);
+                    }
+                  }}
                   className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
                 >
                   Mis zonas
@@ -908,11 +923,11 @@ function BusquedaMapaContent() {
         <MisZonasSidebar
           isOpen={isMisZonasOpen}
           onClose={() => setIsMisZonasOpen(false)}
-          isAuthenticated={true} // Mapea esto a tu hook o estado de autenticación real
-          zonas={[]} // Mapea esto a tu estado de zonas guardadas en BD
+          isAuthenticated={isAuthenticated} // Mapeado al estado que acabamos de crear
+          zonas={[]} 
           onAddZone={() => {
-            setIsMisZonasOpen(false); // Cierra el sidebar
-            setIsDrawingMode(true);   // Activa la herramienta para dibujar (HU8)
+            setIsMisZonasOpen(false);
+            setIsDrawingMode(true);
           }}
           onEditZone={(id) => console.log('Editar zona:', id)}
           onDeleteZone={(id) => console.log('Eliminar zona:', id)}
