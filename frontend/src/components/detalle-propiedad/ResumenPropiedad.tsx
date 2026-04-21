@@ -1,3 +1,4 @@
+
 import type { DetallePropiedad } from '@/types/detallePropiedad'
 
 interface Props {
