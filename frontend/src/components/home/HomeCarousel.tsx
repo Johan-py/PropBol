@@ -13,6 +13,7 @@ interface BannerData {
 
 export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [isPaused, setIsPaused] = useState(false) // Para el criterio de pausa
   const touchStartX = useRef<number | null>(null)
 
   const nextSlide = () => {
@@ -24,11 +25,15 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
   }
 
   useEffect(() => {
+    // Si está pausado (mouse encima), no creamos el intervalo
+    if (isPaused) return;
+
     const timer = setInterval(() => {
       nextSlide()
-    }, 5000)
+    }, 4000) // Criterio: Intervalo de 4 segundos exactamente
+
     return () => clearInterval(timer)
-  }, [currentIndex, banners.length])
+  }, [currentIndex, banners.length, isPaused])
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX
@@ -46,12 +51,20 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
   if (!banners || banners.length === 0) return null
 
   return (
-    <div className="relative w-full" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div 
+      className="relative w-full overflow-hidden" 
+      onTouchStart={handleTouchStart} 
+      onTouchEnd={handleTouchEnd}
+      onMouseEnter={() => setIsPaused(true)}  // Criterio: Pausar en hover
+      onMouseLeave={() => setIsPaused(false)} // Reanudar al quitar mouse
+    >
       <HomeBanner
         url={banners[currentIndex].urlImagen}
         title={banners[currentIndex].titulo || 'Encuentra tu lugar ideal'}
         subtitle={banners[currentIndex].subtitulo}
       />
+      
+      {/* Botones de navegación (CA #6) */}
       <button
         onClick={prevSlide}
         className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 z-10 text-white/80 hover:text-white transition-all hover:scale-110"
@@ -65,13 +78,15 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
       >
         <ChevronRight className="w-10 h-10 drop-shadow-lg" />
       </button>
+
+      {/* Indicadores visuales (CA #10) */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2">
         {banners.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
             className={`h-2 rounded-full transition-all duration-300 ${
-              currentIndex === index ? 'bg-white w-4' : 'bg-white/50 w-2'
+              currentIndex === index ? 'bg-white w-8' : 'bg-white/50 w-2'
             }`}
           />
         ))}
