@@ -1,7 +1,14 @@
-import { HomeBanner } from '@/components/home/HomeBanner'
 import { HomeCarousel } from '@/components/home/HomeCarousel'
+import FeaturedCitiesSection from '@/components/home/FeaturedCitiesSection'
 import ExploreSection from '@/components/layout/ExploreSection'
-import FilterPanel from '@/components/rentals/FilterPanel'
+import { getCities } from '@/services/city.service'
+interface BannerRaw {
+  id: number
+  url_imagen: string
+  titulo?: string
+  subtitulo?: string
+}
+
 interface BannerData {
   id: number
   urlImagen: string
@@ -15,14 +22,22 @@ const fetchBanners = async (): Promise<BannerData[]> => {
   try {
     const response = await fetch(`${apiUrl}/api/banners`, {
       // Revalidación ISR
-      next: { revalidate: 3600 }
+      cache: 'no-store'
     })
 
     if (!response.ok) {
       throw new Error(`Error HTTP al obtener banners: ${response.status}`)
     }
 
-    return await response.json()
+    const data: BannerRaw[] = await response.json()
+
+    // Mapear snake_case del backend → camelCase esperado por los componentes
+    return data.map((b) => ({
+      id: b.id,
+      urlImagen: b.url_imagen,
+      titulo: b.titulo,
+      subtitulo: b.subtitulo,
+    }))
   } catch (error) {
     console.error('Error cargando el banner:', error)
     return []
@@ -31,7 +46,14 @@ const fetchBanners = async (): Promise<BannerData[]> => {
 
 export default async function Home() {
   const banners = await fetchBanners()
-  const mainBanner = banners[0] // Tomamos el primero de la base de datos
+  const cities = await getCities()
+
+  /*
+    Integración futura:
+    Cuando el backend exponga /api/cities con datos reales,
+    la sección FeaturedCitiesSection seguirá consumiendo desde getCities().
+  */
+
   // No toquen esto :v
   return (
     <main className="flex min-h-screen flex-col items-center bg-gray-50">
@@ -50,6 +72,10 @@ export default async function Home() {
           {/* EXPLORE SECTION */}
           <section className="w-full">
             <ExploreSection />
+          </section>
+
+          <section className="w-full">
+            <FeaturedCitiesSection cities={cities} />
           </section>
         </div>
       </div>
