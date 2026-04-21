@@ -84,11 +84,13 @@ export default function TourGuiado() {
     const el = document.getElementById(step.id);
     if (!el) return;
 
-    // ❌ NO eliminamos el highlight para evitar el flash
-    // Simplemente hacemos scroll y luego actualizamos
+    // Decidir cómo hacer scroll: si es footer (pasos 7 en adelante) usar "start" para dejar espacio al tooltip
+    // También podemos detectar si el elemento está cerca del fondo
+    const isFooterStep = currentStep >= 7; // los pasos del footer
+    const scrollBlock = isFooterStep ? "start" : "center";
 
     // Scroll automático al elemento
-    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.scrollIntoView({ behavior: "smooth", block: scrollBlock });
 
     // Limpiar timeout anterior si existe
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -121,19 +123,45 @@ export default function TourGuiado() {
   // Si el tour no está activo, no renderizamos nada
   if (!showTour) return null;
 
-  // Si aún no hay highlight (solo al inicio, mientras se calcula el primero), mostramos un overlay oscuro sin agujero
   const PADDING = 8;
   const hasValidHighlight = highlight !== null;
   
-  // Posición del tooltip: si no hay highlight válido, lo ponemos en un lugar seguro (oculto o centrado)
-  const tooltipTop = hasValidHighlight ? highlight.bottom + PADDING + 12 : 100;
+  // Calcular posición del tooltip (arriba o abajo) para que no se salga
+  let tooltipTop = 100;
+  let tooltipPosition = "bottom"; // por defecto abajo
+
+  if (hasValidHighlight) {
+    const TOOLTIP_HEIGHT = 180; // altura aproximada del tooltip
+    const spaceBelow = window.innerHeight - highlight.bottom;
+    const spaceAbove = highlight.top;
+    
+    // Si hay más espacio abajo que arriba, y espacio abajo suficiente, mostrar abajo
+    if (spaceBelow >= TOOLTIP_HEIGHT + 20 || spaceBelow > spaceAbove) {
+      tooltipPosition = "bottom";
+      tooltipTop = highlight.bottom + PADDING + 12;
+      // Si aún así se sale por abajo, ajustar hacia arriba
+      if (tooltipTop + TOOLTIP_HEIGHT > window.innerHeight) {
+        tooltipTop = highlight.top - TOOLTIP_HEIGHT - PADDING - 12;
+        tooltipPosition = "top";
+      }
+    } else {
+      tooltipPosition = "top";
+      tooltipTop = highlight.top - TOOLTIP_HEIGHT - PADDING - 12;
+      // Si se sale por arriba, mostrar abajo
+      if (tooltipTop < 10) {
+        tooltipTop = highlight.bottom + PADDING + 12;
+        tooltipPosition = "bottom";
+      }
+    }
+  }
+
   const tooltipLeft = hasValidHighlight
     ? Math.max(12, Math.min(highlight.left + highlight.width / 2 - 150, window.innerWidth - 312))
     : window.innerWidth / 2 - 150;
 
   return (
     <>
-      {/* OVERLAY - SIEMPRE visible mientras el tour esté activo, evitando el flash */}
+      {/* OVERLAY - SIEMPRE visible mientras el tour esté activo */}
       <div
         style={{
           position: "fixed",
