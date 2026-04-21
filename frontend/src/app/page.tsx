@@ -1,9 +1,11 @@
 
-import TourGuiado from '@/components/ui/TourGuiado'
+//import TourGuiado from '@/components/ui/TourGuiado'
 import { HomeBanner } from '@/components/home/HomeBanner'
 import { HomeCarousel } from '@/components/home/HomeCarousel'
 import ExploreSection from '@/components/layout/ExploreSection'
 import FilterPanel from '@/components/rentals/FilterPanel'
+import dynamic from 'next/dynamic'
+const TourGuiado = dynamic(() => import('@/components/ui/TourGuiado'), { ssr: false })
 interface BannerData {
   id: number;
   urlImagen: string;
