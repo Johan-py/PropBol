@@ -16,6 +16,7 @@ interface MisZonasSidebarProps {
   onAddZone: () => void
   onEditZone: (id: string) => void
   onDeleteZone: (id: string) => void
+  currentUserId?: number
   onZoneSelect?: (id: number) => void
 }
 
@@ -28,7 +29,8 @@ export default function MisZonasSidebar({
   onAddZone,
   onEditZone,
   onZoneSelect,
-  onDeleteZone
+  onDeleteZone,
+  currentUserId,
 }: MisZonasSidebarProps) {
   return (
     <>
