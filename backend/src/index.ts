@@ -12,6 +12,8 @@ import {
   createNotificationController,
   deleteNotificationController,
   getNotificationsController,
+  getNotificationByIdController,
+  archiveNotificationController,
   getUnreadCountController,
   markAllNotificationsAsReadController,
   markNotificationAsReadController
@@ -27,7 +29,9 @@ import {
   loginController,
   logoutController,
   verifyRegisterCodeController,
-  getMeController
+  getMeController,
+  forgotPasswordController,
+  resetPasswordController
 } from './modules/auth/auth.controller.js'
 import { requireAuth } from './middleware/auth.middleware.js'
 
@@ -42,13 +46,16 @@ import perfilRoutes from './modules/perfil/perfil.routes.js'
 
 import {
   googleCallbackController,
-  StratGoogleLoginController
+  StratGoogleLoginController,
+  StartGoogleRegisterController
 } from './modules/auth/google/google.controller.js'
 
 import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
 import publicacionRoutes from './modules/publicacion/publicacion.routes.js'
 import router from './modules/registro-publicacion/publicacion.routes.js'
+import parametrosRoutes from './modules/parametros-publicacion/parametros.routes.js'
 
+import securityRoutes from './routes/security.routes.js'
 // --------------------
 // LEGACY
 // --------------------
@@ -80,7 +87,6 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
   'http://localhost:2000'
-
 ]
 
 // Middleware CORS global
@@ -104,6 +110,8 @@ app.use('/uploads', express.static(path.resolve('uploads')))
 // --------------------
 // RUTAS LEGACY
 // --------------------
+app.post('/api/auth/forgot-password', forgotPasswordController)
+app.post('/api/auth/reset-password', resetPasswordController)
 app.use('/api/auth-legacy', authRoutes)
 app.get('/api/users/:id/publicaciones/free', authMiddleware, (_req, res) => {
   res.json({ restantes: 2 })
@@ -117,6 +125,7 @@ app.use('/api/publicaciones', publicacionRoutes)
 app.use('/api/publicaciones', multimediaRoutes)
 app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
+app.use('/api/perfil/zonas', zonaRoutes)
 app.use('/api', router)
 app.use("/api/favorites", favoritesRoutes);
 app.use('/api/perfil/zonas', zonaRoutes);
@@ -127,7 +136,7 @@ app.post('/api/users', (req, res) => {
   const user = req.body
   res.json({ message: 'User created', user })
 })
-app.use('/api/perfil/zonas', zonaRoutes);
+app.use('/api/perfil/zonas', zonaRoutes)
 
 // --------------------
 // AUTH
@@ -138,7 +147,9 @@ app.post('/api/auth/logout', logoutController)
 app.post('/api/auth/verify-register', verifyRegisterCodeController)
 app.get('/api/auth/me', getMeController)
 app.get('/api/auth/google/login', StratGoogleLoginController)
+app.get('/api/auth/google/register', StartGoogleRegisterController)
 app.get('/api/auth/google/callback', googleCallbackController)
+//comentario
 
 // --------------------
 // BANNERS & FILTERS
@@ -178,9 +189,11 @@ app.get('/api/properties/inmuebles', propertiesController.getAll)
 app.post('/notificaciones', requireAuth, createNotificationController)
 app.get('/notificaciones', requireAuth, getNotificationsController)
 app.get('/notificaciones/unread-count', requireAuth, getUnreadCountController)
+app.get('/notificaciones/:id', requireAuth, getNotificationByIdController)
 app.patch('/notificaciones/:id/read', requireAuth, markNotificationAsReadController)
 app.patch('/notificaciones/read-all', requireAuth, markAllNotificationsAsReadController)
 app.delete('/notificaciones/:id', requireAuth, deleteNotificationController)
+app.patch('/notificaciones/:id/archivar', requireAuth, archiveNotificationController)
 
 // --------------------
 // PUBLICACIONES MOCK
