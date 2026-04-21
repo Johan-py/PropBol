@@ -10,9 +10,9 @@ interface AuthRequest extends Request {
     nombre?: string;
   };
 }
-
-const MAX_INTENTOS_CAMBIO_PASSWORD = 5;
-const MINUTOS_BLOQUEO_CAMBIO_PASSWORD = 5;
+const MAX_CAMBIOS_VALIDOS_EN_VENTANA = 5;
+const MINUTOS_VENTANA_CAMBIOS_VALIDOS = 5;
+const MINUTOS_BLOQUEO_CAMBIOS_FRECUENTES = 10;
 
 export const cambiarPassword = async (req: AuthRequest, res: Response) => {
   try {
@@ -126,22 +126,64 @@ if (passwordIncorrecta) {
   });
 }
 
-    await prisma.usuario.update({
-      where: { id: usuarioId },
-      data: {
-        password: nuevaPassword,
-        intentos_fallidos_cambio_password: 0,
-        bloqueo_cambio_password_hasta: null,
-        password_actualizado_en: new Date(),
-      },
-    });
+    const haceCincoMinutos = new Date(
+  ahora.getTime() - MINUTOS_VENTANA_CAMBIOS_VALIDOS * 60 * 1000
+);
 
-    await invalidateOtherUserSessions(usuarioId, currentToken);
+const cambiosValidosRecientes = await prisma.historial_password.count({
+  where: {
+    usuarioId,
+    creadoEn: {
+      gte: haceCincoMinutos,
+    },
+  },
+});
 
-    return res.json({
-      ok: true,
-      msg: "Contraseña actualizada correctamente",
-    });
+if (cambiosValidosRecientes >= MAX_CAMBIOS_VALIDOS_EN_VENTANA) {
+  const bloqueoHasta = new Date(
+    ahora.getTime() + MINUTOS_BLOQUEO_CAMBIOS_FRECUENTES * 60 * 1000
+  );
+
+  await prisma.usuario.update({
+    where: { id: usuarioId },
+    data: {
+      bloqueo_cambio_password_hasta: bloqueoHasta,
+    },
+  });
+
+  return res.status(423).json({
+    ok: false,
+    bloqueado: true,
+    bloqueoHasta,
+    msg: `Has realizado ${MAX_CAMBIOS_VALIDOS_EN_VENTANA} cambios de contraseña en menos de ${MINUTOS_VENTANA_CAMBIOS_VALIDOS} minutos. Intenta nuevamente en ${MINUTOS_BLOQUEO_CAMBIOS_FRECUENTES} minutos.`,
+  });
+}
+
+await prisma.$transaction([
+  prisma.usuario.update({
+    where: { id: usuarioId },
+    data: {
+      password: nuevaPassword,
+      intentos_fallidos_cambio_password: 0,
+      bloqueo_cambio_password_hasta: null,
+      password_actualizado_en: ahora,
+    },
+  }),
+  prisma.historial_password.create({
+    data: {
+      usuarioId,
+      passwordHash: nuevaPassword,
+      creadoEn: ahora,
+    },
+  }),
+]);
+
+await invalidateOtherUserSessions(usuarioId, currentToken);
+
+return res.json({
+  ok: true,
+  msg: "Contraseña actualizada correctamente",
+});
   } catch (error) {
     console.error("Error en cambiarPassword:", error);
     return res.status(500).json({
