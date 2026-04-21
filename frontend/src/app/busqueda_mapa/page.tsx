@@ -834,7 +834,7 @@ function BusquedaMapaContent() {
             {!isDrawingMode && !isPolygonClosed && (
               <div className="flex flex-row gap-2 pointer-events-auto">
                 <button
-                  onClick={() => setIsDrawingMode(true)}
+                  onClick={() => { setIsDrawingMode(true); setIsSidebarOpen(false) }}
                   className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
                 >
                   Dibujar zona
