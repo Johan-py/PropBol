@@ -7,6 +7,7 @@ import {
   editarDireccion,
   editarFotoPerfil,
   editarTelefonos,
+  listarMisPublicaciones,
   obtenerPreferenciasNotificacion,
   actualizarPreferenciasNotificacion
 } from "./perfil.controller.js";
@@ -18,6 +19,9 @@ const router = Router();
 // GET - Obtener perfil
 router.get("/", validarJWT, obtenerPerfil);
 router.get('/preferencias-notificacion', validarJWT, obtenerPreferenciasNotificacion);
+
+// GET - Listar mis publicaciones
+router.get("/mis-publicaciones", validarJWT, listarMisPublicaciones);
 
 // PUTs - Editar cada campo
 router.put("/nombre", validarJWT, editarNombre);
