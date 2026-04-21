@@ -54,6 +54,8 @@ import {
 import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
 import publicacionRoutes from './modules/publicacion/publicacion.routes.js'
 import router from './modules/registro-publicacion/publicacion.routes.js'
+import parametrosRoutes from './modules/parametros-publicacion/parametros.routes.js'
+
 import securityRoutes from './routes/security.routes.js'
 // --------------------
 // LEGACY
@@ -125,6 +127,7 @@ app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
 app.use('/api/perfil/zonas', zonaRoutes)
 app.use('/api', router)
+app.use('/api', parametrosRoutes)
 app.use('/api/security', securityRoutes)
 app.use('/api/favorites', favoritesRoutes)
 // --------------------
