@@ -6,9 +6,10 @@ import { useState } from 'react'
 
 interface TarjetaInmuebleProps {
   inmueble: Inmueble
+  posicion?: number
 }
 
-export const TarjetaInmueble = ({ inmueble }: TarjetaInmuebleProps) => {
+export const TarjetaInmueble = ({ inmueble, posicion }: TarjetaInmuebleProps) => {
   const [isHovered, setIsHovered] = useState(false)
   const formatoMoneda = new Intl.NumberFormat('es-BO', {
     style: 'currency',
@@ -20,12 +21,31 @@ export const TarjetaInmueble = ({ inmueble }: TarjetaInmuebleProps) => {
     typeof inmueble.ubicacion === 'object' && inmueble.ubicacion !== null
       ? `${inmueble.ubicacion.zona ?? ''}, ${inmueble.ubicacion.ciudad ?? ''}`
       : ''
-
+  const handleClick = async () => {
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+      await fetch('/api/telemetria/click', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({
+          inmuebleId: inmueble.id,
+          posicionLista: posicion,
+          timestamp: new Date().toISOString()
+        })
+      })
+    } catch (error) {
+      console.error('Error tracking click:', error)
+    }
+  }
   return (
     <div
       className="group flex flex-col w-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300 cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleClick}
     >
       <div className="relative aspect-[4/3] w-full bg-gray-200 overflow-hidden">
         <Image
