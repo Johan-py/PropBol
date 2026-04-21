@@ -123,4 +123,48 @@ export class RecomendacionesRepository {
       include: { ubicacion: true }
     })
   }
+  async getInmueblesPopularesPorZona(zona: string, limit: number = 50, usuarioId?: number) {
+    const fechaLimite = new Date()
+    fechaLimite.setDate(fechaLimite.getDate() - 7)
+
+    let idsExcluir: number[] = []
+    if (usuarioId) {
+      const vistasPrevias = await prisma.propiedad_vista.findMany({
+        where: { usuarioId },
+        select: { inmuebleId: true }
+      })
+      idsExcluir = vistasPrevias.map((v) => v.inmuebleId)
+    }
+
+    const popularesPorZona = await prisma.propiedad_vista.groupBy({
+      by: ['inmuebleId'],
+      _count: { inmuebleId: true },
+      orderBy: { _count: { inmuebleId: 'desc' } },
+      take: limit
+    })
+
+    const ids = popularesPorZona.map((v) => v.inmuebleId)
+    if (ids.length === 0) return []
+
+    return await prisma.inmueble.findMany({
+      where: {
+        id: { in: ids },
+        estado: 'ACTIVO',
+        ubicacion: {
+          zona: { contains: zona, mode: 'insensitive' }
+        },
+        ...(idsExcluir.length > 0 ? { id: { notIn: idsExcluir } } : {})
+      },
+      include: { ubicacion: true }
+    })
+  }
+
+  async getZonaConexionUsuario(usuarioId: number): Promise<string | null> {
+    const usuario = await prisma.usuario.findUnique({
+      where: { id: usuarioId },
+      select: { zona_conexion: true }
+    })
+
+    return usuario?.zona_conexion || null
+  }
 }
