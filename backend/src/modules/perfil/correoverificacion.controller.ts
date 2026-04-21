@@ -159,6 +159,23 @@ if (cambiosValidosRecientes >= MAX_CAMBIOS_VALIDOS_EN_VENTANA) {
   });
 }
 
+const historialUltimas = await prisma.historial_password.findMany({
+  where: { usuarioId },
+  orderBy: { creadoEn: "desc" },
+  take: 3,
+});
+
+const esReutilizada = historialUltimas.some(
+  (h) => h.passwordHash === nuevaPassword
+);
+
+if (esReutilizada) {
+  return res.status(400).json({
+    ok: false,
+    msg: "No puedes usar ninguna de tus últimas 3 contraseñas anteriores.",
+  });
+}
+
 await prisma.$transaction([
   prisma.usuario.update({
     where: { id: usuarioId },
