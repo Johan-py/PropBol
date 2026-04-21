@@ -17,6 +17,9 @@ const MAX_CAMBIOS_VALIDOS_EN_VENTANA = 5;
 const MINUTOS_VENTANA_CAMBIOS_VALIDOS = 5;
 const MINUTOS_BLOQUEO_CAMBIOS_FRECUENTES = 10;
 
+const MAX_INTENTOS_CAMBIO_PASSWORD = 5;
+const MINUTOS_BLOQUEO_CAMBIO_PASSWORD = 5;
+
 export const cambiarPassword = async (req: AuthRequest, res: Response) => {
   try {
     const { passwordActual, nuevaPassword } = req.body;

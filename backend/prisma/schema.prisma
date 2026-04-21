@@ -74,6 +74,7 @@ model Usuario {
   @@index([correo], map: "idx_usuario_correo")
   @@index([rolId], map: "idx_usuario_rol")
   @@index([rolId], map: "idx_usuario_rol_id")
+  @@index([correo])
   @@map("usuario")
 }
 
@@ -190,6 +191,7 @@ model UbicacionInmueble {
   ubicacion_maestra  ubicacion_maestra? @relation(fields: [ubicacionMaestraId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([ubicacionMaestraId], map: "idx_ubicacion_maestra")
+  @@index([ubicacionMaestraId])
   @@map("ubicacion_inmueble")
 }
 
