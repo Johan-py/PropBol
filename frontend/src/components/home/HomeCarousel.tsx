@@ -34,6 +34,9 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
   useEffect(() => {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 29ab4784 (feat(home): ajustar carrusel a 4s con pausa y pausa al hover)
     if (isPaused) return;
 
     const timer = setInterval(() => {
@@ -85,6 +88,7 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
       onTouchStart={handleTouchStart} 
       onTouchEnd={handleTouchEnd}
 <<<<<<< HEAD
+<<<<<<< HEAD
       onMouseEnter={() => setIsPaused(true)} 
       onMouseLeave={() => setIsPaused(false)} 
     >
@@ -94,6 +98,10 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
 =======
       onMouseEnter={() => setIsPaused(true)}  // Criterio: Pausar en hover
       onMouseLeave={() => setIsPaused(false)} // Reanudar al quitar mouse
+=======
+      onMouseEnter={() => setIsPaused(true)} 
+      onMouseLeave={() => setIsPaused(false)} 
+>>>>>>> 29ab4784 (feat(home): ajustar carrusel a 4s con pausa y pausa al hover)
     >
 >>>>>>> 92b68636 (feat(home): carrusel ajustado a 4s con pausa en hover)
       <HomeBanner
@@ -101,8 +109,6 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
         title={banners[currentIndex].titulo || 'Encuentra tu lugar ideal'}
         subtitle={banners[currentIndex].subtitulo}
       />
-      
-      {/* Botones de navegación (CA #6) */}
       <button
         onClick={prevSlide}
         className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 z-10 text-white/80 hover:text-white transition-all hover:scale-110"
@@ -116,8 +122,6 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
       >
         <ChevronRight className="w-10 h-10 drop-shadow-lg" />
       </button>
-
-      {/* Indicadores visuales (CA #10) */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2">
         {banners.map((_, index) => (
           <button
@@ -132,4 +136,8 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
     </div>
   )
 }
+<<<<<<< HEAD
 // fin del componente
+=======
+// fin del componente
+>>>>>>> 29ab4784 (feat(home): ajustar carrusel a 4s con pausa y pausa al hover)
