@@ -1,4 +1,6 @@
-import React from 'react';
+"use client";
+import React, { useState } from 'react';
+import { Star } from "lucide-react";
 import { MOCK_PROPERTIES } from '@/data/mockProperties';
 
 export default function VistasRecientesPage() {
@@ -30,7 +32,10 @@ export default function VistasRecientesPage() {
 
                 {/* Grid de Propiedades */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {displayedProperties.map((prop: any) => (
+                    {displayedProperties.map((prop: any) => {
+                        //Estado de favorito por card
+                        const [favorito, setFavorito] = useState(false);
+                        return(  
                         <div key={prop.id} className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden relative hover:shadow-md transition-all">
 
                             {/* Contenedor de Imagen */}
@@ -71,14 +76,27 @@ export default function VistasRecientesPage() {
                                 </div>
 
                                 {/* Botón Ver Detalle (Texto Negro y ocupa todo el ancho) */}
-                                <div className="mt-4">
+                                <div className="mt-4 flex gap-2">
+                                    {/* Favorito */}
+                                        <button
+                                            onClick={() => setFavorito(!favorito)}
+                                            className="flex items-center justify-center px-3 bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm transition-colors"
+                                        >
+                                            <Star
+                                                size={16}
+                                                strokeWidth={2}
+                                                fill={favorito ? "black" : "none"}
+                                                color="black"
+                                            />
+                                        </button>
                                     <button className="w-full bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm transition-colors text-center">
                                         Ver Detalle
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    ))}
+                        );
+                    })}
                 </div>
 
                 {/* Paginación */}
