@@ -127,6 +127,10 @@ app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
 app.use('/api/perfil/zonas', zonaRoutes)
 app.use('/api', router)
+app.use('/api', parametrosRoutes)
+app.use('/api/security', securityRoutes)
+app.use('/api/favorites', favoritesRoutes)
+app.use("/api/perfil", perfilRoutes);
 app.use("/api/favorites", favoritesRoutes);
 app.use('/api/perfil/zonas', zonaRoutes);
 // --------------------
