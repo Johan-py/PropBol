@@ -64,6 +64,16 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
 
   const LIMITE_MAX = moneda === 'USD' ? 500000 : 3500000
 
+  const formatearMiles = (valor: string): string => {
+    if (!valor) return ''
+    return Number(valor).toLocaleString('es-BO')
+  }
+  const handleMonedaChange = (nuevaMoneda: 'BOB' | 'USD') => {
+    setMoneda(nuevaMoneda)
+    setMinPrice('')
+    setMaxPrice('')
+    setError('')
+  }
   return (
     <div className="flex flex-col gap-8 p-6 w-full bg-white h-full overflow-y-auto">
       <div>
@@ -75,7 +85,7 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
         {/* Toggle de Moneda */}
         <div className="flex bg-stone-100 rounded-full p-1 w-fit mb-6 shadow-inner mx-auto">
           <button
-            onClick={() => setMoneda('BOB')}
+            onClick={() => handleMonedaChange('BOB')}
             className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
               moneda === 'BOB'
                 ? 'bg-[#d97706] text-white shadow-sm'
@@ -85,7 +95,7 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
             $BOB
           </button>
           <button
-            onClick={() => setMoneda('USD')}
+            onClick={() => handleMonedaChange('USD')}
             className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
               moneda === 'USD'
                 ? 'bg-[#d97706] text-white shadow-sm'
@@ -165,7 +175,7 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
             className="flex-1 accent-[#d97706]"
           />
           <span className="text-xs text-stone-600 w-20 text-right">
-            {minPrice || '0'} {moneda}
+            {formatearMiles(minPrice) || '0'} {moneda}
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -177,7 +187,7 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
             className="flex-1 accent-[#d97706]"
           />
           <span className="text-xs text-stone-600 w-20 text-right">
-            {maxPrice || `${LIMITE_MAX/1000}K`} {moneda}
+            {maxPrice ? formatearMiles(maxPrice) : `${(LIMITE_MAX/1000).toLocaleString('es-BO')}K`} {moneda}
           </span>
         </div>
       </div>
