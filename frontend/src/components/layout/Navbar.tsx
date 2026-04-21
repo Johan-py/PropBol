@@ -1,5 +1,5 @@
 "use client";
-
+ 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -11,40 +11,67 @@ import {
   Menu,
   Trash2,
   WifiOff,
+  Settings,
   X,
 } from "lucide-react";
-
+ 
 import Logo from "../navbar/Logo";
 import NavLinks from "../navbar/NavLinks";
 import UserMenu from "../navbar/UserMenu";
 import LogoutModal from "../navbar/LogoutModal";
 import { useNotifications } from "@/hooks/useNotifications";
 import type { NotificationFilter } from "@/types/notification";
-
+ 
 export type User = {
   name: string;
   email: string;
   avatar?: string | null;
 };
-
+ 
+type MeResponse = {
+  message?: string;
+  user?: {
+    id: number;
+    nombre?: string;
+    apellido?: string;
+    correo: string;
+    avatar?: string | null;
+  };
+};
+ 
+class SessionValidationError extends Error {
+  statusCode: number;
+ 
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.name = "SessionValidationError";
+    this.statusCode = statusCode;
+  }
+}
+ 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const USER_STORAGE_KEY = "propbol_user";
 const SESSION_EXPIRES_KEY = "propbol_session_expires";
-
-const filters: NotificationFilter[] = ["todas", "leida", "no leida", "archivada"];
-
+ 
+const filters: NotificationFilter[] = [
+  "todas",
+  "leida",
+  "no leida",
+  "archivada",
+];
+ 
 export default function Navbar() {
   const router = useRouter();
   const panelRef = useRef<HTMLDivElement | null>(null);
   const notificationPanelRef = useRef<HTMLDivElement | null>(null);
   const [, setTick] = useState(0);
-
+ 
   const [user, setUser] = useState<User | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+ 
   const {
     open,
     filter,
@@ -68,8 +95,7 @@ export default function Navbar() {
     isLoggedIn,
     setIsLoggedIn,
   } = useNotifications();
-
-  // FIX #3: clearSession envuelto en useCallback para evitar re-renders infinitos
+ 
   const clearSession = useCallback((emitEvent = true) => {
     localStorage.removeItem(USER_STORAGE_KEY);
     localStorage.removeItem(SESSION_EXPIRES_KEY);
@@ -81,77 +107,83 @@ export default function Navbar() {
     setIsPanelOpen(false);
     setShowLogoutModal(false);
     setIsLoggedIn(false);
-
+ 
     if (emitEvent) {
       window.dispatchEvent(new Event("propbol:session-changed"));
       window.dispatchEvent(new Event("auth-state-changed"));
     }
   }, [setIsLoggedIn]);
-
+ 
   const isSessionExpired = () => {
     const expiresAt = localStorage.getItem(SESSION_EXPIRES_KEY);
     if (!expiresAt) return true;
     return Date.now() > Number(expiresAt);
   };
-
+ 
   const fetchCurrentUser = async (token: string) => {
-    const response = await fetch(`${API_URL}/api/perfil/usuario`, {
+    const response = await fetch(`${API_URL}/api/auth/me`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-
-    const data = await response.json();
-
-    if (!response.ok || !data.perfil) {
-      throw new Error(data.message || "Sesión inválida o expirada");
+ 
+    const data = (await response.json()) as MeResponse;
+ 
+    if (!response.ok || !data.user) {
+      throw new SessionValidationError(
+        data.message || "Sesión inválida o expirada",
+        response.status,
+      );
     }
-
-    return data.perfil;
+ 
+    return data.user;
   };
-
+ 
   const restoreSession = useCallback(async () => {
     const savedUser = localStorage.getItem(USER_STORAGE_KEY);
     const expiresAt = localStorage.getItem(SESSION_EXPIRES_KEY);
     const token = localStorage.getItem("token");
-
+ 
     if (!savedUser || !expiresAt || !token) {
       clearSession(false);
       return;
     }
-
+ 
     if (Date.now() > Number(expiresAt)) {
       clearSession(false);
       return;
     }
-
-    // FIX #4: Si no hay conexión, usar los datos cacheados en lugar de limpiar la sesión
-    if (!navigator.onLine) {
-      try {
-        const cached = JSON.parse(savedUser) as User;
-        setUser(cached);
-        setIsLoggedIn(true);
-      } catch {
-        clearSession(false);
-      }
+ 
+    let parsedUser: User;
+ 
+    try {
+      parsedUser = JSON.parse(savedUser) as User;
+    } catch {
+      clearSession(false);
       return;
     }
-
+ 
+    if (!navigator.onLine) {
+      setUser(parsedUser);
+      setIsLoggedIn(true);
+      return;
+    }
+ 
     try {
       const validatedUser = await fetchCurrentUser(token);
-
+ 
       const finalName =
         validatedUser.nombre && validatedUser.apellido
           ? `${validatedUser.nombre} ${validatedUser.apellido}`
           : validatedUser.nombre || validatedUser.correo;
-
+ 
       const finalUser: User = {
         name: finalName,
         email: validatedUser.correo,
         avatar: validatedUser.avatar ?? null,
       };
-
+ 
       localStorage.setItem(
         USER_STORAGE_KEY,
         JSON.stringify({
@@ -163,60 +195,65 @@ export default function Navbar() {
       localStorage.setItem("nombre", finalUser.name);
       localStorage.setItem("correo", finalUser.email);
       localStorage.setItem("avatar", finalUser.avatar ?? "");
-
+ 
       setUser(finalUser);
       setIsLoggedIn(true);
-    } catch {
-      clearSession(false);
+    } catch (error) {
+      if (
+        error instanceof SessionValidationError &&
+        (error.statusCode === 401 || error.statusCode === 403)
+      ) {
+        clearSession(false);
+        return;
+      }
+ 
+      // Para otros errores de red, usar datos cacheados
+      setUser(parsedUser);
+      setIsLoggedIn(true);
     }
   }, [clearSession, setIsLoggedIn]);
-
+ 
   const formatRelativeTime = (fecha: string | null): string => {
     if (!fecha) return "";
     const diff = Date.now() - new Date(fecha).getTime();
     const mins = Math.floor(diff / 60000);
-
+ 
     if (mins < 1) return "hace un momento";
     if (mins < 60) return `hace ${mins} min`;
-
+ 
     const hours = Math.floor(mins / 60);
     if (hours < 24) return `hace ${hours} h`;
-
+ 
     const days = Math.floor(hours / 24);
     if (days < 7) return `hace ${days} d`;
-
+ 
     return new Date(fecha).toLocaleDateString("es-BO", {
       day: "numeric",
       month: "short",
     });
   };
-
+ 
   // Refresca los tiempos relativos cada minuto
   useEffect(() => {
     const interval = setInterval(() => {
       setTick((t) => t + 1);
     }, 60000);
-
+ 
     return () => clearInterval(interval);
   }, []);
-
+ 
   // Restaura la sesión al montar y escucha cambios de sesión/conectividad
   useEffect(() => {
     void restoreSession();
-
-    const handleSessionChange = () => {
-      void restoreSession();
-    };
-
-    const handleOnline = () => {
-      void restoreSession();
-    };
-
+ 
+    const handleSessionChange = () => void restoreSession();
+    const handleOnline = () => void restoreSession();
+ 
     window.addEventListener("storage", handleSessionChange);
     window.addEventListener("propbol:login", handleSessionChange);
     window.addEventListener("propbol:session-changed", handleSessionChange);
     window.addEventListener("online", handleOnline);
-
+ 
     return () => {
       window.removeEventListener("storage", handleSessionChange);
       window.removeEventListener("propbol:login", handleSessionChange);
@@ -224,7 +261,7 @@ export default function Navbar() {
       window.removeEventListener("online", handleOnline);
     };
   }, [restoreSession]);
-
+ 
   // Cierra paneles al hacer click fuera de ellos
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -242,11 +279,12 @@ export default function Navbar() {
         toggleNotifications();
       }
     };
+ 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open, toggleNotifications]);
-
-  // FIX #2: clearSession agregado como dependencia del useEffect
+ 
+  // Verifica sesión expirada cada 10 segundos
   useEffect(() => {
     const interval = setInterval(() => {
       if (user && isSessionExpired()) {
@@ -254,20 +292,22 @@ export default function Navbar() {
         router.push("/");
       }
     }, 10000);
-
+ 
     return () => clearInterval(interval);
   }, [user, router, clearSession]);
-
+ 
   // Cierra el panel de notificaciones con Escape
   useEffect(() => {
     if (!open) return;
+ 
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === "Escape") toggleNotifications();
     };
+ 
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [open, toggleNotifications]);
-
+ 
   const togglePanel = () => {
     if (user && isSessionExpired()) {
       clearSession();
@@ -276,22 +316,21 @@ export default function Navbar() {
     }
     setIsPanelOpen((prev) => !prev);
   };
-
+ 
   const handleLoginRedirect = () => router.push("/sign-in");
-
   const handleOpenLogoutModal = () => setShowLogoutModal(true);
-
+ 
   const handleCancelLogout = () => {
     if (isLoggingOut) return;
     setShowLogoutModal(false);
   };
-
+ 
   const handleConfirmLogout = async () => {
     if (isLoggingOut) return;
-
+ 
     setIsLoggingOut(true);
     const token = localStorage.getItem("token");
-
+ 
     if (token) {
       try {
         await fetch(`${API_URL}/api/auth/logout`, {
@@ -299,27 +338,25 @@ export default function Navbar() {
           headers: { Authorization: `Bearer ${token}` },
         });
       } catch (err) {
-        // FIX #5: Log del error en lugar de catch vacío
         console.warn("Error al cerrar sesión en el servidor:", err);
       }
     }
-
+ 
     clearSession();
     setIsLoggingOut(false);
     router.push("/");
   };
-
+ 
   return (
     <>
       <nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
         <div className="container mx-auto px-4 py-1.5">
           <div className="flex items-center justify-between">
-            {/* FIX #1: Estructura JSX corregida — Logo y NavLinks correctamente anidados */}
             <div className="flex items-center gap-10">
               <Logo />
               <NavLinks />
             </div>
-
+ 
             <div className="flex items-center gap-4">
               <div className="relative" ref={notificationPanelRef}>
                 <button
@@ -338,7 +375,7 @@ export default function Navbar() {
                     </span>
                   )}
                 </button>
-
+ 
                 {open && (
                   <div
                     role="dialog"
@@ -351,27 +388,35 @@ export default function Navbar() {
                         Notificaciones
                       </h3>
                       {isLoggedIn && (
-                        <button
-                          type="button"
-                          onClick={() => void markAllAsRead()}
-                          disabled={!isOnline}
-                          className="inline-flex items-center gap-1 text-xs text-amber-600 transition hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-40"
-                        >
-                          <CheckCheck className="h-4 w-4" />
-                          Marcar todas
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <Link
+                            href="/configuracion/notificaciones"
+                            onClick={toggleNotifications}
+                            aria-label="Configuración de notificaciones"
+                            className="rounded-full p-2 text-stone-500 transition hover:bg-stone-100 hover:text-stone-700"
+                          >
+                            <Settings className="h-4 w-4" />
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => void markAllAsRead()}
+                            disabled={!isOnline}
+                            className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 transition hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-40"
+                          >
+                            <CheckCheck className="h-4 w-4" />
+                            Marcar todas
+                          </button>
+                        </div>
                       )}
                     </div>
-
+ 
                     {!isOnline && (
                       <div className="flex items-center gap-2 border-b border-stone-100 bg-stone-50 px-4 py-2 text-xs text-stone-500">
                         <WifiOff className="h-3 w-3 shrink-0" />
-                        <span>
-                          Sin conexión. Se actualizará al reconectarte.
-                        </span>
+                        <span>Sin conexión. Se actualizará al reconectarte.</span>
                       </div>
                     )}
-
+ 
                     {!isLoggedIn ? (
                       <div className="px-4 py-6 text-center">
                         <p className="text-sm text-stone-500">
@@ -417,12 +462,24 @@ export default function Navbar() {
                             </button>
                           ))}
                         </div>
-
+ 
                         <div
+                          ref={scrollContainerRef}
                           role="list"
                           aria-label="Lista de notificaciones"
                           aria-live="polite"
                           className="max-h-[60vh] overflow-y-auto sm:max-h-80"
+                          onScroll={(e) => {
+                            const target = e.currentTarget;
+                            const reachedBottom =
+                              target.scrollTop + target.clientHeight >=
+                              target.scrollHeight - 20;
+ 
+                            if (reachedBottom && hasMore && !isLoadingMore) {
+                              saveScrollPosition(target.scrollTop);
+                              void loadMoreNotifications();
+                            }
+                          }}
                         >
                           {isLoading ? (
                             <div className="flex items-center justify-center gap-2 px-4 py-8 text-sm text-stone-500">
@@ -454,9 +511,14 @@ export default function Navbar() {
                                   key={notification.id}
                                   role="listitem"
                                   onClick={() => {
-                                    if (notification.status === "no leida" && isOnline) {
+                                    if (
+                                      notification.status === "no leida" &&
+                                      isOnline
+                                    ) {
                                       void markAsRead(notification.id);
                                     }
+                                    toggleNotifications();
+                                    router.push(`/notificaciones/${notification.id}`);
                                   }}
                                   className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
                                     notification.status === "no leida"
@@ -474,19 +536,25 @@ export default function Navbar() {
                                           {notification.title?.trim() || "(Sin título)"}
                                         </p>
                                       </div>
+ 
                                       <p className="mt-1 line-clamp-2 text-sm text-stone-600">
                                         {notification.description?.trim() ||
                                           "(Sin descripción disponible)"}
                                       </p>
+ 
                                       <div className="mt-2 flex items-center gap-2">
                                         <span className="text-[10px] uppercase text-stone-400">
                                           {notification.status}
                                         </span>
                                         <span className="text-[10px] text-stone-400">
-                                          · {formatRelativeTime(notification.fechaCreacion || null)}
+                                          ·{" "}
+                                          {formatRelativeTime(
+                                            notification.fechaCreacion || null,
+                                          )}
                                         </span>
                                       </div>
                                     </div>
+ 
                                     <div
                                       className="flex shrink-0 items-center gap-2"
                                       onClick={(e) => e.stopPropagation()}
@@ -494,16 +562,21 @@ export default function Navbar() {
                                       {!notification.archivada && (
                                         <button
                                           type="button"
-                                          onClick={() => void archiveNotification(notification.id)}
+                                          onClick={() =>
+                                            void archiveNotification(notification.id)
+                                          }
                                           aria-label="Archivar notificación"
                                           className="text-stone-400 transition hover:text-amber-600 disabled:cursor-not-allowed disabled:opacity-40"
                                         >
                                           <Archive className="h-4 w-4" />
                                         </button>
                                       )}
+ 
                                       <button
                                         type="button"
-                                        onClick={() => void deleteNotification(notification.id)}
+                                        onClick={() =>
+                                          void deleteNotification(notification.id)
+                                        }
                                         disabled={!isOnline}
                                         className="text-xs text-red-500 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-40"
                                       >
@@ -513,7 +586,6 @@ export default function Navbar() {
                                   </div>
                                 </div>
                               ))}
-
                               {isLoadingMore && (
                                 <p className="px-4 py-3 text-center text-xs text-stone-400">
                                   Cargando más notificaciones...
@@ -522,7 +594,7 @@ export default function Navbar() {
                             </>
                           )}
                         </div>
-
+ 
                         <div className="border-t border-stone-100 px-4 py-3 text-center">
                           <Link
                             href="/notificaciones"
@@ -537,7 +609,7 @@ export default function Navbar() {
                   </div>
                 )}
               </div>
-
+ 
               <div className="relative" ref={panelRef}>
                 <UserMenu
                   user={user}
@@ -548,7 +620,7 @@ export default function Navbar() {
                   onOpenLogoutModal={handleOpenLogoutModal}
                 />
               </div>
-
+ 
               <button
                 /* HU-05: ID de referencia para el tour guiado - Paso "Menú móvil" (solo visible en mobile) */
                 id="tour-menu-mobile"
@@ -563,14 +635,14 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
-
+ 
       <LogoutModal
         show={showLogoutModal}
         isLoggingOut={isLoggingOut}
         onCancel={handleCancelLogout}
         onConfirm={handleConfirmLogout}
       />
-
+ 
       {isMobileMenuOpen && (
         <div
           className="fixed inset-0 z-[9999] bg-black/40 md:hidden"
@@ -593,6 +665,7 @@ export default function Navbar() {
                 <X className="h-6 w-6 text-stone-600" />
               </button>
             </div>
+ 
             <nav className="mt-10 flex flex-col gap-4">
               <Link
                 href="/"
@@ -602,18 +675,32 @@ export default function Navbar() {
                 Inicio
               </Link>
               <Link
-                href="#contacto"
+                href="/propiedades"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
-                Contáctanos
+                Propiedades
               </Link>
               <Link
-                href="#nosotros"
+                href="/blogs"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
-                Sobre Nosotros
+                Blogs
+              </Link>
+              <Link
+                href="/cobros-suscripciones"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+              >
+                Planes de membresía
+              </Link>
+              <Link
+                href="/ayuda"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+              >
+                Ayuda
               </Link>
             </nav>
           </div>

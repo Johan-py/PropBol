@@ -1,5 +1,5 @@
-import { $Enums } from '@prisma/client'
-import { prisma } from '../../lib/prisma.client.js'
+import { $Enums } from "@prisma/client";
+import { prisma } from "../../lib/prisma.client.js";
 
 export class FiltersHomepageRepository {
   async getCountsByCity(tipoAccion: $Enums.TipoAccion) {
@@ -11,7 +11,7 @@ export class FiltersHomepageRepository {
         },
       },
       select: {
-        inmuebleId: true, 
+        inmuebleId: true,
         ubicacion_maestra: {
           select: {
             departamento: true,
@@ -31,12 +31,12 @@ export class FiltersHomepageRepository {
       if (!deptCounts.has(normalizedDept)) {
         deptCounts.set(normalizedDept, new Set());
       }
-      
+
       deptCounts.get(normalizedDept)!.add(u.inmuebleId);
     }
 
     const counts = Array.from(deptCounts.entries()).map(([dept, ids]) => ({
-      departamento: dept, 
+      departamento: dept,
       count: ids.size,
     }));
 
