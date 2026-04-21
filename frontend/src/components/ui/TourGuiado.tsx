@@ -22,6 +22,24 @@ const TOUR_STEPS = [
     required: true,
   },
   {
+    id: "tour-propiedades",
+    title: "Propiedades",
+    description: "Explora casas, departamentos, terrenos y más.",
+    required: true,
+  },
+  {
+    id: "tour-blogs",
+    title: "Blogs",
+    description: "Lee artículos y consejos sobre el mercado inmobiliario.",
+    required: true,
+  },
+  {
+    id: "tour-planes",
+    title: "Planes de membresía",
+    description: "Conoce nuestros planes y beneficios para publicar tu inmueble.",
+    required: true,
+  },
+  {
     id: "tour-contacto",
     title: "Contáctanos",
     description: "¿Tienes dudas? Escríbenos y te ayudamos.",
@@ -34,6 +52,14 @@ const TOUR_STEPS = [
     required: true,
   },
   {
+    id: "tour-ayuda",
+    title: "Ayuda",
+    description: "Vuelve a ver este tour cuando quieras desde aquí.",
+    required: true,
+
+
+  },
+  { 
     id: "tour-notificaciones",
     title: "Notificaciones",
     description: "Aquí aparecerán tus alertas y novedades importantes.",
@@ -44,6 +70,7 @@ const TOUR_STEPS = [
     title: "Tu cuenta",
     description: "Accede a tu perfil, publicaciones y configuración.",
     required: true,
+   
   },
   {
     id: "tour-footer-logo",
@@ -71,6 +98,8 @@ const TOUR_STEPS = [
   },
 ];
 
+const FOOTER_STEP_INDEX = 11; // índice desde donde empiezan los pasos del footer
+
 export default function TourGuiado() {
   const [showTour, setShowTour] = useState(true);
   const [currentStep, setCurrentStep] = useState(0);
@@ -89,11 +118,12 @@ export default function TourGuiado() {
     }
   }, [showTour]);
 
-  // ⌨️ Navegación teclado
+  // ⌨️ Navegación por teclado
   useEffect(() => {
     if (!showTour) return;
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") e.preventDefault();
+      if (e.key === "Escape") handleSkip();
       if (e.key === "ArrowLeft" && currentStep > 0) setCurrentStep((prev) => prev - 1);
       if (e.key === "ArrowRight") {
         if (currentStep < TOUR_STEPS.length - 1) setCurrentStep((prev) => prev + 1);
@@ -104,9 +134,20 @@ export default function TourGuiado() {
     return () => window.removeEventListener("keydown", handleKey);
   }, [showTour, currentStep]);
 
-  // 🔥 FIX REAL (estable)
+  // HU-05: Criterio 9 — Reactivación manual desde el botón Ayuda
+  useEffect(() => {
+    const handleIniciarTour = () => {
+      setCurrentStep(0);
+      setHighlight(null);
+      setShowTour(true);
+    };
+
+    window.addEventListener("propbol:iniciar-tour", handleIniciarTour);
+    return () => window.removeEventListener("propbol:iniciar-tour", handleIniciarTour);
+  }, []);
+
   const applyHighlight = (el: HTMLElement) => {
-    const isFooter = currentStep >= 7;
+    const isFooter = currentStep >= FOOTER_STEP_INDEX;
 
     el.scrollIntoView({
       behavior: "auto",
@@ -124,7 +165,7 @@ export default function TourGuiado() {
     }, 50);
   };
 
-  // 🔍 Buscar elemento
+  // 🔍 Buscar elemento con reintentos
   useEffect(() => {
     if (!showTour) return;
 

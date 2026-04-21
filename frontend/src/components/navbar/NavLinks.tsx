@@ -19,8 +19,9 @@ export default function NavLinks() {
         Inicio
       </Link>
 
-      {/* Propiedades con link + dropdown */}
+      {/* HU-05: Propiedades con link + dropdown */}
       <div
+        id="tour-propiedades"
         className="relative flex items-center"
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
@@ -47,11 +48,13 @@ export default function NavLinks() {
         )}
       </div>
 
-      <Link href="/blogs" className={linkStyle}>
+      {/* HU-05: Blogs */}
+      <Link id="tour-blogs" href="/blogs" className={linkStyle}>
         Blogs
       </Link>
 
-      <Link href="/cobros-suscripciones" className={linkStyle}>
+      {/* HU-05: Planes de membresía */}
+      <Link id="tour-planes" href="/cobros-suscripciones" className={linkStyle}>
         Planes de membresía
       </Link>
 
@@ -65,9 +68,14 @@ export default function NavLinks() {
         Sobre Nosotros
       </Link>
 
-      <Link href="/ayuda" className={linkStyle}>
+      {/* HU-05: Botón de ayuda que reactiva el tour guiado */}
+      <button
+        id="tour-ayuda"
+        onClick={() => window.dispatchEvent(new Event("propbol:iniciar-tour"))}
+        className={linkStyle}
+      >
         Ayuda
-      </Link>
+      </button>
 
     </div>
   );
