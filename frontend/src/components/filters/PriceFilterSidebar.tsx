@@ -62,6 +62,8 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
     onClose()
   }
 
+  const LIMITE_MAX = moneda === 'USD' ? 500000 : 3500000
+
   return (
     <div className="flex flex-col gap-8 p-6 w-full bg-white h-full overflow-y-auto">
       <div>
@@ -149,31 +151,35 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
         )}
       </div>
 
-      {/* Input de Rango Visual (Opcional, usando input type="range" nativo) */}
-      <div className="flex flex-col gap-2 mt-2">
+      {/* Día 3 - sliders bidireccionales sincronizados con inputs */}
+      <div className="flex flex-col gap-3 mt-2">
         <label className="font-bold text-xs text-stone-400 uppercase tracking-wide">
           Rango de Precio
         </label>
-        <div className="flex items-center gap-2 mb-2">
-          <div className="border border-stone-200 rounded-md px-3 py-1.5 text-xs text-stone-600 flex-1 text-center">
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-stone-500 w-8">Min</span>
+          <input
+            type="range" min="0" max={LIMITE_MAX} step="100"
+            value={Number(minPrice) || 0}
+            onChange={(e) => { setMinPrice(e.target.value); setError('') }}
+            className="flex-1 accent-[#d97706]"
+          />
+          <span className="text-xs text-stone-600 w-20 text-right">
             {minPrice || '0'} {moneda}
-          </div>
-          <span className="text-stone-400">-</span>
-          <div className="border border-stone-200 rounded-md px-3 py-1.5 text-xs text-stone-600 flex-1 text-center">
-            {maxPrice || '10K'} {moneda}
-          </div>
+          </span>
         </div>
-
-        {/* TODO: Día 3 - reemplazar por rc-slider dual thumb */}
-        <input
-          type="range"
-          className="w-full accent-[#d97706]"
-          min="0"
-          max="10000"
-          step="100"
-          value={maxPrice || 10000}
-          onChange={(e) => setMaxPrice(e.target.value)}
-        />
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-stone-500 w-8">Máx</span>
+          <input
+            type="range" min="0" max={LIMITE_MAX} step="100"
+            value={Number(maxPrice) || LIMITE_MAX}
+            onChange={(e) => { setMaxPrice(e.target.value); setError('') }}
+            className="flex-1 accent-[#d97706]"
+          />
+          <span className="text-xs text-stone-600 w-20 text-right">
+            {maxPrice || `${LIMITE_MAX/1000}K`} {moneda}
+          </span>
+        </div>
       </div>
 
       {/* Botón Aplicar */}
