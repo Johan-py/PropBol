@@ -70,8 +70,27 @@ const MockFilterBtn = ({
     {hasChevron && <ChevronDown className="w-4 h-4 text-stone-400" />}
   </button>
 )
-
-export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter }: FilterBarProps){
+const trackSearchTelemetria = async (filtros: {
+  tipoInmueble: string[]
+  modoInmueble: string[]
+  query: string
+  zona?: string
+}) => {
+  try {
+    await fetch('/api/telemetria/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...filtros,
+        timestamp: new Date().toISOString(),
+        url: typeof window !== 'undefined' ? window.location.pathname : ''
+      })
+    })
+  } catch (error) {
+    console.error('Error tracking search:', error)
+  }
+}
+export default function FilterBar({ onSearch, variant = 'home',  onOpenPriceFilter, onOpenSuperficieFilter  }: FilterBarProps) {
   const router = useRouter()
 
   const { updateFilters } = useSearchFilters()
@@ -103,7 +122,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     { label: 'Espacios Cementerio', icon: Flower2 }
   ]
 
-  const handleSearch = (e?: React.FormEvent) => {
+  const handleSearch = async (e?: React.FormEvent) => {
     if (e) e.preventDefault()
     const tipoMap: Record<string, string> = {
       Casas: 'CASA',
@@ -131,7 +150,12 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       query: ubicacionTexto,
       updatedAt: new Date().toISOString()
     }
-
+    await trackSearchTelemetria({
+      tipoInmueble: nuevosFiltros.tipoInmueble,
+      modoInmueble: nuevosFiltros.modoInmueble,
+      query: nuevosFiltros.query,
+      zona: ubicacionTexto
+    })
     updateFilters(nuevosFiltros)
 
     const params = new URLSearchParams()
@@ -236,7 +260,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
             <div className="shrink-0">
               <MockFilterBtn icon={SlidersHorizontal} text="Más Filtros" hasChevron={false} />
             </div>
-             <div className="shrink-0">
+            <div className="shrink-0">
               <MockFilterBtn icon={Award} text="Recomendados" hasChevron={false} />
             </div>
           </div>
