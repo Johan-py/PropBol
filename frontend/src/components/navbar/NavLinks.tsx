@@ -13,14 +13,22 @@ export default function NavLinks() {
 
   return (
     <div className="hidden md:flex items-center gap-6 text-[15px] font-medium text-gray-700">
-      <Link href="/" className={linkStyle}>Inicio</Link>
+      
+      {/* Inicio */}
+      <Link href="/" className={linkStyle}>
+        Inicio
+      </Link>
 
-      {/* Dropdown Propiedades */}
-      <div className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
-        <button className={`flex items-center gap-1 ${linkStyle}`}>
+      {/* Propiedades con link + dropdown */}
+      <div 
+        className="relative flex items-center"
+        onMouseEnter={() => setOpen(true)}
+        onMouseLeave={() => setOpen(false)}
+      >
+        <Link href="/propiedades" className={`flex items-center gap-1 ${linkStyle}`}>
           Propiedades
           <ChevronDown className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`} />
-        </button>
+        </Link>
 
         {open && (
           <div className="absolute top-full left-0 w-52 pt-2">
@@ -39,9 +47,19 @@ export default function NavLinks() {
         )}
       </div>
 
-      <Link href="/blogs" className={linkStyle}>Blogs</Link>
-      <Link href="/cobros-suscripciones" className={linkStyle}>Planes de membresia</Link>
-      <Link href="/ayuda" className={linkStyle}>Ayuda</Link>
+      {/* Otros links */}
+      <Link href="/blogs" className={linkStyle}>
+        Blogs
+      </Link>
+
+      <Link href="/cobros-suscripciones" className={linkStyle}>
+        Planes de membresia
+      </Link>
+
+      <Link href="/ayuda" className={linkStyle}>
+        Ayuda
+      </Link>
+
     </div>
   );
 }
