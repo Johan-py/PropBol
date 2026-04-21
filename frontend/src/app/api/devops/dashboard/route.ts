@@ -1,5 +1,6 @@
 // frontend/src/app/api/devops/dashboard/route.ts
 import { promises as fs } from 'fs'
+import csv from 'csvtojson'
 import path from 'path'
 
 // Requisito: Forzar runtime de Node.js
@@ -27,7 +28,22 @@ export async function GET() {
     console.log(`📄 pipelines_runs.csv leídos: ${pipelinesCsv.trim().split('\n').length} filas.`)
     console.log(`📄 author_consist.csv leídos: ${authorCsv.trim().split('\n').length} filas.`)
 
-    return Response.json({ message: 'archivos leídos correctamente en backend' })
+    // --- Conversión csv a json ---
+    //
+    // Conversion de Sting al tipo respectivo
+    const [usuariosData, pipelinesData, authorsData] = await Promise.all([
+      csv({ checkType: true }).fromString(usuariosCsv),
+      csv({ checkType: true }).fromString(pipelinesCsv),
+      csv({ checkType: true }).fromString(authorCsv)
+    ])
+    //Salida esperada
+    const responseData = {
+      usuarios: usuariosData,
+      pipelines: pipelinesData,
+      authors: authorsData
+    };
+    //Retornamos la salida y codigo http (OK)
+    return Response.json(responseData, { status: 200 })
   } catch (error) {
     // Si los archivos no existen o la ruta está mal, logueará un error para evitar crashes totales.
     console.error('Error al leer los archivos de la carpeta core_data:', error)
