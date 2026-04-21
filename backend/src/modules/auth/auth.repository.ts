@@ -221,3 +221,14 @@ export const invalidateAllUserSessions = async (usuarioId: number) => {
     data: { estado: false }
   })
 }
+
+export const invalidateOtherUserSessions = async (usuarioId: number, currentToken: string) => {
+  return prisma.sesion.updateMany({
+    where: {
+      usuarioId,
+      token: { not: currentToken },
+      estado: true
+    },
+    data: { estado: false }
+  })
+}
