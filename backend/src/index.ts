@@ -5,6 +5,7 @@ import cors from 'cors'
 import { env } from './config/env.js'
 import type { Request, Response } from 'express'
 import zonaRoutes from './modules/perfil/zonaUsario.routes.js'
+import favoritesRoutes from './modules/favorites/favorites.routes.js'
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -69,8 +70,6 @@ import { authMiddleware } from './middleware/authMiddleware.js'
 // --------------------
 import { verifyEmailTransport } from './lib/email.service.js'
 
-// FAVORITES
-app.use('/api/perfil/zonas', zonaRoutes);
 // --------------------
 // SERVER
 // --------------------
@@ -124,10 +123,11 @@ app.use('/api/publicaciones', publicacionRoutes)
 app.use('/api/publicaciones', multimediaRoutes)
 app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
-app.use('/api/perfil/zonas', zonaRoutes)
+app.use('/api/perfil/zonas', zonaRoutes)  
+app.use("/api/favorites", favoritesRoutes)
 app.use('/api', router)
-app.use("/api/favorites", favoritesRoutes);
-app.use('/api/perfil/zonas', zonaRoutes);
+app.use('/api/parametros', parametrosRoutes)
+
 // --------------------
 // MOCK / TEST
 // --------------------
@@ -135,7 +135,6 @@ app.post('/api/users', (req, res) => {
   const user = req.body
   res.json({ message: 'User created', user })
 })
-app.use('/api/perfil/zonas', zonaRoutes)
 
 // --------------------
 // AUTH
@@ -148,7 +147,6 @@ app.get('/api/auth/me', getMeController)
 app.get('/api/auth/google/login', StratGoogleLoginController)
 app.get('/api/auth/google/register', StartGoogleRegisterController)
 app.get('/api/auth/google/callback', googleCallbackController)
-//comentario
 
 // --------------------
 // BANNERS & FILTERS
