@@ -123,10 +123,30 @@ export default function ZonasOverlay({ zonas, selectedZoneId, onZoneSelect }: Pr
                   },
                   // criterio 8: cursor pointer
                   mouseover: (e) => {
-                    const el = (e.target as L.Path).getElement()
+                     const layer = e.target as L.Path
+                     const el = layer.getElement()
+
                     if (el) (el as HTMLElement).style.cursor = 'pointer'
+
+                     if (!sel) {
+                      layer.setStyle({
+                        weight: 3,
+                        fillOpacity: 0.13
+                      })
+                    }
+                  },
+
+                  mouseout: (e) => {
+                    const layer = e.target as L.Path
+
+                    if (!sel) {
+                       layer.setStyle({
+                         weight: 2.2,
+                         fillOpacity: 0.07
+                       })
+                    }
                   }
-                }}
+               }}
               />
 
               {/* criterio 15: ocultar labels en zoom-out */}
