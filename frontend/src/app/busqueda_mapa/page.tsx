@@ -1,11 +1,12 @@
 'use client'
 
-import MisZonasSidebar from '@/components/map/MisZonasSidebar';
-import type { ZonaPersonalizada } from '@/components/map/MisZonasSidebar';
-import { useRouter } from 'next/navigation' // Debe ser 'next/navigation' y no 'next/router'
 import { point, polygon } from '@turf/helpers'
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon'
 import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from 'react'
+import { useSearchParams } from "next/navigation";
+import { useRouter } from 'next/navigation';
+import MisZonasSidebar from '@/components/map/MisZonasSidebar';
+import type { ZonaPersonalizada } from '@/components/map/MisZonasSidebar';
 import nextDynamic from 'next/dynamic'
 import {
   ChevronLeft,
@@ -29,6 +30,7 @@ import PriceFilterSidebar from '@/components/filters/PriceFilterSidebar'
 import PropertyCard from '@/components/layout/PropertyCard'
 import PropertyRow from '@/components/galeria/PropertyRow'
 import EmptyState from '@/components/galeria/EmptyState'
+import MapaListadoPaginacion, { PageSize } from "@/components/galeria/MapaListadoPaginacion";
 import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenamiento'
 import { ErrorState } from '@/components/ClusterSidebar'
 import SuperficieFilterSidebar from '@/components/filters/SuperficieFilterSidebar'
@@ -76,9 +78,12 @@ function useIsLandscapeMobile() {
 const SHEET_H = { peek: '50%', full: '100%' } as const
 type SheetState = 'hidden' | 'peek' | 'full'
 
+const LIST_PAGE_SIZES = [10, 20, 50, 100] as const;
+
 function BusquedaMapaContent() {
-  //Instanciamos el router para autenticar al usuario
-  const router = useRouter()
+  const searchParams = useSearchParams();
+  const filterResetKey = searchParams.toString();
+
   // === 1. ESTADOS COMPARTIDOS ===
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
@@ -127,7 +132,6 @@ function BusquedaMapaContent() {
   const { properties, isLoading, error } = useProperties()
   const { zonas } = useZonas()
   const [selectedZoneId, setSelectedZoneId] = useState<number | null>(null)
-  const [isFilteringZone, setIsFilteringZone] = useState(false)
 
   // === 3. LÓGICA MATEMÁTICA HU8 (Filtro por polígono) ===
   const displayedProperties = useMemo(() => {
@@ -147,26 +151,30 @@ function BusquedaMapaContent() {
         })
       } catch (err) {
         console.error('Error en validación geométrica:', err)
-        if (selectedZoneId !== null) {
-      const zonaSeleccionada = zonas.find((z) => z.id === selectedZoneId)
-      if (zonaSeleccionada && zonaSeleccionada.coordenadas.length >= 3) {
-        try {
-          const coords = [...zonaSeleccionada.coordenadas, zonaSeleccionada.coordenadas[0]].map((c) => [c[1], c[0]])
-          const zonaPoly = polygon([coords])
-          return properties.filter((p: any) => {
-            if (p.lat == null || p.lng == null) return false
-            return booleanPointInPolygon(point([p.lng, p.lat]), zonaPoly)
-          })
-        } catch (err) {
-          console.error("Error filtrando por zona:", err)
-        }
+        return properties
       }
     }
     return properties
-      }
-    }
-    return properties
-  }, [properties, isPolygonClosed, polygonPoints, selectedZoneId, zonas])
+  }, [properties, isPolygonClosed, polygonPoints])
+
+    const [listPage, setListPage] = useState(1);
+  const [listPageSize, setListPageSize] = useState<(PageSize)>(10);
+  const listTotal = properties.length;
+  const listTotalPages = Math.max(1, Math.ceil(listTotal / listPageSize));
+  const listSafePage = Math.min(Math.max(1, listPage), listTotalPages);
+  const paginatedProperties = useMemo(() => {
+    if (listTotal === 0) return [];
+    const start = (listSafePage - 1) * listPageSize;
+    return properties.slice(start, start + listPageSize);
+  }, [properties, listSafePage, listPageSize, listTotal]);
+
+    useEffect(() => {
+    setListPage(1);
+  }, [filterResetKey]);
+
+  useEffect(() => {
+    if (listPage > listTotalPages) setListPage(listTotalPages);
+  }, [listPage, listTotalPages]);
 
   // === 4. ORDENAMIENTO (Usando resultados filtrados) ===
   const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
@@ -295,7 +303,7 @@ function BusquedaMapaContent() {
               : ''
           }`}
         >
-          {(isClusterView ? clusterProperties : inmueblesOrdenados).map((property: any) => (
+          {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
             <div
               key={property.id}
               onClick={() => {
@@ -340,6 +348,20 @@ function BusquedaMapaContent() {
     </div>
   )
 
+    const renderListPaginationFooter = () => (
+    <MapaListadoPaginacion
+      total={listTotal}
+      page={listSafePage}
+      pageSize={listPageSize}
+      onPageChange={setListPage}
+      onPageSizeChange={(s) => {
+        setListPageSize(s);
+        setListPage(1);
+      }}
+      hint={listTotal === 0 && error ? `Error al cargar: ${error}` : null}
+    />
+  );
+
   // ────────────────────────────────────────────────────────────────────────────
   // RENDER LANDSCAPE MÓVIL
   // ────────────────────────────────────────────────────────────────────────────
@@ -361,7 +383,7 @@ function BusquedaMapaContent() {
                   selectedId={selectedPropertyId}
                   zonas={zonas}
                   selectedZoneId={selectedZoneId}
-                  onZoneSelect={(id) => { setIsFilteringZone(true); setSelectedZoneId(id); setTimeout(() => setIsFilteringZone(false), 500); }}
+                  onZoneSelect={setSelectedZoneId}
                   onSelect={handleMapSelect}
                   isLoading={isLoading}
                   error={error}
@@ -392,7 +414,10 @@ function BusquedaMapaContent() {
                 </span>
                 {MenuToggleComponent}
               </div>
-              <PropertyListMobile onClickItem={(p) => setPinnedProperty(p)} />
+              <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+                <PropertyListMobile onClickItem={(p) => setPinnedProperty(p)} />
+                {renderListPaginationFooter()}
+              </div>
             </div>
           </div>
         </div>
@@ -421,7 +446,7 @@ function BusquedaMapaContent() {
               selectedId={selectedPropertyId}
               zonas={zonas}
               selectedZoneId={selectedZoneId}
-              onZoneSelect={(id) => { setIsFilteringZone(true); setSelectedZoneId(id); setTimeout(() => setIsFilteringZone(false), 500); }}
+              onZoneSelect={setSelectedZoneId}
               onSelect={handleMapSelect}
               isLoading={isLoading}
               error={error}
@@ -571,13 +596,18 @@ function BusquedaMapaContent() {
                     onOrdenChange={cambiarOrden}
                   />
                 </div>
-                <div className="px-4 py-2 flex justify-end shrink-0">{MenuToggleComponent}</div>
+                <div className="px-4 py-2 flex justify-end shrink-0">
+                  {MenuToggleComponent}
+                </div>
+                <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
                 <PropertyListMobile
                   onClickItem={(p) => {
                     setPinnedProperty(p)
                     setSheetState('peek')
                   }}
                 />
+                {renderListPaginationFooter()}
+                </div>
               </div>
             </div>
           )}
@@ -706,21 +736,17 @@ function BusquedaMapaContent() {
               
 
               {/* Lista de propiedades */}
-              <div
-                className="flex-1 min-h-0 overflow-y-auto p-4 bg-stone-50 no-scrollbar"
-                onMouseEnter={() => setIsHoveringList(true)}
-                onMouseLeave={() => {
-                  setIsHoveringList(false)
-                  setSelectedPropertyId(null)
-                  setHoveredId(null)
-                }}
-              >
-                {isFilteringZone ? (
-                  <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
-                    <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
-                    Filtrando por zona...
-                  </div>
-                ) : isLoading ? (
+              <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+                <div
+                  className="flex-1 min-h-0 overflow-y-auto p-4 bg-stone-50 no-scrollbar"
+                  onMouseEnter={() => setIsHoveringList(true)}
+                  onMouseLeave={() => {
+                    setIsHoveringList(false)
+                    setSelectedPropertyId(null)
+                    setHoveredId(null)
+                  }}
+                >
+                {isLoading ? (
                   <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
                     <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
                     Actualizando resultados...
@@ -735,8 +761,7 @@ function BusquedaMapaContent() {
                         : ''
                     }`}
                   >
-                    {(isClusterView ? clusterProperties : inmueblesOrdenados).map(
-                      (property: any) => (
+                    {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
                         <div
                           key={property.id}
                           onMouseEnter={() => setHoveredId(property.id)}
@@ -793,6 +818,8 @@ function BusquedaMapaContent() {
                   </div>
                 )}
               </div>
+              {renderListPaginationFooter()}
+              </div>
             </div>
             )  
           : isSidebarOpen && activeSidebarView === 'superficie' ? (
@@ -821,13 +848,15 @@ function BusquedaMapaContent() {
             {!isDrawingMode && !isPolygonClosed && (
               <div className="flex flex-row gap-2 pointer-events-auto">
                 <button
-                  onClick={handleIntentarDibujarZona} // <-- Este es el que evalúa si dibujas o te logueas
+                  onClick={() => setIsDrawingMode(true)}
                   className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
                 >
                   Dibujar zona
                 </button>
                 <button
-                  onClick={() => setIsMisZonasOpen(true)} // <-- Este solo abre la barra lateral
+                  onClick={() => {
+                    console.log('Próximamente: Abrir barra lateral de Mis Zonas')
+                  }}
                   className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
                 >
                   Mis zonas
@@ -872,7 +901,7 @@ function BusquedaMapaContent() {
               error={error}
               zonas={zonas}
               selectedZoneId={selectedZoneId}
-              onZoneSelect={(id) => { setIsFilteringZone(true); setSelectedZoneId(id); setTimeout(() => setIsFilteringZone(false), 500); }}
+              onZoneSelect={setSelectedZoneId}
               isDrawingMode={isDrawingMode}
               polygonPoints={polygonPoints}
               isPolygonClosed={isPolygonClosed}
@@ -889,23 +918,6 @@ function BusquedaMapaContent() {
               }}
             />
           </div>
-          {/* --- INICIO SIDEBAR MIS ZONAS HU9 --- */}
-          <MisZonasSidebar 
-            isOpen={isMisZonasOpen}
-            onClose={() => setIsMisZonasOpen(false)}
-            isAuthenticated={isAuthenticated}
-            zonas={misZonasGuardadas}
-            currentUserId={isAuthenticated ? 1 : undefined}
-            onAddZone={handleIntentarDibujarZona}
-            onEditZone={(id) => {
-              console.log('Lógica para editar la zona', id)
-            }}
-            onDeleteZone={(id) => {
-               setMisZonasGuardadas(prev => prev.filter(z => z.id !== id))
-               setSelectedZoneId(null)
-            }}
-          />
-          {/* --- FIN SIDEBAR MIS ZONAS HU9 --- */}
         </section>
       </main>
     </div>
