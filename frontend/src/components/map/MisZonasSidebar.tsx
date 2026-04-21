@@ -4,6 +4,7 @@ import { ChevronRight, Plus, Pencil, Trash2, Map as MapIcon } from 'lucide-react
 
 export interface ZonaPersonalizada {
   id: string
+  usuarioId?: number
   nombre: string
 }
 
