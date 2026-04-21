@@ -1,5 +1,4 @@
 import { Publicacion } from "@prisma/client";
-// ¡Ruta corregida! Apuntando al archivo db.ts de tu equipo
 import { prisma } from "../../lib/prisma.client.js";
 
 export const publicacionesRepository = {
@@ -8,7 +7,6 @@ export const publicacionesRepository = {
   },
 
   async findGratis(): Promise<Publicacion[]> {
-    // Ajusta el campo según tu schema.prisma (ejemplo: costo en vez de precio)
     return prisma.publicacion.findMany({
       where: { inmueble: { precio: 0 } },
     });
@@ -18,10 +16,7 @@ export const publicacionesRepository = {
     return prisma.publicacion.count({ where: { usuarioId: userId } });
   },
 
-  async create(
-    userId: number,
-    data: Omit<Publicacion, "id" | "usuarioId">,
-  ): Promise<Publicacion> {
+  async create(userId: number, data: Omit<Publicacion, "id" | "usuarioId">): Promise<Publicacion> {
     return prisma.publicacion.create({
       data: {
         ...data,

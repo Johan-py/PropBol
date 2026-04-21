@@ -10,28 +10,18 @@ export const publicacionesService = {
     return publicacionesRepository.findGratis();
   },
 
-  async crear(
-    userId: number,
-    data: Partial<Publicacion>,
-  ): Promise<Publicacion> {
+  async crear(userId: number, data: Partial<Publicacion>): Promise<Publicacion> {
     const count = await publicacionesRepository.countByUser(userId);
-
-    console.log("📊 Publicaciones del usuario:", count);
 
     if (count >= 2) {
       throw new Error("LIMIT_REACHED");
     }
 
-    return publicacionesRepository.create(
-      userId,
-      data as Omit<Publicacion, "id" | "usuarioId">,
-    );
+    return publicacionesRepository.create(userId, data as Omit<Publicacion, "id" | "usuarioId">);
   },
 
   async validarFlujo(userId: number): Promise<string> {
     const count = await publicacionesRepository.countByUser(userId);
-
-    console.log("🔍 Validando flujo, publicaciones:", count);
 
     if (count >= 2) {
       throw new Error("LIMIT_REACHED");
