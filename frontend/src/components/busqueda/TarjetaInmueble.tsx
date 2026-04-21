@@ -1,31 +1,51 @@
-"use client";
-import { Inmueble } from "../../types/inmueble";
-import { BedDouble, Bath, Maximize, MapPin, Star } from "lucide-react";
-import Image from "next/image";
-import { useState } from "react";
+'use client'
+import { Inmueble } from '../../types/inmueble'
+import { BedDouble, Bath, Maximize, MapPin, Star } from 'lucide-react'
+import Image from 'next/image'
+import { useState } from 'react'
 
 interface TarjetaInmuebleProps {
-  inmueble: Inmueble;
+  inmueble: Inmueble
+  posicion?: number
 }
 
-export const TarjetaInmueble = ({ inmueble }: TarjetaInmuebleProps) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const formatoMoneda = new Intl.NumberFormat("es-BO", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  });
+export const TarjetaInmueble = ({ inmueble, posicion }: TarjetaInmuebleProps) => {
+  const [isHovered, setIsHovered] = useState(false)
+  const formatoMoneda = new Intl.NumberFormat('es-BO', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0
+  })
 
   const ubicacionTexto =
-    typeof inmueble.ubicacion === "object" && inmueble.ubicacion !== null
-      ? `${inmueble.ubicacion.zona ?? ""}, ${inmueble.ubicacion.ciudad ?? ""}`
-      : "";
-
+    typeof inmueble.ubicacion === 'object' && inmueble.ubicacion !== null
+      ? `${inmueble.ubicacion.zona ?? ''}, ${inmueble.ubicacion.ciudad ?? ''}`
+      : ''
+  const handleClick = async () => {
+    try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+      await fetch('/api/telemetria/click', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({
+          inmuebleId: inmueble.id,
+          posicionLista: posicion,
+          timestamp: new Date().toISOString()
+        })
+      })
+    } catch (error) {
+      console.error('Error tracking click:', error)
+    }
+  }
   return (
-    <div 
+    <div
       className="group flex flex-col w-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300 cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={handleClick}
     >
       <div className="relative aspect-[4/3] w-full bg-gray-200 overflow-hidden">
         <Image
@@ -48,9 +68,9 @@ export const TarjetaInmueble = ({ inmueble }: TarjetaInmuebleProps) => {
           <h3 className="font-semibold text-lg text-gray-900 leading-tight line-clamp-1">
             {inmueble.titulo}
           </h3>
-          <span 
+          <span
             className={`whitespace-nowrap ml-2 font-bold transition-all duration-300 ${
-              isHovered ? "text-base text-[#ea580c]" : "text-xs text-gray-900"
+              isHovered ? 'text-base text-[#ea580c]' : 'text-xs text-gray-900'
             }`}
           >
             {formatoMoneda.format(Number(inmueble.precio))}
@@ -65,18 +85,18 @@ export const TarjetaInmueble = ({ inmueble }: TarjetaInmuebleProps) => {
         <div className="mt-auto border-t border-gray-100 pt-3 flex items-center justify-between text-gray-600 text-sm font-medium">
           <div className="flex items-center gap-1.5" title="Habitaciones">
             <BedDouble className="w-4 h-4 text-blue-500" />
-            <span>{inmueble.nroCuartos ?? "-"}</span>
+            <span>{inmueble.nroCuartos ?? '-'}</span>
           </div>
           <div className="flex items-center gap-1.5" title="Baños">
             <Bath className="w-4 h-4 text-orange-500" />
-            <span>{inmueble.nroBanos ?? "-"}</span>
+            <span>{inmueble.nroBanos ?? '-'}</span>
           </div>
           <div className="flex items-center gap-1.5" title="Superficie total">
             <Maximize className="w-4 h-4 text-blue-500" />
-            <span>{inmueble.superficieM2 ?? "-"} m²</span>
+            <span>{inmueble.superficieM2 ?? '-'} m²</span>
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
