@@ -56,6 +56,15 @@ function PasswordField({
   );
 }
 
+function LoadingGuardado() {
+  return (
+    <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-xl bg-neutral-900 px-4 py-3 text-sm font-medium text-white shadow-lg">
+      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+      Guardando cambios...
+    </div>
+  );
+}
+
 export default function PasswordSection() {
   const [passwordActual, setPasswordActual] = useState("");
   const [nuevaPassword, setNuevaPassword] = useState("");
@@ -276,13 +285,15 @@ export default function PasswordSection() {
             }`}
           >
             {isLoading
-              ? "Verificando..."
+              ? "Guardando..."
               : bloqueado
               ? "Bloqueado"
               : "Cambiar contraseña"}
           </button>
         </form>
       </div>
+
+      {isLoading && <LoadingGuardado />}
     </div>
   );
 }
