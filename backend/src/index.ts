@@ -13,6 +13,8 @@ import {
   createNotificationController,
   deleteNotificationController,
   getNotificationsController,
+  getNotificationByIdController,
+  archiveNotificationController,
   getUnreadCountController,
   markAllNotificationsAsReadController,
   markNotificationAsReadController
@@ -70,7 +72,7 @@ import { verifyEmailTransport } from './lib/email.service.js'
 
 // FAVORITES
 
-import favoritesRoutes from './modules/favorites/favorites.routes.js'
+import favoritesRoutes from "./modules/favorites/favorites.routes.js";
 // --------------------
 // SERVER
 // --------------------
@@ -126,9 +128,8 @@ app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
 app.use('/api/perfil/zonas', zonaRoutes)
 app.use('/api', router)
-app.use('/api', parametrosRoutes)
-app.use('/api/security', securityRoutes)
-app.use('/api/favorites', favoritesRoutes)
+app.use("/api/favorites", favoritesRoutes);
+app.use('/api/perfil/zonas', zonaRoutes);
 // --------------------
 // MOCK / TEST
 // --------------------
@@ -191,9 +192,11 @@ app.get('/api/properties/inmuebles', propertiesController.getAll)
 app.post('/notificaciones', requireAuth, createNotificationController)
 app.get('/notificaciones', requireAuth, getNotificationsController)
 app.get('/notificaciones/unread-count', requireAuth, getUnreadCountController)
+app.get('/notificaciones/:id', requireAuth, getNotificationByIdController)
 app.patch('/notificaciones/:id/read', requireAuth, markNotificationAsReadController)
 app.patch('/notificaciones/read-all', requireAuth, markAllNotificationsAsReadController)
 app.delete('/notificaciones/:id', requireAuth, deleteNotificationController)
+app.patch('/notificaciones/:id/archivar', requireAuth, archiveNotificationController)
 
 // --------------------
 // PUBLICACIONES MOCK
