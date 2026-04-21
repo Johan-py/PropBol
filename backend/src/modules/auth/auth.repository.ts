@@ -94,6 +94,7 @@ export const findUser = async (correo: string) => {
       nombre: true,
       apellido: true,
       activo: true,
+      two_factor_activo: true,
     },
   });
 };
@@ -163,7 +164,7 @@ export const desactiveSessionByToken = async (token: string) => {
   });
 };
 export const invalidateActive2FACodesByUserId = async (usuarioId: number) => {
-  return await prisma.codigo_2fa.updateMany({
+  return await prisma.codigo2FA.updateMany({
     where: {
       usuarioId,
       activo: true,
@@ -184,7 +185,7 @@ export const create2FACode = async ({
   codigoHash: string;
   expiraEn: Date;
 }) => {
-  return await prisma.codigo_2fa.create({
+  return await prisma.codigo2FA.create({
     data: {
       usuarioId,
       codigoHash,
@@ -231,7 +232,7 @@ export const createPasswordRecovery = async ({
 };
 
 export const findActive2FACodeByUserId = async (usuarioId: number) => {
-  return await prisma.codigo_2fa.findFirst({
+  return await prisma.codigo2FA.findFirst({
     where: {
       usuarioId,
       activo: true,
@@ -244,7 +245,7 @@ export const findActive2FACodeByUserId = async (usuarioId: number) => {
 };
 
 export const mark2FACodeAsUsed = async (id: number) => {
-  return await prisma.codigo_2fa.update({
+  return await prisma.codigo2FA.update({
     where: { id },
     data: {
       usadoEn: new Date(),
@@ -257,7 +258,7 @@ export const increment2FACodeAttempts = async (
   id: number,
   intentosActuales: number,
 ) => {
-  return await prisma.codigo_2fa.update({
+  return await prisma.codigo2FA.update({
     where: { id },
     data: {
       intentos: intentosActuales + 1,
@@ -266,7 +267,7 @@ export const increment2FACodeAttempts = async (
 };
 
 export const expire2FACode = async (id: number) => {
-  return await prisma.codigo_2fa.update({
+  return await prisma.codigo2FA.update({
     where: { id },
     data: {
       activo: false,
@@ -278,7 +279,7 @@ export const activate2FAByUserId = async (userId: number) => {
   return await prisma.usuario.update({
     where: { id: userId },
     data: {
-      twoFactorActivo: true,
+      two_factor_activo: true,
       twoFactorActivadoEn: new Date(),
       twoFactorMetodo: "email",
     },
