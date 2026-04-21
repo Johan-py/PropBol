@@ -800,7 +800,18 @@ export default function Navbar() {
 
               <Link
 <<<<<<< HEAD
+<<<<<<< HEAD
                 id="tour-planes-mobile"
+=======
+                href="/propiedades"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+              >
+                Blogs
+              </Link>
+
+              <Link
+>>>>>>> d00542e1 (fix: Eliminar el atributo href duplicado en el componente Navbar)
                 href="/cobros-suscripciones"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
