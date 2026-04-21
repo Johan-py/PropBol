@@ -926,8 +926,9 @@ function BusquedaMapaContent() {
           isAuthenticated={isAuthenticated} // Mapeado al estado que acabamos de crear
           zonas={[]} 
           onAddZone={() => {
-            setIsMisZonasOpen(false);
+            setIsMisZonasOpen(true);
             setIsDrawingMode(true);
+            setIsSidebarOpen(false);
           }}
           onEditZone={(id) => console.log('Editar zona:', id)}
           onDeleteZone={(id) => console.log('Eliminar zona:', id)}
