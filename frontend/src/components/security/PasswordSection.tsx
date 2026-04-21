@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
 import { Eye, EyeOff, LockKeyhole } from "lucide-react";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 
@@ -65,118 +65,160 @@ export default function PasswordSection() {
   const [success, setSuccess] = useState("");
   const [intentosFallidos, setIntentosFallidos] = useState(0);
   const [bloqueadoHasta, setBloqueadoHasta] = useState<number | null>(null);
-  const bloqueado = bloqueadoHasta !== null && Date.now() < bloqueadoHasta;
 
+  const usuarioGuardado =
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("propbol_user") || "{}")
+      : {};
+
+  const usuarioKey =
+    usuarioGuardado?.email || usuarioGuardado?.correo || "anonimo";
+
+  const claveIntentos = useMemo(
+    () => `cambio_password_intentos_${usuarioKey}`,
+    [usuarioKey]
+  );
+
+  const claveBloqueo = useMemo(
+    () => `cambio_password_bloqueado_hasta_${usuarioKey}`,
+    [usuarioKey]
+  );
+
+  const bloqueado =
+    bloqueadoHasta !== null && Date.now() < Number(bloqueadoHasta);
 
   useEffect(() => {
-  const intentosGuardados = localStorage.getItem("cambio_password_intentos");
-  const bloqueoGuardado = localStorage.getItem("cambio_password_bloqueado_hasta");
+    if (typeof window === "undefined") return;
 
-  if (intentosGuardados) {
-    setIntentosFallidos(Number(intentosGuardados));
-  }
+    const intentosGuardados = localStorage.getItem(claveIntentos);
+    const bloqueoGuardado = localStorage.getItem(claveBloqueo);
 
-  if (bloqueoGuardado) {
-    const tiempoBloqueo = Number(bloqueoGuardado);
-
-    if (Date.now() < tiempoBloqueo) {
-      setBloqueadoHasta(tiempoBloqueo);
+    if (intentosGuardados) {
+      setIntentosFallidos(Number(intentosGuardados));
     } else {
-      localStorage.removeItem("cambio_password_intentos");
-      localStorage.removeItem("cambio_password_bloqueado_hasta");
+      setIntentosFallidos(0);
     }
-  }
-}, []);
+
+    if (bloqueoGuardado) {
+      const tiempoBloqueo = Number(bloqueoGuardado);
+
+      if (Date.now() < tiempoBloqueo) {
+        setBloqueadoHasta(tiempoBloqueo);
+      } else {
+        localStorage.removeItem(claveIntentos);
+        localStorage.removeItem(claveBloqueo);
+        setBloqueadoHasta(null);
+        setIntentosFallidos(0);
+      }
+    } else {
+      setBloqueadoHasta(null);
+    }
+  }, [claveIntentos, claveBloqueo]);
+
+  useEffect(() => {
+    if (!bloqueadoHasta) return;
+
+    const intervalo = setInterval(() => {
+      if (Date.now() >= bloqueadoHasta) {
+        setBloqueadoHasta(null);
+        setIntentosFallidos(0);
+        localStorage.removeItem(claveIntentos);
+        localStorage.removeItem(claveBloqueo);
+        clearInterval(intervalo);
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalo);
+  }, [bloqueadoHasta, claveIntentos, claveBloqueo]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setError("");
-  setSuccess("");
-
-  if (bloqueado) {
-    setError("Has superado los 5 intentos fallidos. Intenta más tarde");
-    return;
-  }
-
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    setError("No hay sesión activa");
-    return;
-  }
-
-  if (!passwordActual.trim() || !nuevaPassword.trim() || !confirmarPassword.trim()) {
+    e.preventDefault();
+    setError("");
     setSuccess("");
-    setError("Todos los campos son obligatorios");
-    return;
-  }
 
-  if (nuevaPassword.trim().length < 8) {
-    setSuccess("");
-    setError("La nueva contraseña debe tener al menos 8 caracteres");
-    return;
-  }
-
-  if (passwordActual.trim() === nuevaPassword.trim()) {
-    setSuccess("");
-    setError("La nueva contraseña no puede ser igual a la actual");
-    return;
-  }
-
-  if (nuevaPassword.trim() !== confirmarPassword.trim()) {
-    setSuccess("");
-    setError("Las contraseñas no coinciden");
-    return;
-  }
-
-  setIsLoading(true);
-
-  try {
-    const response = await fetch(`${API_URL}/api/perfil/cambiar-password`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        passwordActual: passwordActual.trim(),
-        nuevaPassword: nuevaPassword.trim(),
-      }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok || !data.ok) {
-      const nuevosIntentos = 0 + 1;
-      setIntentosFallidos(nuevosIntentos);
-      localStorage.setItem("cambio_password_intentos", String(nuevosIntentos));
-
-      if (nuevosIntentos >= 5) {
-        const tiempoBloqueo = Date.now() + 5 * 60 * 1000;
-        setBloqueadoHasta(tiempoBloqueo);
-        localStorage.setItem("cambio_password_bloqueado_hasta", String(tiempoBloqueo));
-        throw new Error("Has superado los 5 intentos fallidos. Intenta más tarde");
-      }
-
-      throw new Error(
-        data.msg || `Contraseña incorrecta. Intento ${nuevosIntentos} de 5`
-      );
+    if (bloqueado) {
+      setError("Has superado los 5 intentos fallidos. Intenta más tarde.");
+      return;
     }
 
-    setIntentosFallidos(0);
-    setBloqueadoHasta(null);
-    localStorage.removeItem("cambio_password_intentos");
-    localStorage.removeItem("cambio_password_bloqueado_hasta");
-    setSuccess("Contraseña actualizada correctamente");
-    setPasswordActual("");
-    setNuevaPassword("");
-    setConfirmarPassword("");
-  } catch (error: any) {
-    setError(error.message || "Error al actualizar la contraseña");
-  } finally {
-    setIsLoading(false);
-  }
-};
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setError("No hay sesión activa");
+      return;
+    }
+
+    if (
+      !passwordActual.trim() ||
+      !nuevaPassword.trim() ||
+      !confirmarPassword.trim()
+    ) {
+      setError("Todos los campos son obligatorios");
+      return;
+    }
+
+    if (nuevaPassword.trim().length < 8) {
+      setError("La nueva contraseña debe tener al menos 8 caracteres");
+      return;
+    }
+
+    if (passwordActual.trim() === nuevaPassword.trim()) {
+      setError("La nueva contraseña no puede ser igual a la actual");
+      return;
+    }
+
+    if (nuevaPassword.trim() !== confirmarPassword.trim()) {
+      setError("Las contraseñas no coinciden");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`${API_URL}/api/perfil/cambiar-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          passwordActual: passwordActual.trim(),
+          nuevaPassword: nuevaPassword.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.ok) {
+        if (typeof data.intentosFallidos === "number") {
+          setIntentosFallidos(data.intentosFallidos);
+          localStorage.setItem(claveIntentos, String(data.intentosFallidos));
+        }
+
+        if (data.bloqueado && data.bloqueoHasta) {
+          const tiempoBloqueo = new Date(data.bloqueoHasta).getTime();
+          setBloqueadoHasta(tiempoBloqueo);
+          localStorage.setItem(claveBloqueo, String(tiempoBloqueo));
+        }
+
+        throw new Error(data.msg || "Error al actualizar la contraseña");
+      }
+
+      setIntentosFallidos(0);
+      setBloqueadoHasta(null);
+      localStorage.removeItem(claveIntentos);
+      localStorage.removeItem(claveBloqueo);
+
+      setSuccess("Contraseña actualizada correctamente");
+      setPasswordActual("");
+      setNuevaPassword("");
+      setConfirmarPassword("");
+    } catch (error: any) {
+      setError(error.message || "Error al actualizar la contraseña");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -214,6 +256,12 @@ export default function PasswordSection() {
 
           {error && <p className="text-sm font-medium text-red-600">{error}</p>}
 
+          {!error && intentosFallidos > 0 && !bloqueado && (
+            <p className="text-sm font-medium text-amber-600">
+              Intentos fallidos: {intentosFallidos} de 5
+            </p>
+          )}
+
           {success && (
             <p className="text-sm font-medium text-green-600">{success}</p>
           )}
@@ -221,9 +269,17 @@ export default function PasswordSection() {
           <button
             type="submit"
             disabled={isLoading || bloqueado}
-            className="mt-2 inline-flex w-full items-center justify-center rounded-lg bg-orange-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-70"
->
-            {isLoading ? "Verificando..." : bloqueado ? "Bloqueado" : "Cambiar contraseña"}
+            className={`mt-2 inline-flex w-full items-center justify-center rounded-lg px-5 py-3 text-sm font-semibold text-white transition ${
+              isLoading || bloqueado
+                ? "cursor-not-allowed bg-orange-300"
+                : "bg-orange-500 hover:bg-orange-600"
+            }`}
+          >
+            {isLoading
+              ? "Verificando..."
+              : bloqueado
+              ? "Bloqueado"
+              : "Cambiar contraseña"}
           </button>
         </form>
       </div>
