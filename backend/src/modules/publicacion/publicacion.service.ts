@@ -26,6 +26,7 @@ type ResumenFinalRepositoryResult = NonNullable<
 >;
 
 type ParametroPersonalizadoDb =
+
   ResumenFinalRepositoryResult["inmueble"] extends {
     inmueble_etiqueta: Array<infer T>;
   }
