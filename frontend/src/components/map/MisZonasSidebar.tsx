@@ -4,6 +4,7 @@ import { ChevronRight, Plus, Pencil, Trash2, Check, X, Map as MapIcon } from 'lu
 
 export interface ZonaPersonalizada {
   id: string
+  usuarioId?: number
   nombre: string
 }
 
@@ -27,7 +28,8 @@ interface MisZonasSidebarProps {
   onAddZone: () => void
   onEditZone: (id: string) => void
   onDeleteZone: (id: string) => void
-  onZoneSelect?: (id: string) => void
+  currentUserId?: number
+  onZoneSelect?: (id: number) => void
 }
 
 // Asegúrate de que tenga "export default function"
@@ -51,7 +53,8 @@ export default function MisZonasSidebar({
   onAddZone,
   onEditZone,
   onZoneSelect,
-  onDeleteZone
+  onDeleteZone,
+  currentUserId,
 }: MisZonasSidebarProps) {
   return (
     <>
