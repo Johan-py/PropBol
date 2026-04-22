@@ -4,6 +4,7 @@ import {
   listarMisPublicacionesService,
   editarPublicacionService,
   obtenerResumenFinalService,
+  obtenerDetallePublicacionService,
 } from "./publicacion.service.js";
 
 interface AuthRequest extends Request {
@@ -105,6 +106,45 @@ export const obtenerResumenFinalController = async (
     return res.status(500).json({
       ok: false,
       message: "No se pudo obtener el resumen final de la publicación",
+    });
+  }
+};
+
+export const obtenerDetallePublicacionController = async (
+  req: Request,
+  res: Response,
+) => {
+  const publicacionId = Number(req.params.id);
+
+  try {
+    const detalle = await obtenerDetallePublicacionService(publicacionId);
+
+    return res.status(200).json({
+      ok: true,
+      data: detalle,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      switch (error.message) {
+        case "ID_INVALIDO":
+          return res.status(400).json({
+            ok: false,
+            message: "El id de la publicación es inválido",
+          });
+
+        case "PUBLICACION_NO_EXISTE":
+          return res.status(404).json({
+            ok: false,
+            message: "La publicación no existe",
+          });
+      }
+    }
+
+    console.error("Error al obtener detalle de publicación:", error);
+
+    return res.status(500).json({
+      ok: false,
+      message: "No se pudo obtener el detalle de la propiedad",
     });
   }
 };
