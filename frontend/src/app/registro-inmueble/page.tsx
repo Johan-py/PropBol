@@ -3,6 +3,12 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import PlanModal from '../../components/ui/PlanModal'
+import dynamic from 'next/dynamic'
+
+const MapaPinSelector = dynamic(
+  () => import('@/components/MapaPinSelector'),
+  { ssr: false }
+)
 
 type CampoError =
   | 'titulo'
@@ -815,7 +821,15 @@ export default function MiRegistroPage() {
                   {datos.descripcion.length}/300 caracteres
                 </p>
               </div>
+              <div className="mt-6">
+                 <label className="block text-[15px] font-bold text-gray-900 mb-2">
+                    Ubicación en el mapa
+                    </label>
 
+                  <div className="rounded-2xl overflow-hidden border border-gray-200">
+                   <MapaPinSelector />
+                  </div>
+                 </div>
               <div className="mt-12 space-y-6">
                 <div className="flex justify-center md:justify-end gap-6">
                   <button
