@@ -8,7 +8,7 @@ export class LocationsService {
     if (!query || query.length < 2) return []
 
     // 1. Ejecutamos las 4 búsquedas en paralelo (Optimización de rendimiento)
-    const [deptos, provincias, municipios, zonas] = await Promise.all([
+    const [deptos, provincias, municipios, zonasGeograficas] = await Promise.all([
       (prisma as any).departamento.findMany({
         where: { nombre: { contains: query, mode: 'insensitive' } },
         include: { provincias: { take: 4 } },
@@ -24,7 +24,7 @@ export class LocationsService {
         include: { provincia: true, zonas: { take: 4 } },
         take: 1
       }),
-      (prisma as any).zona.findMany({
+      (prisma as any).zona_geografica.findMany({
         where: { nombre: { contains: query, mode: 'insensitive' } },
         include: { municipio: true, barrios: { take: 4 } },
         take: 2
@@ -41,7 +41,7 @@ export class LocationsService {
       })
     })
 
-    zonas.forEach((z: any) => {
+    zonasGeograficas.forEach((z: any) => {
       if (!sugerencias.find((s: any) => s.nivel === 'ZONA' && s.id === z.id)) {
         sugerencias.push({ id: z.id, nivel: 'ZONA', nombre: z.nombre, contexto: `Zona en ${z.municipio.nombre}` })
         z.barrios.forEach((b: any) => {
