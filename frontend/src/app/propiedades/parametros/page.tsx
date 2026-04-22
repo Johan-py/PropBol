@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import ExtrasPropiedad from "@/components/extras-propiedad/ExtrasPropiedad";
 
@@ -26,6 +26,14 @@ function getApiUrl() {
 }
 
 export default function Page() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#f5efe7] p-8">Cargando parámetros...</div>}>
+      <ParametrosPageContent />
+    </Suspense>
+  );
+}
+
+function ParametrosPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -122,6 +130,7 @@ export default function Page() {
     }
 
     const creado: ParametroBackend = data?.data;
+
     if (!creado?.id) {
       throw new Error(`No se recibió el ID del parámetro "${nombre}".`);
     }
