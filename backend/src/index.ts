@@ -82,6 +82,7 @@ import { verifyEmailTransport } from './lib/email.service.js'
 import favoritesRoutes from './modules/favorites/favorites.routes.js'
 import telemetriaRoutes from './modules/telemetria/telemetria.routes.js'
 import recomendacionesRoutes from './modules/recomendaciones/recomendaciones.routes.js'
+import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js';
 // --------------------
 // SERVER
 // --------------------
@@ -138,6 +139,7 @@ app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
 app.use('/api/perfil/zonas', zonaRoutes)
 app.use('/api/perfil/historial', historialRoutes)
+app.use('/api/perfil/historial-busqueda', historialBusquedaRoutes)
 app.use('/api', router)
 app.use('/api', parametrosRoutes)
 app.use('/api/security', securityRoutes)
