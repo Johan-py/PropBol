@@ -33,5 +33,17 @@ export const blogsRepository = {
     ])
 
     return { data, total, page, limit, totalPages: Math.ceil(total / limit) }
-  }
+  },
+  // Mis blogs (todos los estados del autor)
+  async findByUserId(usuario_id: number) {
+    return prisma.blog.findMany({
+      where: { usuario_id, eliminado: false },
+      orderBy: { fecha_creacion: "desc" },
+      include: {
+        categoria_blog: { select: { id: true, nombre: true } },
+        blog_rechazo: { orderBy: { fecha: "desc" }, take: 1 },
+        _count: { select: { comentario: true } },
+      },
+    });
+  },
 }
