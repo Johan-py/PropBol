@@ -115,6 +115,55 @@ export const blogsRepository = {
     })
 
     return blog
+  },
+  // Eliminar blog (Soft delete)
+  async delete(id: number) {
+    return prisma.blog.update({
+      where: { id },
+      data: { eliminado: true }
+    })
+  },
+  // Listar todos los blogs para administración
+  async findAllAdmin(params: {
+    estado?: estado_blog
+    categoria_id?: number
+    page?: number
+    limit?: number
+  }) {
+    const { estado, categoria_id, page = 1, limit = 10 } = params
+    const skip = (page - 1) * limit
+
+    const where = {
+      eliminado: false,
+      ...(estado ? { estado } : {}),
+      ...(categoria_id ? { categoria_id } : {})
+    }
+
+    const [data, total] = await prisma.$transaction([
+      prisma.blog.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { fecha_creacion: 'desc' },
+        include: {
+          usuario: {
+            select: { id: true, nombre: true, apellido: true, avatar: true }
+          },
+          categoria_blog: { select: { id: true, nombre: true } },
+          blog_rechazo: { orderBy: { fecha: 'desc' }, take: 1 },
+          _count: { select: { comentario: true } }
+        }
+      }),
+      prisma.blog.count({ where })
+    ])
+
+    return { data, total, page, limit, totalPages: Math.ceil(total / limit) }
+  },
+  // Listar categorías de blogs
+  async findAllCategories() {
+    return prisma.categoria_blog.findMany({
+      orderBy: { nombre: 'asc' }
+    })
   }
 }
 
