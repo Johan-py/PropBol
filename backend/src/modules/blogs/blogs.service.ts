@@ -80,3 +80,29 @@ export const blogsService = {
     return blogsRepository.changeEstado(id, estado as estado_blog, razon_rechazo)
   }
 }
+// COMENTARIOS SERVICE
+export const comentariosService = {
+  async crear(data: {
+    contenido: string
+    usuario_id: number
+    blog_id: number
+    comentario_padre_id?: number
+  }) {
+    return comentariosRepository.create(data)
+  },
+
+  async listarPorBlog(blog_id: number) {
+    return comentariosRepository.findByBlogId(blog_id)
+  },
+
+  async toggleLike(usuario_id: number, comentario_id: number) {
+    return comentariosRepository.toggleLike(usuario_id, comentario_id)
+  },
+
+  async eliminar(id: number, usuario_id: number) {
+    const comentario = await comentariosRepository.findById(id)
+    if (!comentario) throw new Error('COMENTARIO_NOT_FOUND')
+    if (comentario.usuario_id !== usuario_id) throw new Error('FORBIDDEN')
+    return comentariosRepository.delete(id)
+  }
+}
