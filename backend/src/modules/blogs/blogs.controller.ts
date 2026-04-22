@@ -183,6 +183,46 @@ export const listarComentarios = async (req: Request, res: Response) => {
   }
 };
 
+/** POST /api/comentarios/:id/like */
+export const toggleLikeComentario = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user)
+      return res.status(401).json({ message: "NOT_AUTHENTICATED" });
+
+    const comentario_id = Number(req.params.id);
+    const result = await comentariosService.toggleLike(
+      req.user.id,
+      comentario_id,
+    );
+
+    return res.json(result);
+  } catch (error: unknown) {
+    return handleError(res, error);
+  }
+};
+
+/** DELETE /api/comentarios/:id */
+export const eliminarComentario = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user)
+      return res.status(401).json({ message: "NOT_AUTHENTICATED" });
+
+    const id = Number(req.params.id);
+    await comentariosService.eliminar(id, req.user.id);
+
+    return res.status(204).send();
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      if (error.message === "COMENTARIO_NOT_FOUND")
+        return res.status(404).json({ message: "Comentario no encontrado" });
+      if (error.message === "FORBIDDEN")
+        return res
+          .status(403)
+          .json({ message: "No tienes permiso para eliminar este comentario" });
+    }
+    return handleError(res, error);
+  }
+};
 // ──────────────────────────────────────────
 // HELPER
 // ──────────────────────────────────────────
