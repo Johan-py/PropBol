@@ -84,6 +84,17 @@ export const blogsService = {
     if (!blog) throw new Error('BLOG_NOT_FOUND')
     if (blog.usuario_id !== usuario_id) throw new Error('FORBIDDEN')
     return blogsRepository.delete(id)
+  },
+  async listarAdmin(params: {
+    estado?: estado_blog
+    categoria_id?: number
+    page?: number
+    limit?: number
+  }) {
+    return blogsRepository.findAllAdmin(params)
+  },
+  async listarCategorias() {
+    return blogsRepository.findAllCategories()
   }
 }
 // COMENTARIOS SERVICE
