@@ -7,8 +7,12 @@ import { useRouter } from "next/navigation";
 export default function MisPublicacionesPage() {
   const router = useRouter();
 
-  const { publicaciones, loading, error, removerPublicacionDeLista } =
-    useMisPublicaciones();
+  const {
+    publicaciones,
+    loading,
+    error,
+    removerPublicacionDeLista,
+  } = useMisPublicaciones();
 
   // Filtrar publicaciones activas
   const publicacionesActivas = publicaciones.filter(
@@ -44,7 +48,6 @@ export default function MisPublicacionesPage() {
       {/* PANEL SUPERIOR */}
       <div className="mb-8 flex flex-col gap-4 rounded-xl border bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         
-        {/* INFO PLAN */}
         <div>
           <p className="text-sm text-gray-500">Mi Plan actual:</p>
           <p className="font-semibold text-black">
@@ -59,7 +62,6 @@ export default function MisPublicacionesPage() {
           </p>
         </div>
 
-        {/* BOTÓN CREAR */}
         <div className="text-right">
           <button
             disabled={!puedePublicarGratis}
@@ -102,4 +104,3 @@ export default function MisPublicacionesPage() {
     </div>
   );
 }
-

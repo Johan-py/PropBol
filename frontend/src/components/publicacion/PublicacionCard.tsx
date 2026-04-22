@@ -2,7 +2,6 @@
 
 import { Bath, BedDouble, MapPin, Square } from 'lucide-react'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 
 import { useDeletePublicacion } from '@/hooks/useDeletePublicacion'
 import type { MisPublicacionesItem } from '@/types/publicacion'
@@ -17,8 +16,6 @@ interface Props {
 }
 
 export default function PublicacionCard({ publicacion, onDeleted }: Props) {
-  const router = useRouter()
-
   const {
     modalConfirmacionAbierto,
     modalExitoAbierto,
@@ -32,10 +29,10 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
     confirmarEliminacion
   } = useDeletePublicacion(publicacion.id, () => onDeleted(publicacion.id))
 
-  const [activa, setActiva] = useState(publicacion.estado === "ACTIVA")
+  const [activa, setActiva] = useState(publicacion.estado === 'ACTIVA')
 
   const toggleEstado = () => {
-    setActiva((prev: boolean) => !prev)
+    setActiva((prev) => !prev)
   }
 
   const precioFormateado = `$${publicacion.precio.toLocaleString()}`
@@ -47,6 +44,7 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
     <>
       <div className="overflow-hidden rounded-2xl border border-[#e6ddd1] bg-[#F9F6EE] shadow-sm transition-shadow hover:shadow-md">
 
+        {/* IMAGEN */}
         <div className="overflow-hidden">
           <img
             src={publicacion.imagenUrl || '/placeholder-house.jpg'}
@@ -57,64 +55,71 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
 
         <div className="p-4">
 
+          {/* TITULO + PRECIO */}
           <div className="mb-2 flex items-start justify-between gap-3">
-            <h3 className="min-w-0 flex-1 text-[17px] font-bold">
+            <h3 className="min-w-0 flex-1 text-[17px] font-bold leading-snug text-[#1f1f1f]">
               {publicacion.titulo}
             </h3>
 
-            <span className="text-[15px] font-bold text-[#e48b18]">
+            <span className="shrink-0 whitespace-nowrap text-[15px] font-bold text-[#e48b18]">
               {precioFormateado}
             </span>
           </div>
 
-          <div className="mb-3 flex items-center justify-between rounded-xl border px-3 py-2">
-            <span className="text-[13px]">Estado:</span>
+          {/* ESTADO */}
+          <div className="mb-3 flex items-center justify-between rounded-xl border border-[#ddd4c8] bg-[#f7f2ec] px-3 py-2">
+            <span className="text-[13px] text-[#555]">Estado:</span>
 
             <button
-            onClick={toggleEstado}
-            aria-label={activa ? "Desactivar publicación" : "Activar publicación"}
-            className={`relative h-6 w-12 rounded-full ${activa ? 'bg-green-500' : 'bg-gray-400'}`}
-          >
-
-              <div className={`absolute top-1 h-4 w-4 bg-white rounded-full ${activa ? 'left-7' : 'left-1'}`} />
+              onClick={toggleEstado}
+              aria-label={activa ? 'Desactivar publicación' : 'Activar publicación'}
+              className={`relative h-6 w-12 rounded-full transition ${
+                activa ? 'bg-green-500' : 'bg-gray-400'
+              }`}
+            >
+              <div
+                className={`absolute top-1 h-4 w-4 rounded-full bg-white transition ${
+                  activa ? 'left-7' : 'left-1'
+                }`}
+              />
             </button>
 
-            <span>{activa ? 'Activa' : 'Inactiva'}</span>
+            <span className="text-[13px] font-medium text-[#444]">
+              {activa ? 'Activa' : 'Inactiva'}
+            </span>
           </div>
 
-          <div className="mb-3 flex justify-center gap-2">
-            <MapPin className="h-4 w-4" />
-            <p>{publicacion.ubicacion}</p>
+          {/* UBICACION */}
+          <div className="mb-3 flex min-h-[42px] items-center justify-center gap-2 rounded-xl border border-[#ddd4c8] bg-[#f7f2ec] px-3 py-2">
+            <MapPin className="h-4 w-4 text-[#e6a04b]" />
+            <p className="line-clamp-1 text-center text-[13px] text-[#555]">
+              {publicacion.ubicacion}
+            </p>
           </div>
 
-          <div className="mb-4 grid grid-cols-3">
-            <div className="flex justify-center gap-2">
-              <Bath className="h-4 w-4" />
+          {/* DETALLES */}
+          <div className="mb-4 grid min-h-[48px] grid-cols-3 rounded-xl border border-[#ddd4c8] bg-[#f7f2ec]">
+            <div className="flex items-center justify-center gap-2 border-r border-[#ddd4c8]">
+              <Bath className="h-4 w-4 text-[#e6a04b]" />
               <span>{publicacion.nroBanos ?? '-'}</span>
             </div>
 
-            <div className="flex justify-center gap-2">
-              <BedDouble className="h-4 w-4" />
+            <div className="flex items-center justify-center gap-2 border-r border-[#ddd4c8]">
+              <BedDouble className="h-4 w-4 text-[#e6a04b]" />
               <span>{publicacion.nroCuartos ?? '-'}</span>
             </div>
 
-            <div className="flex justify-center gap-2">
-              <Square className="h-4 w-4" />
+            <div className="flex items-center justify-center gap-2">
+              <Square className="h-4 w-4 text-[#e6a04b]" />
               <span>{areaFormateada}</span>
             </div>
           </div>
 
+          {/* SOLO ELIMINAR (EDITAR ELIMINADO) */}
           <div className="flex gap-3">
             <button
-              onClick={() => router.push(`/editarPublicacion?id=${publicacion.id}`)}
-              className="h-11 flex-1 border rounded-lg"
-            >
-              Editar
-            </button>
-
-            <button
               onClick={abrirConfirmacion}
-              className="h-11 flex-1 bg-orange-600 text-white rounded-lg"
+              className="h-11 flex-1 rounded-lg bg-[#D97706] text-[14px] font-medium text-white hover:bg-[#bf6905]"
             >
               Eliminar
             </button>
@@ -122,6 +127,7 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
         </div>
       </div>
 
+      {/* MODALES */}
       <ConfirmDeleteModal
         abierto={modalConfirmacionAbierto}
         onAceptar={confirmarEliminacion}
@@ -129,16 +135,17 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
         loading={loading}
       />
 
-      <DeleteSuccessModal abierto={modalExitoAbierto} onAceptar={cerrarExito} />
+      <DeleteSuccessModal
+        abierto={modalExitoAbierto}
+        onAceptar={cerrarExito}
+      />
 
       <DeleteErrorModal
         abierto={modalErrorAbierto}
-        mensaje={error || 'Error'}
+        mensaje={error || 'No se puede eliminar la publicación, intente nuevamente'}
         onAceptar={cerrarError}
       />
     </>
   )
 }
-
-
 
