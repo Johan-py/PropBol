@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { prisma } from "../../lib/prisma.client.js";
+import { publicacionesService } from "../publicaciones/publicaciones.service.js";
 
 interface AuthRequest extends Request {
   usuario?: {
@@ -322,15 +323,51 @@ export const editarTelefonos = async (req: AuthRequest, res: Response) => {
   }
 };
 
+// Listar mis publicaciones
+export const listarMisPublicaciones = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  try {
+    const usuarioId = req.usuario?.id;
+
+    if (!usuarioId) {
+      return res.status(401).json({
+        ok: false,
+        msg: "No hay token válido",
+      });
+    }
+
+    // Obtener las publicaciones del usuario
+    const publicaciones =
+      await publicacionesService.listarMisPublicaciones(usuarioId);
+
+    // Obtener estadísticas de publicaciones y suscripción
+    const estadisticas =
+      await publicacionesService.obtenerEstadisticasPublicaciones(usuarioId);
+
+    return res.json({
+      ok: true,
+      publicaciones,
+      estadisticas,
+    });
+  } catch (error) {
+    console.error("Error en listarMisPublicaciones:", error);
+    return res.status(500).json({
+      ok: false,
+      msg: "Error al obtener las publicaciones",
+    });
+  }
+};
 export const obtenerPreferenciasNotificacion = async (req: AuthRequest, res: Response) => {
   try {
     const usuarioId = req.usuario?.id
     if (!usuarioId) return res.status(401).json({ ok: false, msg: 'No hay token válido' })
     const usuario = await prisma.usuario.findUnique({
       where: { id: usuarioId },
-      select: { 
-        notificacion_email: true, 
-        notificacion_whatsapp: true 
+      select: {
+        notificacion_email: true,
+        notificacion_whatsapp: true
       }
     })
     if (!usuario) return res.status(404).json({ ok: false, msg: 'Usuario no encontrado' })
@@ -356,9 +393,9 @@ export const actualizarPreferenciasNotificacion = async (req: AuthRequest, res: 
     }
     await prisma.usuario.update({
       where: { id: usuarioId },
-      data: { 
-        notificacion_email: email, 
-        notificacion_whatsapp: whatsapp 
+      data: {
+        notificacion_email: email,
+        notificacion_whatsapp: whatsapp
       }
     })
     return res.json({
@@ -371,3 +408,133 @@ export const actualizarPreferenciasNotificacion = async (req: AuthRequest, res: 
     return res.status(500).json({ ok: false, msg: 'Error al guardar preferencias' })
   }
 }
+// Editar fecha de nacimiento
+export const editarFechaNacimiento = async (req: AuthRequest, res: Response) => {
+  try {
+    const usuarioId = req.usuario?.id;
+    const { fecha_nacimiento } = req.body;
+
+    if (!usuarioId) {
+      return res.status(401).json({ ok: false, msg: "No hay token válido" });
+    }
+
+    // Validar que se proporcionó la fecha
+    if (!fecha_nacimiento) {
+      return res.status(400).json({
+        ok: false,
+        msg: "La fecha de nacimiento es requerida",
+      });
+    }
+
+    // Validar formato de fecha
+    const fechaDate = new Date(fecha_nacimiento);
+    if (isNaN(fechaDate.getTime())) {
+      return res.status(400).json({
+        ok: false,
+        msg: "Formato de fecha inválido. Use formato ISO (YYYY-MM-DD)",
+      });
+    }
+
+    // Validar que no sea una fecha futura
+    const hoy = new Date();
+    if (fechaDate > hoy) {
+      return res.status(400).json({
+        ok: false,
+        msg: "La fecha de nacimiento no puede ser futura",
+      });
+    }
+
+    // Validar edad mínima (18 años) - opcional
+    const edadMinima = 18;
+    const fechaLimite = new Date();
+    fechaLimite.setFullYear(hoy.getFullYear() - edadMinima);
+
+    if (fechaDate > fechaLimite) {
+      return res.status(400).json({
+        ok: false,
+        msg: `Debes tener al menos ${edadMinima} años`,
+      });
+    }
+
+    // Actualizar la fecha de nacimiento
+    const usuarioActualizado = await prisma.usuario.update({
+      where: { id: usuarioId },
+      data: {
+        fecha_nacimiento: fechaDate,
+        updatedAt: new Date()
+      },
+    });
+
+    // Formatear fecha para respuesta
+    const fechaFormateada = usuarioActualizado.fecha_nacimiento
+      ? usuarioActualizado.fecha_nacimiento.toISOString().split('T')[0]
+      : null;
+
+    return res.json({
+      ok: true,
+      msg: "Fecha de nacimiento actualizada exitosamente",
+      fecha_nacimiento: fechaFormateada,
+    });
+  } catch (error) {
+    console.error("Error en editarFechaNacimiento:", error);
+    return res.status(500).json({
+      ok: false,
+      msg: "Error al editar la fecha de nacimiento",
+    });
+  }
+};
+
+// Obtener fecha de nacimiento
+export const obtenerFechaNacimiento = async (req: AuthRequest, res: Response) => {
+  try {
+    const usuarioId = req.usuario?.id;
+
+    if (!usuarioId) {
+      return res.status(401).json({ ok: false, msg: "No hay token válido" });
+    }
+
+    const usuario = await prisma.usuario.findUnique({
+      where: { id: usuarioId },
+      select: {
+        id: true,
+        nombre: true,
+        apellido: true,
+        fecha_nacimiento: true,
+      },
+    });
+
+    if (!usuario) {
+      return res.status(404).json({ ok: false, msg: "Usuario no encontrado" });
+    }
+
+    // Calcular edad
+    let edad = null;
+    if (usuario.fecha_nacimiento) {
+      const hoy = new Date();
+      const nacimiento = new Date(usuario.fecha_nacimiento);
+      edad = hoy.getFullYear() - nacimiento.getFullYear();
+      const mesDiff = hoy.getMonth() - nacimiento.getMonth();
+      if (mesDiff < 0 || (mesDiff === 0 && hoy.getDate() < nacimiento.getDate())) {
+        edad--;
+      }
+    }
+
+    const fechaFormateada = usuario.fecha_nacimiento
+      ? usuario.fecha_nacimiento.toISOString().split('T')[0]
+      : null;
+
+    return res.json({
+      ok: true,
+      data: {
+        fecha_nacimiento: fechaFormateada,
+        edad: edad,
+      },
+    });
+  } catch (error) {
+    console.error("Error en obtenerFechaNacimiento:", error);
+    return res.status(500).json({
+      ok: false,
+      msg: "Error al obtener la fecha de nacimiento",
+    });
+  }
+};
