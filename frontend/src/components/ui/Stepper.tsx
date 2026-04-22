@@ -9,13 +9,17 @@ interface Step {
   path: string
 }
 
+interface StepperProps {
+  onBackClick?: () => void
+}
+
 const steps: Step[] = [
   { id: 1, name: 'Resumen', path: '/pago/resumen' },
   { id: 2, name: 'Pagar', path: '/pago/qr' },
   { id: 3, name: 'Confirmación', path: '/pago/confirmacion' }
 ]
 
-export default function Stepper() {
+export default function Stepper({ onBackClick }: StepperProps = {}) {
   const pathname = usePathname()
   
   // Encontramos el paso actual. Si por alguna razón falla, por defecto es 1.
@@ -33,10 +37,10 @@ export default function Stepper() {
         // Clases de Tailwind para el círculo dependiendo de su estado
         const circleClasses = `flex items-center justify-center w-8 h-8 rounded-full transition-colors ${
           isCurrent
-            ? 'bg-green-600 text-white'
+            ? 'bg-green-500 text-white'
             : isPast
-              ? 'bg-green-200 text-green-800 hover:bg-green-300 hover:shadow-sm' // Clickable
-              : 'bg-gray-200 text-gray-500 cursor-not-allowed opacity-70' // Bloqueado
+              ? 'bg-green-100 text-green-700 hover:bg-green-200 hover:shadow-sm'
+              : 'bg-gray-200 text-gray-500 cursor-not-allowed opacity-70'
         }`
 
         return (
@@ -44,9 +48,15 @@ export default function Stepper() {
             
             {/* RENDERIZADO CONDICIONAL: Solo los pasos pasados tienen Link */}
             {isPast ? (
-              <Link href={step.path} className={circleClasses} title="Volver a este paso">
-                {step.id}
-              </Link>
+              onBackClick ? (
+                <button onClick={onBackClick} className={circleClasses} title="Volver a este paso">
+                  {step.id}
+                </button>
+              ) : (
+                <Link href={step.path} className={circleClasses} title="Volver a este paso">
+                  {step.id}
+                </Link>
+              )
             ) : (
               <div className={circleClasses} title={isFuture ? "Paso bloqueado" : ""}>
                 {step.id}
@@ -56,7 +66,7 @@ export default function Stepper() {
             {/* Etiqueta de texto (Nombre del paso) */}
             <span
               className={`ml-2 ${
-                isCurrent ? 'font-bold text-gray-900' : 'text-gray-500'
+                isCurrent ? 'font-bold text-green-600' : 'text-gray-500'
               } ${isFuture ? 'opacity-50' : ''}`}
             >
               {step.name}
