@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { prisma } from "../../lib/prisma.client.js";
+import { publicacionesService } from "../publicaciones/publicaciones.service.js";
 
 interface AuthRequest extends Request {
   usuario?: {
@@ -321,3 +322,89 @@ export const editarTelefonos = async (req: AuthRequest, res: Response) => {
     });
   }
 };
+
+// Listar mis publicaciones
+export const listarMisPublicaciones = async (
+  req: AuthRequest,
+  res: Response,
+) => {
+  try {
+    const usuarioId = req.usuario?.id;
+
+    if (!usuarioId) {
+      return res.status(401).json({
+        ok: false,
+        msg: "No hay token válido",
+      });
+    }
+
+    // Obtener las publicaciones del usuario
+    const publicaciones =
+      await publicacionesService.listarMisPublicaciones(usuarioId);
+
+    // Obtener estadísticas de publicaciones y suscripción
+    const estadisticas =
+      await publicacionesService.obtenerEstadisticasPublicaciones(usuarioId);
+
+    return res.json({
+      ok: true,
+      publicaciones,
+      estadisticas,
+    });
+  } catch (error) {
+    console.error("Error en listarMisPublicaciones:", error);
+    return res.status(500).json({
+      ok: false,
+      msg: "Error al obtener las publicaciones",
+    });
+  }
+};
+export const obtenerPreferenciasNotificacion = async (req: AuthRequest, res: Response) => {
+  try {
+    const usuarioId = req.usuario?.id
+    if (!usuarioId) return res.status(401).json({ ok: false, msg: 'No hay token válido' })
+    const usuario = await prisma.usuario.findUnique({
+      where: { id: usuarioId },
+      select: { 
+        notificacion_email: true, 
+        notificacion_whatsapp: true 
+      }
+    })
+    if (!usuario) return res.status(404).json({ ok: false, msg: 'Usuario no encontrado' })
+    return res.json({
+      ok: true,
+      preferencias: {
+        email: usuario.notificacion_email ?? true,
+        whatsapp: usuario.notificacion_whatsapp ?? false
+      }
+    })
+  } catch (error) {
+    console.error('Error en obtenerPreferenciasNotificacion:', error)
+    return res.status(500).json({ ok: false, msg: 'Error al obtener preferencias' })
+  }
+}
+export const actualizarPreferenciasNotificacion = async (req: AuthRequest, res: Response) => {
+  try {
+    const usuarioId = req.usuario?.id
+    if (!usuarioId) return res.status(401).json({ ok: false, msg: 'No hay token válido' })
+    const { email, whatsapp } = req.body
+    if (typeof email !== 'boolean' || typeof whatsapp !== 'boolean') {
+      return res.status(400).json({ ok: false, msg: 'Los valores deben ser booleanos' })
+    }
+    await prisma.usuario.update({
+      where: { id: usuarioId },
+      data: { 
+        notificacion_email: email, 
+        notificacion_whatsapp: whatsapp 
+      }
+    })
+    return res.json({
+      ok: true,
+      msg: 'Preferencias guardadas correctamente',
+      preferencias: { email, whatsapp }
+    })
+  } catch (error) {
+    console.error('Error en actualizarPreferenciasNotificacion:', error)
+    return res.status(500).json({ ok: false, msg: 'Error al guardar preferencias' })
+  }
+}

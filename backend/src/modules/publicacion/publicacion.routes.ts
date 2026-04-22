@@ -2,6 +2,7 @@ import { Router } from "express";
 import { requireAuth } from "../../middleware/auth.middleware.js";
 import {
   listarMisPublicacionesController,
+  obtenerResumenFinalController,
   editarPublicacionController,
   eliminarPublicacionController,
 } from "./publicacion.controller.js";
@@ -9,6 +10,7 @@ import {
 const router = Router();
 
 router.get("/mias", requireAuth, listarMisPublicacionesController);
+router.get("/:id/resumen-final", requireAuth, obtenerResumenFinalController);
 router.put("/:id", requireAuth, editarPublicacionController);
 router.delete("/:id", requireAuth, eliminarPublicacionController);
 
