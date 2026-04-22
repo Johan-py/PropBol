@@ -106,6 +106,8 @@ export default function TourGuiado() {
   const [highlight, setHighlight] = useState<DOMRect | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const retryRef = useRef<NodeJS.Timeout | null>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const [tooltipH, setTooltipH] = useState(180);
 
   // 🔒 Bloquear scroll + ir al inicio
   useEffect(() => {
@@ -145,6 +147,12 @@ export default function TourGuiado() {
     window.addEventListener("propbol:iniciar-tour", handleIniciarTour);
     return () => window.removeEventListener("propbol:iniciar-tour", handleIniciarTour);
   }, []);
+  // 📐 Medir la altura real del tooltip (importante para zoom / textos largos)
+  useEffect(() => {
+    if (tooltipRef.current) {
+      setTooltipH(tooltipRef.current.offsetHeight);
+    }
+  }, [currentStep, highlight]);
 
   const applyHighlight = (el: HTMLElement) => {
     const isFooter = currentStep >= FOOTER_STEP_INDEX;
@@ -165,7 +173,7 @@ export default function TourGuiado() {
     }, 50);
   };
 
-  // 🔍 Buscar elemento con reintentos
+  //  Buscar elemento con reintentos
   useEffect(() => {
     if (!showTour) return;
 
@@ -215,13 +223,12 @@ export default function TourGuiado() {
   const handleSkip = () => setShowTour(false);
 
   if (!showTour) return null;
-
-  const PADDING = 8;
+ const PADDING = 8;
   const hasValid = highlight !== null;
 
   let top = 100;
   if (hasValid) {
-    const H = 180;
+    const H = tooltipH;
     const spaceBelow = window.innerHeight - highlight.bottom;
     const spaceAbove = highlight.top;
 
@@ -277,6 +284,8 @@ export default function TourGuiado() {
             borderRadius: 12,
             padding: "16px",
             boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
+             maxHeight: "calc(100vh - 24px)",
+            overflowY: "auto",
           }}
         >
           <div style={{ display: "flex", gap: 4, marginBottom: 10 }}>
