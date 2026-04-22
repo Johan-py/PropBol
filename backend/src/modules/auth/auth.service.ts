@@ -18,9 +18,8 @@ import {
   findPasswordRecoveryByToken,
   findUser,
   findUserByCorreo,
-  invalidateAllUserSessions,
   markPasswordRecoveryAsUsed,
-  updateUserPassword,
+  findUserById,
 } from "./auth.repository.js";
 
 type LoginDTO = {
@@ -477,6 +476,34 @@ export const logoutService = async (token: string) => {
   await desactiveSessionByToken(token);
 
   return { message: "Logout exitoso" };
+};
+
+type VerifyPasswordDTO = {
+  userId: number;
+  password: string;
+};
+
+export const verifyPasswordService = async ({
+  userId,
+  password,
+}: VerifyPasswordDTO) => {
+  const trimmed = password?.trim();
+
+  if (!trimmed) {
+    throw new AuthError("La contraseña es obligatoria", 400);
+  }
+
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  if (user.password !== trimmed) {
+    throw new AuthError("Contraseña incorrecta", 401);
+  }
+
+  return { valid: true };
 };
 
 type GoogleTokenResponse = {
