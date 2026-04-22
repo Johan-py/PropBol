@@ -43,6 +43,20 @@ const securityItems: SecurityItem[] = [
 export default function SecuritySidebar() {
   const pathname = usePathname();
 
+  const confirmarSalidaSinGuardar = () => {
+    const estoyEnCambiarContrasena =
+      pathname === "/profile/security/cambiar-contrasena";
+
+    const hayCambiosSinGuardar =
+      sessionStorage.getItem("security_password_dirty") === "true";
+
+    if (!estoyEnCambiarContrasena || !hayCambiosSinGuardar) return true;
+
+    return window.confirm(
+      "Tienes cambios sin guardar. ¿Seguro que deseas salir?"
+    );
+  };
+
   return (
     <aside className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
       <div className="mb-6 flex items-center gap-3">
@@ -64,6 +78,13 @@ export default function SecuritySidebar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={(e) => {
+                if (pathname === item.href) return;
+
+                if (!confirmarSalidaSinGuardar()) {
+                  e.preventDefault();
+                }
+              }}
               className={[
                 "flex items-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition",
                 isActive

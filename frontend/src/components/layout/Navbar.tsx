@@ -58,6 +58,23 @@ const filters: NotificationFilter[] = [
   "no leida",
   "archivada",
 ];
+const confirmarSalidaDesdeCambioContrasena = () => {
+  if (typeof window === "undefined") return true;
+
+  const estoyEnCambiarContrasena =
+    window.location.pathname === "/profile/security/cambiar-contrasena";
+
+  const hayCambiosSinGuardar =
+    sessionStorage.getItem("security_password_dirty") === "true";
+
+  if (!estoyEnCambiarContrasena || !hayCambiosSinGuardar) {
+    return true;
+  }
+
+  return window.confirm(
+    "Tienes cambios sin guardar. ¿Seguro que deseas salir?"
+  );
+};
 
 export default function Navbar() {
   const router = useRouter();
@@ -597,7 +614,14 @@ export default function Navbar() {
                         <div className="border-t border-stone-100 px-4 py-3 text-center">
                           <Link
                             href="/notificaciones"
-                            onClick={toggleNotifications}
+                            onClick={(e) => {
+                              if (!confirmarSalidaDesdeCambioContrasena()) {
+                                e.preventDefault();
+                                return;
+                              }
+
+                              toggleNotifications();
+                            }}
                             className="text-sm font-medium text-amber-600 transition hover:text-amber-700"
                           >
                             Ver todas las notificaciones
@@ -666,7 +690,13 @@ export default function Navbar() {
             <nav className="mt-10 flex flex-col gap-4">
               <Link
                 href="/"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={(e) => {
+                  if (!confirmarSalidaDesdeCambioContrasena()) {
+                    e.preventDefault();
+                    return;
+                  }
+                  setIsMobileMenuOpen(false);
+                }}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
                 Inicio
@@ -674,7 +704,13 @@ export default function Navbar() {
 
               <Link
                 href="/propiedades"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={(e) => {
+                  if (!confirmarSalidaDesdeCambioContrasena()) {
+                    e.preventDefault();
+                    return;
+                  }
+                  setIsMobileMenuOpen(false);
+                }}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
                 Propiedades
@@ -682,7 +718,13 @@ export default function Navbar() {
 
               <Link
                 href="/blogs"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={(e) => {
+                  if (!confirmarSalidaDesdeCambioContrasena()) {
+                    e.preventDefault();
+                    return;
+                  }
+                  setIsMobileMenuOpen(false);
+                }}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
                 Blogs
@@ -690,7 +732,13 @@ export default function Navbar() {
 
               <Link
                 href="/cobros-suscripciones"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={(e) => {
+                  if (!confirmarSalidaDesdeCambioContrasena()) {
+                    e.preventDefault();
+                    return;
+                  }
+                  setIsMobileMenuOpen(false);
+                }}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
                 Planes de membresia
@@ -698,7 +746,13 @@ export default function Navbar() {
 
               <Link
                 href="/ayuda"
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={(e) => {
+                  if (!confirmarSalidaDesdeCambioContrasena()) {
+                    e.preventDefault();
+                    return;
+                  }
+                  setIsMobileMenuOpen(false);
+                }}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
                 Ayuda
