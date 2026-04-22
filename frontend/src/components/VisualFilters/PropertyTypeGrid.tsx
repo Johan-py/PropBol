@@ -51,8 +51,20 @@ export default function PropertyTypeGrid({ items }: PropertyTypeGridProps) {
         {items.map((item) => (
           <div
             key={item.key}
-            onClick={() => router.push(`/propiedades?tipo=${item.key}`)}
-            className="
+        onClick={() => {
+       const tipoMap: Record<string, string> = {
+         casas: "CASA",
+          departamentos: "DEPARTAMENTO",
+           oficinas: "OFICINA",
+            terrenos: "TERRENO",
+      };
+      const params = new URLSearchParams({
+         tipoInmueble: tipoMap[item.key] ?? item.key.toUpperCase(),
+        modoInmueble: "VENTA", 
+        });
+        router.push(`/busqueda_mapa?${params.toString()}`);
+          }}            
+              className="
               flex flex-col items-center justify-center
               w-full py-4 rounded-xl bg-white
               border border-gray-100 shadow-sm cursor-pointer
