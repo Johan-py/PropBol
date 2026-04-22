@@ -5,12 +5,12 @@ import type { City } from '@/types/city'
 
 type Props = {
   city: City
-  onClick: (slug: string) => void
+  onClick: (city: City) => void
 }
 
 export default function CityCard({ city, onClick }: Props) {
   const handleClick = () => {
-    onClick(city.slug)
+    onClick(city)
   }
 
   return (
@@ -23,7 +23,9 @@ export default function CityCard({ city, onClick }: Props) {
       <div className="space-y-3 p-4">
         <div className="space-y-1">
           <h3 className="text-2xl font-semibold text-stone-900">{city.name}</h3>
-          <p className="text-sm font-medium text-stone-500">{city.locationReference}</p>
+          {city.locationReference ? (
+            <p className="text-sm font-medium text-stone-500">{city.locationReference}</p>
+          ) : null}
         </div>
 
         <p className="text-sm leading-6 text-stone-600">{city.description}</p>
