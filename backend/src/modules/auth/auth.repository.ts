@@ -94,10 +94,10 @@ export const findUser = async (correo: string) => {
       nombre: true,
       apellido: true,
       activo: true,
+      two_factor_activo: true,
     },
   });
 };
-
 export const findUserByCorreo = async (correo: string) => {
   return await prisma.usuario.findUnique({
     where: { correo },
