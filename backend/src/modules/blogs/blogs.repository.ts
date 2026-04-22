@@ -117,3 +117,64 @@ export const blogsRepository = {
     return blog
   }
 }
+
+export const comentariosRepository = {
+  // Crear comentario
+  async create(data: {
+    contenido: string
+    usuario_id: number
+    blog_id: number
+    comentario_padre_id?: number
+  }) {
+    return prisma.comentario.create({
+      data,
+      include: {
+        usuario: {
+          select: { id: true, nombre: true, apellido: true, avatar: true }
+        },
+        _count: { select: { comentario_like: true } }
+      }
+    })
+  },
+
+  // Listar comentarios de un blog
+  async findByBlogId(blog_id: number) {
+    return prisma.comentario.findMany({
+      where: { blog_id },
+      orderBy: { fecha_creacion: 'asc' },
+      include: {
+        usuario: {
+          select: { id: true, nombre: true, apellido: true, avatar: true }
+        },
+        _count: { select: { comentario_like: true } }
+      }
+    })
+  },
+
+  // Obtener comentario por id
+  async findById(id: number) {
+    return prisma.comentario.findUnique({ where: { id } })
+  },
+
+  // Eliminar comentario
+  async delete(id: number) {
+    return prisma.comentario.delete({ where: { id } })
+  },
+
+  // Toggle like en comentario
+  async toggleLike(usuario_id: number, comentario_id: number) {
+    const existing = await prisma.comentario_like.findUnique({
+      where: { usuario_id_comentario_id: { usuario_id, comentario_id } }
+    })
+
+    if (existing) {
+      await prisma.comentario_like.delete({ where: { id: existing.id } })
+      return { liked: false }
+    } else {
+      await prisma.comentario_like.create({
+        data: { usuario_id, comentario_id }
+      })
+      return { liked: true }
+    }
+  }
+}
