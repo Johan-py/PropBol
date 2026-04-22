@@ -18,6 +18,31 @@ export const publicacionesRepository = {
     return prisma.publicacion.count({ where: { usuarioId: userId } });
   },
 
+  async findByUserId(userId: number) {
+    return prisma.publicacion.findMany({
+      where: { usuarioId: userId },
+      include: {
+        inmueble: {
+          include: {
+            ubicacion: true,
+          },
+        },
+        multimedia: true,
+        usuario: {
+          select: {
+            id: true,
+            nombre: true,
+            correo: true,
+            avatar: true,
+          },
+        },
+      },
+      orderBy: {
+        fechaPublicacion: "desc",
+      },
+    });
+  },
+
   async create(
     userId: number,
     data: Omit<Publicacion, "id" | "usuarioId">,
@@ -29,4 +54,31 @@ export const publicacionesRepository = {
       },
     });
   },
+  // Agregar después de async create
+  async findById(id: number) {
+    return prisma.publicacion.findUnique({
+      where: { id: id },
+      include: {
+        inmueble: true,
+        multimedia: true
+      }
+    });
+  },
+
+  async deleteById(id: number) {
+    return prisma.publicacion.delete({
+      where: { id: id }
+    });
+  },
+
+  async updateEstado(id: number, activa: boolean) {
+    // ✅ ACTIVA cuando el toggle está ON, PAUSADA cuando está OFF
+    const estado = activa ? "ACTIVA" : "PAUSADA";
+
+    return prisma.publicacion.update({
+      where: { id: id },
+      data: { estado: estado }
+    });
+  },
+
 };

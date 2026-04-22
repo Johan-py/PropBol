@@ -11,7 +11,9 @@ import {
   Menu,
   Trash2,
   WifiOff,
+  Settings,
   X,
+  ChevronDown
 } from "lucide-react";
 
 import Logo from "../navbar/Logo";
@@ -19,6 +21,7 @@ import NavLinks from "../navbar/NavLinks";
 import UserMenu from "../navbar/UserMenu";
 import LogoutModal from "../navbar/LogoutModal";
 import { useNotifications } from "@/hooks/useNotifications";
+import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 import type { NotificationFilter } from "@/types/notification";
 
 export type User = {
@@ -49,7 +52,6 @@ class SessionValidationError extends Error {
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
-const USER_STORAGE_KEY = "propbol_user";
 const SESSION_EXPIRES_KEY = "propbol_session_expires";
 
 const filters: NotificationFilter[] = [
@@ -70,6 +72,7 @@ export default function Navbar() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isPropiedadesOpen, setIsPropiedadesOpen] = useState(false);
 
   const {
     open,
@@ -172,25 +175,9 @@ export default function Navbar() {
     try {
       const validatedUser = await fetchCurrentUser(token);
 
-      const finalName =
-        validatedUser.nombre && validatedUser.apellido
-          ? `${validatedUser.nombre} ${validatedUser.apellido}`
-          : validatedUser.nombre || validatedUser.correo;
+      const finalUser: User = buildSessionUser(validatedUser);
 
-      const finalUser: User = {
-        name: finalName,
-        email: validatedUser.correo,
-        avatar: validatedUser.avatar ?? null,
-      };
-
-      localStorage.setItem(
-        USER_STORAGE_KEY,
-        JSON.stringify({
-          name: finalUser.name,
-          email: finalUser.email,
-          avatar: finalUser.avatar,
-        }),
-      );
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(finalUser));
       localStorage.setItem("nombre", finalUser.name);
       localStorage.setItem("correo", finalUser.email);
       localStorage.setItem("avatar", finalUser.avatar ?? "");
@@ -358,6 +345,13 @@ export default function Navbar() {
             </div>
 
             <div className="flex items-center gap-4">
+              <Link
+                href="/registro-inmueble"
+                className="hidden md:block rounded-md bg-[#E68B25] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-amber-700"
+              >
+                Publica tu inmueble
+              </Link>
+
               <div className="relative" ref={notificationPanelRef}>
                 <button
                   type="button"
@@ -387,15 +381,25 @@ export default function Navbar() {
                         Notificaciones
                       </h3>
                       {isLoggedIn && (
-                        <button
-                          type="button"
-                          onClick={() => void markAllAsRead()}
-                          disabled={!isOnline}
-                          className="inline-flex items-center gap-1 text-xs text-amber-600 transition hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-40"
-                        >
-                          <CheckCheck className="h-4 w-4" />
-                          Marcar todas
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <Link
+                            href="/configuracion/notificaciones"
+                            onClick={toggleNotifications}
+                            aria-label="Configuración de notificaciones"
+                            className="rounded-full p-2 text-stone-500 transition hover:bg-stone-100 hover:text-stone-700"
+                          >
+                            <Settings className="h-4 w-4" />
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => void markAllAsRead()}
+                            disabled={!isOnline}
+                            className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 transition hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-40"
+                          >
+                            <CheckCheck className="h-4 w-4" />
+                            Marcar todas
+                          </button>
+                        </div>
                       )}
                     </div>
 
@@ -512,6 +516,9 @@ export default function Navbar() {
                                     ) {
                                       void markAsRead(notification.id);
                                     }
+
+                                    toggleNotifications()
+                                    router.push(`/notificaciones/${notification.id}`)
                                   }}
                                   className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
                                     notification.status === "no leida"
@@ -584,7 +591,6 @@ export default function Navbar() {
                                   </div>
                                 </div>
                               ))}
-
                               {isLoadingMore && (
                                 <p className="px-4 py-3 text-center text-xs text-stone-400">
                                   Cargando más notificaciones...
@@ -648,7 +654,7 @@ export default function Navbar() {
           role="dialog"
         >
           <div
-            className="fixed right-0 top-0 h-full w-4/5 max-w-xs bg-[#F9F6EE] p-6 shadow-xl"
+            className="fixed right-0 top-0 h-full w-4/5 max-w-xs bg-[#F9F6EE] p-6 shadow-xl overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -663,22 +669,31 @@ export default function Navbar() {
               </button>
             </div>
 
-            <nav className="mt-10 flex flex-col gap-4">
+            <nav className="mt-10 flex flex-col gap-2">
               <Link
-                href="/"
+                href="/registro-inmueble"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+                className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"
               >
-                Inicio
+                Publica tu inmueble
               </Link>
 
-              <Link
-                href="/propiedades"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
-              >
-                Propiedades
-              </Link>
+              <div className="flex flex-col">
+                <button
+                  onClick={() => setIsPropiedadesOpen(!isPropiedadesOpen)}
+                  className="flex w-full items-center justify-between rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+                >
+                  <span>Propiedades</span>
+                  <ChevronDown className={`h-5 w-5 transition-transform duration-200 ${isPropiedadesOpen ? "rotate-180" : ""}`} />
+                </button>
+                <div className={`flex flex-col overflow-hidden transition-all duration-300 ${isPropiedadesOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"}`}>
+                  {["Casas", "Departamentos", "Cuartos", "Terrenos", "Espacios de cementerios"].map((item) => (
+                    <Link key={item} href="/propiedades" onClick={() => setIsMobileMenuOpen(false)} className="pl-8 py-2 text-base text-gray-600 hover:text-[#E68B25]">
+                      {item}
+                    </Link>
+                  ))}
+                </div>
+              </div>
 
               <Link
                 href="/blogs"
