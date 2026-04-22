@@ -13,6 +13,7 @@ import {
   WifiOff,
   Settings,
   X,
+  ChevronDown
 } from "lucide-react";
 
 import Logo from "../navbar/Logo";
@@ -89,6 +90,7 @@ export default function Navbar() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isPropiedadesOpen, setIsPropiedadesOpen] = useState(false);
 
   const {
     open,
@@ -377,6 +379,13 @@ export default function Navbar() {
             </div>
 
             <div className="flex items-center gap-4">
+              <Link
+                href="/registro-inmueble"
+                className="hidden md:block rounded-md bg-[#E68B25] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-amber-700"
+              >
+                Publica tu inmueble
+              </Link>
+
               <div className="relative" ref={notificationPanelRef}>
                 <button
                   type="button"
@@ -686,7 +695,7 @@ export default function Navbar() {
           role="dialog"
         >
           <div
-            className="fixed right-0 top-0 h-full w-4/5 max-w-xs bg-[#F9F6EE] p-6 shadow-xl"
+            className="fixed right-0 top-0 h-full w-4/5 max-w-xs bg-[#F9F6EE] p-6 shadow-xl overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -701,7 +710,7 @@ export default function Navbar() {
               </button>
             </div>
 
-            <nav className="mt-10 flex flex-col gap-4">
+            <nav className="mt-10 flex flex-col gap-2">
               <Link
                 href="/"
                 onClick={(e) => {
@@ -713,7 +722,7 @@ export default function Navbar() {
                 }}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
-                Inicio
+                Publica tu inmueble
               </Link>
 
               <Link
@@ -765,6 +774,7 @@ export default function Navbar() {
               >
                 Blogs
               </Link>
+
               <Link
                 href="/cobros-suscripciones"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -772,6 +782,7 @@ export default function Navbar() {
               >
                 Planes de membresia
               </Link>
+
               <Link
                 href="/ayuda"
                 onClick={(e) => {
