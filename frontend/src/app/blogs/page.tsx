@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import BlogCard from "@/components/blog/BlogCard";
 import MyRecentBlogsPanel from "@/components/blog/MyRecentBlogsPanel";
+import AddPostButton from "@/components/blog/AddPostButton";
 import BlogFilterChips from "@/components/blog/BlogFilterChips";
 import FeaturedBlogSpotlight from "@/components/blog/FeaturedBlogSpotlight";
 import { useBlogFeed } from "@/hooks/useBlogFeed";
@@ -57,6 +58,8 @@ export default function BlogsPage() {
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <AddPostButton />
+
               {/* TODO: restringir este acceso por rol cuando se integre backend. */}
               <Link
                 href="/admin/blogs"
