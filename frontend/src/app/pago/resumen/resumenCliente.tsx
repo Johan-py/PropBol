@@ -70,6 +70,10 @@ export default function ResumenCliente() {
         qrContent:
           transaccion.plan_suscripcion?.imagen_gr_url ||
           '/qrs/estandar.png',
+        planNombre: transaccion.plan_suscripcion?.nombre_plan || null,
+        subtotal: transaccion.subtotal ?? null,
+        iva_monto: transaccion.iva_monto ?? null,
+        planId: planIdParam,
       }));
 
       router.push(`/pago/qr?transaccionId=${transaccion.id}`);
