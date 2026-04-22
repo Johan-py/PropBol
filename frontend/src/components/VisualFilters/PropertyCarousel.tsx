@@ -10,6 +10,7 @@ interface CarouselItem {
   location: string;
   count?: number;
   filterParam: string;
+   previews?: Array<{ imagen: string; titulo: string }>;
 }
 
 interface PropertyCarouselProps {
@@ -50,8 +51,18 @@ export default function PropertyCarousel({
   }, []);
 
   const handleCardClick = (filterParam: string) => {
-    router.push(`/propiedades?categoria=${category}&zona=${filterParam}`);
+  const modoMap: Record<"alquiler" | "venta", string> = {
+    alquiler: "ALQUILER",
+    venta: "VENTA",
   };
+
+  const params = new URLSearchParams({
+    modoInmueble: modoMap[category],
+    query: filterParam,
+  });
+
+  router.push(`/busqueda_mapa?${params.toString()}`);
+};
 
   return (
     <div className="mb-10">
@@ -88,6 +99,7 @@ export default function PropertyCarousel({
               count={item.count}
               variant={category}
               isEmpty={item.count === 0}
+              previews={item.previews ?? []}
               onClick={() => handleCardClick(item.filterParam)}
             />
           ))}
