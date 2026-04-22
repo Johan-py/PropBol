@@ -92,9 +92,9 @@ export default function CobrosSuscripciones() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-        {plans.map((plan) => (
-          <div
-            key={plan.id}
+          {plans.map((plan) => (
+            <div
+              key={plan.id}
               className={`
                 relative p-6 w-80 flex flex-col justify-between
                 rounded-3xl border transition-all duration-300
@@ -115,28 +115,28 @@ export default function CobrosSuscripciones() {
               {isLoggedIn && plan.id === currentPlanId && (
                 <div className="absolute top-4 right-4 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
                   Plan actual
-              </div>
-            )}
+                </div>
+              )}
 
-            <div>
+              <div>
                 <h2 className="text-2xl font-semibold text-stone-900 mb-2">{plan.name}</h2>
 
                 <p className="text-3xl font-bold text-amber-600 mb-2">
                   {plan.price === 0 ? 'Gratis' : `Bs. ${plan.price}`}
                   <span className="text-sm text-stone-500"> / mes</span>
-              </p>
+                </p>
 
                 <p className="text-sm text-stone-600 mb-4">{plan.description}</p>
-            </div>
+              </div>
 
               <ul className="space-y-2 mb-4">
-              {plan.benefits.map((b, i) => (
+                {plan.benefits.map((b, i) => (
                   <li key={i} className="flex items-center gap-2 text-sm text-stone-700">
                     <span className="text-green-500 font-bold">✔</span>
-                  {b}
-                </li>
-              ))}
-            </ul>
+                    {b}
+                  </li>
+                ))}
+              </ul>
 
               <p className="text-sm text-stone-500 mb-4">{plan.comment}</p>
 
@@ -158,7 +158,7 @@ export default function CobrosSuscripciones() {
               </button>
             </div>
           ))}
-          </div>
+        </div>
       </div>
     </div>
   )
