@@ -54,4 +54,16 @@ export const publicacionesRepository = {
       },
     });
   },
+  // Nueva función HU‑5 v2
+  async validarPublicacionHU5(userId: number, data: Partial<Publicacion>) {
+    const count = await publicacionesRepository.countByUser(userId);
+    if (count >= 2) {
+      throw new Error("LIMIT_REACHED");
+    }
+
+    return {
+      estado: "Validado",
+      mensaje: "Publicación lista para guardar",
+    };
+  },
 };
