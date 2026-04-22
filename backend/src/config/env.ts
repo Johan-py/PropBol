@@ -18,6 +18,11 @@ export const env = {
   GOOGLE_CALLBACK_URL:
     process.env.GOOGLE_CALLBACK_URL ??
     "http://localhost:5000/api/auth/google/callback",
+  DISCORD_CLIENT_ID: requireEnv("DISCORD_CLIENT_ID"),
+  DISCORD_CLIENT_SECRET: requireEnv("DISCORD_CLIENT_SECRET"),
+  DISCORD_CALLBACK_URL:
+    process.env.DISCORD_CALLBACK_URL ??
+    "http://localhost:5000/api/auth/discord/callback",
   FRONTEND_URL: process.env.FRONTEND_URL ?? "http://localhost:3000",
   EMAIL_USER: requireEnv("EMAIL_USER"),
   EMAIL_PASSWORD:
