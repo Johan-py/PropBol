@@ -53,6 +53,26 @@ type GooglePopupSuccessPayload = {
   };
 };
 
+type DiscordPopupSuccessPayload = {
+  type: "propbol:discord-login-success";
+  message: string;
+  token: string;
+  user: {
+    id: number;
+    correo: string;
+    nombre?: string;
+    apellido?: string;
+  };
+};
+
+type DiscordPopupErrorPayload = {
+  type: "propbol:discord-login-error";
+  code: string;
+  message: string;
+};
+
+type DiscordPopupMessage = DiscordPopupSuccessPayload | DiscordPopupErrorPayload;
+
 const MAX_NAME_LENGTH = 30;
 const MAX_LAST_NAME_LENGTH = 30;
 const SESSION_DURATION_MS = 60 * 60 * 1000;
@@ -109,6 +129,34 @@ function FieldLabel({
 }
 
 const saveGoogleSession = (payload: GooglePopupSuccessPayload) => {
+  const userName =
+    payload.user.nombre && payload.user.apellido
+      ? `${payload.user.nombre} ${payload.user.apellido}`
+      : payload.user.nombre || payload.user.correo || "Usuario";
+
+  localStorage.setItem("token", payload.token);
+  localStorage.setItem(
+    "propbol_user",
+    JSON.stringify({
+      name: userName,
+      email: payload.user.correo,
+      avatar: null,
+    }),
+  );
+  localStorage.setItem("nombre", userName);
+  localStorage.setItem("correo", payload.user.correo);
+  localStorage.setItem("avatar", "");
+  localStorage.setItem(
+    "propbol_session_expires",
+    String(Date.now() + SESSION_DURATION_MS),
+  );
+
+  window.dispatchEvent(new Event("propbol:login"));
+  window.dispatchEvent(new Event("propbol:session-changed"));
+  window.dispatchEvent(new Event("auth-state-changed"));
+};
+
+const saveDiscordSession = (payload: DiscordPopupSuccessPayload) => {
   const userName =
     payload.user.nombre && payload.user.apellido
       ? `${payload.user.nombre} ${payload.user.apellido}`
@@ -462,9 +510,96 @@ export default function SignUpForm() {
   setServerError("Registro con Facebook próximamente disponible.");
 };
 
-const handleDiscordRegister = () => {
-  setServerError("Registro con Discord próximamente disponible.");
-};
+  const handleDiscordRegister = () => {
+    setServerError("");
+
+    const popupWidth = 500;
+    const popupHeight = 600;
+    const left = window.screenX + (window.outerWidth - popupWidth) / 2;
+    const top = window.screenY + (window.outerHeight - popupHeight) / 2;
+
+    const popupWindow = window.open(
+      `${API_URL}/api/auth/discord/register`,
+      "discord-register",
+      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`,
+    );
+
+    if (
+      !popupWindow ||
+      popupWindow.closed ||
+      typeof popupWindow.closed === "undefined"
+    ) {
+      setServerError(
+        "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.",
+      );
+      return;
+    }
+
+    const popup = popupWindow;
+    popup.focus();
+
+    const expectedOrigin = new URL(API_URL).origin;
+    let authWasResolved = false;
+    let checkPopupIntervalId = 0;
+    let discordTimeoutId = 0;
+
+    function cleanup() {
+      window.removeEventListener("message", handleMessage);
+      window.clearInterval(checkPopupIntervalId);
+      window.clearTimeout(discordTimeoutId);
+    }
+
+    async function handleMessage(event: MessageEvent<DiscordPopupMessage>) {
+      if (event.origin !== expectedOrigin) return;
+
+      const data = event.data;
+      if (
+        !data ||
+        typeof data !== "object" ||
+        !("type" in data) ||
+        (data.type !== "propbol:discord-login-success" &&
+          data.type !== "propbol:discord-login-error")
+      ) {
+        return;
+      }
+
+      authWasResolved = true;
+      cleanup();
+
+      if (data.type === "propbol:discord-login-success") {
+        try {
+          saveDiscordSession(data);
+          popup.close();
+          router.replace("/");
+        } catch {
+          setServerError("No se pudo guardar la sesión iniciada con Discord.");
+          popup.close();
+        }
+        return;
+      }
+
+      setServerError(data.message || "No se pudo completar el registro con Discord.");
+      popup.close();
+    }
+
+    checkPopupIntervalId = window.setInterval(() => {
+      if (!popup.closed) return;
+
+      cleanup();
+
+      if (!authWasResolved) {
+        setServerError("Cancelaste el registro con Discord. Puedes intentarlo nuevamente.");
+      }
+    }, 500);
+
+    discordTimeoutId = window.setTimeout(() => {
+      cleanup();
+      if (!popup.closed) popup.close();
+      setServerError("La autenticación con Discord tardó demasiado. Por favor intenta nuevamente.");
+    }, 2 * 60 * 1000);
+
+    window.addEventListener("message", handleMessage);
+  };
 
   const handleGoogleSuccess = async (payload: GooglePopupSuccessPayload) => {
     setServerError("");

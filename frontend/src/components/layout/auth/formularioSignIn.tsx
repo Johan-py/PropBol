@@ -47,6 +47,26 @@ type GooglePopupErrorMessage = {
 
 type GooglePopupMessage = GooglePopupSuccessMessage | GooglePopupErrorMessage;
 
+type DiscordPopupSuccessMessage = {
+  type: "propbol:discord-login-success";
+  message: string;
+  token: string;
+  user: {
+    id: number;
+    correo: string;
+    nombre?: string;
+    apellido?: string;
+  };
+};
+
+type DiscordPopupErrorMessage = {
+  type: "propbol:discord-login-error";
+  code: "DISCORD_AUTH_FAILED" | "ACCOUNT_NOT_REGISTERED" | string;
+  message: string;
+};
+
+type DiscordPopupMessage = DiscordPopupSuccessMessage | DiscordPopupErrorMessage;
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const LOGIN_TIMEOUT_MS = 10000;
 const GOOGLE_LOGIN_TIMEOUT_MS = 2 * 60 * 1000;
@@ -181,6 +201,7 @@ export default function LoginForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
+  const [isLoadingDiscord, setIsLoadingDiscord] = useState(false);
   const passwordContainerRef = useRef<HTMLDivElement>(null);
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
@@ -494,10 +515,152 @@ export default function LoginForm() {
 };
 
 const handleDiscordLogin = () => {
-  setGoogleError("");
-  setSuccessMessage("");
-  setErrorMessage("Inicio de sesión con Discord próximamente disponible.");
-};
+    clearClientSession();
+    setGoogleError("");
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    if (hasNoInternetConnection()) {
+      setGoogleError(NO_CONNECTION_MESSAGE);
+      return;
+    }
+
+    setIsLoadingDiscord(true);
+
+    const popupWidth = 500;
+    const popupHeight = 600;
+    const left = window.screenX + (window.outerWidth - popupWidth) / 2;
+    const top = window.screenY + (window.outerHeight - popupHeight) / 2;
+
+    const popupWindow = window.open(
+      `${API_URL}/api/auth/discord/login`,
+      "discord-login",
+      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`,
+    );
+
+    if (
+      !popupWindow ||
+      popupWindow.closed ||
+      typeof popupWindow.closed === "undefined"
+    ) {
+      setGoogleError(
+        "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.",
+      );
+      setIsLoadingDiscord(false);
+      return;
+    }
+
+    const popup = popupWindow;
+    popup.focus();
+
+    const expectedOrigin = new URL(API_URL).origin;
+    let authWasResolved = false;
+    let checkPopupIntervalId = 0;
+    let discordTimeoutId = 0;
+
+    function cleanup(shouldStopLoading = true) {
+      window.removeEventListener("message", handleMessage);
+      window.clearInterval(checkPopupIntervalId);
+      window.clearTimeout(discordTimeoutId);
+
+      if (shouldStopLoading) {
+        setIsLoadingDiscord(false);
+      }
+    }
+
+    async function handleMessage(event: MessageEvent<DiscordPopupMessage>) {
+      if (event.origin !== expectedOrigin) {
+        return;
+      }
+
+      const data = event.data;
+      if (
+        !data ||
+        typeof data !== "object" ||
+        !("type" in data) ||
+        (data.type !== "propbol:discord-login-success" &&
+          data.type !== "propbol:discord-login-error")
+      ) {
+        return;
+      }
+
+      authWasResolved = true;
+      cleanup(false);
+
+      if (data.type === "propbol:discord-login-success") {
+        try {
+          await finalizeValidatedSession(data.token, data.user);
+
+          setSuccessMessage(
+            data.message || "Inicio de sesión con Discord exitoso",
+          );
+          setGoogleError("");
+          setIsLoadingDiscord(false);
+          popup.close();
+
+          window.setTimeout(() => {
+            redirectAfterSuccessfulLogin();
+          }, 1000);
+        } catch (error) {
+          clearClientSession();
+          setGoogleError(
+            error instanceof Error
+              ? error.message
+              : "No se pudo consolidar la sesión con Discord.",
+          );
+          setIsLoadingDiscord(false);
+          popup.close();
+        }
+
+        return;
+      }
+
+      clearClientSession();
+      setGoogleError(
+        data.message || "No se pudo iniciar sesión con Discord.",
+      );
+      setIsLoadingDiscord(false);
+      popup.close();
+    }
+
+    checkPopupIntervalId = window.setInterval(() => {
+      if (!popup.closed) {
+        return;
+      }
+
+      cleanup();
+
+      if (!authWasResolved) {
+        clearClientSession();
+
+        if (hasNoInternetConnection()) {
+          setGoogleError(NO_CONNECTION_MESSAGE);
+          return;
+        }
+
+        setGoogleError(
+          "Cancelaste el inicio de sesión con Discord. Puedes intentarlo nuevamente.",
+        );
+      }
+    }, 500);
+
+    discordTimeoutId = window.setTimeout(() => {
+      cleanup();
+      clearClientSession();
+
+      if (!popup.closed) {
+        popup.close();
+      }
+
+      setGoogleError(
+        hasNoInternetConnection()
+          ? NO_CONNECTION_MESSAGE
+          : "La autenticación con Discord tardó demasiado. Por favor intenta nuevamente.",
+      );
+    }, GOOGLE_LOGIN_TIMEOUT_MS);
+
+    window.addEventListener("message", handleMessage);
+  };
 
   return (
     <div className="w-full max-w-sm rounded-md bg-white p-6 shadow-md">
