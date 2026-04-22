@@ -21,11 +21,6 @@ type GetNotificationsParams = {
   offset?: number
 }
 
-type GetNotificationByIdParams = {
-  id: number
-  usuarioId: number
-}
-
 type CreateNotificationParams = {
   correo: string
   titulo: string
@@ -77,17 +72,17 @@ const mapNotificationToFrontend = (notification: {
   id: number
   titulo: string
   mensaje: string
-  leida: boolean | null
-  archivada?: boolean | null
-  fechaCreacion?: Date | null
+  leida: boolean
+  archivada?: boolean
+  fechaCreacion?: Date
 }) => {
   return {
     id: notification.id,
     title: notification.titulo,
     description: notification.mensaje,
-    status: notification.leida === true ? 'leida' : 'no leida',
-    archivada: notification.archivada === true ? true : false,
-    fechaCreacion: notification.fechaCreacion || null
+    status: notification.leida ? 'leida' : 'no leida',
+    archivada: notification.archivada ?? false,
+    fechaCreacion: notification.fechaCreacion ?? null
   }
 }
 
@@ -117,24 +112,6 @@ export const getNotificationsService = async (
     total,
     limit,
     offset
-  }
-}
-
-export const getNotificationByIdService = async ({ id, usuarioId }: GetNotificationByIdParams) => {
-  const notification = await findNotificationByIdRepository({
-    id,
-    usuarioId
-  })
-
-  if (!notification) return null
-
-  return {
-    id: notification.id,
-    title: notification.titulo,
-    description: notification.mensaje,
-    status: notification.leida ? 'leida' : 'no leida',
-    archivada: notification.archivada,
-    fechaCreacion: notification.fechaCreacion
   }
 }
 
@@ -181,12 +158,12 @@ export const createNotificationService = async ({
   emitNotificationEvent(user.id, 'created', notification.id)
 
   try {
-    if (user.correo && user.notificacion_email === true) {
-        await sendNotificationEmail({
-          emailDestino: user.correo,
-          asunto: notification.titulo,
-          mensajeHtml: `<p>${notification.mensaje}</p>`,
-          mensajeTexto: notification.mensaje
+    if (user.correo) {
+      await sendNotificationEmail({
+        emailDestino: user.correo,
+        asunto: notification.titulo,
+        mensajeHtml: `<p>${notification.mensaje}</p>`,
+        mensajeTexto: notification.mensaje
       })
     }
   } catch (error) {
@@ -228,7 +205,7 @@ export const markNotificationAsReadService = async (id: number, usuarioId: numbe
       title: notification.titulo,
       description: notification.mensaje,
       status: 'leida',
-      archivada: notification.archivada === true ? true : false
+      archivada: notification.archivada ?? false
     }
   }
 }

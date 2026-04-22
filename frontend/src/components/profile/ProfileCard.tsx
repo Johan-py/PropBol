@@ -1,8 +1,7 @@
 'use client'
 
-import React, { useState, useEffect, useRef, Suspense } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Plus, Trash2, Pencil, Camera, Loader2, User } from 'lucide-react'
-import { useSearchParams } from 'next/navigation'
 import SecurityModal from './SecurityModal'
 import OtpModal from './OtpModal'
 
@@ -21,7 +20,6 @@ interface PerfilData {
   pais: string | null
   genero: string | null
   direccion: string | null
-  fechaNacimiento: string | null
   telefonos: any[] | null
 }
 
@@ -34,6 +32,7 @@ const PAISES = [
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
+// Función para ocultar el correo (Ej: jo***@gmail.com)
 const ofuscarEmail = (email: string) => {
   if (!email || !email.includes('@')) return email
   const [usuario, dominio] = email.split('@')
@@ -41,21 +40,7 @@ const ofuscarEmail = (email: string) => {
   return `${usuario.substring(0, 2)}***@${dominio}`
 }
 
-// 1. Renombramos la función interna
-function ProfileCardContent() {
-  const searchParams = useSearchParams()
-  const focusParam = searchParams ? searchParams.get('focus') : null
-  const [isHighlighted, setIsHighlighted] = useState(false)
-
-  useEffect(() => {
-    if (focusParam === 'personal-data') {
-      setIsHighlighted(true)
-      const el = document.getElementById('personal-data-form')
-      el?.scrollIntoView({ behavior: 'smooth' })
-      setTimeout(() => setIsHighlighted(false), 3000)
-    }
-  }, [focusParam])
-
+export default function ProfileCard() {
   const [campoEditando, setCampoEditando] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
@@ -66,20 +51,16 @@ function ProfileCardContent() {
   const [pais, setPais] = useState('')
   const [genero, setGenero] = useState('')
   const [direccion, setDireccion] = useState('')
-  const [fechaNacimiento, setFechaNacimiento] = useState('')
   const [avatar, setAvatar] = useState<string | null>(null)
   const [tempAvatar, setTempAvatar] = useState<File | null>(null)
   const [previewAvatar, setPreviewAvatar] = useState<string | null>(null)
-  
-  // Estados para validaciones de error
   const [errorNombre, setErrorNombre] = useState("");
-  const [errorFechaNacimiento, setErrorFechaNacimiento] = useState("");
 
-  const [originalNombre, setOriginalNombre] = useState("");
-  const [originalPais, setOriginalPais] = useState("");
-  const [originalGenero, setOriginalGenero] = useState("");
-  const [originalDireccion, setOriginalDireccion] = useState("");
-  const [originalFechaNacimiento, setOriginalFechaNacimiento] = useState("");
+
+  const [originalNombre] = useState("");
+  const [originalPais] = useState("");
+  const [originalGenero] = useState("");
+  const [originalDireccion] = useState("");
 
   const [isSecurityModalOpen, setIsSecurityModalOpen] = useState(false)
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false)
@@ -119,22 +100,10 @@ function ProfileCardContent() {
         const perfil = data.perfil
         const foto = perfil.avatar || perfil.fotoPerfil || null
         setPerfilData(perfil)
-        
         setNombre(perfil.nombre || '')
-        setOriginalNombre(perfil.nombre || '')
-        
         setPais(perfil.pais || '')
-        setOriginalPais(perfil.pais || '')
-        
         setGenero(perfil.genero || '')
-        setOriginalGenero(perfil.genero || '')
-        
         setDireccion(perfil.direccion || '')
-        setOriginalDireccion(perfil.direccion || '')
-        
-        setFechaNacimiento(perfil.fechaNacimiento || '')
-        setOriginalFechaNacimiento(perfil.fechaNacimiento || '')
-
         setAvatar(foto)
         setOriginalEmail(perfil.correo || '')
         setTempEmail(perfil.correo || '')
@@ -168,81 +137,108 @@ function ProfileCardContent() {
   const hasEmailChanged = tempEmail !== originalEmail && isValidEmail(tempEmail)
 
   const guardarNombre = async () => {
+    setIsLoading(true)
     try {
-      await fetch(`${API_URL}/api/perfil/usuario/nombre`, {
+      const response = await fetch(`${API_URL}/api/perfil/usuario/nombre`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
         body: JSON.stringify({ nombre })
       })
-      setOriginalNombre(nombre)
-      localStorage.setItem('nombre', nombre)
-      syncNavbar()
+      const data = await response.json()
+      if (data.ok) {
+        localStorage.setItem('nombre', nombre)
+        syncNavbar()
+        alert('Nombre actualizado exitosamente')
+        setCampoEditando(null)
+      } else {
+        throw new Error(data.msg)
+      }
     } catch (error: any) {
-      console.error(error.message)
+      alert(error.message || 'Error al actualizar nombre')
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const guardarPais = async () => {
+    setIsLoading(true)
     try {
-      await fetch(`${API_URL}/api/perfil/usuario/pais`, {
+      const response = await fetch(`${API_URL}/api/perfil/usuario/pais`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
         body: JSON.stringify({ pais })
       })
-      setOriginalPais(pais)
+      const data = await response.json()
+      if (data.ok) {
+        alert('País actualizado exitosamente')
+        setCampoEditando(null)
+      } else {
+        throw new Error(data.msg)
+      }
     } catch (error: any) {
-      console.error(error.message)
+      alert(error.message || 'Error al actualizar país')
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const guardarGenero = async () => {
+    setIsLoading(true)
     try {
-      await fetch(`${API_URL}/api/perfil/usuario/genero`, {
+      const response = await fetch(`${API_URL}/api/perfil/usuario/genero`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
         body: JSON.stringify({ genero })
       })
-      setOriginalGenero(genero)
+      const data = await response.json()
+      if (data.ok) {
+        alert('Género actualizado exitosamente')
+        setCampoEditando(null)
+      } else {
+        throw new Error(data.msg)
+      }
     } catch (error: any) {
-      console.error(error.message)
+      alert(error.message || 'Error al actualizar género')
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const guardarDireccion = async () => {
+    setIsLoading(true)
     try {
-      await fetch(`${API_URL}/api/perfil/usuario/direccion`, {
+      const response = await fetch(`${API_URL}/api/perfil/usuario/direccion`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
         body: JSON.stringify({ direccion })
       })
-      setOriginalDireccion(direccion)
+      const data = await response.json()
+      if (data.ok) {
+        alert('Dirección actualizada exitosamente')
+        setCampoEditando(null)
+      } else {
+        throw new Error(data.msg)
+      }
     } catch (error: any) {
-      console.error(error.message)
-    }
-  }
-
-  const guardarFechaNacimiento = async () => {
-    try {
-      await fetch(`${API_URL}/api/perfil/usuario/fecha-nacimiento`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
-        body: JSON.stringify({ fechaNacimiento })
-      })
-      setOriginalFechaNacimiento(fechaNacimiento)
-    } catch (error: any) {
-      console.error(error.message)
+      alert(error.message || 'Error al actualizar dirección')
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const guardarTelefonos = async () => {
-    const numerosLimpios = telefonos.map((t) => t.numero.trim()).filter((num) => num !== '');
+    const numerosLimpios = telefonos
+      .map((t) => t.numero.trim())
+      .filter((num) => num !== '');
+    // 2. VALIDACIÓN DE DUPLICADOS:
     const tieneDuplicados = new Set(numerosLimpios).size !== numerosLimpios.length;
 
     if (tieneDuplicados) {
       alert('No puedes guardar números de teléfono duplicados. Por favor, verifica la información.');
-      return; 
+      return; // Detenemos la ejecución si hay repetidos
     }
 
+    setIsLoading(true);
     try {
       const token = getToken();
       const body = {
@@ -255,7 +251,7 @@ function ProfileCardContent() {
           }))
       };
 
-      await fetch(`${API_URL}/api/perfil/usuario/telefonos`, {
+      const response = await fetch(`${API_URL}/api/perfil/usuario/telefonos`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -263,8 +259,19 @@ function ProfileCardContent() {
         },
         body: JSON.stringify(body)
       });
+
+      const data = await response.json();
+      if (data.ok) {
+        alert('Teléfonos actualizados exitosamente');
+        setCampoEditando(null);
+        cargarPerfil();
+      } else {
+        throw new Error(data.msg);
+      }
     } catch (error: any) {
-      console.error(error.message)
+      alert(error.message || 'Error al actualizar teléfonos');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -294,6 +301,7 @@ function ProfileCardContent() {
         setAvatar(nuevaFoto)
         localStorage.setItem('avatar', nuevaFoto)
         syncNavbar()
+        alert('Foto actualizada exitosamente')
         cargarPerfil()
       } else {
         throw new Error(data.msg)
@@ -436,7 +444,9 @@ function ProfileCardContent() {
         if (t.id === id) {
           const configPais = PAISES.find(p => p.nombre === t.pais);
           const maxDigitos = configPais?.digitos || 15;
+
           const soloNumerosYCortados = valor.replace(/\D/g, '').slice(0, maxDigitos);
+
           return { ...t, numero: soloNumerosYCortados };
         }
         return t;
@@ -444,44 +454,46 @@ function ProfileCardContent() {
     )
   }
 
-  const handleSaveAll = async () => {
-    setIsLoading(true);
-    
+  const handleSaveAll = () => {
     if (tempAvatar) {
-      await subirFoto(tempAvatar)
+      subirFoto(tempAvatar)
       setTempAvatar(null)
       setPreviewAvatar(null)
     }
     if (isEmailEditable && hasEmailChanged) {
-      await solicitarCambioEmail(tempEmail)
+      solicitarCambioEmail(tempEmail)
     } else if (isEmailEditable && !hasEmailChanged) {
       setIsEmailEditable(false)
     }
 
-    if (nombre !== originalNombre) await guardarNombre();
-    if (pais !== originalPais) await guardarPais();
-    if (genero !== originalGenero) await guardarGenero();
-    if (direccion !== originalDireccion) await guardarDireccion();
-    if (fechaNacimiento !== originalFechaNacimiento) await guardarFechaNacimiento();
-    
-    await guardarTelefonos();
+    if (campoEditando && campoEditando.startsWith('telefono-')) {
+      guardarTelefonos()
+      return
+    }
 
-    setCampoEditando(null);
-    setIsLoading(false);
-    alert('Cambios guardados exitosamente');
+    if (campoEditando === 'nombre') {
+      guardarNombre()
+    } else if (campoEditando === 'pais') {
+      guardarPais()
+    } else if (campoEditando === 'genero') {
+      guardarGenero()
+    } else if (campoEditando === 'direccion') {
+      guardarDireccion()
+    } else if (campoEditando) {
+      setCampoEditando(null)
+    }
   }
 
   const handleCancelAll = () => {
     setCampoEditando(null)
-    setNombre(originalNombre)
-    setPais(originalPais)
-    setGenero(originalGenero)
-    setDireccion(originalDireccion)
-    setFechaNacimiento(originalFechaNacimiento)
+    if (perfilData) {
+      setNombre(perfilData.nombre || '')
+      setPais(perfilData.pais || '')
+      setGenero(perfilData.genero || '')
+      setDireccion(perfilData.direccion || '')
+    }
     setTempEmail(originalEmail)
     setIsEmailEditable(false)
-    setErrorNombre("")
-    setErrorFechaNacimiento("")
   }
 
   const handleEditEmailClick = () => {
@@ -493,9 +505,9 @@ function ProfileCardContent() {
     pais !== originalPais ||
     genero !== originalGenero ||
     direccion !== originalDireccion ||
-    fechaNacimiento !== originalFechaNacimiento ||
-    tempEmail !== originalEmail ||
-    tempAvatar !== null;
+    tempEmail !== originalEmail;
+  tempAvatar !== null;
+  ;
 
   if (isLoading && !perfilData) {
     return (
@@ -506,33 +518,47 @@ function ProfileCardContent() {
   }
 
   return (
-    <div 
-      id="personal-data-form" 
-      className={`bg-[#fdf6e6] border border-[#e5dfd7] p-8 rounded-xl flex flex-col md:flex-row gap-10 items-center transition-all duration-700 ${
-        isHighlighted ? 'ring-4 ring-amber-400 shadow-xl shadow-amber-100 scale-[1.01]' : 'shadow-sm'
-      }`}
-    >
+    <div className="bg-[#fdf6e6] border border-[#e5dfd7] shadow-sm p-8 rounded-xl flex flex-col md:flex-row gap-10 items-center">
+
       {/* PERFIL */}
       <div className="flex flex-col items-center justify-center w-full md:w-1/3">
+
         <div className="relative mb-10">
-          <div className="w-28 h-28 rounded-full bg-white border border-gray-300 flex items-center justify-center shadow-sm overflow-hidden">
-             {(previewAvatar || (avatar && avatar.trim() !== "")) ? (
-              <img
-                 src={previewAvatar || (avatar?.startsWith('http') ? avatar : `${API_URL}${avatar}`)}
+
+        {/* AVATAR */}
+        <div className="w-28 h-28 rounded-full bg-white border border-gray-300 flex items-center justify-center shadow-sm overflow-hidden">
+           {(previewAvatar || (avatar && avatar.trim() !== "")) ? (
+            <img
+               src={
+                 previewAvatar ||
+                 (avatar?.startsWith('http') ? avatar : `${API_URL}${avatar}`)
+               }
                  alt="Foto de perfil"
                  className="w-full h-full object-cover"
-               />
-              ) : (
-               <User className="w-10 h-10 text-gray-400" />
-            )}
-          </div>
+             />
+            ) : (
+             <User className="w-10 h-10 text-gray-400" />
+         )}
+        </div>
 
-          <button
-            onClick={() => fileInputRef.current?.click()}
-            disabled={isUploading}
-            className="absolute right-0 top-1/2 translate-x-1/3 -translate-y-1/2 md:right-1/2 md:translate-x-1/2 md:top-full md:mt-6 w-8 h-8 bg-white border border-gray-300 rounded-full flex items-center justify-center shadow-sm hover:bg-gray-100 disabled:opacity-50"
+        {/* BOTÓN + */}
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          disabled={isUploading}
+          className="
+            absolute
+            right-0 top-1/2 translate-x-1/3 -translate-y-1/2   /* 📱 móvil → derecha */
+            md:right-1/2 md:translate-x-1/2 md:top-full md:mt-6  /* 💻 pc → abajo con espacio */
+            w-8 h-8 bg-white border border-gray-300 rounded-full
+            flex items-center justify-center shadow-sm hover:bg-gray-100
+            disabled:opacity-50
+          "
           >
-            {isUploading ? <Loader2 size={16} className="animate-spin" /> : <Plus size={16} />}
+            {isUploading ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              <Plus size={16} />
+            )}
           </button>
 
           <input
@@ -549,10 +575,13 @@ function ProfileCardContent() {
               }
             }}
           />
+
         </div>
 
         <p className="mt-4 font-semibold text-lg">{nombre}</p>
+        {/* CORREO OCULTO EN LA BARRA LATERAL */}
         <p className="text-sm text-gray-500">{isEmailEditable ? originalEmail : ofuscarEmail(originalEmail)}</p>
+
       </div>
 
       {/* FORMULARIO */}
@@ -560,101 +589,147 @@ function ProfileCardContent() {
         <h2 className="text-xl font-bold mb-6 text-stone-900">Datos Personales</h2>
 
         <div className="flex flex-col gap-4">
-          
           {/* NOMBRE */}
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-            <label className="w-full md:w-40 font-medium text-stone-700">Nombre Completo:</label>
+
+            <label className="w-full md:w-40 font-medium text-stone-700">
+              Nombre Completo:
+            </label>
+
             <div className="flex flex-col w-full">
+
               <div className="flex items-center gap-2">
                 <input
                   type="text"
+                  disabled={campoEditando !== 'nombre'}
                   value={nombre}
-                  onFocus={() => setCampoEditando('nombre')}
                   onChange={(e) => {
                     setNombre(soloLetras(e.target.value));
                     if (errorNombre) setErrorNombre("");
                   }}
-                  className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                    errorNombre ? "border-red-500 bg-red-50" : campoEditando === 'nombre' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
-                  }`}
+                  className={`flex-1 px-3 py-2 rounded text-sm ${errorNombre
+                      ? "border border-red-500 bg-red-50"
+                      : campoEditando === 'nombre'
+                        ? 'bg-white border border-amber-500'
+                        : 'bg-gray-200 cursor-not-allowed'
+                    }`}
                 />
+
+                <button
+                  onClick={() => setCampoEditando(campoEditando === 'nombre' ? null : 'nombre')}
+                >
+                  <Pencil size={16} />
+                </button>
               </div>
-              {errorNombre && <span className="text-red-500 text-xs mt-1">{errorNombre}</span>}
+
+              {errorNombre && (
+                <span className="text-red-500 text-xs mt-1">
+                  {errorNombre}
+                </span>
+              )}
             </div>
           </div>
 
-          {/* EMAIL */}
+          {/* EMAIL - ALINEADO Y OCULTO */}
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
             <label className="w-full md:w-40 font-medium text-stone-700">E-mail:</label>
+
             <div className="flex w-full items-center gap-2">
               <input
                 type="email"
-                className={`w-full px-3 py-2 rounded text-sm text-stone-700 ${isEmailEditable ? 'bg-white border border-amber-500 focus:outline-none ring-1 ring-amber-500' : 'bg-gray-200 cursor-not-allowed border-stone-300'}`}
+                className={`w-full px-3 py-2 rounded text-sm text-stone-700 ${isEmailEditable ? 'bg-white border border-amber-500' : 'bg-gray-200 cursor-not-allowed'
+                  }`}
                 readOnly={!isEmailEditable}
+                /* CORREO OCULTO EN EL INPUT */
                 value={isEmailEditable ? tempEmail : ofuscarEmail(originalEmail)}
                 onChange={(e) => setTempEmail(e.target.value)}
                 placeholder="correo@ejemplo.com"
               />
               <button
                 onClick={handleEditEmailClick}
-                className="text-stone-500 hover:text-amber-600 transition-colors"
+                className="text-black hover:text-amber-600"
                 disabled={isEmailEditable}
               >
                 <Pencil size={16} />
               </button>
             </div>
+
           </div>
           {isEmailEditable && tempEmail.length > 0 && !isValidEmail(tempEmail) && (
-            <div className="md:ml-44"><span className="text-red-500 text-xs mt-1">Formato de correo inválido</span></div>
+            <div className="md:ml-44">
+              <span className="text-red-500 text-xs mt-1">Formato de correo inválido</span>
+            </div>
+          )}
+          {isEmailEditable && hasEmailChanged && (
+            <div className="md:ml-44">
+              <span className="text-green-500 text-xs mt-1">Listo para guardar cambios</span>
+            </div>
           )}
 
           {/* TELÉFONOS */}
           {telefonos.map((tel, index) => {
             const keyCampo = `telefono-${tel.id}`
             return (
-              <div key={tel.id} className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
+              <div
+                key={tel.id}
+                className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4"
+              >
                 <label className="w-full md:w-40 font-medium text-stone-700">
                   {index === 0 ? 'Teléfono:' : `Teléfono ${index + 1}:`}
                 </label>
                 <div className="flex w-full items-center gap-2">
                   <select
+                    disabled={campoEditando !== keyCampo}
                     value={`${tel.pais} ${tel.codigo}`}
-                    onFocus={() => setCampoEditando(keyCampo)}
                     onChange={(e) => {
                       const seleccion = PAISES.find((p) => `${p.nombre} ${p.codigo}` === e.target.value)
                       if (seleccion) {
-                        setTelefonos(telefonos.map((t) => t.id === tel.id ? { ...t, pais: seleccion.nombre, codigo: seleccion.codigo } : t))
+                        setTelefonos(
+                          telefonos.map((t) =>
+                            t.id === tel.id ? { ...t, pais: seleccion.nombre, codigo: seleccion.codigo } : t
+                          )
+                        )
                       }
                     }}
-                    className={`px-2 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                      campoEditando === keyCampo ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
-                    }`}
+                    className={`px-2 py-2 rounded text-sm ${campoEditando === keyCampo
+                        ? 'bg-white border border-amber-500'
+                        : 'bg-gray-200 cursor-not-allowed'
+                      }`}
                   >
                     {PAISES.map((p) => (
-                      <option key={p.nombre} value={`${p.nombre} ${p.codigo}`}>{p.flag} {p.codigo}</option>
+                      <option key={p.nombre} value={`${p.nombre} ${p.codigo}`}>
+                        {p.flag} {p.codigo}
+                      </option>
                     ))}
                   </select>
                   <input
                     type="text"
                     placeholder="Ej. 70000000"
                     value={tel.numero}
-                    onFocus={() => setCampoEditando(keyCampo)}
+                    disabled={campoEditando !== keyCampo}
                     onChange={(e) => actualizarTelefono(tel.id, e.target.value)}
-                    className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                      campoEditando === keyCampo ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
-                    }`}
+                    className={`flex-1 px-3 py-2 rounded text-sm ${campoEditando === keyCampo
+                        ? 'bg-white border border-amber-500'
+                        : 'bg-gray-200 cursor-not-allowed'
+                      }`}
                   />
+                  <button
+                    onClick={() => setCampoEditando(campoEditando === keyCampo ? null : keyCampo)}
+                    className="text-black"
+                  >
+                    <Pencil size={16} />
+                  </button>
                   {index === 0 && (
                     <button
                       onClick={agregarTelefono}
                       disabled={telefonos.length >= 3}
-                      className="text-stone-500 disabled:opacity-30 disabled:cursor-not-allowed hover:text-orange-600 transition-colors"
+                      className="disabled:opacity-30 disabled:cursor-not-allowed hover:text-orange-600 transition-colors"
                     >
                       <Plus size={18} />
                     </button>
                   )}
                   {index > 0 && (
-                    <button onClick={() => eliminarTelefono(tel.id)} className="text-stone-500 hover:text-red-500 transition-colors">
+                    <button onClick={() => eliminarTelefono(tel.id)}>
                       <Trash2 size={18} />
                     </button>
                   )}
@@ -668,39 +743,18 @@ function ProfileCardContent() {
             </p>
           )}
 
-          {/* FECHA DE NACIMIENTO */}
-          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-            <label className="w-full md:w-40 font-medium text-stone-700">F. de Nacimiento:</label>
-            <div className="flex flex-col w-full">
-              <div className="flex items-center gap-2">
-                <input
-                  type="date"
-                  value={fechaNacimiento}
-                  onFocus={() => setCampoEditando('fechaNacimiento')}
-                  onChange={(e) => {
-                    setFechaNacimiento(e.target.value)
-                    if (errorFechaNacimiento) setErrorFechaNacimiento("")
-                  }}
-                  className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                    errorFechaNacimiento ? "border-red-500 bg-red-50" : campoEditando === 'fechaNacimiento' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
-                  }`}
-                />
-              </div>
-              {errorFechaNacimiento && <span className="text-red-500 text-xs mt-1">{errorFechaNacimiento}</span>}
-            </div>
-          </div>
-
           {/* PAÍS */}
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
             <label className="w-full md:w-40 font-medium text-stone-700">País:</label>
             <div className="flex w-full items-center gap-2">
               <select
+                disabled={campoEditando !== 'pais'}
                 value={pais}
-                onFocus={() => setCampoEditando('pais')}
                 onChange={(e) => setPais(e.target.value)}
-                className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                  campoEditando === 'pais' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
-                }`}
+                className={`flex-1 px-3 py-2 rounded text-sm ${campoEditando === 'pais'
+                  ? 'bg-white border border-amber-500'
+                  : 'bg-gray-200 cursor-not-allowed'
+                  }`}
               >
                 <option value="">Seleccione un país</option>
                 <option value="Bolivia">Bolivia</option>
@@ -708,6 +762,9 @@ function ProfileCardContent() {
                 <option value="Chile">Chile</option>
                 <option value="Perú">Perú</option>
               </select>
+              <button onClick={() => setCampoEditando(campoEditando === 'pais' ? null : 'pais')}>
+                <Pencil size={16} />
+              </button>
             </div>
           </div>
 
@@ -716,19 +773,22 @@ function ProfileCardContent() {
             <label className="w-full md:w-40 font-medium text-stone-700">Género:</label>
             <div className="flex w-full items-center gap-2">
               <select
+                disabled={campoEditando !== 'genero'}
                 value={genero}
-                onFocus={() => setCampoEditando('genero')}
                 onChange={(e) => setGenero(e.target.value)}
-                className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                  campoEditando === 'genero' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
-                }`}
+                className={`flex-1 px-3 py-2 rounded text-sm ${campoEditando === 'genero'
+                  ? 'bg-white border border-amber-500'
+                  : 'bg-gray-200 cursor-not-allowed'
+                  }`}
               >
                 <option value="">Seleccione género</option>
                 <option value="Masculino">Masculino</option>
                 <option value="Femenino">Femenino</option>
                 <option value="Otro">Otro</option>
-                <option value="Prefiero no decirlo">Prefiero no decirlo</option>
               </select>
+              <button onClick={() => setCampoEditando(campoEditando === 'genero' ? null : 'genero')}>
+                <Pencil size={16} />
+              </button>
             </div>
           </div>
 
@@ -737,18 +797,23 @@ function ProfileCardContent() {
             <label className="w-full md:w-40 font-medium text-stone-700">Dirección:</label>
             <div className="flex w-full items-center gap-2">
               <input
+                disabled={campoEditando !== 'direccion'}
                 value={direccion}
-                onFocus={() => setCampoEditando('direccion')}
                 onChange={(e) => setDireccion(e.target.value)}
-                className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                  campoEditando === 'direccion' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
-                }`}
+                className={`flex-1 px-3 py-2 rounded text-sm ${campoEditando === 'direccion'
+                  ? 'bg-white border border-amber-500'
+                  : 'bg-gray-200 cursor-not-allowed'
+                  }`}
               />
+              <button onClick={() => setCampoEditando(campoEditando === 'direccion' ? null : 'direccion')}>
+                <Pencil size={16} />
+              </button>
             </div>
           </div>
 
           {/* BOTONES */}
           <div className="mt-6 flex justify-end gap-4">
+
             <button
               onClick={handleCancelAll}
               className="text-stone-600 hover:text-black text-sm"
@@ -756,72 +821,56 @@ function ProfileCardContent() {
             >
               Cancelar
             </button>
+
             <button
               onClick={() => {
-                let hasError = false;
-
-                // Validación 1: Nombre
                 if (!nombre.trim()) {
                   setErrorNombre("El nombre es obligatorio");
-                  hasError = true;
-                } else {
-                  setErrorNombre("");
+                  return;
                 }
 
-                // Validación 2: Edad mínima 18 años (tomando en cuenta el año actual 2026)
-                if (fechaNacimiento) {
-                  const dob = new Date(fechaNacimiento);
-                  const today = new Date(); // El sistema usa 2026 como fecha base
-                  let age = today.getFullYear() - dob.getFullYear();
-                  const m = today.getMonth() - dob.getMonth();
-                  
-                  // Ajuste si el mes/día actual es anterior al de cumpleaños
-                  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-                    age--;
-                  }
-
-                  if (age < 18) {
-                    setErrorFechaNacimiento("Debes ser mayor de 18 años para registrarte.");
-                    hasError = true;
-                  } else {
-                    setErrorFechaNacimiento("");
-                  }
-                } else {
-                  setErrorFechaNacimiento(""); // Permite pasar porque es un dato opcional
-                }
-
-                if (hasError) return; // Si hay errores, detenemos el guardado
-
+                setErrorNombre("");
                 handleSaveAll();
               }}
               disabled={isLoading || !hayCambios}
-              className={`px-6 py-2 rounded-lg text-sm font-medium shadow-sm transition ${
-                !hayCambios ? "bg-orange-300 cursor-not-allowed text-white" : "bg-orange-500 hover:bg-orange-600 text-white"
-              }`}
+              className={`px-6 py-2 rounded-lg text-sm font-medium shadow-sm transition
+    ${!hayCambios
+                  ? "bg-orange-300 cursor-not-allowed text-white"
+                  : "bg-orange-500 hover:bg-orange-600 text-white"}
+  `}
             >
               {isLoading ? 'Guardando...' : 'Guardar Cambios'}
             </button>
-          </div>
 
+          </div>
         </div>
       </div>
 
       {/* MODALES */}
-      <SecurityModal isOpen={isSecurityModalOpen} onClose={() => { setIsSecurityModalOpen(false); setIsLoading(false) }} onSubmit={handlePasswordSubmit} isLoading={isLoading} />
-      <OtpModal isOpen={isOtpModalOpen} onClose={() => { setIsOtpModalOpen(false); setOtpError(''); setEmailToUpdate(''); setIsLoading(false); setIsEmailEditable(false); setTempEmail(originalEmail) }} onSubmit={handleOtpSubmit} onResendCode={handleResendCode} externalError={otpError} isLoading={isLoading} />
+      <SecurityModal
+        isOpen={isSecurityModalOpen}
+        onClose={() => {
+          setIsSecurityModalOpen(false)
+          setIsLoading(false)
+        }}
+        onSubmit={handlePasswordSubmit}
+        isLoading={isLoading}
+      />
+      <OtpModal
+        isOpen={isOtpModalOpen}
+        onClose={() => {
+          setIsOtpModalOpen(false)
+          setOtpError('')
+          setEmailToUpdate('')
+          setIsLoading(false)
+          setIsEmailEditable(false)
+          setTempEmail(originalEmail)
+        }}
+        onSubmit={handleOtpSubmit}
+        onResendCode={handleResendCode}
+        externalError={otpError}
+        isLoading={isLoading}
+      />
     </div>
-  )
-}
-
-// 2. Creamos el envoltorio que exporta el componente hacia el resto del proyecto
-export default function ProfileCard() {
-  return (
-    <Suspense fallback={
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
-      </div>
-    }>
-      <ProfileCardContent />
-    </Suspense>
   )
 }
