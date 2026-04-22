@@ -1,4 +1,11 @@
 "use client";
+
+import { useEffect, useState } from "react";
+
+interface Preview {
+  imagen: string;
+  titulo: string;
+}
 interface PropertyCardProps {
   image: string;
   title: string;
@@ -7,6 +14,7 @@ interface PropertyCardProps {
   onClick?: () => void;
   variant?: "alquiler" | "venta";
   isEmpty?: boolean;
+  previews?: Preview[];
 }
 
 export default function PropertyCard({
@@ -17,8 +25,30 @@ export default function PropertyCard({
   onClick,
   variant = "alquiler",
   isEmpty = false,
+   previews = [],
 }: PropertyCardProps) {
    const isAlquiler = variant === "alquiler";
+
+  const slides: Preview[] =
+    previews.length > 0
+      ? previews
+      : [{ imagen: image, titulo: title }];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+   useEffect(() => {
+    if (slides.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % slides.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [slides.length]);
+
+  const currentSlide = slides[currentIndex];
+  const showImage = !isEmpty && currentSlide.imagen;
+
 
   return (
     <div
@@ -38,8 +68,8 @@ export default function PropertyCard({
           ${isAlquiler ? "h-[140px]" : "h-[100px]"}
         `}
       >
-        {isEmpty ? (
-          <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 text-gray-400 gap-1">
+        {isEmpty || !showImage ? (
+          <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 gap-1">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -54,11 +84,38 @@ export default function PropertyCard({
             <span className="text-[10px] font-medium text-gray-400">Sin imagen</span>
           </div>
         ) : (
-          <img
-            src={image}
-            alt={title}
-            className="w-full h-full object-cover"
-          />
+          <>
+            {/* Imagen con fade transition */}
+            <img
+              key={currentIndex}
+              src={currentSlide.imagen}
+              alt={currentSlide.titulo}
+              className="w-full h-full object-cover animate-fade"
+            />
+
+            {/* Título del inmueble rotando */}
+            {previews.length > 0 && (
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-2 py-1">
+                <p className="text-white text-[9px] font-medium truncate">
+                  {currentSlide.titulo}
+                </p>
+              </div>
+            )}
+
+            {/* Indicadores de slide */}
+            {slides.length > 1 && (
+              <div className="absolute top-1 left-1/2 -translate-x-1/2 flex gap-0.5">
+                {slides.map((_, i) => (
+                  <div
+                    key={i}
+                    className={`w-1 h-1 rounded-full transition-all ${
+                      i === currentIndex ? "bg-white" : "bg-white/40"
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
 
         {/* ALQUILERES */}
@@ -70,7 +127,7 @@ export default function PropertyCard({
               ${isEmpty ? "bg-gray-400" : "bg-orange-500"}
             `}
           >
-            {isEmpty ? "SIN DATOS" : `${count.toLocaleString()} PROPIEDADES`}
+            {isEmpty ? "SIN DATOS" : `${count.toLocaleString()} PROP.`}
           </span>
         )}
       </div>
