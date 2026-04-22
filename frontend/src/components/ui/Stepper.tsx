@@ -37,9 +37,9 @@ export default function Stepper({ onBackClick }: StepperProps = {}) {
         // Clases de Tailwind para el círculo dependiendo de su estado
         const circleClasses = `flex items-center justify-center w-8 h-8 rounded-full transition-colors ${
           isCurrent
-            ? 'bg-amber-500 text-white'
+            ? 'bg-green-500 text-white'
             : isPast
-              ? 'bg-amber-100 text-amber-700 hover:bg-amber-200 hover:shadow-sm'
+              ? 'bg-green-100 text-green-700 hover:bg-green-200 hover:shadow-sm'
               : 'bg-gray-200 text-gray-500 cursor-not-allowed opacity-70'
         }`
 
@@ -66,7 +66,7 @@ export default function Stepper({ onBackClick }: StepperProps = {}) {
             {/* Etiqueta de texto (Nombre del paso) */}
             <span
               className={`ml-2 ${
-                isCurrent ? 'font-bold text-amber-600' : 'text-gray-500'
+                isCurrent ? 'font-bold text-green-600' : 'text-gray-500'
               } ${isFuture ? 'opacity-50' : ''}`}
             >
               {step.name}
