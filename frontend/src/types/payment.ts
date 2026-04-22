@@ -7,4 +7,8 @@ export interface PaymentData {
   qrContent: string
   estado: PaymentStatus
   fechaExpiracion: string
+  planNombre?: string
+  subtotal?: number
+  iva_monto?: number
+  planId?: string
 }
