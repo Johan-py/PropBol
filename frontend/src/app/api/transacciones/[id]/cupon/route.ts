@@ -1,9 +1,11 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
 
 // Inicializar Prisma (si falla, usaremos mock)
-let prisma: PrismaClient | null = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let prisma: any = null;
 try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { PrismaClient } = require('@prisma/client');
   prisma = new PrismaClient();
 } catch (error) {
   console.warn('⚠️ No se pudo conectar a la base de datos para cupones, usando modo mock');
