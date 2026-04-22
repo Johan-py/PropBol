@@ -11,9 +11,7 @@ import {
   Menu,
   Trash2,
   WifiOff,
-  Settings,
   X,
-  ChevronDown
 } from "lucide-react";
 
 import Logo from "../navbar/Logo";
@@ -21,7 +19,6 @@ import NavLinks from "../navbar/NavLinks";
 import UserMenu from "../navbar/UserMenu";
 import LogoutModal from "../navbar/LogoutModal";
 import { useNotifications } from "@/hooks/useNotifications";
-import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 import type { NotificationFilter } from "@/types/notification";
 
 export type User = {
@@ -41,38 +38,23 @@ type MeResponse = {
   };
 };
 
-class SessionValidationError extends Error {
-  statusCode: number;
-
-  constructor(message: string, statusCode: number) {
-    super(message);
-    this.name = "SessionValidationError";
-    this.statusCode = statusCode;
-  }
-}
-
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+const USER_STORAGE_KEY = "propbol_user";
 const SESSION_EXPIRES_KEY = "propbol_session_expires";
 
-const filters: NotificationFilter[] = [
-  "todas",
-  "leida",
-  "no leida",
-  "archivada",
-];
+const filters: NotificationFilter[] = ["todas", "leida", "no leida", "archivada"];
 
 export default function Navbar() {
   const router = useRouter();
   const panelRef = useRef<HTMLDivElement | null>(null);
   const notificationPanelRef = useRef<HTMLDivElement | null>(null);
-  const [, setTick] = useState(0);
+ const [, setTick] = useState(0)
 
   const [user, setUser] = useState<User | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isPropiedadesOpen, setIsPropiedadesOpen] = useState(false);
 
   const {
     open,
@@ -123,23 +105,20 @@ export default function Navbar() {
   };
 
   const fetchCurrentUser = async (token: string) => {
-    const response = await fetch(`${API_URL}/api/auth/me`, {
+    const response = await fetch(`${API_URL}/api/perfil/usuario`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    const data = (await response.json()) as MeResponse;
+    const data = await response.json();
 
-    if (!response.ok || !data.user) {
-      throw new SessionValidationError(
-        data.message || "Sesión inválida o expirada",
-        response.status,
-      );
+    if (!response.ok || !data.perfil) {
+      throw new Error(data.message || "Sesión inválida o expirada");
     }
 
-    return data.user;
+    return data.perfil;
   };
 
   const restoreSession = async () => {
@@ -157,74 +136,71 @@ export default function Navbar() {
       return;
     }
 
-    let parsedUser: User;
-
-    try {
-      parsedUser = JSON.parse(savedUser) as User;
-    } catch {
-      clearSession(false);
-      return;
-    }
-
     if (!navigator.onLine) {
-      setUser(parsedUser);
-      setIsLoggedIn(true);
+      clearSession(false);
       return;
     }
 
     try {
       const validatedUser = await fetchCurrentUser(token);
 
-      const finalUser: User = buildSessionUser(validatedUser);
+      const finalName =
+        validatedUser.nombre && validatedUser.apellido
+          ? `${validatedUser.nombre} ${validatedUser.apellido}`
+          : validatedUser.nombre || validatedUser.correo;
 
-      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(finalUser));
+      const finalUser: User = {
+        name: finalName,
+        email: validatedUser.correo,
+        avatar: validatedUser.avatar ?? null,
+      };
+
+      localStorage.setItem(
+        USER_STORAGE_KEY,
+        JSON.stringify({
+          name: finalUser.name,
+          email: finalUser.email,
+          avatar: finalUser.avatar,
+        }),
+      );
       localStorage.setItem("nombre", finalUser.name);
       localStorage.setItem("correo", finalUser.email);
       localStorage.setItem("avatar", finalUser.avatar ?? "");
 
       setUser(finalUser);
       setIsLoggedIn(true);
-    } catch (error) {
-      if (
-        error instanceof SessionValidationError &&
-        (error.statusCode === 401 || error.statusCode === 403)
-      ) {
-        clearSession(false);
-        return;
-      }
-
-      setUser(parsedUser);
-      setIsLoggedIn(true);
+    } catch {
+      clearSession(false);
     }
   };
 
-  const formatRelativeTime = (fecha: string | null): string => {
-    if (!fecha) return "";
-    const diff = Date.now() - new Date(fecha).getTime();
-    const mins = Math.floor(diff / 60000);
+ const formatRelativeTime = (fecha: string | null): string => {
+  if (!fecha) return "";
+  const diff = Date.now() - new Date(fecha).getTime();
+  const mins = Math.floor(diff / 60000);
 
-    if (mins < 1) return "hace un momento";
-    if (mins < 60) return `hace ${mins} min`;
+  if (mins < 1) return "hace un momento";
+  if (mins < 60) return `hace ${mins} min`;
 
-    const hours = Math.floor(mins / 60);
-    if (hours < 24) return `hace ${hours} h`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `hace ${hours} h`;
 
-    const days = Math.floor(hours / 24);
-    if (days < 7) return `hace ${days} d`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `hace ${days} d`;
 
-    return new Date(fecha).toLocaleDateString("es-BO", {
-      day: "numeric",
-      month: "short",
-    });
-  };
+  return new Date(fecha).toLocaleDateString("es-BO", {
+    day: "numeric",
+    month: "short",
+  });
+};
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTick((t) => t + 1);
-    }, 60000);
+useEffect(() => {
+  const interval = setInterval(() => {
+    setTick((t) => t + 1);
+  }, 60000);
 
-    return () => clearInterval(interval);
-  }, []);
+  return () => clearInterval(interval);
+}, []);
 
   useEffect(() => {
     void restoreSession();
@@ -254,17 +230,6 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (user && isSessionExpired()) {
-        clearSession();
-        router.push("/");
-      }
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, [user, router]);
-
-  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         panelRef.current &&
@@ -280,18 +245,26 @@ export default function Navbar() {
         toggleNotifications();
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open, toggleNotifications]);
 
   useEffect(() => {
-    if (!open) return;
+    const interval = setInterval(() => {
+      if (user && isSessionExpired()) {
+        clearSession();
+        router.push("/");
+      }
+    }, 10000);
 
+    return () => clearInterval(interval);
+  }, [user, router]);
+
+  useEffect(() => {
+    if (!open) return;
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === "Escape") toggleNotifications();
     };
-
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [open, toggleNotifications]);
@@ -302,11 +275,11 @@ export default function Navbar() {
       router.push("/");
       return;
     }
-
     setIsPanelOpen((prev) => !prev);
   };
 
   const handleLoginRedirect = () => router.push("/sign-in");
+
   const handleOpenLogoutModal = () => setShowLogoutModal(true);
 
   const handleCancelLogout = () => {
@@ -337,7 +310,7 @@ export default function Navbar() {
   return (
     <>
       <nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
-        <div className="container mx-auto px-4 py-1.5">
+        <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
               <Logo />
@@ -345,13 +318,6 @@ export default function Navbar() {
             </div>
 
             <div className="flex items-center gap-4">
-              <Link
-                href="/registro-inmueble"
-                className="hidden md:block rounded-md bg-[#E68B25] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-amber-700"
-              >
-                Publica tu inmueble
-              </Link>
-
               <div className="relative" ref={notificationPanelRef}>
                 <button
                   type="button"
@@ -374,32 +340,22 @@ export default function Navbar() {
                     role="dialog"
                     aria-label="Panel de notificaciones"
                     aria-modal="true"
-                    className="fixed left-0 right-0 top-[41px] z-50 mx-2 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-lg sm:absolute sm:left-auto sm:right-0 sm:top-10 sm:mx-0 sm:w-80"
+                    className="fixed left-0 right-0 top-[57px] z-50 mx-2 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-lg sm:absolute sm:left-auto sm:right-0 sm:top-12 sm:mx-0 sm:w-80"
                   >
                     <div className="flex items-center justify-between border-b border-stone-100 px-4 py-3">
                       <h3 className="text-sm font-semibold text-stone-900">
                         Notificaciones
                       </h3>
                       {isLoggedIn && (
-                        <div className="flex items-center gap-2">
-                          <Link
-                            href="/configuracion/notificaciones"
-                            onClick={toggleNotifications}
-                            aria-label="Configuración de notificaciones"
-                            className="rounded-full p-2 text-stone-500 transition hover:bg-stone-100 hover:text-stone-700"
-                          >
-                            <Settings className="h-4 w-4" />
-                          </Link>
-                          <button
-                            type="button"
-                            onClick={() => void markAllAsRead()}
-                            disabled={!isOnline}
-                            className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 transition hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-40"
-                          >
-                            <CheckCheck className="h-4 w-4" />
-                            Marcar todas
-                          </button>
-                        </div>
+                        <button
+                          type="button"
+                          onClick={() => void markAllAsRead()}
+                          disabled={!isOnline}
+                          className="inline-flex items-center gap-1 text-xs text-amber-600 transition hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-40"
+                        >
+                          <CheckCheck className="h-4 w-4" />
+                          Marcar todas
+                        </button>
                       )}
                     </div>
 
@@ -447,13 +403,13 @@ export default function Navbar() {
                                   : "bg-stone-100 text-stone-700 hover:bg-stone-200"
                               }`}
                             >
-                              {item === "todas"
-                                ? "Todas"
-                                : item === "leida"
-                                  ? "Leídas"
-                                  : item === "no leida"
-                                    ? "No leídas"
-                                    : "Archivadas"}
+                              {item === 'todas'
+                                ? 'Todas'
+                                : item === 'leida'
+                                  ? 'Leídas'
+                                  : item === 'no leida'
+                                    ? 'No leídas'
+                                    : 'Archivadas'}
                             </button>
                           ))}
                         </div>
@@ -465,16 +421,16 @@ export default function Navbar() {
                           aria-live="polite"
                           className="max-h-[60vh] overflow-y-auto sm:max-h-80"
                           onScroll={(e) => {
-                            const target = e.currentTarget;
+                            const target = e.currentTarget
+
+                            saveScrollPosition(target.scrollTop)
+
                             const reachedBottom =
                               target.scrollTop + target.clientHeight >=
-                              target.scrollHeight - 20;
+                              target.scrollHeight - 10;
 
                             if (reachedBottom && hasMore && !isLoadingMore) {
-                              // @ts-ignore
-                              saveScrollPosition();
-                              // @ts-ignore
-                              void loadMoreNotifications(filter);
+                              void loadMoreNotifications();
                             }
                           }}
                         >
@@ -510,71 +466,49 @@ export default function Navbar() {
                                   key={notification.id}
                                   role="listitem"
                                   onClick={() => {
-                                    if (
-                                      notification.status === "no leida" &&
-                                      isOnline
-                                    ) {
-                                      void markAsRead(notification.id);
+                                    if (notification.status === 'no leida' && isOnline) {
+                                      void markAsRead(notification.id)
                                     }
-
-                                    toggleNotifications()
-                                    router.push(`/notificaciones/${notification.id}`)
                                   }}
                                   className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
-                                    notification.status === "no leida"
-                                      ? "cursor-pointer bg-amber-50"
-                                      : "bg-white"
+                                    notification.status === 'no leida' ? 'cursor-pointer bg-amber-50' : 'bg-white'
                                   }`}
                                 >
                                   <div className="flex items-start justify-between gap-3">
                                     <div className="min-w-0 flex-1">
                                       <div className="flex items-center gap-2">
-                                        {notification.status === "no leida" && (
+                                        {notification.status === 'no leida' && (
                                           <span className="h-2 w-2 shrink-0 rounded-full bg-amber-500" />
                                         )}
                                         <p className="truncate text-sm font-semibold text-stone-900">
-                                          {notification.title?.trim() ||
-                                            "(Sin título)"}
+                                          {notification.title?.trim() || '(Sin título)'}
                                         </p>
                                       </div>
-
                                       <p className="mt-1 line-clamp-2 text-sm text-stone-600">
                                         {notification.description?.trim() ||
                                           "(Sin descripción disponible)"}
                                       </p>
-
                                       <div className="mt-2 flex items-center gap-2">
                                         <span className="text-[10px] uppercase text-stone-400">
                                           {notification.status}
                                         </span>
                                         <span className="text-[10px] text-stone-400">
-                                          ·{" "}
-                                          {formatRelativeTime(
-                                            notification.fechaCreacion || null,
-                                          )}
+                                          · {formatRelativeTime(notification.fechaCreacion)}
                                         </span>
                                       </div>
                                     </div>
-
-                                    <div
-                                      className="flex shrink-0 items-center gap-2"
-                                      onClick={(e) => e.stopPropagation()}
-                                    >
+                                    <div className="flex shrink-0 items-center gap-2" onClick={(e) => e.stopPropagation()}>
                                       {!notification.archivada && (
                                         <button
                                           type="button"
-                                          onClick={() =>
-                                            void archiveNotification(
-                                              notification.id,
-                                            )
-                                          }
+                                          onClick={() => void archiveNotification(notification.id)}
+                                          
                                           aria-label="Archivar notificación"
                                           className="text-stone-400 transition hover:text-amber-600 disabled:cursor-not-allowed disabled:opacity-40"
                                         >
-                                          <Archive className="h-4 w-4" />
+                                          <Archive className="h-4 w-4" /> 
                                         </button>
                                       )}
-
                                       <button
                                         type="button"
                                         onClick={() =>
@@ -591,6 +525,7 @@ export default function Navbar() {
                                   </div>
                                 </div>
                               ))}
+
                               {isLoadingMore && (
                                 <p className="px-4 py-3 text-center text-xs text-stone-400">
                                   Cargando más notificaciones...
@@ -648,13 +583,13 @@ export default function Navbar() {
 
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 z-[9999] bg-black/40 md:hidden"
+          className="fixed inset-0 z-50 bg-black/40 md:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
           aria-modal="true"
           role="dialog"
         >
           <div
-            className="fixed right-0 top-0 h-full w-4/5 max-w-xs bg-[#F9F6EE] p-6 shadow-xl overflow-y-auto"
+            className="fixed right-0 top-0 h-full w-4/5 max-w-xs bg-[#F9F6EE] p-6 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -668,60 +603,32 @@ export default function Navbar() {
                 <X className="h-6 w-6 text-stone-600" />
               </button>
             </div>
-
-            <nav className="mt-10 flex flex-col gap-2">
+            <nav className="mt-10 flex flex-col gap-4">
               <Link
-                href="/registro-inmueble"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"
-              >
-                Publica tu inmueble
-              </Link>
-
-              <div className="flex flex-col">
-                <button
-                  onClick={() => setIsPropiedadesOpen(!isPropiedadesOpen)}
-                  className="flex w-full items-center justify-between rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
-                >
-                  <span>Propiedades</span>
-                  <ChevronDown className={`h-5 w-5 transition-transform duration-200 ${isPropiedadesOpen ? "rotate-180" : ""}`} />
-                </button>
-                <div className={`flex flex-col overflow-hidden transition-all duration-300 ${isPropiedadesOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"}`}>
-                  {["Casas", "Departamentos", "Cuartos", "Terrenos", "Espacios de cementerios"].map((item) => (
-                    <Link key={item} href="/propiedades" onClick={() => setIsMobileMenuOpen(false)} className="pl-8 py-2 text-base text-gray-600 hover:text-[#E68B25]">
-                      {item}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              <Link
-                href="/blogs"
+                href="/"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
-                Blogs
+                Inicio
               </Link>
-
               <Link
-                href="/cobros-suscripciones"
+                href="#contacto"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
-                Planes de membresia
+                Contáctanos
               </Link>
-
               <Link
-                href="/ayuda"
+                href="#nosotros"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
-                Ayuda
+                Sobre Nosotros
               </Link>
             </nav>
           </div>
         </div>
       )}
     </>
-  );
+  )
 }

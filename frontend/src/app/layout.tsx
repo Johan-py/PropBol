@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import AppShell from "@/components/layout/AppShell";
-import TelemetryTrigger from "@/components/profile/TelemetryTrigger"; // Importamos el activador de la HU-11
 
 export const metadata: Metadata = {
   title: {
@@ -47,14 +46,7 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="min-h-screen flex flex-col">
-        {/* El AppShell envuelve el contenido principal */}
         <AppShell>{children}</AppShell>
-
-        {/* Inyectamos el TelemetryTrigger fuera del AppShell 
-          para que controle el retraso de 4 segundos y la 
-          captura automática de zona sin interferir con la UI 
-        */}
-        <TelemetryTrigger />
       </body>
     </html>
   );
