@@ -4,7 +4,7 @@ import MisZonasSidebar from '@/components/map/MisZonasSidebar'
 import { point, polygon } from '@turf/helpers'
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon'
 import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from 'react'
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import nextDynamic from 'next/dynamic'
 import {
   ChevronLeft,
@@ -77,11 +77,62 @@ const SHEET_H = { peek: '50%', full: '100%' } as const
 type SheetState = 'hidden' | 'peek' | 'full'
 
 const LIST_PAGE_SIZES = [10, 20, 50, 100] as const;
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
+
+interface ZonaUsuario {
+  id: number
+  nombre: string
+  geometria: {
+    type: 'Polygon'
+    coordinates: number[][][]
+  }
+}
+
+function extraerCoordenadasDeGeometria(geometria: ZonaUsuario['geometria'] | null | undefined): [number, number][] {
+  if (!geometria || geometria.type !== 'Polygon' || !Array.isArray(geometria.coordinates?.[0])) {
+    return []
+  }
+
+  const ring = geometria.coordinates[0]
+  const puntos = ring
+    .map((coord) => {
+      if (!Array.isArray(coord) || coord.length < 2) return null
+      return [Number(coord[1]), Number(coord[0])] as [number, number]
+    })
+    .filter((coord): coord is [number, number] => Boolean(coord))
+
+  if (puntos.length >= 2) {
+    const [firstLat, firstLng] = puntos[0]
+    const [lastLat, lastLng] = puntos[puntos.length - 1]
+    if (firstLat === lastLat && firstLng === lastLng) {
+      return puntos.slice(0, -1)
+    }
+  }
+
+  return puntos
+}
 
 function BusquedaMapaContent() {
   const [isMisZonasOpen, setIsMisZonasOpen] = useState(false)
+  const router = useRouter();
   const searchParams = useSearchParams();
   const filterResetKey = searchParams.toString();
+
+  //estado para controlar la autenticación
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [misZonas, setMisZonas] = useState<ZonaUsuario[]>([])
+  const [newZoneName, setNewZoneName] = useState('Nueva zona')
+  const [isCreatingCustomZone, setIsCreatingCustomZone] = useState(false)
+  const [isSavingNewZone, setIsSavingNewZone] = useState(false)
+  const [editingZoneId, setEditingZoneId] = useState<string | null>(null)
+  const [editingZoneName, setEditingZoneName] = useState('')
+  const [editingPolygonPoints, setEditingPolygonPoints] = useState<[number, number][]>([])
+  const [isSavingEditedZone, setIsSavingEditedZone] = useState(false)
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsAuthenticated(!!token);
+  }, []);
 
   // === 1. ESTADOS COMPARTIDOS ===
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
@@ -96,11 +147,21 @@ function BusquedaMapaContent() {
   const [isDrawingMode, setIsDrawingMode] = useState(false)
   const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([])
   const [isPolygonClosed, setIsPolygonClosed] = useState(false)
+  // -- Función para reiniciar el modo dibujo y limpiar el polígono --
+  const [drawingError, setDrawingError] = useState(false)
+
+  const resetEditingZone = useCallback(() => {
+    setEditingZoneId(null)
+    setEditingZoneName('')
+    setEditingPolygonPoints([])
+    setIsSavingEditedZone(false)
+  }, [])
 
   const resetDrawing = () => {
     setIsDrawingMode(false)
     setIsPolygonClosed(false)
     setPolygonPoints([])
+    setIsCreatingCustomZone(false)
   }
   // --- FIN ESTADOS HU8 ---
 
@@ -117,6 +178,240 @@ function BusquedaMapaContent() {
   const { properties, isLoading, error } = useProperties()
   const { zonas } = useZonas()
   const [selectedZoneId, setSelectedZoneId] = useState<number | null>(null)
+
+  const cargarMisZonas = useCallback(async () => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setMisZonas([])
+      return
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/api/perfil/zonas`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+
+      if (!response.ok) {
+        throw new Error('No se pudieron cargar tus zonas')
+      }
+
+      const data = await response.json()
+      setMisZonas(Array.isArray(data) ? data : [])
+    } catch (err) {
+      console.error('Error cargando mis zonas:', err)
+      setMisZonas([])
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setMisZonas([])
+      return
+    }
+    cargarMisZonas()
+  }, [isAuthenticated, cargarMisZonas])
+
+  const zonasCombinadas = useMemo(() => {
+    const zonasUsuarioParaMapa = misZonas
+      .map((zonaUsuario) => {
+        const coordenadas = extraerCoordenadasDeGeometria(zonaUsuario.geometria)
+        if (coordenadas.length < 3) return null
+
+        return {
+          id: -zonaUsuario.id,
+          nombre: zonaUsuario.nombre,
+          coordenadas,
+          color: '#ea580c',
+          activa: true,
+          creadoEn: new Date().toISOString()
+        }
+      })
+      .filter((zona): zona is NonNullable<typeof zona> => Boolean(zona))
+
+    return [...zonas, ...zonasUsuarioParaMapa]
+  }, [zonas, misZonas])
+
+  const zonasSidebar = useMemo(
+    () => misZonas.map((zona) => ({ id: String(zona.id), nombre: zona.nombre })),
+    [misZonas]
+  )
+
+  const saveDraftZone = useCallback(async () => {
+    if (!isAuthenticated || isSavingNewZone || !isCreatingCustomZone) return
+    if (polygonPoints.length < 3) return
+
+    const token = localStorage.getItem('token')
+    if (!token) return
+
+    setIsSavingNewZone(true)
+    try {
+      const ring = [...polygonPoints, polygonPoints[0]].map(([lat, lng]) => [lng, lat])
+      const nombreFinal = newZoneName.trim() || 'Nueva zona'
+
+      const response = await fetch(`${API_URL}/api/perfil/zonas`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          nombre: nombreFinal.slice(0, 100),
+          geometria: {
+            type: 'Polygon',
+            coordinates: [ring]
+          }
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('No se pudo guardar la zona')
+      }
+
+      const zonaCreada = await response.json()
+      await cargarMisZonas()
+
+      if (zonaCreada?.id) {
+        setSelectedZoneId(-Number(zonaCreada.id))
+      }
+
+      setIsPolygonClosed(false)
+      setPolygonPoints([])
+      setIsDrawingMode(false)
+      setIsCreatingCustomZone(false)
+      setNewZoneName('Nueva zona')
+    } catch (err) {
+      console.error('Error guardando zona:', err)
+    } finally {
+      setIsSavingNewZone(false)
+    }
+  }, [
+    isAuthenticated,
+    isSavingNewZone,
+    isCreatingCustomZone,
+    polygonPoints,
+    newZoneName,
+    cargarMisZonas
+  ])
+
+  const cancelDraftZone = useCallback(() => {
+    setNewZoneName('Nueva zona')
+    setIsMisZonasOpen(true)
+    resetDrawing()
+  }, [])
+
+  const startEditZone = useCallback(
+    (id: string) => {
+      const zoneId = Number(id)
+      if (Number.isNaN(zoneId)) return
+
+      const zone = misZonas.find((item) => item.id === zoneId)
+      if (!zone) return
+
+      const points = extraerCoordenadasDeGeometria(zone.geometria)
+      if (points.length < 3) return
+
+      setEditingZoneId(id)
+      setEditingZoneName(zone.nombre)
+      setEditingPolygonPoints(points)
+      setIsCreatingCustomZone(false)
+      setIsDrawingMode(false)
+      setIsPolygonClosed(false)
+      setPolygonPoints([])
+      setSelectedZoneId(-zoneId)
+      setIsMisZonasOpen(true)
+      setIsSidebarOpen(false)
+    },
+    [misZonas]
+  )
+
+  const saveEditedZone = useCallback(async () => {
+    if (!editingZoneId || isSavingEditedZone || editingPolygonPoints.length < 3) return
+
+    const token = localStorage.getItem('token')
+    if (!token) return
+
+    const zoneId = Number(editingZoneId)
+    if (Number.isNaN(zoneId)) return
+
+    setIsSavingEditedZone(true)
+    try {
+      const ring = [...editingPolygonPoints, editingPolygonPoints[0]].map(([lat, lng]) => [lng, lat])
+      const nombreFinal = editingZoneName.trim() || 'Nueva zona'
+
+      const response = await fetch(`${API_URL}/api/perfil/zonas/${zoneId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          nombre: nombreFinal.slice(0, 100),
+          geometria: {
+            type: 'Polygon',
+            coordinates: [ring]
+          }
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('No se pudo actualizar la zona')
+      }
+
+      await cargarMisZonas()
+      setSelectedZoneId(-zoneId)
+      resetEditingZone()
+    } catch (err) {
+      console.error('Error actualizando zona:', err)
+    } finally {
+      setIsSavingEditedZone(false)
+    }
+  }, [
+    editingZoneId,
+    isSavingEditedZone,
+    editingPolygonPoints,
+    editingZoneName,
+    cargarMisZonas,
+    resetEditingZone
+  ])
+
+  const cancelEditZone = useCallback(() => {
+    resetEditingZone()
+  }, [resetEditingZone])
+
+  const deleteZone = useCallback(
+    async (id: string) => {
+      const token = localStorage.getItem('token')
+      const zoneId = Number(id)
+      if (!token || Number.isNaN(zoneId)) return
+
+      const confirmed = window.confirm('¿Eliminar esta zona?')
+      if (!confirmed) return
+
+      try {
+        const response = await fetch(`${API_URL}/api/perfil/zonas/${zoneId}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` }
+        })
+
+        if (!response.ok) {
+          throw new Error('No se pudo eliminar la zona')
+        }
+
+        if (selectedZoneId === -zoneId) {
+          setSelectedZoneId(null)
+        }
+
+        if (editingZoneId === id) {
+          resetEditingZone()
+        }
+
+        await cargarMisZonas()
+      } catch (err) {
+        console.error('Error eliminando zona:', err)
+      }
+    },
+    [cargarMisZonas, selectedZoneId, editingZoneId, resetEditingZone]
+  )
 
   // === 3. LÓGICA MATEMÁTICA HU8 (Filtro por polígono) ===
   const displayedProperties = useMemo(() => {
@@ -139,8 +434,15 @@ function BusquedaMapaContent() {
         return properties
       }
     }
+    if (selectedZoneId !== null) {
+      const zona = zonas.find((z: any) => z.id === selectedZoneId)
+      if (zona && zona.coordenadas && zona.coordenadas.length >= 3) {
+        const coords = [...zona.coordenadas, zona.coordenadas[0]].map((c: any) => [c[1], c[0]])
+        return properties.filter((p: any) => p.lat != null && booleanPointInPolygon(point([p.lng, p.lat]), polygon([coords])))
+      }
+    }
     return properties
-  }, [properties, isPolygonClosed, polygonPoints])
+  }, [properties, isPolygonClosed, polygonPoints, selectedZoneId, zonas])
 
   // === 4. ORDENAMIENTO (Usando resultados filtrados) ===
   const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
@@ -369,7 +671,7 @@ function BusquedaMapaContent() {
                 <MapView
                   properties={inmueblesOrdenados}
                   selectedId={selectedPropertyId}
-                  zonas={zonas}
+                  zonas={zonasCombinadas}
                   selectedZoneId={selectedZoneId}
                   onZoneSelect={setSelectedZoneId}
                   onSelect={handleMapSelect}
@@ -378,6 +680,15 @@ function BusquedaMapaContent() {
                   isDrawingMode={isDrawingMode}
                   polygonPoints={polygonPoints}
                   isPolygonClosed={isPolygonClosed}
+                  isZoneEditingMode={Boolean(editingZoneId)}
+                  editablePolygonPoints={editingPolygonPoints}
+                  onEditablePointDrag={(index, lat, lng) => {
+                    setEditingPolygonPoints((prev) =>
+                      prev.map((point, pointIndex) =>
+                        pointIndex === index ? [lat, lng] : point
+                      )
+                    )
+                  }}
                   onMapClick={(latlng) => {
                     if (isDrawingMode && !isPolygonClosed) {
                       setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
@@ -387,6 +698,9 @@ function BusquedaMapaContent() {
                     if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
                       setIsPolygonClosed(true)
                       setIsDrawingMode(false)
+                      if (isCreatingCustomZone) {
+                        setIsMisZonasOpen(true)
+                      }
                     }
                   }}
                 />
@@ -432,7 +746,7 @@ function BusquedaMapaContent() {
             <MapView
               properties={inmueblesOrdenados}
               selectedId={selectedPropertyId}
-              zonas={zonas}
+              zonas={zonasCombinadas}
               selectedZoneId={selectedZoneId}
               onZoneSelect={setSelectedZoneId}
               onSelect={handleMapSelect}
@@ -441,6 +755,15 @@ function BusquedaMapaContent() {
               isDrawingMode={isDrawingMode}
               polygonPoints={polygonPoints}
               isPolygonClosed={isPolygonClosed}
+              isZoneEditingMode={Boolean(editingZoneId)}
+              editablePolygonPoints={editingPolygonPoints}
+              onEditablePointDrag={(index, lat, lng) => {
+                setEditingPolygonPoints((prev) =>
+                  prev.map((point, pointIndex) =>
+                    pointIndex === index ? [lat, lng] : point
+                  )
+                )
+              }}
               onMapClick={(latlng) => {
                 if (isDrawingMode && !isPolygonClosed) {
                   setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
@@ -450,6 +773,9 @@ function BusquedaMapaContent() {
                 if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
                   setIsPolygonClosed(true)
                   setIsDrawingMode(false)
+                  if (isCreatingCustomZone) {
+                    setIsMisZonasOpen(true)
+                  }
                 }
               }}
               onClusterClick={handleClusterClick}
@@ -833,39 +1159,76 @@ function BusquedaMapaContent() {
           )}
           {/* --- INICIO BOTONES FLOTANTES HU8 --- */}
           <div className="absolute top-3 right-4 z-[1000] flex flex-col gap-2 items-end pointer-events-none">
-            {!isDrawingMode && !isPolygonClosed && (
+            {!isDrawingMode && !isPolygonClosed && !editingZoneId && (
               <div className="flex flex-row gap-2 pointer-events-auto">
                 <button
-                  onClick={() => { setIsDrawingMode(true); setIsSidebarOpen(true) }}
+                  onClick={() => {
+                    resetEditingZone()
+                    setIsCreatingCustomZone(false)
+                    setIsDrawingMode(true)
+                    setIsSidebarOpen(true)
+                  }}
                   className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
                 >
                   Dibujar zona
                 </button>
                 <button
-                  onClick={() => setIsMisZonasOpen(true)}
+                  onClick={() => {
+                    if (!isAuthenticated) {
+                      router.push('/sign-in');
+                    } else {
+                      setIsMisZonasOpen(true);
+                    }
+                  }}
                   className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
                 >
                   Mis zonas
                 </button>
               </div>
             )}
+
             {isDrawingMode && !isPolygonClosed && (
-              <div className="flex flex-col items-end gap-2 pointer-events-auto">
-                <button
-                  onClick={resetDrawing}
-                  className="bg-white text-red-600 px-4 py-2 rounded-lg shadow-md border border-stone-200 hover:bg-red-50 transition-all text-sm font-semibold"
-                >
-                  Cancelar dibujo
-                </button>
-                <div className="bg-white/95 backdrop-blur-sm p-3 rounded-lg shadow-md border border-stone-200 text-xs text-stone-600 max-w-[220px] text-right">
-                  Haz clic en el mapa para marcar los vértices. Cierra la zona tocando el punto
-                  inicial.
-                </div>
-              </div>
-            )}
+  <div className="flex flex-col items-end gap-2 pointer-events-auto">
+    <div className="flex flex-row gap-2">
+      <button
+        onClick={() => {
+          if (polygonPoints.length < 3) {
+            setDrawingError(true)
+            setTimeout(() => setDrawingError(false), 3000)
+          } else {
+            setIsPolygonClosed(true)
+            setIsDrawingMode(false)
+          }
+        }}
+        className="bg-[#ea580c] text-white px-4 py-2 rounded-lg shadow-md border border-orange-600 hover:bg-[#c2410c] transition-all text-sm font-semibold"
+      >
+        Finalizar dibujo
+      </button>
+      <button
+        onClick={resetDrawing}
+        className="bg-white text-red-600 px-4 py-2 rounded-lg shadow-md border border-stone-200 hover:bg-red-50 transition-all text-sm font-semibold"
+      >
+        Cancelar dibujo
+      </button>
+    </div>
+
+    {drawingError && (
+      <div className="bg-red-50 border border-red-300 text-red-600 px-3 py-2 rounded-lg text-xs font-medium shadow-md max-w-[220px] text-right">
+        ⚠️ Debes marcar al menos 3 puntos para finalizar la zona.
+      </div>
+    )}
+
+    {!drawingError && (
+      <div className="bg-white/95 backdrop-blur-sm p-3 rounded-lg shadow-md border border-stone-200 text-xs text-stone-600 max-w-[220px] text-right">
+        Haz clic en el mapa para marcar los vértices. Cierra la zona tocando el punto inicial.
+      </div>
+    )}
+  </div>
+)}
+            
           </div>
 
-          {isPolygonClosed && (
+          {isPolygonClosed && isCreatingCustomZone && !editingZoneId && (
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000]">
               <button
                 onClick={resetDrawing}
@@ -885,12 +1248,21 @@ function BusquedaMapaContent() {
               activeClusterIds={activeClusterIds}
               isLoading={isLoading}
               error={error}
-              zonas={zonas}
+              zonas={zonasCombinadas}
               selectedZoneId={selectedZoneId}
               onZoneSelect={setSelectedZoneId}
               isDrawingMode={isDrawingMode}
               polygonPoints={polygonPoints}
               isPolygonClosed={isPolygonClosed}
+              isZoneEditingMode={Boolean(editingZoneId)}
+              editablePolygonPoints={editingPolygonPoints}
+              onEditablePointDrag={(index, lat, lng) => {
+                setEditingPolygonPoints((prev) =>
+                  prev.map((point, pointIndex) =>
+                    pointIndex === index ? [lat, lng] : point
+                  )
+                )
+              }}
               onMapClick={(latlng) => {
                 if (isDrawingMode && !isPolygonClosed) {
                   setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
@@ -900,6 +1272,9 @@ function BusquedaMapaContent() {
                 if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
                   setIsPolygonClosed(true)
                   setIsDrawingMode(false)
+                  if (isCreatingCustomZone) {
+                    setIsMisZonasOpen(true)
+                  }
                 }
               }}
             />
@@ -908,15 +1283,37 @@ function BusquedaMapaContent() {
         <MisZonasSidebar
           isOpen={isMisZonasOpen}
           onClose={() => setIsMisZonasOpen(false)}
-          isAuthenticated={true} // Mapea esto a tu hook o estado de autenticación real
-          zonas={[]} // Mapea esto a tu estado de zonas guardadas en BD
+          isAuthenticated={isAuthenticated} // Mapeado al estado que acabamos de crear
+          zonas={zonasSidebar}
+          editingZoneId={editingZoneId}
+          editingZoneName={editingZoneName}
+          isSavingEditZone={isSavingEditedZone}
+          onEditingZoneNameChange={setEditingZoneName}
+          onConfirmEditZone={saveEditedZone}
+          onCancelEditZone={cancelEditZone}
+          isDraftZoneVisible={isAuthenticated && isCreatingCustomZone && isPolygonClosed && polygonPoints.length >= 3}
+          draftZoneName={newZoneName}
+          isSavingDraftZone={isSavingNewZone}
+          onDraftZoneNameChange={setNewZoneName}
+          onConfirmDraftZone={saveDraftZone}
+          onCancelDraftZone={cancelDraftZone}
           onAddZone={() => {
-            setIsMisZonasOpen(false); // Cierra el sidebar
-            setIsDrawingMode(true);   // Activa la herramienta para dibujar (HU8)
+            setIsMisZonasOpen(true);
+            resetEditingZone();
+            setNewZoneName('Nueva zona');
+            setIsCreatingCustomZone(true);
+            setIsDrawingMode(true);
+            setIsPolygonClosed(false);
+            setPolygonPoints([]);
+            setIsSidebarOpen(false);
           }}
-          onEditZone={(id) => console.log('Editar zona:', id)}
-          onDeleteZone={(id) => console.log('Eliminar zona:', id)}
-          onZoneSelect={(id) => console.log('Seleccionar zona:', id)}
+          onEditZone={startEditZone}
+          onDeleteZone={deleteZone}
+          onZoneSelect={(id) => {
+            const zoneId = Number(id)
+            if (Number.isNaN(zoneId)) return
+            setSelectedZoneId(-zoneId)
+          }}
         />
       </main>
     </div>
