@@ -11,7 +11,9 @@ import {
   obtenerPreferenciasNotificacion,
   actualizarPreferenciasNotificacion,
   editarFechaNacimiento,  // 👈 Agregar esta importación
-  obtenerFechaNacimiento   // 👈 Agregar esta importación
+  obtenerFechaNacimiento,   // 👈 Agregar esta importación
+  eliminarPublicacion,        // 👈 Agregar
+  togglePublicacionEstado     // 👈 Agregar
 } from "./perfil.controller.js";
 import { validarJWT } from "../../middleware/validarJWT.js";
 import { upload } from "../../middleware/upload.js";
@@ -37,4 +39,6 @@ router.put("/foto-perfil", validarJWT, upload.single("foto"), editarFotoPerfil);
 router.put("/telefonos", validarJWT, editarTelefonos);
 router.put('/preferencias-notificacion', validarJWT, actualizarPreferenciasNotificacion);
 router.put("/fecha-nacimiento", validarJWT, editarFechaNacimiento);  // 👈 Agregar esta ruta
+router.delete("/publicaciones/:id", validarJWT, eliminarPublicacion);
+router.patch("/publicaciones/:id/estado", validarJWT, togglePublicacionEstado);
 export default router;
