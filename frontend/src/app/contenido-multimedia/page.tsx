@@ -384,7 +384,8 @@ function ContenidoMultimediaPageContent() {
 
           <button
             type="button"
-            onClick={() => router.push('/propiedades/parametros')}
+            onClick={() => router.push(`/propiedades/parametros?publicacionId=${publicacionId || ""}`)
+            }
             style={{
               background: 'transparent',
               border: 'none',
