@@ -70,15 +70,10 @@ export default function ResumenCliente() {
         qrContent:
           transaccion.plan_suscripcion?.imagen_gr_url ||
           '/qrs/estandar.png',
-<<<<<<< HEAD
         planNombre: transaccion.plan_suscripcion?.nombre_plan || null,
         subtotal: transaccion.subtotal ?? null,
         iva_monto: transaccion.iva_monto ?? null,
         planId: planIdParam,
-=======
->>>>>>> 5e20e98a (Fix: Se corrigio problemas de importaciones dentro de la pagina de resumen para evitar conflictos con el test de github)
-      }));
-
       router.push(`/pago/qr?transaccionId=${transaccion.id}`);
     }
   };
