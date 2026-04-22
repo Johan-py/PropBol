@@ -122,7 +122,6 @@ app.use('/uploads', express.static(path.resolve('uploads')))
 // --------------------
 // RUTAS LEGACY
 // --------------------
-
 app.post('/api/auth/forgot-password', forgotPasswordController)
 app.post('/api/auth/reset-password', resetPasswordController)
 app.use('/api/auth-legacy', authRoutes)
