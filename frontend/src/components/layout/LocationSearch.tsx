@@ -34,11 +34,11 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     if (!containerRef.current) return
     const rect = containerRef.current.getBoundingClientRect()
     setDropdownStyle({
-      position: 'fixed',
-      top: rect.bottom + 8,
-      left: rect.left,
-      width: rect.width,
-      zIndex: 9999
+      position: 'absolute',
+      top: 'calc(100% + 8px)',
+      left: 0,
+      width: '100%',
+      zIndex: 50
     })
   }
 
