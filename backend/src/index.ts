@@ -128,13 +128,13 @@ app.use("/uploads", express.static(path.resolve("uploads")));
 // --------------------
 // RUTAS LEGACY
 // --------------------
-app.post("/api/auth/forgot-password", forgotPasswordController);
-app.post("/api/auth/reset-password", resetPasswordController);
-app.use("/api/auth-legacy", authRoutes);
-app.get("/api/users/:id/publicaciones/free", authMiddleware, (_req, res) => {
-  res.json({ restantes: 2 });
-});
-app.use("/api/publicaciones-legacy", publicacionesRoutes);
+app.post('/api/auth/forgot-password', forgotPasswordController)
+app.post('/api/auth/reset-password', resetPasswordController)
+app.use('/api/auth-legacy', authRoutes)
+app.get('/api/users/:id/publicaciones/free', authMiddleware, (_req, res) => {
+  res.json({ restantes: 2 })
+})
+app.use('/api/publicaciones-legacy', publicacionesRoutes)
 
 // --------------------
 // RUTAS PRINCIPALES
