@@ -435,14 +435,15 @@ function BusquedaMapaContent() {
       }
     }
     if (selectedZoneId !== null) {
-      const zona = zonas.find((z: any) => z.id === selectedZoneId)
+      // CAMBIO: Usar zonasCombinadas para incluir las personalizadas del usuario
+      const zona = zonasCombinadas.find((z: any) => z.id === selectedZoneId)
       if (zona && zona.coordenadas && zona.coordenadas.length >= 3) {
         const coords = [...zona.coordenadas, zona.coordenadas[0]].map((c: any) => [c[1], c[0]])
         return properties.filter((p: any) => p.lat != null && booleanPointInPolygon(point([p.lng, p.lat]), polygon([coords])))
       }
     }
     return properties
-  }, [properties, isPolygonClosed, polygonPoints, selectedZoneId, zonas])
+  }, [properties, isPolygonClosed, polygonPoints, selectedZoneId, zonasCombinadas])
 
   // === 4. ORDENAMIENTO (Usando resultados filtrados) ===
   const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
@@ -1160,10 +1161,12 @@ function BusquedaMapaContent() {
           )}
           {/* --- INICIO BOTONES FLOTANTES HU8 --- */}
           <div className="absolute top-3 right-4 z-[1000] flex flex-col gap-2 items-end pointer-events-none">
-            {!isDrawingMode && !isPolygonClosed && !editingZoneId && (
+            {/* CAMBIO: Se removió !isPolygonClosed para que los botones sigan visibles tras dibujar */}
+            {!isDrawingMode && !editingZoneId && (
               <div className="flex flex-row gap-2 pointer-events-auto">
                 <button
                   onClick={() => {
+                    resetDrawing() // AÑADIDO: Limpia el mapa antes de iniciar un nuevo dibujo
                     resetEditingZone()
                     setIsCreatingCustomZone(false)
                     setIsDrawingMode(true)
@@ -1229,7 +1232,8 @@ function BusquedaMapaContent() {
             
           </div>
 
-          {isPolygonClosed && isCreatingCustomZone && !editingZoneId && (
+          {/* CAMBIO: Se removió isCreatingCustomZone para que aparezca siempre que haya un polígono cerrado */}
+          {isPolygonClosed && !editingZoneId && (
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000]">
               <button
                 onClick={resetDrawing}
