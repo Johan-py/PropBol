@@ -14,7 +14,6 @@ export default function MisPublicacionesPage() {
     removerPublicacionDeLista,
   } = useMisPublicaciones();
 
-  // Filtrar publicaciones activas
   const publicacionesActivas = publicaciones.filter(
     (p) => p.estado === "ACTIVA"
   );
@@ -45,7 +44,6 @@ export default function MisPublicacionesPage() {
         Mis publicaciones
       </h1>
 
-      {/* PANEL SUPERIOR */}
       <div className="mb-8 flex flex-col gap-4 rounded-xl border bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         
         <div>
@@ -83,7 +81,6 @@ export default function MisPublicacionesPage() {
         </div>
       </div>
 
-      {/* LISTADO */}
       {publicaciones.length === 0 ? (
         <p>No tienes publicaciones activas.</p>
       ) : (

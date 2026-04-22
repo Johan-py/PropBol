@@ -1,7 +1,7 @@
 'use client'
 
 import { Bath, BedDouble, MapPin, Square } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { useDeletePublicacion } from '@/hooks/useDeletePublicacion'
 import type { MisPublicacionesItem } from '@/types/publicacion'
@@ -13,9 +13,15 @@ import DeleteErrorModal from './DeleteErrorModal'
 interface Props {
   publicacion: MisPublicacionesItem
   onDeleted: (id: number) => void
+  onToggleEstado?: (id: number) => void   // 👈 NUEVO
 }
 
-export default function PublicacionCard({ publicacion, onDeleted }: Props) {
+export default function PublicacionCard({
+  publicacion,
+  onDeleted,
+  onToggleEstado
+}: Props) {
+
   const {
     modalConfirmacionAbierto,
     modalExitoAbierto,
@@ -31,8 +37,17 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
 
   const [activa, setActiva] = useState(publicacion.estado === 'ACTIVA')
 
+  useEffect(() => {
+    setActiva(publicacion.estado === 'ACTIVA')
+  }, [publicacion.estado])
+
   const toggleEstado = () => {
-    setActiva((prev) => !prev)
+    const nuevoEstado = !activa
+    setActiva(nuevoEstado)
+
+    if (onToggleEstado) {
+      onToggleEstado(publicacion.id)
+    }
   }
 
   const precioFormateado = `$${publicacion.precio.toLocaleString()}`
@@ -44,7 +59,6 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
     <>
       <div className="overflow-hidden rounded-2xl border border-[#e6ddd1] bg-[#F9F6EE] shadow-sm transition-shadow hover:shadow-md">
 
-        {/* IMAGEN */}
         <div className="overflow-hidden">
           <img
             src={publicacion.imagenUrl || '/placeholder-house.jpg'}
@@ -55,7 +69,6 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
 
         <div className="p-4">
 
-          {/* TITULO + PRECIO */}
           <div className="mb-2 flex items-start justify-between gap-3">
             <h3 className="min-w-0 flex-1 text-[17px] font-bold leading-snug text-[#1f1f1f]">
               {publicacion.titulo}
@@ -66,7 +79,6 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
             </span>
           </div>
 
-          {/* ESTADO */}
           <div className="mb-3 flex items-center justify-between rounded-xl border border-[#ddd4c8] bg-[#f7f2ec] px-3 py-2">
             <span className="text-[13px] text-[#555]">Estado:</span>
 
@@ -89,7 +101,6 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
             </span>
           </div>
 
-          {/* UBICACION */}
           <div className="mb-3 flex min-h-[42px] items-center justify-center gap-2 rounded-xl border border-[#ddd4c8] bg-[#f7f2ec] px-3 py-2">
             <MapPin className="h-4 w-4 text-[#e6a04b]" />
             <p className="line-clamp-1 text-center text-[13px] text-[#555]">
@@ -97,7 +108,6 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
             </p>
           </div>
 
-          {/* DETALLES */}
           <div className="mb-4 grid min-h-[48px] grid-cols-3 rounded-xl border border-[#ddd4c8] bg-[#f7f2ec]">
             <div className="flex items-center justify-center gap-2 border-r border-[#ddd4c8]">
               <Bath className="h-4 w-4 text-[#e6a04b]" />
@@ -115,7 +125,6 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
             </div>
           </div>
 
-          {/* SOLO ELIMINAR (EDITAR ELIMINADO) */}
           <div className="flex gap-3">
             <button
               onClick={abrirConfirmacion}
@@ -127,7 +136,6 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
         </div>
       </div>
 
-      {/* MODALES */}
       <ConfirmDeleteModal
         abierto={modalConfirmacionAbierto}
         onAceptar={confirmarEliminacion}
@@ -148,4 +156,3 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
     </>
   )
 }
-

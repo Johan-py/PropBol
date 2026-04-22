@@ -60,7 +60,7 @@ export default function EditForm({
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {/* TÍTULO */}
+
         <div>
           <label htmlFor="title" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
             Título Propiedad
@@ -82,7 +82,6 @@ export default function EditForm({
           )}
         </div>
 
-        {/* DETALLES */}
         <div>
           <label htmlFor="details" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
             Detalles de la Propiedad
@@ -104,7 +103,6 @@ export default function EditForm({
           )}
         </div>
 
-        {/* OPERACIÓN */}
         <div>
           <label htmlFor="operationType" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
             Tipo Operación
@@ -131,7 +129,6 @@ export default function EditForm({
           )}
         </div>
 
-        {/* UBICACIÓN */}
         <div>
           <label htmlFor="location" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
             Ubicación
@@ -153,7 +150,6 @@ export default function EditForm({
           )}
         </div>
 
-        {/* PRECIO */}
         <div className="md:col-span-1">
           <label htmlFor="price" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
             Precio
@@ -176,7 +172,6 @@ export default function EditForm({
         </div>
       </div>
 
-      {/* BOTONES */}
       <div className="flex flex-col sm:flex-row gap-3 mt-8">
         <button
           className="flex-1 rounded-xl bg-[#d8891c] px-6 py-3 text-white font-semibold shadow hover:bg-[#bf7718] transition"
