@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { Trash2, Pencil, Check, X, Loader2, MapPin, Plus, Eye, EyeOff } from 'lucide-react'
 import nextDynamic from 'next/dynamic'
+import { useRouter } from 'next/navigation'
 
 const MapaZonas = nextDynamic(() => import('./MapaZonas'), {
   ssr: false,
@@ -26,6 +27,7 @@ interface Zona {
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
 export default function MisZonas() {
+  const router = useRouter()
   const [zonas, setZonas] = useState<Zona[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [editandoId, setEditandoId] = useState<number | null>(null)
@@ -68,8 +70,7 @@ export default function MisZonas() {
     try {
       const token = getToken()
       if (!token) {
-        setError('No autenticado. Por favor inicia sesión.')
-        setIsLoading(false)
+        router.replace('/sign-in')
         return
       }
 
