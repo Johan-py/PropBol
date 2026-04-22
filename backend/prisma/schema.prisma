@@ -36,7 +36,7 @@ model Usuario {
   controlador                           Boolean                 @default(false)
   notificacionWhatsapp                  Boolean?                @default(false)
   rolId                                 Int?
-  notificacion_email                     Boolean?                @default(true)
+  notificacion_email                    Boolean?                @default(true)
   notificacion_whatsapp                 Boolean?                @default(false)
   fecha_registro                        DateTime?               @default(now()) @db.Timestamp(6)
   updatedAt                             DateTime?               @updatedAt @db.Timestamp(6)
