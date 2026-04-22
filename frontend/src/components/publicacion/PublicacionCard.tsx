@@ -82,19 +82,28 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
             </div>
           </div>
 
-          <div className="flex gap-3">
-            <button
-              onClick={irAEditar}
-              className="h-11 flex-1 rounded-lg border border-[#9a9a9a] bg-white text-[14px] font-medium text-[#2c2c2c] transition hover:bg-gray-50"
-            >
-              Editar
-            </button>
+          <div className="mt-3 flex flex-col gap-2">
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={irAEditar}
+                className="h-10 rounded-lg border border-[#9a9a9a] bg-white px-3 text-[13px] font-medium text-[#2c2c2c] transition hover:bg-gray-50"
+              >
+                Editar
+              </button>
+
+              <button
+                onClick={abrirConfirmacion}
+                className="h-10 rounded-lg bg-[#D97706] px-3 text-[13px] font-medium text-white transition hover:bg-[#bf6905]"
+              >
+                Eliminar
+              </button>
+            </div>
 
             <button
-              onClick={abrirConfirmacion}
-              className="h-11 flex-1 rounded-lg bg-[#D97706] text-[14px] font-medium text-white transition hover:bg-[#bf6905]"
+              type="button"
+              className="w-full rounded-lg bg-[#F3EBDD] px-4 py-2 text-left text-[14px] font-semibold text-[#D97706] transition hover:bg-[#eee2cf]"
             >
-              Eliminar
+              + Añadir otros parámetros
             </button>
           </div>
         </div>
