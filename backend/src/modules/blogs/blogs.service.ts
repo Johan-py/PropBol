@@ -78,6 +78,12 @@ export const blogsService = {
     }
 
     return blogsRepository.changeEstado(id, estado as estado_blog, razon_rechazo)
+  },
+  async eliminar(id: number, usuario_id: number) {
+    const blog = await blogsRepository.findById(id)
+    if (!blog) throw new Error('BLOG_NOT_FOUND')
+    if (blog.usuario_id !== usuario_id) throw new Error('FORBIDDEN')
+    return blogsRepository.delete(id)
   }
 }
 // COMENTARIOS SERVICE
