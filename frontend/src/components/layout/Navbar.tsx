@@ -362,6 +362,13 @@ export default function Navbar() {
             </div>
 
             <div className="flex items-center gap-4">
+              <Link
+                href="/registro-inmueble"
+                className="hidden md:block rounded-md bg-[#E68B25] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-amber-700"
+              >
+                Publica tu inmueble
+              </Link>
+
               <div className="relative" ref={notificationPanelRef}>
                 <button
                   type="button"
@@ -681,11 +688,11 @@ export default function Navbar() {
 
             <nav className="mt-10 flex flex-col gap-2">
               <Link
-                href="/"
+                href="/registro-inmueble"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+                className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"
               >
-                Inicio
+                Publica tu inmueble
               </Link>
 
               <div className="flex flex-col">

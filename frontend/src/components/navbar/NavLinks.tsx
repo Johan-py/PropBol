@@ -22,8 +22,6 @@ export default function NavLinks() {
 
   return (
     <div className="hidden md:flex items-center gap-6 text-[15px] font-medium text-gray-700">
-      <Link href="/" className={linkStyle}>Inicio</Link>
-
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setOpen(!open)}
