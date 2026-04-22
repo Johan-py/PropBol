@@ -102,7 +102,7 @@ export default function MisZonasSidebar({
                           <Pencil size={16} />
                         </button>
                         <button
-                          onClick={() => onDeleteZone(zona.id)}
+                          onClick={() => { if (currentUserId && zona.usuarioId && zona.usuarioId !== currentUserId) return; onDeleteZone(zona.id); }}
                           className="p-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
                           title="Eliminar zona"
                         >
