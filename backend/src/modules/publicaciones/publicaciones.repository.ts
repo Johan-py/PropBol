@@ -54,4 +54,31 @@ export const publicacionesRepository = {
       },
     });
   },
+  // Agregar después de async create
+  async findById(id: number) {
+    return prisma.publicacion.findUnique({
+      where: { id: id },
+      include: {
+        inmueble: true,
+        multimedia: true
+      }
+    });
+  },
+
+  async deleteById(id: number) {
+    return prisma.publicacion.delete({
+      where: { id: id }
+    });
+  },
+
+  async updateEstado(id: number, activa: boolean) {
+    // ✅ ACTIVA cuando el toggle está ON, PAUSADA cuando está OFF
+    const estado = activa ? "ACTIVA" : "PAUSADA";
+
+    return prisma.publicacion.update({
+      where: { id: id },
+      data: { estado: estado }
+    });
+  },
+
 };
