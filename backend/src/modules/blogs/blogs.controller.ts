@@ -140,6 +140,50 @@ export const cambiarEstadoBlog = async (req: AuthRequest, res: Response) => {
 };
 
 // ──────────────────────────────────────────
+// COMENTARIOS CONTROLLERS
+// ──────────────────────────────────────────
+
+/** POST /api/comentarios */
+export const crearComentario = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user)
+      return res.status(401).json({ message: "NOT_AUTHENTICATED" });
+
+    const { contenido, blog_id, comentario_padre_id } = req.body;
+
+    if (!contenido || !blog_id) {
+      return res
+        .status(400)
+        .json({ message: "contenido y blog_id son requeridos" });
+    }
+
+    const comentario = await comentariosService.crear({
+      contenido,
+      usuario_id: req.user.id,
+      blog_id: Number(blog_id),
+      comentario_padre_id: comentario_padre_id
+        ? Number(comentario_padre_id)
+        : undefined,
+    });
+
+    return res.status(201).json(comentario);
+  } catch (error: unknown) {
+    return handleError(res, error);
+  }
+};
+
+/** GET /api/blogs/:id/comentarios */
+export const listarComentarios = async (req: Request, res: Response) => {
+  try {
+    const blog_id = Number(req.params.id);
+    const comentarios = await comentariosService.listarPorBlog(blog_id);
+    return res.json(comentarios);
+  } catch (error: unknown) {
+    return handleError(res, error);
+  }
+};
+
+// ──────────────────────────────────────────
 // HELPER
 // ──────────────────────────────────────────
 
