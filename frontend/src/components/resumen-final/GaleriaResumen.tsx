@@ -7,7 +7,7 @@ interface Props {
 
 export default function GaleriaResumen({ imagenes, videos }: Props) {
   return (
-    <div className="rounded-2xl border border-gray-200 bg-[#f7f7f7] p-6">
+    <div className="h-full rounded-2xl border border-gray-200 bg-[#f7f7f7] p-6">
       <h3 className="mb-5 text-2xl font-semibold text-[#0f172a]">Multimedia</h3>
 
       <div className="mb-6">
@@ -27,12 +27,6 @@ export default function GaleriaResumen({ imagenes, videos }: Props) {
                   alt={`Foto ${index + 1}`}
                   className="h-full w-full object-cover"
                 />
-
-                {index === 2 && (
-                  <span className="absolute left-2 top-2 rounded-md bg-blue-600 px-2 py-1 text-xs font-semibold text-white">
-                    360°
-                  </span>
-                )}
               </div>
             ))}
           </div>

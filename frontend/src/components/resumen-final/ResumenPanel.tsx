@@ -4,6 +4,7 @@ import { useState } from "react";
 import InfoPropiedad from "./InfoPropiedad";
 import GaleriaResumen from "./GaleriaResumen";
 import AceptacionPublicacion from "./AceptacionPublicacion";
+import ParametrosPersonalizados from "./ParametrosPersonalizados";
 
 export interface DatosPropiedad {
   titulo?: string;
@@ -26,7 +27,6 @@ export interface VideoItem {
 export default function ResumenPanel() {
   const [aceptado, setAceptado] = useState(false);
 
-  // Aquí luego reemplazarás estos datos por los reales del formulario
   const datosPropiedad: DatosPropiedad = {
     titulo: "",
     tipoOperacion: "",
@@ -40,11 +40,9 @@ export default function ResumenPanel() {
     descripcion: "",
   };
 
-  // Aquí luego pondrás las fotos reales
   const imagenes: string[] = [];
-
-  // Aquí luego pondrás los videos reales
   const videos: VideoItem[] = [];
+  const parametrosPersonalizados: string[] = [];
 
   return (
     <section className="mx-auto max-w-7xl rounded-[28px] bg-white p-5 shadow-sm md:p-8">
@@ -67,21 +65,25 @@ export default function ResumenPanel() {
           Resumen de la Propiedad
         </h2>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <InfoPropiedad datos={datosPropiedad} />
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-stretch">
+          <div className="flex flex-col gap-6">
+            <InfoPropiedad datos={datosPropiedad} />
+            <ParametrosPersonalizados parametros={parametrosPersonalizados} />
+          </div>
+
           <GaleriaResumen imagenes={imagenes} videos={videos} />
         </div>
 
-        <div className="my-8 border-t border-gray-200" />
-
-        <div className="mb-8">
-          <AceptacionPublicacion
-            aceptado={aceptado}
-            setAceptado={setAceptado}
-          />
+        <div className="mt-6 flex justify-center">
+          <div className="w-full max-w-[560px]">
+            <AceptacionPublicacion
+              aceptado={aceptado}
+              setAceptado={setAceptado}
+            />
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
           <button className="rounded-xl border border-gray-400 bg-white px-6 py-4 text-lg font-medium text-gray-700 transition hover:bg-gray-50">
             Volver
           </button>
