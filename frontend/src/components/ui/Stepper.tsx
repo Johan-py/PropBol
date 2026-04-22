@@ -37,17 +37,10 @@ export default function Stepper({ onBackClick }: StepperProps = {}) {
         // Clases de Tailwind para el círculo dependiendo de su estado
         const circleClasses = `flex items-center justify-center w-8 h-8 rounded-full transition-colors ${
           isCurrent
-<<<<<<< HEAD
             ? 'bg-amber-500 text-white'
             : isPast
               ? 'bg-amber-100 text-amber-700 hover:bg-amber-200 hover:shadow-sm'
               : 'bg-gray-200 text-gray-500 cursor-not-allowed opacity-70'
-=======
-            ? 'bg-green-600 text-white'
-            : isPast
-              ? 'bg-green-200 text-green-800 hover:bg-green-300 hover:shadow-sm' // Clickable
-              : 'bg-gray-200 text-gray-500 cursor-not-allowed opacity-70' // Bloqueado
->>>>>>> ca742bd0 (Fix: Se corrigio la interaccion con el stepper en las fases de resumen de pago, pago y verificación)
         }`
 
         return (
@@ -55,7 +48,6 @@ export default function Stepper({ onBackClick }: StepperProps = {}) {
             
             {/* RENDERIZADO CONDICIONAL: Solo los pasos pasados tienen Link */}
             {isPast ? (
-<<<<<<< HEAD
               onBackClick ? (
                 <button onClick={onBackClick} className={circleClasses} title="Volver a este paso">
                   {step.id}
@@ -65,11 +57,6 @@ export default function Stepper({ onBackClick }: StepperProps = {}) {
                   {step.id}
                 </Link>
               )
-=======
-              <Link href={step.path} className={circleClasses} title="Volver a este paso">
-                {step.id}
-              </Link>
->>>>>>> ca742bd0 (Fix: Se corrigio la interaccion con el stepper en las fases de resumen de pago, pago y verificación)
             ) : (
               <div className={circleClasses} title={isFuture ? "Paso bloqueado" : ""}>
                 {step.id}
@@ -79,11 +66,7 @@ export default function Stepper({ onBackClick }: StepperProps = {}) {
             {/* Etiqueta de texto (Nombre del paso) */}
             <span
               className={`ml-2 ${
-<<<<<<< HEAD
                 isCurrent ? 'font-bold text-amber-600' : 'text-gray-500'
-=======
-                isCurrent ? 'font-bold text-gray-900' : 'text-gray-500'
->>>>>>> ca742bd0 (Fix: Se corrigio la interaccion con el stepper en las fases de resumen de pago, pago y verificación)
               } ${isFuture ? 'opacity-50' : ''}`}
             >
               {step.name}
