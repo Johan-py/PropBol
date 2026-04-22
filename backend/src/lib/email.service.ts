@@ -181,3 +181,48 @@ export const enviarCorreoRecuperacionPassword = async ({
     textContent: `${saludo}\n\nRestablece tu contraseña desde este enlace: ${resetLink}\n\nExpira en ${minutosExpiracion} minutos.`
   })
 }
+
+export const enviarNotificacionCambioPassword = async ({
+  emailDestino,
+  nombreUsuario,
+}: {
+  emailDestino: string;
+  nombreUsuario?: string;
+}): Promise<EmailSendResult> => {
+  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : "Hola,";
+  const fecha = new Date().toLocaleString("es-ES", {
+    dateStyle: "long",
+    timeStyle: "short",
+  });
+
+  return sendBrevoEmail({
+    to: emailDestino,
+    subject: "Tu contraseña ha sido cambiada - PropBol",
+    htmlContent: `
+      <!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
+      <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
+        <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:10px;overflow:hidden;">
+          <div style="background:#d97706;padding:20px;text-align:center;">
+            <h1 style="color:#fff;margin:0;font-size:24px;">Seguridad de la cuenta</h1>
+          </div>
+          <div style="padding:30px;">
+            <p style="font-size:16px;color:#333;">${saludo}</p>
+            <p style="font-size:16px;color:#333;">Te informamos que la contraseña de tu cuenta en <strong>PropBol</strong> ha sido actualizada correctamente.</p>
+            <div style="background:#f9fafb;padding:15px;border-radius:8px;margin:20px 0;border:1px solid #e5e7eb;">
+              <p style="margin:0;font-size:14px;color:#666;"><strong>Fecha del cambio:</strong> ${fecha}</p>
+            </div>
+            <p style="font-size:14px;color:#666;">Si fuiste tú quien realizó este cambio, puedes ignorar este mensaje.</p>
+            <div style="background:#fee2e2;border-left:4px solid #ef4444;padding:12px;margin:20px 0;">
+              <p style="margin:0;font-size:13px;color:#991b1b;"><strong>¿No reconoces esta actividad?</strong></p>
+              <p style="margin:5px 0 0 0;font-size:13px;color:#b91c1c;">Si no realizaste este cambio, por favor ponte en contacto con nuestro equipo de soporte de inmediato para proteger tu cuenta.</p>
+            </div>
+          </div>
+          <div style="background:#f9fafb;padding:20px;text-align:center;border-top:1px solid #e5e7eb;">
+            <p style="font-size:12px;color:#9ca3af;margin:0;">© 2026 PropBol Inmobiliaria · Seguridad</p>
+          </div>
+        </div>
+      </body></html>
+    `,
+    textContent: `${saludo}\n\nTu contraseña ha sido cambiada correctamente el ${fecha}.\n\nSi no realizaste este cambio, contacta con soporte.`,
+  });
+};

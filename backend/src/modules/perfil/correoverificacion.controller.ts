@@ -1,7 +1,10 @@
 // correoverificacion.controller.ts
 import type { Request, Response } from "express";
 import { prisma } from "../../lib/prisma.client.js";
-import { enviarCodigoCambioEmail } from "../../lib/email.service.js";
+import { 
+  enviarCodigoCambioEmail, 
+  enviarNotificacionCambioPassword 
+} from "../../lib/email.service.js";
 import { invalidateOtherUserSessions } from "../auth/auth.repository.js";
 
 interface AuthRequest extends Request {
@@ -159,36 +162,78 @@ if (cambiosValidosRecientes >= MAX_CAMBIOS_VALIDOS_EN_VENTANA) {
   });
 }
 
-await prisma.$transaction([
-  prisma.usuario.update({
-    where: { id: usuarioId },
-    data: {
-      password: nuevaPassword,
-      intentos_fallidos_cambio_password: 0,
-      bloqueo_cambio_password_hasta: null,
-      password_actualizado_en: ahora,
-    },
-  }),
-  prisma.historial_password.create({
-    data: {
-      usuarioId,
-      passwordHash: nuevaPassword,
-      creadoEn: ahora,
-    },
-  }),
-]);
-
-await invalidateOtherUserSessions(usuarioId, currentToken);
-
-return res.json({
-  ok: true,
-  msg: "Contraseña actualizada correctamente",
+const historialUltimas = await prisma.historial_password.findMany({
+  where: { usuarioId },
+  orderBy: { creadoEn: "desc" },
+  take: 3,
 });
-  } catch (error) {
+
+const esReutilizada = historialUltimas.some(
+  (h) => h.passwordHash === nuevaPassword
+);
+
+if (esReutilizada) {
+  return res.status(400).json({
+    ok: false,
+    msg: "No puedes usar ninguna de tus últimas 3 contraseñas anteriores.",
+  });
+}
+
+    await prisma.$transaction([
+      prisma.usuario.update({
+        where: { id: usuarioId },
+        data: {
+          password: nuevaPassword,
+          intentos_fallidos_cambio_password: 0,
+          bloqueo_cambio_password_hasta: null,
+          password_actualizado_en: ahora,
+        },
+      }),
+      prisma.historial_password.create({
+        data: {
+          usuarioId,
+          passwordHash: nuevaPassword,
+          creadoEn: ahora,
+        },
+      }),
+    ]);
+
+    try {
+      await invalidateOtherUserSessions(usuarioId, currentToken);
+    } catch (sessionError) {
+      console.error("Error no crítico al invalidar otras sesiones:", sessionError);
+    }
+
+    try {
+      await enviarNotificacionCambioPassword({
+        emailDestino: usuario.correo,
+        nombreUsuario: usuario.nombre,
+      });
+    } catch (emailError) {
+      console.error("Error no crítico al enviar notificación de cambio de password:", emailError);
+    }
+
+    return res.json({
+      ok: true,
+      msg: "Contraseña actualizada correctamente",
+    });
+  } catch (error: any) {
     console.error("Error en cambiarPassword:", error);
+
+    if (error.code === 'P2002') {
+      return res.status(400).json({
+        ok: false,
+        msg: "Error de duplicidad en la base de datos.",
+      });
+    }
+
+    const errorMsg = error instanceof Error ? error.message : "Error inesperado en el servidor";
+
     return res.status(500).json({
       ok: false,
-      msg: "Error al actualizar la contraseña",
+      msg: errorMsg.includes("Prisma") 
+        ? "Error de conexión con la base de datos" 
+        : "No se pudo completar el cambio de contraseña. Intenta de nuevo.",
     });
   }
 };
