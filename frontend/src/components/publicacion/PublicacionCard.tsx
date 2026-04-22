@@ -1,8 +1,12 @@
 'use client'
 
 import { Bath, BedDouble, MapPin, Square } from 'lucide-react'
+<<<<<<< feature/perfil-HU09-anders
 import { useState, useEffect } from 'react'
 
+=======
+import { useRouter } from 'next/navigation'
+>>>>>>> develop
 import { useDeletePublicacion } from '@/hooks/useDeletePublicacion'
 import type { MisPublicacionesItem } from '@/types/publicacion'
 
@@ -16,11 +20,16 @@ interface Props {
   onToggleEstado?: (id: number) => void   // 👈 NUEVO
 }
 
+<<<<<<< feature/perfil-HU09-anders
 export default function PublicacionCard({
   publicacion,
   onDeleted,
   onToggleEstado
 }: Props) {
+=======
+export default function PublicacionCard({ publicacion, onDeleted }: Props) {
+  const router = useRouter()
+>>>>>>> develop
 
   const {
     modalConfirmacionAbierto,
@@ -54,6 +63,10 @@ export default function PublicacionCard({
   const areaFormateada = publicacion.superficieM2
     ? `${publicacion.superficieM2}m²`
     : '-'
+
+  const irAEditar = () => {
+    router.push(`/mis-publicaciones/${publicacion.id}/editar`)
+  }
 
   return (
     <>
@@ -126,6 +139,16 @@ export default function PublicacionCard({
           </div>
 
           <div className="flex gap-3">
+<<<<<<< feature/perfil-HU09-anders
+=======
+            <button
+              onClick={irAEditar}
+              className="h-11 flex-1 rounded-lg border border-[#9a9a9a] bg-white text-[14px] font-medium text-[#2c2c2c] transition hover:bg-gray-50"
+            >
+              Editar
+            </button>
+
+>>>>>>> develop
             <button
               onClick={abrirConfirmacion}
               className="h-11 flex-1 rounded-lg bg-[#D97706] text-[14px] font-medium text-white hover:bg-[#bf6905]"
