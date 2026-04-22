@@ -30,7 +30,7 @@ export function useCurrentPayment() {
         }
 
         setPayment(realPayment)
-      } catch (err) {
+      } catch (_err) {
         setError('Error al cargar el pago')
       } finally {
         setLoading(false)
