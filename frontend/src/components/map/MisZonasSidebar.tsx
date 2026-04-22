@@ -4,6 +4,7 @@ import { ChevronRight, Plus, Pencil, Trash2, Map as MapIcon } from 'lucide-react
 
 export interface ZonaPersonalizada {
   id: string
+  usuarioId?: number
   nombre: string
 }
 
@@ -15,6 +16,7 @@ interface MisZonasSidebarProps {
   onAddZone: () => void
   onEditZone: (id: string) => void
   onDeleteZone: (id: string) => void
+  currentUserId?: number
   onZoneSelect?: (id: number) => void
 }
 
@@ -27,7 +29,8 @@ export default function MisZonasSidebar({
   onAddZone,
   onEditZone,
   onZoneSelect,
-  onDeleteZone
+  onDeleteZone,
+  currentUserId,
 }: MisZonasSidebarProps) {
   return (
     <>
@@ -92,14 +95,14 @@ export default function MisZonasSidebar({
                       </span>
                       <div className="flex items-center gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
-                          onClick={() => onEditZone(zona.id)}
+                          onClick={() => { if (currentUserId && zona.usuarioId && zona.usuarioId !== currentUserId) return; onEditZone(zona.id); }}
                           className="p-1.5 text-stone-400 hover:text-orange-500 hover:bg-orange-50 rounded-md transition-colors"
                           title="Editar zona"
                         >
                           <Pencil size={16} />
                         </button>
                         <button
-                          onClick={() => onDeleteZone(zona.id)}
+                          onClick={() => { if (currentUserId && zona.usuarioId && zona.usuarioId !== currentUserId) return; onDeleteZone(zona.id); }}
                           className="p-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
                           title="Eliminar zona"
                         >
