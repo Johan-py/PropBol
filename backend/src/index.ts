@@ -83,6 +83,7 @@ import telemetriaRoutes from './modules/telemetria/telemetria.routes.js'
 import recomendacionesRoutes from './modules/recomendaciones/recomendaciones.routes.js'
 import transaccionesRoutes from './modules/transacciones/transacciones.routes.js'
 import plansRoutes from './modules/plans/plans.routes.js'
+import whatsappRoutes from './modules/whatsapp/whatsapp.routes.js'
 // --------------------
 // SERVER
 // --------------------
@@ -147,6 +148,7 @@ app.use('/api/telemetria', telemetriaRoutes)
 app.use('/api/recomendaciones', recomendacionesRoutes)
 app.use('/api/transacciones', transaccionesRoutes)
 app.use('/api/planes', plansRoutes)
+app.use('/api/whatsapp', whatsappRoutes)
 // --------------------
 // MOCK / TEST
 // --------------------
