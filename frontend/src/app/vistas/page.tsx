@@ -4,9 +4,53 @@ import { Star, Calendar, Trash2 } from "lucide-react";
 
 const PropertyCard = ({ prop }: { prop: any }) => {
     const [favorito, setFavorito] = useState(false);
+    const [cargando, setCargando] = useState(false);
+
     const fecha = new Date(prop.viewedDate).toLocaleDateString('es-ES', {
         day: '2-digit', month: '2-digit'
     });
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token || !prop.inmuebleId) return;
+
+        fetch(`http://localhost:5000/api/favorites/status/${prop.inmuebleId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        .then(res => res.json())
+        .then(data => setFavorito(data.is_favorite))
+        .catch(() => {});
+    }, [prop.inmuebleId]);
+
+    const handleFavorito = async () => {
+        const token = localStorage.getItem('token');
+        if (!token || cargando || !prop.inmuebleId) return;
+
+        setCargando(true);
+        try {
+            if (favorito) {
+                await fetch(`http://localhost:5000/api/favorites/${prop.inmuebleId}`, {
+                    method: 'DELETE',
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setFavorito(false);
+            } else {
+                await fetch(`http://localhost:5000/api/favorites`, {
+                    method: 'POST',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ inmuebleId: prop.inmuebleId })
+                });
+                setFavorito(true);
+            }
+        } catch (error) {
+            console.error('Error al actualizar favorito:', error);
+        } finally {
+            setCargando(false);
+        }
+    };
 
     return (
         <div className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden relative hover:shadow-md transition-all">
@@ -22,9 +66,9 @@ const PropertyCard = ({ prop }: { prop: any }) => {
                     <div className="bg-[#4B4B4B] text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm mb-1">
                         Visto: {fecha}
                     </div>
-                    <span className="text-[9px] text-gray-300 font-medium">Ref: #{prop.id}</span>
+                    <span className="text-[9px] text-gray-300 font-medium">Ref: #{prop.inmuebleId}</span>
                 </div>
-                <p className="text-[#E87B00] font-bold text-lg">${prop.price?.toLocaleString()} USD</p>
+                <p className="text-[#E87B00] font-bold text-lg">${Number(prop.price).toLocaleString()} USD</p>
                 <h3 className="font-bold text-black text-sm mt-1 truncate">{prop.title}</h3>
                 <p className="text-black text-[11px] mt-1 font-medium italic">{prop.location}</p>
                 <div className="flex items-center gap-2 mt-3 text-[10px] text-black font-medium italic">
@@ -32,10 +76,20 @@ const PropertyCard = ({ prop }: { prop: any }) => {
                 </div>
                 <div className="mt-4 flex gap-2">
                     <button
-                        onClick={() => setFavorito(!favorito)}
-                        className="flex items-center justify-center px-3 bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 transition-colors"
+                        onClick={handleFavorito}
+                        disabled={cargando}
+                        className={`flex items-center justify-center px-3 py-2.5 rounded-lg text-xs font-bold transition-colors ${
+                            favorito
+                                ? 'bg-[#E87B00] text-black hover:bg-orange-600'
+                                : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                        }`}
+                        title={favorito ? 'Quitar de favoritos' : 'Agregar a favoritos'}
                     >
-                        <Star size={16} fill={favorito ? "black" : "none"} color="black" />
+                        <Star
+                            size={16}
+                            fill={favorito ? "black" : "none"}
+                            color={favorito ? "black" : "gray"}
+                        />
                     </button>
                     <button className="w-full bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm text-center">
                         Ver Detalle
@@ -70,9 +124,8 @@ export default function VistasRecientesPage() {
 
     useEffect(() => { fetchHistorial(); }, []);
 
-    // FUNCIONALIDAD: Filtrar por fecha (Calendario)
     const handleDateFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedDate = e.target.value; // Formato YYYY-MM-DD
+        const selectedDate = e.target.value;
         if (!selectedDate) {
             setFilteredProperties(properties);
             return;
@@ -83,12 +136,10 @@ export default function VistasRecientesPage() {
         setFilteredProperties(filtered);
     };
 
-    // FUNCIONALIDAD: Borrar historial
     const handleClearHistory = async () => {
         if (!confirm("¿Deseas borrar todo tu historial de vistas?")) return;
         const token = localStorage.getItem('token');
         try {
-            // Nota: Este endpoint debe existir en tu historial.routes.ts
             await fetch('http://localhost:5000/api/perfil/historial/vistas', {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -100,19 +151,25 @@ export default function VistasRecientesPage() {
         }
     };
 
-    if (loading) return <div className="p-20 text-center font-bold text-black">Conectando con PropBol...</div>;
+    if (loading) return (
+        <div className="p-20 text-center font-bold text-black">
+            Conectando con PropBol...
+        </div>
+    );
 
     return (
         <main className="min-h-screen bg-[#F8F9FA] p-4 md:p-6 font-sans">
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                     <div>
-                        <h1 className="text-xl md:text-2xl font-bold text-gray-900">Propiedades vistas recientemente</h1>
-                        <p className="text-gray-500 text-xs">{filteredProperties.length} propiedades encontradas</p>
+                        <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+                            Propiedades vistas recientemente
+                        </h1>
+                        <p className="text-gray-500 text-xs">
+                            {filteredProperties.length} propiedades encontradas
+                        </p>
                     </div>
-
                     <div className="flex gap-3 items-center">
-                        {/* Input de fecha oculto pero activable */}
                         <div className="relative">
                             <input
                                 type="date"
@@ -127,7 +184,6 @@ export default function VistasRecientesPage() {
                                 <Calendar size={16} /> Filtrar por Fecha
                             </button>
                         </div>
-
                         <button
                             onClick={handleClearHistory}
                             className="flex items-center gap-2 px-4 py-2 bg-white border border-red-100 text-red-600 rounded-lg shadow-sm text-sm font-medium hover:bg-red-50"
