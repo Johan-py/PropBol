@@ -5,9 +5,10 @@ import { useSearchFilters } from '@/hooks/useSearchFilters'
 import { useRouter, useSearchParams } from 'next/navigation'
 interface PriceFilterSidebarProps {
   isOpen: boolean;  
-  onClose: () => void
+  onClose: () => void;
+  totalResultados?: number;
 }
-export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSidebarProps) {  
+export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = -1 }: PriceFilterSidebarProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { updateFilters } = useSearchFilters()
@@ -16,6 +17,7 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
   const [minPrice, setMinPrice] = useState<string>('')
   const [maxPrice, setMaxPrice] = useState<string>('')
   const [error, setError] = useState<string>('')
+  const [filtroAplicado, setFiltroAplicado] = useState(false)  
 
   // Cargar valores iniciales si existen en la URL o SessionStorage
   useEffect(() => {
@@ -59,6 +61,7 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
     params.set('currency', moneda)
 
     router.push(`/busqueda_mapa?${params.toString()}`)
+    setFiltroAplicado(true)
     onClose()
   }
 
@@ -191,6 +194,17 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
           </span>
         </div>
       </div>
+
+      {/* Día 7 - Empty state cuando no hay resultados */}
+      {filtroAplicado && totalResultados === 0 && (
+        <div className="flex flex-col items-center gap-2 py-3 text-center">
+          <span className="text-xl">🔍</span>
+          <p className="text-sm font-semibold text-stone-700">Sin resultados</p>
+          <p className="text-xs text-stone-400">
+            No se encontraron propiedades dentro del rango de precio seleccionado
+          </p>
+        </div>
+      )}
 
       {/* Botón Aplicar */}
       <button
