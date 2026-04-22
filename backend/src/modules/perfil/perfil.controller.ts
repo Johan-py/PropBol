@@ -359,6 +359,84 @@ export const listarMisPublicaciones = async (
     });
   }
 };
+
+export const eliminarPublicacion = async (req: AuthRequest, res: Response) => {
+  try {
+    const usuarioId = req.usuario?.id;
+    const { id } = req.params;
+
+    if (!usuarioId) {
+      return res.status(401).json({ ok: false, msg: "No hay token válido" });
+    }
+
+    // ✅ CORRECCIÓN: Asegurar que id sea string
+    const idStr = Array.isArray(id) ? id[0] : id;
+    const publicacionId = parseInt(idStr);
+
+    if (isNaN(publicacionId)) {
+      return res.status(400).json({ ok: false, msg: "ID inválido" });
+    }
+
+    await publicacionesService.eliminar(publicacionId, usuarioId);
+
+    return res.json({ ok: true, msg: "Publicación eliminada correctamente" });
+  } catch (error: any) {
+    console.error("Error en eliminarPublicacion:", error);
+
+    if (error.message === "PUBLICACION_NOT_FOUND") {
+      return res.status(404).json({ ok: false, msg: "Publicación no encontrada" });
+    }
+    if (error.message === "UNAUTHORIZED") {
+      return res.status(403).json({ ok: false, msg: "No autorizado" });
+    }
+
+    return res.status(500).json({ ok: false, msg: "Error al eliminar la publicación" });
+  }
+};
+
+export const togglePublicacionEstado = async (req: AuthRequest, res: Response) => {
+  try {
+    const usuarioId = req.usuario?.id;
+    const { id } = req.params;
+    const { activa } = req.body;
+
+    if (!usuarioId) {
+      return res.status(401).json({ ok: false, msg: "No hay token válido" });
+    }
+
+    if (typeof activa !== 'boolean') {
+      return res.status(400).json({ ok: false, msg: "El campo 'activa' debe ser true o false" });
+    }
+
+    // ✅ CORRECCIÓN: Asegurar que id sea string
+    const idStr = Array.isArray(id) ? id[0] : id;
+    const publicacionId = parseInt(idStr);
+
+    if (isNaN(publicacionId)) {
+      return res.status(400).json({ ok: false, msg: "ID inválido" });
+    }
+
+    await publicacionesService.cambiarEstado(publicacionId, usuarioId, activa);
+
+    return res.json({
+      ok: true,
+      msg: `Publicación ${activa ? 'activada' : 'desactivada'} correctamente`,
+      activa
+    });
+  } catch (error: any) {
+    console.error("Error en togglePublicacionEstado:", error);
+
+    if (error.message === "PUBLICACION_NOT_FOUND") {
+      return res.status(404).json({ ok: false, msg: "Publicación no encontrada" });
+    }
+    if (error.message === "UNAUTHORIZED") {
+      return res.status(403).json({ ok: false, msg: "No autorizado" });
+    }
+
+    return res.status(500).json({ ok: false, msg: "Error al cambiar el estado" });
+  }
+};
+
 export const obtenerPreferenciasNotificacion = async (req: AuthRequest, res: Response) => {
   try {
     const usuarioId = req.usuario?.id
@@ -538,3 +616,5 @@ export const obtenerFechaNacimiento = async (req: AuthRequest, res: Response) =>
     });
   }
 };
+
+
