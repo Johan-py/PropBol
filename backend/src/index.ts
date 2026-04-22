@@ -21,6 +21,7 @@ import {
 } from './modules/notificaciones/notificaciones.controller.js'
 import { BannersController } from './modules/banners/banners.controller.js'
 import { FiltersHomepageController } from './modules/filtershomepage/filtershomepage.controller.js'
+import { CityController } from './modules/city/city.controller.js'
 
 // --------------------
 // AUTH
@@ -163,9 +164,11 @@ app.get('/api/auth/google/callback', googleCallbackController)
 // --------------------
 const bannersController = new BannersController()
 const filtersController = new FiltersHomepageController()
+const cityController = new CityController()
 
 app.get('/api/filters', filtersController.getFilters)
 app.get('/api/banners', (req, res) => bannersController.getBanners(req, res))
+app.get('/api/cities', (req, res) => cityController.getFeatured(req, res))
 
 // --------------------
 // LOCATIONS
