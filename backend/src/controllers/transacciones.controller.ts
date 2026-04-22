@@ -136,9 +136,13 @@ export const confirmarPago = async (
       },
     });
 
-    await emitirComprobante(transaccionId);
+    const comprobanteEnviado = await emitirComprobante(transaccionId);
 
-    res.status(200).json({ mensaje: "Pago confirmado y comprobante enviado" });
+    res.status(200).json({
+      mensaje: comprobanteEnviado
+        ? "Pago confirmado y comprobante enviado"
+        : "Pago confirmado, fallo al enviar comprobante",
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error instanceof Error ? error.message : "Error interno" });

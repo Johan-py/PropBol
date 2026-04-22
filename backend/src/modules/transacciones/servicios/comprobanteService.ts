@@ -1,7 +1,7 @@
 import { prisma } from '../../../lib/prisma.client.js'
 import { enviarComprobantePago } from '../../../lib/email.service.js'
 
-export async function emitirComprobante(transaccionId: number): Promise<void> {
+export async function emitirComprobante(transaccionId: number): Promise<boolean> {
   const transaccion = await prisma.transacciones.findUnique({
     where: { id: transaccionId },
     include: {
@@ -32,4 +32,6 @@ export async function emitirComprobante(transaccionId: number): Promise<void> {
         : `Fallo al enviar comprobante: ${String(resultado.error)}`,
     },
   })
+
+  return resultado.success
 }
