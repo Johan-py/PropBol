@@ -1,3 +1,4 @@
+// frontend/src/components/VisualFilters/VisualFiltersSection.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -5,60 +6,80 @@ import PropertyCarousel from "./PropertyCarousel";
 import PropertyTypeGrid from "./PropertyTypeGrid";
 
 const CITY_IMAGES: Record<string, string> = {
-  "Santa Cruz": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&q=80",
-  "La Paz": "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400&q=80",
-  "Cochabamba": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&q=80",
-  "Oruro": "https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=400&q=80",
-  "Potosí": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80",
-  "Sucre": "https://images.unsplash.com/photo-1549417229-aa67d3263ad5?w=400&q=80",
-  "Beni": "https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=400&q=80",
-  "Tarija": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=400&q=80",
-  "Pando": "https://images.unsplash.com/photo-1516939884455-1445c8652f83?w=400&q=80",
+  "SANTA CRUZ": "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&q=80",
+  "LA PAZ": "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400&q=80",
+  "COCHABAMBA": "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&q=80",
+  "ORURO": "https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=400&q=80",
+  "POTOSÍ": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80",
+  "SUCRE": "https://images.unsplash.com/photo-1549417229-aa67d3263ad5?w=400&q=80",
+  "BENI": "https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=400&q=80",
+  "TARIJA": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=400&q=80",
+  "PANDO": "https://images.unsplash.com/photo-1516939884455-1445c8652f83?w=400&q=80",
   default: "https://images.unsplash.com/photo-1560448075-bb485b067938?w=400&q=80",
 };
 
-const CIUDADES_BASE = [
-  "Santa Cruz",
-  "La Paz",
-  "Cochabamba",
-  "Oruro",
-  "Potosí",
-  "Sucre",
-  "Tarija",
-  "Beni",
-  "Pando",
+// Bolivia tiene 9 departamentos — estos siempre se muestran aunque tengan 0
+const DEPARTAMENTOS_BASE = [
+  "SANTA CRUZ",
+  "LA PAZ",
+  "COCHABAMBA",
+  "ORURO",
+  "POTOSÍ",
+  "SUCRE",
+  "TARIJA",
+  "BENI",
+  "PANDO",
 ];
 
-function getCityImage(city: string): string {
-  return CITY_IMAGES[city] ?? CITY_IMAGES.default;
+function getCityImage(dept: string): string {
+  const key = dept.toUpperCase();
+  return CITY_IMAGES[key] ?? CITY_IMAGES.default;
+}
+
+// Formato que viene del backend
+interface BackendItem {
+  name: string;
+  count: number;
+  previews?: Array<{ imagen: string; titulo: string }>;
+}
+
+interface BackendResponse {
+  rentals: BackendItem[];
+  sales: BackendItem[];
+  categories: BackendItem[];
 }
 
 interface FilterData {
   nombre: string;
   total: number;
-  categoria?: string;
+    previews?: Array<{ imagen: string; titulo: string }>;
+
 }
 
-interface FiltersResponse {
-  alquileres: FilterData[];
-  ventas: FilterData[];
-  tipos: FilterData[];
+function normalizeName(name: string): string {
+  return name.trim().toUpperCase();
 }
 
-function mergeCiudadesConDatos(
+function mergeDepartamentos(
   base: string[],
-  datos: FilterData[]
+  datos: BackendItem[]
 ): FilterData[] {
-  return base.map((ciudad) => {
+  return base.map((dept) => {
     const found = datos.find(
-      (d) => d.nombre.toLowerCase() === ciudad.toLowerCase()
+      (d) => normalizeName(d.name) === normalizeName(dept)
     );
-    return found ?? { nombre: ciudad, total: 0 };
+    return {
+      nombre: dept,
+      total: found?.count ?? 0,
+      previews: found?.previews ?? [],
+    };
   });
 }
 
 export default function VisualFiltersSection() {
-  const [data, setData] = useState<FiltersResponse | null>(null);
+  const [alquileres, setAlquileres] = useState<FilterData[]>([]);
+  const [ventas, setVentas] = useState<FilterData[]>([]);
+  const [tipos, setTipos] = useState<FilterData[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -67,13 +88,42 @@ export default function VisualFiltersSection() {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000"}/api/filters`
         );
-        if (!res.ok) throw new Error("Error al cargar filtros");
-        const json = await res.json();
-        setData(json);
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+        const json: BackendResponse = await res.json();
+
+        // El backend puede envolver en { success, data } o directo
+        const payload: BackendResponse =
+          (json as any).data ?? json;
+
+        setAlquileres(mergeDepartamentos(DEPARTAMENTOS_BASE, payload.rentals ?? []));
+        setVentas(mergeDepartamentos(DEPARTAMENTOS_BASE, payload.sales ?? []));
+
+        // Tipos: mapear categories del backend
+        const tiposBase = ["casa", "departamento", "oficina", "terreno"];
+        const tiposMapped = tiposBase.map((base) => {
+          const found = (payload.categories ?? []).find((c) =>
+            normalizeName(c.name).includes(base.toUpperCase())
+          );
+          return {
+            nombre: found?.name ?? (base.charAt(0).toUpperCase() + base.slice(1) + "s"),
+            total: found?.count ?? 0,
+          };
+        });
+        setTipos(tiposMapped);
+
       } catch (err) {
-        console.error("VisualFiltersSection:", err);
-        
-        setData({ alquileres: [], ventas: [], tipos: [] });
+        console.warn("VisualFiltersSection: backend no disponible.", err);
+        // Sin datos reales → mostrar departamentos en 0, nunca romper la UI
+        setAlquileres(mergeDepartamentos(DEPARTAMENTOS_BASE, []));
+        setVentas(mergeDepartamentos(DEPARTAMENTOS_BASE, []));
+        setTipos([
+          { nombre: "Casas", total: 0 },
+          { nombre: "Departamentos", total: 0 },
+          { nombre: "Oficinas", total: 0 },
+          { nombre: "Terrenos", total: 0 },
+        ]);
       } finally {
         setLoading(false);
       }
@@ -103,70 +153,40 @@ export default function VisualFiltersSection() {
     );
   }
 
-  const alquileresConBase = mergeCiudadesConDatos(
-    CIUDADES_BASE,
-    data?.alquileres ?? []
-  );
-  const ventasConBase = mergeCiudadesConDatos(
-    CIUDADES_BASE,
-    data?.ventas ?? []
-  );
-
-  const alquilerItems = alquileresConBase.map((item) => ({
+  const alquilerItems = alquileres.map((item) => ({
     image: getCityImage(item.nombre),
     title: item.nombre,
-    location: `${item.total.toLocaleString()} propiedades`,
+    location: item.total > 0
+      ? `${item.total.toLocaleString()} propiedades`
+      : "Sin propiedades",
     count: item.total,
     filterParam: item.nombre,
+    previews: item.previews ?? [],
   }));
 
-  const ventaItems = ventasConBase.map((item) => ({
+  const ventaItems = ventas.map((item) => ({
     image: getCityImage(item.nombre),
     title: item.nombre,
-    location: `${item.total.toLocaleString()} propiedades`,
+    location: item.total > 0
+      ? `${item.total.toLocaleString()} propiedades`
+      : "Sin propiedades",
     count: item.total,
     filterParam: item.nombre,
+    previews: item.previews ?? [], 
   }));
 
-  const tiposBase = ["casas", "departamentos", "oficinas", "terrenos"];
-  const tipoItems = tiposBase.map((base) => {
-    const found = (data?.tipos ?? []).find((t) =>
-      t.nombre.toLowerCase().includes(base)
-    );
-    return found
-      ? {
-          key: found.nombre.toLowerCase().replace(/\s+/g, ""),
-          label: found.nombre,
-          count: found.total,
-        }
-      : {
-          key: base,
-          label: base.charAt(0).toUpperCase() + base.slice(1),
-          count: 0,
-        };
-  });
+  const tipoItems = tipos.map((item) => ({
+    key: item.nombre.toLowerCase().replace(/\s+/g, ""),
+    label: item.nombre,
+    count: item.total,
+  }));
 
   return (
     <section className="w-full px-4 md:px-8 py-8 flex justify-center">
       <div className="w-full max-w-[1100px]">
-
-        {/* ALQUILERES */}
-        <PropertyCarousel
-          title="Alquileres"
-          items={alquilerItems}
-          category="alquiler"
-        />
-
-        {/* EN VENTA */}
-        <PropertyCarousel
-          title="En Venta"
-          items={ventaItems}
-          category="venta"
-        />
-
-        {/* POR TIPO DE INMUEBLE */}
+        <PropertyCarousel title="Alquileres" items={alquilerItems} category="alquiler" />
+        <PropertyCarousel title="En Venta" items={ventaItems} category="venta" />
         <PropertyTypeGrid items={tipoItems} />
-
       </div>
     </section>
   );
