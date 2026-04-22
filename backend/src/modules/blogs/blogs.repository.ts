@@ -38,12 +38,26 @@ export const blogsRepository = {
   async findByUserId(usuario_id: number) {
     return prisma.blog.findMany({
       where: { usuario_id, eliminado: false },
-      orderBy: { fecha_creacion: "desc" },
+      orderBy: { fecha_creacion: 'desc' },
       include: {
         categoria_blog: { select: { id: true, nombre: true } },
-        blog_rechazo: { orderBy: { fecha: "desc" }, take: 1 },
-        _count: { select: { comentario: true } },
-      },
-    });
+        blog_rechazo: { orderBy: { fecha: 'desc' }, take: 1 },
+        _count: { select: { comentario: true } }
+      }
+    })
   },
+  // Obtener blog por id
+  async findById(id: number) {
+    return prisma.blog.findFirst({
+      where: { id, eliminado: false },
+      include: {
+        usuario: {
+          select: { id: true, nombre: true, apellido: true, avatar: true }
+        },
+        categoria_blog: { select: { id: true, nombre: true } },
+        blog_rechazo: { orderBy: { fecha: 'desc' } },
+        _count: { select: { comentario: true } }
+      }
+    })
+  }
 }
