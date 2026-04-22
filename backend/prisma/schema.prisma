@@ -6,6 +6,12 @@ datasource db {
   provider = "postgresql"
 }
 
+model amenidad {
+  id                Int                 @id @default(autoincrement())
+  nombre            String              @unique @db.VarChar(255)
+  inmueble_amenidad inmueble_amenidad[]
+}
+
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model audit_log {
   id          Int       @default(autoincrement())
@@ -37,6 +43,18 @@ model banner_home {
   fecha_creacion DateTime? @default(now()) @db.Timestamp(6)
   titulo         String?
   subtitulo      String?
+}
+
+model barrio {
+  id                                                      Int                  @id @default(autoincrement())
+  nombre                                                  String               @db.VarChar(255)
+  zona_id                                                 Int
+  zona_geografica                                         Int?
+  zona_geografica_barrio_zona_idTozona_geografica         zona_geografica      @relation("barrio_zona_idTozona_geografica", fields: [zona_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "barrio_zona_fk")
+  zona_geografica_barrio_zona_geograficaTozona_geografica zona_geografica?     @relation("barrio_zona_geograficaTozona_geografica", fields: [zona_geografica], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ubicacion_inmueble                                      ubicacion_inmueble[]
+
+  @@unique([nombre, zona_id], map: "barrio_nombre_zona_unique")
 }
 
 model bitacora_pagos {
@@ -180,6 +198,12 @@ model cupon {
   transacciones   transacciones[]
 }
 
+model departamento {
+  id                                             Int         @id @default(autoincrement())
+  nombre                                         String      @unique @db.VarChar(255)
+  provincia_provincia_departamentoTodepartamento provincia[] @relation("provincia_departamentoTodepartamento")
+}
+
 model detalle_comparacion {
   id            Int         @id @default(autoincrement())
   comparacionId Int
@@ -247,7 +271,6 @@ model historial_password {
   @@index([usuarioId, creadoEn], map: "historial_password_usuario_fecha_idx")
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model inmueble {
   id                  Int                   @id @default(autoincrement())
   titulo              String
@@ -263,9 +286,11 @@ model inmueble {
   created_at          DateTime?             @default(now()) @db.Timestamp(6)
   updated_at          DateTime?             @default(now()) @db.Timestamp(6)
   propietario_id      Int
+  banoCompartido      Boolean?              @default(false)
   detalle_comparacion detalle_comparacion[]
   favorito            favorito[]
   usuario             usuario               @relation(fields: [propietario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "inmueble_propietario_fk")
+  inmueble_amenidad   inmueble_amenidad[]
   inmueble_etiqueta   inmueble_etiqueta[]
   marcador_mapa       marcador_mapa[]
   propiedad_vista     propiedad_vista[]
@@ -275,6 +300,15 @@ model inmueble {
   @@index([estado], map: "idx_inmueble_estado")
   @@index([propietario_id], map: "idx_inmueble_propietario")
   @@index([tipo_accion], map: "idx_inmueble_tipo_accion")
+}
+
+model inmueble_amenidad {
+  inmueble_id Int
+  amenidad_id Int
+  amenidad    amenidad @relation(fields: [amenidad_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "inmueble_amenidad_amenidad_fk")
+  inmueble    inmueble @relation(fields: [inmueble_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "inmueble_amenidad_inmueble_fk")
+
+  @@id([inmueble_id, amenidad_id])
 }
 
 model inmueble_etiqueta {
@@ -312,7 +346,6 @@ model marcador_mapa {
   ubicacion_inmueble ubicacion_inmueble @relation(fields: [ubicacion_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model multimedia {
   id             Int             @id @default(autoincrement())
   url            String
@@ -322,6 +355,17 @@ model multimedia {
   publicacion    publicacion     @relation(fields: [publicacion_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "multimedia_publicacion_fk")
 
   @@index([publicacion_id], map: "idx_multimedia_publicacion")
+}
+
+model municipio {
+  id                                                   Int               @id @default(autoincrement())
+  nombre                                               String            @db.VarChar(255)
+  provincia                                            Int
+  provincia_id                                         Int?
+  provincia_municipio_provinciaToprovincia             provincia         @relation("municipio_provinciaToprovincia", fields: [provincia], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  zona_geografica_zona_geografica_municipioTomunicipio zona_geografica[] @relation("zona_geografica_municipioTomunicipio")
+
+  @@unique([nombre, provincia], map: "municipio_nombre_provincia_unique")
 }
 
 model notificacion {
@@ -337,7 +381,6 @@ model notificacion {
   usuario       usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "notificacion_usuario_id_fkey")
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model parametros_personalizados {
   id                    Int                     @id @default(autoincrement())
   nombre                String?                 @db.VarChar(255)
@@ -368,18 +411,29 @@ model plan_suscripcion {
 }
 
 model propiedad_vista {
-  id         Int      @id @default(autoincrement())
-  usuarioId  Int
-  inmuebleId Int
-  vistaEn    DateTime @default(now())
-  inmueble   inmueble @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
-  usuario    usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  id          Int      @id @default(autoincrement())
+  usuarioId   Int
+  inmuebleId  Int
+  vistaEn     DateTime @default(now())
+  veces_visto Int?     @default(1) @db.SmallInt
+  inmueble    inmueble @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
+  usuario     usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 
   @@unique([usuarioId, inmuebleId])
   @@index([usuarioId, vistaEn])
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model provincia {
+  id                                                Int          @id @default(autoincrement())
+  nombre                                            String       @db.VarChar(255)
+  departamento                                      Int
+  departamento_id                                   Int?
+  municipio_municipio_provinciaToprovincia          municipio[]  @relation("municipio_provinciaToprovincia")
+  departamento_provincia_departamentoTodepartamento departamento @relation("provincia_departamentoTodepartamento", fields: [departamento], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([nombre, departamento], map: "provincia_nombre_departamento_unique")
+}
+
 model publicacion {
   id                    Int                     @id @default(autoincrement())
   titulo                String
@@ -398,7 +452,6 @@ model publicacion {
   @@index([usuario_id], map: "idx_publicacion_usuario")
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model publicacion_parametro {
   id                        Int                        @id @default(autoincrement())
   publicacion_id            Int?
@@ -427,7 +480,6 @@ model recuperacion_password {
   @@index([usuarioId, creadoEn], map: "recuperacion_password_usuario_fecha_idx")
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model rol {
   id      Int       @id @default(autoincrement())
   nombre  RolNombre @unique
@@ -481,7 +533,6 @@ model suscripciones_activas {
   usuario          usuario?          @relation(fields: [id_usuario], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model telefono {
   id                                   Int      @id @default(autoincrement())
   codigoPais                           String
@@ -523,7 +574,6 @@ model transacciones {
   @@index([id_usuario], map: "idx_transacciones_usuario")
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model ubicacion_inmueble {
   id                   Int                @id @default(autoincrement())
   latitud              Decimal            @db.Decimal(10, 7)
@@ -535,11 +585,11 @@ model ubicacion_inmueble {
   ubicacion_maestra_id Int?
   barrio_id            Int?
   marcador_mapa        marcador_mapa[]
+  barrio               barrio?            @relation(fields: [barrio_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   inmueble             inmueble           @relation(fields: [inmueble_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "ubicacion_inmueble_fk")
   ubicacion_maestra    ubicacion_maestra? @relation(fields: [ubicacion_maestra_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([ubicacion_maestra_id], map: "idx_ubicacion_maestra")
-  @@index([ubicacion_maestra_id])
 }
 
 model ubicacion_maestra {
@@ -556,8 +606,6 @@ model ubicacion_maestra {
   @@index([nombre], map: "idx_ubicacion_nombre")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model usuario {
   id                                    Int                     @id @default(autoincrement())
   nombre                                String
@@ -578,9 +626,6 @@ model usuario {
   two_factor_metodo                     String                  @default("email") @db.VarChar(20)
   two_factor_activado_en                DateTime?               @db.Timestamptz(6)
   controlador                           Boolean                 @default(false)
-  fechaNacimiento                       DateTime?
-  telemetriaCompartida                  Boolean?                @default(false)
-  zonaConexion                          String?                 @db.VarChar(100)
   notificacionWhatsapp                  Boolean?                @default(false)
   rolId                                 Int?
   notificacion_email                    Boolean?                @default(true)
@@ -621,7 +666,6 @@ model usuario {
   @@index([correo], map: "idx_usuario_correo")
   @@index([rolId], map: "idx_usuario_rol")
   @@index([rolId], map: "idx_usuario_rol_id")
-  @@index([correo])
 }
 
 model verificacion_pago {
@@ -641,6 +685,18 @@ model visitor {
   fecha_visita DateTime? @default(now()) @db.Timestamp(6)
   usuario_id   Int?
   usuario      usuario?  @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model zona_geografica {
+  id                                             Int       @id @default(autoincrement())
+  nombre                                         String    @db.VarChar(255)
+  municipio                                      Int
+  municipio_id                                   Int?
+  barrio_barrio_zona_idTozona_geografica         barrio[]  @relation("barrio_zona_idTozona_geografica")
+  barrio_barrio_zona_geograficaTozona_geografica barrio[]  @relation("barrio_zona_geograficaTozona_geografica")
+  municipio_zona_geografica_municipioTomunicipio municipio @relation("zona_geografica_municipioTomunicipio", fields: [municipio], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([nombre, municipio], map: "zona_geografica_nombre_municipio_unique")
 }
 
 model zona_predefinida {
@@ -788,3 +844,4 @@ enum tipo_multimedia {
   IMAGEN
   VIDEO
 }
+  

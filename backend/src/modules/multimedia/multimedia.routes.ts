@@ -1,29 +1,31 @@
-import { Router } from "express";
-import { requireAuth } from "../../middleware/auth.middleware.js";
+import { Router } from 'express'
+import multer from 'multer'
+import { requireAuth } from '../../middleware/auth.middleware.js'
 import {
   getPublicationMultimediaController,
   registerImagesController,
-  registerVideoLinkController,
-} from "./multimedia.controller.js";
+  registerVideoLinkController
+} from './multimedia.controller.js'
 
-const multimediaRoutes = Router();
+const multimediaRoutes = Router()
 
-multimediaRoutes.get(
-  "/:publicacionId/multimedia",
-  requireAuth,
-  getPublicationMultimediaController,
-);
+const upload = multer({
+  dest: 'uploads/'
+})
 
-multimediaRoutes.post(
-  "/:publicacionId/multimedia/video-link",
-  requireAuth,
-  registerVideoLinkController,
-);
+multimediaRoutes.get('/:publicacionId/multimedia', requireAuth, getPublicationMultimediaController)
 
 multimediaRoutes.post(
-  "/:publicacionId/multimedia/images",
+  '/:publicacionId/multimedia/video-link',
   requireAuth,
-  registerImagesController,
-);
+  registerVideoLinkController
+)
 
-export default multimediaRoutes;
+multimediaRoutes.post(
+  '/:publicacionId/multimedia/images',
+  requireAuth,
+  upload.array('images', 5),
+  registerImagesController
+)
+
+export default multimediaRoutes
