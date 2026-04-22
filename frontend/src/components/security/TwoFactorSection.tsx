@@ -121,17 +121,14 @@ export default function TwoFactorSection() {
 
             <div className="relative">
               <input
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  setError("");
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleConfirm();
-                }}
+                onChange={(e) => { setPassword(e.target.value); setError('') }}
+                onKeyDown={(e) => { if (e.key === 'Enter') handleConfirm() }}
                 placeholder="••••••••"
-                className="w-full rounded-lg border border-neutral-300 px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+                className={`w-full rounded-lg border px-3 py-2 pr-10 text-sm focus:outline-none focus:ring-2 ${
+                  error ? 'border-red-400 focus:ring-red-400' : 'border-neutral-300 focus:ring-orange-400'
+                }`}
               />
               <button
                 type="button"
