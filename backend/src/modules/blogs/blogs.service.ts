@@ -1,3 +1,4 @@
+import { estado_blog } from '@prisma/client'
 import { blogsRepository, comentariosRepository } from './blogs.repository.js'
 
 // BLOGS SERVICE PE
