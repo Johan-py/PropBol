@@ -34,7 +34,7 @@ async function obtenerCuponDesdeDB(codigo: string) {
 }
 
 // Función para obtener transacción desde DB real
-async function obtenerTransaccionDesdeDB(transaccionId: number) {
+async function _obtenerTransaccionDesdeDB(transaccionId: number) {
   if (!prisma) return null;
   try {
     const transaccion = await prisma.transacciones.findUnique({
@@ -60,7 +60,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
     }
 
     // 1. Intentar obtener cupón desde DB real
-    let cuponDB = await obtenerCuponDesdeDB(codigo);
+    const cuponDB = await obtenerCuponDesdeDB(codigo);
     let usandoMock = false;
     let cuponValor: number = 0;
     let cuponTipo: 'PORCENTAJE' | 'MONTO_FIJO' = 'PORCENTAJE';
@@ -83,7 +83,7 @@ export async function POST(request: Request, { params }: { params: { id: string 
       cuponId = cuponDB.id;
     } else {
       // Buscar en mock
-      console.log(`⚠️ Cupón ${codigo} no encontrado en DB, usando mock`);
+      console.warn(`⚠️ Cupón ${codigo} no encontrado en DB, usando mock`);
       const cuponMock = cuponesMock[codigo.toUpperCase()];
       if (!cuponMock) {
         return NextResponse.json({ error: 'Código inválido' }, { status: 400 });

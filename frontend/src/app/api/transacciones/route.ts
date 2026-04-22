@@ -111,7 +111,6 @@ export async function POST(request: Request) {
     // 3. Calcular subtotal e IVA (usando 'total' como number)
     const subtotal = Number((total / 1.13).toFixed(2));
     const ivaMonto = Number((total - subtotal).toFixed(2));
-    const transaccionId = Math.floor(Math.random() * 10000);
 
     // 4. Crear la transacción
     let transaccion;
