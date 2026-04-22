@@ -90,13 +90,15 @@ const handleConfirm = async () => {
     const data = await res.json()
 
     if (res.ok) {
-      setShowModal(false)
-      setPassword('')
-      setShowPassword(false)
-      setError('')
-      setIsTwoFactorEnabled(true)
-      return
-    }
+  setShowModal(false)
+  setPassword('')
+  setShowPassword(false)
+  setError('')
+  setIsTwoFactorEnabled(true)
+  setShowCodeStep(true)
+  setCode('')
+  return
+}
 
     setError(data.message ?? 'No se pudo activar la verificación en dos pasos')
   } catch {
@@ -107,9 +109,16 @@ const handleConfirm = async () => {
 }
 
 const handleCodeChange = (value: string) => {
-  setCode(value.slice(0, 6))
+  const onlyNumbers = value.replace(/\D/g, '').slice(0, 6)
+  setCode(onlyNumbers)
 }
 
+const handleCodePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+  e.preventDefault()
+  const pastedText = e.clipboardData.getData('text')
+  const cleanedCode = pastedText.trim().replace(/\D/g, '').slice(0, 6)
+  setCode(cleanedCode)
+}
 const handleOpenDisableModal = () => {
   setShowDisableModal(true)
 }
@@ -242,6 +251,38 @@ if (loadingStatus) {
   </div>
 </div>
 
+{showCodeStep && (
+  <div className="max-w-3xl rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
+    <div className="space-y-4">
+      <div>
+        <h3 className="text-base font-semibold text-neutral-900">
+          Ingresa el código de verificación
+        </h3>
+        <p className="mt-1 text-sm text-neutral-500">
+          Escribe el código de 6 dígitos enviado a tu correo electrónico.
+        </p>
+      </div>
+
+      <input
+        type="text"
+        inputMode="numeric"
+        value={code}
+        onChange={(e) => handleCodeChange(e.target.value)}
+        onPaste={handleCodePaste}
+        placeholder="123456"
+        className="w-full max-w-xs rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+      />
+
+      <button
+        type="button"
+        disabled={code.length !== 6}
+        className="rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        Verificar código
+      </button>
+    </div>
+  </div>
+)}
 
 {showDisableModal && (
   <div
