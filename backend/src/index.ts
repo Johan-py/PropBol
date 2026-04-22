@@ -51,6 +51,11 @@ import {
   StratGoogleLoginController,
   StartGoogleRegisterController
 } from './modules/auth/google/google.controller.js'
+import {
+  discordCallbackController,
+  startDiscordLoginController,
+  startDiscordRegisterController
+} from './modules/auth/discord/discord.controller.js'
 
 import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
 import publicacionRoutes from './modules/publicacion/publicacion.routes.js'
@@ -131,6 +136,7 @@ app.use('/api/perfil/usuario', perfilRoutes)
 app.use('/api/perfil/zonas', zonaRoutes)
 app.use('/api/publicaciones', publicacionRoutes)
 app.use('/api/publicaciones', multimediaRoutes)
+app.use('/api/perfil/historial', historialRoutes)
 app.use('/api', router)
 app.use('/api', parametrosRoutes)
 app.use('/api/security', securityRoutes)
@@ -156,6 +162,9 @@ app.get('/api/auth/me', getMeController)
 app.get('/api/auth/google/login', StratGoogleLoginController)
 app.get('/api/auth/google/register', StartGoogleRegisterController)
 app.get('/api/auth/google/callback', googleCallbackController)
+app.get('/api/auth/discord/login', startDiscordLoginController)
+app.get('/api/auth/discord/register', startDiscordRegisterController)
+app.get('/api/auth/discord/callback', discordCallbackController)
 //comentario
 
 // --------------------
