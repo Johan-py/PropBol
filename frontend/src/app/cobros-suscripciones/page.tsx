@@ -68,7 +68,6 @@ export default function CobrosSuscripciones() {
 
     const url = `/pago/resumen?planId=${plan.id}&precio=${plan.price}`
 
-    // 🔴 NO logueado → ir a login y volver a planes
     if (!token || token === 'undefined' || token === 'null') {
       localStorage.setItem('redirectAfterLogin', '/cobros-suscripciones')
       localStorage.setItem('selectedPlan', JSON.stringify(plan))
@@ -76,7 +75,6 @@ export default function CobrosSuscripciones() {
       return
     }
 
-    // 🟢 logueado → ir a pago
     router.push(url)
   }
 
@@ -163,3 +161,4 @@ export default function CobrosSuscripciones() {
     </div>
   )
 }
+//// autenticado
