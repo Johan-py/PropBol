@@ -82,7 +82,7 @@ import { verifyEmailTransport } from './lib/email.service.js'
 import favoritesRoutes from './modules/favorites/favorites.routes.js'
 import telemetriaRoutes from './modules/telemetria/telemetria.routes.js'
 import recomendacionesRoutes from './modules/recomendaciones/recomendaciones.routes.js'
-import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js';
+import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js'
 // --------------------
 // SERVER
 // --------------------
