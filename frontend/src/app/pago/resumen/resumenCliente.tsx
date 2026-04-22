@@ -58,10 +58,8 @@ export default function ResumenCliente() {
   }, [planIdParam]);
 
   const manejarContinuar = () => {
-  if (metodoSeleccionado && transaccion) {
-    localStorage.setItem(
-      'currentPayment',
-      JSON.stringify({
+    if (metodoSeleccionado && transaccion) {
+      localStorage.setItem('currentPayment', JSON.stringify({
         id: transaccion.id,
         monto: transaccion.total,
         referencia: transaccion.referencia || transaccion.id,
@@ -72,16 +70,11 @@ export default function ResumenCliente() {
         qrContent:
           transaccion.plan_suscripcion?.imagen_gr_url ||
           '/qrs/estandar.png',
-        planNombre: transaccion.plan_suscripcion?.nombre_plan || null,
-        subtotal: transaccion.subtotal ?? null,
-        iva_monto: transaccion.iva_monto ?? null,
-        planId: planIdParam,
-      })
-    );
+      }));
 
-    router.push(`/pago/qr?transaccionId=${transaccion.id}`);
-  }
-};
+      router.push(`/pago/qr?transaccionId=${transaccion.id}`);
+    }
+  };
 
   const aplicarCupon = async () => {
     if (!codigoCupon.trim()) {
