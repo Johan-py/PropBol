@@ -59,5 +59,21 @@ export const blogsRepository = {
         _count: { select: { comentario: true } }
       }
     })
+  },
+  // Crear blog
+  async create(data: {
+    titulo: string
+    contenido: string
+    imagen?: string
+    estado: estado_blog
+    categoria_id: number
+    usuario_id: number
+  }) {
+    return prisma.blog.create({
+      data: {
+        ...data,
+        fecha_publicacion: data.estado === 'PUBLICADO' ? new Date() : null
+      }
+    })
   }
 }
