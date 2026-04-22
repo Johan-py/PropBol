@@ -29,7 +29,7 @@ export const obtenerPerfil = async (req: AuthRequest, res: Response) => {
         genero: true,
         direccion: true,
         telefonos: true,
-        fechaNacimiento: true
+        fecha_nacimiento: true
       }
     })
 
@@ -38,8 +38,8 @@ export const obtenerPerfil = async (req: AuthRequest, res: Response) => {
     }
     let fechaFormateada = null
     // Verificamos que exista y que sea una instancia de Date
-    if (usuario?.fechaNacimiento instanceof Date) {
-      const d = usuario.fechaNacimiento
+    if (usuario?.fecha_nacimiento instanceof Date) {
+      const d = usuario.fecha_nacimiento
       const dia = String(d.getUTCDate()).padStart(2, '0')
       const mes = String(d.getUTCMonth() + 1).padStart(2, '0')
       const anio = d.getUTCFullYear()
@@ -338,24 +338,26 @@ export const editarTelefonos = async (req: AuthRequest, res: Response) => {
 export const editarFechaNacimiento = async (req: AuthRequest, res: Response) => {
   try {
     const usuarioId = req.usuario?.id
-    const { fechaNacimiento } = req.body // El front enviará "2002-09-16"
+    const { fechaNacimiento } = req.body 
 
     if (!usuarioId) {
       return res.status(401).json({ ok: false, msg: 'No hay token válido' })
     }
 
-    // Actualizamos en la base de datos convirtiendo el string a Date
     const usuarioActualizado = await prisma.usuario.update({
       where: { id: usuarioId },
       data: {
-        fechaNacimiento: fechaNacimiento ? new Date(fechaNacimiento) : null
+
+        
+        fecha_nacimiento: fechaNacimiento ? new Date(fechaNacimiento) : null
       }
     })
 
     return res.json({
       ok: true,
       msg: 'Fecha de nacimiento actualizada exitosamente',
-      fechaNacimiento: usuarioActualizado.fechaNacimiento
+     
+      fechaNacimiento: usuarioActualizado.fecha_nacimiento
     })
   } catch (error) {
     console.error('Error en editarFechaNacimiento:', error)
