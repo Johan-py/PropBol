@@ -179,8 +179,8 @@ if (esReutilizada) {
   });
 }
 
-    await prisma.$transaction([
-      prisma.usuario.update({
+    await prisma.$transaction(async (tx) => {
+      await tx.usuario.update({
         where: { id: usuarioId },
         data: {
           password: nuevaPassword,
@@ -188,21 +188,25 @@ if (esReutilizada) {
           bloqueo_cambio_password_hasta: null,
           password_actualizado_en: ahora,
         },
-      }),
-      prisma.historial_password.create({
+      });
+
+      await tx.historial_password.create({
         data: {
           usuarioId,
           passwordHash: nuevaPassword,
           creadoEn: ahora,
         },
-      }),
-    ]);
+      });
 
-    try {
-      await invalidateOtherUserSessions(usuarioId, currentToken);
-    } catch (sessionError) {
-      console.error("Error no crítico al invalidar otras sesiones:", sessionError);
-    }
+      await tx.sesion.updateMany({
+        where: {
+          usuarioId,
+          token: { not: currentToken },
+          estado: true,
+        },
+        data: { estado: false },
+      });
+    });
 
     try {
       await enviarNotificacionCambioPassword({
