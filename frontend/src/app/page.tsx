@@ -1,7 +1,15 @@
-import { HomeBanner } from "@/components/home/HomeBanner";
-import { HomeCarousel } from "@/components/home/HomeCarousel";
-import ExploreSection from "@/components/layout/ExploreSection";
+import { HomeCarousel } from '@/components/home/HomeCarousel'
+import FeaturedCitiesSection from '@/components/home/FeaturedCitiesSection'
+import ExploreSection from '@/components/layout/ExploreSection'
+import { getCities } from '@/services/city.service'
 import VisualFiltersSection from "@/components/VisualFilters/VisualFiltersSection";
+interface BannerRaw {
+  id: number
+  url_imagen: string
+  titulo?: string
+  subtitulo?: string
+}
+
 interface BannerData {
   id: number
   urlImagen: string
@@ -15,14 +23,22 @@ const fetchBanners = async (): Promise<BannerData[]> => {
   try {
     const response = await fetch(`${apiUrl}/api/banners`, {
       // Revalidación ISR
-      next: { revalidate: 3600 }
+      cache: 'no-store'
     })
 
     if (!response.ok) {
       throw new Error(`Error HTTP al obtener banners: ${response.status}`)
     }
 
-    return await response.json()
+    const data: BannerRaw[] = await response.json()
+
+    // Mapear snake_case del backend → camelCase esperado por los componentes
+    return data.map((b) => ({
+      id: b.id,
+      urlImagen: b.url_imagen,
+      titulo: b.titulo,
+      subtitulo: b.subtitulo,
+    }))
   } catch (error) {
     console.error('Error cargando el banner:', error)
     return []
@@ -31,7 +47,14 @@ const fetchBanners = async (): Promise<BannerData[]> => {
 
 export default async function Home() {
   const banners = await fetchBanners()
-  const mainBanner = banners[0] // Tomamos el primero de la base de datos
+  const cities = await getCities()
+
+  /*
+    Integración futura:
+    Cuando el backend exponga /api/cities con datos reales,
+    la sección FeaturedCitiesSection seguirá consumiendo desde getCities().
+  */
+
   // No toquen esto :v
   return (
     <main className="flex min-h-screen flex-col items-center bg-gray-50">
@@ -44,17 +67,24 @@ export default async function Home() {
       )}
 
       {/* CONTENEDOR PRINCIPAL */}
-      <div className="w-full px-2 md:px-6 py-12 flex flex-col items-center gap-12">
-       {/* EXPLORE SECTION */}
-       <section className="w-full flex justify-center">
-         <ExploreSection />
-       </section>
+      <div className="w-full  max-w-[1600px] mx-auto px-0 md:px-4 py-4">
+        <div className="flex flex-col gap-0">
 
-         {/* FILTROS VISUALES */}
-       <section className="w-full">
-         <VisualFiltersSection />
-       </section>
-     </div>
+          {/* EXPLORE SECTION */}
+          <section className="w-full">
+            <ExploreSection />
+          </section>
+
+          {/* TU SECCIÓN DE FILTROS VISUALES */}
+          <section className="w-full">
+            <VisualFiltersSection />
+          </section>
+
+          <section className="w-full">
+            <FeaturedCitiesSection cities={cities} />
+          </section>
+        </div>
+      </div>
     </main>
   )
 }

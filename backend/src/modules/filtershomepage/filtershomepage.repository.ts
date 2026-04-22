@@ -1,5 +1,5 @@
-import { $Enums } from '@prisma/client'
-import { prisma } from '../../lib/prisma.client.js'
+import { $Enums } from "@prisma/client";
+import { prisma } from "../../lib/prisma.client.js";
 
 export class FiltersHomepageRepository {
   async getCountsByCity(tipoAccion: $Enums.TipoAccion) {
@@ -7,52 +7,84 @@ export class FiltersHomepageRepository {
       where: {
         inmueble: {
           tipoAccion: tipoAccion,
-          estado: $Enums.EstadoInmueble.ACTIVO
-        }
+          estado: $Enums.EstadoInmueble.ACTIVO,
+        },
       },
       select: {
         inmuebleId: true,
         ubicacion_maestra: {
           select: {
-            departamento: true
-          }
-        }
-      }
-    })
+            departamento: true,
+          },
+        },
+      inmueble: {
+  select: {
+    id: true,
+    titulo: true,
+    publicaciones: {        
+      select: {
+        multimedia: {     
+          where: {
+            tipo: $Enums.TipoMultimedia.IMAGEN,
+          },
+          select: {
+            url: true,
+          },
+          take: 1,
+        },
+      },
+      take: 1,
+    },
+  },
+},
+},
+});
 
-    const deptCounts = new Map<string, Set<number>>()
+    const deptMap = new Map<string, { ids: Set<number>; previews: Array<{ imagen: string; titulo: string }> }>();
 
     for (const u of ubicaciones) {
-      const rawDept = u.ubicacion_maestra?.departamento
-      if (!rawDept || !u.inmuebleId) continue
+      const rawDept = u.ubicacion_maestra?.departamento;
+      if (!rawDept || !u.inmuebleId) continue;
 
-      const normalizedDept = rawDept.trim().toUpperCase()
+      const dept = rawDept.trim().toUpperCase();
 
-      if (!deptCounts.has(normalizedDept)) {
-        deptCounts.set(normalizedDept, new Set())
+      if (!deptMap.has(dept)) {
+        deptMap.set(dept, { ids: new Set(), previews: [] });
       }
 
-      deptCounts.get(normalizedDept)!.add(u.inmuebleId)
+      const entry = deptMap.get(dept)!;
+      entry.ids.add(u.inmuebleId);
+        
+        const primeraPublicacion = u.inmueble?.publicaciones?.[0];
+      const primeraImagen = primeraPublicacion?.multimedia?.[0]?.url;
+
+      if (entry.previews.length < 6 && primeraImagen) {
+         entry.previews.push({
+        imagen: primeraImagen,
+          titulo: u.inmueble.titulo ?? "Sin título",
+        });
+      }
     }
 
-    const counts = Array.from(deptCounts.entries()).map(([dept, ids]) => ({
+    const counts = Array.from(deptMap.entries()).map(([dept, data]) => ({
       departamento: dept,
-      count: ids.size
-    }))
+      count: data.ids.size,
+      previews: data.previews,
+    }));
 
-    return counts.sort((a, b) => b.count - a.count)
+    return counts.sort((a, b) => b.count - a.count);
   }
 
   async getCountsByCategoria() {
     return await prisma.inmueble.groupBy({
-      by: ['categoria'],
+      by: ["categoria"],
       where: {
         estado: $Enums.EstadoInmueble.ACTIVO,
-        categoria: { not: null }
+        categoria: { not: null },
       },
       _count: {
-        id: true
-      }
-    })
+        id: true,
+      },
+    });
   }
 }

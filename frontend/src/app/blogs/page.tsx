@@ -1,117 +1,129 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import BlogCard from "@/components/blog/BlogCard";
+import MyRecentBlogsPanel from "@/components/blog/MyRecentBlogsPanel";
+import BlogFilterChips from "@/components/blog/BlogFilterChips";
+import FeaturedBlogSpotlight from "@/components/blog/FeaturedBlogSpotlight";
+import { useBlogFeed } from "@/hooks/useBlogFeed";
 
-type Blog = {
-  id: string;
-  title: string;
-  excerpt: string;
-  imageUrl?: string;
-  category: string;
-  author: string;
-  date: string;
-};
+const USER_STORAGE_KEY = "propbol_user";
 
 export default function BlogsPage() {
-  const blogs: Blog[] = [
-    {
-      id: "1",
-      title: "El Auge del Brutalismo Biofílico",
-      excerpt:
-        "Descubre cómo el concreto crudo se fusiona con la naturaleza...",
-      category: "Arquitectura",
-      author: "Admin",
-      date: "2026-04-17",
-      imageUrl: "/img1.jpg",
-    },
-    {
-      id: "2",
-      title: "Ciudades secundarias como nuevo prime",
-      excerpt: "Las ciudades intermedias están atrayendo inversión...",
-      category: "Tendencias",
-      author: "Admin",
-      date: "2026-04-16",
-      imageUrl: "/img2.jpg",
-    },
-    {
-      id: "3",
-      title: "Piscinas minimalistas",
-      excerpt: "El lujo ahora se redefine con menos elementos...",
-      category: "Diseño",
-      author: "Admin",
-      date: "2026-04-15",
-      imageUrl: "/img3.jpg",
-    },
-    {
-      id: "4",
-      title: "Estancias Naturales",
-      excerpt: "La conexión con la naturaleza es tendencia...",
-      category: "Estilo de vida",
-      author: "Admin",
-      date: "2026-04-14",
-      imageUrl: "/img4.jpg",
-    },
-  ];
+  const {
+    activeCategory,
+    categories,
+    featuredBlog,
+    secondaryBlogs,
+    canLoadMore,
+    hasResults,
+    toggleCategory,
+    loadMore,
+  } = useBlogFeed();
 
-  const featured = blogs[0];
-  const rest = blogs.slice(1);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const syncAuthState = () => {
+      setIsAuthenticated(Boolean(localStorage.getItem(USER_STORAGE_KEY)));
+    };
+
+    syncAuthState();
+    window.addEventListener("storage", syncAuthState);
+    window.addEventListener("propbol:session-changed", syncAuthState);
+
+    return () => {
+      window.removeEventListener("storage", syncAuthState);
+      window.removeEventListener("propbol:session-changed", syncAuthState);
+    };
+  }, []);
 
   return (
-    <div className="bg-[#f7f5f2] min-h-screen">
-      <div className="max-w-7xl mx-auto px-10 py-16">
+    <div className="min-h-screen bg-[linear-gradient(180deg,#fbf6ef_0%,#f5efe7_45%,#ffffff_100%)]">
+      <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
 
-        {/* 🔥 HEADER */}
-        <div className="mb-20">
-          <span className="text-xs uppercase tracking-widest text-gray-500">
-            Blog
-          </span>
+        {/* ✅ Panel de blogs recientes (feature/blogsRecientes) */}
+        <MyRecentBlogsPanel />
 
-          <h1 className="mt-3 text-5xl font-bold leading-tight text-gray-900 max-w-5xl">
-            Perspectivas para el Bien Raíz Moderno.
+        {/* HEADER */}
+        <section className="space-y-6">
+          <h1 className="max-w-3xl font-heading text-4xl font-bold leading-tight text-stone-900 sm:text-5xl">
+            Perspectivas para el Bien Raiz Moderno.
           </h1>
-        </div>
 
-        {/* 🔥 FEATURED ESTILO REVISTA */}
-        {featured && (
-          <div className="grid lg:grid-cols-2 gap-16 items-center mb-24">
-
-            {/* 🖼️ Imagen dominante */}
-            <div className="overflow-hidden rounded-3xl">
-              <img
-                src={featured.imageUrl || "/placeholder.png"}
-                alt={featured.title}
-                className="w-full h-[450px] lg:h-[500px] object-cover hover:scale-105 transition duration-500"
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="overflow-x-auto pb-1">
+              <BlogFilterChips
+                categories={categories}
+                activeCategory={activeCategory}
+                onToggleCategory={toggleCategory}
               />
             </div>
 
-            {/* 📝 Contenido */}
-            <div className="space-y-6 max-w-xl">
-              <span className="text-xs uppercase tracking-[0.2em] text-orange-500 font-semibold">
-                {featured.category}
-              </span>
-
-              <h2 className="text-3xl md:text-4xl font-bold leading-tight text-gray-900">
-                {featured.title}
-              </h2>
-
-              <p className="text-gray-600 text-base leading-relaxed">
-                {featured.excerpt}
-              </p>
-
-              <button className="text-sm font-semibold text-orange-500 hover:underline">
-                Leer artículo →
-              </button>
-            </div>
+            <button
+              type="button"
+              disabled={!isAuthenticated}
+              aria-disabled={!isAuthenticated}
+              title={
+                isAuthenticated
+                  ? "La creacion de blogs se habilitara cuando el flujo este integrado."
+                  : "Disponible solo para usuarios registrados."
+              }
+              className={`inline-flex min-h-[54px] items-center justify-center self-start px-8 text-sm font-semibold uppercase tracking-[0.22em] transition-colors lg:self-auto ${
+                isAuthenticated
+                  ? "bg-[#a56400] text-white hover:bg-[#8e5800]"
+                  : "cursor-not-allowed bg-[#a56400] text-white/75 opacity-80"
+              }`}
+            >
+              AÑADIR POST
+            </button>
           </div>
+        </section>
+
+        {hasResults && featuredBlog ? (
+          <FeaturedBlogSpotlight blog={featuredBlog} />
+        ) : (
+          <section className="rounded-[32px] border border-dashed border-stone-300 bg-white px-6 py-12 text-center shadow-sm">
+            <p className="text-sm font-semibold uppercase tracking-[0.25em] text-stone-400">
+              Sin resultados
+            </p>
+
+            <h2 className="mt-3 font-heading text-3xl font-bold text-stone-900">
+              No encontramos articulos en esta categoria por ahora.
+            </h2>
+
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-stone-600">
+              Prueba con otra etiqueta para seguir explorando las publicaciones
+              disponibles.
+            </p>
+          </section>
         )}
 
-        {/* 🟢 GRID DE CARDS */}
-        <div className="grid gap-12 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {rest.map((blog) => (
-            <BlogCard key={blog.id} {...blog} />
-          ))}
-        </div>
+        <section className="space-y-6">
+          {secondaryBlogs.length > 0 ? (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {secondaryBlogs.map((blog) => (
+                <BlogCard key={blog.id} {...blog} />
+              ))}
+            </div>
+          ) : hasResults ? (
+            <div className="rounded-[28px] border border-stone-200 bg-white px-6 py-10 text-center text-stone-600 shadow-sm">
+              Esta categoria solo tiene un articulo destacado por el momento.
+            </div>
+          ) : null}
 
+          {canLoadMore && (
+            <div className="flex justify-center pt-2">
+              <button
+                type="button"
+                onClick={loadMore}
+                className="rounded-full border border-amber-600 px-6 py-3 text-sm font-semibold text-amber-700 transition-colors hover:bg-amber-600 hover:text-white"
+              >
+                CONTINUAR LEYENDO
+              </button>
+            </div>
+          )}
+        </section>
       </div>
     </div>
   );
