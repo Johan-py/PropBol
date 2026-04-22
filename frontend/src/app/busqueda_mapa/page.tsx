@@ -148,8 +148,15 @@ function BusquedaMapaContent() {
         return properties
       }
     }
+    if (selectedZoneId !== null) {
+      const zona = zonas.find((z: any) => z.id === selectedZoneId)
+      if (zona && zona.coordenadas && zona.coordenadas.length >= 3) {
+        const coords = [...zona.coordenadas, zona.coordenadas[0]].map((c: any) => [c[1], c[0]])
+        return properties.filter((p: any) => p.lat != null && booleanPointInPolygon(point([p.lng, p.lat]), polygon([coords])))
+      }
+    }
     return properties
-  }, [properties, isPolygonClosed, polygonPoints])
+  }, [properties, isPolygonClosed, polygonPoints, selectedZoneId, zonas])
 
   // === 4. ORDENAMIENTO (Usando resultados filtrados) ===
   const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
