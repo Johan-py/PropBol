@@ -31,6 +31,8 @@ export default function DeactivateAccountSection() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+  const [atPasswordLimit, setAtPasswordLimit] = useState(false);
 
   const resetPasswordState = () => {
     setPassword("");
@@ -38,6 +40,7 @@ export default function DeactivateAccountSection() {
     setSuccessMessage("");
     setIsSubmitting(false);
     setShowPassword(false);
+    setAtPasswordLimit(false);
   };
 
   const handleOpenWarning = () => {
@@ -181,6 +184,9 @@ export default function DeactivateAccountSection() {
                 <p className="mt-1 text-sm text-neutral-600">
                   Esta acción requiere confirmar tu contraseña.
                 </p>
+                <p className="mt-1 text-sm font-medium text-red-600">
+                  Esta accion NO SE PUEDE revertir.
+                </p>
               </div>
             </div>
 
@@ -235,7 +241,11 @@ export default function DeactivateAccountSection() {
                   id="current-password"
                   type={showPassword ? "text" : "password"}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setPassword(val);
+                    setAtPasswordLimit(val.length >= MAX_PASSWORD_LENGTH);
+                  }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !isSubmitting) {
                       void handleDeactivateAccount();
@@ -256,6 +266,12 @@ export default function DeactivateAccountSection() {
                 </button>
               </div>
             </div>
+
+            {atPasswordLimit && (
+              <p className="mt-2 text-xs font-medium text-amber-600">
+                Llegó al límite de caracteres.
+              </p>
+            )}
 
             {errorMessage && (
               <p className="mt-3 text-sm font-medium text-red-600">
