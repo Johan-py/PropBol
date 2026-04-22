@@ -1,7 +1,7 @@
 'use client'
 
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { CheckCircle2, Eye, EyeOff, Info } from 'lucide-react'
 
 export default function TwoFactorSection() {
@@ -11,10 +11,6 @@ export default function TwoFactorSection() {
   const [error, setError] = useState('')
   const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [showCodeStep, setShowCodeStep] = useState(false)
-  const [code, setCode] = useState('')
-  
-  const [loadingStatus, setLoadingStatus] = useState(true)
   const [showDisableModal, setShowDisableModal] = useState(false)
   const handleOpenModal = () => {
     setShowModal(true)
@@ -30,45 +26,6 @@ export default function TwoFactorSection() {
     setError('')
   }
 
-  useEffect(() => {
-  const fetch2FAStatus = async () => {
-    try {
-      const token = localStorage.getItem('token')
-
-      if (!token) {
-        setLoadingStatus(false)
-        return
-      }
-
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/2fa-status`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      })
-
-      const data = await res.json()
-
-      if (res.ok) {
-        setIsTwoFactorEnabled(Boolean(data.twoFactorActivo))
-      }
-    } catch {
-      console.error('No se pudo obtener el estado 2FA')
-    } finally {
-      setLoadingStatus(false)
-    }
-  }
-
-  fetch2FAStatus()
-}, [])
-
-const handleDisableTwoFactor = () => {
-  setIsTwoFactorEnabled(false)
-  setShowCodeStep(false)
-  setCode('')
-}
-
 const handleConfirm = async () => {
   if (!password.trim()) {
     setError('Este campo es obligatorio')
@@ -76,16 +33,9 @@ const handleConfirm = async () => {
   }
 
   setLoading(true)
-
   try {
     const token = localStorage.getItem('token')
-
-    if (!token) {
-      setError('No se encontró una sesión válida')
-      return
-    }
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/activate-2fa`, {
+    const res = await fetch('/api/auth/verify-password', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -94,20 +44,17 @@ const handleConfirm = async () => {
       body: JSON.stringify({ password })
     })
 
-    const data = await res.json()
-
     if (res.ok) {
-  setShowModal(false)
-  setPassword('')
-  setShowPassword(false)
-  setError('')
-  setIsTwoFactorEnabled(true)
-  setShowCodeStep(true)
-  setCode('')
-  return
-}
-
-    setError(data.message ?? 'No se pudo activar la verificación en dos pasos')
+      setShowModal(false)
+      setPassword('')
+      setShowPassword(false)
+      setError('')
+      setIsTwoFactorEnabled(true) 
+      
+    } else {
+      const data = await res.json()
+      setError(data.message ?? 'Contraseña incorrecta')
+    }
   } catch {
     setError('Error de conexión. Intenta de nuevo.')
   } finally {
@@ -115,17 +62,14 @@ const handleConfirm = async () => {
   }
 }
 
-const handleCodeChange = (value: string) => {
-  const onlyNumbers = value.replace(/\D/g, '').slice(0, 6)
-  setCode(onlyNumbers)
+const handleDisableTwoFactor = () => {
+  setIsTwoFactorEnabled(false)
+  setShowModal(false)
+  setPassword('')
+  setShowPassword(false)
+  setError('')
 }
 
-const handleCodePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-  e.preventDefault()
-  const pastedText = e.clipboardData.getData('text')
-  const cleanedCode = pastedText.trim().replace(/\D/g, '').slice(0, 6)
-  setCode(cleanedCode)
-}
 const handleOpenDisableModal = () => {
   setShowDisableModal(true)
 }
@@ -134,66 +78,13 @@ const handleCloseDisableModal = () => {
   setShowDisableModal(false)
 }
 
-const handleConfirmDisable = async () => {
-  setLoading(true)
-
-  try {
-    const token = localStorage.getItem('token')
-
-    if (!token) {
-      setError('No se encontró una sesión válida')
-      return
-    }
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/deactivate-2fa`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      }
-    })
-
-    const data = await res.json()
-
-    if (res.ok) {
-      setIsTwoFactorEnabled(false)
-      setShowDisableModal(false)
-      setShowModal(false)
-      setPassword('')
-      setShowPassword(false)
-      setError('')
-      return
-    }
-
-    setError(data.message ?? 'No se pudo desactivar la verificación en dos pasos')
-  } catch {
-    setError('Error de conexión. Intenta de nuevo.')
-  } finally {
-    setLoading(false)
-  }
+const handleConfirmDisable = () => {
+  handleDisableTwoFactor()
+  setShowDisableModal(false)
+  setError('')
 }
 
-if (loadingStatus) {
-  return (
-    <div className="space-y-6">
-      <header>
-        <h1 className="text-3xl font-bold tracking-tight text-neutral-900">
-          Verificación en dos pasos
-        </h1>
-        <p className="mt-2 text-sm text-neutral-500">
-          Protege tu cuenta con un código de verificación enviado a tu correo electrónico.
-        </p>
-      </header>
-      <div className="max-w-3xl rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-        <div className="rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
-          <p className="text-sm text-neutral-500">
-            Cargando estado de verificación en dos pasos...
-          </p>
-        </div>
-      </div>
-    </div>
-  )
-}
+
 
   return (
     <div className="space-y-6">
@@ -258,38 +149,7 @@ if (loadingStatus) {
   </div>
 </div>
 
-{showCodeStep && (
-  <div className="max-w-3xl rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-    <div className="space-y-4">
-      <div>
-        <h3 className="text-base font-semibold text-neutral-900">
-          Ingresa el código de verificación
-        </h3>
-        <p className="mt-1 text-sm text-neutral-500">
-          Escribe el código de 6 dígitos enviado a tu correo electrónico.
-        </p>
-      </div>
 
-      <input
-        type="text"
-        inputMode="numeric"
-        value={code}
-        onChange={(e) => handleCodeChange(e.target.value)}
-        onPaste={handleCodePaste}
-        placeholder="123456"
-        className="w-full max-w-xs rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
-      />
-
-      <button
-        type="button"
-        disabled={code.length !== 6}
-        className="rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        Verificar código
-      </button>
-    </div>
-  </div>
-)}
 
 {showDisableModal && (
   <div
@@ -389,4 +249,3 @@ if (loadingStatus) {
     </div>
   )
 }
-
