@@ -1,12 +1,8 @@
 'use client'
 
 import { Bath, BedDouble, MapPin, Square } from 'lucide-react'
-<<<<<<< feature/perfil-HU09-anders
 import { useState, useEffect } from 'react'
-
-=======
 import { useRouter } from 'next/navigation'
->>>>>>> develop
 import { useDeletePublicacion } from '@/hooks/useDeletePublicacion'
 import type { MisPublicacionesItem } from '@/types/publicacion'
 
@@ -17,19 +13,15 @@ import DeleteErrorModal from './DeleteErrorModal'
 interface Props {
   publicacion: MisPublicacionesItem
   onDeleted: (id: number) => void
-  onToggleEstado?: (id: number) => void   // 👈 NUEVO
+  onToggleEstado?: (id: number) => void   // 👈 Opcional
 }
 
-<<<<<<< feature/perfil-HU09-anders
 export default function PublicacionCard({
   publicacion,
   onDeleted,
   onToggleEstado
 }: Props) {
-=======
-export default function PublicacionCard({ publicacion, onDeleted }: Props) {
   const router = useRouter()
->>>>>>> develop
 
   const {
     modalConfirmacionAbierto,
@@ -71,7 +63,6 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
   return (
     <>
       <div className="overflow-hidden rounded-2xl border border-[#e6ddd1] bg-[#F9F6EE] shadow-sm transition-shadow hover:shadow-md">
-
         <div className="overflow-hidden">
           <img
             src={publicacion.imagenUrl || '/placeholder-house.jpg'}
@@ -81,12 +72,10 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
         </div>
 
         <div className="p-4">
-
           <div className="mb-2 flex items-start justify-between gap-3">
             <h3 className="min-w-0 flex-1 text-[17px] font-bold leading-snug text-[#1f1f1f]">
               {publicacion.titulo}
             </h3>
-
             <span className="shrink-0 whitespace-nowrap text-[15px] font-bold text-[#e48b18]">
               {precioFormateado}
             </span>
@@ -94,7 +83,6 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
 
           <div className="mb-3 flex items-center justify-between rounded-xl border border-[#ddd4c8] bg-[#f7f2ec] px-3 py-2">
             <span className="text-[13px] text-[#555]">Estado:</span>
-
             <button
               onClick={toggleEstado}
               aria-label={activa ? 'Desactivar publicación' : 'Activar publicación'}
@@ -108,7 +96,6 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
                 }`}
               />
             </button>
-
             <span className="text-[13px] font-medium text-[#444]">
               {activa ? 'Activa' : 'Inactiva'}
             </span>
@@ -126,12 +113,10 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
               <Bath className="h-4 w-4 text-[#e6a04b]" />
               <span>{publicacion.nroBanos ?? '-'}</span>
             </div>
-
             <div className="flex items-center justify-center gap-2 border-r border-[#ddd4c8]">
               <BedDouble className="h-4 w-4 text-[#e6a04b]" />
               <span>{publicacion.nroCuartos ?? '-'}</span>
             </div>
-
             <div className="flex items-center justify-center gap-2">
               <Square className="h-4 w-4 text-[#e6a04b]" />
               <span>{areaFormateada}</span>
@@ -139,16 +124,12 @@ export default function PublicacionCard({ publicacion, onDeleted }: Props) {
           </div>
 
           <div className="flex gap-3">
-<<<<<<< feature/perfil-HU09-anders
-=======
             <button
               onClick={irAEditar}
               className="h-11 flex-1 rounded-lg border border-[#9a9a9a] bg-white text-[14px] font-medium text-[#2c2c2c] transition hover:bg-gray-50"
             >
               Editar
             </button>
-
->>>>>>> develop
             <button
               onClick={abrirConfirmacion}
               className="h-11 flex-1 rounded-lg bg-[#D97706] text-[14px] font-medium text-white hover:bg-[#bf6905]"
