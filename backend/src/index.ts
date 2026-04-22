@@ -82,6 +82,8 @@ import { verifyEmailTransport } from './lib/email.service.js'
 import favoritesRoutes from './modules/favorites/favorites.routes.js'
 import telemetriaRoutes from './modules/telemetria/telemetria.routes.js'
 import recomendacionesRoutes from './modules/recomendaciones/recomendaciones.routes.js'
+import transaccionesRoutes from './modules/transacciones/transacciones.routes.js'
+import plansRoutes from './modules/plans/plans.routes.js'
 // --------------------
 // SERVER
 // --------------------
@@ -145,6 +147,8 @@ app.use('/api/favorites', favoritesRoutes)
 app.use('/api/telemetria', telemetriaRoutes)
 app.use('/api/recomendaciones', recomendacionesRoutes)
 app.use('/api/blogs', blogsRoutes)
+app.use('/api/transacciones', transaccionesRoutes)
+app.use('/api/planes', plansRoutes)
 // --------------------
 // MOCK / TEST
 // --------------------
