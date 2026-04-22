@@ -1,9 +1,26 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star } from "lucide-react";
 import { MOCK_PROPERTIES } from '@/data/mockProperties';
 
 export default function VistasRecientesPage() {
+    const [favoritos, setFavoritos] = useState<any[]>([]);
+    const cargarFavoritos = () => {
+  fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/favorites`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+  })
+    .then(res => res.json())
+    .then(data => {
+      setFavoritos(data.inmuebles);
+    });
+};
+
+useEffect(() => {
+  cargarFavoritos();
+}, []);
+
     const displayedProperties = MOCK_PROPERTIES.slice(0, 8).map((prop, index) => ({
         ...prop,
         fechaVista: index === 0 ? "Hoy" : index < 3 ? "Ayer" : `1${index}/04/2026`
@@ -33,8 +50,11 @@ export default function VistasRecientesPage() {
                 {/* Grid de Propiedades */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {displayedProperties.map((prop: any) => {
-                        //Estado de favorito por card
-                        const [favorito, setFavorito] = useState(false);
+                         //limpiar ID correctamente
+                        const id = parseInt(prop.id.replace("prop-", "")) || 0;
+                        
+                        //verificar si es favorito
+                        const isFav = favoritos.some(f => String(f.id) === String(id));
                         return(  
                         <div key={prop.id} className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden relative hover:shadow-md transition-all">
 
@@ -79,16 +99,34 @@ export default function VistasRecientesPage() {
                                 <div className="mt-4 flex gap-2">
                                     {/* Favorito */}
                                         <button
-                                            onClick={() => setFavorito(!favorito)}
-                                            className="flex items-center justify-center px-3 bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm transition-colors"
-                                        >
-                                            <Star
-                                                size={16}
-                                                strokeWidth={2}
-                                                fill={favorito ? "black" : "none"}
-                                                color="black"
-                                            />
-                                        </button>
+    onClick={() => {
+        if (isFav) {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/favorites/${id}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            }).then(() => cargarFavoritos());
+        } else {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/favorites`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                },
+                body: JSON.stringify({ inmuebleId: id })
+            }).then(() => cargarFavoritos());
+        }
+    }}
+    className="flex items-center justify-center px-3 bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm transition-colors"
+>
+    <Star
+        fill={isFav ? "black" : "none"}   
+        color={isFav ? "black" : "black"} 
+        size={18}
+    />
+</button>
+
                                     <button className="w-full bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm transition-colors text-center">
                                         Ver Detalle
                                     </button>
