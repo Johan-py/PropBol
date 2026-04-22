@@ -1,19 +1,20 @@
 import type { Request, Response } from 'express'
-import type { Express } from 'express'
-import path from 'path'
 import {
   getPublicationMultimediaService,
   registerImagesService,
   registerVideoLinkService
 } from './multimedia.service.js'
-import type { ImageUploadItemInput, RegisterVideoLinkBody } from './multimedia.types.js'
+import type {
+  ImageUploadItemInput,
+  RegisterImagesBody,
+  RegisterVideoLinkBody
+} from './multimedia.types.js'
 
 type AuthenticatedRequest = Request & {
   user?: {
     id?: number
     email?: string
   }
-  files?: Express.Multer.File[]
 }
 
 const parsePublicacionId = (req: Request): number => {
@@ -124,19 +125,9 @@ export const registerImagesController = async (req: Request, res: Response) => {
   try {
     const publicacionId = parsePublicacionId(req)
     const usuarioId = getAuthenticatedUserId(req as AuthenticatedRequest)
+    const { images } = req.body as Partial<RegisterImagesBody>
 
-    const files = (req as AuthenticatedRequest).files ?? []
-
-    const normalizedImages: ImageUploadItemInput[] = files.map((file) => {
-      const extension = path.extname(file.originalname).replace('.', '').toLowerCase()
-      const pesoMb = Number((file.size / (1024 * 1024)).toFixed(2))
-
-      return {
-        url: `/uploads/${file.filename}`,
-        extension,
-        pesoMb
-      }
-    })
+    const normalizedImages: ImageUploadItemInput[] = Array.isArray(images) ? images : []
 
     const result = await registerImagesService({
       publicacionId,
