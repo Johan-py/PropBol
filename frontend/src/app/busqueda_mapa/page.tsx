@@ -662,7 +662,7 @@ function BusquedaMapaContent() {
                 <MapView
                   properties={inmueblesOrdenados}
                   selectedId={selectedPropertyId}
-                  zonas={zonas}
+                  zonas={zonasCombinadas}
                   selectedZoneId={selectedZoneId}
                   onZoneSelect={setSelectedZoneId}
                   onSelect={handleMapSelect}
@@ -671,6 +671,15 @@ function BusquedaMapaContent() {
                   isDrawingMode={isDrawingMode}
                   polygonPoints={polygonPoints}
                   isPolygonClosed={isPolygonClosed}
+                  isZoneEditingMode={Boolean(editingZoneId)}
+                  editablePolygonPoints={editingPolygonPoints}
+                  onEditablePointDrag={(index, lat, lng) => {
+                    setEditingPolygonPoints((prev) =>
+                      prev.map((point, pointIndex) =>
+                        pointIndex === index ? [lat, lng] : point
+                      )
+                    )
+                  }}
                   onMapClick={(latlng) => {
                     if (isDrawingMode && !isPolygonClosed) {
                       setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
@@ -680,6 +689,9 @@ function BusquedaMapaContent() {
                     if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
                       setIsPolygonClosed(true)
                       setIsDrawingMode(false)
+                      if (isCreatingCustomZone) {
+                        setIsMisZonasOpen(true)
+                      }
                     }
                   }}
                 />
@@ -725,7 +737,7 @@ function BusquedaMapaContent() {
             <MapView
               properties={inmueblesOrdenados}
               selectedId={selectedPropertyId}
-              zonas={zonas}
+              zonas={zonasCombinadas}
               selectedZoneId={selectedZoneId}
               onZoneSelect={setSelectedZoneId}
               onSelect={handleMapSelect}
@@ -734,6 +746,15 @@ function BusquedaMapaContent() {
               isDrawingMode={isDrawingMode}
               polygonPoints={polygonPoints}
               isPolygonClosed={isPolygonClosed}
+              isZoneEditingMode={Boolean(editingZoneId)}
+              editablePolygonPoints={editingPolygonPoints}
+              onEditablePointDrag={(index, lat, lng) => {
+                setEditingPolygonPoints((prev) =>
+                  prev.map((point, pointIndex) =>
+                    pointIndex === index ? [lat, lng] : point
+                  )
+                )
+              }}
               onMapClick={(latlng) => {
                 if (isDrawingMode && !isPolygonClosed) {
                   setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
@@ -743,6 +764,9 @@ function BusquedaMapaContent() {
                 if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
                   setIsPolygonClosed(true)
                   setIsDrawingMode(false)
+                  if (isCreatingCustomZone) {
+                    setIsMisZonasOpen(true)
+                  }
                 }
               }}
               onClusterClick={handleClusterClick}
@@ -1126,10 +1150,15 @@ function BusquedaMapaContent() {
           )}
           {/* --- INICIO BOTONES FLOTANTES HU8 --- */}
           <div className="absolute top-3 right-4 z-[1000] flex flex-col gap-2 items-end pointer-events-none">
-            {!isDrawingMode && !isPolygonClosed && (
+            {!isDrawingMode && !isPolygonClosed && !editingZoneId && (
               <div className="flex flex-row gap-2 pointer-events-auto">
                 <button
-                  onClick={() => { setIsDrawingMode(true); setIsSidebarOpen(true) }}
+                  onClick={() => {
+                    resetEditingZone()
+                    setIsCreatingCustomZone(false)
+                    setIsDrawingMode(true)
+                    setIsSidebarOpen(true)
+                  }}
                   className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
                 >
                   Dibujar zona
@@ -1148,7 +1177,7 @@ function BusquedaMapaContent() {
                 </button>
               </div>
             )}
-            {isDrawingMode && !isPolygonClosed && (
+            {isDrawingMode && !isPolygonClosed && !editingZoneId && (
               <div className="flex flex-col items-end gap-2 pointer-events-auto">
                 <button
                   onClick={resetDrawing}
@@ -1164,7 +1193,7 @@ function BusquedaMapaContent() {
             )}
           </div>
 
-          {isPolygonClosed && (
+          {isPolygonClosed && isCreatingCustomZone && !editingZoneId && (
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000]">
               <button
                 onClick={resetDrawing}
@@ -1184,12 +1213,21 @@ function BusquedaMapaContent() {
               activeClusterIds={activeClusterIds}
               isLoading={isLoading}
               error={error}
-              zonas={zonas}
+              zonas={zonasCombinadas}
               selectedZoneId={selectedZoneId}
               onZoneSelect={setSelectedZoneId}
               isDrawingMode={isDrawingMode}
               polygonPoints={polygonPoints}
               isPolygonClosed={isPolygonClosed}
+              isZoneEditingMode={Boolean(editingZoneId)}
+              editablePolygonPoints={editingPolygonPoints}
+              onEditablePointDrag={(index, lat, lng) => {
+                setEditingPolygonPoints((prev) =>
+                  prev.map((point, pointIndex) =>
+                    pointIndex === index ? [lat, lng] : point
+                  )
+                )
+              }}
               onMapClick={(latlng) => {
                 if (isDrawingMode && !isPolygonClosed) {
                   setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
@@ -1199,6 +1237,9 @@ function BusquedaMapaContent() {
                 if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
                   setIsPolygonClosed(true)
                   setIsDrawingMode(false)
+                  if (isCreatingCustomZone) {
+                    setIsMisZonasOpen(true)
+                  }
                 }
               }}
             />
@@ -1208,15 +1249,36 @@ function BusquedaMapaContent() {
           isOpen={isMisZonasOpen}
           onClose={() => setIsMisZonasOpen(false)}
           isAuthenticated={isAuthenticated} // Mapeado al estado que acabamos de crear
-          zonas={[]} 
+          zonas={zonasSidebar}
+          editingZoneId={editingZoneId}
+          editingZoneName={editingZoneName}
+          isSavingEditZone={isSavingEditedZone}
+          onEditingZoneNameChange={setEditingZoneName}
+          onConfirmEditZone={saveEditedZone}
+          onCancelEditZone={cancelEditZone}
+          isDraftZoneVisible={isAuthenticated && isCreatingCustomZone && isPolygonClosed && polygonPoints.length >= 3}
+          draftZoneName={newZoneName}
+          isSavingDraftZone={isSavingNewZone}
+          onDraftZoneNameChange={setNewZoneName}
+          onConfirmDraftZone={saveDraftZone}
+          onCancelDraftZone={cancelDraftZone}
           onAddZone={() => {
             setIsMisZonasOpen(true);
+            resetEditingZone();
+            setNewZoneName('Nueva zona');
+            setIsCreatingCustomZone(true);
             setIsDrawingMode(true);
+            setIsPolygonClosed(false);
+            setPolygonPoints([]);
             setIsSidebarOpen(false);
           }}
-          onEditZone={(id) => console.log('Editar zona:', id)}
-          onDeleteZone={(id) => console.log('Eliminar zona:', id)}
-          onZoneSelect={(id) => console.log('Seleccionar zona:', id)}
+          onEditZone={startEditZone}
+          onDeleteZone={deleteZone}
+          onZoneSelect={(id) => {
+            const zoneId = Number(id)
+            if (Number.isNaN(zoneId)) return
+            setSelectedZoneId(-zoneId)
+          }}
         />
       </main>
     </div>
