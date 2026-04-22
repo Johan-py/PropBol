@@ -21,6 +21,7 @@ import {
 } from './modules/notificaciones/notificaciones.controller.js'
 import { BannersController } from './modules/banners/banners.controller.js'
 import { FiltersHomepageController } from './modules/filtershomepage/filtershomepage.controller.js'
+import { CityController } from './modules/city/city.controller.js'
 
 // --------------------
 // AUTH
@@ -50,6 +51,11 @@ import {
   StratGoogleLoginController,
   StartGoogleRegisterController
 } from './modules/auth/google/google.controller.js'
+import {
+  discordCallbackController,
+  startDiscordLoginController,
+  startDiscordRegisterController
+} from './modules/auth/discord/discord.controller.js'
 
 import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
 import publicacionRoutes from './modules/publicacion/publicacion.routes.js'
@@ -63,6 +69,8 @@ import securityRoutes from './routes/security.routes.js'
 import authRoutes from './routes/auth.routes.js'
 import publicacionesRoutes from './routes/publicaciones.js'
 import { authMiddleware } from './middleware/authMiddleware.js'
+// Borra la línea 66 y pon esta:
+import historialRoutes from './modules/perfil/historial.routes.js';
 
 // --------------------
 // SERVICES
@@ -73,6 +81,8 @@ import { verifyEmailTransport } from './lib/email.service.js'
 import favoritesRoutes from './modules/favorites/favorites.routes.js'
 import telemetriaRoutes from './modules/telemetria/telemetria.routes.js'
 import recomendacionesRoutes from './modules/recomendaciones/recomendaciones.routes.js'
+import transaccionesRoutes from './modules/transacciones/transacciones.routes.js'
+import plansRoutes from './modules/plans/plans.routes.js'
 // --------------------
 // SERVER
 // --------------------
@@ -111,6 +121,7 @@ app.use('/uploads', express.static(path.resolve('uploads')))
 // --------------------
 // RUTAS LEGACY
 // --------------------
+
 app.post('/api/auth/forgot-password', forgotPasswordController)
 app.post('/api/auth/reset-password', resetPasswordController)
 app.use('/api/auth-legacy', authRoutes)
@@ -127,12 +138,15 @@ app.use('/api/publicaciones', multimediaRoutes)
 app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
 app.use('/api/perfil/zonas', zonaRoutes)
+app.use('/api/perfil/historial', historialRoutes)
 app.use('/api', router)
 app.use('/api', parametrosRoutes)
 app.use('/api/security', securityRoutes)
 app.use('/api/favorites', favoritesRoutes)
 app.use('/api/telemetria', telemetriaRoutes)
 app.use('/api/recomendaciones', recomendacionesRoutes)
+app.use('/api/transacciones', transaccionesRoutes)
+app.use('/api/planes', plansRoutes)
 // --------------------
 // MOCK / TEST
 // --------------------
@@ -152,6 +166,9 @@ app.get('/api/auth/me', getMeController)
 app.get('/api/auth/google/login', StratGoogleLoginController)
 app.get('/api/auth/google/register', StartGoogleRegisterController)
 app.get('/api/auth/google/callback', googleCallbackController)
+app.get('/api/auth/discord/login', startDiscordLoginController)
+app.get('/api/auth/discord/register', startDiscordRegisterController)
+app.get('/api/auth/discord/callback', discordCallbackController)
 //comentario
 
 // --------------------
@@ -159,9 +176,11 @@ app.get('/api/auth/google/callback', googleCallbackController)
 // --------------------
 const bannersController = new BannersController()
 const filtersController = new FiltersHomepageController()
+const cityController = new CityController()
 
 app.get('/api/filters', filtersController.getFilters)
 app.get('/api/banners', (req, res) => bannersController.getBanners(req, res))
+app.get('/api/cities', (req, res) => cityController.getFeatured(req, res))
 
 // --------------------
 // LOCATIONS
