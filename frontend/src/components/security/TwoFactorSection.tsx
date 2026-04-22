@@ -12,7 +12,8 @@ export default function TwoFactorSection() {
   const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(false)
   const [loading, setLoading] = useState(false)
   const [showCodeStep, setShowCodeStep] = useState(false)
-const [code, setCode] = useState('')
+  const [code, setCode] = useState('')
+  
   const [loadingStatus, setLoadingStatus] = useState(true)
   const [showDisableModal, setShowDisableModal] = useState(false)
   const handleOpenModal = () => {
