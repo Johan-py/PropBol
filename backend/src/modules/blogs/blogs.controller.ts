@@ -6,6 +6,20 @@ export type AuthRequest = Request & {
   user?: { id: number; correo?: string };
 };
 
+type CrearBlogBody = {
+  titulo: string;
+  contenido: string;
+  imagen?: string;
+  categoria_id: number;
+  accion: "borrador" | "pendiente";
+};
+
+type CrearComentarioBody = {
+  contenido: string;
+  blog_id: number;
+  comentario_padre_id?: number;
+};
+
 // ──────────────────────────────────────────
 // BLOGS CONTROLLERS
 // ──────────────────────────────────────────
@@ -16,7 +30,8 @@ export const crearBlog = async (req: AuthRequest, res: Response) => {
     if (!req.user)
       return res.status(401).json({ message: "NOT_AUTHENTICATED" });
 
-    const { titulo, contenido, imagen, categoria_id, accion } = req.body;
+    const { titulo, contenido, imagen, categoria_id, accion } =
+      req.body as CrearBlogBody;
 
     if (!titulo || !contenido || !categoria_id) {
       return res
@@ -149,7 +164,8 @@ export const crearComentario = async (req: AuthRequest, res: Response) => {
     if (!req.user)
       return res.status(401).json({ message: "NOT_AUTHENTICATED" });
 
-    const { contenido, blog_id, comentario_padre_id } = req.body;
+    const { contenido, blog_id, comentario_padre_id } =
+      req.body as CrearComentarioBody;
 
     if (!contenido || !blog_id) {
       return res
