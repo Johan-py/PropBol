@@ -60,7 +60,7 @@ export default function MiRegistroPage() {
         const result = await response.json()
 
         if (!response.ok && result.message === 'LIMIT_REACHED') {
-          router.push('/HU-03')
+          router.push('/Cobros-Limite')
         }
       } catch (error) {
         //console.error('Error validando flujo de publicación:', error)
@@ -525,7 +525,7 @@ export default function MiRegistroPage() {
 
       if (!response.ok) {
         if (result.message === 'LIMIT_REACHED') {
-          router.push('/HU-03')
+          router.push('/Cobros-Limite')
           return
         }
 
