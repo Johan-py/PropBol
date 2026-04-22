@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { blogsService, comentariosService } from './blogs.service.js'
+import { estado_blog } from '@prisma/client'
 
 // Tipo extendido con usuario autenticado
 export type AuthRequest = Request & {
@@ -160,7 +161,7 @@ export const listarBlogsAdmin = async (req: AuthRequest, res: Response) => {
   try {
     const { estado, categoria_id, page, limit } = req.query
     const result = await blogsService.listarAdmin({
-      estado: estado as any,
+      estado: estado as estado_blog,
       categoria_id: categoria_id ? Number(categoria_id) : undefined,
       page: page ? Number(page) : 1,
       limit: limit ? Number(limit) : 10
