@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import BlogCard from "@/components/blog/BlogCard";
 import MyRecentBlogsPanel from "@/components/blog/MyRecentBlogsPanel";
+import AddPostButton from "@/components/blog/AddPostButton";
 import BlogFilterChips from "@/components/blog/BlogFilterChips";
 import FeaturedBlogSpotlight from "@/components/blog/FeaturedBlogSpotlight";
 import { useBlogFeed } from "@/hooks/useBlogFeed";
@@ -60,23 +61,7 @@ export default function BlogsPage() {
               />
             </div>
 
-            <button
-              type="button"
-              disabled={!isAuthenticated}
-              aria-disabled={!isAuthenticated}
-              title={
-                isAuthenticated
-                  ? "La creacion de blogs se habilitara cuando el flujo este integrado."
-                  : "Disponible solo para usuarios registrados."
-              }
-              className={`inline-flex min-h-[54px] items-center justify-center self-start px-8 text-sm font-semibold uppercase tracking-[0.22em] transition-colors lg:self-auto ${
-                isAuthenticated
-                  ? "bg-[#a56400] text-white hover:bg-[#8e5800]"
-                  : "cursor-not-allowed bg-[#a56400] text-white/75 opacity-80"
-              }`}
-            >
-              AÑADIR POST
-            </button>
+            <AddPostButton />
           </div>
         </section>
 
