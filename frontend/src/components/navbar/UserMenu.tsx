@@ -1,6 +1,12 @@
 import Link from "next/link";
 import type { User } from "../layout/Navbar";
-import { User as UserIcon, Eye, FileText, Map, Star, Shield } from "lucide-react";
+import {
+  User as UserIcon,
+  Eye,
+  FileText,
+  Map,
+  ArrowLeftRight,
+} from "lucide-react";
 
 type UserMenuProps = {
   user: User | null;
@@ -118,6 +124,8 @@ export default function UserMenu({
               </div>
             </div>
 
+
+
             <div className="flex flex-col mb-4">
               <MenuLink
                 label="Mi cuenta"
@@ -125,16 +133,11 @@ export default function UserMenu({
                 icon={UserIcon}
                 onClick={onClosePanel}
               />
+              {/* ✅ Se mantienen ambas opciones: la nueva y la existente */}
               <MenuLink
                 label="Mis propiedades vistas"
                 href="/vistas"
                 icon={Eye}
-                onClick={onClosePanel}
-              />
-              <MenuLink
-                label="Mis favoritos"
-                href="/mis-favoritos"
-                icon={Star}
                 onClick={onClosePanel}
               />
               <MenuLink
@@ -145,7 +148,7 @@ export default function UserMenu({
               />
               <MenuLink
                 label="Mis zonas"
-                href="/profile/mis-zonas"
+                href="/zonas"
                 icon={Map}
                 onClick={onClosePanel}
               />
@@ -153,13 +156,6 @@ export default function UserMenu({
                 label="Mis comparaciones"
                 href="/mis-comparaciones"
                 icon={FileText}
-                onClick={onClosePanel}
-              />
-              {/* ✅ Botón de Seguridad — redirige a /profile/security */}
-              <MenuLink
-                label="Seguridad"
-                href="/profile/security"
-                icon={Shield}
                 onClick={onClosePanel}
               />
             </div>
@@ -186,5 +182,5 @@ export default function UserMenu({
         )}
       </div>
     </>
-  );
+  )
 }

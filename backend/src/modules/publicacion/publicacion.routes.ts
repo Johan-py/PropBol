@@ -1,19 +1,26 @@
+// backend/src/modules/publicaciones/publicacion.routes.ts
 import { Router } from 'express'
 import { requireAuth } from '../../middleware/auth.middleware.js'
 import {
   listarMisPublicacionesController,
-  obtenerResumenFinalController,
-  editarPublicacionController,
-  eliminarPublicacionController,
-  obtenerDetallePublicacionController
+  eliminarPublicacionController
 } from './publicacion.controller.js'
 
 const router = Router()
 
+/**
+ * HU1 - Listar publicaciones propias
+ * - Requiere autenticación
+ * - Devuelve publicaciones activas del usuario autenticado
+ */
 router.get('/mias', requireAuth, listarMisPublicacionesController)
-router.get('/:id/resumen-final', requireAuth, obtenerResumenFinalController)
-router.put('/:id', requireAuth, editarPublicacionController)
+
+/**
+ * HU1 - Eliminar publicación propia
+ * - Requiere autenticación
+ * - Solo permite eliminar publicaciones del usuario autenticado
+ * - Elimina de forma lógica (estado = ELIMINADA)
+ */
 router.delete('/:id', requireAuth, eliminarPublicacionController)
-router.get('/:id/detalle', obtenerDetallePublicacionController)
 
 export default router
