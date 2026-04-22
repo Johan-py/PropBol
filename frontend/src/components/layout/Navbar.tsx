@@ -20,6 +20,7 @@ import NavLinks from "../navbar/NavLinks";
 import UserMenu from "../navbar/UserMenu";
 import LogoutModal from "../navbar/LogoutModal";
 import { useNotifications } from "@/hooks/useNotifications";
+import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 import type { NotificationFilter } from "@/types/notification";
 
 export type User = {
@@ -28,7 +29,6 @@ export type User = {
   avatar?: string | null;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type MeResponse = {
   message?: string;
   user?: {
@@ -51,7 +51,6 @@ class SessionValidationError extends Error {
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
-const USER_STORAGE_KEY = "propbol_user";
 const SESSION_EXPIRES_KEY = "propbol_session_expires";
 
 const filters: NotificationFilter[] = [
@@ -174,25 +173,9 @@ export default function Navbar() {
     try {
       const validatedUser = await fetchCurrentUser(token);
 
-      const finalName =
-        validatedUser.nombre && validatedUser.apellido
-          ? `${validatedUser.nombre} ${validatedUser.apellido}`
-          : validatedUser.nombre || validatedUser.correo;
+      const finalUser: User = buildSessionUser(validatedUser);
 
-      const finalUser: User = {
-        name: finalName,
-        email: validatedUser.correo,
-        avatar: validatedUser.avatar ?? null,
-      };
-
-      localStorage.setItem(
-        USER_STORAGE_KEY,
-        JSON.stringify({
-          name: finalUser.name,
-          email: finalUser.email,
-          avatar: finalUser.avatar,
-        }),
-      );
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(finalUser));
       localStorage.setItem("nombre", finalUser.name);
       localStorage.setItem("correo", finalUser.email);
       localStorage.setItem("avatar", finalUser.avatar ?? "");
