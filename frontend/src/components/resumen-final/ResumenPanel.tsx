@@ -66,8 +66,7 @@ interface ResumenFinalApiResponse {
   message?: string;
 }
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") || "http://localhost:5000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
 
 function getAuthToken(): string | null {
   if (typeof window === "undefined") return null;
@@ -80,7 +79,9 @@ function getAuthToken(): string | null {
   );
 }
 
-async function obtenerResumenFinal(publicacionId: number): Promise<ResumenFinalData> {
+async function obtenerResumenFinal(
+  publicacionId: number
+): Promise<ResumenFinalData> {
   const token = getAuthToken();
 
   if (!publicacionId || Number.isNaN(publicacionId)) {
@@ -89,6 +90,12 @@ async function obtenerResumenFinal(publicacionId: number): Promise<ResumenFinalD
 
   if (!token) {
     throw new Error("No se encontró el token de autenticación");
+  }
+
+  if (!API_BASE_URL) {
+    throw new Error(
+      "La variable NEXT_PUBLIC_API_URL no está configurada en el frontend"
+    );
   }
 
   const response = await fetch(
