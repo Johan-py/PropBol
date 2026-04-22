@@ -1,296 +1,234 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { CapacidadButton } from '../busqueda/capacidad/CapacidadButton'
 import {
-  Home,
-  Search as SearchIcon,
+  Search,
   DollarSign,
-  Users,
   Maximize,
   Award,
   SlidersHorizontal,
   ChevronDown,
-  Building,
-  Bed,
-  Trees,
-  Flower2
+  X,
+  MapPin
 } from 'lucide-react'
-import { useSearchFilters } from '@/hooks/useSearchFilters'
-import { LocationSearch } from '../layout/LocationSearch'
-import { ComboBox } from '../ui/ComboBox'
-import TransactionModeFilter from './TransactionModeFilter'
 import { useRouter } from 'next/navigation'
-import SuperficieFilter from './SuperficieFilter'
-
+import TransactionModeFilter from './TransactionModeFilter'
 
 interface FilterBarProps {
   onSearch?: (filtros: {
-    tipoInmueble: string[]
-    modoInmueble: string[]
     query: string
-    updatedAt: string
+    modoInmueble: string[]
+    amenidades: string[]
+    etiquetas: string[]
   }) => void
-  variant?: 'home' | 'map'
-  onOpenPriceFilter?: () => void
-  onOpenSuperficieFilter?: () => void
-  isCapacidadActive?: boolean
-  onToggleCapacidad?: () => void
-
 }
-type LocationValue =
-  | string
-  | {
-    nombre?: string
-    target?: {
-      value?: string
-    }
-  }
 
-// Botón Mock
-const MockFilterBtn = ({
-  icon: Icon,
-  text,
-  hasChevron = true,
+const AMENIDADES = [
+  'Piscina',
+  'Terraza',
+  'Jardín',
+  'Cochera',
+  'Ascensor',
+  'Amoblado'
+]
+
+const ETIQUETAS = ['Inversión', 'Preventa', 'Nuevo', 'Oferta']
+
+const Chip = ({
+  label,
+  active,
   onClick
 }: {
-  icon?: any
-  text: string
-  hasChevron?: boolean
-  onClick?: () => void
+  label: string
+  active: boolean
+  onClick: () => void
 }) => (
   <button
     type="button"
-    className="h-[36px] flex items-center justify-between bg-white border border-stone-200 text-stone-600 px-3 rounded-xl shadow-sm hover:border-stone-300 transition-all font-inter text-sm whitespace-nowrap gap-2 shrink-0 focus:outline-none cursor-default"
-    onClick={(e) => { e.preventDefault(); if (onClick) onClick() }}
-
+    onClick={onClick}
+    className={`px-3 py-1 text-xs rounded-full border transition
+      ${
+        active
+          ? 'bg-[#c47b2a] text-white border-[#c47b2a]'
+          : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
+      }`}
   >
-    <div className="flex items-center gap-2">
-      {Icon && <Icon className="w-4 h-4 text-stone-500" />}
-      <span>{text}</span>
-    </div>
-    {hasChevron && <ChevronDown className="w-4 h-4 text-stone-400" />}
+    {label}
   </button>
 )
-const trackSearchTelemetria = async (filtros: {
-  tipoInmueble: string[]
-  modoInmueble: string[]
-  query: string
-  zona?: string
-}) => {
-  try {
-    await fetch('/api/telemetria/search', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...filtros,
-        timestamp: new Date().toISOString(),
-        url: typeof window !== 'undefined' ? window.location.pathname : ''
-      })
-    })
-  } catch (error) {
-    console.error('Error tracking search:', error)
-  }
-}
 
-export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad }: FilterBarProps) {
-
+export default function FilterBar({ onSearch }: FilterBarProps) {
   const router = useRouter()
 
-  const { updateFilters } = useSearchFilters()
-  const [modosSeleccionados, setModosSeleccionados] = useState<string[]>(['VENTA'])
-  const [tipoInmueble, setTipoInmueble] = useState<string>('Cualquier tipo')
-  const [ubicacionTexto, setUbicacionTexto] = useState('')
+  const [query, setQuery] = useState('')
+  const [openMore, setOpenMore] = useState(false)
+  const [amenidades, setAmenidades] = useState<string[]>([])
+  const [etiquetas, setEtiquetas] = useState<string[]>([])
+  const [modoInmueble] = useState<string[]>(['VENTA'])
 
-  useEffect(() => {
-    const saved = sessionStorage.getItem('propbol_global_filters')
-    if (saved) {
-      const parsed = JSON.parse(saved)
-      if (parsed.tipoInmueble) setTipoInmueble(parsed.tipoInmueble[0] || 'Cualquier tipo')
-
-      if (parsed.modoInmueble) {
-        setModosSeleccionados(
-          Array.isArray(parsed.modoInmueble) ? parsed.modoInmueble : [parsed.modoInmueble]
-        )
-      }
-
-      if (parsed.query) setUbicacionTexto(parsed.query)
-    }
-  }, [])
-
-  const propertyTypes = [
-    { label: 'Casas', icon: Home },
-    { label: 'Departamentos', icon: Building },
-    { label: 'Cuartos', icon: Bed },
-    { label: 'Terrenos', icon: Trees },
-    { label: 'Espacios Cementerio', icon: Flower2 }
-  ]
-
-  const handleSearch = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault()
-    const tipoMap: Record<string, string> = {
-      Casas: 'CASA',
-      Departamentos: 'DEPARTAMENTO',
-      Terrenos: 'TERRENO',
-      Cuartos: 'CUARTO',
-      "Espacios Cementerio": 'TERRENO_MORTUORIO'
-    }
-
-    const tipoFinal =
-      tipoMap[tipoInmueble] ||
-      (tipoInmueble !== 'Cualquier tipo' ? tipoInmueble.toUpperCase() : null)
-
-    const esTerreno = tipoFinal === 'TERRENO' || tipoFinal === 'TERRENO_MORTUORIO';
-
-    if (esTerreno) {
-      setModosSeleccionados(['VENTA']);
-    }
-
-    const modosFinales = esTerreno ? ['VENTA'] : modosSeleccionados;
-
-    const nuevosFiltros = {
-      tipoInmueble: tipoFinal ? [tipoFinal] : [],
-      modoInmueble: modosFinales,
-      query: ubicacionTexto,
-      updatedAt: new Date().toISOString()
-    }
-    await trackSearchTelemetria({
-      tipoInmueble: nuevosFiltros.tipoInmueble,
-      modoInmueble: nuevosFiltros.modoInmueble,
-      query: nuevosFiltros.query,
-      zona: ubicacionTexto
-    })
-    updateFilters(nuevosFiltros)
-
-    const params = new URLSearchParams()
-    try {
-      const merged = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}') as {
-        locationId?: string | number
-      }
-      if (merged.locationId != null && merged.locationId !== '') {
-        params.set('locationId', String(merged.locationId))
-      }
-    } catch {
-      /* ignore */
-    }
-
-    modosSeleccionados.forEach((modo) => params.append('modoInmueble', modo))
-    if (tipoFinal) params.set('tipoInmueble', tipoFinal)
-    if (ubicacionTexto.trim() !== '') params.set('query', ubicacionTexto.trim())
-
-    const queryString = params.toString()
-    const targetUrl = `/busqueda_mapa${queryString ? `?${queryString}` : ''}`
-
-    router.push(targetUrl)
-    if (onSearch) onSearch(nuevosFiltros)
+  const toggleItem = (
+    item: string,
+    list: string[],
+    setList: (v: string[]) => void
+  ) => {
+    setList(
+      list.includes(item)
+        ? list.filter((i) => i !== item)
+        : [...list, item]
+    )
   }
 
-  // 🚀 FIX Z-INDEX MASIVO: Agregamos z-[99999] y !overflow-visible para aplastar al mapa
-  const containerStyles =
-    variant === 'map'
-      ? 'bg-[#faf9f6] border-b border-stone-200 py-2 px-4 w-full flex flex-col gap-2 shadow-sm sticky top-0 z-50 !overflow-visible'
-      : 'bg-white shadow-lg rounded-[30px] p-6 flex flex-col gap-6 w-full max-w-[921px] relative z-[99999] !overflow-visible'
+  const handleAplicar = () => {
+    onSearch?.({
+      query,
+      modoInmueble,
+      amenidades,
+      etiquetas
+    })
+    setOpenMore(false)
+  }
+
+  const handleLimpiar = () => {
+    setAmenidades([])
+    setEtiquetas([])
+  }
+
+  const handleBuscar = () => {
+    router.push('/busqueda_mapa')
+  }
 
   return (
-    <form className={containerStyles} onSubmit={handleSearch}>
-      {/* =========================================
-          FILA SUPERIOR: Checkboxes (Protegidos con z-index)
-          ========================================= */}
-      <div
-        className={`flex w-full relative z-[100] !overflow-visible ${variant === 'map' ? 'justify-start md:justify-center pl-2' : ''}`}
-      >
-        <TransactionModeFilter
-          modoSeleccionado={modosSeleccionados}
-          onModoChange={setModosSeleccionados}
+    <>
+      {/* OVERLAY OSCURO */}
+      {openMore && (
+        <div
+          onClick={() => setOpenMore(false)}
+          className="fixed inset-0 bg-black/40 z-40"
         />
-      </div>
+      )}
 
-      {/* =========================================
-          FILA INFERIOR: Todo lo demás
-          ========================================= */}
-      <div
-        className={`flex items-center w-full gap-3 relative z-[90] !overflow-visible ${variant === 'map' ? 'flex-nowrap' : 'flex-col md:flex-row flex-wrap'
-          }`}
-      >
-        {/* 🔸 Tipo (Aislado con z-[100] para que salte por encima de todo) */}
-        <div
-          className={`relative z-[100] !overflow-visible ${variant === 'map' ? 'w-48 shrink-0' : 'w-full md:w-64'}`}
-        >
-          <ComboBox
-            label={variant === 'map' ? '' : 'Tipo'}
-            placeholder="Cualquier tipo"
-            icon={Home}
-            options={propertyTypes}
-            onChange={(val: string) => setTipoInmueble(val)}
-            value={tipoInmueble}
+      <div className="w-full flex justify-center relative z-50">
+        <div className="bg-white shadow-xl rounded-[22px] px-6 py-4 w-full max-w-[1200px] flex flex-col gap-4">
+          {/* FILA 1 */}
+          <TransactionModeFilter
+            modoSeleccionado={['VENTA']}
+            onModoChange={() => {}}
           />
-        </div>
 
-        {/* 🔸 Ubicación (Z-[90] para no tapar a Tipo, pero estar encima de lo demás) */}
-        <div
-          className={`relative z-[90] !overflow-visible ${variant === 'map' ? 'w-[300px] shrink-0' : 'w-full flex-1'}`}
-        >
-          <LocationSearch
-            value={ubicacionTexto}
-            onChange={(val: LocationValue) => {
-              const text = typeof val === 'string' ? val : val?.nombre || val?.target?.value || ''
-              setUbicacionTexto(text)
-            }}
-          />
-        </div>
-
-        {/* 🚀 FIX AISLAMIENTO DE SCROLL: 
-            Solo estos botones tienen overflow-x-auto. Así los menús de la izquierda no se cortan. */}
-        {variant === 'map' && (
-          <div className="flex items-center gap-3 flex-1 overflow-visible pb-1">
-            <div className="shrink-0">
-              <MockFilterBtn icon={DollarSign} text="Precio" onClick={onOpenPriceFilter} />
-            </div>
-            <div className="shrink-0">
-              <CapacidadButton
-                variant={variant}
-                isActive={isCapacidadActive}
-                onClick={onToggleCapacidad}
+          {/* FILA 2 (ZONA AZUL ORDENADA) */}
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* BUSCADOR */}
+            <div className="flex items-center h-[40px] px-3 border border-gray-300 rounded-xl gap-2 w-[240px] bg-white">
+              <MapPin className="w-4 h-4 text-gray-400" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Zona, barrio o ciudad"
+                className="outline-none text-sm w-full"
               />
             </div>
-            <div className="shrink-0">
-              <button
-                type="button"
-                onClick={() => onOpenSuperficieFilter?.()}
-                className="h-[36px] flex items-center gap-2 px-3 rounded-xl shadow-sm transition-all text-sm whitespace-nowrap focus:outline-none border bg-white text-stone-600 border-stone-200 hover:border-stone-300"
-              >
-                <Maximize className="w-4 h-4 text-stone-500" />
-                <span>Metros</span>
-                <ChevronDown className="w-4 h-4 text-stone-400" />
-              </button>
-            </div>
-            <div className="shrink-0">
-              <MockFilterBtn icon={SlidersHorizontal} text="Más Filtros" hasChevron={false} />
-            </div>
-            <div className="shrink-0">
-              <MockFilterBtn icon={Award} text="Recomendados" hasChevron={false} />
-            </div>
-          </div>
-        )}
 
-        {/* 🔸 Botón Buscar */}
-        <div
-          className={
-            variant === 'map'
-              ? 'shrink-0 ml-auto relative z-10'
-              : 'w-full md:w-auto flex justify-end relative z-10'
-          }
-        >
-          <button
-            type="submit"
-            className={`${variant === 'map' ? 'h-[36px] px-6 shadow-md' : 'w-full md:w-auto h-[46px] px-10'
-              } bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95`}
-          >
-            <SearchIcon size={18} />
-            {variant === 'home' && 'BUSCAR'}
-          </button>
+            <button className="h-[40px] px-4 border border-gray-300 rounded-xl flex items-center gap-2 text-sm">
+              <DollarSign className="w-4 h-4" />
+              Precio
+              <ChevronDown className="w-4 h-4 text-gray-400" />
+            </button>
+
+            <CapacidadButton variant="home" />
+
+            <button className="h-[40px] px-4 border border-gray-300 rounded-xl flex items-center gap-2 text-sm">
+              <Maximize className="w-4 h-4" />
+              Metros
+              <ChevronDown className="w-4 h-4 text-gray-400" />
+            </button>
+
+            {/* MÁS FILTROS */}
+            <div className="relative">
+              <button
+                onClick={() => setOpenMore(true)}
+                className="h-[40px] px-4 border border-gray-300 rounded-xl flex items-center gap-2 text-sm bg-white"
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+                Más filtros
+              </button>
+
+              {openMore && (
+                <div className="absolute top-12 left-0 w-[360px] bg-white border border-gray-200 rounded-xl shadow-xl p-4 z-50">
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="font-semibold text-sm">
+                      Filtros avanzados
+                    </h3>
+                    <button onClick={() => setOpenMore(false)}>
+                      <X className="w-4 h-4 text-gray-500" />
+                    </button>
+                  </div>
+
+                  <p className="text-xs text-gray-500 mb-2">
+                    Amenidades
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {AMENIDADES.map((a) => (
+                      <Chip
+                        key={a}
+                        label={a}
+                        active={amenidades.includes(a)}
+                        onClick={() =>
+                          toggleItem(a, amenidades, setAmenidades)
+                        }
+                      />
+                    ))}
+                  </div>
+
+                  <p className="text-xs text-gray-500 mb-2">
+                    Etiquetas
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {ETIQUETAS.map((e) => (
+                      <Chip
+                        key={e}
+                        label={e}
+                        active={etiquetas.includes(e)}
+                        onClick={() =>
+                          toggleItem(e, etiquetas, setEtiquetas)
+                        }
+                      />
+                    ))}
+                  </div>
+
+                  <div className="flex justify-between gap-2">
+                    <button
+                      onClick={handleLimpiar}
+                      className="flex-1 h-[38px] rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-100 text-sm"
+                    >
+                      Limpiar
+                    </button>
+                    <button
+                      onClick={handleAplicar}
+                      className="flex-1 h-[38px] rounded-xl bg-[#c47b2a] hover:bg-[#a8651f] text-white text-sm font-semibold"
+                    >
+                      Aplicar
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <button className="h-[40px] px-4 bg-[#c47b2a] text-white rounded-xl flex items-center gap-2 text-sm">
+              <Award className="w-4 h-4" />
+              Recomendados
+            </button>
+
+            <button
+              onClick={handleBuscar}
+              className="ml-auto h-[40px] px-6 bg-[#c47b2a] hover:bg-[#a8651f] text-white rounded-xl font-semibold flex items-center gap-2"
+            >
+              <Search size={16} />
+              Buscar
+            </button>
+          </div>
         </div>
       </div>
-    </form>
+    </>
   )
 }
