@@ -13,7 +13,11 @@ import {
   WifiOff,
   Settings,
   X,
+<<<<<<< HEAD
   ChevronDown,
+=======
+  ChevronDown
+>>>>>>> 15cf0898 (fix(navbar): refactor menú móvil, añade acordeón y auto-cierre)
 } from "lucide-react";
  
 import Logo from "../navbar/Logo";
@@ -788,6 +792,7 @@ export default function Navbar() {
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
+<<<<<<< HEAD
                 Blogs
 =======
                 href="/propiedades"
@@ -818,6 +823,27 @@ export default function Navbar() {
               >
                 Planes de membresía
               </Link>
+=======
+                Inicio
+              </Link>
+
+              <div className="flex flex-col">
+                <button
+                  onClick={() => setIsPropiedadesOpen(!isPropiedadesOpen)}
+                  className="flex w-full items-center justify-between rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+                >
+                  <span>Propiedades</span>
+                  <ChevronDown className={`h-5 w-5 transition-transform duration-200 ${isPropiedadesOpen ? "rotate-180" : ""}`} />
+                </button>
+                <div className={`flex flex-col overflow-hidden transition-all duration-300 ${isPropiedadesOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"}`}>
+                  {["Casas", "Departamentos", "Cuartos", "Terrenos", "Espacios de cementerios"].map((item) => (
+                    <Link key={item} href="/propiedades" onClick={() => setIsMobileMenuOpen(false)} className="pl-8 py-2 text-base text-gray-600 hover:text-[#E68B25]">
+                      {item}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+>>>>>>> 15cf0898 (fix(navbar): refactor menú móvil, añade acordeón y auto-cierre)
 
               <Link
                 id="tour-ayuda-mobile"
@@ -828,6 +854,7 @@ export default function Navbar() {
               >
                 Blogs
               </Link>
+
               <Link
                 href="/cobros-suscripciones"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -835,6 +862,7 @@ export default function Navbar() {
               >
                 Planes de membresia
               </Link>
+
               <Link
 >>>>>>> 5f456f00 (feat: agregar funcionalidades al Navbar)
                 href="/ayuda"
@@ -850,6 +878,7 @@ export default function Navbar() {
     </>
 <<<<<<< HEAD
   );
+<<<<<<< HEAD
 }
 =======
   )
@@ -863,3 +892,6 @@ export default function Navbar() {
 =======
 }
 >>>>>>> 314b6112 (fix(navbar): corregir argumentos de TypeScript en notificaciones)
+=======
+}
+>>>>>>> 15cf0898 (fix(navbar): refactor menú móvil, añade acordeón y auto-cierre)
