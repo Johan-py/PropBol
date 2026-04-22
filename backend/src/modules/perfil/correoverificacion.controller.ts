@@ -180,33 +180,42 @@ if (esReutilizada) {
 }
 
     const resultado = await prisma.$transaction(async (tx) => {
-      const actualizacion = await tx.usuario.updateMany({
-        where: {
-          id: usuarioId,
-          password_actualizado_en: usuario.password_actualizado_en,
-        },
-        data: {
-          password: nuevaPassword,
-          intentos_fallidos_cambio_password: 0,
-          bloqueo_cambio_password_hasta: null,
-          password_actualizado_en: ahora,
-        },
-      });
+  const actualizacion = await tx.usuario.updateMany({
+    where: {
+      id: usuarioId,
+      password_actualizado_en: usuario.password_actualizado_en,
+    },
+    data: {
+      password: nuevaPassword,
+      intentos_fallidos_cambio_password: 0,
+      bloqueo_cambio_password_hasta: null,
+      password_actualizado_en: ahora,
+    },
+  });
 
-      if (actualizacion.count === 0) {
-        return { conflicto: true as const };
-      }
+  if (actualizacion.count === 0) {
+    return { conflicto: true as const };
+  }
 
-      await tx.historial_password.create({
-        data: {
-          usuarioId,
-          passwordHash: nuevaPassword,
-          creadoEn: ahora,
-        },
-      });
+  await tx.historial_password.create({
+    data: {
+      usuarioId,
+      passwordHash: nuevaPassword,
+      creadoEn: ahora,
+    },
+  });
 
-      return { conflicto: false as const };
-    });
+  await tx.sesion.updateMany({
+    where: {
+      usuarioId,
+      token: { not: currentToken },
+      estado: true,
+    },
+    data: { estado: false },
+  });
+
+  return { conflicto: false as const };
+});
 
 if (resultado.conflicto) {
   return res.status(409).json({
@@ -214,12 +223,6 @@ if (resultado.conflicto) {
     msg: "La contraseña ya fue modificada desde otra sesión. Recarga la página e intenta nuevamente.",
   });
 }
-
-    try {
-      await invalidateOtherUserSessions(usuarioId, currentToken);
-    } catch (sessionError) {
-      console.error("Error no crítico al invalidar otras sesiones:", sessionError);
-    }
 
     try {
       await enviarNotificacionCambioPassword({
