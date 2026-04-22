@@ -4,6 +4,7 @@ import {
   createNotificationService,
   deleteNotificationService,
   getNotificationsService,
+  getNotificationByIdService,
   getUnreadCountService,
   markAllNotificationsAsReadService,
   markNotificationAsReadService,
@@ -86,6 +87,26 @@ export const getNotificationsController = async (req: Request, res: Response) =>
     return res.status(statusCode).json({
       message
     })
+  }
+}
+
+export const getNotificationByIdController = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user!.id
+    const id = Number(req.params.id)
+
+    const notification = await getNotificationByIdService({
+      id,
+      usuarioId: userId
+    })
+
+    if (!notification) {
+      return res.status(404).json({ message: 'Notificación no encontrada' })
+    }
+
+    return res.json({ item: notification })
+  } catch (error) {
+    return res.status(500).json({ message: 'Error interno' })
   }
 }
 
@@ -219,13 +240,7 @@ export const archiveNotificationController = async (
   res: Response
 ) => {
   try {
-    const usuarioId = getUserIdFromRequest(req as AuthenticatedRequest)
-
-    if (!usuarioId) {
-      return res.status(401).json({
-        message: 'No autorizado'
-      })
-    }
+    const usuarioId = req.user!.id // 👈 CAMBIO CLAVE
 
     const id = Number.parseInt(req.params.id, 10)
     const result = await archiveNotificationService(id, usuarioId)

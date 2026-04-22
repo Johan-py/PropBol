@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import PlanModal from '../../components/ui/PlanModal'
+//import PlanModal from '../../components/ui/PlanModal'
 
 type CampoError =
   | 'titulo'
@@ -16,11 +16,11 @@ type CampoError =
   | 'operacion'
   | null
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL //?? "http://localhost:5000";
 
 export default function MiRegistroPage() {
   const router = useRouter()
-  const [mostrarPlanModal, setMostrarPlanModal] = useState(false)
+  //const [mostrarPlanModal, setMostrarPlanModal] = useState(false)
 
   const [datos, setDatos] = useState({
     titulo: '',
@@ -48,7 +48,7 @@ export default function MiRegistroPage() {
         router.push('/sign-in') //entra al formulario solo si inicio sesion
         return
       }
-
+      
       try {
         const response = await fetch(`${API_URL}/api/publicaciones/flujo`, {
           method: 'GET',
@@ -60,15 +60,16 @@ export default function MiRegistroPage() {
         const result = await response.json()
 
         if (!response.ok && result.message === 'LIMIT_REACHED') {
-          setMostrarPlanModal(true)
+          router.push('/Cobros-Limite')
         }
       } catch (error) {
-        console.error('Error validando flujo de publicación:', error)
+        //console.error('Error validando flujo de publicación:', error)
+        console.error(error)
       }
     }
 
     validarFlujo()
-  }, [router])
+  }, []) //router
 
   const limpiarError = () => {
     setMensajeError('')
@@ -524,7 +525,7 @@ export default function MiRegistroPage() {
 
       if (!response.ok) {
         if (result.message === 'LIMIT_REACHED') {
-          setMostrarPlanModal(true)
+          router.push('/Cobros-Limite')
           return
         }
 
@@ -850,8 +851,6 @@ export default function MiRegistroPage() {
           </div>
         </div>
       </main>
-
-      {mostrarPlanModal && <PlanModal onClose={() => setMostrarPlanModal(false)} />}
     </div>
   )
 }

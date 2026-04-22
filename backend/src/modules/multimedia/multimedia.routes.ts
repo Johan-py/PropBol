@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import multer from 'multer'
 import { requireAuth } from '../../middleware/auth.middleware.js'
 import {
   getPublicationMultimediaController,
@@ -8,6 +9,10 @@ import {
 
 const multimediaRoutes = Router()
 
+const upload = multer({
+  dest: 'uploads/'
+})
+
 multimediaRoutes.get('/:publicacionId/multimedia', requireAuth, getPublicationMultimediaController)
 
 multimediaRoutes.post(
@@ -16,6 +21,11 @@ multimediaRoutes.post(
   registerVideoLinkController
 )
 
-multimediaRoutes.post('/:publicacionId/multimedia/images', requireAuth, registerImagesController)
+multimediaRoutes.post(
+  '/:publicacionId/multimedia/images',
+  requireAuth,
+  upload.array('images', 5),
+  registerImagesController
+)
 
 export default multimediaRoutes
