@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 
 type LoginResponse = {
   message?: string;
@@ -87,7 +88,7 @@ const DEACTIVATED_ACCOUNT_MESSAGE = "Esta cuenta está desactivada";
 
 const clearClientSession = () => {
   localStorage.removeItem("token");
-  localStorage.removeItem("propbol_user");
+  localStorage.removeItem(USER_STORAGE_KEY);
   localStorage.removeItem("propbol_session_expires");
   localStorage.removeItem("nombre");
   localStorage.removeItem("correo");
@@ -108,24 +109,13 @@ const saveSession = (
   },
 ) => {
   localStorage.setItem("token", token);
+  const sessionUser = buildSessionUser(user);
 
-  const userName =
-    user?.nombre && user?.apellido
-      ? `${user.nombre} ${user.apellido}`
-      : user?.nombre || user?.correo || "Usuario";
+  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(sessionUser));
 
-  localStorage.setItem(
-    "propbol_user",
-    JSON.stringify({
-      name: userName,
-      email: user?.correo ?? "",
-      avatar: user?.avatar ?? null,
-    }),
-  );
-
-  localStorage.setItem("nombre", userName);
-  localStorage.setItem("correo", user?.correo ?? "");
-  localStorage.setItem("avatar", user?.avatar ?? "");
+  localStorage.setItem("nombre", sessionUser.name);
+  localStorage.setItem("correo", sessionUser.email);
+  localStorage.setItem("avatar", sessionUser.avatar ?? "");
   localStorage.setItem(
     "propbol_session_expires",
     String(Date.now() + SESSION_DURATION_MS),
