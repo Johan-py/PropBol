@@ -1,19 +1,15 @@
 import React from 'react'
 import { useRouter } from 'next/navigation'
 
-export function ExpiredView() {
+interface ExpiredViewProps {
+  planId?: string
+}
+
+export function ExpiredView({ planId }: ExpiredViewProps) {
   const router = useRouter()
 
-  const handleVolver = () => {
-    try {
-      const raw = localStorage.getItem('currentPayment')
-      const payment = raw ? JSON.parse(raw) : null
-      const planId = payment?.planId
-      localStorage.removeItem('currentPayment')
-      router.push(planId ? `/pago/resumen?planId=${planId}` : '/')
-    } catch {
-      router.push('/')
-    }
+  const handleBack = () => {
+    router.push(planId ? `/pago/resumen?planId=${planId}` : '/cobros-suscripciones')
   }
 
   return (
@@ -27,7 +23,7 @@ export function ExpiredView() {
           La compra ha sido cancelada automáticamente.
         </p>
         <button
-          onClick={handleVolver}
+          onClick={handleBack}
           className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg transition"
         >
           Volver al resumen

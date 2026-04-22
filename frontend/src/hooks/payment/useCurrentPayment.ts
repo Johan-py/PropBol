@@ -8,12 +8,16 @@ export function useCurrentPayment() {
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem('currentPayment')
-      if (!raw) throw new Error('No hay pago en curso')
-      const data = JSON.parse(raw) as PaymentData
+      const stored = localStorage.getItem('currentPayment')
+      if (!stored) {
+        setError('No hay pago en curso')
+        setLoading(false)
+        return
+      }
+      const data = JSON.parse(stored) as PaymentData
       setPayment(data)
     } catch {
-      setError('Error al cargar el pago')
+      setError('Error al leer el pago')
     } finally {
       setLoading(false)
     }

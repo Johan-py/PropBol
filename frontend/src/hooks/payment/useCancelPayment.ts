@@ -10,24 +10,22 @@ export function useCancelPayment() {
 
   const confirmCancel = async () => {
     setIsModalOpen(false)
+
     try {
-      const raw = localStorage.getItem('currentPayment')
-      const payment = raw ? JSON.parse(raw) : null
-      const planId = payment?.planId
-
-      if (payment?.id) {
-        await fetch(`http://localhost:5000/api/transacciones/${payment.id}/estado`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ nuevoEstado: 'CANCELADO' }),
-        })
+      const stored = localStorage.getItem('currentPayment')
+      if (stored) {
+        const payment = JSON.parse(stored)
+        await fetch(`/api/transacciones/${payment.id}/cancelar`, { method: 'PATCH' })
+        const planId = payment.planId
+        localStorage.removeItem('currentPayment')
+        router.push(planId ? `/pago/resumen?planId=${planId}` : '/cobros-suscripciones')
+        return
       }
-
-      localStorage.removeItem('currentPayment')
-      router.push(planId ? `/pago/resumen?planId=${planId}` : '/')
     } catch {
-      router.push('/')
+      // No bloqueamos la navegación si la llamada falla
     }
+
+    router.push('/cobros-suscripciones')
   }
 
   useEffect(() => {
