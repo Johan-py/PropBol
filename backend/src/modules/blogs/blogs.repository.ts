@@ -87,5 +87,33 @@ export const blogsRepository = {
     }
   ) {
     return prisma.blog.update({ where: { id }, data })
+  },
+  // Cambiar estado (Admin)
+  async changeEstado(id: number, estado: estado_blog, razon_rechazo?: string) {
+    const updateData: {
+      estado: estado_blog
+      fecha_publicacion?: Date | null
+    } = { estado }
+
+    if (estado === 'PUBLICADO') {
+      updateData.fecha_publicacion = new Date()
+    }
+
+    const [blog] = await prisma.$transaction(async (tx) => {
+      const updated = await tx.blog.update({
+        where: { id },
+        data: updateData
+      })
+
+      if (estado === 'RECHAZADO' && razon_rechazo) {
+        await tx.blog_rechazo.create({
+          data: { blog_id: id, comentario: razon_rechazo }
+        })
+      }
+
+      return [updated]
+    })
+
+    return blog
   }
 }
