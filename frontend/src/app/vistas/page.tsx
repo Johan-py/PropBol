@@ -1,26 +1,9 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Star } from "lucide-react";
 import { MOCK_PROPERTIES } from '@/data/mockProperties';
 
 export default function VistasRecientesPage() {
-    const [favoritos, setFavoritos] = useState<any[]>([]);
-    const cargarFavoritos = () => {
-  fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/favorites`, {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`
-    }
-  })
-    .then(res => res.json())
-    .then(data => {
-      setFavoritos(data.inmuebles);
-    });
-};
-
-useEffect(() => {
-  cargarFavoritos();
-}, []);
-
     const displayedProperties = MOCK_PROPERTIES.slice(0, 8).map((prop, index) => ({
         ...prop,
         fechaVista: index === 0 ? "Hoy" : index < 3 ? "Ayer" : `1${index}/04/2026`
@@ -50,89 +33,68 @@ useEffect(() => {
                 {/* Grid de Propiedades */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {displayedProperties.map((prop: any) => {
-                         //limpiar ID correctamente
-                        const id = parseInt(prop.id.replace("prop-", "")) || 0;
-                        
-                        //verificar si es favorito
-                        const isFav = favoritos.some(f => String(f.id) === String(id));
-                        return(  
-                        <div key={prop.id} className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden relative hover:shadow-md transition-all">
+                        //Estado de favorito por card
+                        const [favorito, setFavorito] = useState(false);
+                        return(
+                            <div key={prop.id} className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden relative hover:shadow-md transition-all">
 
-                            {/* Contenedor de Imagen */}
-                            <div className="relative h-44 w-full bg-gray-200">
-                                <img
-                                    src={prop.image || 'https://via.placeholder.com/400x300'}
-                                    alt={prop.title}
-                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
-                                />
-                            </div>
+                                {/* Contenedor de Imagen */}
+                                <div className="relative h-44 w-full bg-gray-200">
+                                    <img
+                                        src={prop.image || 'https://via.placeholder.com/400x300'}
+                                        alt={prop.title}
+                                        className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                                    />
+                                </div>
 
-                            {/* Contenido de la Tarjeta */}
-                            <div className="p-4 relative">
-                                {/* Badge de Fecha y Referencia */}
-                                <div className="absolute top-4 right-4 text-right flex flex-col items-end">
-                                    <div className="bg-[#4B4B4B] text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm mb-1">
-                                        Visto: {prop.fechaVista}
+                                {/* Contenido de la Tarjeta */}
+                                <div className="p-4 relative">
+                                    {/* Badge de Fecha y Referencia */}
+                                    <div className="absolute top-4 right-4 text-right flex flex-col items-end">
+                                        <div className="bg-[#4B4B4B] text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm mb-1">
+                                            Visto: {prop.fechaVista}
+                                        </div>
+                                        <span className="text-[9px] text-gray-300 font-medium">Ref: #{prop.id || 'prop-001'}</span>
                                     </div>
-                                    <span className="text-[9px] text-gray-300 font-medium">Ref: #{prop.id || 'prop-001'}</span>
-                                </div>
 
-                                {/* Precio */}
-                                <p className="text-[#E87B00] font-bold text-lg">${prop.price || '150,000'} USD</p>
+                                    {/* Precio */}
+                                    <p className="text-[#E87B00] font-bold text-lg">${prop.price || '150,000'} USD</p>
 
-                                {/* Título en Negro */}
-                                <h3 className="font-bold text-black text-sm mt-1 truncate">{prop.title}</h3>
+                                    {/* Título en Negro */}
+                                    <h3 className="font-bold text-black text-sm mt-1 truncate">{prop.title}</h3>
 
-                                {/* Ubicación (Sin icono) */}
-                                <p className="text-black text-[11px] mt-1 font-medium italic">Cochabamba, Bolivia</p>
+                                    {/* Ubicación (Sin icono) */}
+                                    <p className="text-black text-[11px] mt-1 font-medium italic">Cochabamba, Bolivia</p>
 
-                                {/* Detalles técnicos */}
-                                <div className="flex items-center gap-2 mt-3 text-[10px] text-black font-medium italic">
-                                    <span>3 hab</span>
-                                    <span>•</span>
-                                    <span>2 baños</span>
-                                    <span>•</span>
-                                    <span>1 garaje</span>
-                                </div>
+                                    {/* Detalles técnicos */}
+                                    <div className="flex items-center gap-2 mt-3 text-[10px] text-black font-medium italic">
+                                        <span>3 hab</span>
+                                        <span>•</span>
+                                        <span>2 baños</span>
+                                        <span>•</span>
+                                        <span>1 garaje</span>
+                                    </div>
 
-                                {/* Botón Ver Detalle (Texto Negro y ocupa todo el ancho) */}
-                                <div className="mt-4 flex gap-2">
-                                    {/* Favorito */}
+                                    {/* Botón Ver Detalle (Texto Negro y ocupa todo el ancho) */}
+                                    <div className="mt-4 flex gap-2">
+                                        {/* Favorito */}
                                         <button
-    onClick={() => {
-        if (isFav) {
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/favorites/${id}`, {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            }).then(() => cargarFavoritos());
-        } else {
-            fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/favorites`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                },
-                body: JSON.stringify({ inmuebleId: id })
-            }).then(() => cargarFavoritos());
-        }
-    }}
-    className="flex items-center justify-center px-3 bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm transition-colors"
->
-    <Star
-        fill={isFav ? "black" : "none"}   
-        color={isFav ? "black" : "black"} 
-        size={18}
-    />
-</button>
-
-                                    <button className="w-full bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm transition-colors text-center">
-                                        Ver Detalle
-                                    </button>
+                                            onClick={() => setFavorito(!favorito)}
+                                            className="flex items-center justify-center px-3 bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm transition-colors"
+                                        >
+                                            <Star
+                                                size={16}
+                                                strokeWidth={2}
+                                                fill={favorito ? "black" : "none"}
+                                                color="black"
+                                            />
+                                        </button>
+                                        <button className="w-full bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm transition-colors text-center">
+                                            Ver Detalle
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         );
                     })}
                 </div>
