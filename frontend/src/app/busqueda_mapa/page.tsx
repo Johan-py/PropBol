@@ -77,6 +77,40 @@ const SHEET_H = { peek: '50%', full: '100%' } as const
 type SheetState = 'hidden' | 'peek' | 'full'
 
 const LIST_PAGE_SIZES = [10, 20, 50, 100] as const;
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
+
+interface ZonaUsuario {
+  id: number
+  nombre: string
+  geometria: {
+    type: 'Polygon'
+    coordinates: number[][][]
+  }
+}
+
+function extraerCoordenadasDeGeometria(geometria: ZonaUsuario['geometria'] | null | undefined): [number, number][] {
+  if (!geometria || geometria.type !== 'Polygon' || !Array.isArray(geometria.coordinates?.[0])) {
+    return []
+  }
+
+  const ring = geometria.coordinates[0]
+  const puntos = ring
+    .map((coord) => {
+      if (!Array.isArray(coord) || coord.length < 2) return null
+      return [Number(coord[1]), Number(coord[0])] as [number, number]
+    })
+    .filter((coord): coord is [number, number] => Boolean(coord))
+
+  if (puntos.length >= 2) {
+    const [firstLat, firstLng] = puntos[0]
+    const [lastLat, lastLng] = puntos[puntos.length - 1]
+    if (firstLat === lastLat && firstLng === lastLng) {
+      return puntos.slice(0, -1)
+    }
+  }
+
+  return puntos
+}
 
 function BusquedaMapaContent() {
   const [isMisZonasOpen, setIsMisZonasOpen] = useState(false)
@@ -86,6 +120,14 @@ function BusquedaMapaContent() {
 
   //estado para controlar la autenticación
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [misZonas, setMisZonas] = useState<ZonaUsuario[]>([])
+  const [newZoneName, setNewZoneName] = useState('Nueva zona')
+  const [isCreatingCustomZone, setIsCreatingCustomZone] = useState(false)
+  const [isSavingNewZone, setIsSavingNewZone] = useState(false)
+  const [editingZoneId, setEditingZoneId] = useState<string | null>(null)
+  const [editingZoneName, setEditingZoneName] = useState('')
+  const [editingPolygonPoints, setEditingPolygonPoints] = useState<[number, number][]>([])
+  const [isSavingEditedZone, setIsSavingEditedZone] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -106,10 +148,18 @@ function BusquedaMapaContent() {
   const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([])
   const [isPolygonClosed, setIsPolygonClosed] = useState(false)
 
+  const resetEditingZone = useCallback(() => {
+    setEditingZoneId(null)
+    setEditingZoneName('')
+    setEditingPolygonPoints([])
+    setIsSavingEditedZone(false)
+  }, [])
+
   const resetDrawing = () => {
     setIsDrawingMode(false)
     setIsPolygonClosed(false)
     setPolygonPoints([])
+    setIsCreatingCustomZone(false)
   }
   // --- FIN ESTADOS HU8 ---
 
