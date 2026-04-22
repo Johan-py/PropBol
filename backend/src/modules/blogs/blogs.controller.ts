@@ -59,6 +59,52 @@ export const listarBlogs = async (req: Request, res: Response) => {
   }
 };
 
+/** GET /api/blogs/mis-blogs */
+export const misBlogs = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user)
+      return res.status(401).json({ message: "NOT_AUTHENTICATED" });
+    const blogs = await blogsService.misBlogs(req.user.id);
+    return res.json(blogs);
+  } catch (error: unknown) {
+    return handleError(res, error);
+  }
+};
+
+/** PATCH /api/blogs/:id */
+export const actualizarBlog = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user)
+      return res.status(401).json({ message: "NOT_AUTHENTICATED" });
+
+    const id = Number(req.params.id);
+    const { titulo, contenido, imagen, accion } = req.body;
+
+    const blog = await blogsService.actualizar(id, req.user.id, {
+      titulo,
+      contenido,
+      imagen,
+      accion,
+    });
+
+    return res.json(blog);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      if (error.message === "BLOG_NOT_FOUND")
+        return res.status(404).json({ message: "Blog no encontrado" });
+      if (error.message === "FORBIDDEN")
+        return res
+          .status(403)
+          .json({ message: "No tienes permiso para editar este blog" });
+      if (error.message === "BLOG_NOT_EDITABLE")
+        return res.status(409).json({
+          message: "Solo puedes editar blogs en estado BORRADOR o RECHAZADO",
+        });
+    }
+    return handleError(res, error);
+  }
+};
+
 // ──────────────────────────────────────────
 // HELPER
 // ──────────────────────────────────────────
