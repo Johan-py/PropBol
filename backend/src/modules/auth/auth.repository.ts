@@ -279,7 +279,7 @@ export const activate2FAByUserId = async (userId: number) => {
   return await prisma.usuario.update({
     where: { id: userId },
     data: {
-      twoFactorActivo: true,
+      two_factor_activo: true,
       twoFactorActivadoEn: new Date(),
       twoFactorMetodo: "email",
     },
