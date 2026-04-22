@@ -89,6 +89,9 @@ export default function TwoFactorSection() {
                   setPassword(e.target.value)
                   setError('')
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleConfirm()
+                }}
                 placeholder="••••••••"
                 className="w-full rounded-lg border border-neutral-300 px-3 py-2 pr-10 text-sm"
               />
