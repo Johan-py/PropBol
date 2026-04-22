@@ -48,7 +48,7 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
       </div>
 
       {/* Sliders */}
-      <div className="px-4 pt-4 space-y-6">
+      <div className="px-4 pt-4 space-y-6  mb-14">
         <RangeSliderControl
           label="dormitorios"
           minValue={dormitoriosMin}
