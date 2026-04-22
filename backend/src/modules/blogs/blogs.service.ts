@@ -68,5 +68,15 @@ export const blogsService = {
       imagen: data.imagen,
       ...(estado ? { estado } : {})
     })
+  },
+  async cambiarEstado(id: number, estado: 'PUBLICADO' | 'RECHAZADO', razon_rechazo?: string) {
+    const blog = await blogsRepository.findById(id)
+    if (!blog) throw new Error('BLOG_NOT_FOUND')
+    if (blog.estado !== 'PENDIENTE') throw new Error('BLOG_NOT_PENDING')
+    if (estado === 'RECHAZADO' && !razon_rechazo) {
+      throw new Error('RAZON_RECHAZO_REQUIRED')
+    }
+
+    return blogsRepository.changeEstado(id, estado as estado_blog, razon_rechazo)
   }
 }
