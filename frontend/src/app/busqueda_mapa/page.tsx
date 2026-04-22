@@ -177,6 +177,240 @@ function BusquedaMapaContent() {
   const { zonas } = useZonas()
   const [selectedZoneId, setSelectedZoneId] = useState<number | null>(null)
 
+  const cargarMisZonas = useCallback(async () => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setMisZonas([])
+      return
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/api/perfil/zonas`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+
+      if (!response.ok) {
+        throw new Error('No se pudieron cargar tus zonas')
+      }
+
+      const data = await response.json()
+      setMisZonas(Array.isArray(data) ? data : [])
+    } catch (err) {
+      console.error('Error cargando mis zonas:', err)
+      setMisZonas([])
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setMisZonas([])
+      return
+    }
+    cargarMisZonas()
+  }, [isAuthenticated, cargarMisZonas])
+
+  const zonasCombinadas = useMemo(() => {
+    const zonasUsuarioParaMapa = misZonas
+      .map((zonaUsuario) => {
+        const coordenadas = extraerCoordenadasDeGeometria(zonaUsuario.geometria)
+        if (coordenadas.length < 3) return null
+
+        return {
+          id: -zonaUsuario.id,
+          nombre: zonaUsuario.nombre,
+          coordenadas,
+          color: '#ea580c',
+          activa: true,
+          creadoEn: new Date().toISOString()
+        }
+      })
+      .filter((zona): zona is NonNullable<typeof zona> => Boolean(zona))
+
+    return [...zonas, ...zonasUsuarioParaMapa]
+  }, [zonas, misZonas])
+
+  const zonasSidebar = useMemo(
+    () => misZonas.map((zona) => ({ id: String(zona.id), nombre: zona.nombre })),
+    [misZonas]
+  )
+
+  const saveDraftZone = useCallback(async () => {
+    if (!isAuthenticated || isSavingNewZone || !isCreatingCustomZone) return
+    if (polygonPoints.length < 3) return
+
+    const token = localStorage.getItem('token')
+    if (!token) return
+
+    setIsSavingNewZone(true)
+    try {
+      const ring = [...polygonPoints, polygonPoints[0]].map(([lat, lng]) => [lng, lat])
+      const nombreFinal = newZoneName.trim() || 'Nueva zona'
+
+      const response = await fetch(`${API_URL}/api/perfil/zonas`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          nombre: nombreFinal.slice(0, 100),
+          geometria: {
+            type: 'Polygon',
+            coordinates: [ring]
+          }
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('No se pudo guardar la zona')
+      }
+
+      const zonaCreada = await response.json()
+      await cargarMisZonas()
+
+      if (zonaCreada?.id) {
+        setSelectedZoneId(-Number(zonaCreada.id))
+      }
+
+      setIsPolygonClosed(false)
+      setPolygonPoints([])
+      setIsDrawingMode(false)
+      setIsCreatingCustomZone(false)
+      setNewZoneName('Nueva zona')
+    } catch (err) {
+      console.error('Error guardando zona:', err)
+    } finally {
+      setIsSavingNewZone(false)
+    }
+  }, [
+    isAuthenticated,
+    isSavingNewZone,
+    isCreatingCustomZone,
+    polygonPoints,
+    newZoneName,
+    cargarMisZonas
+  ])
+
+  const cancelDraftZone = useCallback(() => {
+    setNewZoneName('Nueva zona')
+    setIsMisZonasOpen(true)
+    resetDrawing()
+  }, [])
+
+  const startEditZone = useCallback(
+    (id: string) => {
+      const zoneId = Number(id)
+      if (Number.isNaN(zoneId)) return
+
+      const zone = misZonas.find((item) => item.id === zoneId)
+      if (!zone) return
+
+      const points = extraerCoordenadasDeGeometria(zone.geometria)
+      if (points.length < 3) return
+
+      setEditingZoneId(id)
+      setEditingZoneName(zone.nombre)
+      setEditingPolygonPoints(points)
+      setIsCreatingCustomZone(false)
+      setIsDrawingMode(false)
+      setIsPolygonClosed(false)
+      setPolygonPoints([])
+      setSelectedZoneId(-zoneId)
+      setIsMisZonasOpen(true)
+      setIsSidebarOpen(false)
+    },
+    [misZonas]
+  )
+
+  const saveEditedZone = useCallback(async () => {
+    if (!editingZoneId || isSavingEditedZone || editingPolygonPoints.length < 3) return
+
+    const token = localStorage.getItem('token')
+    if (!token) return
+
+    const zoneId = Number(editingZoneId)
+    if (Number.isNaN(zoneId)) return
+
+    setIsSavingEditedZone(true)
+    try {
+      const ring = [...editingPolygonPoints, editingPolygonPoints[0]].map(([lat, lng]) => [lng, lat])
+      const nombreFinal = editingZoneName.trim() || 'Nueva zona'
+
+      const response = await fetch(`${API_URL}/api/perfil/zonas/${zoneId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          nombre: nombreFinal.slice(0, 100),
+          geometria: {
+            type: 'Polygon',
+            coordinates: [ring]
+          }
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('No se pudo actualizar la zona')
+      }
+
+      await cargarMisZonas()
+      setSelectedZoneId(-zoneId)
+      resetEditingZone()
+    } catch (err) {
+      console.error('Error actualizando zona:', err)
+    } finally {
+      setIsSavingEditedZone(false)
+    }
+  }, [
+    editingZoneId,
+    isSavingEditedZone,
+    editingPolygonPoints,
+    editingZoneName,
+    cargarMisZonas,
+    resetEditingZone
+  ])
+
+  const cancelEditZone = useCallback(() => {
+    resetEditingZone()
+  }, [resetEditingZone])
+
+  const deleteZone = useCallback(
+    async (id: string) => {
+      const token = localStorage.getItem('token')
+      const zoneId = Number(id)
+      if (!token || Number.isNaN(zoneId)) return
+
+      const confirmed = window.confirm('¿Eliminar esta zona?')
+      if (!confirmed) return
+
+      try {
+        const response = await fetch(`${API_URL}/api/perfil/zonas/${zoneId}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` }
+        })
+
+        if (!response.ok) {
+          throw new Error('No se pudo eliminar la zona')
+        }
+
+        if (selectedZoneId === -zoneId) {
+          setSelectedZoneId(null)
+        }
+
+        if (editingZoneId === id) {
+          resetEditingZone()
+        }
+
+        await cargarMisZonas()
+      } catch (err) {
+        console.error('Error eliminando zona:', err)
+      }
+    },
+    [cargarMisZonas, selectedZoneId, editingZoneId, resetEditingZone]
+  )
+
   // === 3. LÓGICA MATEMÁTICA HU8 (Filtro por polígono) ===
   const displayedProperties = useMemo(() => {
     if (!properties) return []
