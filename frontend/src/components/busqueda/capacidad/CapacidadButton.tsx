@@ -31,4 +31,3 @@ export function CapacidadButton({ variant = 'map', isActive = false, onClick }: 
     </div>
   )
 }
-
