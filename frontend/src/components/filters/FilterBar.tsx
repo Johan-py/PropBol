@@ -1,40 +1,22 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { CapacidadButton } from '../busqueda/capacidad/CapacidadButton'
+import { useState } from 'react'
 import {
   Home,
   Search as SearchIcon,
   DollarSign,
-  Users,
   Maximize,
-  Award,
   SlidersHorizontal,
+  Award,
   ChevronDown,
-  Building,
-  Bed,
-  Trees,
-  Flower2
+  X
 } from 'lucide-react'
-import { useSearchFilters } from '@/hooks/useSearchFilters'
-import { LocationSearch } from '../layout/LocationSearch'
+
 import { ComboBox } from '../ui/ComboBox'
+import { LocationSearch } from '../layout/LocationSearch'
+import { CapacidadButton } from '../busqueda/capacidad/CapacidadButton'
 import TransactionModeFilter from './TransactionModeFilter'
-import { useRouter } from 'next/navigation'
-import SuperficieFilter from './SuperficieFilter'
-
-
-interface FilterBarProps {
-  onSearch?: (filtros: {
-    tipoInmueble: string[]
-    modoInmueble: string[]
-    query: string
-    updatedAt: string
-  }) => void
-  variant?: 'home' | 'map'
-  onOpenPriceFilter?: () => void
-  onOpenSuperficieFilter?: () => void
-}
+import AmenityChips from './AmenityChips'
 
 type LocationValue =
   | string
@@ -45,220 +27,140 @@ type LocationValue =
     }
   }
 
-// Botón Mock
-const MockFilterBtn = ({
+type IconType = React.ComponentType<{ className?: string }>
+
+const Btn = ({
   icon: Icon,
   text,
-  hasChevron = true,
   onClick
 }: {
-  icon?: any
+  icon?: IconType
   text: string
-  hasChevron?: boolean
   onClick?: () => void
 }) => (
   <button
     type="button"
-    className="h-[36px] flex items-center justify-between bg-white border border-stone-200 text-stone-600 px-3 rounded-xl shadow-sm hover:border-stone-300 transition-all font-inter text-sm whitespace-nowrap gap-2 shrink-0 focus:outline-none cursor-default"
-    onClick={(e) => { e.preventDefault(); if (onClick) onClick() }}
-
+    onClick={onClick}
+    className="h-[38px] flex items-center gap-2 px-4 rounded-xl border bg-white text-gray-700 border-gray-200 hover:border-gray-300 text-sm"
   >
-    <div className="flex items-center gap-2">
-      {Icon && <Icon className="w-4 h-4 text-stone-500" />}
-      <span>{text}</span>
-    </div>
-    {hasChevron && <ChevronDown className="w-4 h-4 text-stone-400" />}
+    {Icon && <Icon className="w-4 h-4" />}
+    {text}
+    <ChevronDown className="w-4 h-4 text-gray-400" />
   </button>
 )
 
-export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter }: FilterBarProps) {
-  const router = useRouter()
-
-  const { updateFilters } = useSearchFilters()
-  const [modosSeleccionados, setModosSeleccionados] = useState<string[]>(['VENTA'])
-  const [tipoInmueble, setTipoInmueble] = useState<string>('Cualquier tipo')
+export default function FilterBar() {
+  const [tipoInmueble, setTipoInmueble] = useState('Cualquier tipo')
   const [ubicacionTexto, setUbicacionTexto] = useState('')
-
-  useEffect(() => {
-    const saved = sessionStorage.getItem('propbol_global_filters')
-    if (saved) {
-      const parsed = JSON.parse(saved)
-      if (parsed.tipoInmueble) setTipoInmueble(parsed.tipoInmueble[0] || 'Cualquier tipo')
-
-      if (parsed.modoInmueble) {
-        setModosSeleccionados(
-          Array.isArray(parsed.modoInmueble) ? parsed.modoInmueble : [parsed.modoInmueble]
-        )
-      }
-
-      if (parsed.query) setUbicacionTexto(parsed.query)
-    }
-  }, [])
+  const [openMore, setOpenMore] = useState(false)
 
   const propertyTypes = [
     { label: 'Casas', icon: Home },
-    { label: 'Departamentos', icon: Building },
-    { label: 'Cuartos', icon: Bed },
-    { label: 'Terrenos', icon: Trees },
-    { label: 'Espacios Cementerio', icon: Flower2 }
+    { label: 'Departamentos', icon: Home },
+    { label: 'Terrenos', icon: Home }
   ]
 
-  const handleSearch = (e?: React.FormEvent) => {
-    if (e) e.preventDefault()
-    const tipoMap: Record<string, string> = {
-      Casas: 'CASA',
-      Departamentos: 'DEPARTAMENTO',
-      Terrenos: 'TERRENO',
-      Cuartos: 'CUARTO',
-      "Espacios Cementerio": 'TERRENO_MORTUORIO'
-    }
-
-    const tipoFinal =
-      tipoMap[tipoInmueble] ||
-      (tipoInmueble !== 'Cualquier tipo' ? tipoInmueble.toUpperCase() : null)
-
-    const esTerreno = tipoFinal === 'TERRENO' || tipoFinal === 'TERRENO_MORTUORIO';
-
-    if (esTerreno) {
-      setModosSeleccionados(['VENTA']);
-    }
-
-    const modosFinales = esTerreno ? ['VENTA'] : modosSeleccionados;
-
-    const nuevosFiltros = {
-      tipoInmueble: tipoFinal ? [tipoFinal] : [],
-      modoInmueble: modosFinales,
-      query: ubicacionTexto,
-      updatedAt: new Date().toISOString()
-    }
-
-    updateFilters(nuevosFiltros)
-
-    const params = new URLSearchParams()
-    try {
-      const merged = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}') as {
-        locationId?: string | number
-      }
-      if (merged.locationId != null && merged.locationId !== '') {
-        params.set('locationId', String(merged.locationId))
-      }
-    } catch {
-      /* ignore */
-    }
-
-    modosSeleccionados.forEach((modo) => params.append('modoInmueble', modo))
-    if (tipoFinal) params.set('tipoInmueble', tipoFinal)
-    if (ubicacionTexto.trim() !== '') params.set('query', ubicacionTexto.trim())
-
-    const queryString = params.toString()
-    const targetUrl = `/busqueda_mapa${queryString ? `?${queryString}` : ''}`
-
-    router.push(targetUrl)
-    if (onSearch) onSearch(nuevosFiltros)
-  }
-
-  // 🚀 FIX Z-INDEX MASIVO: Agregamos z-[99999] y !overflow-visible para aplastar al mapa
-  const containerStyles =
-    variant === 'map'
-      ? 'bg-[#faf9f6] border-b border-stone-200 py-2 px-4 w-full flex flex-col gap-2 shadow-sm sticky top-0 z-50 !overflow-visible'
-      : 'bg-white shadow-lg rounded-[30px] p-6 flex flex-col gap-6 w-full max-w-[921px] relative z-[99999] !overflow-visible'
-
   return (
-    <form className={containerStyles} onSubmit={handleSearch}>
-      {/* =========================================
-          FILA SUPERIOR: Checkboxes (Protegidos con z-index)
-          ========================================= */}
-      <div
-        className={`flex w-full relative z-[100] !overflow-visible ${variant === 'map' ? 'justify-start md:justify-center pl-2' : ''}`}
-      >
-        <TransactionModeFilter
-          modoSeleccionado={modosSeleccionados}
-          onModoChange={setModosSeleccionados}
-        />
-      </div>
+    <div className="w-full flex justify-center">
+      <div className="bg-white shadow-xl rounded-[25px] p-5 w-full max-w-[1100px] flex flex-col gap-4">
 
-      {/* =========================================
-          FILA INFERIOR: Todo lo demás
-          ========================================= */}
-      <div
-        className={`flex items-center w-full gap-3 relative z-[90] !overflow-visible ${variant === 'map' ? 'flex-nowrap' : 'flex-col md:flex-row flex-wrap'
-          }`}
-      >
-        {/* 🔸 Tipo (Aislado con z-[100] para que salte por encima de todo) */}
-        <div
-          className={`relative z-[100] !overflow-visible ${variant === 'map' ? 'w-48 shrink-0' : 'w-full md:w-64'}`}
-        >
-          <ComboBox
-            label={variant === 'map' ? '' : 'Tipo'}
-            placeholder="Cualquier tipo"
-            icon={Home}
-            options={propertyTypes}
-            onChange={(val: string) => setTipoInmueble(val)}
-            value={tipoInmueble}
-          />
-        </div>
+        {/* 🔹 FILA 1: BUSQUEDA (IZQ) + MODOS (DER) */}
+        <div className="flex items-center gap-3">
+          {/* IZQUIERDA */}
+          <div className="flex items-center gap-3 flex-1">
+            <div className="w-[200px]">
+              <ComboBox
+                label="Tipo"
+                placeholder="Cualquier tipo"
+                icon={Home}
+                options={propertyTypes}
+                onChange={(val: string) => setTipoInmueble(val)}
+                value={tipoInmueble}
+              />
+            </div>
 
-        {/* 🔸 Ubicación (Z-[90] para no tapar a Tipo, pero estar encima de lo demás) */}
-        <div
-          className={`relative z-[90] !overflow-visible ${variant === 'map' ? 'w-[300px] shrink-0' : 'w-full flex-1'}`}
-        >
-          <LocationSearch
-            value={ubicacionTexto}
-            onChange={(val: LocationValue) => {
-              const text = typeof val === 'string' ? val : val?.nombre || val?.target?.value || ''
-              setUbicacionTexto(text)
-            }}
-          />
-        </div>
-
-        {/* 🚀 FIX AISLAMIENTO DE SCROLL: 
-            Solo estos botones tienen overflow-x-auto. Así los menús de la izquierda no se cortan. */}
-        {variant === 'map' && (
-          <div className="flex items-center gap-3 flex-1 overflow-visible pb-1">
-            <div className="shrink-0">
-              <MockFilterBtn icon={DollarSign} text="Precio" onClick={onOpenPriceFilter} />
-            </div>
-            <div className="shrink-0">
-              <CapacidadButton variant={variant} />
-            </div>
-            <div className="shrink-0">
-              <button
-                type="button"
-                onClick={() => onOpenSuperficieFilter?.()}
-                className="h-[36px] flex items-center gap-2 px-3 rounded-xl shadow-sm transition-all text-sm whitespace-nowrap focus:outline-none border bg-white text-stone-600 border-stone-200 hover:border-stone-300"
-              >
-                <Maximize className="w-4 h-4 text-stone-500" />
-                <span>Metros</span>
-                <ChevronDown className="w-4 h-4 text-stone-400" />
-              </button>
-            </div>
-            <div className="shrink-0">
-              <MockFilterBtn icon={SlidersHorizontal} text="Más Filtros" hasChevron={false} />
-            </div>
-            <div className="shrink-0">
-              <MockFilterBtn icon={Award} text="Recomendados" hasChevron={false} />
+            <div className="flex-1 min-w-[250px]">
+              <LocationSearch
+                value={ubicacionTexto}
+                onChange={(val: LocationValue) => {
+                  const text =
+                    typeof val === 'string'
+                      ? val
+                      : val?.nombre || val?.target?.value || ''
+                  setUbicacionTexto(text)
+                }}
+              />
             </div>
           </div>
-        )}
 
-        {/* 🔸 Botón Buscar */}
-        <div
-          className={
-            variant === 'map'
-              ? 'shrink-0 ml-auto relative z-10'
-              : 'w-full md:w-auto flex justify-end relative z-10'
-          }
-        >
+          {/* DERECHA */}
+          <div className="shrink-0">
+            <TransactionModeFilter
+              modoSeleccionado={['VENTA']}
+              onModoChange={() => { }}
+            />
+          </div>
+        </div>
+
+        {/* 🔹 FILA 2: BOTONES EN UNA SOLA LINEA */}
+        <div className="flex items-center gap-3 flex-wrap">
+          <Btn icon={DollarSign} text="Precio" />
+          <CapacidadButton variant="home" />
+
           <button
-            type="submit"
-            className={`${variant === 'map' ? 'h-[36px] px-6 shadow-md' : 'w-full md:w-auto h-[46px] px-10'
-              } bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95`}
+            type="button"
+            className="h-[38px] flex items-center gap-2 px-4 rounded-xl border bg-white text-gray-700 border-gray-200"
           >
-            <SearchIcon size={18} />
-            {variant === 'home' && 'BUSCAR'}
+            <Maximize className="w-4 h-4" />
+            Metros
+            <ChevronDown className="w-4 h-4 text-gray-400" />
+          </button>
+
+          {/* MÁS FILTROS (ABRE POPOVER) */}
+          <div className="relative">
+            <Btn
+              icon={SlidersHorizontal}
+              text="Más filtros"
+              onClick={() => setOpenMore((v) => !v)}
+            />
+
+            {openMore && (
+              <div className="absolute top-12 left-0 w-[320px] bg-white border border-gray-200 rounded-xl shadow-lg p-4 z-50">
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="text-sm font-semibold text-gray-700">
+                    Amenidades
+                  </h3>
+                  <button onClick={() => setOpenMore(false)}>
+                    <X className="w-4 h-4 text-gray-500" />
+                  </button>
+                </div>
+
+                {/* 🔥 AQUÍ VAN LAS AMENIDADES */}
+                <AmenityChips />
+
+                {/* 🔹 ETIQUETAS */}
+                <div className="flex gap-2 flex-wrap mt-3">
+                  {['Inversión', 'Preventa', 'Oferta', 'Nuevo'].map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-3 py-1 text-xs rounded-full bg-gray-100 text-gray-600"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <Btn icon={Award} text="Recomendados" />
+
+          <button className="h-[40px] px-6 bg-[#c47b2a] hover:bg-[#a8651f] text-white rounded-xl font-semibold flex items-center gap-2 ml-auto">
+            <SearchIcon size={16} />
+            Buscar
           </button>
         </div>
       </div>
-    </form>
+    </div>
   )
 }
