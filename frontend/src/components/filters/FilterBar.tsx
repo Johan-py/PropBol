@@ -34,10 +34,9 @@ interface FilterBarProps {
   variant?: 'home' | 'map'
   onOpenPriceFilter?: () => void
    onOpenSuperficieFilter?: () => void 
-  isCapacidadActive?: boolean      // ← AGREGAR
-  onToggleCapacidad?: () => void   // ← AGREGAR
+  isCapacidadActive?: boolean    
+  onToggleCapacidad?: () => void   
 }
-
 type LocationValue =
   | string
   | {
@@ -92,7 +91,8 @@ const trackSearchTelemetria = async (filtros: {
     console.error('Error tracking search:', error)
   }
 }
-export default function FilterBar({ onSearch, variant = 'home',  onOpenPriceFilter, onOpenSuperficieFilter,isCapacidadActive = false, onToggleCapacidad  }: FilterBarProps) {
+export default function FilterBar({ onSearch, variant = 'home',  onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad }: FilterBarProps) {
+
   const router = useRouter()
 
   const { updateFilters } = useSearchFilters()
