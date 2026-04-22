@@ -179,24 +179,41 @@ if (esReutilizada) {
   });
 }
 
-    await prisma.$transaction([
-      prisma.usuario.update({
-        where: { id: usuarioId },
+    const resultado = await prisma.$transaction(async (tx) => {
+      const actualizacion = await tx.usuario.updateMany({
+        where: {
+          id: usuarioId,
+          password_actualizado_en: usuario.password_actualizado_en,
+        },
         data: {
           password: nuevaPassword,
           intentos_fallidos_cambio_password: 0,
           bloqueo_cambio_password_hasta: null,
           password_actualizado_en: ahora,
         },
-      }),
-      prisma.historial_password.create({
+      });
+
+      if (actualizacion.count === 0) {
+        return { conflicto: true as const };
+      }
+
+      await tx.historial_password.create({
         data: {
           usuarioId,
           passwordHash: nuevaPassword,
           creadoEn: ahora,
         },
-      }),
-    ]);
+      });
+
+      return { conflicto: false as const };
+    });
+
+if (resultado.conflicto) {
+  return res.status(409).json({
+    ok: false,
+    msg: "La contraseña ya fue modificada desde otra sesión. Recarga la página e intenta nuevamente.",
+  });
+}
 
     try {
       await invalidateOtherUserSessions(usuarioId, currentToken);
