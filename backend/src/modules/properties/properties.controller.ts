@@ -5,7 +5,18 @@ import type { FiltrosBusqueda } from './properties.repository.js'
 export const propertiesController = {
   async getAll(req: Request, res: Response) {
     try {
-      const { tipoInmueble, modoInmueble, query, locationId, fecha, precio, superficie } = req.query
+      const {
+        tipoInmueble,
+        modoInmueble,
+        query,
+        locationId,
+        fecha,
+        precio,
+        superficie,
+        minPrice,
+        maxPrice,
+        currency
+      } = req.query
 
       const filtros: FiltrosBusqueda = {
         tipoInmueble: tipoInmueble as string | string[],
@@ -14,7 +25,11 @@ export const propertiesController = {
         locationId: locationId ? Number(locationId) : undefined,
         fecha: fecha as any,
         precio: precio as any,
-        superficie: superficie as any
+        superficie: superficie as any,
+
+        minPrice: minPrice ? Number(minPrice) : null,
+        maxPrice: maxPrice ? Number(maxPrice) : null,
+        currency: (currency as string) ?? null
       }
 
       const orden = {
