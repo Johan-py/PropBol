@@ -11,6 +11,7 @@ import { useCancelPayment } from '@/hooks/payment/useCancelPayment'
 import { Timer } from '@/components/payment/Timer'
 import { QRDisplay } from '@/components/payment/QRDisplay'
 import { SuccessView } from '@/components/payment/SuccessView'
+import { ExpiredView } from '@/components/payment/ExpiredView'
 import { CancelPaymentModal } from '@/components/payment/CancelPaymentModal'
 import { ArrowLeft } from 'lucide-react'
 
@@ -64,6 +65,9 @@ export default function PagoQRPage() {
 
   // Si el backend confirma que se pagó, mostramos éxito
   if (status === 'pagado') return <SuccessView />
+
+  // Timer expirado
+  if (timeLeft === 0) return <ExpiredView />
 
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60)

@@ -61,6 +61,7 @@ export default function ResumenCliente() {
     if (metodoSeleccionado && transaccion) {
       localStorage.setItem('currentPayment', JSON.stringify({
         id: transaccion.id,
+        planId: planIdParam,
         monto: transaccion.total,
         referencia: transaccion.referencia || transaccion.id,
         estado: 'pendiente',
