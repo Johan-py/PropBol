@@ -75,5 +75,17 @@ export const blogsRepository = {
         fecha_publicacion: data.estado === 'PUBLICADO' ? new Date() : null
       }
     })
+  },
+  // Actualizar contenido del blog (solo si BORRADOR o RECHAZADO)
+  async update(
+    id: number,
+    data: {
+      titulo?: string
+      contenido?: string
+      imagen?: string
+      estado?: estado_blog
+    }
+  ) {
+    return prisma.blog.update({ where: { id }, data })
   }
 }
