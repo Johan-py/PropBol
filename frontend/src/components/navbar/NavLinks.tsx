@@ -22,6 +22,7 @@ export default function NavLinks() {
 
   return (
     <div className="hidden md:flex items-center gap-6 text-[15px] font-medium text-gray-700">
+<<<<<<< HEAD
 
       {/* HU-05: Inicio */}
       <Link id="tour-inicio" href="/" className={linkStyle}>
@@ -30,6 +31,9 @@ export default function NavLinks() {
 
       {/* HU-05: Propiedades con dropdown */}
       <div id="tour-propiedades" className="relative" ref={dropdownRef}>
+=======
+      <div className="relative" ref={dropdownRef}>
+>>>>>>> 741afe0e (feat(navbar): se añadio botón publicar y acordeón)
         <button
           onClick={() => setOpen(!open)}
           className={`flex items-center gap-1 px-3 py-2 rounded-md transition ${open ? 'text-[#E68B25] bg-[#E68B25]/10' : 'hover:text-[#E68B25] hover:bg-[#E68B25]/10'}`}

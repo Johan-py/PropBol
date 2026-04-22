@@ -747,6 +747,7 @@ export default function Navbar() {
             <nav className="mt-10 flex flex-col gap-2">
               <Link
                 href="/registro-inmueble"
+<<<<<<< HEAD
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"
               >
@@ -789,9 +790,12 @@ export default function Navbar() {
 <<<<<<< HEAD
                 id="tour-blogs-mobile"
                 href="/blogs"
+=======
+>>>>>>> 741afe0e (feat(navbar): se añadio botón publicar y acordeón)
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+                className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"
               >
+<<<<<<< HEAD
 <<<<<<< HEAD
                 Blogs
 =======
@@ -825,6 +829,9 @@ export default function Navbar() {
               </Link>
 =======
                 Inicio
+=======
+                Publica tu inmueble
+>>>>>>> 741afe0e (feat(navbar): se añadio botón publicar y acordeón)
               </Link>
 
               <div className="flex flex-col">
