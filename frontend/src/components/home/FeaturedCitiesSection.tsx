@@ -94,8 +94,12 @@ export default function FeaturedCitiesSection({ cities }: Props) {
 
   const { index, next, prev, goTo } = useCitiesCarousel(totalPages)
 
-  const handleClick = (slug: string) => {
-    router.push(`/busqueda?ciudad=${slug}`)
+  const handleClick = (city: City) => {
+    const params = new URLSearchParams({
+      query: city.name,
+    })
+
+    router.push(`/busqueda?${params.toString()}`)
   }
 
   if (cities.length === 0) {

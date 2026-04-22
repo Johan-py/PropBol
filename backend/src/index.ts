@@ -22,7 +22,7 @@ import {
 } from "./modules/notificaciones/notificaciones.controller.js";
 import { BannersController } from "./modules/banners/banners.controller.js";
 import { FiltersHomepageController } from "./modules/filtershomepage/filtershomepage.controller.js";
-
+import { CityController } from "./modules/city/city.controller.js";
 // --------------------
 // AUTH
 // --------------------
@@ -55,6 +55,12 @@ import {
   StartGoogleRegisterController,
 } from "./modules/auth/google/google.controller.js";
 
+import {
+  discordCallbackController,
+  startDiscordLoginController,
+  startDiscordRegisterController
+} from './modules/auth/discord/discord.controller.js'
+
 import multimediaRoutes from "./modules/multimedia/multimedia.routes.js";
 import publicacionRoutes from "./modules/publicacion/publicacion.routes.js";
 import router from "./modules/registro-publicacion/publicacion.routes.js";
@@ -67,6 +73,12 @@ import securityRoutes from "./routes/security.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import publicacionesRoutes from "./routes/publicaciones.js";
 import { authMiddleware } from "./middleware/authMiddleware.js";
+import blogsRoutes from './modules/blogs/blogs.routes.js'
+// --------------------
+// LEGACY
+// --------------------
+// Borra la línea 66 y pon esta:
+import historialRoutes from './modules/perfil/historial.routes.js'
 
 // --------------------
 // SERVICES
@@ -77,6 +89,7 @@ import { verifyEmailTransport } from "./lib/email.service.js";
 import favoritesRoutes from "./modules/favorites/favorites.routes.js";
 import telemetriaRoutes from "./modules/telemetria/telemetria.routes.js";
 import recomendacionesRoutes from "./modules/recomendaciones/recomendaciones.routes.js";
+import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js';
 // --------------------
 // SERVER
 // --------------------
@@ -137,6 +150,20 @@ app.use("/api/security", securityRoutes);
 app.use("/api/favorites", favoritesRoutes);
 app.use("/api/telemetria", telemetriaRoutes);
 app.use("/api/recomendaciones", recomendacionesRoutes);
+app.use('/api/publicaciones', publicacionRoutes)
+app.use('/api/publicaciones', multimediaRoutes)
+app.use('/api/perfil', correoverificacionRoutes)
+app.use('/api/perfil/usuario', perfilRoutes)
+app.use('/api/perfil/zonas', zonaRoutes)
+app.use('/api/perfil/historial', historialRoutes)
+app.use('/api/perfil/historial-busqueda', historialBusquedaRoutes)
+app.use('/api', router)
+app.use('/api', parametrosRoutes)
+app.use('/api/security', securityRoutes)
+app.use('/api/favorites', favoritesRoutes)
+app.use('/api/telemetria', telemetriaRoutes)
+app.use('/api/recomendaciones', recomendacionesRoutes)
+app.use('/api/blogs', blogsRoutes)
 // --------------------
 // MOCK / TEST
 // --------------------
@@ -160,6 +187,17 @@ app.get("/api/auth/me", getMeController);
 app.get("/api/auth/google/login", StratGoogleLoginController);
 app.get("/api/auth/google/register", StartGoogleRegisterController);
 app.get("/api/auth/google/callback", googleCallbackController);
+app.post('/api/auth/register', registerController)
+app.post('/api/auth/login', loginController)
+app.post('/api/auth/logout', logoutController)
+app.post('/api/auth/verify-register', verifyRegisterCodeController)
+app.get('/api/auth/me', getMeController)
+app.get('/api/auth/google/login', StratGoogleLoginController)
+app.get('/api/auth/google/register', StartGoogleRegisterController)
+app.get('/api/auth/google/callback', googleCallbackController)
+app.get('/api/auth/discord/login', startDiscordLoginController)
+app.get('/api/auth/discord/register', startDiscordRegisterController)
+app.get('/api/auth/discord/callback', discordCallbackController)
 //comentario
 
 // --------------------
@@ -170,6 +208,11 @@ const filtersController = new FiltersHomepageController();
 
 app.get("/api/filters", filtersController.getFilters);
 app.get("/api/banners", (req, res) => bannersController.getBanners(req, res));
+const cityController = new CityController()
+
+app.get('/api/filters', filtersController.getFilters)
+app.get('/api/banners', (req, res) => bannersController.getBanners(req, res))
+app.get('/api/cities', (req, res) => cityController.getFeatured(req, res))
 
 // --------------------
 // LOCATIONS
@@ -179,6 +222,10 @@ app.get("/api/zonas", getZonasController);
 app.get("/api/locations/search", async (req: Request, res: Response) => {
   await locationSearchHandler(req as any, res as any);
 });
+app.get('/api/locations/search', async (req: Request, res: Response) => {
+  // @ts-ignore
+  await locationSearchHandler(req, res)
+})
 
 // --------------------
 // HEALTH
