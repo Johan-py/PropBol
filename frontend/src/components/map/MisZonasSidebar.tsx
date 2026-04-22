@@ -142,7 +142,7 @@ export default function MisZonasSidebar({
                     ) : (
                       <li
                         key={zona.id}
-                        onClick={() => onZoneSelect?.(zona.id)}
+                        onClick={() => onZoneSelect?.(Number(zona.id))}
                         className="flex items-center justify-between p-3 bg-stone-50 border border-stone-100 rounded-lg cursor-pointer hover:border-orange-200 hover:-translate-y-1 hover:shadow-md active:translate-y-0 active:shadow-sm transition-all duration-200 group"
                       >
                         <span className="text-sm font-medium text-stone-700 truncate pr-2">
