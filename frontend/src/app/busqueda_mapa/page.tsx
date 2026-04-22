@@ -967,6 +967,7 @@ function BusquedaMapaContent() {
               setIsPriceFilterOpen(false) // cierra el filtro
               setIsSidebarOpen(true)      // asegura que el aside siga visible
             }}
+            totalResultados={displayedProperties.length} 
           />
         ) : 
           isSidebarOpen && activeSidebarView === 'results' ? (
