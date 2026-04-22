@@ -99,7 +99,7 @@ export default function FeaturedCitiesSection({ cities }: Props) {
       query: city.name,
     })
 
-    router.push(`/busqueda_mapa?${params.toString()}`)
+    router.push(`/busqueda?${params.toString()}`)
   }
 
   if (cities.length === 0) {

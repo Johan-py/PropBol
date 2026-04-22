@@ -71,8 +71,9 @@ import { authMiddleware } from './middleware/authMiddleware.js'
 import { verifyEmailTransport } from './lib/email.service.js'
 
 // FAVORITES
-
-import favoritesRoutes from "./modules/favorites/favorites.routes.js";
+import favoritesRoutes from './modules/favorites/favorites.routes.js'
+import telemetriaRoutes from './modules/telemetria/telemetria.routes.js'
+import recomendacionesRoutes from './modules/recomendaciones/recomendaciones.routes.js'
 // --------------------
 // SERVER
 // --------------------
@@ -128,8 +129,11 @@ app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
 app.use('/api/perfil/zonas', zonaRoutes)
 app.use('/api', router)
-app.use("/api/favorites", favoritesRoutes);
-app.use('/api/perfil/zonas', zonaRoutes);
+app.use('/api', parametrosRoutes)
+app.use('/api/security', securityRoutes)
+app.use('/api/favorites', favoritesRoutes)
+app.use('/api/telemetria', telemetriaRoutes)
+app.use('/api/recomendaciones', recomendacionesRoutes)
 // --------------------
 // MOCK / TEST
 // --------------------
@@ -137,7 +141,6 @@ app.post('/api/users', (req, res) => {
   const user = req.body
   res.json({ message: 'User created', user })
 })
-app.use('/api/perfil/zonas', zonaRoutes)
 
 // --------------------
 // AUTH
