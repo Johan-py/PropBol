@@ -95,7 +95,7 @@ export default function MisZonasSidebar({
                       </span>
                       <div className="flex items-center gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
-                          onClick={() => onEditZone(zona.id)}
+                          onClick={() => { if (currentUserId && zona.usuarioId && zona.usuarioId !== currentUserId) return; onEditZone(zona.id); }}
                           className="p-1.5 text-stone-400 hover:text-orange-500 hover:bg-orange-50 rounded-md transition-colors"
                           title="Editar zona"
                         >
