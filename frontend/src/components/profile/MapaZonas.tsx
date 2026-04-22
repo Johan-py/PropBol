@@ -216,7 +216,7 @@ export default function MapaZonas({
 
             if (!polygon) return
 
-            map.fitBounds(polygon, { padding: [30, 30] })
+            map.fitBounds(polygon as [number, number][], { padding: [30, 30] })
         }, [map, zonas, zonaSeleccionadaId])
 
         return null
