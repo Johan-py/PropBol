@@ -4,7 +4,7 @@ import {
   buscarResumenFinalPorIdRepository,
   actualizarPublicacionRepository,
   eliminarLogicamentePublicacionRepository,
-  buscarDetallePublicacionPorIdRepository,
+  buscarDetallePublicacionPorIdRepository
 } from './publicacion.repository.js'
 
 type TipoAccionPermitido = 'VENTA' | 'ALQUILER' | 'ANTICRETO'
@@ -117,11 +117,10 @@ export const listarMisPublicacionesService = async (usuarioId: number) => {
     nroBanos: publicacion.inmueble.nroBanos,
     nroCuartos: publicacion.inmueble.nroCuartos,
     superficieM2:
-      publicacion.inmueble.superficieM2 !== null &&
-      publicacion.inmueble.superficieM2 !== undefined
+      publicacion.inmueble.superficieM2 !== null && publicacion.inmueble.superficieM2 !== undefined
         ? Number(publicacion.inmueble.superficieM2)
         : null,
-    imagenUrl: obtenerPrimeraImagenUrl(publicacion.multimedia),
+    imagenUrl: obtenerPrimeraImagenUrl(publicacion.multimedia)
   }))
 }
 
@@ -188,7 +187,7 @@ export const editarPublicacionService = async (
   }
 
   const payloadNormalizado: Record<string, unknown> = {
-    ...(data as Record<string, unknown>),
+    ...(data as Record<string, unknown>)
   }
 
   if (titulo !== undefined) {
@@ -225,7 +224,7 @@ export const editarPublicacionService = async (
     precio: Number(actualizada.inmueble.precio),
     tipoAccion: actualizada.inmueble.tipoAccion,
     ubicacion: actualizada.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
-    imagenUrl: obtenerPrimeraImagenUrl(actualizada.multimedia),
+    imagenUrl: obtenerPrimeraImagenUrl(actualizada.multimedia)
   }
 }
 
@@ -259,7 +258,7 @@ export const eliminarPublicacionService = async (
 
   return {
     id: publicacion.id,
-    estado: ESTADO_PUBLICACION_ELIMINADA,
+    estado: ESTADO_PUBLICACION_ELIMINADA
   }
 }
 
@@ -293,7 +292,7 @@ export const obtenerResumenFinalService = async (
     resumen.inmueble?.inmueble_etiqueta ?? []
   ).map((item: ParametroPersonalizadoDb) => ({
     id: item.etiqueta.id,
-    nombre: item.etiqueta.nombre,
+    nombre: item.etiqueta.nombre
   }))
 
   const parametrosUnicos = parametrosPersonalizados.filter(
@@ -309,7 +308,7 @@ export const obtenerResumenFinalService = async (
       id: item.id,
       url: item.url,
       tipo: normalizarTipoMultimedia(item.tipo),
-      pesoMb: item.pesoMb !== null && item.pesoMb !== undefined ? Number(item.pesoMb) : null,
+      pesoMb: item.pesoMb !== null && item.pesoMb !== undefined ? Number(item.pesoMb) : null
     })
   )
 
@@ -330,7 +329,7 @@ export const obtenerResumenFinalService = async (
       titulo: resumen.titulo ?? resumen.inmueble?.titulo ?? null,
       descripcion: resumen.descripcion ?? resumen.inmueble?.descripcion ?? null,
       estado: resumen.estado,
-      fechaPublicacion: resumen.fechaPublicacion,
+      fechaPublicacion: resumen.fechaPublicacion
     },
 
     datosGenerales: {
@@ -344,20 +343,19 @@ export const obtenerResumenFinalService = async (
           ? Number(resumen.inmueble.precio)
           : null,
       areaM2:
-        resumen.inmueble?.superficieM2 !== null &&
-        resumen.inmueble?.superficieM2 !== undefined
+        resumen.inmueble?.superficieM2 !== null && resumen.inmueble?.superficieM2 !== undefined
           ? Number(resumen.inmueble.superficieM2)
           : null,
       coordenadas: {
         latitud: resumen.inmueble?.ubicacion?.latitud ?? null,
-        longitud: resumen.inmueble?.ubicacion?.longitud ?? null,
-      },
+        longitud: resumen.inmueble?.ubicacion?.longitud ?? null
+      }
     },
 
     caracteristicas: {
       habitaciones: resumen.inmueble?.nroCuartos ?? null,
       banos: resumen.inmueble?.nroBanos ?? null,
-      estacionamiento: null,
+      estacionamiento: null
     },
 
     parametrosPersonalizados: parametrosUnicos,
@@ -365,10 +363,10 @@ export const obtenerResumenFinalService = async (
     multimedia: {
       total: multimedia.length,
       imagenes,
-      videos,
+      videos
     },
 
-    soloLectura: true,
+    soloLectura: true
   }
 }
 
@@ -384,8 +382,7 @@ export const obtenerDetallePublicacionService = async (publicacionId: number) =>
   }
 
   const telefonoPrincipal =
-    publicacion.usuario.telefonos.find((item) => item.principal) ??
-    publicacion.usuario.telefonos[0]
+    publicacion.usuario.telefonos.find((item) => item.principal) ?? publicacion.usuario.telefonos[0]
 
   return {
     id: publicacion.id,
@@ -395,21 +392,19 @@ export const obtenerDetallePublicacionService = async (publicacionId: number) =>
     tipoOperacion: publicacion.inmueble.tipoAccion,
     ubicacionTexto: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
     descripcion:
-      publicacion.descripcion ||
-      publicacion.inmueble.descripcion ||
-      'Sin descripción disponible',
+      publicacion.descripcion || publicacion.inmueble.descripcion || 'Sin descripción disponible',
     imagenes: publicacion.multimedia.map((item) => ({
       id: item.id,
       url: item.url,
       tipo: item.tipo,
-      pesoMb: item.pesoMb ? Number(item.pesoMb) : null,
+      pesoMb: item.pesoMb ? Number(item.pesoMb) : null
     })),
     detalles: {
       habitaciones: publicacion.inmueble.nroCuartos ?? null,
       banos: publicacion.inmueble.nroBanos ?? null,
       superficieUtil: publicacion.inmueble.superficieM2
         ? Number(publicacion.inmueble.superficieM2)
-        : null,
+        : null
     },
     caracteristicasAdicionales:
       publicacion.inmueble.inmueble_etiqueta?.map((item) => item.etiqueta.nombre) ?? [],
@@ -420,14 +415,14 @@ export const obtenerDetallePublicacionService = async (publicacionId: number) =>
       longitud: publicacion.inmueble.ubicacion?.longitud
         ? Number(publicacion.inmueble.ubicacion.longitud)
         : null,
-      direccion: publicacion.inmueble.ubicacion?.direccion || null,
+      direccion: publicacion.inmueble.ubicacion?.direccion || null
     },
     contacto: {
       nombre: `${publicacion.usuario.nombre} ${publicacion.usuario.apellido}`,
       correo: publicacion.usuario.correo ?? null,
       telefono: telefonoPrincipal
         ? `${telefonoPrincipal.codigoPais} ${telefonoPrincipal.numero}`
-        : null,
-    },
+        : null
+    }
   }
 }

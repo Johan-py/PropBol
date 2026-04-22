@@ -60,11 +60,13 @@ export default function EditForm({
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
         <div>
-          <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label htmlFor="title" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
             Título Propiedad
           </label>
           <input
+            id="title"
             type="text"
             className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
               fieldErrors.title
@@ -81,10 +83,11 @@ export default function EditForm({
         </div>
 
         <div>
-          <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label htmlFor="details" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
             Detalles de la Propiedad
           </label>
           <input
+            id="details"
             type="text"
             className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
               fieldErrors.details
@@ -101,10 +104,11 @@ export default function EditForm({
         </div>
 
         <div>
-          <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label htmlFor="operationType" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
             Tipo Operación
           </label>
           <select
+            id="operationType"
             className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
               fieldErrors.operationType
                 ? "border-red-400 focus:ring-2 focus:ring-red-200"
@@ -126,10 +130,11 @@ export default function EditForm({
         </div>
 
         <div>
-          <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label htmlFor="location" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
             Ubicación
           </label>
           <input
+            id="location"
             type="text"
             className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
               fieldErrors.location
@@ -146,10 +151,11 @@ export default function EditForm({
         </div>
 
         <div className="md:col-span-1">
-          <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label htmlFor="price" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
             Precio
           </label>
           <input
+            id="price"
             type="text"
             className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
               fieldErrors.price
