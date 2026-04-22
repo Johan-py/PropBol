@@ -7,6 +7,8 @@ export interface MisPublicacionesItem {
   nroCuartos: number | null
   superficieM2: number | null
   imagenUrl: string | null
+  tipoOperacion?: string
+  activa?: boolean
 }
 
 export interface PublicacionDetalle {
