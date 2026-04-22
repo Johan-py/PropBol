@@ -1,11 +1,13 @@
-import type { VideoItem } from "./ResumenPanel";
+import type { ResumenFinalData } from "./ResumenPanel";
 
 interface Props {
-  imagenes: string[];
-  videos: VideoItem[];
+  multimedia: ResumenFinalData["multimedia"];
 }
 
-export default function GaleriaResumen({ imagenes, videos }: Props) {
+export default function GaleriaResumen({ multimedia }: Props) {
+  const imagenes = multimedia.imagenes ?? [];
+  const videos = multimedia.videos ?? [];
+
   return (
     <div className="h-full rounded-2xl border border-gray-200 bg-[#f7f7f7] p-6">
       <h3 className="mb-5 text-2xl font-semibold text-[#0f172a]">Multimedia</h3>
@@ -19,11 +21,11 @@ export default function GaleriaResumen({ imagenes, videos }: Props) {
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
             {imagenes.map((imagen, index) => (
               <div
-                key={`${imagen}-${index}`}
+                key={`${imagen.id}-${index}`}
                 className="relative h-32 overflow-hidden rounded-2xl md:h-36"
               >
                 <img
-                  src={imagen}
+                  src={imagen.url}
                   alt={`Foto ${index + 1}`}
                   className="h-full w-full object-cover"
                 />
@@ -46,14 +48,12 @@ export default function GaleriaResumen({ imagenes, videos }: Props) {
           <div className="space-y-3">
             {videos.map((video, index) => (
               <div
-                key={`${video.titulo}-${index}`}
-                className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3"
+                key={`${video.id}-${index}`}
+                className="rounded-xl border border-gray-200 bg-white px-4 py-3"
               >
-                <div>
-                  <p className="font-medium text-[#0f172a]">{video.titulo}</p>
-                  <p className="text-sm text-gray-500">{video.tipo}</p>
-                </div>
-                <div className="text-2xl">🎥</div>
+                <p className="font-medium text-[#0f172a]">Video {index + 1}</p>
+                <p className="truncate text-sm text-gray-500">{video.url}</p>
+                <p className="text-xs text-gray-400">{video.tipo}</p>
               </div>
             ))}
           </div>

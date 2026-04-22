@@ -1,5 +1,10 @@
+interface ParametroPersonalizado {
+  id: number;
+  nombre: string;
+}
+
 interface Props {
-  parametros: string[];
+  parametros: ParametroPersonalizado[];
 }
 
 export default function ParametrosPersonalizados({ parametros }: Props) {
@@ -11,12 +16,12 @@ export default function ParametrosPersonalizados({ parametros }: Props) {
 
       {parametros.length > 0 ? (
         <div className="flex flex-wrap gap-3">
-          {parametros.map((parametro, index) => (
+          {parametros.map((parametro) => (
             <span
-              key={`${parametro}-${index}`}
+              key={parametro.id}
               className="rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-sm font-medium text-[#0f172a]"
             >
-              {parametro}
+              {parametro.nombre}
             </span>
           ))}
         </div>
