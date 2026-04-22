@@ -3,6 +3,21 @@ import { prisma } from '../../lib/prisma.client.js'
 const ESTADO_PUBLICACION_ELIMINADA = 'ELIMINADA' as const
 const ESTADO_INMUEBLE_INACTIVO = 'INACTIVO' as const
 
+type TipoAccionValue = 'VENTA' | 'ALQUILER' | 'ANTICRETO'
+
+type ActualizarPublicacionInput = {
+  titulo?: unknown
+  title?: unknown
+  descripcion?: unknown
+  details?: unknown
+  tipoAccion?: unknown
+  operationType?: unknown
+  ubicacion?: unknown
+  location?: unknown
+  precio?: unknown
+  price?: unknown
+}
+
 export const buscarPublicacionesPorUsuarioRepository = async (usuarioId: number) => {
   return prisma.publicacion.findMany({
     where: {
@@ -48,29 +63,126 @@ export const buscarPublicacionPorIdRepository = async (id: number) => {
   })
 }
 
-export const actualizarPublicacionRepository = async (publicacionId: number, data: any) => {
-  const titulo = data.titulo ?? data.title
-  const descripcion = data.descripcion ?? data.details
-  const tipoAccion = data.tipoAccion ?? data.operationType
-  const direccion = data.ubicacion ?? data.location
+export const buscarResumenFinalPorIdRepository = async (publicacionId: number) => {
+  return prisma.publicacion.findUnique({
+    where: { id: publicacionId },
+    select: {
+      id: true,
+      titulo: true,
+      descripcion: true,
+      estado: true,
+      fechaPublicacion: true,
+      usuarioId: true,
+      inmuebleId: true,
+      inmueble: {
+        select: {
+          id: true,
+          titulo: true,
+          tipoAccion: true,
+          categoria: true,
+          precio: true,
+          superficieM2: true,
+          nroCuartos: true,
+          nroBanos: true,
+          descripcion: true,
+          estado: true,
+          ubicacion: {
+            select: {
+              direccion: true,
+              ciudad: true,
+              zona: true,
+              latitud: true,
+              longitud: true
+            }
+          },
+          inmueble_etiqueta: {
+            select: {
+              etiqueta: {
+                select: {
+                  id: true,
+                  nombre: true
+                }
+              }
+            }
+          }
+        }
+      },
+      multimedia: {
+        select: {
+          id: true,
+          url: true,
+          tipo: true,
+          pesoMb: true
+        },
+        orderBy: {
+          id: 'asc'
+        }
+      }
+    }
+  })
+}
 
+export const actualizarPublicacionRepository = async (
+  publicacionId: number,
+  data: ActualizarPublicacionInput
+) => {
+  const tituloRaw = data.titulo ?? data.title
+  const descripcionRaw = data.descripcion ?? data.details
+  const tipoAccionRaw = data.tipoAccion ?? data.operationType
+  const direccionRaw = data.ubicacion ?? data.location
   const precioRaw = data.precio ?? data.price
-  const precio =
-    precioRaw !== undefined && precioRaw !== null && precioRaw !== ''
-      ? Number(precioRaw)
-      : undefined
 
-  const dataToUpdate: any = {}
-  const inmuebleData: any = {}
+  const dataToUpdate: {
+    titulo?: string
+    descripcion?: string
+    inmueble?: {
+      update: {
+        tipoAccion?: TipoAccionValue
+        precio?: number
+        ubicacion?: {
+          update: {
+            direccion: string
+          }
+        }
+      }
+    }
+  } = {}
 
-  if (titulo !== undefined) dataToUpdate.titulo = titulo
-  if (descripcion !== undefined) dataToUpdate.descripcion = descripcion
-  if (tipoAccion !== undefined) inmuebleData.tipoAccion = tipoAccion
-  if (precio !== undefined && !Number.isNaN(precio)) inmuebleData.precio = precio
-  if (direccion !== undefined) {
+  const inmuebleData: {
+    tipoAccion?: TipoAccionValue
+    precio?: number
+    ubicacion?: {
+      update: {
+        direccion: string
+      }
+    }
+  } = {}
+
+  if (tituloRaw !== undefined) {
+    dataToUpdate.titulo = String(tituloRaw).trim()
+  }
+
+  if (descripcionRaw !== undefined) {
+    dataToUpdate.descripcion = String(descripcionRaw).trim()
+  }
+
+  if (tipoAccionRaw !== undefined) {
+    inmuebleData.tipoAccion = String(tipoAccionRaw).trim().toUpperCase() as TipoAccionValue
+  }
+
+  if (
+    precioRaw !== undefined &&
+    precioRaw !== null &&
+    precioRaw !== '' &&
+    !Number.isNaN(Number(precioRaw))
+  ) {
+    inmuebleData.precio = Number(precioRaw)
+  }
+
+  if (direccionRaw !== undefined) {
     inmuebleData.ubicacion = {
       update: {
-        direccion
+        direccion: String(direccionRaw).trim()
       }
     }
   }
@@ -113,4 +225,78 @@ export const eliminarLogicamentePublicacionRepository = async (
       }
     })
   ])
+}
+
+export const buscarDetallePublicacionPorIdRepository = async (publicacionId: number) => {
+  return prisma.publicacion.findUnique({
+    where: { id: publicacionId },
+    select: {
+      id: true,
+      titulo: true,
+      descripcion: true,
+      estado: true,
+      fechaPublicacion: true,
+      usuarioId: true,
+      inmuebleId: true,
+      usuario: {
+        select: {
+          id: true,
+          nombre: true,
+          apellido: true,
+          correo: true,
+          telefonos: {
+            select: {
+              codigoPais: true,
+              numero: true,
+              principal: true
+            }
+          }
+        }
+      },
+      inmueble: {
+        select: {
+          id: true,
+          titulo: true,
+          tipoAccion: true,
+          categoria: true,
+          precio: true,
+          superficieM2: true,
+          nroCuartos: true,
+          nroBanos: true,
+          descripcion: true,
+          estado: true,
+          ubicacion: {
+            select: {
+              direccion: true,
+              latitud: true,
+              longitud: true,
+              inmuebleId: true,
+              ubicacionMaestraId: true
+            }
+          },
+          inmueble_etiqueta: {
+            select: {
+              etiqueta: {
+                select: {
+                  id: true,
+                  nombre: true
+                }
+              }
+            }
+          }
+        }
+      },
+      multimedia: {
+        select: {
+          id: true,
+          url: true,
+          tipo: true,
+          pesoMb: true
+        },
+        orderBy: {
+          id: 'asc'
+        }
+      }
+    }
+  })
 }
