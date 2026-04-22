@@ -4,49 +4,73 @@ import { Facebook, Instagram } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import Logo, { LogoMark } from '../navbar/Logo'
+import { confirmarSalidaDesdeCambioContrasena } from "@/utils/confirmarSalidaSinGuardar";
 
 type FooterAction = {
   href?: string
   isExternal?: boolean
   label: string
   requiresAuth?: boolean
+  requiresConfirm?: boolean
 }
 
 const exploreActions: FooterAction[] = [
   {
-    label: 'En venta',
-    href: '/busqueda_mapa?modoInmueble=VENTA',
-    requiresAuth: true
+    label: "En venta",
+    href: "/busqueda_mapa?modoInmueble=VENTA",
+    requiresAuth: true,
+    requiresConfirm: true,
   },
   {
-    label: 'Alquileres',
-    href: '/busqueda_mapa?modoInmueble=ALQUILER',
-    requiresAuth: true
+    label: "Alquileres",
+    href: "/busqueda_mapa?modoInmueble=ALQUILER",
+    requiresAuth: true,
+    requiresConfirm: true,
   },
   {
-    label: 'Anticrético',
-    href: '/busqueda_mapa?modoInmueble=ANTICRETO',
-    requiresAuth: true
+    label: "Anticrético",
+    href: "/busqueda_mapa?modoInmueble=ANTICRETO",
+    requiresAuth: true,
+    requiresConfirm: true,
   },
-  { label: 'Publica tu inmueble', href: '/registro-inmueble', requiresAuth: true }
+  {
+    label: "Publica tu inmueble",
+    href: "/registro-inmueble",
+    requiresAuth: true,
+    requiresConfirm: true,
+  },
 ]
 
 const companyActions: FooterAction[] = [
-  { label: 'Sobre Nosotros', href: '/sobre-nosotros' },
-  { label: 'Términos y Condiciones', href: '/terminos-y-condiciones' },
-  { label: 'Políticas de Privacidad', href: '/politicas-privacidad' }
+  {
+    label: "Sobre Nosotros",
+    href: "/sobre-nosotros",
+    requiresConfirm: true,
+  },
+  {
+    label: "Términos y Condiciones",
+    href: "/terminos-y-condiciones",
+    requiresConfirm: true,
+  },
+  {
+    label: "Políticas de Privacidad",
+    href: "/politicas-privacidad",
+    requiresConfirm: true,
+  },
 ]
 
 const socialActions: FooterAction[] = [
   {
     href: 'https://www.facebook.com/share/1DtBkxKBWf/',
     isExternal: true,
-    label: 'Facebook'
+    label: 'Facebook',
+    requiresConfirm: true,
   },
   {
     href: 'https://www.instagram.com/prop.bol?igsh=MWlsZzUwZWhtbDlwOA==',
     isExternal: true,
-    label: 'Instagram'
+    label: 'Instagram',
+    requiresConfirm: true,
   }
 ]
 
@@ -99,13 +123,17 @@ function FooterSection({ actions, title }: { actions: FooterAction[]; title: str
   const router = useRouter()
 
   const handleProtectedNavigation = (action: FooterAction) => {
+    if (action.requiresConfirm && !confirmarSalidaDesdeCambioContrasena()) {
+      return
+    }
+
     if (!action.href) {
       return
     }
 
     const token = localStorage.getItem('token')
 
-    if (!token) {
+    if (action.requiresAuth && !token) {
       localStorage.setItem('redirectAfterLogin', action.href)
       router.push('/sign-in')
       return
@@ -131,6 +159,11 @@ function FooterSection({ actions, title }: { actions: FooterAction[]; title: str
             ) : action.href && !action.isExternal ? (
               <Link
                 href={action.href}
+                onClick={(e) => {
+                  if (action.requiresConfirm && !confirmarSalidaDesdeCambioContrasena()) {
+                    e.preventDefault()
+                  }
+                }}
                 className="text-sm text-stone-600 transition-colors hover:text-amber-600"
               >
                 {action.label}
@@ -140,6 +173,11 @@ function FooterSection({ actions, title }: { actions: FooterAction[]; title: str
                 href={action.href}
                 target={action.isExternal ? '_blank' : undefined}
                 rel={action.isExternal ? 'noreferrer' : undefined}
+                onClick={(e) => {
+                  if (action.requiresConfirm && !confirmarSalidaDesdeCambioContrasena()) {
+                    e.preventDefault()
+                  }
+                }}
                 className="text-sm text-stone-600 transition-colors hover:text-amber-600"
               >
                 {action.label}
@@ -181,6 +219,11 @@ function FooterBottomBar() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={action.label}
+                onClick={(e) => {
+                  if (action.requiresConfirm && !confirmarSalidaDesdeCambioContrasena()) {
+                    e.preventDefault()
+                  }
+                }}
                 className="transition-colors hover:text-amber-600"
               >
                 <Icon size={18} strokeWidth={2} />

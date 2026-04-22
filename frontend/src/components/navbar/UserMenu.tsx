@@ -1,6 +1,17 @@
+"use client";
+
 import Link from "next/link";
+import type { MouseEvent } from "react";
+import { usePathname } from "next/navigation";
 import type { User } from "../layout/Navbar";
-import { User as UserIcon, Eye, FileText, Map, Star, Shield } from "lucide-react";
+import {
+  User as UserIcon,
+  Eye,
+  FileText,
+  Map,
+  Star,
+  Shield,
+} from "lucide-react";
 
 type UserMenuProps = {
   user: User | null;
@@ -23,16 +34,45 @@ const MenuLink = ({
   href: string;
   onClick: () => void;
   icon: any;
-}) => (
-  <Link
-    href={href}
-    onClick={onClick}
-    className="flex items-center gap-3 py-2 px-2 text-gray-500 text-sm hover:bg-black/5 hover:text-[#E68B25] transition-colors rounded"
-  >
-    <Icon size={18} strokeWidth={1.5} />
-    {label}
-  </Link>
-);
+}) => {
+  const pathname = usePathname();
+
+  const confirmarSalidaSinGuardar = () => {
+    const estoyEnCambiarContrasena =
+      pathname === "/profile/security/cambiar-contrasena";
+
+    const hayCambiosSinGuardar =
+      sessionStorage.getItem("security_password_dirty") === "true";
+
+    if (!estoyEnCambiarContrasena || !hayCambiosSinGuardar) {
+      return true;
+    }
+
+    return window.confirm(
+      "Tienes cambios sin guardar. ¿Seguro que deseas salir?"
+    );
+  };
+
+  const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    if (!confirmarSalidaSinGuardar()) {
+      e.preventDefault();
+      return;
+    }
+
+    onClick();
+  };
+
+  return (
+    <Link
+      href={href}
+      onClick={handleClick}
+      className="flex items-center gap-3 rounded px-2 py-2 text-sm text-gray-500 transition-colors hover:bg-black/5 hover:text-[#E68B25]"
+    >
+      <Icon size={18} strokeWidth={1.5} />
+      {label}
+    </Link>
+  );
+};
 
 export default function UserMenu({
   user,
@@ -46,7 +86,7 @@ export default function UserMenu({
     <>
       <button
         onClick={onTogglePanel}
-        className="p-2 text-gray-700 rounded-full hover:bg-black/5 transition focus:outline-none"
+        className="rounded-full p-2 text-gray-700 transition hover:bg-black/5 focus:outline-none"
         aria-label="Abrir menú de usuario"
       >
         {user?.avatar ? (
@@ -57,11 +97,11 @@ export default function UserMenu({
                 : `${API_URL}${user.avatar}`
             }
             alt={user.name}
-            className="w-6 h-6 rounded-full object-cover"
+            className="h-6 w-6 rounded-full object-cover"
           />
         ) : (
           <svg
-            className="w-6 h-6"
+            className="h-6 w-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -77,10 +117,14 @@ export default function UserMenu({
       </button>
 
       <div
-        className={`absolute right-0 mt-3 w-72 rounded-xl border border-gray-200 bg-[#F9F6EE] shadow-lg p-5 z-50 transition-all duration-200 ${isPanelOpen ? "opacity-100 translate-y-0 visible" : "opacity-0 -translate-y-2 invisible pointer-events-none"}`}
+        className={`absolute right-0 z-50 mt-3 w-72 rounded-xl border border-gray-200 bg-[#F9F6EE] p-5 shadow-lg transition-all duration-200 ${
+          isPanelOpen
+            ? "visible translate-y-0 opacity-100"
+            : "invisible pointer-events-none -translate-y-2 opacity-0"
+        }`}
       >
-        <div className="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
-          <span className="font-bold text-sm text-gray-900">
+        <div className="mb-4 flex items-center justify-between border-b border-gray-300 pb-2">
+          <span className="text-sm font-bold text-gray-900">
             Bienvenido a PropBol
           </span>
           <button
@@ -94,8 +138,8 @@ export default function UserMenu({
 
         {user ? (
           <>
-            <div className="flex items-center gap-3 mb-4 px-1">
-              <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 overflow-hidden border border-gray-100">
+            <div className="mb-4 flex items-center gap-3 px-1">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border border-gray-100 bg-gray-600 font-bold text-white">
                 {user.avatar ? (
                   <img
                     src={
@@ -104,21 +148,21 @@ export default function UserMenu({
                         : `${API_URL}${user.avatar}`
                     }
                     alt={user.name}
-                    className="w-full h-full object-cover"
+                    className="h-full w-full object-cover"
                   />
                 ) : (
                   user.name.charAt(0).toUpperCase()
                 )}
               </div>
               <div className="flex flex-col">
-                <p className="font-bold text-gray-800 text-sm leading-tight">
+                <p className="text-sm font-bold leading-tight text-gray-800">
                   {user.name}
                 </p>
                 <p className="text-xs text-gray-500">{user.email}</p>
               </div>
             </div>
 
-            <div className="flex flex-col mb-4">
+            <div className="mb-4 flex flex-col">
               <MenuLink
                 label="Mi cuenta"
                 href="/profile"
@@ -155,7 +199,6 @@ export default function UserMenu({
                 icon={FileText}
                 onClick={onClosePanel}
               />
-              {/* ✅ Botón de Seguridad — redirige a /profile/security */}
               <MenuLink
                 label="Seguridad"
                 href="/profile/security"
@@ -166,19 +209,19 @@ export default function UserMenu({
 
             <button
               onClick={onOpenLogoutModal}
-              className="w-full bg-[#E68B25] text-white py-2 rounded-lg font-bold hover:bg-[#cf7b1f] transition text-sm shadow-sm"
+              className="w-full rounded-lg bg-[#E68B25] py-2 text-sm font-bold text-white shadow-sm transition hover:bg-[#cf7b1f]"
             >
               Cerrar Sesión
             </button>
           </>
         ) : (
-          <div className="text-center py-2 flex flex-col items-center">
-            <p className="text-sm text-gray-600 mb-5">
+          <div className="flex flex-col items-center py-2 text-center">
+            <p className="mb-5 text-sm text-gray-600">
               Encuentra tu hogar ideal hoy mismo.
             </p>
             <button
               onClick={onLogin}
-              className="w-full bg-[#E68B25] text-white py-2.5 rounded-xl text-sm font-bold shadow-md"
+              className="w-full rounded-xl bg-[#E68B25] py-2.5 text-sm font-bold text-white shadow-md"
             >
               Ingresar / Registrarse
             </button>

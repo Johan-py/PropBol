@@ -96,6 +96,11 @@ export default function PasswordSection() {
   const bloqueado =
     bloqueadoHasta !== null && Date.now() < Number(bloqueadoHasta);
 
+  const hayCambiosSinGuardar =
+    passwordActual.trim() !== "" ||
+    nuevaPassword.trim() !== "" ||
+    confirmarPassword.trim() !== "";
+
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -139,6 +144,34 @@ export default function PasswordSection() {
 
     return () => clearInterval(intervalo);
   }, [bloqueadoHasta, claveIntentos, claveBloqueo]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    sessionStorage.setItem(
+      "security_password_dirty",
+      hayCambiosSinGuardar ? "true" : "false"
+    );
+
+    return () => {
+      sessionStorage.setItem("security_password_dirty", "false");
+    };
+  }, [hayCambiosSinGuardar]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!hayCambiosSinGuardar || isLoading) return;
+
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [hayCambiosSinGuardar, isLoading]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -217,6 +250,7 @@ export default function PasswordSection() {
       setBloqueadoHasta(null);
       localStorage.removeItem(claveIntentos);
       localStorage.removeItem(claveBloqueo);
+      sessionStorage.setItem("security_password_dirty", "false");
 
       setSuccess("Contraseña actualizada correctamente");
       setPasswordActual("");
@@ -287,8 +321,8 @@ export default function PasswordSection() {
             {isLoading
               ? "Guardando..."
               : bloqueado
-              ? "Bloqueado"
-              : "Cambiar contraseña"}
+                ? "Bloqueado"
+                : "Cambiar contraseña"}
           </button>
         </form>
       </div>

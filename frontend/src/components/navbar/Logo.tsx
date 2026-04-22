@@ -1,16 +1,26 @@
-import type { MouseEventHandler } from 'react'
-import Link from 'next/link'
+"use client";
+
+import type { MouseEvent, MouseEventHandler } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { confirmarSalidaDesdeCambioContrasena } from "@/utils/confirmarSalidaSinGuardar";
 
 type LogoProps = {
-  className?: string
-  iconClassName?: string
-  iconSize?: number
-  onClick?: MouseEventHandler<HTMLAnchorElement>
-  textClassName?: string
-}
+  className?: string;
+  iconClassName?: string;
+  iconSize?: number;
+  onClick?: MouseEventHandler<HTMLAnchorElement>;
+  textClassName?: string;
+};
 
-export function LogoMark({ className = '', size = 44 }: { className?: string; size?: number }) {
-  const iconSize = Math.max(18, Math.round(size * 0.6))
+export function LogoMark({
+  className = "",
+  size = 44,
+}: {
+  className?: string;
+  size?: number;
+}) {
+  const iconSize = Math.max(18, Math.round(size * 0.6));
 
   return (
     <span
@@ -36,20 +46,47 @@ export function LogoMark({ className = '', size = 44 }: { className?: string; si
         <rect x="9.5" y="16" width="7" height="7" rx="2.5" fill="#D97706" />
       </svg>
     </span>
-  )
+  );
 }
 
 export default function Logo({
-  className = '',
+  className = "",
   iconClassName,
   iconSize = 34,
   onClick,
-  textClassName = ''
+  textClassName = "",
 }: LogoProps) {
+  const pathname = usePathname();
+
+  const confirmarSalidaSinGuardar = () => {
+    const estoyEnCambiarContrasena =
+      pathname === "/profile/security/cambiar-contrasena";
+
+    const hayCambiosSinGuardar =
+      sessionStorage.getItem("security_password_dirty") === "true";
+
+    if (!estoyEnCambiarContrasena || !hayCambiosSinGuardar) {
+      return true;
+    }
+
+    return window.confirm(
+      "Tienes cambios sin guardar. ¿Seguro que deseas salir?"
+    );
+  };
+
+  const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    if (!confirmarSalidaSinGuardar()) {
+      e.preventDefault();
+      return;
+    }
+
+    onClick?.(e);
+  };
+
   return (
     <Link
       href="/"
-      onClick={onClick}
+      onClick={handleClick}
       className={`flex items-center gap-2 p-0.5 transition hover:opacity-80 ${className}`}
     >
       <LogoMark className={iconClassName} size={iconSize} />
@@ -59,5 +96,5 @@ export default function Logo({
         Prop<span className="text-amber-600">Bol</span>
       </span>
     </Link>
-  )
+  );
 }
