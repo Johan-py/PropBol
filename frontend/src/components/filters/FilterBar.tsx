@@ -34,6 +34,8 @@ interface FilterBarProps {
   variant?: 'home' | 'map'
   onOpenPriceFilter?: () => void
    onOpenSuperficieFilter?: () => void 
+  isCapacidadActive?: boolean      // ← AGREGAR
+  onToggleCapacidad?: () => void   // ← AGREGAR
 }
 
 type LocationValue =
@@ -90,7 +92,7 @@ const trackSearchTelemetria = async (filtros: {
     console.error('Error tracking search:', error)
   }
 }
-export default function FilterBar({ onSearch, variant = 'home',  onOpenPriceFilter, onOpenSuperficieFilter  }: FilterBarProps) {
+export default function FilterBar({ onSearch, variant = 'home',  onOpenPriceFilter, onOpenSuperficieFilter,isCapacidadActive = false, onToggleCapacidad  }: FilterBarProps) {
   const router = useRouter()
 
   const { updateFilters } = useSearchFilters()
@@ -244,7 +246,11 @@ export default function FilterBar({ onSearch, variant = 'home',  onOpenPriceFilt
               <MockFilterBtn icon={DollarSign} text="Precio" onClick={onOpenPriceFilter} />
             </div>
             <div className="shrink-0">
-              <CapacidadButton variant={variant} />
+              <CapacidadButton 
+                variant={variant} 
+                isActive={isCapacidadActive}
+                onClick={onToggleCapacidad}
+              />
             </div>
             <div className="shrink-0">
   <button
