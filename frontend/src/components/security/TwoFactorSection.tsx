@@ -63,6 +63,12 @@ export default function TwoFactorSection() {
   fetch2FAStatus()
 }, [])
 
+const handleDisableTwoFactor = () => {
+  setIsTwoFactorEnabled(false)
+  setShowCodeStep(false)
+  setCode('')
+}
+
 const handleConfirm = async () => {
   if (!password.trim()) {
     setError('Este campo es obligatorio')
@@ -242,7 +248,7 @@ if (loadingStatus) {
 
         <button
           type="button"
-          onClick={handleOpenDisableModal}
+          onClick={handleDisableTwoFactor}
           className="inline-flex items-center justify-center rounded-lg border border-neutral-300 bg-white px-5 py-2.5 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50"
         >
           Desactivar
