@@ -9,15 +9,38 @@ import {
   SlidersHorizontal,
   Award,
   ChevronDown,
-  X
+
+  
+  Building,
+  Bed,
+  Trees,
+  Flower2
 } from 'lucide-react'
 
 import { ComboBox } from '../ui/ComboBox'
 import { LocationSearch } from '../layout/LocationSearch'
 import { CapacidadButton } from '../busqueda/capacidad/CapacidadButton'
 import TransactionModeFilter from './TransactionModeFilter'
-import AmenityChips from './AmenityChips'
 
+import { useRouter } from 'next/navigation'
+import SuperficieFilter from './SuperficieFilter'
+
+
+interface FilterBarProps {
+  onSearch?: (filtros: {
+    tipoInmueble: string[]
+    modoInmueble: string[]
+    query: string
+    updatedAt: string
+  }) => void
+  variant?: 'home' | 'map'
+  onOpenPriceFilter?: () => void
+  onOpenSuperficieFilter?: () => void
+  isCapacidadActive?: boolean
+  onToggleCapacidad?: () => void
+
+
+}
 type LocationValue =
   | string
   | {
@@ -40,17 +63,37 @@ const Btn = ({
 }) => (
   <button
     type="button"
-    onClick={onClick}
-    className="h-[38px] flex items-center gap-2 px-4 rounded-xl border bg-white text-gray-700 border-gray-200 hover:border-gray-300 text-sm"
-  >
+
     {Icon && <Icon className="w-4 h-4" />}
     {text}
     <ChevronDown className="w-4 h-4 text-gray-400" />
   </button>
 )
+const trackSearchTelemetria = async (filtros: {
+  tipoInmueble: string[]
+  modoInmueble: string[]
+  query: string
+  zona?: string
+}) => {
+  try {
+    await fetch('/api/telemetria/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...filtros,
+        timestamp: new Date().toISOString(),
+        url: typeof window !== 'undefined' ? window.location.pathname : ''
+      })
+    })
+  } catch (error) {
+    console.error('Error tracking search:', error)
+  }
+}
 
-export default function FilterBar() {
-  const [tipoInmueble, setTipoInmueble] = useState('Cualquier tipo')
+export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad }: FilterBarProps) {
+
+
+ 
   const [ubicacionTexto, setUbicacionTexto] = useState('')
   const [openMore, setOpenMore] = useState(false)
 
@@ -60,36 +103,78 @@ export default function FilterBar() {
     { label: 'Terrenos', icon: Home }
   ]
 
+
+  const handleSearch = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
+    const tipoMap: Record<string, string> = {
+      Casas: 'CASA',
+      Departamentos: 'DEPARTAMENTO',
+      Terrenos: 'TERRENO',
+      Cuartos: 'CUARTO',
+      "Espacios Cementerio": 'TERRENO_MORTUORIO'
+    }
+
+    const tipoFinal =
+      tipoMap[tipoInmueble] ||
+      (tipoInmueble !== 'Cualquier tipo' ? tipoInmueble.toUpperCase() : null)
+
+    const esTerreno = tipoFinal === 'TERRENO' || tipoFinal === 'TERRENO_MORTUORIO';
+
+    if (esTerreno) {
+      setModosSeleccionados(['VENTA']);
+    }
+
+    const modosFinales = esTerreno ? ['VENTA'] : modosSeleccionados;
+
+    const nuevosFiltros = {
+      tipoInmueble: tipoFinal ? [tipoFinal] : [],
+      modoInmueble: modosFinales,
+      query: ubicacionTexto,
+      updatedAt: new Date().toISOString()
+    }
+    await trackSearchTelemetria({
+      tipoInmueble: nuevosFiltros.tipoInmueble,
+      modoInmueble: nuevosFiltros.modoInmueble,
+      query: nuevosFiltros.query,
+      zona: ubicacionTexto
+    })
+    updateFilters(nuevosFiltros)
+
+    const params = new URLSearchParams()
+    try {
+      const merged = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}') as {
+        locationId?: string | number
+      }
+      if (merged.locationId != null && merged.locationId !== '') {
+        params.set('locationId', String(merged.locationId))
+      }
+    } catch {
+      /* ignore */
+    }
+
+    modosSeleccionados.forEach((modo) => params.append('modoInmueble', modo))
+    if (tipoFinal) params.set('tipoInmueble', tipoFinal)
+    if (ubicacionTexto.trim() !== '') params.set('query', ubicacionTexto.trim())
+
+    const queryString = params.toString()
+    const targetUrl = `/busqueda_mapa${queryString ? `?${queryString}` : ''}`
+
+    router.push(targetUrl)
+    if (onSearch) onSearch(nuevosFiltros)
+  }
+
+  // 🚀 FIX Z-INDEX MASIVO: Agregamos z-[99999] y !overflow-visible para aplastar al mapa
+  const containerStyles =
+    variant === 'map'
+      ? 'bg-[#faf9f6] border-b border-stone-200 py-2 px-4 w-full flex flex-col gap-2 shadow-sm sticky top-0 z-50 !overflow-visible'
+      : 'bg-white shadow-lg rounded-[30px] p-6 flex flex-col gap-6 w-full max-w-[921px] relative z-[99999] !overflow-visible'
+
+
   return (
     <div className="w-full flex justify-center">
       <div className="bg-white shadow-xl rounded-[25px] p-5 w-full max-w-[1100px] flex flex-col gap-4">
 
-        {/* 🔹 FILA 1: BUSQUEDA (IZQ) + MODOS (DER) */}
-        <div className="flex items-center gap-3">
-          {/* IZQUIERDA */}
-          <div className="flex items-center gap-3 flex-1">
-            <div className="w-[200px]">
-              <ComboBox
-                label="Tipo"
-                placeholder="Cualquier tipo"
-                icon={Home}
-                options={propertyTypes}
-                onChange={(val: string) => setTipoInmueble(val)}
-                value={tipoInmueble}
-              />
-            </div>
 
-            <div className="flex-1 min-w-[250px]">
-              <LocationSearch
-                value={ubicacionTexto}
-                onChange={(val: LocationValue) => {
-                  const text =
-                    typeof val === 'string'
-                      ? val
-                      : val?.nombre || val?.target?.value || ''
-                  setUbicacionTexto(text)
-                }}
-              />
             </div>
           </div>
 
@@ -108,8 +193,7 @@ export default function FilterBar() {
           <CapacidadButton variant="home" />
 
           <button
-            type="button"
-            className="h-[38px] flex items-center gap-2 px-4 rounded-xl border bg-white text-gray-700 border-gray-200"
+
           >
             <Maximize className="w-4 h-4" />
             Metros
