@@ -1,11 +1,9 @@
 'use client'
 
-import { Bath, BedDouble, MapPin, Square } from 'lucide-react'
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { Trash2 } from 'lucide-react'
 import { useDeletePublicacion } from '@/hooks/useDeletePublicacion'
 import type { MisPublicacionesItem } from '@/types/publicacion'
-
 import ConfirmDeleteModal from './ConfirmDeleteModal'
 import DeleteSuccessModal from './DeleteSuccessModal'
 import DeleteErrorModal from './DeleteErrorModal'
@@ -13,15 +11,11 @@ import DeleteErrorModal from './DeleteErrorModal'
 interface Props {
   publicacion: MisPublicacionesItem
   onDeleted: (id: number) => void
-  onToggleEstado?: (id: number) => void   // 👈 Opcional
 }
 
-export default function PublicacionCard({
-  publicacion,
-  onDeleted,
-  onToggleEstado
-}: Props) {
-  const router = useRouter()
+export default function PublicacionCard({ publicacion, onDeleted }: Props) {
+  // Estado local para manejar visualmente el switch de Activa/Inactiva
+  const [activa, setActiva] = useState(publicacion.activa ?? true)
 
   const {
     modalConfirmacionAbierto,
@@ -36,104 +30,62 @@ export default function PublicacionCard({
     confirmarEliminacion
   } = useDeletePublicacion(publicacion.id, () => onDeleted(publicacion.id))
 
-  const [activa, setActiva] = useState(publicacion.estado === 'ACTIVA')
-
-  useEffect(() => {
-    setActiva(publicacion.estado === 'ACTIVA')
-  }, [publicacion.estado])
-
-  const toggleEstado = () => {
-    const nuevoEstado = !activa
-    setActiva(nuevoEstado)
-
-    if (onToggleEstado) {
-      onToggleEstado(publicacion.id)
-    }
-  }
-
-  const precioFormateado = `$${publicacion.precio.toLocaleString()}`
-  const areaFormateada = publicacion.superficieM2
-    ? `${publicacion.superficieM2}m²`
-    : '-'
-
-  const irAEditar = () => {
-    router.push(`/mis-publicaciones/${publicacion.id}/editar`)
-  }
+  const precioFormateado = `Bs. ${publicacion.precio.toLocaleString('es-BO')}`
+  const tipoOperacionTexto = publicacion.tipoOperacion || 'Venta / Alquiler'
 
   return (
     <>
-      <div className="overflow-hidden rounded-2xl border border-[#e6ddd1] bg-[#F9F6EE] shadow-sm transition-shadow hover:shadow-md">
-        <div className="overflow-hidden">
+      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md">
+        <div className="relative">
           <img
             src={publicacion.imagenUrl || '/placeholder-house.jpg'}
             alt={publicacion.titulo}
-            className="h-40 w-full object-cover sm:h-44"
+            className="h-[180px] w-full object-cover"
           />
         </div>
 
-        <div className="p-4">
-          <div className="mb-2 flex items-start justify-between gap-3">
-            <h3 className="min-w-0 flex-1 text-[17px] font-bold leading-snug text-[#1f1f1f]">
-              {publicacion.titulo}
-            </h3>
-            <span className="shrink-0 whitespace-nowrap text-[15px] font-bold text-[#e48b18]">
-              {precioFormateado}
-            </span>
-          </div>
+        <div className="p-5">
+          <div className="mb-4 flex items-start justify-between gap-4">
+            <div className="flex-1">
+              <h3 className="mb-1 line-clamp-2 text-[16px] font-medium leading-tight text-gray-900">
+                {publicacion.titulo}
+              </h3>
+              <p className="mb-1 text-[16px] font-bold text-gray-900">
+                {precioFormateado}
+              </p>
+              <p className="text-[13px] text-gray-500">
+                {tipoOperacionTexto}
+              </p>
+            </div>
 
-          <div className="mb-3 flex items-center justify-between rounded-xl border border-[#ddd4c8] bg-[#f7f2ec] px-3 py-2">
-            <span className="text-[13px] text-[#555]">Estado:</span>
-            <button
-              onClick={toggleEstado}
-              aria-label={activa ? 'Desactivar publicación' : 'Activar publicación'}
-              className={`relative h-6 w-12 rounded-full transition ${
-                activa ? 'bg-green-500' : 'bg-gray-400'
-              }`}
-            >
-              <div
-                className={`absolute top-1 h-4 w-4 rounded-full bg-white transition ${
-                  activa ? 'left-7' : 'left-1'
+            <div className="flex flex-col items-center pt-1">
+              <button
+                type="button"
+                onClick={() => setActiva(!activa)}
+                aria-label={activa ? 'Desactivar publicación' : 'Activar publicación'}
+                title={activa ? 'Desactivar publicación' : 'Activar publicación'}
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                  activa ? 'bg-[#4ade80]' : 'bg-gray-300'
                 }`}
-              />
-            </button>
-            <span className="text-[13px] font-medium text-[#444]">
-              {activa ? 'Activa' : 'Inactiva'}
-            </span>
-          </div>
-
-          <div className="mb-3 flex min-h-[42px] items-center justify-center gap-2 rounded-xl border border-[#ddd4c8] bg-[#f7f2ec] px-3 py-2">
-            <MapPin className="h-4 w-4 text-[#e6a04b]" />
-            <p className="line-clamp-1 text-center text-[13px] text-[#555]">
-              {publicacion.ubicacion}
-            </p>
-          </div>
-
-          <div className="mb-4 grid min-h-[48px] grid-cols-3 rounded-xl border border-[#ddd4c8] bg-[#f7f2ec]">
-            <div className="flex items-center justify-center gap-2 border-r border-[#ddd4c8]">
-              <Bath className="h-4 w-4 text-[#e6a04b]" />
-              <span>{publicacion.nroBanos ?? '-'}</span>
-            </div>
-            <div className="flex items-center justify-center gap-2 border-r border-[#ddd4c8]">
-              <BedDouble className="h-4 w-4 text-[#e6a04b]" />
-              <span>{publicacion.nroCuartos ?? '-'}</span>
-            </div>
-            <div className="flex items-center justify-center gap-2">
-              <Square className="h-4 w-4 text-[#e6a04b]" />
-              <span>{areaFormateada}</span>
+              >
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                    activa ? 'translate-x-5' : 'translate-x-0'
+                  }`}
+                />
+              </button>
+              <span className="mt-1 text-[12px] font-medium text-gray-800">
+                {activa ? 'Activa' : 'Inactiva'}
+              </span>
             </div>
           </div>
 
-          <div className="flex gap-3">
-            <button
-              onClick={irAEditar}
-              className="h-11 flex-1 rounded-lg border border-[#9a9a9a] bg-white text-[14px] font-medium text-[#2c2c2c] transition hover:bg-gray-50"
-            >
-              Editar
-            </button>
+          <div className="mt-2 flex justify-center">
             <button
               onClick={abrirConfirmacion}
-              className="h-11 flex-1 rounded-lg bg-[#D97706] text-[14px] font-medium text-white hover:bg-[#bf6905]"
+              className="flex h-9 w-32 items-center justify-center gap-2 rounded-xl border border-[#c4a9a9] bg-white text-[13px] font-medium text-[#8c6b6b] transition hover:bg-[#fff5f5] hover:text-[#d9534f]"
             >
+              <Trash2 size={15} />
               Eliminar
             </button>
           </div>
@@ -147,10 +99,7 @@ export default function PublicacionCard({
         loading={loading}
       />
 
-      <DeleteSuccessModal
-        abierto={modalExitoAbierto}
-        onAceptar={cerrarExito}
-      />
+      <DeleteSuccessModal abierto={modalExitoAbierto} onAceptar={cerrarExito} />
 
       <DeleteErrorModal
         abierto={modalErrorAbierto}
@@ -160,3 +109,4 @@ export default function PublicacionCard({
     </>
   )
 }
+

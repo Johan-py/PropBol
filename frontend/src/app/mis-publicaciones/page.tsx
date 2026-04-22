@@ -1,103 +1,65 @@
-"use client";
+'use client'
 
-import PublicacionCard from "@/components/publicacion/PublicacionCard";
-import { useMisPublicaciones } from "@/hooks/useMisPublicaciones";
-import { useRouter } from "next/navigation";
+import { Lock, AlertTriangle } from 'lucide-react'
+import PublicacionCard from '@/components/publicacion/PublicacionCard'
+import { useMisPublicaciones } from '@/hooks/useMisPublicaciones'
 
 export default function MisPublicacionesPage() {
-  const router = useRouter();
-
-  const {
-    publicaciones,
-    loading,
-    error,
-    removerPublicacionDeLista,
-  } = useMisPublicaciones();
-
-  const publicacionesActivas = publicaciones.filter(
-    (p) => p.estado === "ACTIVA"
-  );
-
-  const limiteGratis = 2;
-  const puedePublicarGratis = publicacionesActivas.length < limiteGratis;
+  const { publicaciones, loading, error, removerPublicacionDeLista } = useMisPublicaciones()
 
   if (loading) {
-    return (
-      <div className="px-4 py-8 sm:px-6 lg:px-8">
-        Cargando publicaciones...
-      </div>
-    );
+    return <div className="px-4 py-8 sm:px-6 lg:px-8">Cargando publicaciones...</div>
   }
 
   if (error) {
-    return (
-      <div className="px-4 py-8 text-red-600 sm:px-6 lg:px-8">
-        {error}
-      </div>
-    );
+    return <div className="px-4 py-8 text-red-600 sm:px-6 lg:px-8">{error}</div>
   }
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-      
-      <h1 className="mb-6 text-3xl font-bold text-black sm:mb-8">
-        Mis publicaciones
-      </h1>
-
-      <div className="mb-8 flex flex-col gap-4 rounded-xl border bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+    <div className="min-h-screen bg-[#FAF9F6] px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-5xl">
         
-        <div>
-          <p className="text-sm text-gray-500">Mi Plan actual:</p>
-          <p className="font-semibold text-black">
-            Básico (Gratis)
-          </p>
-
-          <p className="text-sm text-gray-600">
-            Publicaciones Activas:{" "}
-            <span className="font-medium">
-              {publicacionesActivas.length} / {limiteGratis}
-            </span>
-          </p>
-        </div>
-
-        <div className="text-right">
-          <button
-            disabled={!puedePublicarGratis}
-            onClick={() => router.push("/crear-publicacion")}
-            className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
-              puedePublicarGratis
-                ? "bg-orange-500 text-white hover:bg-orange-600"
-                : "cursor-not-allowed bg-gray-300 text-gray-600"
-            }`}
-          >
-            Crear Nueva Publicación
-          </button>
-
-          {!puedePublicarGratis && (
-            <p className="mt-1 text-xs text-gray-500">
-              Límite alcanzado: Actualiza tu plan para añadir más propiedades.
+        {/* Banner de Suscripción */}
+        <div className="mb-8 flex flex-col items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:flex-row">
+          <div>
+            <p className="text-[15px] text-gray-900">
+              <strong>Mi Plan actual: Básico (Gratis)</strong>
             </p>
-          )}
-        </div>
-      </div>
-
-      {publicaciones.length === 0 ? (
-        <p>No tienes publicaciones activas.</p>
-      ) : (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {publicaciones.map((publicacion) => (
-            <div
-              key={publicacion.id}
-              className="mx-auto w-full max-w-[360px] sm:max-w-none"
+            <p className="mt-1 text-[14px] text-gray-700">
+              <strong>**Publicaciones Activas:**</strong> 2 / 2 (Límite gratis alcanzado)
+            </p>
+          </div>
+          
+          <div className="flex flex-col items-end">
+            <button
+              disabled
+              className="flex cursor-not-allowed items-center gap-2 rounded-lg bg-[#c4c4c4] px-4 py-2 text-[14px] font-medium text-white transition-colors"
             >
-              <PublicacionCard
-                publicacion={publicacion}
-                onDeleted={removerPublicacionDeLista}
-              />
-            </div>
-          ))}
+              <Lock size={16} />
+              Crear Nueva Publicación
+              <AlertTriangle size={16} className="text-[#f5a623]" />
+            </button>
+            <p className="mt-2 max-w-[260px] text-right text-[12px] leading-tight text-gray-600">
+              (Límite alcanzado! Actualiza tu plan para añadir más propiedades.
+            </p>
+          </div>
         </div>
-      )}
+
+        {/* Lista de Publicaciones */}
+        {publicaciones.length === 0 ? (
+          <p className="text-gray-600">No tienes publicaciones activas.</p>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            {publicaciones.map((publicacion) => (
+              <div key={publicacion.id} className="mx-auto w-full">
+                <PublicacionCard publicacion={publicacion} onDeleted={removerPublicacionDeLista} />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
-  );
+  )
 }
+
+
