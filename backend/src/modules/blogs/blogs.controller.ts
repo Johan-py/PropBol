@@ -105,6 +105,40 @@ export const actualizarBlog = async (req: AuthRequest, res: Response) => {
   }
 };
 
+/** PATCH /api/blogs/:id/estado — Solo Admin */
+export const cambiarEstadoBlog = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user)
+      return res.status(401).json({ message: "NOT_AUTHENTICATED" });
+
+    const id = Number(req.params.id);
+    const { estado, razon_rechazo } = req.body;
+
+    if (!["PUBLICADO", "RECHAZADO"].includes(estado)) {
+      return res
+        .status(400)
+        .json({ message: "estado debe ser 'PUBLICADO' o 'RECHAZADO'" });
+    }
+
+    const blog = await blogsService.cambiarEstado(id, estado, razon_rechazo);
+    return res.json(blog);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      if (error.message === "BLOG_NOT_FOUND")
+        return res.status(404).json({ message: "Blog no encontrado" });
+      if (error.message === "BLOG_NOT_PENDING")
+        return res.status(409).json({
+          message: "Solo puedes cambiar el estado de blogs en estado PENDIENTE",
+        });
+      if (error.message === "RAZON_RECHAZO_REQUIRED")
+        return res
+          .status(400)
+          .json({ message: "Debes proporcionar una razón de rechazo" });
+    }
+    return handleError(res, error);
+  }
+};
+
 // ──────────────────────────────────────────
 // HELPER
 // ──────────────────────────────────────────
