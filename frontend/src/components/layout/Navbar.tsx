@@ -13,6 +13,7 @@ import {
   WifiOff,
   Settings,
   X,
+  ChevronDown
 } from "lucide-react";
 
 import Logo from "../navbar/Logo";
@@ -72,6 +73,7 @@ export default function Navbar() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isPropiedadesOpen, setIsPropiedadesOpen] = useState(false);
 
   const {
     open,
@@ -360,6 +362,13 @@ export default function Navbar() {
             </div>
 
             <div className="flex items-center gap-4">
+              <Link
+                href="/registro-inmueble"
+                className="hidden md:block rounded-md bg-[#E68B25] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-amber-700"
+              >
+                Publica tu inmueble
+              </Link>
+
               <div className="relative" ref={notificationPanelRef}>
                 <button
                   type="button"
@@ -662,7 +671,7 @@ export default function Navbar() {
           role="dialog"
         >
           <div
-            className="fixed right-0 top-0 h-full w-4/5 max-w-xs bg-[#F9F6EE] p-6 shadow-xl"
+            className="fixed right-0 top-0 h-full w-4/5 max-w-xs bg-[#F9F6EE] p-6 shadow-xl overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -677,38 +686,31 @@ export default function Navbar() {
               </button>
             </div>
 
-            <nav className="mt-10 flex flex-col gap-4">
+            <nav className="mt-10 flex flex-col gap-2">
               <Link
-                href="/"
+                href="/registro-inmueble"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+                className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"
               >
-                Inicio
+                Publica tu inmueble
               </Link>
 
-              <Link
-                href="/propiedades"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
-              >
-                Propiedades
-              </Link>
-
-              <Link
-                href="/propiedades"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
-              >
-                Blogs
-              </Link>
-
-              <Link
-                href="/cobros-suscripciones"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
-              >
-                Planes de membresia
-              </Link>
+              <div className="flex flex-col">
+                <button
+                  onClick={() => setIsPropiedadesOpen(!isPropiedadesOpen)}
+                  className="flex w-full items-center justify-between rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+                >
+                  <span>Propiedades</span>
+                  <ChevronDown className={`h-5 w-5 transition-transform duration-200 ${isPropiedadesOpen ? "rotate-180" : ""}`} />
+                </button>
+                <div className={`flex flex-col overflow-hidden transition-all duration-300 ${isPropiedadesOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"}`}>
+                  {["Casas", "Departamentos", "Cuartos", "Terrenos", "Espacios de cementerios"].map((item) => (
+                    <Link key={item} href="/propiedades" onClick={() => setIsMobileMenuOpen(false)} className="pl-8 py-2 text-base text-gray-600 hover:text-[#E68B25]">
+                      {item}
+                    </Link>
+                  ))}
+                </div>
+              </div>
 
               <Link
                 href="/blogs"
@@ -717,6 +719,7 @@ export default function Navbar() {
               >
                 Blogs
               </Link>
+
               <Link
                 href="/cobros-suscripciones"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -724,6 +727,7 @@ export default function Navbar() {
               >
                 Planes de membresia
               </Link>
+
               <Link
                 href="/ayuda"
                 onClick={() => setIsMobileMenuOpen(false)}
