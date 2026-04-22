@@ -84,6 +84,7 @@ import telemetriaRoutes from './modules/telemetria/telemetria.routes.js'
 import recomendacionesRoutes from './modules/recomendaciones/recomendaciones.routes.js'
 import transaccionesRoutes from './modules/transacciones/transacciones.routes.js'
 import plansRoutes from './modules/plans/plans.routes.js'
+import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js'
 // --------------------
 // SERVER
 // --------------------
@@ -122,7 +123,6 @@ app.use('/uploads', express.static(path.resolve('uploads')))
 // --------------------
 // RUTAS LEGACY
 // --------------------
-
 app.post('/api/auth/forgot-password', forgotPasswordController)
 app.post('/api/auth/reset-password', resetPasswordController)
 app.use('/api/auth-legacy', authRoutes)
@@ -140,6 +140,7 @@ app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
 app.use('/api/perfil/zonas', zonaRoutes)
 app.use('/api/perfil/historial', historialRoutes)
+app.use('/api/perfil/historial-busqueda', historialBusquedaRoutes)
 app.use('/api', router)
 app.use('/api', parametrosRoutes)
 app.use('/api/security', securityRoutes)
