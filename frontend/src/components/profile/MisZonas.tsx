@@ -35,7 +35,8 @@ export default function MisZonas() {
   const [referenciaEditada, setReferenciaEditada] = useState('')
   const [confirmandoEliminarId, setConfirmandoEliminarId] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
-
+  const [zonaSeleccionadaId, setZonaSeleccionadaId] = useState<number | null>(null)
+ 
   const getToken = () => localStorage.getItem('token')
 
   // Extraer coordenadas del centro del polígono real
@@ -112,6 +113,7 @@ export default function MisZonas() {
 
   const toggleMostrarPropiedades = (zonaId: number, event: React.MouseEvent) => {
     event.stopPropagation()
+    setZonaSeleccionadaId(zonaId)
     setZonas(prev => prev.map(zona =>
       zona.id === zonaId
         ? { ...zona, mostrarPropiedades: !zona.mostrarPropiedades }
@@ -260,6 +262,7 @@ export default function MisZonas() {
             <MapaZonas
               zonas={zonas}
               zonasConPropiedades={zonasConPropiedades}
+              zonaSeleccionadaId={zonaSeleccionadaId}
             />
           </div>
         </div>
