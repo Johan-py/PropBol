@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import PlanModal from '../../components/ui/PlanModal'
+//import PlanModal from '../../components/ui/PlanModal'
 
 type CampoError =
   | 'titulo'
@@ -20,7 +20,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL //?? "http://localhost:5000";
 
 export default function MiRegistroPage() {
   const router = useRouter()
-  const [mostrarPlanModal, setMostrarPlanModal] = useState(false)
+  //const [mostrarPlanModal, setMostrarPlanModal] = useState(false)
 
   const [datos, setDatos] = useState({
     titulo: '',
@@ -60,15 +60,16 @@ export default function MiRegistroPage() {
         const result = await response.json()
 
         if (!response.ok && result.message === 'LIMIT_REACHED') {
-          setMostrarPlanModal(true)
+          router.push('/Cobros-Limite')
         }
       } catch (error) {
-        console.error('Error validando flujo de publicación:', error)
+        //console.error('Error validando flujo de publicación:', error)
+        console.error(error)
       }
     }
 
     validarFlujo()
-  }, [router])
+  }, []) //router
 
   const limpiarError = () => {
     setMensajeError('')
@@ -524,7 +525,7 @@ export default function MiRegistroPage() {
 
       if (!response.ok) {
         if (result.message === 'LIMIT_REACHED') {
-          setMostrarPlanModal(true)
+          router.push('/Cobros-Limite')
           return
         }
 
@@ -613,7 +614,9 @@ export default function MiRegistroPage() {
                       }`}
                     />
                     {errorTitulo && <p className="text-red-500 text-sm mt-2">{mensajeError}</p>}
-                    <p className="text-xs text-gray-500 mt-1">{datos.titulo.length}/80 caracteres</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {datos.titulo.length}/80 caracteres
+                    </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -808,9 +811,7 @@ export default function MiRegistroPage() {
                   }`}
                   placeholder="Casa de dos plantas, amplia y moderna ubicada en una zona tranquila..."
                 />
-                {errorDescripcion && (
-                  <p className="text-red-500 text-sm mt-2">{mensajeError}</p>
-                )}
+                {errorDescripcion && <p className="text-red-500 text-sm mt-2">{mensajeError}</p>}
                 <p className="text-xs text-gray-500 mt-1">
                   {datos.descripcion.length}/300 caracteres
                 </p>
@@ -850,8 +851,6 @@ export default function MiRegistroPage() {
           </div>
         </div>
       </main>
-
-      {mostrarPlanModal && <PlanModal onClose={() => setMostrarPlanModal(false)} />}
     </div>
   )
 }

@@ -4,10 +4,15 @@ import { useState, useEffect } from 'react'
 import { useSearchFilters } from '@/hooks/useSearchFilters'
 import { useRouter, useSearchParams } from 'next/navigation'
 interface PriceFilterSidebarProps {
-  isOpen: boolean;  
+  isOpen: boolean
   onClose: () => void
+  totalResultados?: number
 }
-export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSidebarProps) {  
+export default function PriceFilterSidebar({
+  isOpen,
+  onClose,
+  totalResultados = -1
+}: PriceFilterSidebarProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { updateFilters } = useSearchFilters()
@@ -16,6 +21,7 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
   const [minPrice, setMinPrice] = useState<string>('')
   const [maxPrice, setMaxPrice] = useState<string>('')
   const [error, setError] = useState<string>('')
+  const [filtroAplicado, setFiltroAplicado] = useState(false)
 
   // Cargar valores iniciales si existen en la URL o SessionStorage
   useEffect(() => {
@@ -28,7 +34,7 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
     }
   }, [])
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   const handleApply = () => {
     if (Number(minPrice) < 0 || Number(maxPrice) < 0) {
@@ -59,6 +65,7 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
     params.set('currency', moneda)
 
     router.push(`/busqueda_mapa?${params.toString()}`)
+    setFiltroAplicado(true)
     onClose()
   }
 
@@ -117,14 +124,22 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
               value={minPrice}
               onChange={(e) => {
                 const val = e.target.value
-                if (Number(val) < 0) { setError('Solo se permiten números positivos'); return }
+                if (Number(val) < 0) {
+                  setError('Solo se permiten números positivos')
+                  return
+                }
                 setError('')
                 setMinPrice(val)
               }}
-              onKeyDown={(e) => { if (e.key === '-') e.preventDefault() }}
+              onKeyDown={(e) => {
+                if (e.key === '-') e.preventDefault()
+              }}
               onPaste={(e) => {
                 const texto = e.clipboardData.getData('text')
-                if (!/^\d*\.?\d*$/.test(texto)) { e.preventDefault(); setError('Formato no válido') }
+                if (!/^\d*\.?\d*$/.test(texto)) {
+                  e.preventDefault()
+                  setError('Formato no válido')
+                }
               }}
               className="border border-stone-300 rounded-lg px-3 py-2 text-sm w-full outline-none focus:border-[#d97706] focus:ring-1 focus:ring-[#d97706] transition-all"
             />
@@ -138,26 +153,30 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
               value={maxPrice}
               onChange={(e) => {
                 const val = e.target.value
-                if (Number(val) < 0) { setError('Solo se permiten números positivos'); return }
+                if (Number(val) < 0) {
+                  setError('Solo se permiten números positivos')
+                  return
+                }
                 setError('')
                 setMaxPrice(val)
               }}
-              onKeyDown={(e) => { if (e.key === '-') e.preventDefault() }}
+              onKeyDown={(e) => {
+                if (e.key === '-') e.preventDefault()
+              }}
               onPaste={(e) => {
                 const texto = e.clipboardData.getData('text')
-                if (!/^\d*\.?\d*$/.test(texto)) { e.preventDefault(); setError('Formato no válido') }
+                if (!/^\d*\.?\d*$/.test(texto)) {
+                  e.preventDefault()
+                  setError('Formato no válido')
+                }
               }}
               className="border border-stone-300 rounded-lg px-3 py-2 text-sm w-full outline-none focus:border-[#d97706] focus:ring-1 focus:ring-[#d97706] transition-all"
             />
           </div>
         </div>
-        {error && (
-          <p className="text-red-500 text-xs mt-2">{error}</p>
-        )}
+        {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
         {!error && minPrice && maxPrice && Number(minPrice) > Number(maxPrice) && (
-          <p className="text-red-500 text-xs mt-1">
-            El precio mínimo no puede ser mayor al máximo
-          </p>
+          <p className="text-red-500 text-xs mt-1">El precio mínimo no puede ser mayor al máximo</p>
         )}
       </div>
 
@@ -169,9 +188,15 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
         <div className="flex items-center gap-2">
           <span className="text-xs text-stone-500 w-8">Min</span>
           <input
-            type="range" min="0" max={LIMITE_MAX} step="100"
+            type="range"
+            min="0"
+            max={LIMITE_MAX}
+            step="100"
             value={Number(minPrice) || 0}
-            onChange={(e) => { setMinPrice(e.target.value); setError('') }}
+            onChange={(e) => {
+              setMinPrice(e.target.value)
+              setError('')
+            }}
             className="flex-1 accent-[#d97706]"
           />
           <span className="text-xs text-stone-600 w-20 text-right">
@@ -181,16 +206,36 @@ export default function PriceFilterSidebar({ isOpen, onClose }: PriceFilterSideb
         <div className="flex items-center gap-2">
           <span className="text-xs text-stone-500 w-8">Máx</span>
           <input
-            type="range" min="0" max={LIMITE_MAX} step="100"
+            type="range"
+            min="0"
+            max={LIMITE_MAX}
+            step="100"
             value={Number(maxPrice) || LIMITE_MAX}
-            onChange={(e) => { setMaxPrice(e.target.value); setError('') }}
+            onChange={(e) => {
+              setMaxPrice(e.target.value)
+              setError('')
+            }}
             className="flex-1 accent-[#d97706]"
           />
           <span className="text-xs text-stone-600 w-20 text-right">
-            {maxPrice ? formatearMiles(maxPrice) : `${(LIMITE_MAX/1000).toLocaleString('es-BO')}K`} {moneda}
+            {maxPrice
+              ? formatearMiles(maxPrice)
+              : `${(LIMITE_MAX / 1000).toLocaleString('es-BO')}K`}{' '}
+            {moneda}
           </span>
         </div>
       </div>
+
+      {/* Día 7 - Empty state cuando no hay resultados */}
+      {filtroAplicado && totalResultados === 0 && (
+        <div className="flex flex-col items-center gap-2 py-3 text-center">
+          <span className="text-xl">🔍</span>
+          <p className="text-sm font-semibold text-stone-700">Sin resultados</p>
+          <p className="text-xs text-stone-400">
+            No se encontraron propiedades dentro del rango de precio seleccionado
+          </p>
+        </div>
+      )}
 
       {/* Botón Aplicar */}
       <button

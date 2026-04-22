@@ -20,7 +20,7 @@ export class RecomendacionesService {
 
     if (historialVistas.length === 0 && favoritos.length === 0) {
       const populares = await this.repository.getInmueblesPopulares(limit)
-      return populares.map(p => ({
+      return populares.map((p) => ({
         id: p.id,
         titulo: p.titulo,
         precio: Number(p.precio),
@@ -39,14 +39,13 @@ export class RecomendacionesService {
     )
 
     let candidatos = await this.repository.getInmueblesCandidatos(usuarioId, 100)
-    candidatos = candidatos.filter(c => !excludeIds.includes(c.id))
+    candidatos = candidatos.filter((c) => !excludeIds.includes(c.id))
 
     const inmueblesConScore: InmuebleConScore[] = []
 
     for (const inmueble of candidatos) {
-      const esSimilarAFavorito = favoritos.some(f =>
-        f.categoria === inmueble.categoria ||
-        f.ubicacion?.zona === inmueble.ubicacion?.zona
+      const esSimilarAFavorito = favoritos.some(
+        (f) => f.categoria === inmueble.categoria || f.ubicacion?.zona === inmueble.ubicacion?.zona
       )
 
       const { score, razones } = this.scoreCalculator.calcularScore(

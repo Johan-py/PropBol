@@ -2,7 +2,7 @@ import { LocationsRepository } from './locations.repository.js'
 import { prisma } from '../../lib/prisma.client.js'
 
 export class LocationsService {
-  private repository = new LocationsRepository();
+  private repository = new LocationsRepository()
 
   async searchLocations(query: string) {
     if (!query || query.length < 2) return []
@@ -35,25 +35,55 @@ export class LocationsService {
 
     // 2. Procesamos en orden de prioridad para búsquedas inmobiliarias
     municipios.forEach((m: any) => {
-      sugerencias.push({ id: m.id, nivel: 'MUNICIPIO', nombre: m.nombre, contexto: `Municipio en ${m.provincia.nombre}` })
+      sugerencias.push({
+        id: m.id,
+        nivel: 'MUNICIPIO',
+        nombre: m.nombre,
+        contexto: `Municipio en ${m.provincia.nombre}`
+      })
       m.zonas.forEach((z: any) => {
-        sugerencias.push({ id: z.id, nivel: 'ZONA', nombre: z.nombre, contexto: `Zona de ${m.nombre}` })
+        sugerencias.push({
+          id: z.id,
+          nivel: 'ZONA',
+          nombre: z.nombre,
+          contexto: `Zona de ${m.nombre}`
+        })
       })
     })
 
     zonas.forEach((z: any) => {
       if (!sugerencias.find((s: any) => s.nivel === 'ZONA' && s.id === z.id)) {
-        sugerencias.push({ id: z.id, nivel: 'ZONA', nombre: z.nombre, contexto: `Zona en ${z.municipio.nombre}` })
+        sugerencias.push({
+          id: z.id,
+          nivel: 'ZONA',
+          nombre: z.nombre,
+          contexto: `Zona en ${z.municipio.nombre}`
+        })
         z.barrios.forEach((b: any) => {
-          sugerencias.push({ id: b.id, nivel: 'BARRIO', nombre: b.nombre, contexto: `Barrio en ${z.nombre}` })
+          sugerencias.push({
+            id: b.id,
+            nivel: 'BARRIO',
+            nombre: b.nombre,
+            contexto: `Barrio en ${z.nombre}`
+          })
         })
       }
     })
 
     deptos.forEach((d: any) => {
-      sugerencias.push({ id: d.id, nivel: 'DEPARTAMENTO', nombre: d.nombre, contexto: 'Departamento de Bolivia' })
+      sugerencias.push({
+        id: d.id,
+        nivel: 'DEPARTAMENTO',
+        nombre: d.nombre,
+        contexto: 'Departamento de Bolivia'
+      })
       d.provincias.forEach((p: any) => {
-        sugerencias.push({ id: p.id, nivel: 'PROVINCIA', nombre: p.nombre, contexto: `Provincia en ${d.nombre}` })
+        sugerencias.push({
+          id: p.id,
+          nivel: 'PROVINCIA',
+          nombre: p.nombre,
+          contexto: `Provincia en ${d.nombre}`
+        })
       })
     })
 
@@ -62,7 +92,7 @@ export class LocationsService {
   }
 
   async incrementPopularity(id: number) {
-    if (!id) throw new Error("ID de ubicación no proporcionado");
-    return await this.repository.incrementPopularity(id);
+    if (!id) throw new Error('ID de ubicación no proporcionado')
+    return await this.repository.incrementPopularity(id)
   }
 }

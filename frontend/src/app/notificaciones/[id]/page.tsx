@@ -72,9 +72,7 @@ export default function NotificationDetailPage() {
     return (
       <section className="mx-auto w-full max-w-3xl px-4 py-6">
         <div className="rounded-2xl border border-stone-200 bg-white p-6 text-center shadow-sm">
-          <h1 className="text-lg font-semibold text-stone-900">
-            No se encontró la notificación
-          </h1>
+          <h1 className="text-lg font-semibold text-stone-900">No se encontró la notificación</h1>
           <p className="mt-2 text-sm text-stone-500">
             La notificación no existe o ya no está disponible.
           </p>

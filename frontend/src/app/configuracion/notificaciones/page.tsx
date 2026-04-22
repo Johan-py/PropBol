@@ -13,11 +13,11 @@ type NotificationPreferences = {
 export default function NotificationSettingsPage() {
   const [preferences, setPreferences] = useState<NotificationPreferences>({
     email: true,
-    whatsapp: false,
+    whatsapp: false
   })
   const [savedPreferences, setSavedPreferences] = useState<NotificationPreferences>({
     email: true,
-    whatsapp: false,
+    whatsapp: false
   })
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)

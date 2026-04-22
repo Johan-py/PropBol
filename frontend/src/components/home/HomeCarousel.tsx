@@ -25,7 +25,7 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
   }
 
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused) return
 
     const timer = setInterval(() => {
       nextSlide()
@@ -50,12 +50,12 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
   if (!banners || banners.length === 0) return null
 
   return (
-    <div 
-      className="relative w-full overflow-hidden" 
-      onTouchStart={handleTouchStart} 
+    <div
+      className="relative w-full overflow-hidden"
+      onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      onMouseEnter={() => setIsPaused(true)} 
-      onMouseLeave={() => setIsPaused(false)} 
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
     >
       <HomeBanner
         url={banners[currentIndex].urlImagen}

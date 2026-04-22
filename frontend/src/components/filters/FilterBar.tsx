@@ -11,10 +11,10 @@ import {
   Award,
   SlidersHorizontal,
   ChevronDown,
-  Building, 
-  Bed,      
-  Trees,    
-  Flower2   
+  Building,
+  Bed,
+  Trees,
+  Flower2
 } from 'lucide-react'
 import { useSearchFilters } from '@/hooks/useSearchFilters'
 import { LocationSearch } from '../layout/LocationSearch'
@@ -22,7 +22,6 @@ import { ComboBox } from '../ui/ComboBox'
 import TransactionModeFilter from './TransactionModeFilter'
 import { useRouter } from 'next/navigation'
 import SuperficieFilter from './SuperficieFilter'
-
 
 interface FilterBarProps {
   onSearch?: (filtros: {
@@ -33,9 +32,10 @@ interface FilterBarProps {
   }) => void
   variant?: 'home' | 'map'
   onOpenPriceFilter?: () => void
-   onOpenSuperficieFilter?: () => void 
+  onOpenSuperficieFilter?: () => void
+  isCapacidadActive?: boolean
+  onToggleCapacidad?: () => void
 }
-
 type LocationValue =
   | string
   | {
@@ -60,8 +60,10 @@ const MockFilterBtn = ({
   <button
     type="button"
     className="h-[36px] flex items-center justify-between bg-white border border-stone-200 text-stone-600 px-3 rounded-xl shadow-sm hover:border-stone-300 transition-all font-inter text-sm whitespace-nowrap gap-2 shrink-0 focus:outline-none cursor-default"
-     onClick={(e) => { e.preventDefault(); if (onClick) onClick() }}
-   
+    onClick={(e) => {
+      e.preventDefault()
+      if (onClick) onClick()
+    }}
   >
     <div className="flex items-center gap-2">
       {Icon && <Icon className="w-4 h-4 text-stone-500" />}
@@ -90,7 +92,15 @@ const trackSearchTelemetria = async (filtros: {
     console.error('Error tracking search:', error)
   }
 }
-export default function FilterBar({ onSearch, variant = 'home',  onOpenPriceFilter, onOpenSuperficieFilter  }: FilterBarProps) {
+
+export default function FilterBar({
+  onSearch,
+  variant = 'home',
+  onOpenPriceFilter,
+  onOpenSuperficieFilter,
+  isCapacidadActive = false,
+  onToggleCapacidad
+}: FilterBarProps) {
   const router = useRouter()
 
   const { updateFilters } = useSearchFilters()
@@ -129,20 +139,20 @@ export default function FilterBar({ onSearch, variant = 'home',  onOpenPriceFilt
       Departamentos: 'DEPARTAMENTO',
       Terrenos: 'TERRENO',
       Cuartos: 'CUARTO',
-      "Espacios Cementerio": 'TERRENO_MORTUORIO'
+      'Espacios Cementerio': 'TERRENO_MORTUORIO'
     }
 
     const tipoFinal =
       tipoMap[tipoInmueble] ||
       (tipoInmueble !== 'Cualquier tipo' ? tipoInmueble.toUpperCase() : null)
 
-    const esTerreno = tipoFinal === 'TERRENO' || tipoFinal === 'TERRENO_MORTUORIO';
+    const esTerreno = tipoFinal === 'TERRENO' || tipoFinal === 'TERRENO_MORTUORIO'
 
     if (esTerreno) {
-      setModosSeleccionados(['VENTA']);
+      setModosSeleccionados(['VENTA'])
     }
 
-    const modosFinales = esTerreno ? ['VENTA'] : modosSeleccionados;
+    const modosFinales = esTerreno ? ['VENTA'] : modosSeleccionados
 
     const nuevosFiltros = {
       tipoInmueble: tipoFinal ? [tipoFinal] : [],
@@ -244,19 +254,23 @@ export default function FilterBar({ onSearch, variant = 'home',  onOpenPriceFilt
               <MockFilterBtn icon={DollarSign} text="Precio" onClick={onOpenPriceFilter} />
             </div>
             <div className="shrink-0">
-              <CapacidadButton variant={variant} />
+              <CapacidadButton
+                variant={variant}
+                isActive={isCapacidadActive}
+                onClick={onToggleCapacidad}
+              />
             </div>
             <div className="shrink-0">
-  <button
-    type="button"
-    onClick={() => onOpenSuperficieFilter?.()}
-    className="h-[36px] flex items-center gap-2 px-3 rounded-xl shadow-sm transition-all text-sm whitespace-nowrap focus:outline-none border bg-white text-stone-600 border-stone-200 hover:border-stone-300"
-  >
-    <Maximize className="w-4 h-4 text-stone-500" />
-    <span>Metros</span>
-    <ChevronDown className="w-4 h-4 text-stone-400" />
-  </button>
-</div>
+              <button
+                type="button"
+                onClick={() => onOpenSuperficieFilter?.()}
+                className="h-[36px] flex items-center gap-2 px-3 rounded-xl shadow-sm transition-all text-sm whitespace-nowrap focus:outline-none border bg-white text-stone-600 border-stone-200 hover:border-stone-300"
+              >
+                <Maximize className="w-4 h-4 text-stone-500" />
+                <span>Metros</span>
+                <ChevronDown className="w-4 h-4 text-stone-400" />
+              </button>
+            </div>
             <div className="shrink-0">
               <MockFilterBtn icon={SlidersHorizontal} text="Más Filtros" hasChevron={false} />
             </div>

@@ -1,18 +1,18 @@
 import { Request, Response } from 'express'
 import { FavoritesService } from './favorites.service.js'
-import { AuthRequest } from '../../middleware/validarJWT.js'  // Importar el tipo
+import { AuthRequest } from '../../middleware/validarJWT.js' // Importar el tipo
 
 export class FavoritesController {
-
-  static async getAll(req: AuthRequest, res: Response) {  // ← Usar AuthRequest
+  static async getAll(req: AuthRequest, res: Response) {
+    // ← Usar AuthRequest
     try {
-      const usuario = req.usuario;  // ← Viene de validarJWT
-      
+      const usuario = req.usuario // ← Viene de validarJWT
+
       if (!usuario) {
-        return res.status(401).json({ message: 'Usuario no autenticado' });
+        return res.status(401).json({ message: 'Usuario no autenticado' })
       }
-      
-      const usuarioId = usuario.id;  // ← Tomar el id del usuario
+
+      const usuarioId = usuario.id // ← Tomar el id del usuario
       const page = parseInt(req.query.page as string) || 1
       const perPage = parseInt(req.query.per_page as string) || 8
 
@@ -21,7 +21,7 @@ export class FavoritesController {
       if (result.total === 0) {
         return res.status(200).json({
           ...result,
-          message: 'Aún no tienes propiedades favoritas',
+          message: 'Aún no tienes propiedades favoritas'
         })
       }
 
@@ -32,36 +32,37 @@ export class FavoritesController {
     }
   }
 
-  static async add(req: AuthRequest, res: Response) {  // ← Usar AuthRequest
+  static async add(req: AuthRequest, res: Response) {
+    // ← Usar AuthRequest
     try {
-      const usuario = req.usuario;
-      
+      const usuario = req.usuario
+
       if (!usuario) {
-        return res.status(401).json({ message: 'Usuario no autenticado' });
+        return res.status(401).json({ message: 'Usuario no autenticado' })
       }
-      
-      const usuarioId = usuario.id;
+
+      const usuarioId = usuario.id
       const { inmuebleId } = req.body
-      
+
       if (!inmuebleId) {
-        return res.status(400).json({ 
+        return res.status(400).json({
           message: 'Se requiere inmuebleId en el body',
           example: { inmuebleId: 1 }
         })
       }
-      
+
       const parsedId = parseInt(String(inmuebleId))
       if (isNaN(parsedId)) {
         return res.status(400).json({ message: 'ID de inmueble inválido' })
       }
 
       await FavoritesService.add(usuarioId, parsedId)
-      
-      return res.status(201).json({ 
+
+      return res.status(201).json({
         message: 'Inmueble agregado a favoritos',
-        data: { 
-          usuarioId: usuarioId, 
-          inmuebleId: parsedId 
+        data: {
+          usuarioId: usuarioId,
+          inmuebleId: parsedId
         }
       })
     } catch (error: any) {
@@ -73,15 +74,16 @@ export class FavoritesController {
     }
   }
 
-  static async remove(req: AuthRequest, res: Response) {  // ← Usar AuthRequest
+  static async remove(req: AuthRequest, res: Response) {
+    // ← Usar AuthRequest
     try {
-      const usuario = req.usuario;
-      
+      const usuario = req.usuario
+
       if (!usuario) {
-        return res.status(401).json({ message: 'Usuario no autenticado' });
+        return res.status(401).json({ message: 'Usuario no autenticado' })
       }
-      
-      const usuarioId = usuario.id;
+
+      const usuarioId = usuario.id
       const inmuebleId = parseInt(String(req.params.inmuebleId))
 
       if (isNaN(inmuebleId)) {
@@ -99,15 +101,16 @@ export class FavoritesController {
     }
   }
 
-  static async status(req: AuthRequest, res: Response) {  // ← Usar AuthRequest
+  static async status(req: AuthRequest, res: Response) {
+    // ← Usar AuthRequest
     try {
-      const usuario = req.usuario;
-      
+      const usuario = req.usuario
+
       if (!usuario) {
-        return res.status(401).json({ message: 'Usuario no autenticado' });
+        return res.status(401).json({ message: 'Usuario no autenticado' })
       }
-      
-      const usuarioId = usuario.id;
+
+      const usuarioId = usuario.id
       const inmuebleId = parseInt(String(req.params.inmuebleId))
 
       if (isNaN(inmuebleId)) {

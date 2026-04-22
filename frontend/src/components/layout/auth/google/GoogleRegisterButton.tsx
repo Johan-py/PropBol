@@ -1,37 +1,35 @@
-"use client";
+'use client'
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react'
 
 type GoogleRegisterSuccessPayload = {
-  type: "propbol:google-login-success";
-  message: string;
-  token: string;
+  type: 'propbol:google-login-success'
+  message: string
+  token: string
   user: {
-    id: number;
-    correo: string;
-    nombre?: string;
-    apellido?: string;
-  };
-};
+    id: number
+    correo: string
+    nombre?: string
+    apellido?: string
+  }
+}
 
 type GoogleRegisterErrorPayload = {
-  type: "propbol:google-login-error";
-  code: string;
-  message: string;
-};
+  type: 'propbol:google-login-error'
+  code: string
+  message: string
+}
 
-type GooglePopupMessage =
-  | GoogleRegisterSuccessPayload
-  | GoogleRegisterErrorPayload;
+type GooglePopupMessage = GoogleRegisterSuccessPayload | GoogleRegisterErrorPayload
 
 type GoogleRegisterButtonProps = {
-  onSuccess: (payload: GoogleRegisterSuccessPayload) => void | Promise<void>;
-  onError?: (message: string) => void;
-  disabled?: boolean;
-};
+  onSuccess: (payload: GoogleRegisterSuccessPayload) => void | Promise<void>
+  onError?: (message: string) => void
+  disabled?: boolean
+}
 
-const GOOGLE_LOGIN_TIMEOUT_MS = 2 * 60 * 1000;
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+const GOOGLE_LOGIN_TIMEOUT_MS = 2 * 60 * 1000
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 
 function GoogleLogo() {
   return (
@@ -58,115 +56,113 @@ function GoogleLogo() {
         d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.084 5.566l.003-.002 6.19 5.238C36.973 39.2 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"
       />
     </svg>
-  );
+  )
 }
 
 export default function GoogleRegisterButton({
   onSuccess,
   onError,
-  disabled = false,
+  disabled = false
 }: GoogleRegisterButtonProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const popupRef = useRef<Window | null>(null);
-  const intervalRef = useRef<number | null>(null);
-  const timeoutRef = useRef<number | null>(null);
+  const [isLoading, setIsLoading] = useState(false)
+  const popupRef = useRef<Window | null>(null)
+  const intervalRef = useRef<number | null>(null)
+  const timeoutRef = useRef<number | null>(null)
 
   const cleanup = () => {
     if (intervalRef.current !== null) {
-      window.clearInterval(intervalRef.current);
-      intervalRef.current = null;
+      window.clearInterval(intervalRef.current)
+      intervalRef.current = null
     }
 
     if (timeoutRef.current !== null) {
-      window.clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
+      window.clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
     }
 
-    window.removeEventListener("message", handleMessage);
-    setIsLoading(false);
-  };
+    window.removeEventListener('message', handleMessage)
+    setIsLoading(false)
+  }
 
   const handleMessage = async (event: MessageEvent<GooglePopupMessage>) => {
-    const expectedOrigin = new URL(API_URL).origin;
+    const expectedOrigin = new URL(API_URL).origin
 
     if (event.origin !== expectedOrigin) {
-      return;
+      return
     }
 
-    const data = event.data;
+    const data = event.data
 
-    if (!data || typeof data !== "object" || !("type" in data)) {
-      return;
+    if (!data || typeof data !== 'object' || !('type' in data)) {
+      return
     }
 
-    cleanup();
+    cleanup()
 
-    if (data.type === "propbol:google-login-error") {
-      onError?.(data.message || "No se pudo completar el registro con Google.");
-      return;
+    if (data.type === 'propbol:google-login-error') {
+      onError?.(data.message || 'No se pudo completar el registro con Google.')
+      return
     }
 
-    await onSuccess(data);
-  };
+    await onSuccess(data)
+  }
 
   useEffect(() => {
     return () => {
-      cleanup();
-    };
-  }, []);
+      cleanup()
+    }
+  }, [])
 
   const handleGoogleRegister = () => {
     if (disabled || isLoading) {
-      return;
+      return
     }
 
-    onError?.("");
-    setIsLoading(true);
+    onError?.('')
+    setIsLoading(true)
 
-    const popupWidth = 500;
-    const popupHeight = 650;
-    const left = window.screenX + (window.outerWidth - popupWidth) / 2;
-    const top = window.screenY + (window.outerHeight - popupHeight) / 2;
+    const popupWidth = 500
+    const popupHeight = 650
+    const left = window.screenX + (window.outerWidth - popupWidth) / 2
+    const top = window.screenY + (window.outerHeight - popupHeight) / 2
 
     const popup = window.open(
       `${API_URL}/api/auth/google/register`,
-      "google-register",
-      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`,
-    );
+      'google-register',
+      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`
+    )
 
-    if (!popup || popup.closed || typeof popup.closed === "undefined") {
-      setIsLoading(false);
+    if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+      setIsLoading(false)
       onError?.(
-        "El navegador bloqueó la ventana emergente. Habilita los pop-ups e intenta nuevamente.",
-      );
-      return;
+        'El navegador bloqueó la ventana emergente. Habilita los pop-ups e intenta nuevamente.'
+      )
+      return
     }
 
-    popupRef.current = popup;
-    popup.focus();
+    popupRef.current = popup
+    popup.focus()
 
-    window.addEventListener("message", handleMessage);
+    window.addEventListener('message', handleMessage)
 
     intervalRef.current = window.setInterval(() => {
       if (!popupRef.current || !popupRef.current.closed) {
-        return;
+        return
       }
 
-      cleanup();
-      onError?.("Cancelaste el registro con Google. Intenta nuevamente.");
-    }, 500);
+      cleanup()
+      onError?.('Cancelaste el registro con Google. Intenta nuevamente.')
+    }, 500)
 
     timeoutRef.current = window.setTimeout(() => {
       if (popupRef.current && !popupRef.current.closed) {
-        popupRef.current.close();
+        popupRef.current.close()
       }
 
-      cleanup();
-      onError?.(
-        "La autenticación con Google tardó demasiado. Intenta nuevamente.",
-      );
-    }, GOOGLE_LOGIN_TIMEOUT_MS);
-  };
+      cleanup()
+      onError?.('La autenticación con Google tardó demasiado. Intenta nuevamente.')
+    }, GOOGLE_LOGIN_TIMEOUT_MS)
+  }
 
   return (
     <button
@@ -176,7 +172,7 @@ export default function GoogleRegisterButton({
       className="flex w-full items-center justify-center gap-3 rounded-md border border-[#d6d3d1] bg-white px-4 py-2.5 text-[13px] font-medium text-[#292524] transition hover:bg-[#fafaf9] disabled:cursor-not-allowed disabled:opacity-60"
     >
       <GoogleLogo />
-      {isLoading ? "Conectando con Google..." : "Registrar con Google"}
+      {isLoading ? 'Conectando con Google...' : 'Registrar con Google'}
     </button>
-  );
+  )
 }

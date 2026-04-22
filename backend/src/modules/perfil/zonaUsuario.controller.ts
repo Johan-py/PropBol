@@ -4,8 +4,8 @@ import { prisma } from '../../lib/prisma.client.js'
 // 📌 Obtener todas las zonas del usuario
 export const getZonasUsuario = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const usuario = (req as any).usuario;
-    if (!usuario) return res.status(401).json({ message: 'No autenticado' });
+    const usuario = (req as any).usuario
+    if (!usuario) return res.status(401).json({ message: 'No autenticado' })
 
     // ✅ CORREGIDO: usar camelCase según Prisma
     const zonas = await prisma.zona_usuario.findMany({
@@ -24,8 +24,8 @@ export const getZonasUsuario = async (req: Request, res: Response): Promise<Resp
 export const getZonaById = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { id } = req.params
-    const usuario = (req as any).usuario;
-    if (!usuario) return res.status(401).json({ message: 'No autenticado' });
+    const usuario = (req as any).usuario
+    if (!usuario) return res.status(401).json({ message: 'No autenticado' })
 
     // ✅ CORREGIDO: usar camelCase según Prisma
     const zona = await prisma.zona_usuario.findFirst({
@@ -49,8 +49,8 @@ export const getZonaById = async (req: Request, res: Response): Promise<Response
 // 📌 Crear zona
 export const createZona = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const usuario = (req as any).usuario;
-    if (!usuario) return res.status(401).json({ message: 'No autenticado' });
+    const usuario = (req as any).usuario
+    if (!usuario) return res.status(401).json({ message: 'No autenticado' })
 
     const { nombre, descripcion, geometria, area } = req.body
 
@@ -83,11 +83,11 @@ export const createZona = async (req: Request, res: Response): Promise<Response>
 // 📌 Actualizar zona
 export const updateZona = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { id } = req.params;
-    const usuario = (req as any).usuario;
-    if (!usuario) return res.status(401).json({ message: 'No autenticado' });
+    const { id } = req.params
+    const usuario = (req as any).usuario
+    if (!usuario) return res.status(401).json({ message: 'No autenticado' })
 
-    const { nombre, descripcion, geometria, area } = req.body;
+    const { nombre, descripcion, geometria, area } = req.body
 
     // ✅ CORREGIDO: usar camelCase según Prisma
     const zona = await prisma.zona_usuario.findFirst({
@@ -95,10 +95,10 @@ export const updateZona = async (req: Request, res: Response): Promise<Response>
         id: Number(id),
         usuarioId: usuario.id
       }
-    });
+    })
 
     if (!zona) {
-      return res.status(404).json({ message: 'Zona no encontrada' });
+      return res.status(404).json({ message: 'Zona no encontrada' })
     }
 
     // ✅ CORREGIDO: usar camelCase según Prisma
@@ -111,21 +111,21 @@ export const updateZona = async (req: Request, res: Response): Promise<Response>
         area,
         actualizadoEn: new Date()
       }
-    });
+    })
 
-    return res.json(zonaActualizada);
+    return res.json(zonaActualizada)
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Error al actualizar zona' });
+    console.error(error)
+    return res.status(500).json({ message: 'Error al actualizar zona' })
   }
-};
+}
 
 // 📌 Eliminar zona
 export const deleteZona = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { id } = req.params
-    const usuario = (req as any).usuario;
-    if (!usuario) return res.status(401).json({ message: 'No autenticado' });
+    const usuario = (req as any).usuario
+    if (!usuario) return res.status(401).json({ message: 'No autenticado' })
 
     // ✅ CORREGIDO: usar camelCase según Prisma
     const zona = await prisma.zona_usuario.findFirst({
@@ -154,8 +154,8 @@ export const deleteZona = async (req: Request, res: Response): Promise<Response>
 export const getPropiedadesEnZona = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { id } = req.params
-    const usuario = (req as any).usuario;
-    if (!usuario) return res.status(401).json({ message: 'No autenticado' });
+    const usuario = (req as any).usuario
+    if (!usuario) return res.status(401).json({ message: 'No autenticado' })
 
     const zonaId = Number(id)
 
@@ -188,7 +188,7 @@ export const getPropiedadesEnZona = async (req: Request, res: Response): Promise
         AND i.estado = 'ACTIVO'
     `
 
-    const ids = inmueblesIds.map(item => item.id)
+    const ids = inmueblesIds.map((item) => item.id)
 
     if (ids.length === 0) {
       return res.json({ success: true, data: [], total: 0 })
@@ -201,15 +201,17 @@ export const getPropiedadesEnZona = async (req: Request, res: Response): Promise
         estado: 'ACTIVO'
       },
       include: {
-        ubicacion: true,              // ✅ relación correcta
-        propietario: {                // ✅ relación correcta (no "usuario")
+        ubicacion: true, // ✅ relación correcta
+        propietario: {
+          // ✅ relación correcta (no "usuario")
           select: {
             nombre: true,
             apellido: true,
             correo: true
           }
         },
-        publicaciones: {              // ✅ relación correcta (plural)
+        publicaciones: {
+          // ✅ relación correcta (plural)
           where: { estado: 'ACTIVA' },
           take: 1,
           include: {
@@ -224,14 +226,14 @@ export const getPropiedadesEnZona = async (req: Request, res: Response): Promise
     })
 
     // ✅ CORREGIDO: mapeo correcto de campos
-    const propiedadesFormateadas = propiedades.map(prop => ({
+    const propiedadesFormateadas = propiedades.map((prop) => ({
       id: prop.id,
       titulo: prop.titulo,
-      tipo_accion: prop.tipoAccion,        // campo: tipoAccion
+      tipo_accion: prop.tipoAccion, // campo: tipoAccion
       precio: prop.precio,
-      superficie_m2: prop.superficieM2,    // campo: superficieM2
-      nro_cuartos: prop.nroCuartos,        // campo: nroCuartos
-      nro_banos: prop.nroBanos,            // campo: nroBanos
+      superficie_m2: prop.superficieM2, // campo: superficieM2
+      nro_cuartos: prop.nroCuartos, // campo: nroCuartos
+      nro_banos: prop.nroBanos, // campo: nroBanos
       direccion: prop.ubicacion?.direccion,
       ciudad: prop.ubicacion?.ciudad,
       zona: prop.ubicacion?.zona,

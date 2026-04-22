@@ -1,33 +1,32 @@
-"use client";
+'use client'
 
-import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import SecuritySidebar from "@/components/security/SecuritySidebar";
+import type { ReactNode } from 'react'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import SecuritySidebar from '@/components/security/SecuritySidebar'
 
 type SecurityLayoutProps = {
-  children: ReactNode;
-};
+  children: ReactNode
+}
 
 export default function SecurityLayout({ children }: SecurityLayoutProps) {
-  const router = useRouter();
-  const [isVerified, setIsVerified] = useState(false);
+  const router = useRouter()
+  const [isVerified, setIsVerified] = useState(false)
 
   useEffect(() => {
-    const token =
-      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
 
     if (!token) {
-      router.replace("/sign-in");
-      return;
+      router.replace('/sign-in')
+      return
     }
 
-    setIsVerified(true);
-  }, [router]);
+    setIsVerified(true)
+  }, [router])
 
   // No renderiza nada hasta verificar — evita flash del contenido protegido
   if (!isVerified) {
-    return null;
+    return null
   }
 
   return (
@@ -40,5 +39,5 @@ export default function SecurityLayout({ children }: SecurityLayoutProps) {
         </section>
       </div>
     </div>
-  );
+  )
 }

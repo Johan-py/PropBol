@@ -1,5 +1,5 @@
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation'
 
 export default function SecurityIndexPage() {
-  redirect("/profile/security/redes-vinculadas");
+  redirect('/profile/security/redes-vinculadas')
 }

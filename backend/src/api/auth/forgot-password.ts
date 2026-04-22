@@ -14,7 +14,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json(result)
   } catch (error) {
     return res.status(400).json({
-      message: error instanceof Error ? error.message : 'Error al solicitar recuperación de contraseña'
+      message:
+        error instanceof Error ? error.message : 'Error al solicitar recuperación de contraseña'
     })
   }
 }

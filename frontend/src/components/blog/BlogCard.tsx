@@ -1,16 +1,16 @@
-"use client";
+'use client'
 
 type BlogCardProps = {
-  id: string;
-  title: string;
-  excerpt: string;
-  imageUrl: string;
-  category: string;
-  categoryLabel?: string;
-  authorName: string;
-  publishedAt: string;
-  onClick?: (id: string) => void;
-};
+  id: string
+  title: string
+  excerpt: string
+  imageUrl: string
+  category: string
+  categoryLabel?: string
+  authorName: string
+  publishedAt: string
+  onClick?: (id: string) => void
+}
 
 export default function BlogCard({
   id,
@@ -21,23 +21,23 @@ export default function BlogCard({
   categoryLabel,
   authorName,
   publishedAt,
-  onClick,
+  onClick
 }: BlogCardProps) {
   const handleClick = () => {
-    onClick?.(id);
-  };
+    onClick?.(id)
+  }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
-    if (event.key === "Enter") {
-      handleClick();
+    if (event.key === 'Enter') {
+      handleClick()
     }
-  };
+  }
 
   return (
     <article
       onClick={onClick ? handleClick : undefined}
       onKeyDown={onClick ? handleKeyDown : undefined}
-      role={onClick ? "button" : undefined}
+      role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
       aria-label={onClick ? `Abrir blog: ${title}` : undefined}
       className={`
@@ -52,8 +52,8 @@ export default function BlogCard({
         duration-300
         ${
           onClick
-            ? "cursor-pointer hover:-translate-y-1 hover:border-stone-300 hover:shadow-[0_20px_70px_-38px_rgba(41,37,36,0.5)] focus:outline-none focus:ring-2 focus:ring-amber-500"
-            : ""
+            ? 'cursor-pointer hover:-translate-y-1 hover:border-stone-300 hover:shadow-[0_20px_70px_-38px_rgba(41,37,36,0.5)] focus:outline-none focus:ring-2 focus:ring-amber-500'
+            : ''
         }
       `}
     >
@@ -68,9 +68,7 @@ export default function BlogCard({
       <div className="space-y-4 p-5">
         {/* Categoría */}
         <div className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
-          <span className="text-amber-700">
-            {categoryLabel ?? category}
-          </span>
+          <span className="text-amber-700">{categoryLabel ?? category}</span>
         </div>
 
         {/* Título */}
@@ -79,20 +77,16 @@ export default function BlogCard({
         </h2>
 
         {/* Resumen */}
-        <p className="line-clamp-3 text-sm leading-6 text-stone-600">
-          {excerpt}
-        </p>
+        <p className="line-clamp-3 text-sm leading-6 text-stone-600">{excerpt}</p>
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-2 text-xs text-stone-500">
           <span className="font-semibold uppercase tracking-[0.16em] text-stone-700">
             {authorName}
           </span>
-          <span>
-            {new Date(publishedAt).toLocaleDateString()}
-          </span>
+          <span>{new Date(publishedAt).toLocaleDateString()}</span>
         </div>
       </div>
     </article>
-  );
+  )
 }

@@ -17,7 +17,7 @@ const steps: Step[] = [
 
 export default function Stepper() {
   const pathname = usePathname()
-  
+
   // Encontramos el paso actual. Si por alguna razón falla, por defecto es 1.
   const foundIndex = steps.findIndex((step) => pathname.startsWith(step.path))
   const currentStep = foundIndex !== -1 ? foundIndex + 1 : 1
@@ -41,18 +41,17 @@ export default function Stepper() {
 
         return (
           <div key={step.id} className="flex items-center">
-            
             {/* RENDERIZADO CONDICIONAL: Solo los pasos pasados tienen Link */}
             {isPast ? (
               <Link href={step.path} className={circleClasses} title="Volver a este paso">
                 {step.id}
               </Link>
             ) : (
-              <div className={circleClasses} title={isFuture ? "Paso bloqueado" : ""}>
+              <div className={circleClasses} title={isFuture ? 'Paso bloqueado' : ''}>
                 {step.id}
               </div>
             )}
-            
+
             {/* Etiqueta de texto (Nombre del paso) */}
             <span
               className={`ml-2 ${
@@ -61,7 +60,7 @@ export default function Stepper() {
             >
               {step.name}
             </span>
-            
+
             {/* Flecha separadora */}
             {idx < steps.length - 1 && <span className="mx-2 text-gray-300">→</span>}
           </div>

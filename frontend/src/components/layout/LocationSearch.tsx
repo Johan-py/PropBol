@@ -34,11 +34,11 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     if (!containerRef.current) return
     const rect = containerRef.current.getBoundingClientRect()
     setDropdownStyle({
-      position: 'fixed',
-      top: rect.bottom + 8,
-      left: rect.left,
-      width: rect.width,
-      zIndex: 9999
+      position: 'absolute',
+      top: 'calc(100% + 8px)',
+      left: 0,
+      width: '100%',
+      zIndex: 50
     })
   }
 
@@ -88,12 +88,12 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
   }, [])
 
   const saveToHistory = (item: string) => {
-    if (!item.trim()) return 
+    if (!item.trim()) return
     const updatedHistory = [item, ...history.filter((i) => i !== item)].slice(0, 20)
     setHistory(updatedHistory)
     localStorage.setItem('searchHistory', JSON.stringify(updatedHistory))
   }
-  
+
   const handleDeleteItem = (e: React.MouseEvent, term: string) => {
     e.stopPropagation()
     const updated = history.filter((h) => h !== term)
@@ -146,8 +146,12 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
 
   return (
     <div className="w-full relative" ref={containerRef}>
-      <div className={`h-[46px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${isOpen ? 'border-amber-600 ring-2 ring-amber-100' : 'border-stone-300'}`}>
-        <MapPin className={`w-5 h-5 flex-shrink-0 ${value ? 'text-amber-600' : 'text-stone-400'}`} />
+      <div
+        className={`h-[46px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${isOpen ? 'border-amber-600 ring-2 ring-amber-100' : 'border-stone-300'}`}
+      >
+        <MapPin
+          className={`w-5 h-5 flex-shrink-0 ${value ? 'text-amber-600' : 'text-stone-400'}`}
+        />
         <div className="relative flex-1 flex items-center w-full h-full min-w-0">
           <input
             type="text"
@@ -162,25 +166,49 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             className="w-full bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 font-inter pr-[70px]"
           />
           <div className="absolute right-0 flex items-center gap-2 bg-white pl-2 h-full">
-            {isSelected && <Image src="https://flagcdn.com/w20/bo.png" alt="BO" width={20} height={14} className="rounded-sm flex-shrink-0" />}
-            {isLoading ? <Loader2 className="w-4 h-4 animate-spin text-amber-600" /> : value && (
-              <button onClick={() => onChange('')} type="button" className="p-1 hover:bg-stone-100 rounded-full transition-colors flex-shrink-0">
-                <X className="w-4 h-4 text-stone-400 hover:text-red-500" />
-              </button>
+            {isSelected && (
+              <Image
+                src="https://flagcdn.com/w20/bo.png"
+                alt="BO"
+                width={20}
+                height={14}
+                className="rounded-sm flex-shrink-0"
+              />
+            )}
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin text-amber-600" />
+            ) : (
+              value && (
+                <button
+                  onClick={() => onChange('')}
+                  type="button"
+                  className="p-1 hover:bg-stone-100 rounded-full transition-colors flex-shrink-0"
+                >
+                  <X className="w-4 h-4 text-stone-400 hover:text-red-500" />
+                </button>
+              )
             )}
           </div>
         </div>
       </div>
 
       {isOpen && (
-        <div style={dropdownStyle} className="bg-white border border-stone-200 rounded-xl shadow-xl overflow-hidden">
+        <div
+          style={dropdownStyle}
+          className="bg-white border border-stone-200 rounded-xl shadow-xl overflow-hidden"
+        >
           {value === '' && history.length > 0 && (
-            <div className="max-h-60 overflow-y-auto overscroll-contain"> 
+            <div className="max-h-60 overflow-y-auto overscroll-contain">
               <div className="px-4 py-2 bg-stone-50 border-b border-stone-100">
-                <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">Búsquedas recientes</span>
+                <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">
+                  Búsquedas recientes
+                </span>
               </div>
               {(showAll ? history : history.slice(0, 5)).map((item, idx) => (
-                <div key={`hist-${idx}`} className="group flex items-center justify-between hover:bg-amber-50 border-b border-stone-50 last:border-0">
+                <div
+                  key={`hist-${idx}`}
+                  className="group flex items-center justify-between hover:bg-amber-50 border-b border-stone-50 last:border-0"
+                >
                   <button
                     type="button"
                     onClick={() => {
@@ -234,12 +262,8 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                       <div className="flex items-center gap-3">
                         <Search className="w-3.5 h-3.5 text-stone-500" />
                         <div className="flex flex-col">
-                          <span className="text-sm font-bold text-stone-600">
-                            {loc.nombre}
-                          </span>
-                          <span className="text-xs text-stone-400">
-                            {loc.contexto}
-                          </span>
+                          <span className="text-sm font-bold text-stone-600">{loc.nombre}</span>
+                          <span className="text-xs text-stone-400">{loc.contexto}</span>
                         </div>
                       </div>
                       <div className="text-[10px] font-bold px-2 py-1 bg-stone-100 text-stone-500 rounded-md uppercase">

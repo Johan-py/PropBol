@@ -1,12 +1,12 @@
-"use client"
+'use client'
 
-import { useEffect, useMemo, useRef, useState, type TouchEvent } from "react"
-import { useRouter } from "next/navigation"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useEffect, useMemo, useRef, useState, type TouchEvent } from 'react'
+import { useRouter } from 'next/navigation'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-import CityCard from "@/components/home/CityCard"
-import { useCitiesCarousel } from "@/hooks/useCitiesCarousel"
-import { City } from "@/types/city"
+import CityCard from '@/components/home/CityCard'
+import { useCitiesCarousel } from '@/hooks/useCitiesCarousel'
+import { City } from '@/types/city'
 
 type Props = {
   cities: City[]
@@ -37,7 +37,10 @@ export function FeaturedCitiesSectionSkeleton() {
       <div className="mx-auto mt-10 max-w-6xl rounded-[2rem] border border-stone-200/80 bg-white/60 px-6 py-10 shadow-sm backdrop-blur sm:px-8">
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 3 }, (_, index) => (
-            <div key={`featured-city-skeleton-${index}`} className="overflow-hidden rounded-2xl bg-white shadow">
+            <div
+              key={`featured-city-skeleton-${index}`}
+              className="overflow-hidden rounded-2xl bg-white shadow"
+            >
               <div className="h-48 animate-pulse bg-stone-100" />
               <div className="space-y-4 p-6">
                 <div className="mx-auto h-7 w-40 animate-pulse rounded-lg bg-stone-100" />
@@ -60,7 +63,7 @@ export default function FeaturedCitiesSection({ cities }: Props) {
   const router = useRouter()
   const touchStartXRef = useRef<number | null>(null)
   const [columns, setColumns] = useState(() => {
-    if (typeof window === "undefined") {
+    if (typeof window === 'undefined') {
       return 3
     }
 
@@ -73,10 +76,10 @@ export default function FeaturedCitiesSection({ cities }: Props) {
     }
 
     syncColumns()
-    window.addEventListener("resize", syncColumns)
+    window.addEventListener('resize', syncColumns)
 
     return () => {
-      window.removeEventListener("resize", syncColumns)
+      window.removeEventListener('resize', syncColumns)
     }
   }, [])
 
@@ -94,8 +97,12 @@ export default function FeaturedCitiesSection({ cities }: Props) {
 
   const { index, next, prev, goTo } = useCitiesCarousel(totalPages)
 
-  const handleClick = (slug: string) => {
-    router.push(`/busqueda?ciudad=${slug}`)
+  const handleClick = (city: City) => {
+    const params = new URLSearchParams({
+      query: city.name
+    })
+
+    router.push(`/busqueda?${params.toString()}`)
   }
 
   if (cities.length === 0) {
@@ -239,7 +246,7 @@ export default function FeaturedCitiesSection({ cities }: Props) {
                     type="button"
                     onClick={() => goTo(dotIndex)}
                     className={`h-2.5 rounded-full transition-all ${
-                      dotIndex === index ? "w-8 bg-amber-500" : "w-2.5 bg-stone-300"
+                      dotIndex === index ? 'w-8 bg-amber-500' : 'w-2.5 bg-stone-300'
                     }`}
                     aria-label={`Mostrar grupo de ciudades ${dotIndex + 1}`}
                   />

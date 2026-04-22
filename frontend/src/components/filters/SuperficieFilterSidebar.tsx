@@ -29,54 +29,42 @@ export default function SuperficieFilterSidebar({ onClose }: SuperficieFilterSid
     }
   }, [])
 
-  const handleKeyDown = (
-  e: React.KeyboardEvent<HTMLInputElement>,
-  campo: 'desde' | 'hasta'
-) => {
-  // Bloquear caracteres inválidos
-  const bloqueadas = ['-', '+', 'e', 'E', ',']
-  if (bloqueadas.includes(e.key)) {
-    e.preventDefault()
-    return
-  }
-  if (e.key === 'Enter') {
-    e.preventDefault()
-    if (!hayErrores && (desde || hasta)) handleApply()
-    return
-  }
-  const valor = campo === 'desde' ? desde : hasta
-  const setCampo = campo === 'desde' ? setDesde : setHasta
-  const setError = campo === 'desde' ? setErrorDesde : setErrorHasta
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, campo: 'desde' | 'hasta') => {
+    // Bloquear caracteres inválidos
+    const bloqueadas = ['-', '+', 'e', 'E', ',']
+    if (bloqueadas.includes(e.key)) {
+      e.preventDefault()
+      return
+    }
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      if (!hayErrores && (desde || hasta)) handleApply()
+      return
+    }
+    const valor = campo === 'desde' ? desde : hasta
+    const setCampo = campo === 'desde' ? setDesde : setHasta
+    const setError = campo === 'desde' ? setErrorDesde : setErrorHasta
 
-  if (e.key === 'ArrowUp') {
-    e.preventDefault()
-    const num = parseFloat(valor || '0') + 1
-    const nuevo = (Math.round(num * 100) / 100).toString()
-    setCampo(nuevo)
-    setError('')
-    validarRango(
-      campo === 'desde' ? nuevo : desde,
-      campo === 'hasta' ? nuevo : hasta
-    )
-  }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      const num = parseFloat(valor || '0') + 1
+      const nuevo = (Math.round(num * 100) / 100).toString()
+      setCampo(nuevo)
+      setError('')
+      validarRango(campo === 'desde' ? nuevo : desde, campo === 'hasta' ? nuevo : hasta)
+    }
 
-  if (e.key === 'ArrowDown') {
-    e.preventDefault()
-    const num = parseFloat(valor || '0') - 1
-    if (num < 0) return // no negativos
-    const nuevo = (Math.round(num * 100) / 100).toString()
-    setCampo(nuevo)
-    setError('')
-    validarRango(
-      campo === 'desde' ? nuevo : desde,
-      campo === 'hasta' ? nuevo : hasta
-    )
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      const num = parseFloat(valor || '0') - 1
+      if (num < 0) return // no negativos
+      const nuevo = (Math.round(num * 100) / 100).toString()
+      setCampo(nuevo)
+      setError('')
+      validarRango(campo === 'desde' ? nuevo : desde, campo === 'hasta' ? nuevo : hasta)
+    }
   }
-}
-  const handlePaste = (
-    e: React.ClipboardEvent<HTMLInputElement>,
-    campo: 'desde' | 'hasta'
-  ) => {
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>, campo: 'desde' | 'hasta') => {
     const texto = e.clipboardData.getData('text')
     // Permitir números con hasta un punto decimal
     if (!/^\d+(\.\d*)?$/.test(texto)) {
@@ -139,7 +127,7 @@ export default function SuperficieFilterSidebar({ onClose }: SuperficieFilterSid
     const nuevosFiltros = {
       minSuperficie: desde || null,
       maxSuperficie: hasta || null,
-      updatedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     }
     updateFilters(nuevosFiltros)
     const params = new URLSearchParams(searchParams.toString())
@@ -151,7 +139,7 @@ export default function SuperficieFilterSidebar({ onClose }: SuperficieFilterSid
     onClose()
   }
   const handleLimpiar = () => {
-    setDesde('') 
+    setDesde('')
     setHasta('')
     setErrorDesde('')
     setErrorHasta('')
@@ -180,15 +168,14 @@ export default function SuperficieFilterSidebar({ onClose }: SuperficieFilterSid
               onChange={handleDesde}
               onBlur={() => handleBlur(desde, setDesde, setErrorDesde)}
               className={`border rounded-lg px-3 py-2 text-sm w-full outline-none transition-all
-                ${errorDesde
-                  ? 'border-red-400 focus:border-red-400 focus:ring-1 focus:ring-red-300'
-                  : 'border-stone-300 focus:border-[#d97706] focus:ring-1 focus:ring-[#d97706]'
+                ${
+                  errorDesde
+                    ? 'border-red-400 focus:border-red-400 focus:ring-1 focus:ring-red-300'
+                    : 'border-stone-300 focus:border-[#d97706] focus:ring-1 focus:ring-[#d97706]'
                 }`}
             />
           </div>
-          {errorDesde && (
-            <p className="text-xs text-red-500 ml-16">{errorDesde}</p>
-          )}
+          {errorDesde && <p className="text-xs text-red-500 ml-16">{errorDesde}</p>}
         </div>
 
         {/* Campo Hasta */}
@@ -205,19 +192,19 @@ export default function SuperficieFilterSidebar({ onClose }: SuperficieFilterSid
               onChange={handleHasta}
               onBlur={() => handleBlur(hasta, setHasta, setErrorHasta)}
               className={`border rounded-lg px-3 py-2 text-sm w-full outline-none transition-all
-                ${errorHasta
-                  ? 'border-red-400 focus:border-red-400 focus:ring-1 focus:ring-red-300'
-                  : 'border-stone-300 focus:border-[#d97706] focus:ring-1 focus:ring-[#d97706]'
+                ${
+                  errorHasta
+                    ? 'border-red-400 focus:border-red-400 focus:ring-1 focus:ring-red-300'
+                    : 'border-stone-300 focus:border-[#d97706] focus:ring-1 focus:ring-[#d97706]'
                 }`}
             />
           </div>
-          {errorHasta && (
-            <p className="text-xs text-red-500 ml-16">{errorHasta}</p>
-          )}
+          {errorHasta && <p className="text-xs text-red-500 ml-16">{errorHasta}</p>}
         </div>
         {errorRango && (
-          <p className="text-xs text-red-500 mt-3 text-center bg-red-50 py-2 px-3 rounded-lg">⚠️ {errorRango}
-</p>
+          <p className="text-xs text-red-500 mt-3 text-center bg-red-50 py-2 px-3 rounded-lg">
+            ⚠️ {errorRango}
+          </p>
         )}
       </div>
       {/* Botones */}
@@ -236,9 +223,10 @@ export default function SuperficieFilterSidebar({ onClose }: SuperficieFilterSid
           disabled={hayErrores}
           onClick={handleApply}
           className={`rounded-xl font-bold py-3 px-4 w-full transition-all active:scale-95 shadow-md
-            ${hayErrores
-              ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
-              : 'bg-[#d97706] hover:bg-[#b95e00] text-white'
+            ${
+              hayErrores
+                ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
+                : 'bg-[#d97706] hover:bg-[#b95e00] text-white'
             }`}
         >
           Aplicar

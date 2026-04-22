@@ -221,11 +221,30 @@ interface MapViewProps {
   isDrawingMode?: boolean
   polygonPoints?: [number, number][]
   isPolygonClosed?: boolean
+  isZoneEditingMode?: boolean
+  editablePolygonPoints?: [number, number][]
+  onEditablePointDrag?: (index: number, lat: number, lng: number) => void
   onMapClick?: (latlng: L.LatLng) => void
   onPointClick?: (index: number) => void
   isLoading?: boolean
   error?: string | null
 }
+
+const vertexHandleIcon = L.divIcon({
+  className: '',
+  html: `
+    <div style="
+      width: 12px;
+      height: 12px;
+      border-radius: 9999px;
+      background: #ffffff;
+      border: 2px solid #ea580c;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    "></div>
+  `,
+  iconSize: [12, 12],
+  iconAnchor: [6, 6]
+})
 
 export default function MapView({
   properties = [],
@@ -240,6 +259,9 @@ export default function MapView({
   isDrawingMode = false,
   polygonPoints = [],
   isPolygonClosed = false,
+  isZoneEditingMode = false,
+  editablePolygonPoints = [],
+  onEditablePointDrag,
   onMapClick,
   onPointClick,
   zonas = [],
@@ -308,7 +330,7 @@ export default function MapView({
           onMapClick={(latlng) => {
             if (isDrawingMode && onMapClick) {
               onMapClick(latlng)
-            } else if (!isDrawingMode) {
+            } else if (!isDrawingMode && !isZoneEditingMode) {
               onSelect?.(null)
               onZoneSelect?.(null) // criterio 10: clic neutral desactiva zona
             }
@@ -359,6 +381,35 @@ export default function MapView({
               weight: 2
             }}
           />
+        )}
+
+        {isZoneEditingMode && editablePolygonPoints.length >= 3 && (
+          <>
+            <Polygon
+              positions={editablePolygonPoints}
+              pathOptions={{
+                color: '#ea580c',
+                fillColor: '#ea580c',
+                fillOpacity: 0.2,
+                weight: 2,
+                dashArray: '6, 6'
+              }}
+            />
+            {editablePolygonPoints.map((point, index) => (
+              <Marker
+                key={`editable-point-${index}`}
+                position={point}
+                draggable
+                icon={vertexHandleIcon}
+                eventHandlers={{
+                  dragend: (event) => {
+                    const latlng = event.target.getLatLng()
+                    onEditablePointDrag?.(index, latlng.lat, latlng.lng)
+                  }
+                }}
+              />
+            ))}
+          </>
         )}
         {/* --- FIN CÓDIGO HU8 --- */}
         {selectedProperty && (

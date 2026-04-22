@@ -1,35 +1,30 @@
-"use client";
+'use client'
 
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { MOCK_USER_BLOGS } from "@/lib/mock/blogs.mock";
-import { Blog } from "@/types/blog";
+import React from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { MOCK_USER_BLOGS } from '@/lib/mock/blogs.mock'
+import { Blog } from '@/types/blog'
 
-const MAX_VISIBLE = 3;
+const MAX_VISIBLE = 3
 
 const STATUS_STYLES: Record<string, string> = {
-  aprobado: "bg-green-50 text-green-700 border-green-200",
-  pendiente: "bg-amber-50 text-amber-700 border-amber-200",
-  rechazado: "bg-red-50 text-red-600 border-red-200",
-  borrador: "bg-stone-50 text-stone-500 border-stone-200",
-};
+  aprobado: 'bg-green-50 text-green-700 border-green-200',
+  pendiente: 'bg-amber-50 text-amber-700 border-amber-200',
+  rechazado: 'bg-red-50 text-red-600 border-red-200',
+  borrador: 'bg-stone-50 text-stone-500 border-stone-200'
+}
 
 function getStatusClass(estado: string) {
-  return (
-    STATUS_STYLES[estado.toLowerCase()] ??
-    "bg-stone-50 text-stone-500 border-stone-200"
-  );
+  return STATUS_STYLES[estado.toLowerCase()] ?? 'bg-stone-50 text-stone-500 border-stone-200'
 }
 
 interface MyRecentBlogsPanelProps {
-  blogs?: Blog[];
+  blogs?: Blog[]
 }
 
-const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({
-  blogs = MOCK_USER_BLOGS,
-}) => {
-  const visible = blogs.slice(0, MAX_VISIBLE);
+const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({ blogs = MOCK_USER_BLOGS }) => {
+  const visible = blogs.slice(0, MAX_VISIBLE)
 
   return (
     <section
@@ -65,7 +60,7 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({
             {/* Thumbnail */}
             <div className="relative h-16 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-stone-200">
               <Image
-                src={blog.imagenUrl || "/placeholder-house.jpg"}
+                src={blog.imagenUrl || '/placeholder-house.jpg'}
                 alt={blog.titulo}
                 fill
                 className="object-cover"
@@ -88,7 +83,7 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({
         ))}
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default MyRecentBlogsPanel;
+export default MyRecentBlogsPanel

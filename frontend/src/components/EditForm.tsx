@@ -1,31 +1,31 @@
-import React from "react";
+import React from 'react'
 
-const OPERATION_TYPES = ["Venta", "Alquiler", "Anticrético"];
+const OPERATION_TYPES = ['Venta', 'Alquiler', 'Anticrético']
 
 interface FormData {
-  title: string;
-  details: string;
-  operationType: string;
-  price: string | number;
-  location: string;
+  title: string
+  details: string
+  operationType: string
+  price: string | number
+  location: string
 }
 
 interface FieldErrors {
-  title?: string;
-  details?: string;
-  operationType?: string;
-  price?: string;
-  location?: string;
+  title?: string
+  details?: string
+  operationType?: string
+  price?: string
+  location?: string
 }
 
 interface EditFormProps {
-  formData: FormData;
-  fieldErrors: FieldErrors;
-  onChange: (field: keyof FormData, value: string) => void;
-  onSave: () => void;
-  onCancel: () => void;
-  toast?: string | null;
-  globalError?: string | null;
+  formData: FormData
+  fieldErrors: FieldErrors
+  onChange: (field: keyof FormData, value: string) => void
+  onSave: () => void
+  onCancel: () => void
+  toast?: string | null
+  globalError?: string | null
 }
 
 export default function EditForm({
@@ -35,13 +35,11 @@ export default function EditForm({
   onSave,
   onCancel,
   toast,
-  globalError,
+  globalError
 }: EditFormProps) {
   return (
     <div className="w-full">
-      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-        Editar Publicación
-      </h1>
+      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Editar Publicación</h1>
 
       <p className="text-[11px] font-semibold tracking-[0.18em] text-gray-500 uppercase mb-6">
         Información de la publicación
@@ -61,38 +59,44 @@ export default function EditForm({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div>
-          <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label
+            htmlFor="title"
+            className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2"
+          >
             Título Propiedad
           </label>
           <input
+            id="title"
             type="text"
             className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
               fieldErrors.title
-                ? "border-red-400 focus:ring-2 focus:ring-red-200"
-                : "border-gray-200 bg-gray-100 focus:border-gray-300 focus:ring-2 focus:ring-gray-200"
+                ? 'border-red-400 focus:ring-2 focus:ring-red-200'
+                : 'border-gray-200 bg-gray-100 focus:border-gray-300 focus:ring-2 focus:ring-gray-200'
             }`}
             value={formData.title}
-            onChange={(e) => onChange("title", e.target.value)}
+            onChange={(e) => onChange('title', e.target.value)}
             placeholder="Residencia Moderna"
           />
-          {fieldErrors.title && (
-            <p className="mt-1 text-sm text-red-500">{fieldErrors.title}</p>
-          )}
+          {fieldErrors.title && <p className="mt-1 text-sm text-red-500">{fieldErrors.title}</p>}
         </div>
 
         <div>
-          <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label
+            htmlFor="details"
+            className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2"
+          >
             Detalles de la Propiedad
           </label>
           <input
+            id="details"
             type="text"
             className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
               fieldErrors.details
-                ? "border-red-400 focus:ring-2 focus:ring-red-200"
-                : "border-gray-200 bg-gray-100 focus:border-gray-300 focus:ring-2 focus:ring-gray-200"
+                ? 'border-red-400 focus:ring-2 focus:ring-red-200'
+                : 'border-gray-200 bg-gray-100 focus:border-gray-300 focus:ring-2 focus:ring-gray-200'
             }`}
             value={formData.details}
-            onChange={(e) => onChange("details", e.target.value)}
+            onChange={(e) => onChange('details', e.target.value)}
             placeholder="Descripción de la propiedad"
           />
           {fieldErrors.details && (
@@ -101,17 +105,21 @@ export default function EditForm({
         </div>
 
         <div>
-          <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label
+            htmlFor="operationType"
+            className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2"
+          >
             Tipo Operación
           </label>
           <select
+            id="operationType"
             className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
               fieldErrors.operationType
-                ? "border-red-400 focus:ring-2 focus:ring-red-200"
-                : "border-gray-200 bg-gray-100 focus:border-gray-300 focus:ring-2 focus:ring-gray-200"
+                ? 'border-red-400 focus:ring-2 focus:ring-red-200'
+                : 'border-gray-200 bg-gray-100 focus:border-gray-300 focus:ring-2 focus:ring-gray-200'
             }`}
             value={formData.operationType}
-            onChange={(e) => onChange("operationType", e.target.value)}
+            onChange={(e) => onChange('operationType', e.target.value)}
           >
             <option value="">Seleccionar...</option>
             {OPERATION_TYPES.map((op) => (
@@ -126,18 +134,22 @@ export default function EditForm({
         </div>
 
         <div>
-          <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label
+            htmlFor="location"
+            className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2"
+          >
             Ubicación
           </label>
           <input
+            id="location"
             type="text"
             className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
               fieldErrors.location
-                ? "border-red-400 focus:ring-2 focus:ring-red-200"
-                : "border-gray-200 bg-gray-100 focus:border-gray-300 focus:ring-2 focus:ring-gray-200"
+                ? 'border-red-400 focus:ring-2 focus:ring-red-200'
+                : 'border-gray-200 bg-gray-100 focus:border-gray-300 focus:ring-2 focus:ring-gray-200'
             }`}
             value={formData.location}
-            onChange={(e) => onChange("location", e.target.value)}
+            onChange={(e) => onChange('location', e.target.value)}
             placeholder="Cochabamba, Sacaba"
           />
           {fieldErrors.location && (
@@ -146,23 +158,25 @@ export default function EditForm({
         </div>
 
         <div className="md:col-span-1">
-          <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label
+            htmlFor="price"
+            className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2"
+          >
             Precio
           </label>
           <input
+            id="price"
             type="text"
             className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
               fieldErrors.price
-                ? "border-red-400 focus:ring-2 focus:ring-red-200"
-                : "border-gray-300 bg-white focus:border-gray-400 focus:ring-2 focus:ring-gray-200"
+                ? 'border-red-400 focus:ring-2 focus:ring-red-200'
+                : 'border-gray-300 bg-white focus:border-gray-400 focus:ring-2 focus:ring-gray-200'
             }`}
             value={formData.price}
-            onChange={(e) => onChange("price", e.target.value)}
+            onChange={(e) => onChange('price', e.target.value)}
             placeholder="180000"
           />
-          {fieldErrors.price && (
-            <p className="mt-1 text-sm text-red-500">{fieldErrors.price}</p>
-          )}
+          {fieldErrors.price && <p className="mt-1 text-sm text-red-500">{fieldErrors.price}</p>}
         </div>
       </div>
 
@@ -182,5 +196,5 @@ export default function EditForm({
         </button>
       </div>
     </div>
-  );
+  )
 }

@@ -282,30 +282,32 @@ function ContenidoMultimediaPageContent() {
   const uploadYoutubeLinks = async (token: string) => {
     const youtubeVideos = videos.filter(
       (video): video is VideoItem & { sourceUrl: string } =>
-        video.type === 'youtube' && typeof video.sourceUrl === 'string' && video.sourceUrl.length > 0
+        video.type === 'youtube' &&
+        typeof video.sourceUrl === 'string' &&
+        video.sourceUrl.length > 0
     )
 
-  for (const video of youtubeVideos) {
-    const response = await fetch(
-    `${getApiUrl()}/api/publicaciones/${publicacionId}/multimedia/video-link`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        videoUrl: video.sourceUrl
-      })
+    for (const video of youtubeVideos) {
+      const response = await fetch(
+        `${getApiUrl()}/api/publicaciones/${publicacionId}/multimedia/video-link`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            videoUrl: video.sourceUrl
+          })
+        }
+      )
+
+      const data = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        throw new Error(data?.message || 'No se pudo registrar el enlace del video.')
+      }
     }
-  )
-
-  const data = await response.json().catch(() => null)
-
-  if (!response.ok) {
-    throw new Error(data?.message || 'No se pudo registrar el enlace del video.')
-  }
-}
   }
 
   const handlePublish = async () => {
@@ -351,7 +353,9 @@ function ContenidoMultimediaPageContent() {
       setShowSuccessModal(true)
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : 'Ocurrió un error al registrar el contenido multimedia.'
+        error instanceof Error
+          ? error.message
+          : 'Ocurrió un error al registrar el contenido multimedia.'
       setPublishError(message)
     } finally {
       setIsPublishing(false)

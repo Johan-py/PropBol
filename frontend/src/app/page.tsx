@@ -36,7 +36,7 @@ const fetchBanners = async (): Promise<BannerData[]> => {
       id: b.id,
       urlImagen: b.url_imagen,
       titulo: b.titulo,
-      subtitulo: b.subtitulo,
+      subtitulo: b.subtitulo
     }))
   } catch (error) {
     console.error('Error cargando el banner:', error)
@@ -68,7 +68,6 @@ export default async function Home() {
       {/* CONTENEDOR PRINCIPAL */}
       <div className="w-full  max-w-[1600px] mx-auto px-0 md:px-4 py-4">
         <div className="flex flex-col gap-0">
-
           {/* EXPLORE SECTION */}
           <section className="w-full">
             <ExploreSection />

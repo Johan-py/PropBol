@@ -1,21 +1,21 @@
-"use client"
+'use client'
 
-import { useEffect, useState, type MouseEvent as ReactMouseEvent } from "react"
-import Image from "next/image"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useEffect, useState, type MouseEvent as ReactMouseEvent } from 'react'
+import Image from 'next/image'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 
 type Props = {
   images: string[]
   cityName: string
 }
 
-const FALLBACK_IMAGE = "/placeholder-house.jpg"
+const FALLBACK_IMAGE = '/placeholder-house.jpg'
 const EDGE_ACTIVATION_WIDTH = 72
 
 export default function CityCarousel({ images, cityName }: Props) {
   const carouselImages = images.length > 0 ? images : [FALLBACK_IMAGE]
   const [index, setIndex] = useState(0)
-  const [activeEdge, setActiveEdge] = useState<"left" | "right" | null>(null)
+  const [activeEdge, setActiveEdge] = useState<'left' | 'right' | null>(null)
   const [imageError, setImageError] = useState(false)
 
   useEffect(() => {
@@ -54,12 +54,12 @@ export default function CityCarousel({ images, cityName }: Props) {
     const offsetX = event.clientX - bounds.left
 
     if (offsetX <= EDGE_ACTIVATION_WIDTH) {
-      setActiveEdge("left")
+      setActiveEdge('left')
       return
     }
 
     if (bounds.width - offsetX <= EDGE_ACTIVATION_WIDTH) {
-      setActiveEdge("right")
+      setActiveEdge('right')
       return
     }
 
@@ -101,7 +101,7 @@ export default function CityCarousel({ images, cityName }: Props) {
             type="button"
             onClick={showPreviousImage}
             className={`absolute inset-y-0 left-0 z-10 flex w-16 items-center justify-start bg-gradient-to-r from-black/30 via-black/10 to-transparent pl-2 text-white transition-opacity duration-200 opacity-100 md:opacity-0 md:group-focus-within:opacity-100 ${
-              activeEdge === "left" ? "md:opacity-100" : ""
+              activeEdge === 'left' ? 'md:opacity-100' : ''
             }`}
             aria-label="Mostrar imagen anterior"
           >
@@ -114,7 +114,7 @@ export default function CityCarousel({ images, cityName }: Props) {
             type="button"
             onClick={showNextImage}
             className={`absolute inset-y-0 right-0 z-10 flex w-16 items-center justify-end bg-gradient-to-l from-black/30 via-black/10 to-transparent pr-2 text-white transition-opacity duration-200 opacity-100 md:opacity-0 md:group-focus-within:opacity-100 ${
-              activeEdge === "right" ? "md:opacity-100" : ""
+              activeEdge === 'right' ? 'md:opacity-100' : ''
             }`}
             aria-label="Mostrar imagen siguiente"
           >
@@ -135,7 +135,7 @@ export default function CityCarousel({ images, cityName }: Props) {
               setIndex(dotIndex)
             }}
             className={`h-2.5 rounded-full transition-all ${
-              dotIndex === index ? "w-6 bg-white" : "w-2.5 bg-white/65"
+              dotIndex === index ? 'w-6 bg-white' : 'w-2.5 bg-white/65'
             }`}
             aria-label={`Mostrar imagen ${dotIndex + 1}`}
           />
