@@ -475,7 +475,7 @@ model RecuperacionPassword {
   usadoEn   DateTime? @db.Timestamp(6)
   intentos  Int?      @default(0)
   activo    Boolean?  @default(true)
-  usuario   Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  usuario   usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([usuarioId, creadoEn], map: "recuperacion_password_usuario_fecha_idx")
   @@map("recuperacion_password")
