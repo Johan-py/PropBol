@@ -2,10 +2,17 @@ import type { Request, Response } from 'express'
 import { prisma } from '../../lib/prisma.client.js'
 import { crearTransaccion } from './servicios/transaccionServicios.js'
 
-export const generarPagoQr = async (req: Request, res: Response) => {
+interface AuthRequest extends Request {
+  user?: { id: number }
+}
+
+const toMessage = (error: unknown): string =>
+  error instanceof Error ? error.message : 'Error interno'
+
+export const generarPagoQr = async (req: AuthRequest, res: Response) => {
   try {
     const { idSuscripcion, userId } = req.body
-    const usuarioId: number = (req as any).user?.id ?? userId ?? 1
+    const usuarioId: number = req.user?.id ?? userId ?? 1
 
     if (!idSuscripcion) {
       return res.status(400).json({ error: 'Falta idSuscripcion' })
@@ -13,9 +20,10 @@ export const generarPagoQr = async (req: Request, res: Response) => {
 
     const transaccion = await crearTransaccion(usuarioId, parseInt(idSuscripcion))
     return res.status(201).json(transaccion)
-  } catch (error: any) {
-    const status = error.message === 'Plan no encontrado' ? 404 : 500
-    return res.status(status).json({ error: error.message })
+  } catch (error) {
+    const msg = toMessage(error)
+    const status = msg === 'Plan no encontrado' ? 404 : 500
+    return res.status(status).json({ error: msg })
   }
 }
 
@@ -50,8 +58,8 @@ export const obtenerPagoPendiente = async (req: Request, res: Response) => {
       iva_monto: Number(transaccion.iva_monto),
       planNombre: transaccion.plan_suscripcion?.nombre_plan ?? null
     })
-  } catch (error: any) {
-    return res.status(500).json({ error: error.message })
+  } catch (error) {
+    return res.status(500).json({ error: toMessage(error) })
   }
 }
 
@@ -70,8 +78,8 @@ export const consultarEstadoPago = async (req: Request, res: Response) => {
     }
 
     return res.json({ estado: transaccion.estado?.toLowerCase() ?? 'pendiente' })
-  } catch (error: any) {
-    return res.status(500).json({ error: error.message })
+  } catch (error) {
+    return res.status(500).json({ error: toMessage(error) })
   }
 }
 
@@ -109,7 +117,7 @@ export const cancelarTransaccion = async (req: Request, res: Response) => {
     })
 
     return res.json({ message: 'Transacción cancelada correctamente' })
-  } catch (error: any) {
-    return res.status(500).json({ error: error.message })
+  } catch (error) {
+    return res.status(500).json({ error: toMessage(error) })
   }
 }
