@@ -1,9 +1,10 @@
 'use client'
 
+import MisZonasSidebar from '@/components/map/MisZonasSidebar'
 import { point, polygon } from '@turf/helpers'
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon'
 import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from 'react'
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import nextDynamic from 'next/dynamic'
 import {
   ChevronLeft,
@@ -78,8 +79,18 @@ type SheetState = 'hidden' | 'peek' | 'full'
 const LIST_PAGE_SIZES = [10, 20, 50, 100] as const;
 
 function BusquedaMapaContent() {
+  const [isMisZonasOpen, setIsMisZonasOpen] = useState(false)
+  const router = useRouter();
   const searchParams = useSearchParams();
   const filterResetKey = searchParams.toString();
+
+  //estado para controlar la autenticación
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsAuthenticated(!!token);
+  }, []);
 
   // === 1. ESTADOS COMPARTIDOS ===
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
@@ -125,11 +136,6 @@ function BusquedaMapaContent() {
         const turfCoords = [...polygonPoints, polygonPoints[0]].map((p) => [p[1], p[0]])
         const drawPoly = polygon([turfCoords])
         
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
-    null
-  );
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
-
         return properties.filter((p: any) => {
           if (p.lat == null || p.lng == null) return false
           const pt = point([p.lng, p.lat])
@@ -142,32 +148,42 @@ function BusquedaMapaContent() {
         return properties
       }
     }
+    if (selectedZoneId !== null) {
+      const zona = zonas.find((z: any) => z.id === selectedZoneId)
+      if (zona && zona.coordenadas && zona.coordenadas.length >= 3) {
+        const coords = [...zona.coordenadas, zona.coordenadas[0]].map((c: any) => [c[1], c[0]])
+        return properties.filter((p: any) => p.lat != null && booleanPointInPolygon(point([p.lng, p.lat]), polygon([coords])))
+      }
+    }
     return properties
-  }, [properties, isPolygonClosed, polygonPoints])
-
-    const [listPage, setListPage] = useState(1);
-  const [listPageSize, setListPageSize] = useState<(PageSize)>(10);
-  const listTotal = properties.length;
-  const listTotalPages = Math.max(1, Math.ceil(listTotal / listPageSize));
-  const listSafePage = Math.min(Math.max(1, listPage), listTotalPages);
-  const paginatedProperties = useMemo(() => {
-    if (listTotal === 0) return [];
-    const start = (listSafePage - 1) * listPageSize;
-    return properties.slice(start, start + listPageSize);
-  }, [properties, listSafePage, listPageSize, listTotal]);
-
-    useEffect(() => {
-    setListPage(1);
-  }, [filterResetKey]);
-
-  useEffect(() => {
-    if (listPage > listTotalPages) setListPage(listTotalPages);
-  }, [listPage, listTotalPages]);
+  }, [properties, isPolygonClosed, polygonPoints, selectedZoneId, zonas])
 
   // === 4. ORDENAMIENTO (Usando resultados filtrados) ===
   const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
     inmuebles: displayedProperties
   })
+
+  // === LÓGICA DE PAGINACIÓN ===
+  const [listPage, setListPage] = useState(1);
+  const [listPageSize, setListPageSize] = useState<PageSize>(10);
+  
+  const listTotal = inmueblesOrdenados.length;
+  const listTotalPages = Math.max(1, Math.ceil(listTotal / listPageSize));
+  const listSafePage = Math.min(Math.max(1, listPage), listTotalPages);
+  
+  const paginatedProperties = useMemo(() => {
+    if (listTotal === 0) return [];
+    const start = (listSafePage - 1) * listPageSize;
+    return inmueblesOrdenados.slice(start, start + listPageSize);
+  }, [inmueblesOrdenados, listSafePage, listPageSize, listTotal]);
+
+  useEffect(() => {
+    setListPage(1);
+  }, [filterResetKey, isPolygonClosed]);
+
+  useEffect(() => {
+    if (listPage > listTotalPages) setListPage(listTotalPages);
+  }, [listPage, listTotalPages]);
 
   // === 5. ESTADOS VISUALES Y DE CLUSTERS (develop + HU8) ===
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
@@ -836,14 +852,18 @@ function BusquedaMapaContent() {
             {!isDrawingMode && !isPolygonClosed && (
               <div className="flex flex-row gap-2 pointer-events-auto">
                 <button
-                  onClick={() => setIsDrawingMode(true)}
+                  onClick={() => { setIsDrawingMode(true); setIsSidebarOpen(true) }}
                   className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
                 >
                   Dibujar zona
                 </button>
                 <button
                   onClick={() => {
-                    console.log('Próximamente: Abrir barra lateral de Mis Zonas')
+                    if (!isAuthenticated) {
+                      router.push('/sign-in');
+                    } else {
+                      setIsMisZonasOpen(true);
+                    }
                   }}
                   className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
                 >
@@ -907,6 +927,20 @@ function BusquedaMapaContent() {
             />
           </div>
         </section>
+        <MisZonasSidebar
+          isOpen={isMisZonasOpen}
+          onClose={() => setIsMisZonasOpen(false)}
+          isAuthenticated={isAuthenticated} // Mapeado al estado que acabamos de crear
+          zonas={[]} 
+          onAddZone={() => {
+            setIsMisZonasOpen(true);
+            setIsDrawingMode(true);
+            setIsSidebarOpen(false);
+          }}
+          onEditZone={(id) => console.log('Editar zona:', id)}
+          onDeleteZone={(id) => console.log('Eliminar zona:', id)}
+          onZoneSelect={(id) => console.log('Seleccionar zona:', id)}
+        />
       </main>
     </div>
   )
