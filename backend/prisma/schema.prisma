@@ -36,7 +36,7 @@ model Usuario {
   controlador                           Boolean                 @default(false)
   notificacionWhatsapp                  Boolean?                @default(false)
   rolId                                 Int?
-  notificacion_email                     Boolean?                @default(true)
+  notificacion_email                    Boolean?                @default(true)
   notificacion_whatsapp                 Boolean?                @default(false)
   fecha_registro                        DateTime?               @default(now()) @db.Timestamp(6)
   updatedAt                             DateTime?               @updatedAt @db.Timestamp(6)
@@ -707,26 +707,6 @@ model comentario_like {
   usuario       Usuario    @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "comentario_like_usuario_fk")
 
   @@unique([usuario_id, comentario_id], map: "comentario_like_unique")
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model amenidad {
-  id                Int                 @id @default(autoincrement())
-  nombre            String              @unique @db.VarChar(255)
-  inmueble_amenidad inmueble_amenidad[]
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model barrio {
-  id                                                      Int                 @id @default(autoincrement())
-  nombre                                                  String              @db.VarChar(255)
-  zona_id                                                 Int
-  zona_geografica                                         Int?
-  zona_geografica_barrio_zona_idTozona_geografica         zona_geografica     @relation("barrio_zona_idTozona_geografica", fields: [zona_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "barrio_zona_fk")
-  zona_geografica_barrio_zona_geograficaTozona_geografica zona_geografica?    @relation("barrio_zona_geograficaTozona_geografica", fields: [zona_geografica], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  ubicacion_inmueble                                      UbicacionInmueble[]
-
-  @@unique([nombre, zona_id], map: "barrio_nombre_zona_unique")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
