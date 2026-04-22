@@ -22,7 +22,13 @@ import {
   markPasswordRecoveryAsUsed,
   findUserById,
   create2FACode,
-  invalidateActive2FACodesByUserId
+  invalidateActive2FACodesByUserId,
+  activate2FAByUserId,
+  deactivate2FAByUserId,
+  expire2FACode,
+  findActive2FACodeByUserId,
+  increment2FACodeAttempts,
+  mark2FACodeAsUsed,
 } from "./auth.repository.js";
 
 type LoginDTO = {
@@ -44,6 +50,11 @@ type VerifyRegisterCodeDTO = {
   codigo: string;
   password: string;
 };
+
+type Verify2FADTO = {
+  userId: number
+  codigo: string
+}
 
 type PendingRegisterPayload = {
   purpose: "pending-register";
@@ -369,6 +380,72 @@ export const loginService = async (payload: LoginDTO) => {
   };
 };
 
+export const verify2FAService = async ({ userId, codigo }: Verify2FADTO) => {
+  const normalizedCode = codigo?.trim()
+
+  if (!userId || !normalizedCode) {
+    throw new AuthError('El usuario y el código son obligatorios', 400)
+  }
+
+  if (!/^\d{6}$/.test(normalizedCode)) {
+    throw new AuthError('El código debe tener exactamente 6 dígitos numéricos', 400)
+  }
+
+  const user = await findUserById(userId)
+
+  if (!user) {
+    throw new AuthError('Usuario no encontrado', 404)
+  }
+
+  if (!user.two_factor_activo) {
+    throw new AuthError('El usuario no tiene autenticación en dos pasos activada', 400)
+  }
+
+  const activeCode = await findActive2FACodeByUserId(userId)
+
+  if (!activeCode) {
+    throw new AuthError('El código es incorrecto', 401)
+  }
+
+  if (activeCode.expiraEn.getTime() < Date.now()) {
+    await expire2FACode(activeCode.id)
+    throw new AuthError('El código ha expirado', 401)
+  }
+
+  const codigoHash = hash2FACode(normalizedCode)
+
+  if (codigoHash !== activeCode.codigoHash) {
+    await increment2FACodeAttempts(activeCode.id, activeCode.intentos ?? 0)
+    throw new AuthError('El código es incorrecto', 401)
+  }
+
+  await mark2FACodeAsUsed(activeCode.id)
+
+  const jwtPayload: JwtPayload = {
+    id: user.id,
+    correo: user.correo,
+  }
+
+  const token = generateToken(jwtPayload)
+  const fechaExpiracion = new Date(Date.now() + 60 * 60 * 1000)
+
+  await createSession({
+    token,
+    usuarioId: user.id,
+    fechaExpiracion,
+  })
+
+  return {
+    user: {
+      id: user.id,
+      correo: user.correo,
+      nombre: user.nombre,
+      apellido: user.apellido,
+    },
+    token,
+  }
+}
+
 export const registerUser = async (payload: RegisterDTO) => {
   const normalized = normalizeRegisterPayload(payload);
 
@@ -530,7 +607,7 @@ type VerifyPasswordDTO = {
 export const verifyPasswordService = async ({
   userId,
   password,
-}: VerifyPasswordDTO) => {
+  }: VerifyPasswordDTO) => {
   const trimmed = password?.trim();
 
   if (!trimmed) {
@@ -548,6 +625,61 @@ export const verifyPasswordService = async ({
   }
 
   return { valid: true };
+};
+
+export const activate2FAService = async ({
+  userId,
+  password,
+}: VerifyPasswordDTO) => {
+  const trimmed = password?.trim();
+
+  if (!trimmed) {
+    throw new AuthError("La contraseña es obligatoria", 400);
+  }
+
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  if (user.password !== trimmed) {
+    throw new AuthError("Contraseña incorrecta", 401);
+  }
+
+  await activate2FAByUserId(userId);
+
+  return {
+    message: "Verificación en dos pasos activada correctamente",
+    two_factor_activo: true,
+  };
+};
+
+export const deactivate2FAService = async (userId: number) => {
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  await deactivate2FAByUserId(userId);
+
+  return {
+    message: "Verificación en dos pasos desactivada correctamente",
+    two_factor_activo: false,
+  };
+};
+
+export const get2FAStatusService = async (userId: number) => {
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  return {
+    two_factor_activo: user.two_factor_activo,
+  };
 };
 
 type GoogleTokenResponse = {

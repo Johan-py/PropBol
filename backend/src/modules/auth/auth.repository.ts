@@ -241,6 +241,67 @@ export const markPasswordRecoveryAsUsed = async (id: number) => {
   })
 }
 
+export const findActive2FACodeByUserId = async (usuarioId: number) => {
+  return await prisma.codigo_2fa.findFirst({
+    where: {
+      usuarioId,
+      activo: true,
+      usadoEn: null
+    },
+    orderBy: {
+      creadoEn: 'desc'
+    }
+  })
+}
+
+export const mark2FACodeAsUsed = async (id: number) => {
+  return await prisma.codigo_2fa.update({
+    where: { id },
+    data: {
+      usadoEn: new Date(),
+      activo: false
+    }
+  })
+}
+
+export const increment2FACodeAttempts = async (id: number, intentosActuales: number) => {
+  return await prisma.codigo_2fa.update({
+    where: { id },
+    data: {
+      intentos: intentosActuales + 1
+    }
+  })
+}
+
+export const expire2FACode = async (id: number) => {
+  return await prisma.codigo_2fa.update({
+    where: { id },
+    data: {
+      activo: false
+    }
+  })
+}
+
+export const activate2FAByUserId = async (userId: number) => {
+  return await prisma.usuario.update({
+    where: { id: userId },
+    data: {
+      two_factor_activo: true,
+      two_factor_activado_en: new Date(),
+      two_factor_metodo: 'email'
+    }
+  })
+}
+
+export const deactivate2FAByUserId = async (userId: number) => {
+  return await prisma.usuario.update({
+    where: { id: userId },
+    data: {
+      two_factor_activo: false
+    }
+  })
+}
+
 export const updateUserPassword = async (usuarioId: number, password: string) => {
   return prisma.usuario.update({
     where: { id: usuarioId },

@@ -7,6 +7,10 @@ import { useRouter } from "next/navigation";
 type LoginResponse = {
   message?: string;
   token?: string;
+  requires2FA?: boolean;
+  userId?: number;
+  email?: string;
+  expiresInMinutes?: number;
   user?: {
     id: number;
     correo: string;
@@ -53,6 +57,7 @@ const GOOGLE_LOGIN_TIMEOUT_MS = 2 * 60 * 1000;
 const DEFAULT_POST_LOGIN_REDIRECT = "/";
 const REDIRECT_AFTER_LOGIN_KEY = "redirectAfterLogin";
 const SESSION_DURATION_MS = 60 * 60 * 1000;
+const PENDING_2FA_KEY = "pending2FA";
 
 const NO_CONNECTION_MESSAGE =
   "Sin conexión a internet. Verifica tu red e intenta nuevamente.";
@@ -75,6 +80,26 @@ const clearClientSession = () => {
 
   window.dispatchEvent(new Event("propbol:session-changed"));
   window.dispatchEvent(new Event("auth-state-changed"));
+};
+
+const savePending2FA = (data: {
+  userId: number;
+  email?: string;
+  expiresInMinutes?: number;
+}) => {
+  localStorage.setItem(
+    PENDING_2FA_KEY,
+    JSON.stringify({
+      userId: data.userId,
+      email: data.email ?? "",
+      expiresInMinutes: data.expiresInMinutes ?? 5,
+      createdAt: Date.now(),
+    }),
+  );
+};
+
+const clearPending2FA = () => {
+  localStorage.removeItem(PENDING_2FA_KEY);
 };
 
 const saveSession = (
@@ -426,6 +451,7 @@ export default function LoginForm() {
 
     setIsLoading(true);
     clearClientSession();
+    clearPending2FA();
 
     const controller = new AbortController();
     const timeoutId = window.setTimeout(() => {
@@ -464,19 +490,43 @@ export default function LoginForm() {
         return;
       }
 
-      if (!data.token) {
-        clearClientSession();
-        setErrorMessage("El servidor no devolvió un token válido");
-        return;
-      }
+    if (data.requires2FA) {
+  if (!data.userId) {
+    clearClientSession();
+    setErrorMessage("No se pudo iniciar la verificación en dos pasos");
+    return;
+  }
 
-      await finalizeValidatedSession(data.token, data.user);
+  savePending2FA({
+    userId: data.userId,
+    email: data.email,
+    expiresInMinutes: data.expiresInMinutes,
+  });
 
-      setSuccessMessage(data.message || "Inicio de sesión exitoso");
+  setSuccessMessage(data.message || "Te enviamos un código de verificación");
+  setPassword("");
 
-      window.setTimeout(() => {
-        redirectAfterSuccessfulLogin();
-      }, 1000);
+  window.setTimeout(() => {
+    router.push("/sign-in/verify-2fa");
+  }, 800);
+
+  return;
+  }
+
+  if (!data.token) {
+    clearClientSession();
+    setErrorMessage("El servidor no devolvió un token válido");
+    return;
+  }
+
+    await finalizeValidatedSession(data.token, data.user);
+
+  setSuccessMessage(data.message || "Inicio de sesión exitoso");
+
+  window.setTimeout(() => {
+   redirectAfterSuccessfulLogin();
+  }, 1000);
+
     } catch (error) {
       clearClientSession();
       setPassword("");
