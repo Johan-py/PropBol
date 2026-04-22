@@ -2,249 +2,233 @@
 
 import { useState } from 'react'
 import {
-  Home,
-  Search as SearchIcon,
+  Search,
   DollarSign,
   Maximize,
   SlidersHorizontal,
   Award,
   ChevronDown,
-
-  
-  Building,
-  Bed,
-  Trees,
-  Flower2
+  X,
+  MapPin
 } from 'lucide-react'
-
-import { ComboBox } from '../ui/ComboBox'
-import { LocationSearch } from '../layout/LocationSearch'
-import { CapacidadButton } from '../busqueda/capacidad/CapacidadButton'
-import TransactionModeFilter from './TransactionModeFilter'
-
 import { useRouter } from 'next/navigation'
-import SuperficieFilter from './SuperficieFilter'
-
+import TransactionModeFilter from './TransactionModeFilter'
+import { CapacidadButton } from '../busqueda/capacidad/CapacidadButton'
 
 interface FilterBarProps {
   onSearch?: (filtros: {
-    tipoInmueble: string[]
-    modoInmueble: string[]
     query: string
-    updatedAt: string
+    modoInmueble: string[]
+    amenidades: string[]
+    etiquetas: string[]
   }) => void
-  variant?: 'home' | 'map'
-  onOpenPriceFilter?: () => void
-  onOpenSuperficieFilter?: () => void
-  isCapacidadActive?: boolean
-  onToggleCapacidad?: () => void
-
-
 }
-type LocationValue =
-  | string
-  | {
-    nombre?: string
-    target?: {
-      value?: string
-    }
-  }
 
-type IconType = React.ComponentType<{ className?: string }>
+const AMENIDADES = [
+  'Piscina',
+  'Terraza',
+  'Jardín',
+  'Cochera',
+  'Ascensor',
+  'Amoblado'
+]
 
-const Btn = ({
-  icon: Icon,
-  text,
+const ETIQUETAS = ['Inversión', 'Preventa', 'Nuevo', 'Oferta']
+
+const Chip = ({
+  label,
+  active,
   onClick
 }: {
-  icon?: IconType
-  text: string
-  onClick?: () => void
+  label: string
+  active: boolean
+  onClick: () => void
 }) => (
   <button
     type="button"
-
-    {Icon && <Icon className="w-4 h-4" />}
-    {text}
-    <ChevronDown className="w-4 h-4 text-gray-400" />
+    onClick={onClick}
+    className={`px-3 py-1 text-xs rounded-full border transition
+      ${
+        active
+          ? 'bg-[#c47b2a] text-white border-[#c47b2a]'
+          : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200'
+      }`}
+  >
+    {label}
   </button>
 )
-const trackSearchTelemetria = async (filtros: {
-  tipoInmueble: string[]
-  modoInmueble: string[]
-  query: string
-  zona?: string
-}) => {
-  try {
-    await fetch('/api/telemetria/search', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ...filtros,
-        timestamp: new Date().toISOString(),
-        url: typeof window !== 'undefined' ? window.location.pathname : ''
-      })
-    })
-  } catch (error) {
-    console.error('Error tracking search:', error)
-  }
-}
 
-export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad }: FilterBarProps) {
+export default function FilterBar({ onSearch }: FilterBarProps) {
+  const router = useRouter()
 
-
- 
-  const [ubicacionTexto, setUbicacionTexto] = useState('')
+  const [query, setQuery] = useState('')
   const [openMore, setOpenMore] = useState(false)
+  const [amenidades, setAmenidades] = useState<string[]>([])
+  const [etiquetas, setEtiquetas] = useState<string[]>([])
+  const [modoInmueble] = useState<string[]>(['VENTA'])
 
-  const propertyTypes = [
-    { label: 'Casas', icon: Home },
-    { label: 'Departamentos', icon: Home },
-    { label: 'Terrenos', icon: Home }
-  ]
-
-
-  const handleSearch = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault()
-    const tipoMap: Record<string, string> = {
-      Casas: 'CASA',
-      Departamentos: 'DEPARTAMENTO',
-      Terrenos: 'TERRENO',
-      Cuartos: 'CUARTO',
-      "Espacios Cementerio": 'TERRENO_MORTUORIO'
-    }
-
-    const tipoFinal =
-      tipoMap[tipoInmueble] ||
-      (tipoInmueble !== 'Cualquier tipo' ? tipoInmueble.toUpperCase() : null)
-
-    const esTerreno = tipoFinal === 'TERRENO' || tipoFinal === 'TERRENO_MORTUORIO';
-
-    if (esTerreno) {
-      setModosSeleccionados(['VENTA']);
-    }
-
-    const modosFinales = esTerreno ? ['VENTA'] : modosSeleccionados;
-
-    const nuevosFiltros = {
-      tipoInmueble: tipoFinal ? [tipoFinal] : [],
-      modoInmueble: modosFinales,
-      query: ubicacionTexto,
-      updatedAt: new Date().toISOString()
-    }
-    await trackSearchTelemetria({
-      tipoInmueble: nuevosFiltros.tipoInmueble,
-      modoInmueble: nuevosFiltros.modoInmueble,
-      query: nuevosFiltros.query,
-      zona: ubicacionTexto
-    })
-    updateFilters(nuevosFiltros)
-
-    const params = new URLSearchParams()
-    try {
-      const merged = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}') as {
-        locationId?: string | number
-      }
-      if (merged.locationId != null && merged.locationId !== '') {
-        params.set('locationId', String(merged.locationId))
-      }
-    } catch {
-      /* ignore */
-    }
-
-    modosSeleccionados.forEach((modo) => params.append('modoInmueble', modo))
-    if (tipoFinal) params.set('tipoInmueble', tipoFinal)
-    if (ubicacionTexto.trim() !== '') params.set('query', ubicacionTexto.trim())
-
-    const queryString = params.toString()
-    const targetUrl = `/busqueda_mapa${queryString ? `?${queryString}` : ''}`
-
-    router.push(targetUrl)
-    if (onSearch) onSearch(nuevosFiltros)
+  const toggleItem = (
+    item: string,
+    list: string[],
+    setList: (v: string[]) => void
+  ) => {
+    setList(
+      list.includes(item)
+        ? list.filter((i) => i !== item)
+        : [...list, item]
+    )
   }
 
-  // 🚀 FIX Z-INDEX MASIVO: Agregamos z-[99999] y !overflow-visible para aplastar al mapa
-  const containerStyles =
-    variant === 'map'
-      ? 'bg-[#faf9f6] border-b border-stone-200 py-2 px-4 w-full flex flex-col gap-2 shadow-sm sticky top-0 z-50 !overflow-visible'
-      : 'bg-white shadow-lg rounded-[30px] p-6 flex flex-col gap-6 w-full max-w-[921px] relative z-[99999] !overflow-visible'
+  const handleAplicar = () => {
+    onSearch?.({
+      query,
+      modoInmueble,
+      amenidades,
+      etiquetas
+    })
+    setOpenMore(false)
+  }
 
+  const handleLimpiar = () => {
+    setAmenidades([])
+    setEtiquetas([])
+  }
+
+  const handleBuscar = () => {
+    router.push('/busqueda_mapa')
+  }
 
   return (
-    <div className="w-full flex justify-center">
-      <div className="bg-white shadow-xl rounded-[25px] p-5 w-full max-w-[1100px] flex flex-col gap-4">
+    <>
+      {/* OVERLAY OSCURO */}
+      {openMore && (
+        <div
+          onClick={() => setOpenMore(false)}
+          className="fixed inset-0 bg-black/40 z-40"
+        />
+      )}
 
+      <div className="w-full flex justify-center relative z-50">
+        <div className="bg-white shadow-xl rounded-[22px] px-6 py-4 w-full max-w-[1200px] flex flex-col gap-4">
+          {/* FILA 1 */}
+          <TransactionModeFilter
+            modoSeleccionado={['VENTA']}
+            onModoChange={() => {}}
+          />
 
+          {/* FILA 2 (ZONA AZUL ORDENADA) */}
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* BUSCADOR */}
+            <div className="flex items-center h-[40px] px-3 border border-gray-300 rounded-xl gap-2 w-[240px] bg-white">
+              <MapPin className="w-4 h-4 text-gray-400" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Zona, barrio o ciudad"
+                className="outline-none text-sm w-full"
+              />
             </div>
-          </div>
 
-          {/* DERECHA */}
-          <div className="shrink-0">
-            <TransactionModeFilter
-              modoSeleccionado={['VENTA']}
-              onModoChange={() => { }}
-            />
-          </div>
-        </div>
+            <button className="h-[40px] px-4 border border-gray-300 rounded-xl flex items-center gap-2 text-sm">
+              <DollarSign className="w-4 h-4" />
+              Precio
+              <ChevronDown className="w-4 h-4 text-gray-400" />
+            </button>
 
-        {/* 🔹 FILA 2: BOTONES EN UNA SOLA LINEA */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <Btn icon={DollarSign} text="Precio" />
-          <CapacidadButton variant="home" />
+            <CapacidadButton variant="home" />
 
-          <button
+            <button className="h-[40px] px-4 border border-gray-300 rounded-xl flex items-center gap-2 text-sm">
+              <Maximize className="w-4 h-4" />
+              Metros
+              <ChevronDown className="w-4 h-4 text-gray-400" />
+            </button>
 
-          >
-            <Maximize className="w-4 h-4" />
-            Metros
-            <ChevronDown className="w-4 h-4 text-gray-400" />
-          </button>
+            {/* MÁS FILTROS */}
+            <div className="relative">
+              <button
+                onClick={() => setOpenMore(true)}
+                className="h-[40px] px-4 border border-gray-300 rounded-xl flex items-center gap-2 text-sm bg-white"
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+                Más filtros
+              </button>
 
-          {/* MÁS FILTROS (ABRE POPOVER) */}
-          <div className="relative">
-            <Btn
-              icon={SlidersHorizontal}
-              text="Más filtros"
-              onClick={() => setOpenMore((v) => !v)}
-            />
+              {openMore && (
+                <div className="absolute top-12 left-0 w-[360px] bg-white border border-gray-200 rounded-xl shadow-xl p-4 z-50">
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="font-semibold text-sm">
+                      Filtros avanzados
+                    </h3>
+                    <button onClick={() => setOpenMore(false)}>
+                      <X className="w-4 h-4 text-gray-500" />
+                    </button>
+                  </div>
 
-            {openMore && (
-              <div className="absolute top-12 left-0 w-[320px] bg-white border border-gray-200 rounded-xl shadow-lg p-4 z-50">
-                <div className="flex justify-between items-center mb-2">
-                  <h3 className="text-sm font-semibold text-gray-700">
+                  <p className="text-xs text-gray-500 mb-2">
                     Amenidades
-                  </h3>
-                  <button onClick={() => setOpenMore(false)}>
-                    <X className="w-4 h-4 text-gray-500" />
-                  </button>
-                </div>
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {AMENIDADES.map((a) => (
+                      <Chip
+                        key={a}
+                        label={a}
+                        active={amenidades.includes(a)}
+                        onClick={() =>
+                          toggleItem(a, amenidades, setAmenidades)
+                        }
+                      />
+                    ))}
+                  </div>
 
-                {/* 🔥 AQUÍ VAN LAS AMENIDADES */}
-                <AmenityChips />
+                  <p className="text-xs text-gray-500 mb-2">
+                    Etiquetas
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {ETIQUETAS.map((e) => (
+                      <Chip
+                        key={e}
+                        label={e}
+                        active={etiquetas.includes(e)}
+                        onClick={() =>
+                          toggleItem(e, etiquetas, setEtiquetas)
+                        }
+                      />
+                    ))}
+                  </div>
 
-                {/* 🔹 ETIQUETAS */}
-                <div className="flex gap-2 flex-wrap mt-3">
-                  {['Inversión', 'Preventa', 'Oferta', 'Nuevo'].map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-3 py-1 text-xs rounded-full bg-gray-100 text-gray-600"
+                  <div className="flex justify-between gap-2">
+                    <button
+                      onClick={handleLimpiar}
+                      className="flex-1 h-[38px] rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-100 text-sm"
                     >
-                      {tag}
-                    </span>
-                  ))}
+                      Limpiar
+                    </button>
+                    <button
+                      onClick={handleAplicar}
+                      className="flex-1 h-[38px] rounded-xl bg-[#c47b2a] hover:bg-[#a8651f] text-white text-sm font-semibold"
+                    >
+                      Aplicar
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+
+            <button className="h-[40px] px-4 bg-[#c47b2a] text-white rounded-xl flex items-center gap-2 text-sm">
+              <Award className="w-4 h-4" />
+              Recomendados
+            </button>
+
+            <button
+              onClick={handleBuscar}
+              className="ml-auto h-[40px] px-6 bg-[#c47b2a] hover:bg-[#a8651f] text-white rounded-xl font-semibold flex items-center gap-2"
+            >
+              <Search size={16} />
+              Buscar
+            </button>
           </div>
-
-          <Btn icon={Award} text="Recomendados" />
-
-          <button className="h-[40px] px-6 bg-[#c47b2a] hover:bg-[#a8651f] text-white rounded-xl font-semibold flex items-center gap-2 ml-auto">
-            <SearchIcon size={16} />
-            Buscar
-          </button>
         </div>
       </div>
-    </div>
+    </>
   )
 }
