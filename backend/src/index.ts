@@ -63,6 +63,8 @@ import securityRoutes from './routes/security.routes.js'
 import authRoutes from './routes/auth.routes.js'
 import publicacionesRoutes from './routes/publicaciones.js'
 import { authMiddleware } from './middleware/authMiddleware.js'
+// Borra la línea 66 y pon esta:
+import historialRoutes from './modules/perfil/historial.routes.js';
 
 // --------------------
 // SERVICES
@@ -111,6 +113,7 @@ app.use('/uploads', express.static(path.resolve('uploads')))
 // --------------------
 // RUTAS LEGACY
 // --------------------
+
 app.post('/api/auth/forgot-password', forgotPasswordController)
 app.post('/api/auth/reset-password', resetPasswordController)
 app.use('/api/auth-legacy', authRoutes)
@@ -127,6 +130,7 @@ app.use('/api/publicaciones', multimediaRoutes)
 app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
 app.use('/api/perfil/zonas', zonaRoutes)
+app.use('/api/perfil/historial', historialRoutes)
 app.use('/api', router)
 app.use('/api', parametrosRoutes)
 app.use('/api/security', securityRoutes)
