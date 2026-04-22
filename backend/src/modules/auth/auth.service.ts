@@ -884,7 +884,7 @@ export const resetPasswordService = async (payload: ResetPasswordDTO) => {
   tokenAttempts.set(token, attempts + 1)
 
   await prisma.$transaction([
-    prisma.recuperacion_password.update({
+    prisma.recuperacionPassword.update({
       where: { id: recovery.id },
       data: { usadoEn: new Date(), activo: false }
     }),

@@ -467,7 +467,7 @@ model publicacion_parametro {
   @@index([publicacion_id], map: "idx_pub_param_publicacion")
 }
 
-model recuperacion_password {
+model RecuperacionPassword {
   id        Int       @id @default(autoincrement())
   usuarioId Int
   token     String    @unique @db.VarChar(255)
@@ -476,11 +476,11 @@ model recuperacion_password {
   usadoEn   DateTime? @db.Timestamp(6)
   intentos  Int?      @default(0)
   activo    Boolean?  @default(true)
-  usuario   usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  usuario   Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([usuarioId, creadoEn], map: "recuperacion_password_usuario_fecha_idx")
+  @@map("recuperacion_password")
 }
-
 model rol {
   id      Int       @id @default(autoincrement())
   nombre  RolNombre @unique
@@ -653,7 +653,7 @@ model usuario {
   perfil                                perfil?
   propiedad_vista                       propiedad_vista[]
   publicacion                           publicacion[]
-  recuperacion_password                 recuperacion_password[]
+  recuperacionesPassword                 RecuperacionPassword[]
   sesion                                sesion[]
   suscripciones_activas                 suscripciones_activas[]
   telefono_telefono_usuarioIdTousuario  telefono[]              @relation("telefono_usuarioIdTousuario")

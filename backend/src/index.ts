@@ -32,6 +32,9 @@ import {
   verifyRegisterCodeController,
   verify2FAController,
   getMeController,
+  activate2FAController,
+  deactivate2FAController,
+  get2FAStatusController,
   forgotPasswordController,
   resetPasswordController
 } from './modules/auth/auth.controller.js'
