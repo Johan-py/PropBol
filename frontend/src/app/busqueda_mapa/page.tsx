@@ -1,5 +1,6 @@
 'use client'
 
+import { CapacidadSidebar } from '@/components/filters/CapacidadSidebar'
 import MisZonasSidebar from '@/components/map/MisZonasSidebar'
 import { point, polygon } from '@turf/helpers'
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon'
@@ -120,6 +121,17 @@ function BusquedaMapaContent() {
 
   //estado para controlar la autenticación
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCapacidadOpen, setIsCapacidadOpen] = useState(false)
+
+const toggleCapacidad = () => {
+  setIsCapacidadOpen(!isCapacidadOpen)
+  if (!isCapacidadOpen) {
+    setActiveSidebarView('capacidad')
+    setIsSidebarOpen(true)
+  } else {
+    setActiveSidebarView('results')
+  }
+}
   const [misZonas, setMisZonas] = useState<ZonaUsuario[]>([])
   const [newZoneName, setNewZoneName] = useState('Nueva zona')
   const [isCreatingCustomZone, setIsCreatingCustomZone] = useState(false)
@@ -141,7 +153,7 @@ function BusquedaMapaContent() {
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
   const [isMounted, setIsMounted] = useState(false)
   const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false)
-  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie'>('results')
+  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie'| 'capacidad'>('results')
 
   // --- INICIO ESTADOS HU8 ---
   const [isDrawingMode, setIsDrawingMode] = useState(false)
@@ -949,6 +961,8 @@ function BusquedaMapaContent() {
          setIsSidebarOpen(true)
          setActiveSidebarView('superficie')
          }}
+        isCapacidadActive={isCapacidadOpen}
+        onToggleCapacidad={toggleCapacidad}
       />
 
       <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200">
@@ -969,6 +983,14 @@ function BusquedaMapaContent() {
             }}
             totalResultados={displayedProperties.length} 
           />
+        ): isSidebarOpen && activeSidebarView === 'capacidad' ? (
+          <CapacidadSidebar 
+             isOpen={true}
+             onClose={() =>{
+              setIsCapacidadOpen(false)
+              setActiveSidebarView('results')
+             }}
+          /> 
         ) : 
           isSidebarOpen && activeSidebarView === 'results' ? (
             <div className="flex flex-col h-full min-h-0">
