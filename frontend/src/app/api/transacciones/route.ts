@@ -19,21 +19,21 @@ const planesMock: Record<number, any> = {
        fotos_galeria: 5, 
        imagen_gr_url: '/qrs/basico.png' 
       },
-  2: { 
-       nombre_plan: 'Estándar', 
+  2: {
+       nombre_plan: 'Estándar',
        precio_plan: 99.0,
-       nro_publicaciones_plan: 10, 
-       duración_plan_días: 30, 
-       fotos_galeria: 15, 
-       imagen_gr_url: '/qrs/estandar.png' 
+       nro_publicaciones_plan: 10,
+       duración_plan_días: 30,
+       fotos_galeria: 15,
+       imagen_gr_url: 'TT3HfmhicyLGB7DsszTMD0ayhkdaDCksBPXNzTV5jSfRx7ZZoEqhjqNJY/EKhN11XVStPpLWzxkKDLREBFDL063hBFqV/yyuT3m6bz9I8DgFIk9qclw05CnmXEcY83ojlo9J3rLmtk4t6VFugFqt8lu42y8sguScwt3CXqCDVRlbNuN3DXDxtrPk5FezHuda0nSyXJjXCwcpEQteO8QGTxL6kiBIg1rUE8VHva+xzCkZw6kL1b/bZbGou+rPAglwsWmdtrml0mLqYoIWM18Kll9V/dhNNNGOATfJnMBKPVfr2pAFKSJFQsrHdSbQ3PlfrnzTTNKUTYwNJw1jJINtvw==|772E2FC6B3BAA5262DA3FE4B'
        },
-  3: { 
+  3: {
       nombre_plan: 'Pro',
-       precio_plan: 199.0, 
-       nro_publicaciones_plan: 100, 
-       duración_plan_días: 30, 
-       fotos_galeria: 30, 
-       imagen_gr_url: '/qrs/pro.png'
+       precio_plan: 199.0,
+       nro_publicaciones_plan: 100,
+       duración_plan_días: 30,
+       fotos_galeria: 30,
+       imagen_gr_url: 'i9wvnM89po4tY2maQFw7QUpqdIsVpIWU2GSEkhllTejx9c3c0549XbomghsgXZRzeem9mHIUsSlyJdFVKk8hhCij7TyThkDo1pFGMatRWA3NxvjmsqQ3rjSebUVC8GzCwO1nk2b5UvWrIRcnNISHK0WMIEnbDd4hiE5DwPgkJoqspwtEe/W3u4olIIBStoGNEk7bdvuWRkGfP1mwXgPMowEDEg/w6AGdDZEzypxFkW+mOnyWS2DgnmbTZ7OBM7A7Ci2pKReW5vOPKerV+jm9aB1HMh3v9iv2TlLU+4cys0G35KBr15waiAN0lTDCYI6ngHQ29ZK9UPoVUkNKXJur0g==|772E2FC6B3BAA5262DA3FE4B'
       },
 };
 
