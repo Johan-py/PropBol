@@ -27,7 +27,13 @@ function getApiUrl() {
 
 export default function Page() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#f5efe7] p-8">Cargando parámetros...</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#f5efe7] p-8">
+          Cargando parámetros...
+        </div>
+      }
+    >
       <ParametrosPageContent />
     </Suspense>
   );
@@ -39,6 +45,7 @@ function ParametrosPageContent() {
 
   const publicacionIdParam = searchParams.get("publicacionId");
   const publicacionId = publicacionIdParam ? Number(publicacionIdParam) : null;
+  const origen = searchParams.get("origen");
 
   const [catalogoParametros, setCatalogoParametros] = useState<ParametroBackend[]>([]);
   const [parametrosGuardados, setParametrosGuardados] = useState<string[]>([]);
@@ -46,6 +53,25 @@ function ParametrosPageContent() {
   const [guardando, setGuardando] = useState(false);
   const [mensaje, setMensaje] = useState("");
   const [mostrarModalExito, setMostrarModalExito] = useState(false);
+
+  const volverSegunOrigen = () => {
+    if (origen === "mis-publicaciones") {
+      router.push("/mis-publicaciones");
+      return;
+    }
+
+    if (origen === "multimedia" && publicacionId && !Number.isNaN(publicacionId)) {
+      router.push(`/contenido-multimedia?publicacionId=${publicacionId}`);
+      return;
+    }
+
+    if (publicacionId && !Number.isNaN(publicacionId)) {
+      router.push(`/contenido-multimedia?publicacionId=${publicacionId}`);
+      return;
+    }
+
+    router.push("/mis-publicaciones");
+  };
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -82,16 +108,16 @@ function ParametrosPageContent() {
           : [];
 
         const parametrosPublicacion: ParametroPublicacion[] = Array.isArray(publicacionJson?.data)
-          ? publicacionJson.data.map((item: any) => ({
-              id: item.parametros_personalizados?.id,
-              nombre: item.parametros_personalizados?.nombre,
-            }))
+          ? publicacionJson.data
+              .map((item: any) => ({
+                id: item.parametros_personalizados?.id,
+                nombre: item.parametros_personalizados?.nombre,
+              }))
+              .filter((item: ParametroPublicacion) => item.id && item.nombre)
           : [];
 
         setCatalogoParametros(catalogo);
-        setParametrosGuardados(
-          parametrosPublicacion.map((item) => item.nombre).filter(Boolean)
-        );
+        setParametrosGuardados(parametrosPublicacion.map((item) => item.nombre));
       } catch (error) {
         const mensajeError =
           error instanceof Error ? error.message : "Error al cargar parámetros.";
@@ -126,7 +152,9 @@ function ParametrosPageContent() {
     const data = await response.json().catch(() => null);
 
     if (!response.ok) {
-      throw new Error(data?.mensaje || data?.message || `No se pudo crear el parámetro "${nombre}".`);
+      throw new Error(
+        data?.mensaje || data?.message || `No se pudo crear el parámetro "${nombre}".`
+      );
     }
 
     const creado: ParametroBackend = data?.data;
@@ -155,7 +183,7 @@ function ParametrosPageContent() {
         throw new Error("No se encontró la sesión del usuario.");
       }
 
-      const parametrosConId = [];
+      const parametrosConId: Array<{ parametroId: number; valor: null }> = [];
 
       for (const nombre of parametros) {
         const parametro = await crearParametroSiNoExiste(nombre, token);
@@ -182,7 +210,9 @@ function ParametrosPageContent() {
       const data = await response.json().catch(() => null);
 
       if (!response.ok) {
-        throw new Error(data?.mensaje || data?.message || "No se pudieron guardar los parámetros.");
+        throw new Error(
+          data?.mensaje || data?.message || "No se pudieron guardar los parámetros."
+        );
       }
 
       setParametrosGuardados(parametros);
@@ -190,7 +220,7 @@ function ParametrosPageContent() {
 
       setTimeout(() => {
         setMostrarModalExito(false);
-        router.push(`/contenido-multimedia?publicacionId=${publicacionId}`);
+        volverSegunOrigen();
       }, 4000);
     } catch (error) {
       const mensajeError =
@@ -199,15 +229,6 @@ function ParametrosPageContent() {
     } finally {
       setGuardando(false);
     }
-  };
-
-  const volverAMultimedia = () => {
-    if (!publicacionId || Number.isNaN(publicacionId)) {
-      router.push("/contenido-multimedia");
-      return;
-    }
-
-    router.push(`/contenido-multimedia?publicacionId=${publicacionId}`);
   };
 
   return (
@@ -233,7 +254,7 @@ function ParametrosPageContent() {
           <ExtrasPropiedad
             valoresIniciales={parametrosGuardados}
             onGuardar={manejarGuardarParametros}
-            onCancelar={volverAMultimedia}
+            onCancelar={volverSegunOrigen}
           />
         )}
 
