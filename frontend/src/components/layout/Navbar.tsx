@@ -42,26 +42,7 @@ type MeResponse = {
     rol?: string;
   };
 };
-
-class SessionValidationError extends Error {
-  statusCode: number;
-
-  constructor(message: string, statusCode: number) {
-    super(message);
-    this.name = "SessionValidationError";
-    this.statusCode = statusCode;
-  }
-}
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
-const USER_STORAGE_KEY = "propbol_user";
-const SESSION_EXPIRES_KEY = "propbol_session_expires";
-
-=======
-
-=======
  
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 class SessionValidationError extends Error {
   statusCode: number;
  
@@ -74,10 +55,7 @@ class SessionValidationError extends Error {
  
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const SESSION_EXPIRES_KEY = "propbol_session_expires";
-
-
  
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 const filters: NotificationFilter[] = [
   "todas",
   "leida",
@@ -528,15 +506,8 @@ export default function Navbar() {
                                     ) {
                                       void markAsRead(notification.id);
                                     }
-
-
-                                    toggleNotifications()
-                                    router.push(`/notificaciones/${notification.id}`)
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
-=======
                                     toggleNotifications();
                                     router.push(`/notificaciones/${notification.id}`);
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
                                   }}
                                   className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
                                     notification.status === "no leida"
@@ -604,7 +575,6 @@ export default function Navbar() {
                                   </div>
                                 </div>
                               ))}
-
                               {isLoadingMore && (
                                 <p className="px-4 py-3 text-center text-xs text-stone-400">
                                   Cargando más notificaciones...
@@ -693,29 +663,6 @@ export default function Navbar() {
                 Publica tu inmueble
               </Link>
 
-
-              <Link
-                href="/propiedades"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
-              >
-                Propiedades
-              </Link>
-
-              <Link
-                href="/blogs"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
-              >
-                Blogs
-              </Link>
-
-              <Link
-                href="/cobros-suscripciones"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
-              >
-=======
               <div className="flex flex-col">
                 <button
                   onClick={() => setIsPropiedadesOpen(!isPropiedadesOpen)}
@@ -746,10 +693,7 @@ export default function Navbar() {
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
-
-                Planes de membresia
                 Planes de membresía
-
               </Link>
 
               <Link

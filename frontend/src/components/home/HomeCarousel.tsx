@@ -89,4 +89,4 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
     </div>
   )
 }
-somponente
+// fin del componente

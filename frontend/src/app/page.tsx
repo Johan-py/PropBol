@@ -1,22 +1,12 @@
-
-import { HomeBanner } from '@/components/home/HomeBanner'
-import { HomeCarousel } from '@/components/home/HomeCarousel'
-import ExploreSection from '@/components/layout/ExploreSection'
-import FilterPanel from '@/components/rentals/FilterPanel'
-
 import { HomeCarousel } from '@/components/home/HomeCarousel'
 import FeaturedCitiesSection from '@/components/home/FeaturedCitiesSection'
 import ExploreSection from '@/components/layout/ExploreSection'
 import { getCities } from '@/services/city.service'
-
-import VisualFiltersSection from "@/components/VisualFilters/VisualFiltersSection";
-
 import dynamic from 'next/dynamic'
 import VisualFiltersSection from '@/components/VisualFilters/VisualFiltersSection'
 import HomeBlogsSection from '@/components/home/HomeBlogsSection'
 
 const TourGuiado = dynamic(() => import('@/components/ui/TourGuiado'), { ssr: false })
-
 
 interface BannerRaw {
   id: number;
@@ -59,25 +49,8 @@ const fetchBanners = async (): Promise<BannerData[]> => {
 };
 
 export default async function Home() {
-
-  const banners = await fetchBanners()
-
-  const mainBanner = banners[0] // Tomamos el primero de la base de datos
-
-  const cities = await getCities()
-
-  /*
-    Integración futura:
-    Cuando el backend exponga /api/cities con datos reales,
-    la sección FeaturedCitiesSection seguirá consumiendo desde getCities().
-  */
-
-
-  // No toquen esto :v
-
   const banners = await fetchBanners();
   const cities = await getCities();
-
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-gray-50">
@@ -113,13 +86,5 @@ export default async function Home() {
         </div>
       </div>
     </main>
-
-  )
-
-}
-
-}
-
   );
 }
-
