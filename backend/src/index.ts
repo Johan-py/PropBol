@@ -87,10 +87,12 @@ import historialRoutes from './modules/perfil/historial.routes.js'
 import { verifyEmailTransport } from "./lib/email.service.js";
 
 // FAVORITES
-import favoritesRoutes from "./modules/favorites/favorites.routes.js";
-import telemetriaRoutes from "./modules/telemetria/telemetria.routes.js";
-import recomendacionesRoutes from "./modules/recomendaciones/recomendaciones.routes.js";
-import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js';
+import favoritesRoutes from './modules/favorites/favorites.routes.js'
+import telemetriaRoutes from './modules/telemetria/telemetria.routes.js'
+import recomendacionesRoutes from './modules/recomendaciones/recomendaciones.routes.js'
+import transaccionesRoutes from './modules/transacciones/transacciones.routes.js'
+import plansRoutes from './modules/plans/plans.routes.js'
+import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js'
 // --------------------
 // SERVER
 // --------------------
@@ -129,13 +131,13 @@ app.use("/uploads", express.static(path.resolve("uploads")));
 // --------------------
 // RUTAS LEGACY
 // --------------------
-app.post("/api/auth/forgot-password", forgotPasswordController);
-app.post("/api/auth/reset-password", resetPasswordController);
-app.use("/api/auth-legacy", authRoutes);
-app.get("/api/users/:id/publicaciones/free", authMiddleware, (_req, res) => {
-  res.json({ restantes: 2 });
-});
-app.use("/api/publicaciones-legacy", publicacionesRoutes);
+app.post('/api/auth/forgot-password', forgotPasswordController)
+app.post('/api/auth/reset-password', resetPasswordController)
+app.use('/api/auth-legacy', authRoutes)
+app.get('/api/users/:id/publicaciones/free', authMiddleware, (_req, res) => {
+  res.json({ restantes: 2 })
+})
+app.use('/api/publicaciones-legacy', publicacionesRoutes)
 
 // --------------------
 // RUTAS PRINCIPALES
@@ -167,6 +169,8 @@ app.use('/api/recomendaciones', recomendacionesRoutes)
 app.use('/api/blogs', blogsRoutes)
 app.use("/api/telemetria", telemetriaRouter);
 
+app.use('/api/transacciones', transaccionesRoutes)
+app.use('/api/planes', plansRoutes)
 // --------------------
 // MOCK / TEST
 // --------------------
