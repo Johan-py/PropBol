@@ -68,18 +68,18 @@ export class RecomendacionesRepository {
     return favoritos.map((f) => f.inmueble)
   }
 
- async getInmueblesCandidatos(usuarioId: number, limit: number = 100) {
-  return await prisma.inmueble.findMany({
-    where: {
-      estado: 'ACTIVO'
-    },
-    include: {
-      ubicacion: true
-    },
-    take: limit
-  })
-  console.log("DATABASE_URL actual:", process.env.DATABASE_URL);
-}
+  async getInmueblesCandidatos(usuarioId: number, limit: number = 100) {
+    return await prisma.inmueble.findMany({
+      where: {
+        estado: 'ACTIVO'
+      },
+      include: {
+        ubicacion: true
+      },
+      take: limit
+    })
+    console.log('DATABASE_URL actual:', process.env.DATABASE_URL)
+  }
 
   async getInmueblesPorZona(zona: string, limit: number = 50) {
     return await prisma.inmueble.findMany({
