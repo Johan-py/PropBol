@@ -26,13 +26,15 @@ type ResumenFinalRepositoryResult = NonNullable<
   Awaited<ReturnType<typeof buscarResumenFinalPorIdRepository>>
 >
 
-type ParametroPersonalizadoDb = ResumenFinalRepositoryResult['inmueble'] extends {
-  inmueble_etiqueta: Array<infer T>
-}
-  ? T
-  : never
+type ParametroPersonalizadoDb =
+  ResumenFinalRepositoryResult['inmueble'] extends {
+    inmueble_etiqueta: Array<infer T>
+  }
+    ? T
+    : never
 
-type MultimediaDb = ResumenFinalRepositoryResult['multimedia'] extends Array<infer T> ? T : never
+type MultimediaDb =
+  ResumenFinalRepositoryResult['multimedia'] extends Array<infer T> ? T : never
 
 type ParametroPersonalizadoResumen = {
   id: number
@@ -103,7 +105,9 @@ export const listarMisPublicacionesService = async (usuarioId: number) => {
 
   const publicaciones = await buscarPublicacionesPorUsuarioRepository(usuarioId)
 
-  type PublicacionesPorUsuario = Awaited<ReturnType<typeof buscarPublicacionesPorUsuarioRepository>>
+  type PublicacionesPorUsuario = Awaited<
+    ReturnType<typeof buscarPublicacionesPorUsuarioRepository>
+  >
 
   return publicaciones.map((publicacion: PublicacionesPorUsuario[number]) => ({
     id: publicacion.id,
@@ -299,18 +303,22 @@ export const obtenerResumenFinalService = async (
     ) => array.findIndex((item) => item.id === parametro.id) === index
   )
 
-  const multimedia: MultimediaResumen[] = (resumen.multimedia ?? []).map((item: MultimediaDb) => ({
-    id: item.id,
-    url: item.url,
-    tipo: normalizarTipoMultimedia(item.tipo),
-    pesoMb: item.pesoMb !== null && item.pesoMb !== undefined ? Number(item.pesoMb) : null
-  }))
+  const multimedia: MultimediaResumen[] = (resumen.multimedia ?? []).map(
+    (item: MultimediaDb) => ({
+      id: item.id,
+      url: item.url,
+      tipo: normalizarTipoMultimedia(item.tipo),
+      pesoMb: item.pesoMb !== null && item.pesoMb !== undefined ? Number(item.pesoMb) : null
+    })
+  )
 
   const imagenes = multimedia.filter(
     (item: MultimediaResumen) => item.tipo === TIPO_MULTIMEDIA_IMAGEN
   )
 
-  const videos = multimedia.filter((item: MultimediaResumen) => item.tipo === TIPO_MULTIMEDIA_VIDEO)
+  const videos = multimedia.filter(
+    (item: MultimediaResumen) => item.tipo === TIPO_MULTIMEDIA_VIDEO
+  )
 
   return {
     id: resumen.id,
