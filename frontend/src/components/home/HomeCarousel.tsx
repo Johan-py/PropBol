@@ -13,6 +13,10 @@ interface BannerData {
 
 export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
+<<<<<<< HEAD
+=======
+  const [isPaused, setIsPaused] = useState(false) // Para el criterio de pausa
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   const touchStartX = useRef<number | null>(null)
 
   const nextSlide = () => {
@@ -23,6 +27,7 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
     setCurrentIndex((prev) => (prev === 0 ? banners.length - 1 : prev - 1))
   }
 
+<<<<<<< HEAD
   // auto-slide cada 5 segundos
   useEffect(() => {
     const timer = setInterval(() => {
@@ -33,12 +38,25 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
   }, [banners.length])
 
   // swipe mobile
+=======
+  useEffect(() => {
+    if (isPaused) return;
+
+    const timer = setInterval(() => {
+      nextSlide()
+    }, 4000) // Criterio: Intervalo de 4 segundos exactamente
+
+    return () => clearInterval(timer)
+  }, [currentIndex, banners.length, isPaused])
+
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX
   }
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (touchStartX.current === null) return
+<<<<<<< HEAD
 
     const touchEndX = e.changedTouches[0].clientX
     const diff = touchStartX.current - touchEndX
@@ -46,18 +64,35 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
     if (diff > 50) nextSlide()
     else if (diff < -50) prevSlide()
 
+=======
+    const touchEndX = e.changedTouches[0].clientX
+    const diff = touchStartX.current - touchEndX
+    if (diff > 50) nextSlide()
+    else if (diff < -50) prevSlide()
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     touchStartX.current = null
   }
 
   if (!banners || banners.length === 0) return null
 
   return (
+<<<<<<< HEAD
     <div className="relative w-full" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+=======
+    <div 
+      className="relative w-full overflow-hidden" 
+      onTouchStart={handleTouchStart} 
+      onTouchEnd={handleTouchEnd}
+      onMouseEnter={() => setIsPaused(true)} 
+      onMouseLeave={() => setIsPaused(false)} 
+    >
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
       <HomeBanner
         url={banners[currentIndex].urlImagen}
         title={banners[currentIndex].titulo || 'Encuentra tu lugar ideal'}
         subtitle={banners[currentIndex].subtitulo}
       />
+<<<<<<< HEAD
 
       {/* Flechas */}
       <button
@@ -66,12 +101,18 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
         text-white/80 hover:text-white
         transition-all duration-200
         hover:scale-110 active:scale-95"
+=======
+      <button
+        onClick={prevSlide}
+        className="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 z-10 text-white/80 hover:text-white transition-all hover:scale-110"
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
       >
         <ChevronLeft className="w-10 h-10 drop-shadow-lg" />
       </button>
 
       <button
         onClick={nextSlide}
+<<<<<<< HEAD
         className="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 z-10
         text-white/80 hover:text-white
         transition-all duration-200
@@ -87,6 +128,19 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
             key={index}
             className={`h-2 rounded-full transition-all ${
               currentIndex === index ? 'bg-white w-4' : 'bg-white/50 w-2'
+=======
+        className="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 z-10 text-white/80 hover:text-white transition-all hover:scale-110"
+      >
+        <ChevronRight className="w-10 h-10 drop-shadow-lg" />
+      </button>
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+        {banners.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              currentIndex === index ? 'bg-white w-8' : 'bg-white/50 w-2'
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
             }`}
           />
         ))}
@@ -94,3 +148,7 @@ export const HomeCarousel = ({ banners }: { banners: BannerData[] }) => {
     </div>
   )
 }
+<<<<<<< HEAD
+=======
+// fin del componente
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83

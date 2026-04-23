@@ -2,9 +2,16 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+<<<<<<< HEAD
 import { Archive, Trash2, WifiOff } from 'lucide-react'
 import { useNotifications } from '@/hooks/useNotifications'
 import type { NotificationFilter } from '@/types/notification'
+=======
+import { Archive, Trash2, Settings, WifiOff } from 'lucide-react'
+import { useNotifications } from '@/hooks/useNotifications'
+import type { NotificationFilter } from '@/types/notification'
+import Link from 'next/link'
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 const filters: NotificationFilter[] = ['todas', 'no leida', 'leida', 'archivada']
 
@@ -117,6 +124,7 @@ export default function NotificationsPage() {
         </button>
       </div>
 
+<<<<<<< HEAD
       <div className="mb-4 flex flex-wrap gap-2">
         {filters.map((item) => (
           <button
@@ -137,6 +145,39 @@ export default function NotificationsPage() {
                   : 'Archivadas'}
           </button>
         ))}
+=======
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap gap-2">
+          {filters.map((item) => (
+            <button
+              key={item}
+              onClick={() => setFilter(item)}
+              className={`rounded-full px-3 py-1.5 text-sm font-medium transition sm:py-1 ${
+                filter === item
+                  ? 'bg-amber-600 text-white'
+                  : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+              }`}
+            >
+              {item === 'todas'
+                ? 'Todas'
+                : item === 'leida'
+                  ? 'Leídas'
+                  : item === 'no leida'
+                    ? 'No leídas'
+                    : 'Archivadas'}
+            </button>
+          ))}
+        </div>
+
+        <Link
+          href="/configuracion/notificaciones"
+          aria-label="Configuración de notificaciones"
+          className="flex items-center gap-1 rounded-full px-3 py-1.5 text-sm text-stone-500 transition hover:bg-stone-100 hover:text-stone-700"
+        >
+          <Settings className="h-4 w-4" />
+          Configuración
+        </Link>
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
       </div>
 
       <div
@@ -177,11 +218,28 @@ export default function NotificationsPage() {
                   if (notification.status === 'no leida' && isOnline) {
                     void markAsRead(notification.id)
                   }
+<<<<<<< HEAD
                 }}
                 className={`border-b border-stone-100 px-3 py-4 last:border-b-0 transition sm:px-4 ${
                   notification.status === 'no leida'
                     ? 'cursor-pointer bg-amber-50'
                     : 'bg-white hover:bg-stone-50'
+=======
+
+                  router.push(`/notificaciones/${notification.id}`)
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    if (notification.status === 'no leida' && isOnline) {
+                      void markAsRead(notification.id)
+                    }
+
+                    router.push(`/notificaciones/${notification.id}`)
+                  }
+                }}
+                className={`cursor-pointer border-b border-stone-100 px-3 py-4 last:border-b-0 transition hover:bg-stone-50 sm:px-4 ${
+                  notification.status === 'no leida' ? 'bg-amber-50' : 'bg-white'
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
                 }`}
               >
                 <div className="flex items-start justify-between gap-2">

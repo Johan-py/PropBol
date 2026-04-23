@@ -11,7 +11,9 @@ import {
   Menu,
   Trash2,
   WifiOff,
+  Settings,
   X,
+  ChevronDown
 } from "lucide-react";
 
 import Logo from "../navbar/Logo";
@@ -19,6 +21,7 @@ import NavLinks from "../navbar/NavLinks";
 import UserMenu from "../navbar/UserMenu";
 import LogoutModal from "../navbar/LogoutModal";
 import { useNotifications } from "@/hooks/useNotifications";
+import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 import type { NotificationFilter } from "@/types/notification";
 
 export type User = {
@@ -37,6 +40,7 @@ type MeResponse = {
     avatar?: string | null;
   };
 };
+<<<<<<< HEAD
 
 class SessionValidationError extends Error {
   statusCode: number;
@@ -52,6 +56,22 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const USER_STORAGE_KEY = "propbol_user";
 const SESSION_EXPIRES_KEY = "propbol_session_expires";
 
+=======
+
+class SessionValidationError extends Error {
+  statusCode: number;
+
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.name = "SessionValidationError";
+    this.statusCode = statusCode;
+  }
+}
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+const SESSION_EXPIRES_KEY = "propbol_session_expires";
+
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 const filters: NotificationFilter[] = [
   "todas",
   "leida",
@@ -70,6 +90,7 @@ export default function Navbar() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isPropiedadesOpen, setIsPropiedadesOpen] = useState(false);
 
   const {
     open,
@@ -172,6 +193,7 @@ export default function Navbar() {
     try {
       const validatedUser = await fetchCurrentUser(token);
 
+<<<<<<< HEAD
       const finalName =
         validatedUser.nombre && validatedUser.apellido
           ? `${validatedUser.nombre} ${validatedUser.apellido}`
@@ -191,6 +213,11 @@ export default function Navbar() {
           avatar: finalUser.avatar,
         }),
       );
+=======
+      const finalUser: User = buildSessionUser(validatedUser);
+
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(finalUser));
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
       localStorage.setItem("nombre", finalUser.name);
       localStorage.setItem("correo", finalUser.email);
       localStorage.setItem("avatar", finalUser.avatar ?? "");
@@ -358,6 +385,16 @@ export default function Navbar() {
             </div>
 
             <div className="flex items-center gap-4">
+<<<<<<< HEAD
+=======
+              <Link
+                href="/registro-inmueble"
+                className="hidden md:block rounded-md bg-[#E68B25] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-amber-700"
+              >
+                Publica tu inmueble
+              </Link>
+
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
               <div className="relative" ref={notificationPanelRef}>
                 <button
                   type="button"
@@ -387,15 +424,25 @@ export default function Navbar() {
                         Notificaciones
                       </h3>
                       {isLoggedIn && (
-                        <button
-                          type="button"
-                          onClick={() => void markAllAsRead()}
-                          disabled={!isOnline}
-                          className="inline-flex items-center gap-1 text-xs text-amber-600 transition hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-40"
-                        >
-                          <CheckCheck className="h-4 w-4" />
-                          Marcar todas
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <Link
+                            href="/configuracion/notificaciones"
+                            onClick={toggleNotifications}
+                            aria-label="Configuración de notificaciones"
+                            className="rounded-full p-2 text-stone-500 transition hover:bg-stone-100 hover:text-stone-700"
+                          >
+                            <Settings className="h-4 w-4" />
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => void markAllAsRead()}
+                            disabled={!isOnline}
+                            className="inline-flex items-center gap-1 text-xs font-medium text-amber-600 transition hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-40"
+                          >
+                            <CheckCheck className="h-4 w-4" />
+                            Marcar todas
+                          </button>
+                        </div>
                       )}
                     </div>
 
@@ -512,6 +559,12 @@ export default function Navbar() {
                                     ) {
                                       void markAsRead(notification.id);
                                     }
+<<<<<<< HEAD
+=======
+
+                                    toggleNotifications()
+                                    router.push(`/notificaciones/${notification.id}`)
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
                                   }}
                                   className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
                                     notification.status === "no leida"
@@ -648,7 +701,7 @@ export default function Navbar() {
           role="dialog"
         >
           <div
-            className="fixed right-0 top-0 h-full w-4/5 max-w-xs bg-[#F9F6EE] p-6 shadow-xl"
+            className="fixed right-0 top-0 h-full w-4/5 max-w-xs bg-[#F9F6EE] p-6 shadow-xl overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -663,15 +716,20 @@ export default function Navbar() {
               </button>
             </div>
 
+<<<<<<< HEAD
             <nav className="mt-10 flex flex-col gap-4">
+=======
+            <nav className="mt-10 flex flex-col gap-2">
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
               <Link
-                href="/"
+                href="/registro-inmueble"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+                className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"
               >
-                Inicio
+                Publica tu inmueble
               </Link>
 
+<<<<<<< HEAD
               <Link
                 href="/propiedades"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -693,6 +751,38 @@ export default function Navbar() {
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
+=======
+              <div className="flex flex-col">
+                <button
+                  onClick={() => setIsPropiedadesOpen(!isPropiedadesOpen)}
+                  className="flex w-full items-center justify-between rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+                >
+                  <span>Propiedades</span>
+                  <ChevronDown className={`h-5 w-5 transition-transform duration-200 ${isPropiedadesOpen ? "rotate-180" : ""}`} />
+                </button>
+                <div className={`flex flex-col overflow-hidden transition-all duration-300 ${isPropiedadesOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"}`}>
+                  {["Casas", "Departamentos", "Cuartos", "Terrenos", "Espacios de cementerios"].map((item) => (
+                    <Link key={item} href="/propiedades" onClick={() => setIsMobileMenuOpen(false)} className="pl-8 py-2 text-base text-gray-600 hover:text-[#E68B25]">
+                      {item}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              <Link
+                href="/blogs"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+              >
+                Blogs
+              </Link>
+
+              <Link
+                href="/cobros-suscripciones"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+              >
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
                 Planes de membresia
               </Link>
 

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 'use client'
 
 import { Suspense, useEffect, useState } from 'react'
@@ -162,3 +163,15 @@ function ResumenCompraContenido() {
     </div>
   )
 }
+=======
+import { Suspense } from "react";
+import ResumenCliente from "../resumen/resumenCliente";
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div className="text-center py-10 text-gray-600">Cargando...</div>}>
+      <ResumenCliente />
+    </Suspense>
+  );
+}
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83

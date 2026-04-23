@@ -108,11 +108,21 @@ export default function ZonasOverlay({ zonas, selectedZoneId, onZoneSelect }: Pr
               <Polygon
                 positions={zona.coordenadas}
                 pathOptions={{
+<<<<<<< HEAD
                   color: sel ? '#ea580c' : '#9ca3af',
                   weight: sel ? 2 : 1.5, // criterio 16
                   dashArray: sel ? '6,6' : undefined, // criterio 6
                   fillColor: sel ? '#ea580c' : '#9ca3af',
                   fillOpacity: sel ? 0.25 : 0.08 // criterio 7
+=======
+                  color: sel ? '#ea580c' : '#64748b',
+                  weight: sel ? 2 : 1.8, // criterio 16
+                  dashArray: sel ? '6,6' : undefined, // criterio 6
+                  fillColor: sel ? '#ea580c' : '#94a3b8',
+                  fillOpacity: sel ? 0.25 : 0.10, // criterio 7
+                  lineJoin: 'round',
+                  lineCap: 'round'
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
                 }}
                 // criterio 13/14: no capturar eventos de mapa accidentalmente
                 bubblingMouseEvents={false as any}
@@ -123,10 +133,37 @@ export default function ZonasOverlay({ zonas, selectedZoneId, onZoneSelect }: Pr
                   },
                   // criterio 8: cursor pointer
                   mouseover: (e) => {
+<<<<<<< HEAD
                     const el = (e.target as L.Path).getElement()
                     if (el) (el as HTMLElement).style.cursor = 'pointer'
                   }
                 }}
+=======
+                     const layer = e.target as L.Path
+                     const el = layer.getElement()
+
+                    if (el) (el as HTMLElement).style.cursor = 'pointer'
+
+                     if (!sel) {
+                      layer.setStyle({
+                        weight: 3,
+                        fillOpacity: 0.13
+                      })
+                    }
+                  },
+
+                  mouseout: (e) => {
+                    const layer = e.target as L.Path
+
+                    if (!sel) {
+                       layer.setStyle({
+                         weight: 1.8,
+                         fillOpacity: 0.10
+                       })
+                    }
+                  }
+               }}
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
               />
 
               {/* criterio 15: ocultar labels en zoom-out */}

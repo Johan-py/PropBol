@@ -221,11 +221,33 @@ interface MapViewProps {
   isDrawingMode?: boolean
   polygonPoints?: [number, number][]
   isPolygonClosed?: boolean
+<<<<<<< HEAD
+=======
+  isZoneEditingMode?: boolean
+  editablePolygonPoints?: [number, number][]
+  onEditablePointDrag?: (index: number, lat: number, lng: number) => void
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   onMapClick?: (latlng: L.LatLng) => void
   onPointClick?: (index: number) => void
   isLoading?: boolean
   error?: string | null
 }
+
+const vertexHandleIcon = L.divIcon({
+  className: '',
+  html: `
+    <div style="
+      width: 12px;
+      height: 12px;
+      border-radius: 9999px;
+      background: #ffffff;
+      border: 2px solid #ea580c;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    "></div>
+  `,
+  iconSize: [12, 12],
+  iconAnchor: [6, 6]
+})
 
 export default function MapView({
   properties = [],
@@ -240,6 +262,12 @@ export default function MapView({
   isDrawingMode = false,
   polygonPoints = [],
   isPolygonClosed = false,
+<<<<<<< HEAD
+=======
+  isZoneEditingMode = false,
+  editablePolygonPoints = [],
+  onEditablePointDrag,
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   onMapClick,
   onPointClick,
   zonas = [],
@@ -308,7 +336,11 @@ export default function MapView({
           onMapClick={(latlng) => {
             if (isDrawingMode && onMapClick) {
               onMapClick(latlng)
+<<<<<<< HEAD
             } else if (!isDrawingMode) {
+=======
+            } else if (!isDrawingMode && !isZoneEditingMode) {
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
               onSelect?.(null)
               onZoneSelect?.(null) // criterio 10: clic neutral desactiva zona
             }
@@ -360,6 +392,38 @@ export default function MapView({
             }}
           />
         )}
+<<<<<<< HEAD
+=======
+
+        {isZoneEditingMode && editablePolygonPoints.length >= 3 && (
+          <>
+            <Polygon
+              positions={editablePolygonPoints}
+              pathOptions={{
+                color: '#ea580c',
+                fillColor: '#ea580c',
+                fillOpacity: 0.2,
+                weight: 2,
+                dashArray: '6, 6'
+              }}
+            />
+            {editablePolygonPoints.map((point, index) => (
+              <Marker
+                key={`editable-point-${index}`}
+                position={point}
+                draggable
+                icon={vertexHandleIcon}
+                eventHandlers={{
+                  dragend: (event) => {
+                    const latlng = event.target.getLatLng()
+                    onEditablePointDrag?.(index, latlng.lat, latlng.lng)
+                  }
+                }}
+              />
+            ))}
+          </>
+        )}
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
         {/* --- FIN CÓDIGO HU8 --- */}
         {selectedProperty && (
           <FlyToSelected

@@ -60,11 +60,21 @@ export default function EditForm({
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+<<<<<<< HEAD
         <div>
           <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
             Título Propiedad
           </label>
           <input
+=======
+
+        <div>
+          <label htmlFor="title" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+            Título Propiedad
+          </label>
+          <input
+            id="title"
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
             type="text"
             className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
               fieldErrors.title
@@ -81,10 +91,18 @@ export default function EditForm({
         </div>
 
         <div>
+<<<<<<< HEAD
           <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
             Detalles de la Propiedad
           </label>
           <input
+=======
+          <label htmlFor="details" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+            Detalles de la Propiedad
+          </label>
+          <input
+            id="details"
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
             type="text"
             className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
               fieldErrors.details
@@ -101,10 +119,18 @@ export default function EditForm({
         </div>
 
         <div>
+<<<<<<< HEAD
           <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
             Tipo Operación
           </label>
           <select
+=======
+          <label htmlFor="operationType" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+            Tipo Operación
+          </label>
+          <select
+            id="operationType"
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
             className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
               fieldErrors.operationType
                 ? "border-red-400 focus:ring-2 focus:ring-red-200"
@@ -126,10 +152,18 @@ export default function EditForm({
         </div>
 
         <div>
+<<<<<<< HEAD
           <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
             Ubicación
           </label>
           <input
+=======
+          <label htmlFor="location" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+            Ubicación
+          </label>
+          <input
+            id="location"
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
             type="text"
             className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
               fieldErrors.location
@@ -146,10 +180,18 @@ export default function EditForm({
         </div>
 
         <div className="md:col-span-1">
+<<<<<<< HEAD
           <label className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
             Precio
           </label>
           <input
+=======
+          <label htmlFor="price" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+            Precio
+          </label>
+          <input
+            id="price"
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
             type="text"
             className={`w-full rounded-xl border px-4 py-3 text-gray-800 outline-none transition ${
               fieldErrors.price
@@ -183,4 +225,8 @@ export default function EditForm({
       </div>
     </div>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83

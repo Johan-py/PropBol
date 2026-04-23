@@ -1,5 +1,6 @@
 "use client";
 
+<<<<<<< HEAD
 import { useEffect, useState } from "react";
 import BlogCard from "@/components/blog/BlogCard";
 import MyRecentBlogsPanel from "@/components/blog/MyRecentBlogsPanel";
@@ -8,6 +9,17 @@ import FeaturedBlogSpotlight from "@/components/blog/FeaturedBlogSpotlight";
 import { useBlogFeed } from "@/hooks/useBlogFeed";
 
 const USER_STORAGE_KEY = "propbol_user";
+=======
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import BlogCard from "@/components/blog/BlogCard";
+import MyRecentBlogsPanel from "@/components/blog/MyRecentBlogsPanel";
+import AddPostButton from "@/components/blog/AddPostButton";
+import BlogFilterChips from "@/components/blog/BlogFilterChips";
+import FeaturedBlogSpotlight from "@/components/blog/FeaturedBlogSpotlight";
+import { useBlogFeed } from "@/hooks/useBlogFeed";
+import { USER_STORAGE_KEY } from "@/lib/session";
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 export default function BlogsPage() {
   const {
@@ -22,7 +34,10 @@ export default function BlogsPage() {
   } = useBlogFeed();
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   useEffect(() => {
     const syncAuthState = () => {
       setIsAuthenticated(Boolean(localStorage.getItem(USER_STORAGE_KEY)));
@@ -41,11 +56,16 @@ export default function BlogsPage() {
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#fbf6ef_0%,#f5efe7_45%,#ffffff_100%)]">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+<<<<<<< HEAD
 
         {/* ✅ Panel de blogs recientes (feature/blogsRecientes) */}
         <MyRecentBlogsPanel />
 
         {/* HEADER */}
+=======
+        <MyRecentBlogsPanel />
+
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
         <section className="space-y-6">
           <h1 className="max-w-3xl font-heading text-4xl font-bold leading-tight text-stone-900 sm:text-5xl">
             Perspectivas para el Bien Raiz Moderno.
@@ -60,6 +80,7 @@ export default function BlogsPage() {
               />
             </div>
 
+<<<<<<< HEAD
             <button
               type="button"
               disabled={!isAuthenticated}
@@ -77,6 +98,37 @@ export default function BlogsPage() {
             >
               AÑADIR POST
             </button>
+=======
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <AddPostButton />
+
+              {/* TODO: restringir este acceso por rol cuando se integre backend. */}
+              <Link
+                href="/admin/blogs"
+                className="inline-flex min-h-[54px] items-center justify-center border border-stone-300 px-8 text-sm font-semibold uppercase tracking-[0.22em] text-stone-700 transition-colors hover:border-[#a56400] hover:text-[#a56400]"
+              >
+                Moderar Posts
+              </Link>
+
+              <button
+                type="button"
+                disabled={!isAuthenticated}
+                aria-disabled={!isAuthenticated}
+                title={
+                  isAuthenticated
+                    ? "La creacion de blogs se habilitara cuando el flujo este integrado."
+                    : "Disponible solo para usuarios registrados."
+                }
+                className={`inline-flex min-h-[54px] items-center justify-center self-start px-8 text-sm font-semibold uppercase tracking-[0.22em] transition-colors lg:self-auto ${
+                  isAuthenticated
+                    ? "bg-[#a56400] text-white hover:bg-[#8e5800]"
+                    : "cursor-not-allowed bg-[#a56400] text-white/75 opacity-80"
+                }`}
+              >
+                AÑADIR POST
+              </button>
+            </div>
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
           </div>
         </section>
 

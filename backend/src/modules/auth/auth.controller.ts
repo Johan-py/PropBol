@@ -1,12 +1,23 @@
 import type { Request, Response } from "express";
 import {
   AuthError,
+<<<<<<< HEAD
   forgotPasswordService,
+=======
+  activate2FAService,
+  deactivate2FAService,
+  forgotPasswordService,
+  get2FAStatusService,
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   getMeService,
   loginService,
   logoutService,
   registerUser,
   resetPasswordService,
+<<<<<<< HEAD
+=======
+  verify2FAService,
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   verifyRegisterCodeService
 } from './auth.service.js'
 
@@ -24,6 +35,15 @@ type VerifyRegisterBody = {
   codigo: string;
   password: string;
 };
+
+type Verify2FABody = {
+  userId: number
+  codigo: string
+}
+
+type VerifyPasswordBody = {
+  password: string
+}
 
 const isDuplicateEmailError = (message: string) => {
   const normalized = message.toLowerCase();
@@ -144,6 +164,39 @@ export const verifyRegisterCodeController = async (
   }
 };
 
+<<<<<<< HEAD
+=======
+export const verify2FAController = async (
+  req: Request<unknown, unknown, Verify2FABody>,
+  res: Response
+) => {
+  try {
+    const { userId, codigo } = req.body
+
+    const result = await verify2FAService({
+      userId,
+      codigo
+    })
+
+    return res.status(200).json({
+      message: 'Verificación 2FA exitosa',
+      ...result
+    })
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message
+      })
+    }
+
+    const message =
+      error instanceof Error ? error.message : 'Error al verificar código 2FA'
+
+    return res.status(400).json({ message })
+  }
+}
+
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 export const getMeController = async (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
 
@@ -202,6 +255,99 @@ export const logoutController = async (req: Request, res: Response) => {
   }
 };
 
+<<<<<<< HEAD
+=======
+export const activate2FAController = async (
+  req: Request<unknown, unknown, VerifyPasswordBody>,
+  res: Response
+) => {
+  try {
+    const userId = req.user?.id
+    const { password } = req.body
+
+    if (!userId) {
+      return res.status(401).json({
+        message: 'Usuario no autenticado'
+      })
+    }
+
+    const result = await activate2FAService({
+      userId,
+      password
+    })
+
+    return res.status(200).json(result)
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message
+      })
+    }
+
+    const message =
+      error instanceof Error ? error.message : 'Error al activar la verificación en dos pasos'
+
+    return res.status(400).json({ message })
+  }
+}
+
+export const deactivate2FAController = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.id
+
+    if (!userId) {
+      return res.status(401).json({
+        message: 'Usuario no autenticado'
+      })
+    }
+
+    const result = await deactivate2FAService(userId)
+
+    return res.status(200).json(result)
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message
+      })
+    }
+
+    const message =
+      error instanceof Error ? error.message : 'Error al desactivar la verificación en dos pasos'
+
+    return res.status(400).json({ message })
+  }
+}
+
+export const get2FAStatusController = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?.id
+
+    if (!userId) {
+      return res.status(401).json({
+        message: 'Usuario no autenticado'
+      })
+    }
+
+    const result = await get2FAStatusService(userId)
+
+    return res.status(200).json(result)
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message
+      })
+    }
+
+    const message =
+      error instanceof Error
+        ? error.message
+        : 'Error al obtener el estado de la verificación en dos pasos'
+
+    return res.status(400).json({ message })
+  }
+}
+
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 export const forgotPasswordController = async (req: Request, res: Response) => {
   try {
     const result = await forgotPasswordService(req.body)

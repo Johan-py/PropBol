@@ -1,4 +1,5 @@
 'use client'
+<<<<<<< HEAD
 
 import { useEffect, useState } from 'react'
 import {
@@ -16,6 +17,32 @@ import { LocationSearch } from '../layout/LocationSearch'
 import { ComboBox } from '../ui/ComboBox'
 import TransactionModeFilter from './TransactionModeFilter'
 import { useRouter } from 'next/navigation'
+=======
+
+import { useEffect, useState } from 'react'
+import { CapacidadButton } from '../busqueda/capacidad/CapacidadButton'
+import {
+  Home,
+  Search as SearchIcon,
+  DollarSign,
+  Users,
+  Maximize,
+  Award,
+  SlidersHorizontal,
+  ChevronDown,
+  Building,
+  Bed,
+  Trees,
+  Flower2
+} from 'lucide-react'
+import { useSearchFilters } from '@/hooks/useSearchFilters'
+import { LocationSearch } from '../layout/LocationSearch'
+import { ComboBox } from '../ui/ComboBox'
+import TransactionModeFilter from './TransactionModeFilter'
+import { useRouter } from 'next/navigation'
+import SuperficieFilter from './SuperficieFilter'
+
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 interface FilterBarProps {
   onSearch?: (filtros: {
@@ -26,6 +53,7 @@ interface FilterBarProps {
   }) => void
   variant?: 'home' | 'map'
   onOpenPriceFilter?: () => void
+<<<<<<< HEAD
 }
 
 type LocationValue =
@@ -63,6 +91,71 @@ const MockFilterBtn = ({
 )
 
 export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter }: FilterBarProps) {
+=======
+  onOpenSuperficieFilter?: () => void
+  isCapacidadActive?: boolean
+  onToggleCapacidad?: () => void
+  isPriceFilterActive?: boolean   
+  isSuperficieFilterActive?: boolean
+}
+type LocationValue =
+  | string
+  | {
+    nombre?: string
+    target?: {
+      value?: string
+    }
+  }
+
+// Botón Mock
+const MockFilterBtn = ({
+  icon: Icon,
+  text,
+  hasChevron = true,
+  onClick
+}: {
+  icon?: any
+  text: string
+  hasChevron?: boolean
+  onClick?: () => void
+}) => (
+  <button
+    type="button"
+    className="h-[36px] flex items-center justify-between bg-white border border-stone-200 text-stone-600 px-3 rounded-xl shadow-sm hover:border-stone-300 transition-all font-inter text-sm whitespace-nowrap gap-2 shrink-0 focus:outline-none cursor-default"
+    onClick={(e) => { e.preventDefault(); if (onClick) onClick() }}
+
+  >
+    <div className="flex items-center gap-2">
+      {Icon && <Icon className="w-4 h-4 text-stone-500" />}
+      <span>{text}</span>
+    </div>
+    {hasChevron && <ChevronDown className="w-4 h-4 text-stone-400" />}
+  </button>
+)
+const trackSearchTelemetria = async (filtros: {
+  tipoInmueble: string[]
+  modoInmueble: string[]
+  query: string
+  zona?: string
+}) => {
+  try {
+    await fetch('/api/telemetria/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...filtros,
+        timestamp: new Date().toISOString(),
+        url: typeof window !== 'undefined' ? window.location.pathname : ''
+      })
+    })
+  } catch (error) {
+    console.error('Error tracking search:', error)
+  }
+}
+
+export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad, isPriceFilterActive = false, isSuperficieFilterActive = false }: FilterBarProps) {
+
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   const router = useRouter()
 
   const { updateFilters } = useSearchFilters()
@@ -86,6 +179,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     }
   }, [])
 
+<<<<<<< HEAD
   const handleSearch = (e?: React.FormEvent) => {
     if (e) e.preventDefault()
     const tipoMap: Record<string, string> = {
@@ -95,11 +189,30 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       Cuarto: 'CUARTO',
       Espacios: 'ESPACIOS',
       Cementerio: 'CEMENTERIO'
+=======
+  const propertyTypes = [
+    { label: 'Casas', icon: Home },
+    { label: 'Departamentos', icon: Building },
+    { label: 'Cuartos', icon: Bed },
+    { label: 'Terrenos', icon: Trees },
+    { label: 'Espacios Cementerio', icon: Flower2 }
+  ]
+
+  const handleSearch = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault()
+    const tipoMap: Record<string, string> = {
+      Casas: 'CASA',
+      Departamentos: 'DEPARTAMENTO',
+      Terrenos: 'TERRENO',
+      Cuartos: 'CUARTO',
+      "Espacios Cementerio": 'TERRENO_MORTUORIO'
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     }
 
     const tipoFinal =
       tipoMap[tipoInmueble] ||
       (tipoInmueble !== 'Cualquier tipo' ? tipoInmueble.toUpperCase() : null)
+<<<<<<< HEAD
 
     const nuevosFiltros = {
       tipoInmueble: tipoFinal ? [tipoFinal] : [],
@@ -129,6 +242,50 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     const queryString = params.toString()
     const targetUrl = `/busqueda_mapa${queryString ? `?${queryString}` : ''}`
 
+=======
+
+    const esTerreno = tipoFinal === 'TERRENO' || tipoFinal === 'TERRENO_MORTUORIO';
+
+    if (esTerreno) {
+      setModosSeleccionados(['VENTA']);
+    }
+
+    const modosFinales = esTerreno ? ['VENTA'] : modosSeleccionados;
+
+    const nuevosFiltros = {
+      tipoInmueble: tipoFinal ? [tipoFinal] : [],
+      modoInmueble: modosFinales,
+      query: ubicacionTexto,
+      updatedAt: new Date().toISOString()
+    }
+    await trackSearchTelemetria({
+      tipoInmueble: nuevosFiltros.tipoInmueble,
+      modoInmueble: nuevosFiltros.modoInmueble,
+      query: nuevosFiltros.query,
+      zona: ubicacionTexto
+    })
+    updateFilters(nuevosFiltros)
+
+    const params = new URLSearchParams()
+    try {
+      const merged = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}') as {
+        locationId?: string | number
+      }
+      if (merged.locationId != null && merged.locationId !== '') {
+        params.set('locationId', String(merged.locationId))
+      }
+    } catch {
+      /* ignore */
+    }
+
+    modosSeleccionados.forEach((modo) => params.append('modoInmueble', modo))
+    if (tipoFinal) params.set('tipoInmueble', tipoFinal)
+    if (ubicacionTexto.trim() !== '') params.set('query', ubicacionTexto.trim())
+
+    const queryString = params.toString()
+    const targetUrl = `/busqueda_mapa${queryString ? `?${queryString}` : ''}`
+
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     router.push(targetUrl)
     if (onSearch) onSearch(nuevosFiltros)
   }
@@ -157,9 +314,14 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
           FILA INFERIOR: Todo lo demás
           ========================================= */}
       <div
+<<<<<<< HEAD
         className={`flex items-center w-full gap-3 relative z-[90] !overflow-visible ${
           variant === 'map' ? 'flex-nowrap' : 'flex-col md:flex-row flex-wrap'
         }`}
+=======
+        className={`flex items-center w-full gap-3 relative z-[90] !overflow-visible ${variant === 'map' ? 'flex-nowrap' : 'flex-col md:flex-row flex-wrap'
+          }`}
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
       >
         {/* 🔸 Tipo (Aislado con z-[100] para que salte por encima de todo) */}
         <div
@@ -169,7 +331,11 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
             label={variant === 'map' ? '' : 'Tipo'}
             placeholder="Cualquier tipo"
             icon={Home}
+<<<<<<< HEAD
 options={['Casa', 'Departamento', 'Terreno', 'Cuarto', 'Espacios', 'Cementerio']}
+=======
+            options={propertyTypes}
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
             onChange={(val: string) => setTipoInmueble(val)}
             value={tipoInmueble}
           />
@@ -191,6 +357,7 @@ options={['Casa', 'Departamento', 'Terreno', 'Cuarto', 'Espacios', 'Cementerio']
         {/* 🚀 FIX AISLAMIENTO DE SCROLL: 
             Solo estos botones tienen overflow-x-auto. Así los menús de la izquierda no se cortan. */}
         {variant === 'map' && (
+<<<<<<< HEAD
           <div className="flex items-center gap-3 flex-1 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <div className="shrink-0">
               <MockFilterBtn icon={DollarSign} text="Precio" onClick={onOpenPriceFilter} />
@@ -200,11 +367,54 @@ options={['Casa', 'Departamento', 'Terreno', 'Cuarto', 'Espacios', 'Cementerio']
             </div>
             <div className="shrink-0">
               <MockFilterBtn icon={Maximize} text="Metros" />
+=======
+          <div className="flex items-center gap-3 flex-1 overflow-visible pb-1">
+            <div className="shrink-0">
+              <button
+                type="button"
+                onClick={(e) => { e.preventDefault(); onOpenPriceFilter?.() }}
+                className={`h-[36px] flex items-center gap-2 px-3 rounded-xl shadow-sm transition-all text-sm whitespace-nowrap focus:outline-none border shrink-0 ${
+                  isPriceFilterActive
+                    ? 'bg-[#d97706] text-white border-[#d97706]'
+                    : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+                }`}
+              >
+                <DollarSign className={`w-4 h-4 ${isPriceFilterActive ? 'text-white' : 'text-stone-500'}`} />
+                <span>Precio</span>
+                <ChevronDown className={`w-4 h-4 ${isPriceFilterActive ? 'text-white' : 'text-stone-400'}`} />
+              </button>
+            </div>
+            <div className="shrink-0">
+              <CapacidadButton
+                variant={variant}
+                isActive={isCapacidadActive}
+                onClick={onToggleCapacidad}
+              />
+            </div>
+            <div className="shrink-0">
+              <button
+                type="button"
+                onClick={() => onOpenSuperficieFilter?.()}
+                className={`h-[36px] flex items-center gap-2 px-3 rounded-xl shadow-sm transition-all text-sm whitespace-nowrap focus:outline-none border shrink-0 ${
+                  isSuperficieFilterActive
+                    ? 'bg-[#d97706] text-white border-[#d97706]'
+                    : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+                }`}
+              >
+                <Maximize className={`w-4 h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-500'}`} />
+                <span>Metros</span>
+                <ChevronDown className={`w-4 h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-400'}`} />
+              </button>
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
             </div>
             <div className="shrink-0">
               <MockFilterBtn icon={SlidersHorizontal} text="Más Filtros" hasChevron={false} />
             </div>
+<<<<<<< HEAD
              <div className="shrink-0">
+=======
+            <div className="shrink-0">
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
               <MockFilterBtn icon={Award} text="Recomendados" hasChevron={false} />
             </div>
           </div>
@@ -220,9 +430,14 @@ options={['Casa', 'Departamento', 'Terreno', 'Cuarto', 'Espacios', 'Cementerio']
         >
           <button
             type="submit"
+<<<<<<< HEAD
             className={`${
               variant === 'map' ? 'h-[36px] px-6 shadow-md' : 'w-full md:w-auto h-[46px] px-10'
             } bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95`}
+=======
+            className={`${variant === 'map' ? 'h-[36px] px-6 shadow-md' : 'w-full md:w-auto h-[46px] px-10'
+              } bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95`}
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
           >
             <SearchIcon size={18} />
             {variant === 'home' && 'BUSCAR'}

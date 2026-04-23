@@ -1,5 +1,9 @@
 import { publicacionesRepository } from "./publicaciones.repository.js";
 import { Publicacion } from "@prisma/client";
+<<<<<<< HEAD
+=======
+import { suscripcionesService } from "../suscripciones/suscripciones.service.js";
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 export const publicacionesService = {
   async listarTodas(): Promise<Publicacion[]> {
@@ -10,6 +14,35 @@ export const publicacionesService = {
     return publicacionesRepository.findGratis();
   },
 
+<<<<<<< HEAD
+=======
+  async listarMisPublicaciones(userId: number) {
+    return publicacionesRepository.findByUserId(userId);
+  },
+
+  async obtenerEstadisticasPublicaciones(userId: number) {
+    const totalPublicaciones = await publicacionesRepository.countByUser(userId);
+    const limite = await suscripcionesService.obtenerLimitePublicaciones(userId);
+    const tieneSuscripcion = await suscripcionesService.tieneSuscripcionActiva(userId);
+    const suscripcion = await suscripcionesService.obtenerSuscripcionActiva(userId);
+
+    return {
+      totalPublicaciones,
+      limite,
+      disponibles: Math.max(0, limite - totalPublicaciones),
+      tieneSuscripcion,
+      suscripcion: suscripcion
+        ? {
+          id: suscripcion.id,
+          planNombre: suscripcion.plan_suscripcion?.nombre_plan,
+          fechaInicio: suscripcion.fecha_inicio,
+          fechaFin: suscripcion.fecha_fin,
+        }
+        : null,
+    };
+  },
+
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   async crear(
     userId: number,
     data: Partial<Publicacion>,
@@ -39,4 +72,35 @@ export const publicacionesService = {
 
     return "FLOW_ALLOWED";
   },
+<<<<<<< HEAD
+=======
+  // Agregar después de validarFlujo
+  async eliminar(publicacionId: number, userId: number): Promise<void> {
+    const publicacion = await publicacionesRepository.findById(publicacionId);
+
+    if (!publicacion) {
+      throw new Error("PUBLICACION_NOT_FOUND");
+    }
+
+    if (publicacion.usuarioId !== userId) {
+      throw new Error("UNAUTHORIZED");
+    }
+
+    await publicacionesRepository.deleteById(publicacionId);
+  },
+
+  async cambiarEstado(publicacionId: number, userId: number, activa: boolean): Promise<void> {
+    const publicacion = await publicacionesRepository.findById(publicacionId);
+
+    if (!publicacion) {
+      throw new Error("PUBLICACION_NOT_FOUND");
+    }
+
+    if (publicacion.usuarioId !== userId) {
+      throw new Error("UNAUTHORIZED");
+    }
+
+    await publicacionesRepository.updateEstado(publicacionId, activa);
+  },
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 };

@@ -3,6 +3,10 @@
 import React, { useState, useEffect } from 'react'
 import { Trash2, Pencil, Check, X, Loader2, MapPin, Plus, Eye, EyeOff } from 'lucide-react'
 import nextDynamic from 'next/dynamic'
+<<<<<<< HEAD
+=======
+import { useRouter } from 'next/navigation'
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 const MapaZonas = nextDynamic(() => import('./MapaZonas'), {
   ssr: false,
@@ -26,6 +30,10 @@ interface Zona {
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
 export default function MisZonas() {
+<<<<<<< HEAD
+=======
+  const router = useRouter()
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   const [zonas, setZonas] = useState<Zona[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [editandoId, setEditandoId] = useState<number | null>(null)
@@ -33,7 +41,12 @@ export default function MisZonas() {
   const [referenciaEditada, setReferenciaEditada] = useState('')
   const [confirmandoEliminarId, setConfirmandoEliminarId] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
+<<<<<<< HEAD
 
+=======
+  const [zonaSeleccionadaId, setZonaSeleccionadaId] = useState<number | null>(null)
+ 
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   const getToken = () => localStorage.getItem('token')
 
   // Extraer coordenadas del centro del polígono real
@@ -68,8 +81,12 @@ export default function MisZonas() {
     try {
       const token = getToken()
       if (!token) {
+<<<<<<< HEAD
         setError('No autenticado. Por favor inicia sesión.')
         setIsLoading(false)
+=======
+        router.replace('/sign-in')
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
         return
       }
 
@@ -111,6 +128,10 @@ export default function MisZonas() {
 
   const toggleMostrarPropiedades = (zonaId: number, event: React.MouseEvent) => {
     event.stopPropagation()
+<<<<<<< HEAD
+=======
+    setZonaSeleccionadaId(zonaId)
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     setZonas(prev => prev.map(zona =>
       zona.id === zonaId
         ? { ...zona, mostrarPropiedades: !zona.mostrarPropiedades }
@@ -259,6 +280,10 @@ export default function MisZonas() {
             <MapaZonas
               zonas={zonas}
               zonasConPropiedades={zonasConPropiedades}
+<<<<<<< HEAD
+=======
+              zonaSeleccionadaId={zonaSeleccionadaId}
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
             />
           </div>
         </div>

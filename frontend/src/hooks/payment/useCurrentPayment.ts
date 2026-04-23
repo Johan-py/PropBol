@@ -30,15 +30,24 @@ export function useCurrentPayment() {
         }
 
         setPayment(realPayment)
+<<<<<<< HEAD
       } catch (err) {
+=======
+      } catch (_err) {
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
         setError('Error al cargar el pago')
       } finally {
         setLoading(false)
       }
     }
+<<<<<<< HEAD
 
     fetchPayment()
   }, [])
 
+=======
+    fetchPayment()
+  }, [])
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   return { payment, loading, error }
 }

@@ -67,6 +67,7 @@ export const DropdownOrden = <T extends string = string>({
   }, [isOpen])
 
   const handleSelect = useCallback(
+<<<<<<< HEAD
     (optionValue: T) => {
       setInternalValue(optionValue)
       onChange(optionValue)
@@ -75,6 +76,30 @@ export const DropdownOrden = <T extends string = string>({
     [onChange]
   )
 
+=======
+  async (optionValue: T) => {
+    setInternalValue(optionValue)
+    onChange(optionValue)
+    setIsOpen(false)
+
+    try {
+      await fetch('/api/telemetria/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ordenamiento: optionValue,
+          timestamp: new Date().toISOString(),
+          url: typeof window !== 'undefined' ? window.location.pathname : ''
+        })
+      })
+    } catch (error) {
+      console.error('Error tracking ordenamiento:', error)
+    }
+  },
+  [onChange]
+)
+
+>>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   const selectedOption = options.find((opt) => opt.value === currentValue)
   const hasSelection = selectedOption !== undefined
 

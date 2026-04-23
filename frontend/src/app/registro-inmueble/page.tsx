@@ -11,6 +11,18 @@ import ErrorPanel from "../../components/publicacion/ErrorPanel";
 import PublicarModal from "../../components/publicacion/PublicarModal";
 // ----------------------------------------------------
 
+type CampoError =
+  | 'titulo'
+  | 'descripcion'
+  | 'direccion'
+  | 'zona'
+  | 'habitaciones'
+  | 'banos'
+  | 'precio'
+  | 'area'
+  | 'operacion'
+  | null
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 
 export default function MiRegistroPage() {
@@ -31,6 +43,10 @@ export default function MiRegistroPage() {
     ciudad: 'Cochabamba',
     descripcion: ''
   })
+
+  const [estado, setEstado] = useState<'ninguno' | 'exito' | 'error'>('ninguno')
+  const [mensajeError, setMensajeError] = useState('')
+  const [campoError, setCampoError] = useState<CampoError>(null)
 
   // 2. NUEVOS ESTADOS PARA LA HU-5 (Añadidos)
   const [estadoPublicacion, setEstadoPublicacion] = useState<EstadoPublicacion>("idle")
@@ -460,12 +476,12 @@ export default function MiRegistroPage() {
 
       {mostrarPlanModal && <PlanModal onClose={() => setMostrarPlanModal(false)} />}
       
-     {/* --- 🟢 COMPONENTE MODAL DE TU HU-5 (FASE 2) (INYECTADO) --- */}
+      {/* --- 🟢 COMPONENTE MODAL DE TU HU-5 (FASE 2) (INYECTADO) --- */}
       {(estadoPublicacion !== "idle") && (
         <PublicarModal
           estado={estadoPublicacion as any} 
           progreso={progreso}
-          onConfirmar={handlePublicarInmueble}
+          onConfirmar={handlePublicarInmueble} // Llama a la API original fusionada
           onCancelar={() => setEstadoPublicacion("idle")}
           onReintentar={() => setEstadoPublicacion("confirmando")}
         />
