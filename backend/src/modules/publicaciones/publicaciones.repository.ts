@@ -54,20 +54,20 @@ export const publicacionesRepository = {
       },
     });
   },
-  // Agregar después de async create
+
   async findById(id: number) {
     return prisma.publicacion.findUnique({
       where: { id: id },
       include: {
         inmueble: true,
-        multimedia: true
-      }
+        multimedia: true,
+      },
     });
   },
 
   async deleteById(id: number) {
     return prisma.publicacion.delete({
-      where: { id: id }
+      where: { id: id },
     });
   },
 
@@ -77,8 +77,20 @@ export const publicacionesRepository = {
 
     return prisma.publicacion.update({
       where: { id: id },
-      data: { estado: estado }
+      data: { estado: estado },
     });
   },
 
+  // 👉 Nueva función HU‑5 v2
+  async validarPublicacionHU5(userId: number, data: Partial<Publicacion>) {
+    const count = await publicacionesRepository.countByUser(userId);
+    if (count >= 2) {
+      throw new Error("LIMIT_REACHED");
+    }
+
+    return {
+      estado: "Validado",
+      mensaje: "Publicación lista para guardar",
+    };
+  },
 };
