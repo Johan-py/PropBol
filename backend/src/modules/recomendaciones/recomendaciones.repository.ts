@@ -138,24 +138,30 @@ export class RecomendacionesRepository {
 
     const popularesPorZona = await prisma.propiedad_vista.groupBy({
       by: ['inmuebleId'],
+      where: {
+        vistaEn: { gte: fechaLimite }
+      },
       _count: { inmuebleId: true },
       orderBy: { _count: { inmuebleId: 'desc' } },
-      take: limit
+      take: limit * 2
     })
 
     const ids = popularesPorZona.map((v) => v.inmuebleId)
     if (ids.length === 0) return []
 
+    const idsFinales = ids.filter((id) => !idsExcluir.includes(id))
+    if (idsFinales.length === 0) return []
+
     return await prisma.inmueble.findMany({
       where: {
-        id: { in: ids },
+        id: { in: idsFinales },
         estado: 'ACTIVO',
         ubicacion: {
           zona: { contains: zona, mode: 'insensitive' }
-        },
-        ...(idsExcluir.length > 0 ? { id: { notIn: idsExcluir } } : {})
+        }
       },
-      include: { ubicacion: true }
+      include: { ubicacion: true },
+      take: limit
     })
   }
 

@@ -30,6 +30,7 @@ export const obtenerPerfil = async (req: AuthRequest, res: Response) => {
         genero: true,
         direccion: true,
         telefonos: true,
+        fecha_nacimiento: true,
       },
     });
 

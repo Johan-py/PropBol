@@ -36,9 +36,7 @@ export function useCurrentPayment() {
         setLoading(false)
       }
     }
-
     fetchPayment()
   }, [])
-
   return { payment, loading, error }
 }
