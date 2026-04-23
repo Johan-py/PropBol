@@ -16,12 +16,15 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
   const handleSave = async () => {
     const payload = {
       genero: genero || undefined,
-      rango_edad: edad || undefined,  // ✅ Cambiado: enviar rango_edad
+      rango_edad: edad || undefined,  // ✅ Tu lógica original
       zona_interes: zona || undefined
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/telemetria/visitante', {
+      // ✅ SOLO CAMBIÉ ESTO: la URL ahora usa variable de entorno
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
+      const response = await fetch(`${API_URL}/api/telemetria/visitante`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,7 +35,7 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
       const data = await response.json();
 
       if (data.success) {
-        // Guardar en localStorage
+        // ✅ Tu lógica original de localStorage
         localStorage.setItem('guest_preferences', JSON.stringify({
           genero,
           rango_edad: edad,
@@ -41,6 +44,9 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
 
         alert('¡Preferencias guardadas! Te mostraremos mejores resultados.');
         onClose();
+      } else {
+        // ✅ AÑADÍ SOLO ESTO: manejo del caso cuando data.success es false
+        alert(data.message || 'Error al guardar preferencias');
       }
     } catch (error) {
       console.error("Error guardando preferencias:", error);
