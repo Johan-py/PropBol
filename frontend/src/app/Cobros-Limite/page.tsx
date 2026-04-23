@@ -11,13 +11,21 @@ export default function Page() {
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 100)
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/consumo/limite`)
-      .then((res) => res.json())
-      .then((data) => {
-        setDatosPlan({ total: data.total, usadas: data.usadas })
-        setCargando(false)
-      })
-      .catch((err) => console.error('Error:', err))
+    const token = localStorage.getItem('token')
+const payload = token ? JSON.parse(atob(token.split('.')[1])) : null
+const userId = payload?.id ?? payload?.sub
+
+if (userId) {
+  fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${userId}/publicaciones/free`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      setDatosPlan({ total: 2, usadas: 2 - data.restantes })
+      setCargando(false)
+    })
+    .catch((err) => console.error('Error:', err))
+}
 
     return () => clearTimeout(timer)
   }, [])
