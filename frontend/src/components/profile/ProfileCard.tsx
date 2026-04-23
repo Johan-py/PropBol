@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, Suspense } from 'react'
 import { Plus, Trash2, Pencil, Camera, Loader2, User } from 'lucide-react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import SecurityModal from './SecurityModal'
 import OtpModal from './OtpModal'
 
@@ -21,7 +21,7 @@ interface PerfilData {
   pais: string | null
   genero: string | null
   direccion: string | null
-  fechaNacimiento: string | null
+  fecha_nacimiento: string | null // ✅ UNA SOLA VARIABLE, exactamente como la base de datos
   telefonos: any[] | null
 }
 
@@ -41,20 +41,11 @@ const ofuscarEmail = (email: string) => {
   return `${usuario.substring(0, 2)}***@${dominio}`
 }
 
-// 1. Renombramos la función interna
 function ProfileCardContent() {
+  const router = useRouter()
   const searchParams = useSearchParams()
   const focusParam = searchParams ? searchParams.get('focus') : null
-  const [isHighlighted, setIsHighlighted] = useState(false)
-
-  useEffect(() => {
-    if (focusParam === 'personal-data') {
-      setIsHighlighted(true)
-      const el = document.getElementById('personal-data-form')
-      el?.scrollIntoView({ behavior: 'smooth' })
-      setTimeout(() => setIsHighlighted(false), 3000)
-    }
-  }, [focusParam])
+  const [highlightedFields, setHighlightedFields] = useState<string[]>([])
 
   const [campoEditando, setCampoEditando] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -100,8 +91,22 @@ function ProfileCardContent() {
   const soloLetras = (value: string) => value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')
   const getToken = () => localStorage.getItem('token')
 
-  const syncNavbar = () => {
+  // BUG 1 CORREGIDO: Disparamos un StorageEvent real y refrescamos el layout para el Navbar
+  const syncNavbar = (key?: string, value?: string) => {
     window.dispatchEvent(new Event('storage'))
+    window.dispatchEvent(new Event('profileUpdated'))
+
+    if (key && value) {
+      window.dispatchEvent(new StorageEvent('storage', {
+        key: key,
+        newValue: value,
+        url: window.location.href,
+        storageArea: localStorage
+      }))
+    }
+    
+    // Fuerza a los componentes del servidor (como layouts) a reevaluarse
+    router.refresh()
   }
 
   const cargarPerfil = async () => {
@@ -158,7 +163,7 @@ function ProfileCardContent() {
         setDireccion(perfil.direccion || '')
         setOriginalDireccion(perfil.direccion || '')
 
-        // ✅ FORMATEAR LA FECHA PARA EL INPUT DATE
+        // ✅ Lógica de Develop: FORMATEAR LA FECHA PARA EL INPUT DATE
         const fechaFormateada = perfil.fecha_nacimiento
           ? new Date(perfil.fecha_nacimiento).toISOString().split('T')[0]
           : ''
@@ -172,8 +177,15 @@ function ProfileCardContent() {
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
         localStorage.setItem('nombre', perfil.nombre || '')
         localStorage.setItem('correo', perfil.correo || '')
-        if (foto) localStorage.setItem('avatar', foto)
-        syncNavbar()
+        
+        // BUG 1 CORREGIDO: Sincronización robusta al cargar
+        if (foto) {
+          const absoluteAvatar = foto.startsWith('http') ? foto : `${API_URL}${foto}`;
+          localStorage.setItem('avatar', absoluteAvatar)
+          syncNavbar('avatar', absoluteAvatar)
+        } else {
+          syncNavbar()
+        }
 
         if (perfil.telefonos && Array.isArray(perfil.telefonos) && perfil.telefonos.length > 0) {
           setTelefonos(perfil.telefonos.map((tel: any, i: number) => ({
@@ -195,6 +207,33 @@ function ProfileCardContent() {
 
   useEffect(() => { cargarPerfil() }, [])
 
+  // BUG 2 CORREGIDO: Resaltado visual EXCLUSIVO para los campos vacíos
+  useEffect(() => {
+    if (focusParam === 'personal-data' && perfilData) {
+      const el = document.getElementById('personal-data-form')
+      el?.scrollIntoView({ behavior: 'smooth' })
+
+      // Evaluamos únicamente los campos que faltan por llenar
+      const fieldsToHighlight: string[] = []
+
+      if (!perfilData.fecha_nacimiento) fieldsToHighlight.push('fechaNacimiento') // ✅ Lógica limpia
+      if (!perfilData.pais) fieldsToHighlight.push('pais')
+      if (!perfilData.genero) fieldsToHighlight.push('genero')
+      if (!perfilData.direccion) fieldsToHighlight.push('direccion')
+      
+      setHighlightedFields(fieldsToHighlight)
+      
+      // Apagamos el resaltado después de 6 segundos
+      setTimeout(() => setHighlightedFields([]), 6000)
+    }
+  }, [focusParam, perfilData])
+
+  const clearHighlight = (field: string) => {
+    if (highlightedFields.includes(field)) {
+      setHighlightedFields(prev => prev.filter(f => f !== field))
+    }
+  }
+
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   const hasEmailChanged = tempEmail !== originalEmail && isValidEmail(tempEmail)
 
@@ -207,7 +246,7 @@ function ProfileCardContent() {
       })
       setOriginalNombre(nombre)
       localStorage.setItem('nombre', nombre)
-      syncNavbar()
+      syncNavbar('nombre', nombre)
     } catch (error: any) {
       console.error(error.message)
     }
@@ -258,10 +297,14 @@ function ProfileCardContent() {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
 <<<<<<< HEAD
+<<<<<<< HEAD
         body: JSON.stringify({ fechaNacimiento })
 =======
         body: JSON.stringify({ fecha_nacimiento: fechaNacimiento }) // ✅ CAMBIA ESTA LÍNEA
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
+=======
+        body: JSON.stringify({ fecha_nacimiento: fechaNacimiento })
+>>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
       })
       setOriginalFechaNacimiento(fechaNacimiento)
     } catch (error: any) {
@@ -330,9 +373,13 @@ function ProfileCardContent() {
       const data = await response.json()
       if (data.ok) {
         const nuevaFoto = data.fotoPerfil || data.avatar
+        const absoluteAvatar = nuevaFoto.startsWith('http') ? nuevaFoto : `${API_URL}${nuevaFoto}`;
+        
         setAvatar(nuevaFoto)
-        localStorage.setItem('avatar', nuevaFoto)
-        syncNavbar()
+        localStorage.setItem('avatar', absoluteAvatar)
+        
+        // BUG 1 CORREGIDO: Notificamos inmediatamente a la Navbar la nueva foto
+        syncNavbar('avatar', absoluteAvatar) 
         cargarPerfil()
       } else {
         throw new Error(data.msg)
@@ -421,7 +468,9 @@ function ProfileCardContent() {
       setIsOtpModalOpen(false)
       setEmailToUpdate('')
       setOtpError('')
-      alert('Correo actualizado exitosamente')
+      
+      syncNavbar('correo', emailToUpdate)
+      alert('Correo actualizado y cambios guardados exitosamente')
       cargarPerfil()
     } catch (error: any) {
       setOtpError(error.message || 'Error al verificar código')
@@ -486,19 +535,19 @@ function ProfileCardContent() {
   const handleSaveAll = async () => {
     setIsLoading(true);
 <<<<<<< HEAD
+<<<<<<< HEAD
     
 =======
 
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
+=======
+    let isWaitingForEmailOTP = false;
+    
+>>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
     if (tempAvatar) {
       await subirFoto(tempAvatar)
       setTempAvatar(null)
       setPreviewAvatar(null)
-    }
-    if (isEmailEditable && hasEmailChanged) {
-      await solicitarCambioEmail(tempEmail)
-    } else if (isEmailEditable && !hasEmailChanged) {
-      setIsEmailEditable(false)
     }
 
     if (nombre !== originalNombre) await guardarNombre();
@@ -506,6 +555,7 @@ function ProfileCardContent() {
     if (genero !== originalGenero) await guardarGenero();
     if (direccion !== originalDireccion) await guardarDireccion();
     if (fechaNacimiento !== originalFechaNacimiento) await guardarFechaNacimiento();
+<<<<<<< HEAD
 <<<<<<< HEAD
     
     await guardarTelefonos();
@@ -515,9 +565,23 @@ function ProfileCardContent() {
     await guardarTelefonos();
 
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
+=======
+    await guardarTelefonos();
+
+    if (isEmailEditable && hasEmailChanged) {
+      isWaitingForEmailOTP = true;
+      await solicitarCambioEmail(tempEmail)
+    } else if (isEmailEditable && !hasEmailChanged) {
+      setIsEmailEditable(false)
+    }
+
+>>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
     setCampoEditando(null);
     setIsLoading(false);
-    alert('Cambios guardados exitosamente');
+
+    if (!isWaitingForEmailOTP) {
+      alert('Cambios guardados exitosamente');
+    }
   }
 
   const handleCancelAll = () => {
@@ -531,6 +595,7 @@ function ProfileCardContent() {
     setIsEmailEditable(false)
     setErrorNombre("")
     setErrorFechaNacimiento("")
+    setHighlightedFields([])
   }
 
   const handleEditEmailClick = () => {
@@ -556,6 +621,7 @@ function ProfileCardContent() {
 
   return (
 <<<<<<< HEAD
+<<<<<<< HEAD
     <div 
       id="personal-data-form" 
       className={`bg-[#fdf6e6] border border-[#e5dfd7] p-8 rounded-xl flex flex-col md:flex-row gap-10 items-center transition-all duration-700 ${
@@ -567,11 +633,17 @@ function ProfileCardContent() {
       className={`bg-[#fdf6e6] border border-[#e5dfd7] p-8 rounded-xl flex flex-col md:flex-row gap-10 items-center transition-all duration-700 ${isHighlighted ? 'ring-4 ring-amber-400 shadow-xl shadow-amber-100 scale-[1.01]' : 'shadow-sm'
         }`}
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
+=======
+    <div 
+      id="personal-data-form" 
+      className="bg-[#fdf6e6] border border-[#e5dfd7] p-5 md:p-8 rounded-xl flex flex-col md:flex-row gap-8 md:gap-10 items-center md:items-start transition-all duration-700 shadow-sm"
+>>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
     >
       {/* PERFIL */}
-      <div className="flex flex-col items-center justify-center w-full md:w-1/3">
-        <div className="relative mb-10">
+      <div className="flex flex-col items-center justify-center w-full md:w-1/3 md:mt-4">
+        <div className="relative mb-6 md:mb-10">
           <div className="w-28 h-28 rounded-full bg-white border border-gray-300 flex items-center justify-center shadow-sm overflow-hidden">
+<<<<<<< HEAD
 <<<<<<< HEAD
              {(previewAvatar || (avatar && avatar.trim() !== "")) ? (
               <img
@@ -583,6 +655,9 @@ function ProfileCardContent() {
                <User className="w-10 h-10 text-gray-400" />
 =======
             {(previewAvatar || (avatar && avatar.trim() !== "")) ? (
+=======
+              {(previewAvatar || (avatar && avatar.trim() !== "")) ? (
+>>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
               <img
                 src={previewAvatar || (avatar?.startsWith('http') ? avatar : `${API_URL}${avatar}`)}
                 alt="Foto de perfil"
@@ -618,13 +693,13 @@ function ProfileCardContent() {
           />
         </div>
 
-        <p className="mt-4 font-semibold text-lg">{nombre}</p>
-        <p className="text-sm text-gray-500">{isEmailEditable ? originalEmail : ofuscarEmail(originalEmail)}</p>
+        <p className="mt-2 md:mt-4 font-semibold text-lg text-center">{nombre}</p>
+        <p className="text-sm text-gray-500 text-center">{isEmailEditable ? originalEmail : ofuscarEmail(originalEmail)}</p>
       </div>
 
       {/* FORMULARIO */}
       <div className="w-full md:w-2/3">
-        <h2 className="text-xl font-bold mb-6 text-stone-900">Datos Personales</h2>
+        <h2 className="text-xl font-bold mb-6 text-stone-900 text-center md:text-left">Datos Personales</h2>
 
         <div className="flex flex-col gap-4">
 <<<<<<< HEAD
@@ -633,8 +708,8 @@ function ProfileCardContent() {
 
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
           {/* NOMBRE */}
-          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-            <label className="w-full md:w-40 font-medium text-stone-700">Nombre Completo:</label>
+          <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+            <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">Nombre Completo:</label>
             <div className="flex flex-col w-full">
               <div className="flex items-center gap-2">
                 <input
@@ -646,6 +721,7 @@ function ProfileCardContent() {
                     if (errorNombre) setErrorNombre("");
                   }}
 <<<<<<< HEAD
+<<<<<<< HEAD
                   className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
                     errorNombre ? "border-red-500 bg-red-50" : campoEditando === 'nombre' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
                   }`}
@@ -653,6 +729,11 @@ function ProfileCardContent() {
                   className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${errorNombre ? "border-red-500 bg-red-50" : campoEditando === 'nombre' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
                     }`}
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
+=======
+                  className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
+                    errorNombre ? "border-red-500 bg-red-50" : campoEditando === 'nombre' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                  }`}
+>>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
                 />
               </div>
               {errorNombre && <span className="text-red-500 text-xs mt-1">{errorNombre}</span>}
@@ -660,8 +741,8 @@ function ProfileCardContent() {
           </div>
 
           {/* EMAIL */}
-          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-            <label className="w-full md:w-40 font-medium text-stone-700">E-mail:</label>
+          <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+            <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">E-mail:</label>
             <div className="flex w-full items-center gap-2">
               <input
                 type="email"
@@ -681,15 +762,15 @@ function ProfileCardContent() {
             </div>
           </div>
           {isEmailEditable && tempEmail.length > 0 && !isValidEmail(tempEmail) && (
-            <div className="md:ml-44"><span className="text-red-500 text-xs mt-1">Formato de correo inválido</span></div>
+            <div className="ml-0 md:ml-44"><span className="text-red-500 text-xs mt-1">Formato de correo inválido</span></div>
           )}
 
           {/* TELÉFONOS */}
           {telefonos.map((tel, index) => {
             const keyCampo = `telefono-${tel.id}`
             return (
-              <div key={tel.id} className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-                <label className="w-full md:w-40 font-medium text-stone-700">
+              <div key={tel.id} className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+                <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">
                   {index === 0 ? 'Teléfono:' : `Teléfono ${index + 1}:`}
                 </label>
                 <div className="flex w-full items-center gap-2">
@@ -703,6 +784,7 @@ function ProfileCardContent() {
                       }
                     }}
 <<<<<<< HEAD
+<<<<<<< HEAD
                     className={`px-2 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
                       campoEditando === keyCampo ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
                     }`}
@@ -710,6 +792,11 @@ function ProfileCardContent() {
                     className={`px-2 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${campoEditando === keyCampo ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
                       }`}
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
+=======
+                    className={`px-2 py-2 rounded text-sm bg-white border focus:outline-none transition-colors w-1/3 md:w-auto ${
+                      campoEditando === keyCampo ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                    }`}
+>>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
                   >
                     {PAISES.map((p) => (
                       <option key={p.nombre} value={`${p.nombre} ${p.codigo}`}>{p.flag} {p.codigo}</option>
@@ -722,6 +809,7 @@ function ProfileCardContent() {
                     onFocus={() => setCampoEditando(keyCampo)}
                     onChange={(e) => actualizarTelefono(tel.id, e.target.value)}
 <<<<<<< HEAD
+<<<<<<< HEAD
                     className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
                       campoEditando === keyCampo ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
                     }`}
@@ -729,6 +817,11 @@ function ProfileCardContent() {
                     className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${campoEditando === keyCampo ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
                       }`}
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
+=======
+                    className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
+                      campoEditando === keyCampo ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                    }`}
+>>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
                   />
                   {index === 0 && (
                     <button
@@ -749,24 +842,26 @@ function ProfileCardContent() {
             )
           })}
           {telefonos.length >= 3 && (
-            <p className="text-[10px] text-orange-600 font-medium md:ml-44 mt-1">
+            <p className="text-[10px] text-orange-600 font-medium ml-0 md:ml-44 mt-1">
               * Has alcanzado el límite máximo de 3 números de contacto.
             </p>
           )}
 
           {/* FECHA DE NACIMIENTO */}
-          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-            <label className="w-full md:w-40 font-medium text-stone-700">F. de Nacimiento:</label>
+          <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+            <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">F. de Nacimiento:</label>
             <div className="flex flex-col w-full">
               <div className="flex items-center gap-2">
                 <input
                   type="date"
+                  max="2999-12-31"
                   value={fechaNacimiento}
-                  onFocus={() => setCampoEditando('fechaNacimiento')}
+                  onFocus={() => { setCampoEditando('fechaNacimiento'); clearHighlight('fechaNacimiento'); }}
                   onChange={(e) => {
                     setFechaNacimiento(e.target.value)
                     if (errorFechaNacimiento) setErrorFechaNacimiento("")
                   }}
+<<<<<<< HEAD
 <<<<<<< HEAD
                   className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
                     errorFechaNacimiento ? "border-red-500 bg-red-50" : campoEditando === 'fechaNacimiento' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
@@ -775,6 +870,13 @@ function ProfileCardContent() {
                   className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${errorFechaNacimiento ? "border-red-500 bg-red-50" : campoEditando === 'fechaNacimiento' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
                     }`}
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
+=======
+                  className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-all duration-500 ${
+                    errorFechaNacimiento ? "border-red-500 bg-red-50" : 
+                    highlightedFields.includes('fechaNacimiento') ? 'border-amber-500 ring-2 ring-amber-400 bg-amber-50 shadow-inner' :
+                    campoEditando === 'fechaNacimiento' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                  }`}
+>>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
                 />
               </div>
               {errorFechaNacimiento && <span className="text-red-500 text-xs mt-1">{errorFechaNacimiento}</span>}
@@ -782,13 +884,14 @@ function ProfileCardContent() {
           </div>
 
           {/* PAÍS */}
-          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-            <label className="w-full md:w-40 font-medium text-stone-700">País:</label>
+          <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+            <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">País:</label>
             <div className="flex w-full items-center gap-2">
               <select
                 value={pais}
-                onFocus={() => setCampoEditando('pais')}
+                onFocus={() => { setCampoEditando('pais'); clearHighlight('pais'); }}
                 onChange={(e) => setPais(e.target.value)}
+<<<<<<< HEAD
 <<<<<<< HEAD
                 className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
                   campoEditando === 'pais' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
@@ -797,6 +900,12 @@ function ProfileCardContent() {
                 className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${campoEditando === 'pais' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
                   }`}
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
+=======
+                className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-all duration-500 ${
+                  highlightedFields.includes('pais') ? 'border-amber-500 ring-2 ring-amber-400 bg-amber-50 shadow-inner' :
+                  campoEditando === 'pais' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                }`}
+>>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
               >
                 <option value="">Seleccione un país</option>
                 <option value="Bolivia">Bolivia</option>
@@ -808,13 +917,14 @@ function ProfileCardContent() {
           </div>
 
           {/* GÉNERO */}
-          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-            <label className="w-full md:w-40 font-medium text-stone-700">Género:</label>
+          <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+            <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">Género:</label>
             <div className="flex w-full items-center gap-2">
               <select
                 value={genero}
-                onFocus={() => setCampoEditando('genero')}
+                onFocus={() => { setCampoEditando('genero'); clearHighlight('genero'); }}
                 onChange={(e) => setGenero(e.target.value)}
+<<<<<<< HEAD
 <<<<<<< HEAD
                 className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
                   campoEditando === 'genero' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
@@ -823,6 +933,12 @@ function ProfileCardContent() {
                 className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${campoEditando === 'genero' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
                   }`}
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
+=======
+                className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-all duration-500 ${
+                  highlightedFields.includes('genero') ? 'border-amber-500 ring-2 ring-amber-400 bg-amber-50 shadow-inner' :
+                  campoEditando === 'genero' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                }`}
+>>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
               >
                 <option value="">Seleccione género</option>
                 <option value="Masculino">Masculino</option>
@@ -834,13 +950,14 @@ function ProfileCardContent() {
           </div>
 
           {/* DIRECCIÓN */}
-          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
-            <label className="w-full md:w-40 font-medium text-stone-700">Dirección:</label>
+          <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
+            <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">Dirección:</label>
             <div className="flex w-full items-center gap-2">
               <input
                 value={direccion}
-                onFocus={() => setCampoEditando('direccion')}
+                onFocus={() => { setCampoEditando('direccion'); clearHighlight('direccion'); }}
                 onChange={(e) => setDireccion(e.target.value)}
+<<<<<<< HEAD
 <<<<<<< HEAD
                 className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
                   campoEditando === 'direccion' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
@@ -849,15 +966,21 @@ function ProfileCardContent() {
                 className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${campoEditando === 'direccion' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
                   }`}
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
+=======
+                className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-all duration-500 ${
+                  highlightedFields.includes('direccion') ? 'border-amber-500 ring-2 ring-amber-400 bg-amber-50 shadow-inner' :
+                  campoEditando === 'direccion' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                }`}
+>>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
               />
             </div>
           </div>
 
           {/* BOTONES */}
-          <div className="mt-6 flex justify-end gap-4">
+          <div className="mt-6 flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4">
             <button
               onClick={handleCancelAll}
-              className="text-stone-600 hover:text-black text-sm"
+              className="text-stone-600 hover:text-black text-sm py-2 sm:py-0 w-full sm:w-auto text-center"
               disabled={isLoading}
             >
               Cancelar
@@ -866,7 +989,6 @@ function ProfileCardContent() {
               onClick={() => {
                 let hasError = false;
 
-                // Validación 1: Nombre
                 if (!nombre.trim()) {
                   setErrorNombre("El nombre es obligatorio");
                   hasError = true;
@@ -874,17 +996,20 @@ function ProfileCardContent() {
                   setErrorNombre("");
                 }
 
-                // Validación 2: Edad mínima 18 años (tomando en cuenta el año actual 2026)
                 if (fechaNacimiento) {
                   const dob = new Date(fechaNacimiento);
-                  const today = new Date(); // El sistema usa 2026 como fecha base
+                  const today = new Date();
                   let age = today.getFullYear() - dob.getFullYear();
                   const m = today.getMonth() - dob.getMonth();
+<<<<<<< HEAD
 <<<<<<< HEAD
                   
 =======
 
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
+=======
+                  
+>>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
                   // Ajuste si el mes/día actual es anterior al de cumpleaños
                   if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
                     age--;
@@ -897,14 +1022,15 @@ function ProfileCardContent() {
                     setErrorFechaNacimiento("");
                   }
                 } else {
-                  setErrorFechaNacimiento(""); // Permite pasar porque es un dato opcional
+                  setErrorFechaNacimiento("");
                 }
 
-                if (hasError) return; // Si hay errores, detenemos el guardado
+                if (hasError) return;
 
                 handleSaveAll();
               }}
               disabled={isLoading || !hayCambios}
+<<<<<<< HEAD
 <<<<<<< HEAD
               className={`px-6 py-2 rounded-lg text-sm font-medium shadow-sm transition ${
                 !hayCambios ? "bg-orange-300 cursor-not-allowed text-white" : "bg-orange-500 hover:bg-orange-600 text-white"
@@ -913,6 +1039,11 @@ function ProfileCardContent() {
               className={`px-6 py-2 rounded-lg text-sm font-medium shadow-sm transition ${!hayCambios ? "bg-orange-300 cursor-not-allowed text-white" : "bg-orange-500 hover:bg-orange-600 text-white"
                 }`}
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
+=======
+              className={`px-6 py-3 sm:py-2 rounded-lg text-sm font-medium shadow-sm transition w-full sm:w-auto ${
+                !hayCambios ? "bg-orange-300 cursor-not-allowed text-white" : "bg-orange-500 hover:bg-orange-600 text-white"
+              }`}
+>>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
             >
               {isLoading ? 'Guardando...' : 'Guardar Cambios'}
             </button>
@@ -928,7 +1059,6 @@ function ProfileCardContent() {
   )
 }
 
-// 2. Creamos el envoltorio que exporta el componente hacia el resto del proyecto
 export default function ProfileCard() {
   return (
     <Suspense fallback={

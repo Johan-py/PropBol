@@ -19,7 +19,8 @@ interface AuthRequest extends Request {
   };
 =======
   obtenerResumenFinalService,
-  obtenerDetallePublicacionService
+  obtenerDetallePublicacionService,
+  obtenerDetallePublicacionPorInmuebleService
 } from './publicacion.service.js'
 
 interface AuthRequest extends Request {
@@ -32,6 +33,7 @@ interface AuthRequest extends Request {
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 }
 
+<<<<<<< HEAD
 export const listarMisPublicacionesController = async (
   req: AuthRequest,
   res: Response
@@ -39,6 +41,9 @@ export const listarMisPublicacionesController = async (
 <<<<<<< HEAD
   const usuarioId = req.user?.id;
 =======
+=======
+export const listarMisPublicacionesController = async (req: AuthRequest, res: Response) => {
+>>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
   const usuarioId = req.user?.id
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
@@ -66,18 +71,12 @@ export const listarMisPublicacionesController = async (
   }
 }
 
-export const obtenerResumenFinalController = async (
-  req: AuthRequest,
-  res: Response
-) => {
+export const obtenerResumenFinalController = async (req: AuthRequest, res: Response) => {
   const publicacionId = Number(req.params.id)
   const usuarioSolicitanteId = req.user?.id
 
   try {
-    const resumen = await obtenerResumenFinalService(
-      publicacionId,
-      Number(usuarioSolicitanteId)
-    )
+    const resumen = await obtenerResumenFinalService(publicacionId, Number(usuarioSolicitanteId))
 
     return res.status(200).json({
       ok: true,
@@ -127,10 +126,7 @@ export const obtenerResumenFinalController = async (
   }
 }
 
-export const editarPublicacionController = async (
-  req: AuthRequest,
-  res: Response
-) => {
+export const editarPublicacionController = async (req: AuthRequest, res: Response) => {
   const publicacionId = Number(req.params.id)
   const usuarioSolicitanteId = req.user?.id
 
@@ -220,6 +216,7 @@ export const editarPublicacionController = async (
   }
 }
 
+<<<<<<< HEAD
 export const editarPublicacionController = async (
   req: AuthRequest,
   res: Response,
@@ -282,15 +279,15 @@ export const eliminarPublicacionController = async (
   const publicacionId = Number(req.params.id);
   const usuarioSolicitanteId = req.user?.id;
 =======
+=======
+export const eliminarPublicacionController = async (req: AuthRequest, res: Response) => {
+>>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
   const publicacionId = Number(req.params.id)
   const usuarioSolicitanteId = req.user?.id
 >>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
   try {
-    const resultado = await eliminarPublicacionService(
-      publicacionId,
-      Number(usuarioSolicitanteId)
-    )
+    const resultado = await eliminarPublicacionService(publicacionId, Number(usuarioSolicitanteId))
 
     return res.status(200).json({
       ok: true,
@@ -369,10 +366,7 @@ export const eliminarPublicacionController = async (
   }
 }
 
-export const obtenerDetallePublicacionController = async (
-  req: Request,
-  res: Response
-) => {
+export const obtenerDetallePublicacionController = async (req: Request, res: Response) => {
   const publicacionId = Number(req.params.id)
 
   try {
@@ -404,6 +398,45 @@ export const obtenerDetallePublicacionController = async (
     return res.status(500).json({
       ok: false,
       message: 'No se pudo obtener el detalle de la publicación'
+    })
+  }
+}
+
+export const obtenerDetallePublicacionPorInmuebleController = async (
+  req: Request,
+  res: Response
+) => {
+  const inmuebleId = Number(req.params.inmuebleId)
+
+  try {
+    const detalle = await obtenerDetallePublicacionPorInmuebleService(inmuebleId)
+
+    return res.status(200).json({
+      ok: true,
+      data: detalle
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      switch (error.message) {
+        case 'ID_INVALIDO':
+          return res.status(400).json({
+            ok: false,
+            message: 'El id del inmueble es inválido'
+          })
+
+        case 'PUBLICACION_NO_EXISTE':
+          return res.status(404).json({
+            ok: false,
+            message: 'No existe una publicación activa para este inmueble'
+          })
+      }
+    }
+
+    console.error('Error al obtener detalle por inmueble:', error)
+
+    return res.status(500).json({
+      ok: false,
+      message: 'No se pudo obtener el detalle de la propiedad'
     })
   }
 }
