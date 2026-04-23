@@ -35,5 +35,4 @@ seed-datos_ub_maestra.ts
 .vercel
 .env*.local
 frontend/
-
-/src/generated/prisma
+prisma
