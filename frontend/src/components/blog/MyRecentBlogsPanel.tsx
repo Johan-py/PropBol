@@ -3,24 +3,35 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MOCK_USER_BLOGS } from "@/lib/mock/blogs.mock";
 import { Blog } from "@/types/blog";
 
 const MAX_VISIBLE = 3;
 const USER_STORAGE_KEY = "propbol_user";
 
 const STATUS_STYLES: Record<string, string> = {
-  aprobado: "bg-green-50 text-green-700 border-green-200",
-  pendiente: "bg-amber-50 text-amber-700 border-amber-200",
-  rechazado: "bg-red-50 text-red-600 border-red-200",
-  borrador: "bg-stone-50 text-stone-500 border-stone-200",
+  PUBLICADO: "bg-green-50 text-green-700 border-green-200",
+  PENDIENTE: "bg-amber-50 text-amber-700 border-amber-200",
+  RECHAZADO: "bg-red-50 text-red-600 border-red-200",
+  BORRADOR: "bg-stone-50 text-stone-500 border-stone-200",
 };
 
+function getEstadoLabel(estado: string) {
+  switch (estado) {
+    case "PUBLICADO":
+      return "Aprobado";
+    case "PENDIENTE":
+      return "Pendiente";
+    case "RECHAZADO":
+      return "Rechazado";
+    case "BORRADOR":
+      return "Borrador";
+    default:
+      return estado;
+  }
+}
+
 function getStatusClass(estado: string) {
-  return (
-    STATUS_STYLES[estado.toLowerCase()] ??
-    "bg-stone-50 text-stone-500 border-stone-200"
-  );
+  return STATUS_STYLES[estado] ?? "bg-stone-50 text-stone-500 border-stone-200";
 }
 
 interface MyRecentBlogsPanelProps {
@@ -28,7 +39,7 @@ interface MyRecentBlogsPanelProps {
 }
 
 const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({
-  blogs = MOCK_USER_BLOGS,
+  blogs = [],
 }) => {
   const visible = blogs.slice(0, MAX_VISIBLE);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -50,6 +61,14 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({
 
   if (!isAuthenticated) return null;
 
+  if (blogs.length === 0) {
+    return (
+      <section className="bg-white rounded-[32px] p-6 border border-stone-100 shadow-sm mb-10">
+        <p className="text-sm text-gray-400">No publicaste ningún blog aún</p>
+      </section>
+    );
+  }
+
   return (
     <section
       aria-label="Mis blogs recientes"
@@ -61,12 +80,10 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({
           <h2 className="text-stone-900 font-bold text-sm uppercase tracking-widest">
             Mis Blogs Recientes
           </h2>
-          <p className="text-stone-400 text-xs">
-            Panel de control editorial
-          </p>
+          <p className="text-stone-400 text-xs">Panel de control editorial</p>
         </div>
 
-        <Link href="/profile?tab=blogs">
+        <Link href="/mis-blogs">
           <button className="text-[#A67C00] font-bold text-xs uppercase tracking-tighter transition-colors hover:text-[#7d4b00]">
             Ver todos mis posts
           </button>
@@ -99,7 +116,7 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({
               <span
                 className={`inline-block rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${getStatusClass(blog.estado)}`}
               >
-                {blog.estado}
+                {getEstadoLabel(blog.estado)}
               </span>
             </div>
           </div>

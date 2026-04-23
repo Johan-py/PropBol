@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import BlogCard from "@/components/blog/BlogCard";
 import MyRecentBlogsPanel from "@/components/blog/MyRecentBlogsPanel";
@@ -7,6 +8,8 @@ import AddPostButton from "@/components/blog/AddPostButton";
 import BlogFilterChips from "@/components/blog/BlogFilterChips";
 import FeaturedBlogSpotlight from "@/components/blog/FeaturedBlogSpotlight";
 import { useBlogFeed } from "@/hooks/useBlogFeed";
+import { Blog } from "@/types/blog";
+import error from "next/error";
 
 export default function BlogsPage() {
   const {
@@ -20,10 +23,28 @@ export default function BlogsPage() {
     loadMore,
   } = useBlogFeed();
 
+const [myBlogs, setMyBlogs] = useState<Blog[]>([]);
+
+useEffect(() => {
+  const token = localStorage.getItem("token");
+
+  if (!token) return;
+
+  fetch("http://localhost:5000/api/blogs/mis-blogs", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => {setMyBlogs(data.data ?? data);
+    })
+    .catch(console.error);
+}, []);
+
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#fbf6ef_0%,#f5efe7_45%,#ffffff_100%)]">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-        <MyRecentBlogsPanel />
+        <MyRecentBlogsPanel blogs={myBlogs} />
 
         <section className="space-y-6">
           <h1 className="max-w-3xl font-heading text-4xl font-bold leading-tight text-stone-900 sm:text-5xl">
