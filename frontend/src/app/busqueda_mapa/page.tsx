@@ -496,57 +496,6 @@ function BusquedaMapaContent() {
   const dragStartY = useRef<number | null>(null)
   const dragStartState = useRef<SheetState>('peek')
 
-        return properties.filter((p: any) => {
-          if (p.lat == null || p.lng == null) return false
-          const pt = point([p.lng, p.lat])
-          const isInside = booleanPointInPolygon(pt, drawPoly)
-          if (isInside) console.log(`✅ Adentro: ${p.title}`)
-          return isInside
-        })
-      } catch (err) {
-        console.error('Error en validación geométrica:', err)
-        return properties
-      }
-    }
-    return properties
-  }, [properties, isPolygonClosed, polygonPoints])
-
-    const [listPage, setListPage] = useState(1);
-  const [listPageSize, setListPageSize] = useState<(PageSize)>(10);
-  const listTotal = properties.length;
-  const listTotalPages = Math.max(1, Math.ceil(listTotal / listPageSize));
-  const listSafePage = Math.min(Math.max(1, listPage), listTotalPages);
-  const paginatedProperties = useMemo(() => {
-    if (listTotal === 0) return [];
-    const start = (listSafePage - 1) * listPageSize;
-    return properties.slice(start, start + listPageSize);
-  }, [properties, listSafePage, listPageSize, listTotal]);
-
-    useEffect(() => {
-    setListPage(1);
-  }, [filterResetKey]);
-
-  useEffect(() => {
-    if (listPage > listTotalPages) setListPage(listTotalPages);
-  }, [listPage, listTotalPages]);
-
-  // === 4. ORDENAMIENTO (Usando resultados filtrados) ===
-  const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
-    inmuebles: displayedProperties
-  })
-
-  // === 5. ESTADOS VISUALES Y DE CLUSTERS (develop + HU8) ===
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
-  const [hoveredId, setHoveredId] = useState<string | null>(null)
-  const [isHoveringList, setIsHoveringList] = useState(false)
-
-  const [clusterProperties, setClusterProperties] = useState<any[]>([])
-  const [isClusterView, setIsClusterView] = useState(false)
-  const [activeClusterIds, setActiveClusterIds] = useState<string[]>([])
-
-  const dragStartY = useRef<number | null>(null)
-  const dragStartState = useRef<SheetState>('peek')
-
   // Hover con debounce de 200 ms → vuela el mapa al marcador
   useEffect(() => {
     if (!hoveredId) {
@@ -969,24 +918,6 @@ function BusquedaMapaContent() {
                     ordenActual={ordenActual}
                     onOrdenChange={cambiarOrden}
                   />
-                  <div className="absolute right-0 bottom-4 flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90 origin-bottom-right">
-                    <button
-                      onClick={() => setViewMode('grid')}
-                      className={`p-1 rounded transition-colors ${
-                        viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-                      }`}
-                    >
-                      <LayoutGrid size={16} />
-                    </button>
-                    <button
-                      onClick={() => setViewMode('list')}
-                      className={`p-1 rounded transition-colors ${
-                        viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-                      }`}
-                    >
-                      <ListIcon size={16} />
-                    </button>
-                  </div>
                 </div>
                 <div className="px-4 py-2 flex justify-end shrink-0">
                   {MenuToggleComponent}
@@ -1001,10 +932,7 @@ function BusquedaMapaContent() {
                   {renderListPaginationFooter()}
                 </div>
               </div>
-              {renderListPaginationFooter()}
-              </div>
             </div>
-            )  
           )}
         </div>
       </div>

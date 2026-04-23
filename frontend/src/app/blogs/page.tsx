@@ -1,15 +1,5 @@
 "use client";
 
-
-import { useEffect, useState } from "react";
-import BlogCard from "@/components/blog/BlogCard";
-import MyRecentBlogsPanel from "@/components/blog/MyRecentBlogsPanel";
-import BlogFilterChips from "@/components/blog/BlogFilterChips";
-import FeaturedBlogSpotlight from "@/components/blog/FeaturedBlogSpotlight";
-import { useBlogFeed } from "@/hooks/useBlogFeed";
-
-const USER_STORAGE_KEY = "propbol_user";
-=======
 import Link from "next/link";
 import BlogCard from "@/components/blog/BlogCard";
 import MyRecentBlogsPanel from "@/components/blog/MyRecentBlogsPanel";
@@ -17,9 +7,6 @@ import AddPostButton from "@/components/blog/AddPostButton";
 import BlogFilterChips from "@/components/blog/BlogFilterChips";
 import FeaturedBlogSpotlight from "@/components/blog/FeaturedBlogSpotlight";
 import { useBlogFeed } from "@/hooks/useBlogFeed";
-
-import { USER_STORAGE_KEY } from "@/lib/session";
-
 
 export default function BlogsPage() {
   const {
@@ -33,23 +20,6 @@ export default function BlogsPage() {
     loadMore,
   } = useBlogFeed();
 
-  useEffect(() => {
-    const syncAuthState = () => {
-      setIsAuthenticated(Boolean(localStorage.getItem(USER_STORAGE_KEY)));
-    };
-
-    syncAuthState();
-    window.addEventListener("storage", syncAuthState);
-    window.addEventListener("propbol:session-changed", syncAuthState);
-
-    return () => {
-      window.removeEventListener("storage", syncAuthState);
-      window.removeEventListener("propbol:session-changed", syncAuthState);
-    };
-  }, []);
-
-=======
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#fbf6ef_0%,#f5efe7_45%,#ffffff_100%)]">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
