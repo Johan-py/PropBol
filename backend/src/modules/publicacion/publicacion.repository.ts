@@ -300,5 +300,3 @@ export const buscarDetallePublicacionPorIdRepository = async (publicacionId: num
     }
   })
 }
-
-

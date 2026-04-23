@@ -1,8 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Bath, BedDouble, MapPin, Square, Trash2 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { Trash2 } from 'lucide-react'
 import { publicacionService } from '@/services/publicacionn.service'
 import type { MisPublicacionesItem } from '@/types/publicacion'
 import ConfirmDeleteModal from './ConfirmDeleteModal'
@@ -15,13 +14,7 @@ interface Props {
   onEstadoChange?: (id: number, nuevoEstado: boolean) => void
 }
 
-export default function PublicacionCard({
-  publicacion,
-  onDeleted,
-  onEstadoChange
-}: Props) {
-  const router = useRouter()
-
+export default function PublicacionCard({ publicacion, onDeleted, onEstadoChange }: Props) {
   const [activa, setActiva] = useState(publicacion.activa ?? true)
   const [isToggling, setIsToggling] = useState(false)
   const [toggleError, setToggleError] = useState('')
@@ -32,9 +25,11 @@ export default function PublicacionCard({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  // Toggle activa/inactiva con conexión al backend
   const handleToggle = async () => {
     const nuevoEstado = !activa
 
+    // UI optimista: cambiar visualmente primero
     setActiva(nuevoEstado)
     setIsToggling(true)
     setToggleError('')
@@ -43,6 +38,7 @@ export default function PublicacionCard({
       await publicacionService.toggleEstado(publicacion.id, nuevoEstado)
       onEstadoChange?.(publicacion.id, nuevoEstado)
     } catch (err) {
+      // Revertir si falló
       setActiva(!nuevoEstado)
       setToggleError(err instanceof Error ? err.message : 'Error al cambiar el estado')
       setTimeout(() => setToggleError(''), 3000)
@@ -51,6 +47,7 @@ export default function PublicacionCard({
     }
   }
 
+  // Eliminar publicación con conexión al backend
   const eliminarPublicacion = async () => {
     try {
       setLoading(true)
@@ -92,10 +89,6 @@ export default function PublicacionCard({
   const precioFormateado = `Bs. ${publicacion.precio.toLocaleString('es-BO')}`
   const tipoOperacionTexto = publicacion.tipoOperacion || 'Venta / Alquiler'
 
-  const irAEditar = () => {
-    router.push(`/mis-publicaciones/${publicacion.id}/editar`)
-  }
-
   return (
     <>
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md">
@@ -106,8 +99,8 @@ export default function PublicacionCard({
             className="h-[180px] w-full object-cover"
           />
           {!activa && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-              <span className="rounded-full bg-red-500 px-3 py-1 text-sm font-medium text-white">
+            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+              <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium">
                 Desactivada
               </span>
             </div>
@@ -120,32 +113,24 @@ export default function PublicacionCard({
               <h3 className="mb-1 line-clamp-2 text-[16px] font-medium leading-tight text-gray-900">
                 {publicacion.titulo}
               </h3>
-
-              <div className="mb-1 flex items-center gap-1 text-[13px] text-gray-500">
-                <MapPin size={14} />
-                <span>{publicacion.ubicacion}</span>
-              </div>
-
+              <p className="text-[13px] text-gray-500 mb-1">
+                {publicacion.ubicacion}
+              </p>
               <p className="mb-1 text-[16px] font-bold text-gray-900">
                 {precioFormateado}
               </p>
-
-              <div className="mt-2 grid grid-cols-3 gap-2 text-xs text-gray-500">
-                <div className="flex items-center gap-1">
-                  <BedDouble size={14} />
-                  <span>{publicacion.nroCuartos ?? '-'} habs</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Bath size={14} />
-                  <span>{publicacion.nroBanos ?? '-'} baños</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Square size={14} />
-                  <span>{publicacion.superficieM2 ?? '-'} m²</span>
-                </div>
+              <div className="flex gap-3 text-xs text-gray-500">
+                {publicacion.nroCuartos !== null && (
+                  <span>{publicacion.nroCuartos} habs</span>
+                )}
+                {publicacion.nroBanos !== null && (
+                  <span>{publicacion.nroBanos} baños</span>
+                )}
+                {publicacion.superficieM2 !== null && (
+                  <span>{publicacion.superficieM2} m²</span>
+                )}
               </div>
-
-              <p className="mt-1 text-[13px] text-gray-500">
+              <p className="text-[13px] text-gray-500 mt-1">
                 {tipoOperacionTexto}
               </p>
             </div>
@@ -156,18 +141,16 @@ export default function PublicacionCard({
                 onClick={handleToggle}
                 disabled={isToggling}
                 aria-label={activa ? 'Desactivar publicación' : 'Activar publicación'}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 ${
-                  activa ? 'bg-[#4ade80]' : 'bg-gray-300'
-                }`}
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed ${activa ? 'bg-[#4ade80]' : 'bg-gray-300'
+                  }`}
               >
                 <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    activa ? 'translate-x-5' : 'translate-x-0'
-                  }`}
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${activa ? 'translate-x-5' : 'translate-x-0'
+                    }`}
                 />
               </button>
               <span className="mt-1 text-[12px] font-medium text-gray-800">
-                {isToggling ? '...' : activa ? 'Activa' : 'Inactiva'}
+                {isToggling ? '...' : (activa ? 'Activa' : 'Inactiva')}
               </span>
               {toggleError && (
                 <span className="mt-1 text-[10px] text-red-500">
@@ -177,29 +160,13 @@ export default function PublicacionCard({
             </div>
           </div>
 
-          <div className="mt-3 flex flex-col gap-2">
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={irAEditar}
-                className="h-10 rounded-lg border border-[#9a9a9a] bg-white px-3 text-[13px] font-medium text-[#2c2c2c] transition hover:bg-gray-50"
-              >
-                Editar
-              </button>
-
-              <button
-                onClick={abrirConfirmacion}
-                className="flex h-10 items-center justify-center gap-2 rounded-lg bg-[#D97706] px-3 text-[13px] font-medium text-white transition hover:bg-[#bf6905]"
-              >
-                <Trash2 size={15} />
-                Eliminar
-              </button>
-            </div>
-
+          <div className="mt-2 flex justify-center">
             <button
-              type="button"
-              className="w-full rounded-lg bg-[#F3EBDD] px-4 py-2 text-left text-[14px] font-semibold text-[#D97706] transition hover:bg-[#eee2cf]"
+              onClick={abrirConfirmacion}
+              className="flex h-9 w-32 items-center justify-center gap-2 rounded-xl border border-[#c4a9a9] bg-white text-[13px] font-medium text-[#8c6b6b] transition hover:bg-[#fff5f5] hover:text-[#d9534f]"
             >
-              + Añadir otros parámetros
+              <Trash2 size={15} />
+              Eliminar
             </button>
           </div>
         </div>
