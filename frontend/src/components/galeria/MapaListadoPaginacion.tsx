@@ -29,15 +29,12 @@ export default function MapaListadoPaginacion({
   const disabled = total === 0;
 
   const visiblePages = useMemo(() => {
-    const w = 9;
-    if (totalPages <= w) return Array.from({ length: totalPages }, (_, i) => i + 1);
-    let lo = Math.max(1, safePage - Math.floor(w / 2));
-    let hi = lo + w - 1;
-    if (hi > totalPages) {
-      hi = totalPages;
-      lo = hi - w + 1;
-    }
-    return Array.from({ length: hi - lo + 1 }, (_, i) => lo + i);
+if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
+
+    if (safePage <= 4) return [1, 2, 3, 4, 5, "...", totalPages];
+    if (safePage >= totalPages - 3) return [1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+    
+    return [1, "...", safePage - 1, safePage, safePage + 1, "...", totalPages];
   }, [safePage, totalPages]);
 
   const from = disabled ? 0 : (safePage - 1) * pageSize + 1;
@@ -75,21 +72,25 @@ export default function MapaListadoPaginacion({
           >
             <ChevronLeft size={16} />
           </button>
-          <div className="flex flex-wrap gap-1 justify-center max-w-[min(100%,14rem)] overflow-x-auto no-scrollbar">
-            {visiblePages.map((n) => (
-              <button
-                key={n}
-                type="button"
-                disabled={disabled}
-                onClick={() => onPageChange(n)}
-                className={`min-w-[1.75rem] h-7 text-xs rounded-md border transition-colors ${
-                  n === safePage
-                    ? "bg-orange-500 text-white border-orange-500 font-semibold shadow-sm"
-                    : "bg-white border-stone-200 text-stone-600 hover:border-orange-300"
-                }`}
-              >
-                {n}
-              </button>
+<div className="flex items-center gap-1 justify-center no-scrollbar">
+            {visiblePages.map((n, idx) => (
+              n === "..." ? (
+                <span key={`dots-${idx}`} className="px-1 text-stone-400 text-xs">...</span>
+              ) : (
+                <button
+                  key={n}
+                  type="button"
+                  disabled={disabled}
+                  onClick={() => onPageChange(n as number)}
+                  className={`min-w-[1.75rem] h-7 text-xs rounded-md border transition-colors ${
+                    n === safePage
+                      ? "bg-orange-500 text-white border-orange-500 font-semibold shadow-sm"
+                      : "bg-white border-stone-200 text-stone-600 hover:border-orange-300"
+                  }`}
+                >
+                  {n}
+                </button>
+              )
             ))}
           </div>
           <button
