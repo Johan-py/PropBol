@@ -36,7 +36,8 @@ const TOUR_STEPS = [
   {
     id: "tour-planes",
     title: "Planes de membresía",
-    description: "Conoce nuestros planes y beneficios para publicar tu inmueble.",
+    description:
+      "Conoce nuestros planes y beneficios para publicar tu inmueble.",
     required: true,
   },
   {
@@ -56,10 +57,8 @@ const TOUR_STEPS = [
     title: "Ayuda",
     description: "Vuelve a ver este tour cuando quieras desde aquí.",
     required: true,
-
-
   },
-  { 
+  {
     id: "tour-notificaciones",
     title: "Notificaciones",
     description: "Aquí aparecerán tus alertas y novedades importantes.",
@@ -70,12 +69,12 @@ const TOUR_STEPS = [
     title: "Tu cuenta",
     description: "Accede a tu perfil, publicaciones y configuración.",
     required: true,
-   
   },
   {
     id: "tour-footer-logo",
     title: "PropBol",
-    description: "Nuestra misión: revolucionar el mercado inmobiliario en Bolivia.",
+    description:
+      "Nuestra misión: revolucionar el mercado inmobiliario en Bolivia.",
     required: true,
   },
   {
@@ -87,13 +86,15 @@ const TOUR_STEPS = [
   {
     id: "tour-footer-conocenos",
     title: "Conócenos",
-    description: "Accede a información sobre nosotros, términos y políticas de privacidad.",
+    description:
+      "Accede a información sobre nosotros, términos y políticas de privacidad.",
     required: true,
   },
   {
     id: "tour-footer-redes",
     title: "Redes Sociales",
-    description: "Síguenos en Facebook e Instagram para estar al tanto de las novedades.",
+    description:
+      "Síguenos en Facebook e Instagram para estar al tanto de las novedades.",
     required: true,
   },
 ];
@@ -126,9 +127,11 @@ export default function TourGuiado() {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") e.preventDefault();
       if (e.key === "Escape") handleSkip();
-      if (e.key === "ArrowLeft" && currentStep > 0) setCurrentStep((prev) => prev - 1);
+      if (e.key === "ArrowLeft" && currentStep > 0)
+        setCurrentStep((prev) => prev - 1);
       if (e.key === "ArrowRight") {
-        if (currentStep < TOUR_STEPS.length - 1) setCurrentStep((prev) => prev + 1);
+        if (currentStep < TOUR_STEPS.length - 1)
+          setCurrentStep((prev) => prev + 1);
         else setShowTour(false);
       }
     };
@@ -145,15 +148,39 @@ export default function TourGuiado() {
     };
 
     window.addEventListener("propbol:iniciar-tour", handleIniciarTour);
-    return () => window.removeEventListener("propbol:iniciar-tour", handleIniciarTour);
+    return () =>
+      window.removeEventListener("propbol:iniciar-tour", handleIniciarTour);
   }, []);
-  // 📐 Medir la altura real del tooltip (importante para zoom / textos largos)
-  useEffect(() => {
-    if (tooltipRef.current) {
-      setTooltipH(tooltipRef.current.offsetHeight);
-    }
-  }, [currentStep, highlight]);
 
+  // 📐 Medir la altura real del tooltip + recalcular en resize/zoom
+  useEffect(() => {
+    if (!showTour) return;
+
+    const measure = () => {
+      if (tooltipRef.current) {
+        setTooltipH(tooltipRef.current.offsetHeight);
+      }
+      const step = TOUR_STEPS[currentStep];
+      const el = document.getElementById(step.id);
+      if (el) setHighlight(el.getBoundingClientRect());
+    };
+
+    measure();
+
+    const ro = tooltipRef.current ? new ResizeObserver(measure) : null;
+    if (ro && tooltipRef.current) ro.observe(tooltipRef.current);
+
+    window.addEventListener("resize", measure);
+    window.visualViewport?.addEventListener("resize", measure);
+    window.visualViewport?.addEventListener("scroll", measure);
+
+    return () => {
+      ro?.disconnect();
+      window.removeEventListener("resize", measure);
+      window.visualViewport?.removeEventListener("resize", measure);
+      window.visualViewport?.removeEventListener("scroll", measure);
+    };
+  }, [currentStep, showTour]);
   const applyHighlight = (el: HTMLElement) => {
     const isFooter = currentStep >= FOOTER_STEP_INDEX;
 
@@ -223,36 +250,63 @@ export default function TourGuiado() {
   const handleSkip = () => setShowTour(false);
 
   if (!showTour) return null;
- const PADDING = 8;
+
+  const PADDING = 8;
   const hasValid = highlight !== null;
 
+  const vw = window.visualViewport?.width ?? window.innerWidth;
+  const vh = window.visualViewport?.height ?? window.innerHeight;
+  const vOffsetTop = window.visualViewport?.offsetTop ?? 0;
+  const vOffsetLeft = window.visualViewport?.offsetLeft ?? 0;
+
   let top = 100;
+  let left = vOffsetLeft + vw / 2 - 150;
+
   if (hasValid) {
     const H = tooltipH;
-    const spaceBelow = window.innerHeight - highlight.bottom;
-    const spaceAbove = highlight.top;
+    const GAP = PADDING + 12;
 
-    if (spaceBelow >= H + 20 || spaceBelow > spaceAbove) {
-      top = highlight.bottom + PADDING + 12;
-      if (top + H > window.innerHeight) {
-        top = highlight.top - H - PADDING - 12;
-      }
+    const spaceBelow = vOffsetTop + vh - highlight.bottom;
+    const spaceAbove = highlight.top - vOffsetTop;
+
+    if (spaceBelow >= H + GAP || spaceBelow > spaceAbove) {
+      top = highlight.bottom + GAP;
     } else {
-      top = highlight.top - H - PADDING - 12;
-      if (top < 10) {
-        top = highlight.bottom + PADDING + 12;
-      }
+      top = highlight.top - H - GAP;
     }
-  }
 
-  const left = hasValid
-    ? Math.max(12, Math.min(highlight.left + highlight.width / 2 - 150, window.innerWidth - 312))
-    : window.innerWidth / 2 - 150;
+    // Clamp final: nunca salirse del viewport visible
+    const minTop = vOffsetTop + 10;
+    const maxTop = vOffsetTop + vh - H - 10;
+    top = Math.max(minTop, Math.min(top, maxTop));
+
+    left = Math.max(
+      vOffsetLeft + 12,
+      Math.min(
+        highlight.left + highlight.width / 2 - 150,
+        vOffsetLeft + vw - 312,
+      ),
+    );
+  }
 
   return (
     <>
-      <div style={{ position: "fixed", inset: 0, zIndex: 9998, pointerEvents: "all" }}>
-        <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 9998,
+          pointerEvents: "all",
+        }}
+      >
+        <svg
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+          }}
+        >
           <defs>
             <mask id="tm">
               <rect width="100%" height="100%" fill="white" />
@@ -268,7 +322,12 @@ export default function TourGuiado() {
               )}
             </mask>
           </defs>
-          <rect width="100%" height="100%" fill="rgba(0,0,0,0.75)" mask="url(#tm)" />
+          <rect
+            width="100%"
+            height="100%"
+            fill="rgba(0,0,0,0.75)"
+            mask="url(#tm)"
+          />
         </svg>
       </div>
 
@@ -284,7 +343,7 @@ export default function TourGuiado() {
             borderRadius: 12,
             padding: "16px",
             boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
-             maxHeight: "calc(100vh - 24px)",
+            maxHeight: `${vh - 20}px`,
             overflowY: "auto",
           }}
         >
@@ -310,7 +369,13 @@ export default function TourGuiado() {
             {TOUR_STEPS[currentStep].description}
           </p>
 
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <button
               onClick={handleSkip}
               style={{
@@ -356,7 +421,9 @@ export default function TourGuiado() {
                   cursor: "pointer",
                 }}
               >
-                {currentStep < TOUR_STEPS.length - 1 ? "Siguiente →" : "Finalizar"}
+                {currentStep < TOUR_STEPS.length - 1
+                  ? "Siguiente →"
+                  : "Finalizar"}
               </button>
             </div>
           </div>
