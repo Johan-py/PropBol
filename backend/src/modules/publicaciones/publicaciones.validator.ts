@@ -1,5 +1,4 @@
-import { Request, Response, NextFunction } from "express";
-import { body, validationResult, ValidationError } from "express-validator";
+import { body } from "express-validator";
 
 export const propertyValidationRules = [
   body("titulo")
@@ -40,50 +39,3 @@ export const propertyValidationRules = [
     .matches(/^[a-zA-Z0-9\s.,;:()]+$/)
     .withMessage("La descripción solo puede contener caracteres alfanuméricos y básicos"),
 ];
-
-// Middleware HU‑5 v2
-export const manejarErroresPublicacion = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const errors = validationResult(req);
-
-  if (!errors.isEmpty()) {
-    const grouped: {
-      informacionBasica: { campo: string; mensaje: string }[];
-      caracteristicas: { campo: string; mensaje: string }[];
-      ubicacion: { campo: string; mensaje: string }[];
-      detalles: { campo: string; mensaje: string }[];
-    } = {
-      informacionBasica: [],
-      caracteristicas: [],
-      ubicacion: [],
-      detalles: [],
-    };
-
-    errors.array().forEach((err: ValidationError & { param?: string; msg?: string }) => {
-      const campo = err.param ?? "campo_desconocido";
-      const mensaje = err.msg ?? "Error sin mensaje";
-
-      if (["titulo", "tipoAccion", "categoria", "precio"].includes(campo)) {
-        grouped.informacionBasica.push({ campo, mensaje });
-      } else if (["superficieM2", "nroCuartos", "nroBanos"].includes(campo)) {
-        grouped.caracteristicas.push({ campo, mensaje });
-      } else if (["direccion", "ciudad", "codigoPostal"].includes(campo)) {
-        grouped.ubicacion.push({ campo, mensaje });
-      } else if (["descripcion"].includes(campo)) {
-        grouped.detalles.push({ campo, mensaje });
-      }
-    });
-
-    return res.status(400).json({
-      estado: "Pendiente de revisión",
-      totalErrores: errors.array().length,
-      errores: grouped,
-    });
-    
-  }
-
-  next();
-};
