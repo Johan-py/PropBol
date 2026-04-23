@@ -1,4 +1,4 @@
-"use client";
+import Link from "next/link";
 
 type BlogCardProps = {
   id: string;
@@ -9,7 +9,7 @@ type BlogCardProps = {
   categoryLabel?: string;
   authorName: string;
   publishedAt: string;
-  onClick?: (id: string) => void;
+  href?: string;
 };
 
 export default function BlogCard({
@@ -21,90 +21,72 @@ export default function BlogCard({
   categoryLabel,
   authorName,
   publishedAt,
-  onClick,
+  href,
 }: BlogCardProps) {
-  const handleClick = () => {
-    onClick?.(id);
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
-    if (event.key === "Enter") {
-      handleClick();
-    }
-  };
+  const cardHref = href || `/blog/${id}`;
 
   return (
-    <article
-      onClick={onClick ? handleClick : undefined}
-      onKeyDown={onClick ? handleKeyDown : undefined}
-      role={onClick ? "button" : undefined}
-      tabIndex={onClick ? 0 : undefined}
-      aria-label={onClick ? `Abrir blog: ${title}` : undefined}
-      className={`
-        group
-        flex
-        flex-col
-        overflow-hidden
-        rounded-[32px]
-        bg-white
-        transition-all
-        duration-500
-        ${onClick
-          ? "cursor-pointer hover:shadow-[0_24px_80px_-15px_rgba(41,37,36,0.15)] focus:outline-none focus:ring-2 focus:ring-[#D97706]/20"
-          : "shadow-[0_16px_60px_-40px_rgba(41,37,36,0.1)]"
-        }
-      `}
-    >
-      {/* Imagen */}
-      <div className="relative aspect-[16/10] overflow-hidden">
-        <img
-          src={imageUrl || "/placeholder-blog.jpg"}
-          alt={title}
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
-        <div className="absolute inset-0 bg-stone-900/5 transition-opacity duration-500 group-hover:opacity-0" />
-      </div>
-
-      <div className="flex flex-1 flex-col p-6 sm:p-8">
-        {/* Categoría Pill */}
-        <div className="mb-4">
-          <span className="inline-block rounded-full border border-[#D97706]/20 bg-[#D97706]/5 px-4 py-1 text-[10px] font-bold uppercase tracking-widest text-[#D97706]">
-            {categoryLabel ?? category}
-          </span>
+    <Link href={cardHref} className="block group">
+      <article
+        className={`
+          flex
+          flex-col
+          overflow-hidden
+          rounded-[32px]
+          bg-white
+          transition-all
+          duration-500
+          group-hover:shadow-[0_24px_80px_-15px_rgba(41,37,36,0.15)]
+          h-full
+        `}
+      >
+        {/* Imagen */}
+        <div className="relative aspect-[16/10] overflow-hidden">
+          <img
+            src={imageUrl || "/placeholder-blog.jpg"}
+            alt={title}
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-stone-900/5 transition-opacity duration-500 group-hover:opacity-0" />
         </div>
 
-        {/* Título */}
-        <h2 className="font-['Montserrat'] mb-3 line-clamp-2 text-xl font-bold leading-tight text-stone-900 transition-colors group-hover:text-[#D97706] sm:text-2xl">
-          {title}
-        </h2>
+        <div className="flex flex-1 flex-col p-6 sm:p-8">
+          {/* Categoría Pill */}
+          <div className="mb-4">
+            <span className="inline-block rounded-full border border-[#D97706]/20 bg-[#D97706]/5 px-4 py-1 text-[10px] font-bold uppercase tracking-widest text-[#D97706]">
+              {categoryLabel ?? category}
+            </span>
+          </div>
 
-        {/* Resumen */}
-        <p className="font-['Inter'] mb-6 line-clamp-3 text-sm leading-relaxed text-stone-600 sm:text-base">
-          {excerpt}
-        </p>
+          {/* Título */}
+          <h2 className="font-['Montserrat'] mb-3 line-clamp-2 text-xl font-bold leading-tight text-stone-900 transition-colors group-hover:text-[#D97706] sm:text-2xl">
+            {title}
+          </h2>
 
-        {/* Botón y Metadata */}
-        <div className="mt-auto flex items-center justify-between">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              handleClick();
-            }}
-            className="rounded-full bg-[#D97706] px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-white transition-all hover:bg-[#D97706]/90 hover:shadow-lg hover:shadow-[#D97706]/20"
-          >
-            Leer Más
-          </button>
+          {/* Resumen */}
+          <p className="font-['Inter'] mb-6 line-clamp-3 text-sm leading-relaxed text-stone-600 sm:text-base">
+            {excerpt}
+          </p>
 
-          <div className="text-right">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">
-              {authorName}
-            </p>
-            <p className="text-[9px] text-stone-400">
-              {new Date(publishedAt).toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' })}
-            </p>
+          {/* Botón y Metadata */}
+          <div className="mt-auto flex items-center justify-between">
+            <div
+              className="rounded-full bg-[#D97706] px-5 py-2 text-[10px] font-bold uppercase tracking-wider text-white transition-all group-hover:bg-[#D97706]/90 group-hover:shadow-lg group-hover:shadow-[#D97706]/20"
+            >
+              Leer Más
+            </div>
+
+            <div className="text-right">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">
+                {authorName}
+              </p>
+              <p className="text-[9px] text-stone-400">
+                {new Date(publishedAt).toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' })}
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-    </article>
+      </article>
+    </Link>
   );
 }
