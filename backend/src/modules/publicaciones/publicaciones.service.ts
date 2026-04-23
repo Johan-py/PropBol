@@ -75,7 +75,9 @@ export const publicacionesService = {
     }
 
     // Aquí no validamos campos (eso lo hace el validator),
+  
     // solo devolvemos estado de negocio
+  
     return {
       estado: "Validado",
       mensaje: "Publicación lista para guardar",

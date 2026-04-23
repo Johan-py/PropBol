@@ -82,6 +82,7 @@ export const manejarErroresPublicacion = (
       totalErrores: errors.array().length,
       errores: grouped,
     });
+    
   }
 
   next();

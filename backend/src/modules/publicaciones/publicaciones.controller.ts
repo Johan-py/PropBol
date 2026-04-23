@@ -6,10 +6,12 @@ export type AuthenticatedRequest = Request & {
   user?: { id: number; email?: string };
 };
 
+
 export const listarPublicaciones = async (_req: Request, res: Response) => {
   const publicaciones = await publicacionesService.listarTodas();
   return res.json(publicaciones);
 };
+
 
 export const listarPublicacionesGratis = async (
   _req: Request,
