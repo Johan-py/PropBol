@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation'
 import TransactionModeFilter from './TransactionModeFilter'
 
 interface FilterBarProps {
+   variant?: string  
   onSearch?: (filtros: {
     query: string
     modoInmueble: string[]
@@ -83,6 +84,7 @@ export default function FilterBar({ onSearch }: FilterBarProps) {
     onSearch?.({
       query,
       modoInmueble,
+      tipoInmueble: [], 
       amenidades,
       etiquetas
     })
