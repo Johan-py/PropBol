@@ -1,5 +1,47 @@
 import { prisma } from '../../lib/prisma.client.js'
 import { estado_blog } from '@prisma/client'
+import { createClient } from '@supabase/supabase-js'
+import { randomUUID } from 'crypto'
+
+function resolveSupabaseUrl() {
+  const configuredUrl = process.env.SUPABASE_URL
+
+  if (configuredUrl) {
+    return configuredUrl
+  }
+
+  const databaseUrl = process.env.DATABASE_URL
+
+  if (!databaseUrl) {
+    throw new Error('SUPABASE_URL o DATABASE_URL son requeridos para subir imágenes')
+  }
+
+  const parsedUrl = new URL(databaseUrl)
+  const projectRef = parsedUrl.username.split('.')[1]
+
+  if (!projectRef) {
+    throw new Error('No se pudo inferir SUPABASE_URL desde DATABASE_URL')
+  }
+
+  return `https://${projectRef}.supabase.co`
+}
+
+function getSupabaseClient() {
+  const supabaseUrl = resolveSupabaseUrl()
+  const supabaseKey =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_ANON_KEY
+
+  if (!supabaseKey) {
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY o SUPABASE_ANON_KEY son requeridos')
+  }
+
+  return createClient(supabaseUrl, supabaseKey)
+}
+
+function getFileExtension(file: Express.Multer.File) {
+  const fromMimeType = file.mimetype.split('/')[1]
+  return fromMimeType === 'jpeg' ? 'jpg' : fromMimeType || 'jpg'
+}
 
 // BLOGS PE
 
@@ -83,10 +125,36 @@ export const blogsRepository = {
       titulo?: string
       contenido?: string
       imagen?: string
+      categoria_id?: number
       estado?: estado_blog
     }
   ) {
     return prisma.blog.update({ where: { id }, data })
+  },
+  async uploadImage(file: Express.Multer.File, usuario_id: number) {
+    const supabase = getSupabaseClient()
+    const extension = getFileExtension(file)
+    const filePath = `${usuario_id}/${Date.now()}-${randomUUID()}.${extension}`
+
+    const { error } = await supabase.storage
+      .from('blogs')
+      .upload(filePath, file.buffer, {
+        cacheControl: '3600',
+        contentType: file.mimetype,
+        upsert: false
+      })
+
+    if (error) {
+      throw new Error(`No se pudo subir la imagen del blog: ${error.message}`)
+    }
+
+    const { data } = supabase.storage.from('blogs').getPublicUrl(filePath)
+
+    if (!data.publicUrl) {
+      throw new Error('No se pudo obtener la URL pública de la imagen')
+    }
+
+    return { path: filePath, url: data.publicUrl }
   },
   // Cambiar estado (Admin)
   async changeEstado(id: number, estado: estado_blog, razon_rechazo?: string) {
