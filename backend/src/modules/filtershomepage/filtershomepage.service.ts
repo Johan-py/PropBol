@@ -14,6 +14,7 @@ export class FiltersHomepageService {
     const mapToHomeFilter = (item: any) => ({
       name: item.departamento || "Sin nombre",
       count: item.count,
+            previews: item.previews ?? [],
     });
 
     const requiredCategories = [

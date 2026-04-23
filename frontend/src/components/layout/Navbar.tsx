@@ -28,6 +28,7 @@ export type User = {
   name: string;
   email: string;
   avatar?: string | null;
+  role?: string | null;
 };
 
 type MeResponse = {
@@ -38,6 +39,7 @@ type MeResponse = {
     apellido?: string;
     correo: string;
     avatar?: string | null;
+    rol?: string;
   };
 };
 
