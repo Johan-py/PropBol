@@ -13,9 +13,14 @@ export const crearBlog = async (req: AuthRequest, res: Response) => {
     if (!req.user) return res.status(401).json({ message: 'NOT_AUTHENTICATED' })
 
     const { titulo, contenido, imagen, categoria_id, accion } = req.body
+    const cleanTitulo = typeof titulo === 'string' ? titulo.trim() : ''
+    const cleanContenido = typeof contenido === 'string' ? contenido.trim() : ''
+    const cleanImagen = typeof imagen === 'string' ? imagen.trim() : ''
 
-    if (!titulo || !contenido || !categoria_id) {
-      return res.status(400).json({ message: 'titulo, contenido y categoria_id son requeridos' })
+    if (!cleanTitulo || !cleanContenido || !cleanImagen || !categoria_id) {
+      return res
+        .status(400)
+        .json({ message: 'titulo, contenido, imagen y categoria_id son requeridos' })
     }
 
     if (!['borrador', 'pendiente'].includes(accion)) {
@@ -23,14 +28,31 @@ export const crearBlog = async (req: AuthRequest, res: Response) => {
     }
 
     const blog = await blogsService.crear(req.user.id, {
-      titulo,
-      contenido,
-      imagen,
+      titulo: cleanTitulo,
+      contenido: cleanContenido,
+      imagen: cleanImagen,
       categoria_id: Number(categoria_id),
       accion
     })
 
     return res.status(201).json(blog)
+  } catch (error: unknown) {
+    return handleError(res, error)
+  }
+}
+
+/** POST /api/blogs/upload-image */
+export const subirImagenBlog = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user) return res.status(401).json({ message: 'NOT_AUTHENTICATED' })
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'Debes adjuntar una imagen del blog' })
+    }
+
+    const uploaded = await blogsService.subirImagen(req.file, req.user.id)
+
+    return res.status(201).json(uploaded)
   } catch (error: unknown) {
     return handleError(res, error)
   }
@@ -102,12 +124,26 @@ export const actualizarBlog = async (req: AuthRequest, res: Response) => {
     if (!req.user) return res.status(401).json({ message: 'NOT_AUTHENTICATED' })
 
     const id = Number(req.params.id)
-    const { titulo, contenido, imagen, accion } = req.body
+    const { titulo, contenido, imagen, categoria_id, accion } = req.body
+    const cleanTitulo = typeof titulo === 'string' ? titulo.trim() : ''
+    const cleanContenido = typeof contenido === 'string' ? contenido.trim() : ''
+    const cleanImagen = typeof imagen === 'string' ? imagen.trim() : ''
+
+    if (!cleanTitulo || !cleanContenido || !cleanImagen || !categoria_id) {
+      return res
+        .status(400)
+        .json({ message: 'titulo, contenido, imagen y categoria_id son requeridos' })
+    }
+
+    if (accion && !['borrador', 'pendiente'].includes(accion)) {
+      return res.status(400).json({ message: "accion debe ser 'borrador' o 'pendiente'" })
+    }
 
     const blog = await blogsService.actualizar(id, req.user.id, {
-      titulo,
-      contenido,
-      imagen,
+      titulo: cleanTitulo,
+      contenido: cleanContenido,
+      imagen: cleanImagen,
+      categoria_id: Number(categoria_id),
       accion
     })
 
