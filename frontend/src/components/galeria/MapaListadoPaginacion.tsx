@@ -27,6 +27,7 @@ export default function MapaListadoPaginacion({
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const safePage = Math.min(Math.max(1, page), totalPages);
   const disabled = total === 0;
+  const showPaginationControls = !disabled && totalPages > 1;
 
   const visiblePages = useMemo(() => {
 if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -62,47 +63,48 @@ if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
 
           </select>
         </label>
-        <div className="flex items-center gap-1 shrink-0" aria-label="Paginación">
-          <button
-            type="button"
-            disabled={disabled || safePage <= 1}
-            onClick={() => onPageChange(safePage - 1)}
-            className="p-1.5 rounded-md border border-stone-200 bg-white disabled:opacity-40"
-            aria-label="Página anterior"
-          >
-            <ChevronLeft size={16} />
-          </button>
-<div className="flex items-center gap-1 justify-center no-scrollbar">
-            {visiblePages.map((n, idx) => (
-              n === "..." ? (
-                <span key={`dots-${idx}`} className="px-1 text-stone-400 text-xs">...</span>
-              ) : (
-                <button
-                  key={n}
-                  type="button"
-                  disabled={disabled}
-                  onClick={() => onPageChange(n as number)}
-                  className={`min-w-[1.75rem] h-7 text-xs rounded-md border transition-colors ${
-                    n === safePage
-                      ? "bg-orange-500 text-white border-orange-500 font-semibold shadow-sm"
-                      : "bg-white border-stone-200 text-stone-600 hover:border-orange-300"
-                  }`}
-                >
-                  {n}
-                </button>
-              )
-            ))}
+        {showPaginationControls ? (
+          <div className="flex items-center gap-1 shrink-0" aria-label="Paginación">
+            <button
+              type="button"
+              disabled={safePage <= 1}
+              onClick={() => onPageChange(safePage - 1)}
+              className="p-1.5 rounded-md border border-stone-200 bg-white disabled:opacity-40"
+              aria-label="Página anterior"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <div className="flex items-center gap-1 justify-center no-scrollbar">
+              {visiblePages.map((n, idx) => (
+                n === "..." ? (
+                  <span key={`dots-${idx}`} className="px-1 text-stone-400 text-xs">...</span>
+                ) : (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => onPageChange(n as number)}
+                    className={`min-w-[1.75rem] h-7 text-xs rounded-md border transition-colors ${
+                      n === safePage
+                        ? "bg-orange-500 text-white border-orange-500 font-semibold shadow-sm"
+                        : "bg-white border-stone-200 text-stone-600 hover:border-orange-300"
+                    }`}
+                  >
+                    {n}
+                  </button>
+                )
+              ))}
+            </div>
+            <button
+              type="button"
+              disabled={safePage >= totalPages}
+              onClick={() => onPageChange(safePage + 1)}
+              className="p-1.5 rounded-md border border-stone-200 bg-white disabled:opacity-40"
+              aria-label="Página siguiente"
+            >
+              <ChevronRight size={16} />
+            </button>
           </div>
-          <button
-            type="button"
-            disabled={disabled || safePage >= totalPages}
-            onClick={() => onPageChange(safePage + 1)}
-            className="p-1.5 rounded-md border border-stone-200 bg-white disabled:opacity-40"
-            aria-label="Página siguiente"
-          >
-            <ChevronRight size={16} />
-          </button>
-        </div>
+        ) : null}
       </div>
       <p className="text-[11px] text-stone-500 text-center sm:text-left">
         {disabled

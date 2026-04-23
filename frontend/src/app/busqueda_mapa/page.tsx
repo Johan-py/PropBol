@@ -331,6 +331,7 @@ function BusquedaMapaContent() {
   )
 
     const renderListPaginationFooter = () => (
+    listTotal > 0 ? (
     <MapaListadoPaginacion
       total={listTotal}
       page={listSafePage}
@@ -342,6 +343,7 @@ function BusquedaMapaContent() {
       }}
       hint={listTotal === 0 && error ? `Error al cargar: ${error}` : null}
     />
+    ) : null
   );
 
   // ────────────────────────────────────────────────────────────────────────────
