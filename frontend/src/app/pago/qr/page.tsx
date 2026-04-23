@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Clock } from 'lucide-react'
+import { ArrowLeft, Clock, CheckCircle } from 'lucide-react'
 import Stepper from '@/components/ui/Stepper'
 import { useCurrentPayment } from '@/hooks/payment/useCurrentPayment'
 import { usePaymentStatus } from '@/hooks/payment/usePaymentStatus'
@@ -21,6 +21,7 @@ export default function PagoQRPage() {
 
   const [timeLeft, setTimeLeft] = useState<number | null>(null)
   const [isExpired, setIsExpired] = useState(false)
+  const [isConfirming, setIsConfirming] = useState(false)
   const expiredHandled = useRef(false)
 
   useEffect(() => {
@@ -50,6 +51,31 @@ export default function PagoQRPage() {
   useEffect(() => {
     if (status === 'pagado') router.push('/pago/confirmacion')
   }, [status, router])
+
+  const handleConfirmarPago = async () => {
+    if (!payment || isConfirming) return
+    setIsConfirming(true)
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`/api/transacciones/${payment.id}/confirmar`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      })
+      if (response.ok) {
+        localStorage.removeItem('currentPayment')
+        router.push('/pago/confirmacion')
+      } else {
+        const data = await response.json()
+        console.error('Error al confirmar:', data.error)
+        setIsConfirming(false)
+      }
+    } catch {
+      setIsConfirming(false)
+    }
+  }
 
   const fmt = (s: number) =>
     `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
@@ -234,6 +260,22 @@ export default function PagoQRPage() {
                   </p>
                 </div>
               </div>
+            </div>
+
+            {/* Confirmar pago */}
+            <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-4">
+              <p className="text-sm font-semibold text-stone-800 mb-1">¿Ya realizaste el pago?</p>
+              <p className="text-xs text-stone-500 mb-3 leading-relaxed">
+                Después de escanear el QR y completar la transferencia en tu app bancaria, presiona el botón para confirmar tu pago.
+              </p>
+              <button
+                onClick={handleConfirmarPago}
+                disabled={isConfirming}
+                className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white py-2.5 rounded-lg text-sm font-semibold transition-colors"
+              >
+                <CheckCircle size={16} />
+                {isConfirming ? 'Confirmando...' : 'Ya realicé el pago'}
+              </button>
             </div>
 
             {/* Flecha "Atrás" → Confirmación */}
