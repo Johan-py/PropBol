@@ -153,7 +153,10 @@ export default function UserMenu({
 
   return (
     <>
+      {/* HU-05: ID de referencia para el tour guiado - Paso "Tu cuenta" */}
+      {/* Este botón será resaltado para mostrar dónde gestionar perfil y sesión */}
       <button
+        id="tour-user"
         onClick={onTogglePanel}
         className="p-2 text-gray-700 rounded-full hover:bg-black/5 transition focus:outline-none"
         aria-label="Abrir menú de usuario"
@@ -264,7 +267,6 @@ export default function UserMenu({
                 icon={FileText}
                 onClick={onClosePanel}
               />
-              {/* ✅ Botón de Seguridad — redirige a /profile/security */}
               <MenuLink
                 label="Seguridad"
                 href="/profile/security"
