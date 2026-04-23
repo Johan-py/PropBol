@@ -23,18 +23,21 @@ const TOUR_STEPS = [
   },
   {
     id: "tour-propiedades",
+    mobileId: "tour-propiedades-mobile",
     title: "Propiedades",
     description: "Explora casas, departamentos, terrenos y más.",
     required: true,
   },
   {
     id: "tour-blogs",
+    mobileId: "tour-blogs-mobile",
     title: "Blogs",
     description: "Lee artículos y consejos sobre el mercado inmobiliario.",
     required: true,
   },
   {
     id: "tour-planes",
+    mobileId: "tour-planes-mobile",
     title: "Planes de membresía",
     description:
       "Conoce nuestros planes y beneficios para publicar tu inmueble.",
@@ -54,6 +57,7 @@ const TOUR_STEPS = [
   },
   {
     id: "tour-ayuda",
+    mobileId: "tour-ayuda-mobile",
     title: "Ayuda",
     description: "Vuelve a ver este tour cuando quieras desde aquí.",
     required: true,
@@ -70,6 +74,12 @@ const TOUR_STEPS = [
     description: "Accede a tu perfil, publicaciones y configuración.",
     required: true,
   },
+  //{
+  //  id: "tour-publicar",
+  //title: "Publica tu inmueble",
+  //description: "Anuncia tu propiedad de forma rápida y sencilla. Llega a miles de compradores.",
+  //required: true,
+  //},
   {
     id: "tour-footer-logo",
     title: "PropBol",
@@ -161,8 +171,27 @@ export default function TourGuiado() {
         setTooltipH(tooltipRef.current.offsetHeight);
       }
       const step = TOUR_STEPS[currentStep];
-      const el = document.getElementById(step.id);
-      if (el) setHighlight(el.getBoundingClientRect());
+      const isMobileNav =
+        (window.visualViewport?.width ?? window.innerWidth) < 768;
+      const mobileId =
+        "mobileId" in step
+          ? (step as typeof step & { mobileId: string }).mobileId
+          : undefined;
+      const id = isMobileNav && mobileId ? mobileId : step.id;
+      const el = document.getElementById(id);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        const vh = window.visualViewport?.height ?? window.innerHeight;
+        // Solo actualiza si el elemento ya está visible en el viewport
+        if (
+          rect.width > 0 &&
+          rect.height > 0 &&
+          rect.top < vh &&
+          rect.bottom > 0
+        ) {
+          setHighlight(rect);
+        }
+      }
     };
 
     measure();
@@ -181,31 +210,55 @@ export default function TourGuiado() {
       window.visualViewport?.removeEventListener("scroll", measure);
     };
   }, [currentStep, showTour]);
+
   const applyHighlight = (el: HTMLElement) => {
     const isFooter = currentStep >= FOOTER_STEP_INDEX;
 
-    el.scrollIntoView({
-      behavior: "auto",
-      block: isFooter ? "start" : "center",
-    });
-
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
-    timeoutRef.current = setTimeout(() => {
+    if (isFooter) {
+      document.body.style.overflow = "";
+      // Esperar un frame para que el browser procese el overflow antes de scrollear
       requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: "auto", block: "start" });
         requestAnimationFrame(() => {
-          setHighlight(el.getBoundingClientRect());
+          requestAnimationFrame(() => {
+            setHighlight(el.getBoundingClientRect());
+            document.body.style.overflow = "hidden";
+          });
         });
       });
-    }, 50);
+    } else {
+      el.scrollIntoView({ behavior: "auto", block: "center" });
+      timeoutRef.current = setTimeout(() => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            setHighlight(el.getBoundingClientRect());
+          });
+        });
+      }, 50);
+    }
   };
 
-  //  Buscar elemento con reintentos
+  // Búsqueda del elemento con reintentos
   useEffect(() => {
     if (!showTour) return;
 
     const step = TOUR_STEPS[currentStep];
-    const id = step.id;
+    const isMobileNav =
+      (window.visualViewport?.width ?? window.innerWidth) < 768;
+    const mobileId =
+      "mobileId" in step
+        ? (step as typeof step & { mobileId: string }).mobileId
+        : undefined;
+    const needsMobileMenu = isMobileNav && !!mobileId;
+    const id = needsMobileMenu ? mobileId! : step.id;
+
+    if (needsMobileMenu) {
+      window.dispatchEvent(new Event("propbol:abrir-menu-movil"));
+    } else if (isMobileNav) {
+      window.dispatchEvent(new Event("propbol:cerrar-menu-movil"));
+    }
 
     let attempts = 0;
     const maxAttempts = 10;
@@ -243,11 +296,15 @@ export default function TourGuiado() {
     if (currentStep < TOUR_STEPS.length - 1) {
       setCurrentStep((prev) => prev + 1);
     } else {
+      window.dispatchEvent(new Event("propbol:cerrar-menu-movil"));
       setShowTour(false);
     }
   };
 
-  const handleSkip = () => setShowTour(false);
+  const handleSkip = () => {
+    window.dispatchEvent(new Event("propbol:cerrar-menu-movil"));
+    setShowTour(false);
+  };
 
   if (!showTour) return null;
 
@@ -259,8 +316,17 @@ export default function TourGuiado() {
   const vOffsetTop = window.visualViewport?.offsetTop ?? 0;
   const vOffsetLeft = window.visualViewport?.offsetLeft ?? 0;
 
-  let top = 100;
-  let left = vOffsetLeft + vw / 2 - 150;
+  const tooltipW = Math.min(300, vw - 24);
+  const isMobile = vw < 480;
+  const tooltipPad = isMobile ? "12px" : "16px";
+  const fontTitle = isMobile ? 13 : 14;
+  const fontDesc = isMobile ? 12 : 13;
+  const fontMeta = isMobile ? 10 : 11;
+  const fontBtn = isMobile ? 12 : 13;
+  const fontSkip = isMobile ? 11 : 12;
+
+  let top = vOffsetTop + 80;
+  let left = vOffsetLeft + (vw - tooltipW) / 2;
 
   if (hasValid) {
     const H = tooltipH;
@@ -283,8 +349,8 @@ export default function TourGuiado() {
     left = Math.max(
       vOffsetLeft + 12,
       Math.min(
-        highlight.left + highlight.width / 2 - 150,
-        vOffsetLeft + vw - 312,
+        highlight.left + highlight.width / 2 - tooltipW / 2,
+        vOffsetLeft + vw - tooltipW - 12,
       ),
     );
   }
@@ -333,15 +399,16 @@ export default function TourGuiado() {
 
       {hasValid && (
         <div
+          ref={tooltipRef}
           style={{
             position: "fixed",
             top,
             left,
-            width: 300,
+            width: tooltipW,
             zIndex: 9999,
             background: "#fff",
             borderRadius: 12,
-            padding: "16px",
+            padding: tooltipPad,
             boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
             maxHeight: `${vh - 20}px`,
             overflowY: "auto",
@@ -361,13 +428,31 @@ export default function TourGuiado() {
             ))}
           </div>
 
-          <p style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }}>
+          <p style={{ fontWeight: 700, fontSize: fontTitle, marginBottom: 4 }}>
             {TOUR_STEPS[currentStep].title}
           </p>
 
-          <p style={{ fontSize: 13, marginBottom: 14 }}>
+          <p
+            style={{
+              fontSize: fontDesc,
+              color: "#374151",
+              marginBottom: !hasValid ? 8 : 14,
+            }}
+          >
             {TOUR_STEPS[currentStep].description}
           </p>
+          {!hasValid && (
+            <p
+              style={{
+                fontSize: fontMeta,
+                color: "#9ca3af",
+                marginBottom: 14,
+                fontStyle: "italic",
+              }}
+            >
+              Esta sección no está visible en tu dispositivo actual.
+            </p>
+          )}
 
           <div
             style={{
@@ -379,11 +464,13 @@ export default function TourGuiado() {
             <button
               onClick={handleSkip}
               style={{
-                fontSize: 12,
+                fontSize: fontSkip,
                 color: "#9ca3af",
                 background: "none",
                 border: "none",
                 cursor: "pointer",
+                minHeight: 44,
+                padding: "0 4px",
               }}
             >
               Saltar tour
@@ -398,10 +485,11 @@ export default function TourGuiado() {
                     color: "#E68B25",
                     border: "1px solid #E68B25",
                     borderRadius: 8,
-                    padding: "8px 14px",
-                    fontSize: 13,
+                    padding: isMobile ? "8px 10px" : "10px 14px",
+                    fontSize: fontBtn,
                     fontWeight: 600,
                     cursor: "pointer",
+                    minHeight: 44,
                   }}
                 >
                   ← Anterior
@@ -415,10 +503,11 @@ export default function TourGuiado() {
                   color: "#fff",
                   border: "none",
                   borderRadius: 8,
-                  padding: "8px 18px",
-                  fontSize: 13,
+                  padding: isMobile ? "8px 12px" : "10px 18px",
+                  fontSize: fontBtn,
                   fontWeight: 600,
                   cursor: "pointer",
+                  minHeight: 44,
                 }}
               >
                 {currentStep < TOUR_STEPS.length - 1

@@ -1,216 +1,227 @@
-import { MOCK_PUBLIC_BLOGS } from '@/lib/mock/publicBlogs.mock'
-import { PublicBlogCard, BlogCategory } from '@/types/publicBlog'
+import { MOCK_PUBLIC_BLOGS } from "@/lib/mock/publicBlogs.mock";
+import { PublicBlogCard, BlogCategory } from "@/types/publicBlog";
 
-export type BlogCreationAction = 'borrador' | 'pendiente'
+export type BlogCreationAction = "borrador" | "pendiente";
 
 export type BlogCategoryOption = {
-  id: number
-  nombre: string
-}
+  id: number;
+  nombre: string;
+};
 
 type UploadedBlogImageResponse = {
-  path: string
-  url: string
-}
+  path: string;
+  url: string;
+};
 
 export type CreateBlogPayload = {
-  titulo: string
-  contenido: string
-  imagen: string
-  categoria_id: number
-  accion: BlogCreationAction
-}
+  titulo: string;
+  contenido: string;
+  imagen: string;
+  categoria_id: number;
+  accion: BlogCreationAction;
+};
 
 export type EditableBlog = {
-  id: number
-  titulo: string
-  contenido: string
-  imagen: string
-  categoria_id: number
-  estado: 'BORRADOR' | 'RECHAZADO'
-}
+  id: number;
+  titulo: string;
+  contenido: string;
+  imagen: string;
+  categoria_id: number;
+  estado: "BORRADOR" | "RECHAZADO";
+};
 
 type CreatedBlogResponse = {
-  id: number
-  titulo: string
-  estado: 'BORRADOR' | 'PENDIENTE' | 'PUBLICADO' | 'RECHAZADO'
-}
+  id: number;
+  titulo: string;
+  estado: "BORRADOR" | "PENDIENTE" | "PUBLICADO" | "RECHAZADO";
+};
 
 type UserBlogRow = {
-  id: number
-  titulo: string
-  contenido: string
-  imagen: string | null
-  categoria_id: number
-  estado: 'BORRADOR' | 'PENDIENTE' | 'PUBLICADO' | 'RECHAZADO'
-}
+  id: number;
+  titulo: string;
+  contenido: string;
+  imagen: string | null;
+  categoria_id: number;
+  estado: "BORRADOR" | "PENDIENTE" | "PUBLICADO" | "RECHAZADO";
+};
 
 const getApiUrl = () =>
-  (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
+  (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").replace(
+    /\/$/,
+    "",
+  );
 
 const getToken = () => {
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem("token");
 
   if (!token) {
-    throw new Error('No hay sesión activa. Inicia sesión nuevamente.')
+    throw new Error("No hay sesión activa. Inicia sesión nuevamente.");
   }
 
-  return token
-}
+  return token;
+};
 
 interface BlogApiRow {
-  id: number
-  titulo: string
-  resumen?: string
-  contenido: string
-  imagen?: string
-  fecha_publicacion?: string
-  fecha_creacion: string
+  id: number;
+  titulo: string;
+  resumen?: string;
+  contenido: string;
+  imagen?: string;
+  fecha_publicacion?: string;
+  fecha_creacion: string;
   usuario?: {
-    nombre?: string
-    apellido?: string
-  }
+    nombre?: string;
+    apellido?: string;
+  };
   categoria_blog?: {
-    nombre: string
-  }
+    nombre: string;
+  };
 }
 
-export const getPublishedBlogs = async (limit: number = 10): Promise<PublicBlogCard[]> => {
-  const apiUrl = getApiUrl()
+export const getPublishedBlogs = async (
+  limit: number = 10,
+): Promise<PublicBlogCard[]> => {
+  const apiUrl = getApiUrl();
 
   try {
     const response = await fetch(`${apiUrl}/api/blogs?limit=${limit}`, {
-      cache: 'no-store'
-    })
+      cache: "no-store",
+    });
 
     if (!response.ok) {
-      throw new Error(`Error HTTP: ${response.status}`)
+      throw new Error(`Error HTTP: ${response.status}`);
     }
 
-    const result = await response.json()
-    const rows = (result.data || []) as BlogApiRow[]
+    const result = await response.json();
+    const rows = (result.data || []) as BlogApiRow[];
 
     return rows.map((row: BlogApiRow) => ({
       id: String(row.id),
       title: row.titulo,
-      excerpt: row.resumen || row.contenido.substring(0, 150) + '...',
-      imageUrl: row.imagen || '/placeholder-blog.jpg',
-      category: (row.categoria_blog?.nombre || 'General') as BlogCategory,
-      authorName: `${row.usuario?.nombre || ''} ${row.usuario?.apellido || ''}`.trim() || 'Anónimo',
-      publishedAt: row.fecha_publicacion || row.fecha_creacion
-    }))
+      excerpt: row.resumen || row.contenido.substring(0, 150) + "...",
+      imageUrl: row.imagen || "/placeholder-blog.jpg",
+      category: (row.categoria_blog?.nombre || "General") as BlogCategory,
+      authorName:
+        `${row.usuario?.nombre || ""} ${row.usuario?.apellido || ""}`.trim() ||
+        "Anónimo",
+      publishedAt: row.fecha_publicacion || row.fecha_creacion,
+    }));
   } catch (error) {
-    console.error('Error al obtener los blogs publicados:', error)
-    return MOCK_PUBLIC_BLOGS.slice(0, limit)
+    console.error("Error al obtener los blogs publicados:", error);
+    return MOCK_PUBLIC_BLOGS.slice(0, limit);
   }
-}
+};
 
 export async function getBlogCategories(): Promise<BlogCategoryOption[]> {
   const response = await fetch(`${getApiUrl()}/api/blogs/categorias`, {
-    cache: 'no-store'
-  })
+    cache: "no-store",
+  });
 
-  const data = await response.json()
+  const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || 'No se pudieron cargar las categorías')
+    throw new Error(data.message || "No se pudieron cargar las categorías");
   }
 
-  return data
+  return data;
 }
 
-export async function createBlog(payload: CreateBlogPayload): Promise<CreatedBlogResponse> {
+export async function createBlog(
+  payload: CreateBlogPayload,
+): Promise<CreatedBlogResponse> {
   const response = await fetch(`${getApiUrl()}/api/blogs`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${getToken()}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
     },
-    body: JSON.stringify(payload)
-  })
+    body: JSON.stringify(payload),
+  });
 
-  const data = await response.json()
+  const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || 'No se pudo crear el blog')
+    throw new Error(data.message || "No se pudo crear el blog");
   }
 
-  return data
+  return data;
 }
 
 export async function updateBlog(
   id: number,
-  payload: CreateBlogPayload
+  payload: CreateBlogPayload,
 ): Promise<CreatedBlogResponse> {
   const response = await fetch(`${getApiUrl()}/api/blogs/${id}`, {
-    method: 'PATCH',
+    method: "PATCH",
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${getToken()}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken()}`,
     },
-    body: JSON.stringify(payload)
-  })
+    body: JSON.stringify(payload),
+  });
 
-  const data = await response.json()
+  const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || 'No se pudo actualizar el blog')
+    throw new Error(data.message || "No se pudo actualizar el blog");
   }
 
-  return data
+  return data;
 }
 
 export async function getEditableBlog(id: number): Promise<EditableBlog> {
   const response = await fetch(`${getApiUrl()}/api/blogs/mis-blogs`, {
-    cache: 'no-store',
+    cache: "no-store",
     headers: {
-      Authorization: `Bearer ${getToken()}`
-    }
-  })
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
 
-  const data = await response.json()
+  const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || 'No se pudieron cargar tus blogs')
+    throw new Error(data.message || "No se pudieron cargar tus blogs");
   }
 
-  const blog = (data as UserBlogRow[]).find((row) => row.id === id)
+  const blog = (data as UserBlogRow[]).find((row) => row.id === id);
 
   if (!blog) {
-    throw new Error('No se encontró el blog solicitado.')
+    throw new Error("No se encontró el blog solicitado.");
   }
 
-  if (blog.estado !== 'BORRADOR' && blog.estado !== 'RECHAZADO') {
-    throw new Error('Solo puedes editar blogs en estado BORRADOR o RECHAZADO.')
+  if (blog.estado !== "BORRADOR" && blog.estado !== "RECHAZADO") {
+    throw new Error("Solo puedes editar blogs en estado BORRADOR o RECHAZADO.");
   }
 
   return {
     id: blog.id,
     titulo: blog.titulo,
     contenido: blog.contenido,
-    imagen: blog.imagen ?? '',
+    imagen: blog.imagen ?? "",
     categoria_id: blog.categoria_id,
-    estado: blog.estado
-  }
+    estado: blog.estado,
+  };
 }
 
-export async function uploadBlogImage(file: File): Promise<UploadedBlogImageResponse> {
-  const formData = new FormData()
-  formData.append('imagen', file)
+export async function uploadBlogImage(
+  file: File,
+): Promise<UploadedBlogImageResponse> {
+  const formData = new FormData();
+  formData.append("imagen", file);
 
   const response = await fetch(`${getApiUrl()}/api/blogs/upload-image`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      Authorization: `Bearer ${getToken()}`
+      Authorization: `Bearer ${getToken()}`,
     },
-    body: formData
-  })
+    body: formData,
+  });
 
-  const data = await response.json()
+  const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || 'No se pudo subir la imagen del blog')
+    throw new Error(data.message || "No se pudo subir la imagen del blog");
   }
 
-  return data
+  return data;
 }
