@@ -26,7 +26,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL //?? "http://localhost:5000";
 
 export default function MiRegistroPage() {
   const router = useRouter()
-  const [mostrarPlanModal, setMostrarPlanModal] = useState(false)
+  //const [mostrarPlanModal, setMostrarPlanModal] = useState(false)
 
   const [datos, setDatos] = useState({
     titulo: '',
@@ -61,7 +61,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
         router.push('/sign-in') //entra al formulario solo si inicio sesion
         return
       }
-
+      
       try {
         const response = await fetch(`${API_URL}/api/publicaciones/flujo`, {
           method: 'GET',
@@ -73,15 +73,16 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
         const result = await response.json()
 
         if (!response.ok && result.message === 'LIMIT_REACHED') {
-          setMostrarPlanModal(true)
+          router.push('/Cobros-Limite')
         }
       } catch (error) {
-        console.error('Error validando flujo de publicación:', error)
+        //console.error('Error validando flujo de publicación:', error)
+        console.error(error)
       }
     }
 
     validarFlujo()
-  }, [router])
+  }, []) //router
 
   const limpiarError = () => {
     setMensajeError('')
@@ -537,7 +538,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
 
       if (!response.ok) {
         if (result.message === 'LIMIT_REACHED') {
-          setMostrarPlanModal(true)
+          router.push('/Cobros-Limite')
           return
         }
 
@@ -927,8 +928,6 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
           </div>
         </div>
       </main>
-
-      {mostrarPlanModal && <PlanModal onClose={() => setMostrarPlanModal(false)} />}
     </div>
   )
 }

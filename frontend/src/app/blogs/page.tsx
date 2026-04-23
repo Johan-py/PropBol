@@ -1,13 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import BlogCard from "@/components/blog/BlogCard";
 import MyRecentBlogsPanel from "@/components/blog/MyRecentBlogsPanel";
+import AddPostButton from "@/components/blog/AddPostButton";
 import BlogFilterChips from "@/components/blog/BlogFilterChips";
 import FeaturedBlogSpotlight from "@/components/blog/FeaturedBlogSpotlight";
 import { useBlogFeed } from "@/hooks/useBlogFeed";
-import { USER_STORAGE_KEY } from "@/lib/session";
 
 export default function BlogsPage() {
   const {
@@ -20,22 +19,6 @@ export default function BlogsPage() {
     toggleCategory,
     loadMore,
   } = useBlogFeed();
-
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  useEffect(() => {
-    const syncAuthState = () => {
-      setIsAuthenticated(Boolean(localStorage.getItem(USER_STORAGE_KEY)));
-    };
-
-    syncAuthState();
-    window.addEventListener("storage", syncAuthState);
-    window.addEventListener("propbol:session-changed", syncAuthState);
-
-    return () => {
-      window.removeEventListener("storage", syncAuthState);
-      window.removeEventListener("propbol:session-changed", syncAuthState);
-    };
-  }, []);
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#fbf6ef_0%,#f5efe7_45%,#ffffff_100%)]">
@@ -57,6 +40,8 @@ export default function BlogsPage() {
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <AddPostButton />
+
               {/* TODO: restringir este acceso por rol cuando se integre backend. */}
               <Link
                 href="/admin/blogs"
@@ -64,24 +49,6 @@ export default function BlogsPage() {
               >
                 Moderar Posts
               </Link>
-
-              <button
-                type="button"
-                disabled={!isAuthenticated}
-                aria-disabled={!isAuthenticated}
-                title={
-                  isAuthenticated
-                    ? "La creacion de blogs se habilitara cuando el flujo este integrado."
-                    : "Disponible solo para usuarios registrados."
-                }
-                className={`inline-flex min-h-[54px] items-center justify-center self-start px-8 text-sm font-semibold uppercase tracking-[0.22em] transition-colors lg:self-auto ${
-                  isAuthenticated
-                    ? "bg-[#a56400] text-white hover:bg-[#8e5800]"
-                    : "cursor-not-allowed bg-[#a56400] text-white/75 opacity-80"
-                }`}
-              >
-                AÑADIR POST
-              </button>
             </div>
           </div>
         </section>
