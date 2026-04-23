@@ -59,7 +59,7 @@ export default function BlogCard({
     >
       <div className="overflow-hidden">
         <img
-          src={imageUrl}
+          src={imageUrl || "/placeholder-blog.jpg"}
           alt={title}
           className="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
@@ -68,9 +68,7 @@ export default function BlogCard({
       <div className="space-y-4 p-5">
         {/* Categoría */}
         <div className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
-          <span className="text-amber-700">
-            {categoryLabel ?? category}
-          </span>
+          <span className="text-amber-700">{categoryLabel ?? category}</span>
         </div>
 
         {/* Título */}
@@ -88,9 +86,7 @@ export default function BlogCard({
           <span className="font-semibold uppercase tracking-[0.16em] text-stone-700">
             {authorName}
           </span>
-          <span>
-            {new Date(publishedAt).toLocaleDateString()}
-          </span>
+          <span>{new Date(publishedAt).toLocaleDateString()}</span>
         </div>
       </div>
     </article>
