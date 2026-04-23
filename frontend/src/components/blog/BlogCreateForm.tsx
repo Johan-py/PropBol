@@ -1,11 +1,12 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
   createBlog,
   getBlogCategories,
+  updateBlog,
   type BlogCategoryOption,
   type BlogCreationAction,
 } from "@/services/blogs.service";
@@ -18,6 +19,19 @@ type FieldErrors = {
 };
 
 const INITIAL_ERRORS: FieldErrors = {};
+const AUTOSAVE_STORAGE_PREFIX = "propbol_blog_form";
+
+type BlogCreateFormProps = {
+  blogId?: number;
+  initialValues?: {
+    categoriaId: string;
+    contenido: string;
+    imagen: string;
+    titulo: string;
+  };
+  mode?: "create" | "edit";
+  statusLabel?: "BORRADOR" | "RECHAZADO";
+};
 
 function isValidImageUrl(value: string) {
   try {
@@ -28,20 +42,35 @@ function isValidImageUrl(value: string) {
   }
 }
 
-export default function BlogCreateForm() {
+export default function BlogCreateForm({
+  blogId,
+  initialValues,
+  mode = "create",
+  statusLabel,
+}: BlogCreateFormProps) {
   const router = useRouter();
+  const hasHydratedDraft = useRef(false);
   const [categories, setCategories] = useState<BlogCategoryOption[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [loadError, setLoadError] = useState("");
+  const [autosaveMessage, setAutosaveMessage] = useState("");
   const [submitError, setSubmitError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>(INITIAL_ERRORS);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [titulo, setTitulo] = useState("");
-  const [imagen, setImagen] = useState("");
-  const [categoriaId, setCategoriaId] = useState("");
-  const [contenido, setContenido] = useState("");
+  const [titulo, setTitulo] = useState(initialValues?.titulo ?? "");
+  const [imagen, setImagen] = useState(initialValues?.imagen ?? "");
+  const [categoriaId, setCategoriaId] = useState(initialValues?.categoriaId ?? "");
+  const [contenido, setContenido] = useState(initialValues?.contenido ?? "");
+
+  const autosaveKey = useMemo(
+    () =>
+      mode === "edit" && blogId
+        ? `${AUTOSAVE_STORAGE_PREFIX}:edit:${blogId}`
+        : `${AUTOSAVE_STORAGE_PREFIX}:create`,
+    [blogId, mode],
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -80,10 +109,101 @@ export default function BlogCreateForm() {
     };
   }, []);
 
-  const isFormDirty = useMemo(
-    () => Boolean(titulo.trim() || imagen.trim() || categoriaId || contenido.trim()),
-    [categoriaId, contenido, imagen, titulo],
-  );
+  useEffect(() => {
+    setTitulo(initialValues?.titulo ?? "");
+    setImagen(initialValues?.imagen ?? "");
+    setCategoriaId(initialValues?.categoriaId ?? "");
+    setContenido(initialValues?.contenido ?? "");
+  }, [initialValues]);
+
+  useEffect(() => {
+    if (hasHydratedDraft.current) {
+      return;
+    }
+
+    hasHydratedDraft.current = true;
+
+    const rawDraft = window.localStorage.getItem(autosaveKey);
+
+    if (!rawDraft) {
+      return;
+    }
+
+    try {
+      const draft = JSON.parse(rawDraft) as {
+        categoriaId?: string;
+        contenido?: string;
+        imagen?: string;
+        titulo?: string;
+      };
+
+      setTitulo(draft.titulo ?? initialValues?.titulo ?? "");
+      setImagen(draft.imagen ?? initialValues?.imagen ?? "");
+      setCategoriaId(draft.categoriaId ?? initialValues?.categoriaId ?? "");
+      setContenido(draft.contenido ?? initialValues?.contenido ?? "");
+      setAutosaveMessage("Recuperamos un borrador local para que continúes editando.");
+    } catch {
+      window.localStorage.removeItem(autosaveKey);
+    }
+  }, [autosaveKey, initialValues]);
+
+  const isFormDirty = useMemo(() => {
+    const baseTitulo = initialValues?.titulo?.trim() ?? "";
+    const baseImagen = initialValues?.imagen?.trim() ?? "";
+    const baseCategoriaId = initialValues?.categoriaId ?? "";
+    const baseContenido = initialValues?.contenido?.trim() ?? "";
+
+    return (
+      titulo.trim() !== baseTitulo ||
+      imagen.trim() !== baseImagen ||
+      categoriaId !== baseCategoriaId ||
+      contenido.trim() !== baseContenido
+    );
+  }, [categoriaId, contenido, imagen, initialValues, titulo]);
+
+  useEffect(() => {
+    const hasContent = Boolean(
+      titulo.trim() || imagen.trim() || categoriaId || contenido.trim(),
+    );
+
+    if (!hasContent) {
+      window.localStorage.removeItem(autosaveKey);
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      window.localStorage.setItem(
+        autosaveKey,
+        JSON.stringify({
+          categoriaId,
+          contenido,
+          imagen,
+          titulo,
+        }),
+      );
+    }, 500);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [autosaveKey, categoriaId, contenido, imagen, titulo]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!isFormDirty) {
+        return;
+      }
+
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isFormDirty]);
 
   const validate = () => {
     const nextErrors: FieldErrors = {};
@@ -121,21 +241,33 @@ export default function BlogCreateForm() {
     setIsSubmitting(true);
     setSubmitError("");
     setSuccessMessage("");
+    setAutosaveMessage("");
 
     try {
-      await createBlog({
+      const payload = {
         titulo: titulo.trim(),
         imagen: imagen.trim(),
         categoria_id: Number(categoriaId),
         contenido: contenido.trim(),
         accion,
-      });
+      };
+
+      if (mode === "edit" && blogId) {
+        await updateBlog(blogId, payload);
+      } else {
+        await createBlog(payload);
+      }
 
       setFieldErrors(INITIAL_ERRORS);
+      window.localStorage.removeItem(autosaveKey);
       setSuccessMessage(
         accion === "borrador"
-          ? "El blog fue guardado como borrador exitosamente."
-          : "El blog fue enviado a revisión y quedó pendiente de aprobación.",
+          ? mode === "edit"
+            ? "Los cambios del blog fueron guardados como borrador."
+            : "El blog fue guardado como borrador exitosamente."
+          : mode === "edit"
+            ? "El blog fue actualizado y reenviado a revisión."
+            : "El blog fue enviado a revisión y quedó pendiente de aprobación.",
       );
 
       window.setTimeout(() => {
@@ -166,6 +298,7 @@ export default function BlogCreateForm() {
       return;
     }
 
+    window.localStorage.removeItem(autosaveKey);
     router.push("/blogs");
   };
 
@@ -180,11 +313,18 @@ export default function BlogCreateForm() {
         >
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-700">
-              Nuevo aporte al blog
+              {mode === "edit" ? "Editar blog" : "Nuevo aporte al blog"}
             </p>
             <h1 className="mt-2 text-4xl font-bold leading-tight text-stone-900">
-              Comparte tu conocimiento con la comunidad.
+              {mode === "edit"
+                ? "Ajusta tu artículo antes de volver a enviarlo."
+                : "Comparte tu conocimiento con la comunidad."}
             </h1>
+            {statusLabel ? (
+              <p className="mt-3 text-sm font-medium text-stone-500">
+                Estado actual: <span className="font-semibold text-stone-700">{statusLabel}</span>
+              </p>
+            ) : null}
           </div>
 
           <label className="block">
@@ -273,6 +413,12 @@ export default function BlogCreateForm() {
             </p>
           ) : null}
 
+          {autosaveMessage ? (
+            <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+              {autosaveMessage}
+            </p>
+          ) : null}
+
           {submitError ? (
             <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
               {submitError}
@@ -294,7 +440,7 @@ export default function BlogCreateForm() {
               disabled={isSubmitting || isLoadingCategories || Boolean(loadError)}
               className="inline-flex min-h-[52px] items-center justify-center rounded-2xl border border-stone-300 px-6 text-sm font-semibold text-stone-700 transition hover:border-stone-400 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Guardar borrador
+              {mode === "edit" ? "Guardar cambios" : "Guardar borrador"}
             </button>
 
             <button
@@ -302,7 +448,11 @@ export default function BlogCreateForm() {
               disabled={isSubmitting || isLoadingCategories || Boolean(loadError)}
               className="inline-flex min-h-[52px] items-center justify-center rounded-2xl bg-amber-600 px-6 text-sm font-semibold text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isSubmitting ? "Enviando..." : "Publicar"}
+              {isSubmitting
+                ? "Enviando..."
+                : mode === "edit"
+                  ? "Enviar nuevamente"
+                  : "Publicar"}
             </button>
 
             <button
@@ -320,8 +470,9 @@ export default function BlogCreateForm() {
           <div className="space-y-3">
             <h2 className="text-lg font-semibold text-stone-900">Publicación</h2>
             <p className="text-sm leading-6 text-stone-600">
-              Usa “Guardar borrador” si quieres continuar luego, o “Publicar”
-              para enviar tu blog a revisión del administrador.
+              {mode === "edit"
+                ? "Guarda los cambios localmente o reenvía tu blog a revisión cuando esté listo."
+                : "Usa “Guardar borrador” si quieres continuar luego, o “Publicar” para enviar tu blog a revisión del administrador."}
             </p>
           </div>
 
