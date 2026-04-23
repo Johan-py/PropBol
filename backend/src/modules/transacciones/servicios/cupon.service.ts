@@ -18,7 +18,7 @@ function convertirDecimalANumber(valor: any): number {
 
 export async function aplicarCupon(transaccionId: number, codigo: string, totalOriginal: number) {
   // 1. Intentar obtener cupón desde DB real
-  let cuponDB = await prisma.cupon.findUnique({
+  const cuponDB = await prisma.cupon.findUnique({
     where: { codigo: codigo.toUpperCase() },
   }).catch(() => null);
 

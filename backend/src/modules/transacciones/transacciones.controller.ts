@@ -1,7 +1,6 @@
 import type { Request, Response } from 'express'
 import { prisma } from '../../lib/prisma.client.js'
 import { crearTransaccion } from './servicios/transaccion.service.js'
-import { aplicarCupon } from "./servicios/cupon.service.js"
 
 interface AuthRequest extends Request {
   user?: { id: number }

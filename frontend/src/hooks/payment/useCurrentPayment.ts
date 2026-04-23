@@ -34,16 +34,9 @@ export function useCurrentPayment() {
         setError('Error al cargar el pago')
       } finally {
         setLoading(false)
-        return
       }
-      const data = JSON.parse(stored) as PaymentData
-      setPayment(data)
-    } catch {
-      setError('Error al leer el pago')
-    } finally {
-      setLoading(false)
     }
+    fetchPayment()
   }, [])
-
   return { payment, loading, error }
 }
