@@ -25,7 +25,7 @@ export const generarPagoQr = async (req: AuthRequest, res: Response) => {
     const msg = toMessage(error)
     const status = msg === 'Plan no encontrado' ? 404 : 500
     return res.status(status).json({ error: msg })
-  }ss
+  }
 }
 
 export const obtenerPagoPendiente = async (req: Request, res: Response) => {
