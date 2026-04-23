@@ -11,7 +11,7 @@ import { requireAuth } from '../../middleware/auth.middleware.js'
 
 const router = Router()
 
-router.post('/', generarPagoQr)
+router.post('/', requireAuth, generarPagoQr)
 router.get('/pendiente/:userId', obtenerPagoPendiente)
 router.patch('/:id/confirmar', requireAuth, confirmarPago)
 router.patch('/:id/cancelar', cancelarTransaccion)

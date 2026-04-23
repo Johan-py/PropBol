@@ -37,9 +37,13 @@ export default function ResumenCliente() {
 
     async function iniciarTransaccion() {
       try {
+        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
         const res = await fetch('/api/transacciones', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
           body: JSON.stringify({ idSuscripcion }),
         });
 
