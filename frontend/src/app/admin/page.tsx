@@ -1,12 +1,41 @@
-"use client";
+'use client'
 
-import {
-  Newspaper,
-  Clock,
-} from "lucide-react";
-import Link from "next/link";
+import { Newspaper, Clock } from 'lucide-react'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 
 export default function AdminDashboard() {
+  const [pendingCount, setPendingCount] = useState<number | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchPendingCount = async () => {
+      try {
+        const token = localStorage.getItem('token')
+        if (!token) return
+
+        const response = await fetch(`${API_URL}/api/blogs/admin?estado=PENDIENTE&limit=1`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          setPendingCount(data.total)
+        }
+      } catch (error) {
+        console.error('Error fetching pending blogs count:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchPendingCount()
+  }, [])
+
   return (
     <div className="min-h-screen bg-stone-50 py-12">
       <div className="container mx-auto px-4 max-w-4xl">
@@ -38,8 +67,16 @@ export default function AdminDashboard() {
                     <Newspaper className="h-6 w-6" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium font-inter text-stone-500">Blogs por Moderar</p>
-                    <h3 className="text-2xl font-bold font-montserrat text-stone-900">24</h3>
+                    <p className="text-sm font-medium font-inter text-stone-500">
+                      Blogs por Moderar
+                    </p>
+                    <h3 className="text-2xl font-bold font-montserrat text-stone-900">
+                      {isLoading ? (
+                        <div className="h-8 w-12 bg-stone-100 animate-pulse rounded"></div>
+                      ) : (
+                        (pendingCount ?? 0)
+                      )}
+                    </h3>
                   </div>
                 </div>
                 <div className="h-8 w-8 rounded-full bg-stone-50 flex items-center justify-center transition-colors group-hover:bg-amber-600 group-hover:text-white">
@@ -51,5 +88,5 @@ export default function AdminDashboard() {
         </div>
       </div>
     </div>
-  );
+  )
 }
