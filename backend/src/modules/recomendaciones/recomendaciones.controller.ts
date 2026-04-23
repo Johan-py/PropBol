@@ -28,6 +28,8 @@ export const getRecomendacionesGlobales = async (req: Request, res: Response) =>
 export const getInmueblesRecomendados = async (req: Request, res: Response) => {
   try {
     const usuarioId = (req as any).usuario?.id
+    console.log('usuarioId recibido:', usuarioId)  //  pruebas
+    console.log('orden:', req.query.orden)           
     const orden = (req.query.orden as string) || 'relevancia'
     const zona = req.query.zona as string | undefined
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 50

@@ -8,6 +8,6 @@ import { validarJWT } from '../../middleware/validarJWT.js'
 const router = Router()
 
 router.get('/globales', validarJWT, getRecomendacionesGlobales)
-router.get('/inmuebles', getInmueblesRecomendados)
+router.get('/inmuebles', validarJWT, getInmueblesRecomendados)
 
 export default router
