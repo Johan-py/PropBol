@@ -1,5 +1,6 @@
 import { publicacionesRepository } from "./publicaciones.repository.js";
 import { Publicacion } from "@prisma/client";
+import { suscripcionesService } from "../suscripciones/suscripciones.service.js";
 
 export const publicacionesService = {
   async listarTodas(): Promise<Publicacion[]> {
@@ -8,6 +9,32 @@ export const publicacionesService = {
 
   async listarGratis(): Promise<Publicacion[]> {
     return publicacionesRepository.findGratis();
+  },
+
+  async listarMisPublicaciones(userId: number) {
+    return publicacionesRepository.findByUserId(userId);
+  },
+
+  async obtenerEstadisticasPublicaciones(userId: number) {
+    const totalPublicaciones = await publicacionesRepository.countByUser(userId);
+    const limite = await suscripcionesService.obtenerLimitePublicaciones(userId);
+    const tieneSuscripcion = await suscripcionesService.tieneSuscripcionActiva(userId);
+    const suscripcion = await suscripcionesService.obtenerSuscripcionActiva(userId);
+
+    return {
+      totalPublicaciones,
+      limite,
+      disponibles: Math.max(0, limite - totalPublicaciones),
+      tieneSuscripcion,
+      suscripcion: suscripcion
+        ? {
+          id: suscripcion.id,
+          planNombre: suscripcion.plan_suscripcion?.nombre_plan,
+          fechaInicio: suscripcion.fecha_inicio,
+          fechaFin: suscripcion.fecha_fin,
+        }
+        : null,
+    };
   },
 
   async crear(
@@ -38,5 +65,33 @@ export const publicacionesService = {
     }
 
     return "FLOW_ALLOWED";
+  },
+  // Agregar después de validarFlujo
+  async eliminar(publicacionId: number, userId: number): Promise<void> {
+    const publicacion = await publicacionesRepository.findById(publicacionId);
+
+    if (!publicacion) {
+      throw new Error("PUBLICACION_NOT_FOUND");
+    }
+
+    if (publicacion.usuarioId !== userId) {
+      throw new Error("UNAUTHORIZED");
+    }
+
+    await publicacionesRepository.deleteById(publicacionId);
+  },
+
+  async cambiarEstado(publicacionId: number, userId: number, activa: boolean): Promise<void> {
+    const publicacion = await publicacionesRepository.findById(publicacionId);
+
+    if (!publicacion) {
+      throw new Error("PUBLICACION_NOT_FOUND");
+    }
+
+    if (publicacion.usuarioId !== userId) {
+      throw new Error("UNAUTHORIZED");
+    }
+
+    await publicacionesRepository.updateEstado(publicacionId, activa);
   },
 };
