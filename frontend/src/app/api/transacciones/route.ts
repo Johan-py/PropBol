@@ -1,177 +1,26 @@
-import { NextResponse } from 'next/server'
-
-// Inicializar Prisma de forma dinámica para no romper el build
-let prismaInstance: any = null
-
-async function getPrisma() {
-  if (prismaInstance) return prismaInstance
-
-  try {
-    const prismaModule = await import('@prisma/client')
-    const PrismaClientCtor = (prismaModule as any).PrismaClient
-
-    if (!PrismaClientCtor) {
-      console.warn('⚠️ PrismaClient no disponible, usando modo mock')
-      return null
-    }
-
-    prismaInstance = new PrismaClientCtor()
-    return prismaInstance
-  } catch (error) {
-    console.warn('⚠️ No se pudo conectar a la base de datos, usando modo mock')
-    return null
-  }
-}
-
-// Datos mock de planes (fallback)
-const planesMock: Record<number, any> = {
-  1: {
-    nombre_plan: 'Básico',
-    precio_plan: 0.0,
-    nro_publicaciones_plan: 3,
-    duración_plan_días: 30,
-    fotos_galeria: 5,
-    imagen_gr_url: '/qrs/basico.png'
-  },
-  2: {
-    nombre_plan: 'Estándar',
-    precio_plan: 99.0,
-    nro_publicaciones_plan: 10,
-    duración_plan_días: 30,
-    fotos_galeria: 15,
-    imagen_gr_url: '/qrs/estandar.png'
-  },
-  3: {
-    nombre_plan: 'Pro',
-    precio_plan: 199.0,
-    nro_publicaciones_plan: 100,
-    duración_plan_días: 30,
-    fotos_galeria: 30,
-    imagen_gr_url: '/qrs/pro.png'
-  }
-}
-
-async function obtenerPlanDesdeDB(idSuscripcion: number) {
-  const prisma = await getPrisma()
-  if (!prisma) return null
-
-  try {
-    const plan = await prisma.plan_suscripcion.findUnique({
-      where: { id: idSuscripcion }
-    })
-    return plan
-  } catch (error) {
-    console.error('Error al consultar plan en DB:', error)
-    return null
-  }
-}
-
-function crearTransaccionMock(idSuscripcion: number, plan: any) {
-  const total = plan.precio_plan
-  const subtotal = Number((total / 1.13).toFixed(2))
-  const ivaMonto = Number((total - subtotal).toFixed(2))
-  const transaccionId = Math.floor(Math.random() * 10000)
-
-  return {
-    id: transaccionId,
-    id_usuario: 1,
-    id_suscripcion: idSuscripcion,
-    subtotal,
-    iva_porcentaje: 13,
-    iva_monto: ivaMonto,
-    total,
-    metodo_pago: 'QR_BANCARIO',
-    fecha_intento: new Date().toISOString(),
-    estado: 'pendiente',
-    verificacion_requerida: true,
-    monto_descuento: 0,
-    plan_suscripcion: plan,
-    referencia: `REF-${transaccionId}`,
-    fechaExpiracion: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
-    qrContent: plan.imagen_gr_url
-  }
-}
-
+import { NextResponse } from 'next/server';
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
 export async function POST(request: Request) {
   try {
-    const { idSuscripcion } = await request.json()
-
+    const { idSuscripcion } = await request.json();
     if (!idSuscripcion) {
-      return NextResponse.json({ error: 'Falta el ID del plan' }, { status: 400 })
+      return NextResponse.json({ error: 'Falta el ID del plan' }, { status: 400 });
+    }
+    const response = await fetch(`${BACKEND_URL}/api/transacciones`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idSuscripcion, idUsuario: 1 }), // TODO: obtener usuario autenticado
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Error al crear transacción');
     }
 
-    // 1. Intentar obtener el plan desde la base de datos
-    let plan = await obtenerPlanDesdeDB(idSuscripcion)
-    let usandoMock = false
-
-    // 2. Si no se encontró en DB o hubo error, usar mock
-    if (!plan) {
-      console.log(`⚠️ Plan ${idSuscripcion} no encontrado en DB, usando mock`)
-      plan = planesMock[idSuscripcion]
-      usandoMock = true
-
-      if (!plan) {
-        return NextResponse.json({ error: 'Plan no encontrado' }, { status: 404 })
-      }
-    }
-
-    // CONVERSIÓN: Decimal → number (si viene de Prisma)
-    let total: number
-    if (plan.precio_plan && typeof plan.precio_plan === 'object' && 'toNumber' in plan.precio_plan) {
-      total = plan.precio_plan.toNumber()
-    } else if (typeof plan.precio_plan === 'number') {
-      total = plan.precio_plan
-    } else {
-      total = 0
-      console.error('Precio del plan no válido:', plan.precio_plan)
-    }
-
-    // 3. Calcular subtotal e IVA
-    const subtotal = Number((total / 1.13).toFixed(2))
-    const ivaMonto = Number((total - subtotal).toFixed(2))
-
-    // 4. Crear la transacción
-    let transaccion
-    const prisma = await getPrisma()
-
-    if (!usandoMock && prisma) {
-      try {
-        const transaccionReal = await prisma.transacciones.create({
-          data: {
-            id_usuario: 1,
-            id_suscripcion: idSuscripcion,
-            subtotal,
-            iva_porcentaje: 13,
-            iva_monto: ivaMonto,
-            total,
-            metodo_pago: 'QR_BANCARIO',
-            fecha_intento: new Date(),
-            estado: 'pendiente',
-            verificacion_requerida: true,
-            monto_descuento: 0
-          },
-          include: {
-            plan_suscripcion: true
-          }
-        })
-
-        transaccion = {
-          ...transaccionReal,
-          referencia: `REF-${transaccionReal.id}`,
-          fechaExpiracion: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
-          qrContent: plan.imagen_gr_url
-        }
-      } catch (dbError) {
-        console.error('Error al guardar transacción en DB, usando mock:', dbError)
-        transaccion = crearTransaccionMock(idSuscripcion, plan)
-      }
-    } else {
-      transaccion = crearTransaccionMock(idSuscripcion, plan)
-    }
-
-    return NextResponse.json(transaccion, { status: 201 })
+    const data = await response.json();
+    return NextResponse.json(data, { status: 201 });
   } catch (error: any) {
-    console.error('Error en API transacciones:', error)
-    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 })
+    console.error('Error en API transacciones:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
