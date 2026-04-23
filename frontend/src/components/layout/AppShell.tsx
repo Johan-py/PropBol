@@ -7,10 +7,10 @@ import Footer from "@/components/layout/Footer";
 import RegisterSuccessToast from "@/components/layout/RegisterSuccessToast";
 import { useInactivityLogout } from "@/hooks/useInactivityLogout";
 import { useAccountStatus } from "@/hooks/useAccountStatus";
+import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 
 const AUTH_ROUTES = ["/sign-in", "/sign-up"];
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
-const USER_STORAGE_KEY = "propbol_user";
 const SESSION_EXPIRES_KEY = "propbol_session_expires";
 const TOKEN_STORAGE_KEY = "token";
 const SESSION_DURATION_MS = 60 * 60 * 1000;
@@ -96,22 +96,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
         const data = await response.json();
 
-        const userName =
-          data.user?.nombre && data.user?.apellido
-            ? `${data.user.nombre} ${data.user.apellido}`
-            : (data.user?.correo ?? "");
-
         localStorage.setItem(
           SESSION_EXPIRES_KEY,
           String(Date.now() + SESSION_DURATION_MS),
         );
-        localStorage.setItem(
-          USER_STORAGE_KEY,
-          JSON.stringify({
-            name: userName,
-            email: data.user?.correo ?? "",
-          }),
-        );
+        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(buildSessionUser(data.user)));
 
         window.dispatchEvent(new Event("propbol:session-changed"));
       } catch {

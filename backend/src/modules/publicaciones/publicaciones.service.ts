@@ -28,11 +28,11 @@ export const publicacionesService = {
       tieneSuscripcion,
       suscripcion: suscripcion
         ? {
-            id: suscripcion.id,
-            planNombre: suscripcion.plan_suscripcion?.nombre_plan,
-            fechaInicio: suscripcion.fecha_inicio,
-            fechaFin: suscripcion.fecha_fin,
-          }
+          id: suscripcion.id,
+          planNombre: suscripcion.plan_suscripcion?.nombre_plan,
+          fechaInicio: suscripcion.fecha_inicio,
+          fechaFin: suscripcion.fecha_fin,
+        }
         : null,
     };
   },
@@ -65,5 +65,48 @@ export const publicacionesService = {
     }
 
     return "FLOW_ALLOWED";
+  },
+  // Agregar después de validarFlujo
+  async eliminar(publicacionId: number, userId: number): Promise<void> {
+    const publicacion = await publicacionesRepository.findById(publicacionId);
+
+    if (!publicacion) {
+      throw new Error("PUBLICACION_NOT_FOUND");
+    }
+
+    if (publicacion.usuarioId !== userId) {
+      throw new Error("UNAUTHORIZED");
+    }
+
+    await publicacionesRepository.deleteById(publicacionId);
+  },
+
+  async cambiarEstado(publicacionId: number, userId: number, activa: boolean): Promise<void> {
+    const publicacion = await publicacionesRepository.findById(publicacionId);
+
+    if (!publicacion) {
+      throw new Error("PUBLICACION_NOT_FOUND");
+    }
+
+    if (publicacion.usuarioId !== userId) {
+      throw new Error("UNAUTHORIZED");
+    }
+
+    await publicacionesRepository.updateEstado(publicacionId, activa);
+  },
+
+  // 👉 Nueva función HU‑5 v2
+  async validarPublicacionHU5(userId: number, data: Partial<Publicacion>) {
+    const count = await publicacionesRepository.countByUser(userId);
+    if (count >= 2) {
+      throw new Error("LIMIT_REACHED");
+    }
+
+    // Aquí no validamos campos (eso lo hace el validator),
+    // solo devolvemos estado de negocio
+    return {
+      estado: "Validado",
+      mensaje: "Publicación lista para guardar",
+    };
   },
 };

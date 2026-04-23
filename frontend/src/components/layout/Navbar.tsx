@@ -13,6 +13,7 @@ import {
   WifiOff,
   Settings,
   X,
+  ChevronDown
 } from "lucide-react";
  
 import Logo from "../navbar/Logo";
@@ -20,14 +21,20 @@ import NavLinks from "../navbar/NavLinks";
 import UserMenu from "../navbar/UserMenu";
 import LogoutModal from "../navbar/LogoutModal";
 import { useNotifications } from "@/hooks/useNotifications";
+import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 import type { NotificationFilter } from "@/types/notification";
  
 export type User = {
   name: string;
   email: string;
   avatar?: string | null;
+  role?: string | null;
 };
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> origin/develop
 type MeResponse = {
   message?: string;
   user?: {
@@ -36,6 +43,7 @@ type MeResponse = {
     apellido?: string;
     correo: string;
     avatar?: string | null;
+    rol?: string;
   };
 };
  
@@ -50,7 +58,6 @@ class SessionValidationError extends Error {
 }
  
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
-const USER_STORAGE_KEY = "propbol_user";
 const SESSION_EXPIRES_KEY = "propbol_session_expires";
  
 const filters: NotificationFilter[] = [
@@ -71,7 +78,12 @@ export default function Navbar() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+<<<<<<< HEAD
  
+=======
+  const [isPropiedadesOpen, setIsPropiedadesOpen] = useState(false);
+
+>>>>>>> origin/develop
   const {
     open,
     filter,
@@ -172,6 +184,7 @@ export default function Navbar() {
  
     try {
       const validatedUser = await fetchCurrentUser(token);
+<<<<<<< HEAD
  
       const finalName =
         validatedUser.nombre && validatedUser.apellido
@@ -192,6 +205,12 @@ export default function Navbar() {
           avatar: finalUser.avatar,
         }),
       );
+=======
+
+      const finalUser: User = buildSessionUser(validatedUser);
+
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(finalUser));
+>>>>>>> origin/develop
       localStorage.setItem("nombre", finalUser.name);
       localStorage.setItem("correo", finalUser.email);
       localStorage.setItem("avatar", finalUser.avatar ?? "");
@@ -358,6 +377,13 @@ export default function Navbar() {
             </div>
  
             <div className="flex items-center gap-4">
+              <Link
+                href="/registro-inmueble"
+                className="hidden md:block rounded-md bg-[#E68B25] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-amber-700"
+              >
+                Publica tu inmueble
+              </Link>
+
               <div className="relative" ref={notificationPanelRef}>
                 <button
                   id="tour-notificaciones"
@@ -651,7 +677,7 @@ export default function Navbar() {
           role="dialog"
         >
           <div
-            className="fixed right-0 top-0 h-full w-4/5 max-w-xs bg-[#F9F6EE] p-6 shadow-xl"
+            className="fixed right-0 top-0 h-full w-4/5 max-w-xs bg-[#F9F6EE] p-6 shadow-xl overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -665,15 +691,21 @@ export default function Navbar() {
                 <X className="h-6 w-6 text-stone-600" />
               </button>
             </div>
+<<<<<<< HEAD
  
             <nav className="mt-10 flex flex-col gap-4">
+=======
+
+            <nav className="mt-10 flex flex-col gap-2">
+>>>>>>> origin/develop
               <Link
-                href="/"
+                href="/registro-inmueble"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+                className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"
               >
-                Inicio
+                Publica tu inmueble
               </Link>
+<<<<<<< HEAD
               <Link
                 href="/propiedades"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -681,6 +713,26 @@ export default function Navbar() {
               >
                 Propiedades
               </Link>
+=======
+
+              <div className="flex flex-col">
+                <button
+                  onClick={() => setIsPropiedadesOpen(!isPropiedadesOpen)}
+                  className="flex w-full items-center justify-between rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+                >
+                  <span>Propiedades</span>
+                  <ChevronDown className={`h-5 w-5 transition-transform duration-200 ${isPropiedadesOpen ? "rotate-180" : ""}`} />
+                </button>
+                <div className={`flex flex-col overflow-hidden transition-all duration-300 ${isPropiedadesOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"}`}>
+                  {["Casas", "Departamentos", "Cuartos", "Terrenos", "Espacios de cementerios"].map((item) => (
+                    <Link key={item} href="/propiedades" onClick={() => setIsMobileMenuOpen(false)} className="pl-8 py-2 text-base text-gray-600 hover:text-[#E68B25]">
+                      {item}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+>>>>>>> origin/develop
               <Link
                 href="/blogs"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -688,6 +740,7 @@ export default function Navbar() {
               >
                 Blogs
               </Link>
+
               <Link
                 href="/cobros-suscripciones"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -695,6 +748,7 @@ export default function Navbar() {
               >
                 Planes de membresía
               </Link>
+
               <Link
                 href="/ayuda"
                 onClick={() => setIsMobileMenuOpen(false)}
