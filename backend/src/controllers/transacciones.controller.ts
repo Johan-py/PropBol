@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { prisma } from "../lib/prisma.client.js";
+import { emitirComprobante } from "../modules/transacciones/servicios/comprobanteService.js";
 
 // Generar Pago QR
 export const generarPagoQr = async (
@@ -91,6 +92,60 @@ export const consultarEstadoPago = async (
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error al consultar estado" });
+  }
+};
+
+export const confirmarPago = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const transaccionId = Number(id);
+
+    const transaccion = await prisma.transacciones.findUnique({
+      where: { id: transaccionId },
+      select: { estado: true, id_usuario: true, id_suscripcion: true },
+    });
+
+    if (!transaccion) {
+      res.status(404).json({ error: "Transacción no encontrada" });
+      return;
+    }
+
+    if (transaccion.estado === "COMPLETADO") {
+      res.status(409).json({ error: "La transacción ya fue confirmada" });
+      return;
+    }
+
+    const ahora = new Date();
+
+    await prisma.transacciones.update({
+      where: { id: transaccionId },
+      data: { estado: "COMPLETADO", fecha_completado: ahora },
+    });
+
+    await prisma.suscripciones_activas.create({
+      data: {
+        id_usuario: transaccion.id_usuario,
+        id_suscripcion: transaccion.id_suscripcion,
+        id_transaccion: transaccionId,
+        fecha_inicio: ahora,
+        fecha_fin: new Date(ahora.getTime() + 30 * 24 * 60 * 60 * 1000),
+        estado: "ACTIVA",
+      },
+    });
+
+    const comprobanteEnviado = await emitirComprobante(transaccionId);
+
+    res.status(200).json({
+      mensaje: comprobanteEnviado
+        ? "Pago confirmado y comprobante enviado"
+        : "Pago confirmado, fallo al enviar comprobante",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error instanceof Error ? error.message : "Error interno" });
   }
 };
 

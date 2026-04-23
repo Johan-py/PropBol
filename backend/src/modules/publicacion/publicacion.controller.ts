@@ -276,7 +276,7 @@ export const obtenerDetallePublicacionController = async (req: Request, res: Res
 
     return res.status(500).json({
       ok: false,
-      message: 'No se pudo obtener el detalle de la propiedad'
+      message: 'No se pudo obtener el detalle de la publicación'
     })
   }
 }
