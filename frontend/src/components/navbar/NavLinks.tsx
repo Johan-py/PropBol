@@ -20,6 +20,14 @@ export default function NavLinks() {
 
   const linkStyle = "hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition";
 
+  const categorias = [
+    { name: "Casas", href: "/busqueda_mapa?tipo=casa" },
+    { name: "Departamentos", href: "/busqueda_mapa?tipo=departamento" },
+    { name: "Cuartos", href: "/busqueda_mapa?tipo=cuarto" },
+    { name: "Terrenos", href: "/busqueda_mapa?tipo=terreno" },
+    { name: "Espacios de cementerios", href: "/busqueda_mapa?tipo=cementerio" },
+  ];
+
   return (
     <div className="hidden md:flex items-center gap-6 text-[15px] font-medium text-gray-700">
 <<<<<<< HEAD
@@ -43,6 +51,7 @@ export default function NavLinks() {
         </button>
 
         {open && (
+<<<<<<< HEAD
           <div className="absolute top-full left-0 mt-2 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-50 py-2">
             {["Casas", "Departamentos", "Cuartos", "Terrenos", "Espacios de cementerios"].map((item) => (
               <Link
@@ -52,6 +61,17 @@ export default function NavLinks() {
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#E68B25]"
               >
                 {item}
+=======
+          <div className="absolute top-full left-0 mt-2 w-56 rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 z-[9999] py-2 border border-stone-100">
+            {categorias.map((item) => (
+              <Link 
+                key={item.name} 
+                href={item.href} 
+                onClick={() => setOpen(false)} 
+                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#E68B25]"
+              >
+                {item.name}
+>>>>>>> b6afc3df (fix(navbar): corregir redirección de categorías y capas de filtros del mapa)
               </Link>
             ))}
           </div>

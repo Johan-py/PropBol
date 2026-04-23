@@ -404,7 +404,8 @@ export default function Navbar() {
  
   return (
     <>
-      <nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
+      {/* CAMBIO CLAVE: z-[9999] para ganar al mapa siempre */}
+      <nav className="sticky top-0 z-[9999] w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
         <div className="container mx-auto px-4 py-1.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
@@ -723,7 +724,7 @@ export default function Navbar() {
  
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 z-[9999] bg-black/40 md:hidden"
+          className="fixed inset-0 z-[10000] bg-black/40 md:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
           aria-modal="true"
           role="dialog"
@@ -843,9 +844,15 @@ export default function Navbar() {
                   <ChevronDown className={`h-5 w-5 transition-transform duration-200 ${isPropiedadesOpen ? "rotate-180" : ""}`} />
                 </button>
                 <div className={`flex flex-col overflow-hidden transition-all duration-300 ${isPropiedadesOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"}`}>
-                  {["Casas", "Departamentos", "Cuartos", "Terrenos", "Espacios de cementerios"].map((item) => (
-                    <Link key={item} href="/propiedades" onClick={() => setIsMobileMenuOpen(false)} className="pl-8 py-2 text-base text-gray-600 hover:text-[#E68B25]">
-                      {item}
+                  {[
+                    { name: "Casas", href: "/busqueda_mapa?tipo=casa" },
+                    { name: "Departamentos", href: "/busqueda_mapa?tipo=departamento" },
+                    { name: "Cuartos", href: "/busqueda_mapa?tipo=cuarto" },
+                    { name: "Terrenos", href: "/busqueda_mapa?tipo=terreno" },
+                    { name: "Espacios de cementerios", href: "/busqueda_mapa?tipo=cementerio" },
+                  ].map((item) => (
+                    <Link key={item.name} href={item.href} onClick={() => setIsMobileMenuOpen(false)} className="pl-8 py-2 text-base text-gray-600 hover:text-[#E68B25]">
+                      {item.name}
                     </Link>
                   ))}
                 </div>
