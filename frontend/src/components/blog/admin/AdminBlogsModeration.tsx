@@ -29,11 +29,11 @@ function formatDate(date: string) {
 
 function getStatusStyles(status: AdminModerationStatus) {
   if (status === "APROBADO") {
-    return "bg-emerald-50 text-emerald-700";
+    return "bg-green-50 text-green-700";
   }
 
   if (status === "RECHAZADO") {
-    return "bg-rose-50 text-rose-700";
+    return "bg-red-50 text-red-700";
   }
 
   return "bg-amber-50 text-amber-700";
@@ -42,17 +42,17 @@ function getStatusStyles(status: AdminModerationStatus) {
 function EmptyState({ filter }: { filter: AdminModerationStatus }) {
   const copy =
     filter === "PENDIENTE"
-      ? "No hay articulos pendientes por revisar."
+      ? "No hay artículos pendientes por revisar."
       : filter === "APROBADO"
-        ? "Aun no aprobaste articulos en esta vista."
-        : "Todavia no hay articulos rechazados.";
+        ? "Aún no aprobaste artículos en esta vista."
+        : "Todavía no hay artículos rechazados.";
 
   return (
-    <div className="rounded-[28px] border border-dashed border-stone-300 bg-white px-6 py-14 text-center text-stone-500">
-      <p className="text-xs font-semibold uppercase tracking-[0.28em] text-stone-400">
+    <div className="rounded-3xl border border-dashed border-stone-300 bg-white px-6 py-14 text-center text-stone-500">
+      <p className="text-xs font-semibold uppercase tracking-[0.28em] text-stone-400 font-inter">
         Sin registros
       </p>
-      <p className="mt-3 text-base">{copy}</p>
+      <p className="mt-3 text-base font-inter">{copy}</p>
     </div>
   );
 }
@@ -74,13 +74,13 @@ function BlogRow({ blog }: { blog: AdminModerationBlog }) {
         </div>
 
         <div className="min-w-0 pt-0.5">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-700">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-600 font-inter">
             {blog.category}
           </p>
-          <h2 className="mt-2 text-xl font-semibold leading-tight text-stone-900">
+          <h2 className="mt-2 text-xl font-bold leading-tight text-stone-900 font-montserrat">
             {blog.title}
           </h2>
-          <p className="mt-2 text-sm text-stone-500">{blog.excerpt}</p>
+          <p className="mt-2 text-sm text-stone-600 font-inter">{blog.excerpt}</p>
         </div>
       </div>
 
@@ -124,7 +124,7 @@ function BlogRow({ blog }: { blog: AdminModerationBlog }) {
       </div>
 
       {blog.status === "RECHAZADO" && blog.rejectionComment && (
-        <div className="rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700 md:col-span-5">
+        <div className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700 md:col-span-5 font-inter">
           <span className="font-semibold">Comentario de rechazo:</span>{" "}
           {blog.rejectionComment}
         </div>
@@ -174,30 +174,30 @@ export default function AdminBlogsModeration() {
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
         <section className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-amber-700">
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-amber-600 font-inter">
               Panel del administrador
             </p>
-            <h1 className="mt-4 text-4xl font-black tracking-tight text-stone-950 sm:text-5xl">
-              Gestion de Blogs
+            <h1 className="mt-4 text-4xl font-bold tracking-tight text-stone-900 sm:text-5xl font-montserrat">
+              Gestión de Blogs
             </h1>
-            <p className="mt-5 text-lg leading-8 text-stone-600">
-              Revisa, aprueba o rechaza las ultimas publicaciones de la
+            <p className="mt-5 text-lg leading-8 text-stone-600 font-inter">
+              Revisa, aprueba o rechaza las últimas publicaciones de la
               comunidad inmobiliaria. El estado queda guardado localmente para
-              esta demo mientras no exista integracion con backend.
+              esta demo mientras no exista integración con backend.
             </p>
             {/* TODO: validar permisos de acceso desde backend cuando exista autenticacion de roles. */}
           </div>
 
-          <div className="rounded-[28px] border border-stone-200 bg-white p-2 shadow-sm">
+          <div className="rounded-3xl border border-stone-200 bg-white p-2 shadow-sm">
             <div className="flex flex-col gap-2 sm:flex-row">
               {FILTERS.map((filter) => (
                 <button
                   key={filter.value}
                   type="button"
                   onClick={() => setActiveFilter(filter.value)}
-                  className={`inline-flex min-h-[52px] items-center justify-center rounded-full px-5 text-sm font-semibold uppercase tracking-[0.18em] transition-colors ${
+                  className={`inline-flex min-h-[52px] items-center justify-center rounded-full px-5 text-sm font-semibold uppercase tracking-[0.18em] transition-colors font-inter ${
                     activeFilter === filter.value
-                      ? "bg-[#a56400] text-white"
+                      ? "bg-amber-600 text-white"
                       : "text-stone-500 hover:bg-stone-100 hover:text-stone-800"
                   }`}
                 >
@@ -231,13 +231,13 @@ export default function AdminBlogsModeration() {
           <EmptyState filter={activeFilter} />
         )}
 
-        <div className="flex flex-col gap-3 text-sm text-stone-500 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 text-sm text-stone-500 sm:flex-row sm:items-center sm:justify-between font-inter">
           <p className="font-semibold uppercase tracking-[0.18em] text-stone-400">
             Mostrando {filteredBlogs.length} de {blogs.length} registros
           </p>
           <Link
             href="/blogs"
-            className="inline-flex items-center gap-2 font-semibold uppercase tracking-[0.18em] text-[#a56400]"
+            className="inline-flex items-center gap-2 font-semibold uppercase tracking-[0.18em] text-amber-600 hover:text-amber-700 transition-colors"
           >
             Volver a Blogs
             <ChevronRight className="h-4 w-4" />
