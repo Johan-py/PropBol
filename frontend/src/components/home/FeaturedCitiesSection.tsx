@@ -15,14 +15,8 @@ type Props = {
 const SWIPE_THRESHOLD = 56;
 
 function getVisibleColumns(width: number) {
-  if (width >= 1024) {
-    return 3;
-  }
-
-  if (width >= 640) {
-    return 2;
-  }
-
+  if (width >= 1024) return 3;
+  if (width >= 640) return 2;
   return 1;
 }
 
@@ -63,11 +57,9 @@ export default function FeaturedCitiesSection({ cities }: Props) {
   const router = useRouter();
   const touchStartXRef = useRef<number | null>(null);
 
-  // Siempre empieza en 3 para que coincida con el render del servidor
   const [columns, setColumns] = useState(3);
 
   useEffect(() => {
-    // Tras montar en el cliente, sincronizamos con el ancho real del viewport
     const syncColumns = () => {
       setColumns(getVisibleColumns(window.innerWidth));
     };
@@ -94,19 +86,13 @@ export default function FeaturedCitiesSection({ cities }: Props) {
 
   const { index, next, prev, goTo } = useCitiesCarousel(totalPages);
 
-<<<<<<< HEAD
-  const handleClick = (slug: string) => {
-    router.push(`/busqueda?ciudad=${slug}`);
-  };
-=======
   const handleClick = (city: City) => {
     const params = new URLSearchParams({
       query: city.name,
-    })
+    });
 
-    router.push(`/busqueda?${params.toString()}`)
-  }
->>>>>>> origin/develop
+    router.push(`/busqueda?${params.toString()}`);
+  };
 
   if (cities.length === 0) {
     return (
@@ -134,15 +120,11 @@ export default function FeaturedCitiesSection({ cities }: Props) {
 
     touchStartXRef.current = null;
 
-    if (touchStartX === null || touchEndX === undefined) {
-      return;
-    }
+    if (touchStartX === null || touchEndX === undefined) return;
 
     const swipeDistance = touchEndX - touchStartX;
 
-    if (Math.abs(swipeDistance) < SWIPE_THRESHOLD) {
-      return;
-    }
+    if (Math.abs(swipeDistance) < SWIPE_THRESHOLD) return;
 
     if (swipeDistance < 0) {
       next();
@@ -252,9 +234,7 @@ export default function FeaturedCitiesSection({ cities }: Props) {
                     type="button"
                     onClick={() => goTo(dotIndex)}
                     className={`h-2.5 rounded-full transition-all ${
-                      dotIndex === index
-                        ? "w-8 bg-amber-500"
-                        : "w-2.5 bg-stone-300"
+                      dotIndex === index ? "w-8 bg-amber-500" : "w-2.5 bg-stone-300"
                     }`}
                     aria-label={`Mostrar grupo de ciudades ${dotIndex + 1}`}
                   />

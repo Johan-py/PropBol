@@ -30,11 +30,7 @@ export type User = {
   avatar?: string | null;
   role?: string | null;
 };
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> origin/develop
 type MeResponse = {
   message?: string;
   user?: {
@@ -78,12 +74,8 @@ export default function Navbar() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-<<<<<<< HEAD
- 
-=======
   const [isPropiedadesOpen, setIsPropiedadesOpen] = useState(false);
 
->>>>>>> origin/develop
   const {
     open,
     filter,
@@ -184,33 +176,10 @@ export default function Navbar() {
  
     try {
       const validatedUser = await fetchCurrentUser(token);
-<<<<<<< HEAD
- 
-      const finalName =
-        validatedUser.nombre && validatedUser.apellido
-          ? `${validatedUser.nombre} ${validatedUser.apellido}`
-          : validatedUser.nombre || validatedUser.correo;
- 
-      const finalUser: User = {
-        name: finalName,
-        email: validatedUser.correo,
-        avatar: validatedUser.avatar ?? null,
-      };
- 
-      localStorage.setItem(
-        USER_STORAGE_KEY,
-        JSON.stringify({
-          name: finalUser.name,
-          email: finalUser.email,
-          avatar: finalUser.avatar,
-        }),
-      );
-=======
 
       const finalUser: User = buildSessionUser(validatedUser);
 
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(finalUser));
->>>>>>> origin/develop
       localStorage.setItem("nombre", finalUser.name);
       localStorage.setItem("correo", finalUser.email);
       localStorage.setItem("avatar", finalUser.avatar ?? "");
@@ -226,7 +195,6 @@ export default function Navbar() {
         return;
       }
  
-      // Para otros errores de red, usar datos cacheados
       setUser(parsedUser);
       setIsLoggedIn(true);
     }
@@ -252,7 +220,6 @@ export default function Navbar() {
     });
   };
  
-  // Refresca los tiempos relativos cada minuto
   useEffect(() => {
     const interval = setInterval(() => {
       setTick((t) => t + 1);
@@ -261,7 +228,6 @@ export default function Navbar() {
     return () => clearInterval(interval);
   }, []);
  
-  // Restaura la sesión al montar y escucha cambios de sesión/conectividad
   useEffect(() => {
     void restoreSession();
  
@@ -281,7 +247,6 @@ export default function Navbar() {
     };
   }, [restoreSession]);
  
-  // Cierra paneles al hacer click fuera de ellos
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -303,7 +268,6 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open, toggleNotifications]);
  
-  // Verifica sesión expirada cada 10 segundos
   useEffect(() => {
     const interval = setInterval(() => {
       if (user && isSessionExpired()) {
@@ -315,7 +279,6 @@ export default function Navbar() {
     return () => clearInterval(interval);
   }, [user, router, clearSession]);
  
-  // Cierra el panel de notificaciones con Escape
   useEffect(() => {
     if (!open) return;
  
@@ -648,7 +611,6 @@ export default function Navbar() {
               </div>
  
               <button
-                /* HU-05: ID de referencia para el tour guiado - Paso "Menú móvil" (solo visible en mobile) */
                 id="tour-menu-mobile"
                 type="button"
                 onClick={() => setIsMobileMenuOpen(true)}
@@ -691,13 +653,8 @@ export default function Navbar() {
                 <X className="h-6 w-6 text-stone-600" />
               </button>
             </div>
-<<<<<<< HEAD
- 
-            <nav className="mt-10 flex flex-col gap-4">
-=======
 
             <nav className="mt-10 flex flex-col gap-2">
->>>>>>> origin/develop
               <Link
                 href="/registro-inmueble"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -705,15 +662,6 @@ export default function Navbar() {
               >
                 Publica tu inmueble
               </Link>
-<<<<<<< HEAD
-              <Link
-                href="/propiedades"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
-              >
-                Propiedades
-              </Link>
-=======
 
               <div className="flex flex-col">
                 <button
@@ -732,7 +680,6 @@ export default function Navbar() {
                 </div>
               </div>
 
->>>>>>> origin/develop
               <Link
                 href="/blogs"
                 onClick={() => setIsMobileMenuOpen(false)}
