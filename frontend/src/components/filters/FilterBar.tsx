@@ -21,13 +21,14 @@ interface FilterBarProps {
     modoInmueble: string[]
     amenidades: string[]
     etiquetas: string[]
-    tipoInmueble?: string[]
+    tipoInmueble: string[]
   }) => void
 
   onOpenPriceFilter?: () => void
   onOpenSuperficieFilter?: () => void
   isCapacidadActive?: boolean
-  variant?: string
+  onToggleCapacidad?: () => void
+  variant?: 'home' | 'map'
 }
 
 const AMENIDADES = [
@@ -64,7 +65,14 @@ const Chip = ({
   </button>
 )
 
-export default function FilterBar({ onSearch }: FilterBarProps) {
+export default function FilterBar({
+  onSearch,
+  onOpenPriceFilter,
+  onOpenSuperficieFilter,
+  isCapacidadActive = false,
+  onToggleCapacidad,
+  variant = 'home'
+}: FilterBarProps) {
   const router = useRouter()
 
   const [query, setQuery] = useState('')
@@ -89,7 +97,7 @@ export default function FilterBar({ onSearch }: FilterBarProps) {
     onSearch?.({
       query,
       modoInmueble,
-      tipoInmueble: [], 
+      tipoInmueble: [],
       amenidades,
       etiquetas
     })
@@ -107,7 +115,7 @@ export default function FilterBar({ onSearch }: FilterBarProps) {
 
   return (
     <>
-      {/* OVERLAY OSCURO */}
+      {/* OVERLAY */}
       {openMore && (
         <div
           onClick={() => setOpenMore(false)}
@@ -117,15 +125,17 @@ export default function FilterBar({ onSearch }: FilterBarProps) {
 
       <div className="w-full flex justify-center relative z-50">
         <div className="bg-white shadow-xl rounded-[22px] px-6 py-4 w-full max-w-[1200px] flex flex-col gap-4">
-          {/* FILA 1 */}
+
+          {/* FILA 1: MODOS */}
           <TransactionModeFilter
-            modoSeleccionado={['VENTA']}
+            modoSeleccionado={modoInmueble}
             onModoChange={() => {}}
           />
 
-          {/* FILA 2 (ZONA AZUL ORDENADA) */}
+          {/* FILA 2 */}
           <div className="flex items-center gap-3 flex-wrap">
-            {/* BUSCADOR */}
+
+            {/* BUSCADOR IZQUIERDA */}
             <div className="flex items-center h-[40px] px-3 border border-gray-300 rounded-xl gap-2 w-[240px] bg-white">
               <MapPin className="w-4 h-4 text-gray-400" />
               <input
@@ -136,15 +146,28 @@ export default function FilterBar({ onSearch }: FilterBarProps) {
               />
             </div>
 
-            <button className="h-[40px] px-4 border border-gray-300 rounded-xl flex items-center gap-2 text-sm">
+            {/* PRECIO */}
+            <button
+              onClick={onOpenPriceFilter}
+              className="h-[40px] px-4 border border-gray-300 rounded-xl flex items-center gap-2 text-sm"
+            >
               <DollarSign className="w-4 h-4" />
               Precio
               <ChevronDown className="w-4 h-4 text-gray-400" />
             </button>
 
-            <CapacidadButton variant="home" />
+            {/* CAPACIDAD */}
+            <CapacidadButton
+              variant={variant}
+              isActive={isCapacidadActive}
+              onClick={onToggleCapacidad}
+            />
 
-            <button className="h-[40px] px-4 border border-gray-300 rounded-xl flex items-center gap-2 text-sm">
+            {/* METROS */}
+            <button
+              onClick={onOpenSuperficieFilter}
+              className="h-[40px] px-4 border border-gray-300 rounded-xl flex items-center gap-2 text-sm"
+            >
               <Maximize className="w-4 h-4" />
               Metros
               <ChevronDown className="w-4 h-4 text-gray-400" />
@@ -162,6 +185,7 @@ export default function FilterBar({ onSearch }: FilterBarProps) {
 
               {openMore && (
                 <div className="absolute top-12 left-0 w-[360px] bg-white border border-gray-200 rounded-xl shadow-xl p-4 z-50">
+
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="font-semibold text-sm">
                       Filtros avanzados
@@ -171,6 +195,7 @@ export default function FilterBar({ onSearch }: FilterBarProps) {
                     </button>
                   </div>
 
+                  {/* AMENIDADES */}
                   <p className="text-xs text-gray-500 mb-2">
                     Amenidades
                   </p>
@@ -187,6 +212,7 @@ export default function FilterBar({ onSearch }: FilterBarProps) {
                     ))}
                   </div>
 
+                  {/* ETIQUETAS */}
                   <p className="text-xs text-gray-500 mb-2">
                     Etiquetas
                   </p>
@@ -203,6 +229,7 @@ export default function FilterBar({ onSearch }: FilterBarProps) {
                     ))}
                   </div>
 
+                  {/* BOTONES */}
                   <div className="flex justify-between gap-2">
                     <button
                       onClick={handleLimpiar}
@@ -221,11 +248,13 @@ export default function FilterBar({ onSearch }: FilterBarProps) {
               )}
             </div>
 
+            {/* RECOMENDADOS */}
             <button className="h-[40px] px-4 bg-[#c47b2a] text-white rounded-xl flex items-center gap-2 text-sm">
               <Award className="w-4 h-4" />
               Recomendados
             </button>
 
+            {/* BUSCAR DERECHA */}
             <button
               onClick={handleBuscar}
               className="ml-auto h-[40px] px-6 bg-[#c47b2a] hover:bg-[#a8651f] text-white rounded-xl font-semibold flex items-center gap-2"
