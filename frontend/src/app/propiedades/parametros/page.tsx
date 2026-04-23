@@ -113,7 +113,7 @@ function ParametrosPageContent() {
                 id: item.parametros_personalizados?.id,
                 nombre: item.parametros_personalizados?.nombre,
               }))
-              .filter((item) => item.id && item.nombre)
+              .filter((item: ParametroPublicacion) => item.id && item.nombre)
           : [];
 
         setCatalogoParametros(catalogo);
