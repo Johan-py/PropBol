@@ -37,7 +37,7 @@ export class RecomendacionesService {
     console.log('historialVistas.length:', historialVistas.length)
     console.log('favoritos.length:', favoritos.length)
     console.log('zonaConexion:', zonaConexion)
-    
+
     if (historialVistas.length === 0 && favoritos.length === 0) {
       const zonaAEvaluar = zonaForzada || zonaConexion
       if (zonaAEvaluar) {
