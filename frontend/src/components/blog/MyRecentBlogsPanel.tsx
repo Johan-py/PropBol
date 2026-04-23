@@ -1,20 +1,13 @@
 "use client";
 
-<<<<<<< HEAD
-import React from "react";
-=======
 import React, { useEffect, useState } from "react";
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 import Image from "next/image";
 import Link from "next/link";
 import { MOCK_USER_BLOGS } from "@/lib/mock/blogs.mock";
 import { Blog } from "@/types/blog";
 
 const MAX_VISIBLE = 3;
-<<<<<<< HEAD
-=======
 const USER_STORAGE_KEY = "propbol_user";
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 const STATUS_STYLES: Record<string, string> = {
   aprobado: "bg-green-50 text-green-700 border-green-200",
@@ -38,8 +31,6 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({
   blogs = MOCK_USER_BLOGS,
 }) => {
   const visible = blogs.slice(0, MAX_VISIBLE);
-<<<<<<< HEAD
-=======
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -58,31 +49,10 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({
   }, []);
 
   if (!isAuthenticated) return null;
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
   return (
     <section
       aria-label="Mis blogs recientes"
-<<<<<<< HEAD
-      className="rounded-2xl border border-dashed border-stone-300 bg-white px-6 py-5 shadow-sm"
-    >
-      {/* Header */}
-      <div className="mb-4 flex items-start justify-between">
-        <div>
-          <h2 className="text-sm font-extrabold uppercase tracking-[0.18em] text-stone-800">
-            Mis Blogs Recientes
-          </h2>
-          <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-stone-400">
-            Panel de Control Editorial
-          </p>
-        </div>
-
-        <Link
-          href="/profile?tab=blogs"
-          className="mt-0.5 text-[11px] font-bold uppercase tracking-[0.18em] text-[#a56400] underline-offset-4 transition-colors hover:text-[#7d4b00] hover:underline"
-        >
-          Ver todos mis posts
-=======
       className="bg-white rounded-[32px] p-6 border border-stone-100 shadow-sm mb-10"
     >
       {/* Header */}
@@ -100,7 +70,6 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({
           <button className="text-[#A67C00] font-bold text-xs uppercase tracking-tighter transition-colors hover:text-[#7d4b00]">
             Ver todos mis posts
           </button>
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
         </Link>
       </div>
 

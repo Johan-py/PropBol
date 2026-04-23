@@ -246,10 +246,6 @@ export default function Home() {
       )}
     </div>
   );
-<<<<<<< HEAD
-}
-=======
 }
 
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83

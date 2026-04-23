@@ -3,21 +3,11 @@ interface Props {
 }
 
 export default function ResumenTransaccion({ transaccion }: Props) {
-<<<<<<< HEAD
-  const plan = transaccion.plan_suscripcion
-  const { subtotal, iva_monto, total } = transaccion
-
-  return (
-    <div className="border border-gray-200 rounded-lg p-6 shadow-lg bg-white">
-      <h2 className="text-xl font-bold mb-4 pb-2 border-b border-gray-100">Resumen de compra</h2>
-      <p className="text-sm text-gray-500 mb-4">Verifica tu pedido antes de realizar el pago</p>
-=======
   const { subtotal, iva_monto, total, monto_descuento } = transaccion;
 
   return (
     <div className="border border-gray-200 rounded-lg p-6 shadow-lg bg-white">
       <h3 className="text-xl font-bold mb-4 pb-2 border-b border-gray-100">Resumen de compra</h3>
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
       <div className="space-y-3 text-gray-700">
         <div className="flex justify-between">
           <span>Subtotal</span>
@@ -44,10 +34,5 @@ export default function ResumenTransaccion({ transaccion }: Props) {
         <p className="text-xs text-green-600 mt-1">IVA incluido</p>
       </div>
     </div>
-<<<<<<< HEAD
-  )
-}
-=======
   );
 }
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83

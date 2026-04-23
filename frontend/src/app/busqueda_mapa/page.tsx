@@ -1,18 +1,11 @@
 'use client'
 
-<<<<<<< HEAD
-import { point, polygon } from '@turf/helpers'
-import booleanPointInPolygon from '@turf/boolean-point-in-polygon'
-import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from 'react'
-import { useSearchParams } from "next/navigation";
-=======
 import { CapacidadSidebar } from '@/components/filters/CapacidadSidebar'
 import MisZonasSidebar from '@/components/map/MisZonasSidebar'
 import { point, polygon } from '@turf/helpers'
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon'
 import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from 'react'
 import { useSearchParams, useRouter } from "next/navigation";
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 import nextDynamic from 'next/dynamic'
 import {
   ChevronLeft,
@@ -39,10 +32,7 @@ import EmptyState from '@/components/galeria/EmptyState'
 import MapaListadoPaginacion, { PageSize } from "@/components/galeria/MapaListadoPaginacion";
 import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenamiento'
 import { ErrorState } from '@/components/ClusterSidebar'
-<<<<<<< HEAD
-=======
 import SuperficieFilterSidebar from '@/components/filters/SuperficieFilterSidebar'
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 // Carga dinámica del mapa (sin SSR)
 const MapView = nextDynamic(() => import('./MapView'), {
@@ -88,21 +78,6 @@ const SHEET_H = { peek: '50%', full: '100%' } as const
 type SheetState = 'hidden' | 'peek' | 'full'
 
 const LIST_PAGE_SIZES = [10, 20, 50, 100] as const;
-<<<<<<< HEAD
-
-function BusquedaMapaContent() {
-  const searchParams = useSearchParams();
-  const filterResetKey = searchParams.toString();
-
-  // === 1. ESTADOS COMPARTIDOS ===
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [sheetState, setSheetState] = useState<SheetState>('peek')
-  const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
-  const [isMounted, setIsMounted] = useState(false)
-  const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false)
-
-=======
 const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
 
 interface ZonaUsuario {
@@ -180,13 +155,10 @@ function BusquedaMapaContent() {
   const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false)
   const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad'>('results')
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   // --- INICIO ESTADOS HU8 ---
   const [isDrawingMode, setIsDrawingMode] = useState(false)
   const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([])
   const [isPolygonClosed, setIsPolygonClosed] = useState(false)
-<<<<<<< HEAD
-=======
   // -- Función para reiniciar el modo dibujo y limpiar el polígono --
   const [drawingError, setDrawingError] = useState(false)
 
@@ -196,27 +168,20 @@ function BusquedaMapaContent() {
     setEditingPolygonPoints([])
     setIsSavingEditedZone(false)
   }, [])
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
   const resetDrawing = () => {
     setIsDrawingMode(false)
     setIsPolygonClosed(false)
     setPolygonPoints([])
-<<<<<<< HEAD
-=======
     setIsCreatingCustomZone(false)
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   }
   // --- FIN ESTADOS HU8 ---
 
   const isMobile = useIsMobile()
   const isLandscape = useIsLandscapeMobile()
 
-<<<<<<< HEAD
-=======
   const [isSuperficieSidebarOpen, setIsSuperficieSidebarOpen] = useState(false)
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   useEffect(() => {
     setIsMounted(true)
   }, [])
@@ -226,8 +191,6 @@ function BusquedaMapaContent() {
   const { zonas } = useZonas()
   const [selectedZoneId, setSelectedZoneId] = useState<number | null>(null)
 
-<<<<<<< HEAD
-=======
   const cargarMisZonas = useCallback(async () => {
     const token = localStorage.getItem('token')
     if (!token) {
@@ -462,7 +425,6 @@ function BusquedaMapaContent() {
     [cargarMisZonas, selectedZoneId, editingZoneId, resetEditingZone]
   )
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   // === 3. LÓGICA MATEMÁTICA HU8 (Filtro por polígono) ===
   const displayedProperties = useMemo(() => {
     if (!properties) return []
@@ -471,13 +433,6 @@ function BusquedaMapaContent() {
       try {
         const turfCoords = [...polygonPoints, polygonPoints[0]].map((p) => [p[1], p[0]])
         const drawPoly = polygon([turfCoords])
-<<<<<<< HEAD
-        
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
-    null
-  );
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
-=======
 
         return properties.filter((p: any) => {
           if (p.lat == null || p.lng == null) return false
@@ -540,7 +495,6 @@ function BusquedaMapaContent() {
 
   const dragStartY = useRef<number | null>(null)
   const dragStartState = useRef<SheetState>('peek')
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
         return properties.filter((p: any) => {
           if (p.lat == null || p.lng == null) return false
@@ -601,503 +555,6 @@ function BusquedaMapaContent() {
       }
       return
     }
-<<<<<<< HEAD
-
-    const timeout = setTimeout(() => {
-      if (isHoveringList) {
-        setSelectedPropertyId(hoveredId)
-      }
-    }, 200)
-
-    return () => clearTimeout(timeout)
-  }, [hoveredId, isHoveringList])
-
-  // Sincronización del mapa con el colapso del panel lateral
-  useEffect(() => {
-    const t = setTimeout(() => window.dispatchEvent(new Event('resize')), 310)
-    return () => clearTimeout(t)
-  }, [isSidebarOpen, sheetState])
-
-  function handleClusterClick(props: any[]) {
-    setClusterProperties(props)
-    setIsClusterView(true)
-    setActiveClusterIds(props.map((p: any) => p.id))
-  }
-
-  const handleMapSelect = useCallback(
-    (id: string | null) => {
-      setSelectedPropertyId(id)
-
-      if (id) {
-        const prop = inmueblesOrdenados.find((p: any) => p.id === id)
-        if (prop) {
-          setPinnedProperty(prop)
-          setSheetState('peek')
-        }
-      } else {
-        setPinnedProperty(null)
-        setIsClusterView(false)
-        setActiveClusterIds([])
-        setClusterProperties([])
-      }
-    },
-    [inmueblesOrdenados]
-  )
-
-  // Eventos táctiles para el Bottom Sheet
-  function onTouchStart(e: React.TouchEvent) {
-    dragStartY.current = e.touches[0].clientY
-    dragStartState.current = sheetState === 'hidden' ? 'peek' : sheetState
-  }
-
-  function onTouchEnd(e: React.TouchEvent) {
-    if (dragStartY.current === null) return
-    const dy = dragStartY.current - e.changedTouches[0].clientY
-    if (Math.abs(dy) < 20) {
-      dragStartY.current = null
-      return
-    }
-    if (dy > 40) {
-      setSheetState(dragStartState.current === 'peek' ? 'full' : 'full')
-    } else if (dy < -40) {
-      setSheetState(dragStartState.current === 'full' ? 'peek' : 'hidden')
-    }
-    dragStartY.current = null
-  }
-
-  // ── COMPONENTES COMPARTIDOS MÓVILES ───────────────────────
-  const MenuToggleComponent = (
-    <div className="flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90">
-      <button
-        onClick={() => setViewMode('grid')}
-        className={`p-1 rounded transition-colors ${
-          viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-        }`}
-      >
-        <LayoutGrid size={16} />
-      </button>
-      <button
-        onClick={() => setViewMode('list')}
-        className={`p-1 rounded transition-colors ${
-          viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-        }`}
-      >
-        <ListIcon size={16} />
-      </button>
-    </div>
-  )
-
-  const PropertyListMobile = ({ onClickItem }: { onClickItem?: (p: any) => void }) => (
-    <div className="flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar">
-      {isLoading ? (
-        <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2">
-          <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />{' '}
-          Actualizando...
-        </div>
-      ) : displayedProperties.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <div
-          className={`gap-3 flex flex-col ${
-            viewMode === 'list'
-              ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-              : ''
-          }`}
-        >
-          {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
-            <div
-              key={property.id}
-              onClick={() => {
-                setSelectedPropertyId(property.id)
-                onClickItem?.(property)
-              }}
-              className={`cursor-pointer transition-all duration-200 rounded-xl ${
-                selectedPropertyId === property.id ? 'ring-2 ring-orange-400 ring-offset-1' : ''
-              }`}
-            >
-              {viewMode === 'grid' ? (
-                <PropertyCard
-                  imagen=""
-                  estado={property.type}
-                  precio={
-                    property.currency === 'USD'
-                      ? `$${property.price.toLocaleString('es-BO')} USD`
-                      : `Bs ${property.price.toLocaleString('es-BO')}`
-                  }
-                  descripcion={property.descripcion || property.title}
-                  camas={property.nroCuartos ?? 0}
-                  banos={property.nroBanos ?? 0}
-                  metros={property.superficieM2 ?? 0}
-                />
-              ) : (
-                <PropertyRow
-                  title={property.title}
-                  price={
-                    property.currency === 'USD'
-                      ? `$${property.price.toLocaleString('es-BO')} USD`
-                      : `Bs ${property.price.toLocaleString('es-BO')}`
-                  }
-                  size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
-                  contactType="whatsapp"
-                  image=""
-                />
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-
-    const renderListPaginationFooter = () => (
-    <MapaListadoPaginacion
-      total={listTotal}
-      page={listSafePage}
-      pageSize={listPageSize}
-      onPageChange={setListPage}
-      onPageSizeChange={(s) => {
-        setListPageSize(s);
-        setListPage(1);
-      }}
-      hint={listTotal === 0 && error ? `Error al cargar: ${error}` : null}
-    />
-  );
-
-  // ────────────────────────────────────────────────────────────────────────────
-  // RENDER LANDSCAPE MÓVIL
-  // ────────────────────────────────────────────────────────────────────────────
-  if (isMounted && (isMobile || isLandscape)) {
-    if (isLandscape) {
-      return (
-        <div className="flex flex-col bg-white overflow-hidden" style={{ height: '100dvh' }}>
-          <div className="shrink-0" style={{ zIndex: 1002, position: 'relative' }}>
-            <FilterBar variant="map" onSearch={(f) => console.log('🔍 Filtros:', f)} />
-          </div>
-          <div className="flex flex-1 overflow-hidden">
-            <div className="flex-1 relative">
-              <div className="absolute inset-0" style={{ zIndex: 0 }}>
-                <MapView
-                  properties={inmueblesOrdenados}
-                  selectedId={selectedPropertyId}
-                  zonas={zonas}
-                  selectedZoneId={selectedZoneId}
-                  onZoneSelect={setSelectedZoneId}
-                  onSelect={handleMapSelect}
-                  isLoading={isLoading}
-                  error={error}
-                  isDrawingMode={isDrawingMode}
-                  polygonPoints={polygonPoints}
-                  isPolygonClosed={isPolygonClosed}
-                  onMapClick={(latlng) => {
-                    if (isDrawingMode && !isPolygonClosed) {
-                      setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
-                    }
-                  }}
-                  onPointClick={(index) => {
-                    if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
-                      setIsPolygonClosed(true)
-                      setIsDrawingMode(false)
-                    }
-                  }}
-                />
-              </div>
-            </div>
-            <div className="w-[280px] flex flex-col bg-white border-l border-stone-200 overflow-hidden shrink-0">
-              <div className="px-3 py-2 border-b border-stone-100 flex items-center justify-between shrink-0">
-                <span className="text-sm font-semibold text-slate-700">
-                  <span className="text-orange-500">
-                    {isClusterView ? clusterProperties.length : displayedProperties.length}
-                  </span>
-                  <span className="ml-1 text-gray-500 font-normal text-xs">props.</span>
-                </span>
-                {MenuToggleComponent}
-              </div>
-              <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
-                <PropertyListMobile onClickItem={(p) => setPinnedProperty(p)} />
-                {renderListPaginationFooter()}
-              </div>
-            </div>
-          </div>
-        </div>
-      )
-    }
-
-    // ────────────────────────────────────────────────────────────────────────────
-    // RENDER PORTRAIT MÓVIL — Bottom Sheet
-    // ────────────────────────────────────────────────────────────────────────────
-    return (
-      <div className="flex flex-col overflow-hidden bg-white" style={{ height: '100dvh' }}>
-        <div className="shrink-0 overflow-x-auto" style={{ zIndex: 1002, position: 'relative' }}>
-          <div className="min-w-max">
-            <FilterBar variant="map" onSearch={(f) => console.log('🔍 Filtros:', f)} />
-          </div>
-        </div>
-        <div className="flex-1 relative overflow-hidden">
-          <div className="absolute inset-0">
-            <MapView
-              properties={inmueblesOrdenados}
-              selectedId={selectedPropertyId}
-              zonas={zonas}
-              selectedZoneId={selectedZoneId}
-              onZoneSelect={setSelectedZoneId}
-              onSelect={handleMapSelect}
-              isLoading={isLoading}
-              error={error}
-              isDrawingMode={isDrawingMode}
-              polygonPoints={polygonPoints}
-              isPolygonClosed={isPolygonClosed}
-              onMapClick={(latlng) => {
-                if (isDrawingMode && !isPolygonClosed) {
-                  setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
-                }
-              }}
-              onPointClick={(index) => {
-                if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
-                  setIsPolygonClosed(true)
-                  setIsDrawingMode(false)
-                }
-              }}
-              onClusterClick={handleClusterClick}
-              activeClusterIds={activeClusterIds}
-            />
-          </div>
-          {sheetState === 'hidden' && (
-            <button
-              onClick={() => setSheetState('peek')}
-              className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[20] bg-white rounded-full px-5 py-3 shadow-xl border border-stone-200 flex items-center gap-2 text-sm font-semibold text-slate-700 active:scale-95 transition-transform"
-              style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.18)' }}
-            >
-              <ListIcon size={16} className="text-orange-500" /> Ver lista
-              {displayedProperties.length > 0 && (
-                <span className="bg-orange-100 text-orange-600 text-xs font-bold px-2 py-0.5 rounded-full">
-                  {displayedProperties.length}
-                </span>
-              )}
-              <ChevronUp size={16} className="text-stone-400" />
-            </button>
-          )}
-          {sheetState !== 'hidden' && (
-            <div
-              className="absolute left-0 right-0 bottom-0 z-[30] bg-white rounded-t-2xl shadow-[0_-4px_24px_rgba(0,0,0,0.12)] flex flex-col"
-              style={{
-                height: SHEET_H[sheetState],
-                transition: 'height 0.3s cubic-bezier(0.32,0.72,0,1)'
-              }}
-              onTouchStart={onTouchStart}
-              onTouchEnd={onTouchEnd}
-            >
-              <div
-                className="shrink-0 overflow-x-auto"
-                style={{ zIndex: 10, position: 'relative' }}
-              >
-                <div
-                  className="w-10 h-1.5 bg-stone-300 hover:bg-orange-400 rounded-full mb-3 transition-colors"
-                  onClick={() => setSheetState((s) => (s === 'full' ? 'peek' : 'full'))}
-                />
-                <div className="flex items-center justify-between w-full px-4 pb-2">
-                  <span className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
-                    <span className="text-orange-500">
-                      {isClusterView ? clusterProperties.length : displayedProperties.length}
-                    </span>
-                    <span className="text-gray-500 font-normal">propiedades</span>
-                  </span>
-                  {isClusterView && (
-                    <button
-                      onClick={() => {
-                        setIsClusterView(false)
-                        setClusterProperties([])
-                        setActiveClusterIds([])
-                      }}
-                      className="text-xs text-orange-500 hover:underline px-2"
-                    >
-                      ← Volver
-                    </button>
-                  )}
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setSheetState('hidden')
-                      }}
-                      className="flex items-center gap-1 text-xs text-stone-400 hover:text-stone-600 bg-stone-100 rounded-full px-2 py-1"
-                    >
-                      <X size={12} />
-                      <span>Ocultar</span>
-                    </button>
-                    {sheetState === 'peek' ? (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setSheetState('full')
-                        }}
-                        className="text-stone-400 hover:text-stone-600 p-1"
-                      >
-                        <ChevronUp size={18} />
-                      </button>
-                    ) : (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setSheetState('peek')
-                        }}
-                        className="text-stone-400 hover:text-stone-600 p-1"
-                      >
-                        <ChevronDown size={18} />
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col flex-1 overflow-hidden">
-                {error && (
-                  <div className="mx-4 mt-3 shrink-0">
-                    <ErrorState onRetry={() => window.location.reload()} />
-                  </div>
-                )}
-                {pinnedProperty && (
-                  <div className="mx-4 mb-3 relative shrink-0">
-                    <button
-                      onClick={() => {
-                        setPinnedProperty(null)
-                        setSelectedPropertyId(null)
-                      }}
-                      className="absolute top-2 right-2 z-10 bg-white rounded-full p-1 shadow text-stone-400 hover:text-stone-600"
-                    >
-                      <X size={14} />
-                    </button>
-                    <div className="ring-2 ring-orange-400 rounded-xl overflow-hidden">
-                      <PropertyCard
-                        imagen=""
-                        estado={pinnedProperty.type}
-                        precio={
-                          pinnedProperty.currency === 'USD'
-                            ? `$${pinnedProperty.price.toLocaleString('es-BO')} USD`
-                            : `Bs ${pinnedProperty.price.toLocaleString('es-BO')}`
-                        }
-                        descripcion={pinnedProperty.descripcion || pinnedProperty.title}
-                        camas={pinnedProperty.nroCuartos ?? 0}
-                        banos={pinnedProperty.nroBanos ?? 0}
-                        metros={pinnedProperty.superficieM2 ?? 0}
-                      />
-                    </div>
-                  </div>
-                )}
-                <div className="px-4 shrink-0 border-b border-stone-100 pb-2">
-                  <MenuOrdenamiento
-                    totalResultados={displayedProperties.length}
-                    ordenActual={ordenActual}
-                    onOrdenChange={cambiarOrden}
-                  />
-                </div>
-                <div className="px-4 py-2 flex justify-end shrink-0">
-                  {MenuToggleComponent}
-                </div>
-                <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
-                <PropertyListMobile
-                  onClickItem={(p) => {
-                    setPinnedProperty(p)
-                    setSheetState('peek')
-                  }}
-                />
-                {renderListPaginationFooter()}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    )
-  }
-
-  // ────────────────────────────────────────────────────────────────────────────
-  // RENDER DESKTOP
-  // ────────────────────────────────────────────────────────────────────────────
-  return (
-    <div className="flex flex-col bg-white w-full h-[calc(100dvh-54px)] overflow-hidden">
-      <FilterBar
-        variant="map"
-        onSearch={(nuevosFiltros) => {
-          console.log('🔍 Buscando con filtros:', nuevosFiltros)
-        }}
-        onOpenPriceFilter={() => { 
-          setIsPriceFilterOpen(true)
-          setIsSidebarOpen(true)
-        }}
-      />
-
-      <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200">
-        {/* Panel lateral colapsable */}
-        <aside
-          className={`bg-white border-r border-stone-200 flex flex-col z-10 transition-all duration-300 min-h-0 overflow-hidden ${
-            isSidebarOpen ? 'w-full md:w-[450px] h-[65dvh] md:h-full' : 'w-0'
-          }`}
-        >
-        {/* ✅ MODIFICADO: ternario que alterna entre filtro de precio y resultados */}
-        {isPriceFilterOpen ? (
-          // Vista del filtro de precio — reemplaza temporalmente los resultados
-          <PriceFilterSidebar
-            isOpen={isPriceFilterOpen}
-            onClose={() => {
-              setIsPriceFilterOpen(false) // cierra el filtro
-              setIsSidebarOpen(true)      // asegura que el aside siga visible
-            }}
-          />
-        ) : (
-          isSidebarOpen && (
-            <div className="flex flex-col h-full min-h-0">
-              <div className="p-4 bg-white shrink-0">
-                <div className="flex justify-between items-center mb-4">
-                  <div className="flex flex-col">
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-1">
-                        <Filter className="w-4 h-4 text-orange-500" />
-                        <h1 className="text-base font-semibold text-stone-900 uppercase tracking-wide">
-                          Filtros{' '}
-                        </h1>
-                      </div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <h1 className="text-xl font-semibold text-slate-800">
-                          {isClusterView
-                            ? `${clusterProperties.length} propiedades en este clúster`
-                            : 'Resultados de búsqueda'}
-                        </h1>
-                      </div>
-                      <h2 className="text-sm font-bold text-slate-900">
-                        <span className="text-orange-500">
-                          {isClusterView ? clusterProperties.length : displayedProperties.length}
-                        </span>
-                        <span className="ml-2 text-gray-600 font-normal text-sm">
-                          {(isClusterView
-                            ? clusterProperties.length
-                            : displayedProperties.length) === 1
-                            ? 'propiedad encontrada'
-                            : 'propiedades encontradas'}
-                        </span>
-                      </h2>
-                      {isClusterView && (
-                        <button
-                          onClick={() => {
-                            setIsClusterView(false)
-                            setClusterProperties([])
-                            setActiveClusterIds([])
-                          }}
-                          className="text-sm text-orange-500 hover:underline flex items-center gap-1 mt-1 mb-2"
-                        >
-                          ← Volver a todos los resultados
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setIsSidebarOpen(false)}
-                    className="p-1 hover:bg-stone-100 rounded-full transition-colors text-stone-400"
-                  >
-                    <ChevronLeft size={20} />
-                  </button>
-                </div>
-
-                <div className="relative border-b border-stone-100 pb-4 [&>div]:mb-0">
-=======
 
     const timeout = setTimeout(() => {
       if (isHoveringList) {
@@ -1507,7 +964,6 @@ function BusquedaMapaContent() {
                   </div>
                 )}
                 <div className="px-4 shrink-0 border-b border-stone-100 pb-2">
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
                   <MenuOrdenamiento
                     totalResultados={displayedProperties.length}
                     ordenActual={ordenActual}
@@ -1532,92 +988,6 @@ function BusquedaMapaContent() {
                     </button>
                   </div>
                 </div>
-<<<<<<< HEAD
-              </div>
-
-              {/* Lista de propiedades */}
-              <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
-                <div
-                  className="flex-1 min-h-0 overflow-y-auto p-4 bg-stone-50 no-scrollbar"
-                  onMouseEnter={() => setIsHoveringList(true)}
-                  onMouseLeave={() => {
-                    setIsHoveringList(false)
-                    setSelectedPropertyId(null)
-                    setHoveredId(null)
-                  }}
-                >
-                {isLoading ? (
-                  <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
-                    <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
-                    Actualizando resultados...
-                  </div>
-                ) : displayedProperties.length === 0 ? (
-                  <EmptyState />
-                ) : (
-                  <div
-                    className={`gap-4 flex flex-col ${
-                      viewMode === 'list'
-                        ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-                        : ''
-                    }`}
-                  >
-                    {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
-                        <div
-                          key={property.id}
-                          onMouseEnter={() => setHoveredId(property.id)}
-                          onMouseLeave={() => setHoveredId(null)}
-                          onClick={() => setSelectedPropertyId(property.id)}
-                          className={`cursor-pointer transition-all duration-200 rounded-xl relative ${
-                            viewMode === 'grid'
-                              ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
-                              : 'w-full py-1 hover:bg-stone-100'
-                          } ${
-                            selectedPropertyId === property.id
-                              ? 'ring-2 ring-orange-400 ring-offset-1 z-10'
-                              : ''
-                          }`}
-                        >
-                          {viewMode === 'grid' ? (
-                            <PropertyCard
-                              imagen={
-                                property.thumbnailUrl ||
-                                property.imagen ||
-                                'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
-                              }
-                              estado={property.type}
-                              precio={
-                                property.currency === 'USD'
-                                  ? `$${property.price.toLocaleString('es-BO')} USD`
-                                  : `Bs ${property.price.toLocaleString('es-BO')}`
-                              }
-                              descripcion={property.descripcion || property.title}
-                              camas={property.nroCuartos ?? 0}
-                              banos={property.nroBanos ?? 0}
-                              metros={property.superficieM2 ?? 0}
-                            />
-                          ) : (
-                            <PropertyRow
-                              title={property.title}
-                              price={
-                                property.currency === 'USD'
-                                  ? `$${property.price.toLocaleString('es-BO')} USD`
-                                  : `Bs ${property.price.toLocaleString('es-BO')}`
-                              }
-                              size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
-                              contactType="whatsapp"
-                              image={
-                                property.thumbnailUrl ||
-                                property.imagen ||
-                                'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
-                              }
-                            />
-                          )}
-                        </div>
-                      )
-                    )}
-                  </div>
-                )}
-=======
                 <div className="px-4 py-2 flex justify-end shrink-0">
                   {MenuToggleComponent}
                 </div>
@@ -1630,7 +1000,6 @@ function BusquedaMapaContent() {
                   />
                   {renderListPaginationFooter()}
                 </div>
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
               </div>
               {renderListPaginationFooter()}
               </div>
@@ -1886,12 +1255,6 @@ function BusquedaMapaContent() {
           )}
           {/* --- INICIO BOTONES FLOTANTES HU8 --- */}
           <div className="absolute top-3 right-4 z-[1000] flex flex-col gap-2 items-end pointer-events-none">
-<<<<<<< HEAD
-            {!isDrawingMode && !isPolygonClosed && (
-              <div className="flex flex-row gap-2 pointer-events-auto">
-                <button
-                  onClick={() => setIsDrawingMode(true)}
-=======
             {/* CAMBIO: Se removió !isPolygonClosed para que los botones sigan visibles tras dibujar */}
             {!isDrawingMode && !editingZoneId && (
               <div className="flex flex-row gap-2 pointer-events-auto">
@@ -1903,22 +1266,17 @@ function BusquedaMapaContent() {
                     setIsDrawingMode(true)
                     setIsSidebarOpen(true)
                   }}
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
                   className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
                 >
                   Dibujar zona
                 </button>
                 <button
                   onClick={() => {
-<<<<<<< HEAD
-                    console.log('Próximamente: Abrir barra lateral de Mis Zonas')
-=======
                     if (!isAuthenticated) {
                       router.push('/sign-in');
                     } else {
                       setIsMisZonasOpen(true);
                     }
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
                   }}
                   className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
                 >
@@ -1926,25 +1284,6 @@ function BusquedaMapaContent() {
                 </button>
               </div>
             )}
-<<<<<<< HEAD
-            {isDrawingMode && !isPolygonClosed && (
-              <div className="flex flex-col items-end gap-2 pointer-events-auto">
-                <button
-                  onClick={resetDrawing}
-                  className="bg-white text-red-600 px-4 py-2 rounded-lg shadow-md border border-stone-200 hover:bg-red-50 transition-all text-sm font-semibold"
-                >
-                  Cancelar dibujo
-                </button>
-                <div className="bg-white/95 backdrop-blur-sm p-3 rounded-lg shadow-md border border-stone-200 text-xs text-stone-600 max-w-[220px] text-right">
-                  Haz clic en el mapa para marcar los vértices. Cierra la zona tocando el punto
-                  inicial.
-                </div>
-              </div>
-            )}
-          </div>
-
-          {isPolygonClosed && (
-=======
 
             {isDrawingMode && !isPolygonClosed && (
               <div className="flex flex-col items-end gap-2 pointer-events-auto">
@@ -1989,7 +1328,6 @@ function BusquedaMapaContent() {
 
           {/* CAMBIO: Se removió isCreatingCustomZone para que aparezca siempre que haya un polígono cerrado */}
           {isPolygonClosed && !editingZoneId && (
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000]">
               <button
                 onClick={resetDrawing}
@@ -2009,18 +1347,12 @@ function BusquedaMapaContent() {
               activeClusterIds={activeClusterIds}
               isLoading={isLoading}
               error={error}
-<<<<<<< HEAD
-              zonas={zonas}
-=======
               zonas={zonasCombinadas}
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
               selectedZoneId={selectedZoneId}
               onZoneSelect={setSelectedZoneId}
               isDrawingMode={isDrawingMode}
               polygonPoints={polygonPoints}
               isPolygonClosed={isPolygonClosed}
-<<<<<<< HEAD
-=======
               isZoneEditingMode={Boolean(editingZoneId)}
               editablePolygonPoints={editingPolygonPoints}
               onEditablePointDrag={(index, lat, lng) => {
@@ -2030,7 +1362,6 @@ function BusquedaMapaContent() {
                   )
                 )
               }}
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
               onMapClick={(latlng) => {
                 if (isDrawingMode && !isPolygonClosed) {
                   setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
@@ -2040,12 +1371,9 @@ function BusquedaMapaContent() {
                 if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
                   setIsPolygonClosed(true)
                   setIsDrawingMode(false)
-<<<<<<< HEAD
-=======
                   if (isCreatingCustomZone) {
                     setIsMisZonasOpen(true)
                   }
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
                 }
               }}
             />

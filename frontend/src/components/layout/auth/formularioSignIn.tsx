@@ -78,10 +78,7 @@ const GOOGLE_LOGIN_TIMEOUT_MS = 2 * 60 * 1000;
 const DEFAULT_POST_LOGIN_REDIRECT = "/";
 const REDIRECT_AFTER_LOGIN_KEY = "redirectAfterLogin";
 const SESSION_DURATION_MS = 60 * 60 * 1000;
-<<<<<<< HEAD
-=======
 const PENDING_2FA_KEY = "pending2FA";
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 const NO_CONNECTION_MESSAGE =
   "Sin conexión a internet. Verifica tu red e intenta nuevamente.";
@@ -93,37 +90,6 @@ const GOOGLE_TIMEOUT_MESSAGE =
   "La autenticación con Google tardó demasiado. Por favor intenta nuevamente.";
 
 const DEACTIVATED_ACCOUNT_MESSAGE = "Esta cuenta está desactivada";
-<<<<<<< HEAD
-
-const clearClientSession = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("propbol_user");
-  localStorage.removeItem("propbol_session_expires");
-  localStorage.removeItem("nombre");
-  localStorage.removeItem("correo");
-  localStorage.removeItem("avatar");
-
-  window.dispatchEvent(new Event("propbol:session-changed"));
-  window.dispatchEvent(new Event("auth-state-changed"));
-};
-
-const saveSession = (
-  token: string,
-  user?: {
-    id: number;
-    correo: string;
-    nombre?: string;
-    apellido?: string;
-    avatar?: string | null;
-  },
-) => {
-  localStorage.setItem("token", token);
-
-  const userName =
-    user?.nombre && user?.apellido
-      ? `${user.nombre} ${user.apellido}`
-      : user?.nombre || user?.correo || "Usuario";
-=======
 
 const clearClientSession = () => {
   localStorage.removeItem("token");
@@ -132,7 +98,6 @@ const clearClientSession = () => {
   localStorage.removeItem("nombre");
   localStorage.removeItem("correo");
   localStorage.removeItem("avatar");
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
   window.dispatchEvent(new Event("propbol:session-changed"));
   window.dispatchEvent(new Event("auth-state-changed"));
@@ -146,25 +111,14 @@ const savePending2FA = (data: {
   localStorage.setItem(
     PENDING_2FA_KEY,
     JSON.stringify({
-<<<<<<< HEAD
-      name: userName,
-      email: user?.correo ?? "",
-      avatar: user?.avatar ?? null,
-=======
       userId: data.userId,
       email: data.email ?? "",
       expiresInMinutes: data.expiresInMinutes ?? 5,
       createdAt: Date.now(),
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     }),
   );
 };
 
-<<<<<<< HEAD
-  localStorage.setItem("nombre", userName);
-  localStorage.setItem("correo", user?.correo ?? "");
-  localStorage.setItem("avatar", user?.avatar ?? "");
-=======
 const clearPending2FA = () => {
   localStorage.removeItem(PENDING_2FA_KEY);
 };
@@ -187,7 +141,6 @@ const saveSession = (
   localStorage.setItem("nombre", sessionUser.name);
   localStorage.setItem("correo", sessionUser.email);
   localStorage.setItem("avatar", sessionUser.avatar ?? "");
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   localStorage.setItem(
     "propbol_session_expires",
     String(Date.now() + SESSION_DURATION_MS),
@@ -263,10 +216,7 @@ export default function LoginForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
-<<<<<<< HEAD
-=======
   const [isLoadingDiscord, setIsLoadingDiscord] = useState(false);
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   const passwordContainerRef = useRef<HTMLDivElement>(null);
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
@@ -512,10 +462,7 @@ export default function LoginForm() {
 
     setIsLoading(true);
     clearClientSession();
-<<<<<<< HEAD
-=======
     clearPending2FA();
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
     const controller = new AbortController();
     const timeoutId = window.setTimeout(() => {
@@ -554,17 +501,6 @@ export default function LoginForm() {
         return;
       }
 
-<<<<<<< HEAD
-      if (!data.token) {
-        clearClientSession();
-        setErrorMessage("El servidor no devolvió un token válido");
-        return;
-      }
-
-      await finalizeValidatedSession(data.token, data.user);
-
-      setSuccessMessage(data.message || "Inicio de sesión exitoso");
-=======
     if (data.requires2FA) {
   if (!data.userId) {
     clearClientSession();
@@ -601,7 +537,6 @@ export default function LoginForm() {
   window.setTimeout(() => {
    redirectAfterSuccessfulLogin();
   }, 1000);
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
     } catch (error) {
       clearClientSession();

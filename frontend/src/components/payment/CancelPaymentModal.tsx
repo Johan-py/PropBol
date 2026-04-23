@@ -33,12 +33,7 @@ export function CancelPaymentModal({ isOpen, onConfirm, onCancel }: CancelPaymen
           <AlertTriangle size={30} className="text-amber-500" />
         </div>
 
-<<<<<<< HEAD
-        {/* Título */}
-        <h2 className="text-xl font-bold text-stone-900 mb-2">¿Cancelar el pago?</h2>
-=======
         <h2 className="text-xl font-bold text-stone-900 mb-2">¿Cancelar pago en curso?</h2>
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
         <p className="text-sm text-stone-500 mb-1 leading-relaxed">
           Si salís ahora,{' '}

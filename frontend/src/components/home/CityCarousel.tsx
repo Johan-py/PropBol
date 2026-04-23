@@ -1,21 +1,3 @@
-<<<<<<< HEAD
-'use client'
-
-import { useEffect, useState } from 'react'
-import Image from 'next/image'
-
-type Props = {
-  images: string[]
-}
-
-export default function CityCarousel({ images }: Props) {
-  const [index, setIndex] = useState(0)
-  const activeImage = images[index] ?? '/placeholder-house.jpg'
-
-  useEffect(() => {
-    if (images.length <= 1) {
-      setIndex(0)
-=======
 "use client"
 
 import { useEffect, useState, type MouseEvent as ReactMouseEvent } from "react"
@@ -48,22 +30,10 @@ export default function CityCarousel({ images, cityName }: Props) {
 
   useEffect(() => {
     if (carouselImages.length <= 1) {
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
       return
     }
 
     const intervalId = window.setInterval(() => {
-<<<<<<< HEAD
-      setIndex((currentIndex) => (currentIndex + 1) % images.length)
-    }, 4000)
-
-    return () => window.clearInterval(intervalId)
-  }, [images.length])
-
-  return (
-    <div className="relative h-48 w-full overflow-hidden rounded-t-2xl">
-      <Image src={activeImage} alt="Ciudad destacada" fill className="object-cover" />
-=======
       setIndex((currentIndex) => (currentIndex + 1) % carouselImages.length)
     }, 4000)
 
@@ -171,7 +141,6 @@ export default function CityCarousel({ images, cityName }: Props) {
           />
         ))}
       </div>
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     </div>
   )
 }

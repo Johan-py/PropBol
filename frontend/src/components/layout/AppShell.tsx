@@ -7,10 +7,7 @@ import Footer from "@/components/layout/Footer";
 import RegisterSuccessToast from "@/components/layout/RegisterSuccessToast";
 import { useInactivityLogout } from "@/hooks/useInactivityLogout";
 import { useAccountStatus } from "@/hooks/useAccountStatus";
-<<<<<<< HEAD
-=======
 import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 const AUTH_ROUTES = ["/sign-in", "/sign-up"];
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
@@ -102,16 +99,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         localStorage.setItem(
           SESSION_EXPIRES_KEY,
           String(Date.now() + SESSION_DURATION_MS),
-<<<<<<< HEAD
-        );
-        localStorage.setItem(
-          USER_STORAGE_KEY,
-          JSON.stringify({
-            name: userName,
-            email: data.user?.correo ?? "",
-          }),
-=======
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
         );
         localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(buildSessionUser(data.user)));
 

@@ -1,14 +1,9 @@
 'use client'
 
-<<<<<<< HEAD
-import { Bath, BedDouble, MapPin, Square } from 'lucide-react'
-import { useDeletePublicacion } from '@/hooks/useDeletePublicacion'
-=======
 import { useState } from 'react'
 import { Bath, BedDouble, MapPin, Square, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { publicacionService } from '@/services/publicacionn.service'
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 import type { MisPublicacionesItem } from '@/types/publicacion'
 import ConfirmDeleteModal from './ConfirmDeleteModal'
 import DeleteSuccessModal from './DeleteSuccessModal'
@@ -17,26 +12,6 @@ import DeleteErrorModal from './DeleteErrorModal'
 interface Props {
   publicacion: MisPublicacionesItem
   onDeleted: (id: number) => void
-<<<<<<< HEAD
-}
-
-export default function PublicacionCard({ publicacion, onDeleted }: Props) {
-  const {
-    modalConfirmacionAbierto,
-    modalExitoAbierto,
-    modalErrorAbierto,
-    loading,
-    error,
-    abrirConfirmacion,
-    cerrarConfirmacion,
-    cerrarExito,
-    cerrarError,
-    confirmarEliminacion
-  } = useDeletePublicacion(publicacion.id, () => onDeleted(publicacion.id))
-
-  const precioFormateado = `$${publicacion.precio.toLocaleString()}`
-  const areaFormateada = publicacion.superficieM2 ? `${publicacion.superficieM2}m²` : '-'
-=======
   onEstadoChange?: (id: number, nuevoEstado: boolean) => void
 }
 
@@ -120,7 +95,6 @@ export default function PublicacionCard({
   const irAEditar = () => {
     router.push(`/mis-publicaciones/${publicacion.id}/editar`)
   }
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
   const irAParametros = () => {
   router.push(`/propiedades/parametros?publicacionId=${publicacion.id}&origen=mis-publicaciones`)
@@ -160,22 +134,6 @@ export default function PublicacionCard({
                 {precioFormateado}
               </p>
 
-<<<<<<< HEAD
-          <div className="mb-4 grid min-h-[48px] grid-cols-3 overflow-hidden rounded-xl border border-[#ddd4c8] bg-[#f7f2ec]">
-            <div className="flex items-center justify-center gap-2 border-r border-[#ddd4c8] px-2">
-              <Bath className="h-4 w-4 shrink-0 text-[#e6a04b]" />
-              <span className="text-[14px] text-[#444]">{publicacion.nroBanos ?? '-'}</span>
-            </div>
-
-            <div className="flex items-center justify-center gap-2 border-r border-[#ddd4c8] px-2">
-              <BedDouble className="h-4 w-4 shrink-0 text-[#e6a04b]" />
-              <span className="text-[14px] text-[#444]">{publicacion.nroCuartos ?? '-'}</span>
-            </div>
-
-            <div className="flex items-center justify-center gap-2 px-2">
-              <Square className="h-4 w-4 shrink-0 text-[#e6a04b]" />
-              <span className="text-[14px] text-[#444]">{areaFormateada}</span>
-=======
               <div className="mt-2 grid grid-cols-3 gap-2 text-xs text-gray-500">
                 <div className="flex items-center gap-1">
                   <BedDouble size={14} />
@@ -220,7 +178,6 @@ export default function PublicacionCard({
                   {toggleError}
                 </span>
               )}
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
             </div>
           </div>
 
@@ -272,8 +229,4 @@ export default function PublicacionCard({
       />
     </>
   )
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83

@@ -67,16 +67,6 @@ export const DropdownOrden = <T extends string = string>({
   }, [isOpen])
 
   const handleSelect = useCallback(
-<<<<<<< HEAD
-    (optionValue: T) => {
-      setInternalValue(optionValue)
-      onChange(optionValue)
-      setIsOpen(false)
-    },
-    [onChange]
-  )
-
-=======
   async (optionValue: T) => {
     setInternalValue(optionValue)
     onChange(optionValue)
@@ -99,7 +89,6 @@ export const DropdownOrden = <T extends string = string>({
   [onChange]
 )
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   const selectedOption = options.find((opt) => opt.value === currentValue)
   const hasSelection = selectedOption !== undefined
 

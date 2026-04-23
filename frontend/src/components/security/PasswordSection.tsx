@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-import { Eye, LockKeyhole } from "lucide-react";
-
-type PasswordFieldProps = {
-  label: string;
-  placeholder: string;
-};
-
-function PasswordField({ label, placeholder }: PasswordFieldProps) {
-=======
 "use client";
 
 import { Eye, EyeOff, LockKeyhole } from "lucide-react";
@@ -30,7 +20,6 @@ function PasswordField({
 }: PasswordFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   return (
     <div className="space-y-2">
       <label className="text-sm font-medium text-neutral-700">{label}</label>
@@ -39,26 +28,15 @@ function PasswordField({
         <LockKeyhole className="h-4 w-4 text-neutral-400" />
 
         <input
-<<<<<<< HEAD
-          type="password"
-          placeholder={placeholder}
-=======
           type={showPassword ? "text" : "password"}
           placeholder={placeholder}
           value={value}
           onChange={(e) => onChange(e.target.value)}
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
           className="h-11 w-full border-none bg-transparent px-3 text-sm text-neutral-900 outline-none"
         />
 
         <button
           type="button"
-<<<<<<< HEAD
-          className="text-neutral-400 transition hover:text-neutral-600"
-          aria-label={`Mostrar ${label.toLowerCase()}`}
-        >
-          <Eye className="h-4 w-4" />
-=======
           onClick={() => setShowPassword((prev) => !prev)}
           className="text-neutral-400 transition hover:text-neutral-600"
           aria-label={
@@ -72,7 +50,6 @@ function PasswordField({
           ) : (
             <Eye className="h-4 w-4" />
           )}
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
         </button>
       </div>
     </div>
@@ -80,8 +57,6 @@ function PasswordField({
 }
 
 export default function PasswordSection() {
-<<<<<<< HEAD
-=======
   const [passwordActual, setPasswordActual] = useState("");
   const [nuevaPassword, setNuevaPassword] = useState("");
   const [confirmarPassword, setConfirmarPassword] = useState("");
@@ -245,7 +220,6 @@ export default function PasswordSection() {
     }
   };
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   return (
     <div className="space-y-6">
       <header>
@@ -258,43 +232,24 @@ export default function PasswordSection() {
       </header>
 
       <div className="max-w-xl rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-<<<<<<< HEAD
-        <form className="space-y-4">
-          <PasswordField
-            label="Ingresa tu contraseña actual"
-            placeholder="••••••••"
-=======
         <form className="space-y-4" onSubmit={handleSubmit}>
           <PasswordField
             label="Ingresa tu contraseña actual"
             placeholder="••••••••"
             value={passwordActual}
             onChange={setPasswordActual}
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
           />
 
           <PasswordField
             label="Ingresa tu nueva contraseña"
             placeholder="••••••••"
-<<<<<<< HEAD
-=======
             value={nuevaPassword}
             onChange={setNuevaPassword}
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
           />
 
           <PasswordField
             label="Confirma tu nueva contraseña"
             placeholder="••••••••"
-<<<<<<< HEAD
-          />
-
-          <button
-            type="submit"
-            className="mt-2 inline-flex w-full items-center justify-center rounded-lg bg-orange-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-600"
-          >
-            Cambiar contraseña
-=======
             value={confirmarPassword}
             onChange={setConfirmarPassword}
           />
@@ -325,14 +280,9 @@ export default function PasswordSection() {
               : bloqueado
               ? "Bloqueado"
               : "Cambiar contraseña"}
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
           </button>
         </form>
       </div>
     </div>
   );
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83

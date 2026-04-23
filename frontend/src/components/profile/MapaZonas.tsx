@@ -53,12 +53,8 @@ interface Propiedad {
 interface MapaZonasProps {
     zonas: Zona[] // Todas las zonas para mostrar en el mapa
     zonasConPropiedades: number[] // IDs de zonas donde mostrar propiedades
-<<<<<<< HEAD
-}
-=======
     zonaSeleccionadaId?: number | null
  }
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
@@ -116,12 +112,8 @@ function getPolygonFromGeometria(geometria: any): LatLngExpression[] | null {
 
 export default function MapaZonas({
     zonas = [],
-<<<<<<< HEAD
-    zonasConPropiedades = [],
-=======
     zonasConPropiedades,
     zonaSeleccionadaId = null,
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 }: MapaZonasProps) {
     const center: [number, number] = [-17.3895, -66.1568]
     const [propiedades, setPropiedades] = useState<Propiedad[]>([])
@@ -189,8 +181,6 @@ export default function MapaZonas({
         )
     }
 
-<<<<<<< HEAD
-=======
     function CentrarZona({
         zonas,
         zonaSeleccionadaId,
@@ -232,7 +222,6 @@ export default function MapaZonas({
         return null
     }
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     return (
         <MapContainer
             center={center}
@@ -245,11 +234,8 @@ export default function MapaZonas({
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-<<<<<<< HEAD
-=======
             <CentrarZona zonas={zonas} zonaSeleccionadaId={zonaSeleccionadaId} />
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
             {/* Dibujar TODAS las zonas en el mapa */}
             {zonas.map((zona) => {

@@ -23,8 +23,6 @@ type VideoItem = {
   file?: File
   sourceUrl?: string
 }
-<<<<<<< HEAD
-=======
 
 function getApiUrl() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL
@@ -35,7 +33,6 @@ function getApiUrl() {
 
   return apiUrl
 }
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 export default function ContenidoMultimediaPage() {
   return (
@@ -61,10 +58,7 @@ function ContenidoMultimediaPageContent() {
 
   const [isUploadingImages, setIsUploadingImages] = useState(false)
   const [isUploadingVideos, setIsUploadingVideos] = useState(false)
-<<<<<<< HEAD
-=======
   const [isPublishing, setIsPublishing] = useState(false)
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
   const [showPlanModal, setShowPlanModal] = useState(false)
 
@@ -145,18 +139,10 @@ function ContenidoMultimediaPageContent() {
     }
 
     const allowedTypes = ['video/mp4', 'video/x-matroska', 'video/avi', 'video/x-msvideo']
-<<<<<<< HEAD
-
     const maxSize = 20 * 1024 * 1024
 
     setIsUploadingVideos(true)
 
-=======
-    const maxSize = 20 * 1024 * 1024
-
-    setIsUploadingVideos(true)
-
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     const validVideos: VideoItem[] = []
 
     for (const file of files) {
@@ -263,8 +249,6 @@ function ContenidoMultimediaPageContent() {
       return prev.filter((video) => video.id !== id)
     })
   }
-<<<<<<< HEAD
-=======
 
   const uploadImages = async (token: string) => {
     if (!images.length) return
@@ -318,7 +302,6 @@ function ContenidoMultimediaPageContent() {
       }
     }
   }
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
   const handlePublish = async () => {
     setPublishError('')
@@ -338,11 +321,6 @@ function ContenidoMultimediaPageContent() {
       return
     }
 
-<<<<<<< HEAD
-    // Aquí luego irá tu llamada real al backend
-    // Si todo sale bien, abrimos el modal de éxito
-    setShowSuccessModal(true)
-=======
     const token = localStorage.getItem('token')
 
     if (!token) {
@@ -373,7 +351,6 @@ function ContenidoMultimediaPageContent() {
     } finally {
       setIsPublishing(false)
     }
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   }
 
   return (

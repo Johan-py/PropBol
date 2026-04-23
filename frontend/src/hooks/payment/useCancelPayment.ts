@@ -5,16 +5,6 @@ export function useCancelPayment() {
   const router = useRouter()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-<<<<<<< HEAD
-  // Abrir/cerrar modal
-  const openModal = () => setIsModalOpen(true)
-  const closeModal = () => setIsModalOpen(false)
-
-  // Confirmar cancelación: navega al inicio
-  const confirmCancel = () => {
-    setIsModalOpen(false)
-    router.push('/')
-=======
   const openModal = () => setIsModalOpen(true)
   const closeModal = () => setIsModalOpen(false)
 
@@ -36,7 +26,6 @@ export function useCancelPayment() {
     }
 
     router.push('/cobros-suscripciones')
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   }
 
   useEffect(() => {

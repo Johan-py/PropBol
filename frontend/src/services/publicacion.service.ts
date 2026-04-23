@@ -1,12 +1,8 @@
-<<<<<<< HEAD
-import type { MisPublicacionesItem } from '@/types/publicacion'
-=======
 import type {
   EditarPublicacionPayload,
   MisPublicacionesItem,
   PublicacionDetalle
 } from '@/types/publicacion'
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 function getApiUrl() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL
@@ -48,8 +44,6 @@ export async function obtenerMisPublicaciones(): Promise<MisPublicacionesItem[]>
   }
 
   return data.data
-<<<<<<< HEAD
-=======
 }
 
 export async function obtenerDetallePublicacion(id: number): Promise<PublicacionDetalle> {
@@ -92,7 +86,6 @@ export async function editarPublicacion(id: number, payload: EditarPublicacionPa
   }
 
   return data.data
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 }
 
 export async function eliminarPublicacion(id: number) {
@@ -114,8 +107,4 @@ export async function eliminarPublicacion(id: number) {
   }
 
   return data
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83

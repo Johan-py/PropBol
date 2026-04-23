@@ -121,15 +121,9 @@ export const ResultadosBusqueda = () => {
       />
       {inmueblesOrdenados.length > 0 ? (
         <div className="grid grid-cols-1 gap-4">
-<<<<<<< HEAD
-          {inmueblesOrdenados.map((item: unknown) => {
-            const inmueble = item as Inmueble
-            return <TarjetaInmueble key={inmueble.id} inmueble={inmueble} />
-=======
           {inmueblesOrdenados.map((item: unknown, index: number) => {
             const inmueble = item as Inmueble
             return <TarjetaInmueble key={inmueble.id} inmueble={inmueble} posicion={index + 1} />
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
           })}
         </div>
       ) : (

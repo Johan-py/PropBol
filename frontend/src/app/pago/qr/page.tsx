@@ -1,20 +1,5 @@
 'use client'
 
-<<<<<<< HEAD
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-
-import Stepper from '@/components/ui/Stepper'
-import { useCurrentPayment } from '@/hooks/payment/useCurrentPayment'
-import { usePaymentStatus } from '@/hooks/payment/usePaymentStatus'
-import { useCancelPayment } from '@/hooks/payment/useCancelPayment'
-
-import { Timer } from '@/components/payment/Timer'
-import { QRDisplay } from '@/components/payment/QRDisplay'
-import { SuccessView } from '@/components/payment/SuccessView'
-import { CancelPaymentModal } from '@/components/payment/CancelPaymentModal'
-import { ArrowLeft } from 'lucide-react'
-=======
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Clock } from 'lucide-react'
@@ -27,33 +12,11 @@ import { ExpiredView } from '@/components/payment/ExpiredView'
 import { CancelPaymentModal } from '@/components/payment/CancelPaymentModal'
 
 const BANKS = ['BNB', 'Banco Unión', 'Económica', 'Fassil']
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 export default function PagoQRPage() {
   const router = useRouter()
   const { payment, loading, error } = useCurrentPayment()
   const { isModalOpen, openModal, closeModal, confirmCancel } = useCancelPayment()
-<<<<<<< HEAD
-
-  // FORZADO: 10 minutos de gracia para que no salga la pantalla roja
-  const [timeLeft, setTimeLeft] = useState<number | null>(600)
-
-  // Hook de estatus (le pasamos el ID si existe)
-  const { status } = usePaymentStatus(payment?.id ?? null)
-
-  useEffect(() => {
-    if (!payment) return
-
-    // Si ya se pagó, no necesitamos cronómetro
-    if (status === 'pagado') return
-
-    const intervalId = setInterval(() => {
-      setTimeLeft((prev) => (prev && prev > 0 ? prev - 1 : 0))
-    }, 1000)
-
-    return () => clearInterval(intervalId)
-  }, [payment, status])
-=======
   const { status } = usePaymentStatus(payment?.id ?? null)
 
   const [timeLeft, setTimeLeft] = useState<number | null>(null)
@@ -92,7 +55,6 @@ export default function PagoQRPage() {
     `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
 
   const isUrgent = timeLeft !== null && timeLeft < 60
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
   if (loading)
     return (
@@ -104,36 +66,17 @@ export default function PagoQRPage() {
   if (error || !payment)
     return (
       <div className="min-h-screen flex flex-col items-center justify-center font-sans p-4">
-<<<<<<< HEAD
-        <p className="text-red-500 mb-4 text-center font-bold">⚠️ No se encontró la transacción</p>
-        <p className="text-stone-500 text-sm mb-6 text-center">
-          Asegúrate de que en Prisma Studio el Usuario 1 tenga un registro PENDIENTE.
-=======
         <p className="text-red-500 mb-4 font-bold">⚠️ No se encontró la transacción</p>
         <p className="text-stone-500 text-sm mb-6 text-center">
           Selecciona un plan para iniciar el proceso de pago.
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
         </p>
         <a href="/cobros-suscripciones" className="bg-stone-800 text-white px-6 py-2 rounded-lg font-medium">
           Ver planes
         </a>
       </div>
     )
-<<<<<<< HEAD
-  }
-
-  // Si el backend confirma que se pagó, mostramos éxito
-  if (status === 'pagado') return <SuccessView />
-
-  const formatTime = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
-  }
-=======
 
   if (isExpired) return <ExpiredView planId={payment?.planId} />
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
   return (
     <>
@@ -200,11 +143,6 @@ export default function PagoQRPage() {
               </span>
             </div>
 
-<<<<<<< HEAD
-          <div className="p-6 border-b border-stone-100 text-center">
-            <h1 className="text-xl font-medium text-stone-600">Total a pagar</h1>
-            <p className="text-4xl font-bold text-stone-900 mt-2">Bs. {payment.monto.toFixed(2)}</p>
-=======
             {/* QR card */}
             <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-8 flex flex-col items-center">
               <QRDisplay value={payment.qrContent || 'PROBOL_TEST_TOKEN'} size={250} />
@@ -232,7 +170,6 @@ export default function PagoQRPage() {
                 ))}
               </div>
             </div>
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
           </div>
 
           {/* ──── RIGHT: sidebar ──── */}
@@ -325,15 +262,6 @@ export default function PagoQRPage() {
               </div>
             </div>
 
-<<<<<<< HEAD
-          <div className="px-6 py-8 flex justify-center bg-white">
-            <QRDisplay
-              value={payment.qrContent || 'PROBOL_TEST_TOKEN'}
-              id={payment.referencia}
-              size={220}
-            />
-=======
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
           </div>
         </div>
       </main>

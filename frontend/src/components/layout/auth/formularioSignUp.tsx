@@ -53,8 +53,6 @@ type GooglePopupSuccessPayload = {
   };
 };
 
-<<<<<<< HEAD
-=======
 type DiscordPopupSuccessPayload = {
   type: "propbol:discord-login-success";
   message: string;
@@ -75,7 +73,6 @@ type DiscordPopupErrorPayload = {
 
 type DiscordPopupMessage = DiscordPopupSuccessPayload | DiscordPopupErrorPayload;
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 const MAX_NAME_LENGTH = 30;
 const MAX_LAST_NAME_LENGTH = 30;
 const SESSION_DURATION_MS = 60 * 60 * 1000;
@@ -159,8 +156,6 @@ const saveGoogleSession = (payload: GooglePopupSuccessPayload) => {
   window.dispatchEvent(new Event("auth-state-changed"));
 };
 
-<<<<<<< HEAD
-=======
 const saveDiscordSession = (payload: DiscordPopupSuccessPayload) => {
   const userName =
     payload.user.nombre && payload.user.apellido
@@ -189,7 +184,6 @@ const saveDiscordSession = (payload: DiscordPopupSuccessPayload) => {
   window.dispatchEvent(new Event("auth-state-changed"));
 };
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 export default function SignUpForm() {
   const router = useRouter();
   const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
@@ -512,17 +506,6 @@ export default function SignUpForm() {
     }
   };
 
-<<<<<<< HEAD
-  const handleGoogleSuccess = async (payload: GooglePopupSuccessPayload) => {
-    setServerError("");
-
-    try {
-      saveGoogleSession(payload);
-      router.replace("/");
-    } catch {
-      setServerError("No se pudo guardar la sesión iniciada con Google.");
-    }
-=======
   const handleFacebookRegister = () => {
   setServerError("Registro con Facebook próximamente disponible.");
 };
@@ -627,7 +610,6 @@ export default function SignUpForm() {
     } catch {
       setServerError("No se pudo guardar la sesión iniciada con Google.");
     }
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   };
 
   return (

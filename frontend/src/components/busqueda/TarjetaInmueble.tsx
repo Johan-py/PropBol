@@ -6,16 +6,10 @@ import { useState } from 'react'
 
 interface TarjetaInmuebleProps {
   inmueble: Inmueble
-<<<<<<< HEAD
-}
-
-export const TarjetaInmueble = ({ inmueble }: TarjetaInmuebleProps) => {
-=======
   posicion?: number
 }
 
 export const TarjetaInmueble = ({ inmueble, posicion }: TarjetaInmuebleProps) => {
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   const [isHovered, setIsHovered] = useState(false)
   const formatoMoneda = new Intl.NumberFormat('es-BO', {
     style: 'currency',
@@ -27,9 +21,6 @@ export const TarjetaInmueble = ({ inmueble, posicion }: TarjetaInmuebleProps) =>
     typeof inmueble.ubicacion === 'object' && inmueble.ubicacion !== null
       ? `${inmueble.ubicacion.zona ?? ''}, ${inmueble.ubicacion.ciudad ?? ''}`
       : ''
-<<<<<<< HEAD
-
-=======
   const handleClick = async () => {
     try {
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
@@ -49,16 +40,12 @@ export const TarjetaInmueble = ({ inmueble, posicion }: TarjetaInmuebleProps) =>
       console.error('Error tracking click:', error)
     }
   }
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   return (
     <div
       className="group flex flex-col w-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300 cursor-pointer"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-<<<<<<< HEAD
-=======
       onClick={handleClick}
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     >
       <div className="relative aspect-[4/3] w-full bg-gray-200 overflow-hidden">
         <Image

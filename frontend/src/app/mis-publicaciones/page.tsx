@@ -1,24 +1,5 @@
 'use client'
 
-<<<<<<< HEAD
-import PublicacionCard from '@/components/publicacion/PublicacionCard'
-import { useMisPublicaciones } from '@/hooks/useMisPublicaciones'
-
-export default function MisPublicacionesPage() {
-  const { publicaciones, loading, error, removerPublicacionDeLista } = useMisPublicaciones()
-
-  if (loading) {
-    return <div className="px-4 py-8 sm:px-6 lg:px-8">Cargando publicaciones...</div>
-  }
-
-  if (error) {
-    return <div className="px-4 py-8 text-red-600 sm:px-6 lg:px-8">{error}</div>
-  }
-
-  return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-      <h1 className="mb-6 text-3xl font-bold text-black sm:mb-8">Mis publicaciones</h1>
-=======
 import { useState, useEffect } from 'react'
 import PublicacionCard from '@/components/publicacion/PublicacionCard'
 import { publicacionService } from '@/services/publicacionn.service'
@@ -140,7 +121,6 @@ export default function MisPublicacionesList() {
           )}
         </p>
       </div>
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
       {/* 👈 NUEVO: Filtros */}
       <div className="flex gap-2 border-b border-gray-200 pb-2">
@@ -186,13 +166,6 @@ export default function MisPublicacionesList() {
           </button>
         </div>
       ) : (
-<<<<<<< HEAD
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {publicaciones.map((publicacion) => (
-            <div key={publicacion.id} className="mx-auto w-full max-w-[360px] sm:max-w-none">
-              <PublicacionCard publicacion={publicacion} onDeleted={removerPublicacionDeLista} />
-            </div>
-=======
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {publicacionesFiltradas.map(pub => (
             <PublicacionCard
@@ -201,14 +174,9 @@ export default function MisPublicacionesList() {
               onDeleted={handleDeleted}
               onEstadoChange={handleEstadoChange}
             />
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
           ))}
         </div>
       )}
     </div>
   )
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83

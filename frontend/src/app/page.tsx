@@ -1,24 +1,23 @@
-<<<<<<< HEAD
+
 import { HomeBanner } from '@/components/home/HomeBanner'
 import { HomeCarousel } from '@/components/home/HomeCarousel'
 import ExploreSection from '@/components/layout/ExploreSection'
 import FilterPanel from '@/components/rentals/FilterPanel'
-=======
+
 import { HomeCarousel } from '@/components/home/HomeCarousel'
 import FeaturedCitiesSection from '@/components/home/FeaturedCitiesSection'
 import ExploreSection from '@/components/layout/ExploreSection'
 import { getCities } from '@/services/city.service'
-<<<<<<< HEAD
+
 import VisualFiltersSection from "@/components/VisualFilters/VisualFiltersSection";
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
-=======
+
 import dynamic from 'next/dynamic'
 import VisualFiltersSection from '@/components/VisualFilters/VisualFiltersSection'
 import HomeBlogsSection from '@/components/home/HomeBlogsSection'
 
 const TourGuiado = dynamic(() => import('@/components/ui/TourGuiado'), { ssr: false })
 
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
+
 interface BannerRaw {
   id: number;
   url_imagen: string;
@@ -60,11 +59,11 @@ const fetchBanners = async (): Promise<BannerData[]> => {
 };
 
 export default async function Home() {
-<<<<<<< HEAD
+
   const banners = await fetchBanners()
-<<<<<<< HEAD
+
   const mainBanner = banners[0] // Tomamos el primero de la base de datos
-=======
+
   const cities = await getCities()
 
   /*
@@ -73,13 +72,13 @@ export default async function Home() {
     la sección FeaturedCitiesSection seguirá consumiendo desde getCities().
   */
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
+
   // No toquen esto :v
-=======
+
   const banners = await fetchBanners();
   const cities = await getCities();
 
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
+
   return (
     <main className="flex min-h-screen flex-col items-center bg-gray-50">
       <TourGuiado />
@@ -114,14 +113,13 @@ export default async function Home() {
         </div>
       </div>
     </main>
-<<<<<<< HEAD
+
   )
-<<<<<<< HEAD
+
 }
-=======
+
 }
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
-=======
+
   );
 }
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
+

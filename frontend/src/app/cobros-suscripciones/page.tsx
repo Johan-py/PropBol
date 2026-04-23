@@ -1,10 +1,6 @@
 'use client'
 
-<<<<<<< HEAD
-import { useState } from 'react'
-=======
 import { useEffect, useState } from 'react'
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 import { useRouter } from 'next/navigation'
 
 type Plan = {
@@ -21,17 +17,10 @@ const plansData: Plan[] = [
   {
     id: 1,
     name: 'Básico',
-<<<<<<< HEAD
-    price: 59,
-    description: 'Ideal para comenzar',
-    comment: 'Perfecto para empezar y explorar nuestras funciones esenciales sin complicaciones.',
-    benefits: ['Acceso limitado', 'Soporte básico', '1 usuario'],
-=======
     price: 0,
     description: 'Ideal para comenzar',
     comment: 'Perfecto para empezar y explorar nuestras funciones esenciales sin complicaciones.',
     benefits: ['3 publicaciones activas', 'Acceso limitado', 'Soporte basico', '1 usuario'],
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     subscribers: 25
   },
   {
@@ -40,44 +29,24 @@ const plansData: Plan[] = [
     price: 99,
     description: 'Para usuarios intermedios',
     comment:
-<<<<<<< HEAD
-      'La opción más elegida para empresas pequeñas: balance perfecto entre funciones y precio.',
-    benefits: ['Acceso completo', 'Soporte prioritario', '5 usuarios'],
-=======
       'La opcion mas elegida para empresas pequeñas: balance perfecto entre funciones y precio.',
     benefits: ['10 publicaciones activas', 'Acceso completo', 'Soporte prioritario', '5 usuarios'],
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     subscribers: 60
   },
   {
     id: 3,
     name: 'Pro',
     price: 199,
-<<<<<<< HEAD
-    description: 'Máximo rendimiento',
-    comment:
-      'Todo incluido, ideal para usuarios avanzados o empresas que buscan máximo rendimiento.',
-    benefits: ['Todo incluido', 'Soporte 24/7', 'Usuarios ilimitados'],
-=======
     description: 'Maximo rendimiento',
     comment:
       'Todo incluido, ideal para usuarios avanzados o empresas que buscan maximo rendimiento.',
     benefits: ['Publicaciones ilimitadas', 'Todo incluido', 'Soporte 24/7', 'Usuarios ilimitados'],
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     subscribers: 10
   }
 ]
 
 export default function CobrosSuscripciones() {
   const [plans] = useState(plansData)
-<<<<<<< HEAD
-  const maxSubscribers = Math.max(...plans.map((plan) => plan.subscribers))
-  const router = useRouter()
-
-  return (
-    <div className="min-h-screen bg-white flex flex-col items-center p-10 font-inter">
-      <h1 className="text-4xl font-bold text-stone-900 mb-10">Planes de Suscripción</h1>
-=======
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const router = useRouter()
 
@@ -114,7 +83,6 @@ export default function CobrosSuscripciones() {
       <div className="w-full max-w-6xl">
         <div className="mb-10">
           <h1 className="text-4xl font-bold text-stone-900">Planes de membresía</h1>
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
           <p className="text-stone-400 mt-2 text-lg">
             Amplia tu alcance en el mercado inmobiliario de Bolivia.
@@ -159,10 +127,6 @@ export default function CobrosSuscripciones() {
                 <p className="text-sm text-stone-600 mb-4">{plan.description}</p>
               </div>
 
-<<<<<<< HEAD
-            <div>
-              <h2 className="text-3xl font-semibold text-stone-900 mb-2">{plan.name}</h2>
-=======
               <ul className="space-y-2 mb-4">
                 {plan.benefits.map((b, i) => (
                   <li key={i} className="flex items-center gap-2 text-sm text-stone-700">
@@ -171,27 +135,9 @@ export default function CobrosSuscripciones() {
                   </li>
                 ))}
               </ul>
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
               <p className="text-sm text-stone-500 mb-4">{plan.comment}</p>
 
-<<<<<<< HEAD
-              <p className="text-base text-stone-600 mb-4">{plan.description}</p>
-            </div>
-
-            <ul className="mb-2 space-y-1 pl-4">
-              {plan.benefits.map((b, i) => (
-                <li key={i} className="text-base text-stone-600 list-disc">
-                  {b}
-                </li>
-              ))}
-            </ul>
-
-            <p className="text-base text-stone-600 mb-4">{plan.comment}</p>
-
-            <div className="flex flex-col gap-2 mt-auto">
-=======
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
               <button
                 onClick={() => handleSubscription(plan)}
                 disabled={isLoggedIn && plan.id === currentPlanId}

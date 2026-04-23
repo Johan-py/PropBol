@@ -7,13 +7,10 @@ interface Step {
   id: number
   name: string
   path: string
-<<<<<<< HEAD
-=======
 }
 
 interface StepperProps {
   onBackClick?: () => void
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 }
 
 const steps: Step[] = [
@@ -22,41 +19,6 @@ const steps: Step[] = [
   { id: 3, name: 'Confirmación', path: '/pago/confirmacion' }
 ]
 
-<<<<<<< HEAD
-export default function Stepper() {
-  const pathname = usePathname()
-  const currentStep = steps.findIndex((step) => pathname.startsWith(step.path)) + 1
-
-  return (
-    <div className="flex items-center justify-end space-x-2 text-sm">
-      {steps.map((step, idx) => (
-        <div key={step.id} className="flex items-center">
-          <Link
-            href={step.path}
-            className={`flex items-center justify-center w-8 h-8 rounded-full transition-colors ${
-              step.id === currentStep
-                ? 'bg-green-600 text-white'
-                : step.id < currentStep
-                  ? 'bg-green-200 text-green-800'
-                  : 'bg-gray-200 text-gray-500'
-            }`}
-          >
-            {step.id}
-          </Link>
-          <span
-            className={`ml-2 ${
-              step.id === currentStep ? 'font-bold text-gray-900' : 'text-gray-500'
-            }`}
-          >
-            {step.name}
-          </span>
-          {idx < steps.length - 1 && <span className="mx-2 text-gray-300">→</span>}
-        </div>
-      ))}
-    </div>
-  )
-}
-=======
 export default function Stepper({ onBackClick }: StepperProps = {}) {
   const pathname = usePathname()
   
@@ -118,4 +80,3 @@ export default function Stepper({ onBackClick }: StepperProps = {}) {
     </div>
   )
 }
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83

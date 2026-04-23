@@ -221,12 +221,9 @@ interface MapViewProps {
   isDrawingMode?: boolean
   polygonPoints?: [number, number][]
   isPolygonClosed?: boolean
-<<<<<<< HEAD
-=======
   isZoneEditingMode?: boolean
   editablePolygonPoints?: [number, number][]
   onEditablePointDrag?: (index: number, lat: number, lng: number) => void
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   onMapClick?: (latlng: L.LatLng) => void
   onPointClick?: (index: number) => void
   isLoading?: boolean
@@ -262,12 +259,9 @@ export default function MapView({
   isDrawingMode = false,
   polygonPoints = [],
   isPolygonClosed = false,
-<<<<<<< HEAD
-=======
   isZoneEditingMode = false,
   editablePolygonPoints = [],
   onEditablePointDrag,
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   onMapClick,
   onPointClick,
   zonas = [],
@@ -336,11 +330,7 @@ export default function MapView({
           onMapClick={(latlng) => {
             if (isDrawingMode && onMapClick) {
               onMapClick(latlng)
-<<<<<<< HEAD
-            } else if (!isDrawingMode) {
-=======
             } else if (!isDrawingMode && !isZoneEditingMode) {
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
               onSelect?.(null)
               onZoneSelect?.(null) // criterio 10: clic neutral desactiva zona
             }
@@ -392,8 +382,6 @@ export default function MapView({
             }}
           />
         )}
-<<<<<<< HEAD
-=======
 
         {isZoneEditingMode && editablePolygonPoints.length >= 3 && (
           <>
@@ -423,7 +411,6 @@ export default function MapView({
             ))}
           </>
         )}
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
         {/* --- FIN CÓDIGO HU8 --- */}
         {selectedProperty && (
           <FlyToSelected

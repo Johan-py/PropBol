@@ -42,8 +42,6 @@ type MeResponse = {
     rol?: string;
   };
 };
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 class SessionValidationError extends Error {
   statusCode: number;
@@ -76,10 +74,8 @@ class SessionValidationError extends Error {
  
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const SESSION_EXPIRES_KEY = "propbol_session_expires";
-<<<<<<< HEAD
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
-=======
+
  
 >>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 const filters: NotificationFilter[] = [
@@ -203,31 +199,9 @@ export default function Navbar() {
     try {
       const validatedUser = await fetchCurrentUser(token);
 
-<<<<<<< HEAD
-      const finalName =
-        validatedUser.nombre && validatedUser.apellido
-          ? `${validatedUser.nombre} ${validatedUser.apellido}`
-          : validatedUser.nombre || validatedUser.correo;
-
-      const finalUser: User = {
-        name: finalName,
-        email: validatedUser.correo,
-        avatar: validatedUser.avatar ?? null,
-      };
-
-      localStorage.setItem(
-        USER_STORAGE_KEY,
-        JSON.stringify({
-          name: finalUser.name,
-          email: finalUser.email,
-          avatar: finalUser.avatar,
-        }),
-      );
-=======
       const finalUser: User = buildSessionUser(validatedUser);
 
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(finalUser));
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
       localStorage.setItem("nombre", finalUser.name);
       localStorage.setItem("correo", finalUser.email);
       localStorage.setItem("avatar", finalUser.avatar ?? "");
@@ -388,8 +362,6 @@ export default function Navbar() {
             </div>
  
             <div className="flex items-center gap-4">
-<<<<<<< HEAD
-=======
               <Link
                 href="/registro-inmueble"
                 className="hidden md:block rounded-md bg-[#E68B25] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-amber-700"
@@ -397,7 +369,6 @@ export default function Navbar() {
                 Publica tu inmueble
               </Link>
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
               <div className="relative" ref={notificationPanelRef}>
                 <button
                   id="tour-notificaciones"
@@ -557,9 +528,7 @@ export default function Navbar() {
                                     ) {
                                       void markAsRead(notification.id);
                                     }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
+
 
                                     toggleNotifications()
                                     router.push(`/notificaciones/${notification.id}`)
@@ -715,11 +684,7 @@ export default function Navbar() {
               </button>
             </div>
 
-<<<<<<< HEAD
-            <nav className="mt-10 flex flex-col gap-4">
-=======
             <nav className="mt-10 flex flex-col gap-2">
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
               <Link
                 href="/registro-inmueble"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -728,7 +693,7 @@ export default function Navbar() {
                 Publica tu inmueble
               </Link>
 
-<<<<<<< HEAD
+
               <Link
                 href="/propiedades"
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -781,12 +746,10 @@ export default function Navbar() {
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
-<<<<<<< HEAD
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
+
                 Planes de membresia
-=======
                 Planes de membresía
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
+
               </Link>
 
               <Link

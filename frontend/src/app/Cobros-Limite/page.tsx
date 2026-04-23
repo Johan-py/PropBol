@@ -87,8 +87,4 @@ export default function Page() {
       </div>
     </div>
   )
-<<<<<<< HEAD:frontend/src/app/HU-03/page.tsx
 }
-=======
-}
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83:frontend/src/app/Cobros-Limite/page.tsx

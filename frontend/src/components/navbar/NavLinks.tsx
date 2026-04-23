@@ -38,7 +38,7 @@ export default function NavLinks() {
           <ChevronDown className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`} />
         </button>
 
-<<<<<<< HEAD
+
       <Link
         href="/propiedades"
         className="hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition"
@@ -83,7 +83,7 @@ export default function NavLinks() {
         )}
       </div>
 
-<<<<<<< HEAD
+
       <Link href="/blogs" className={linkStyle}>Blogs</Link>
       <Link href="/cobros-suscripciones" className={linkStyle}>Planes de membresia</Link>
       <Link href="/ayuda" className={linkStyle}>Ayuda</Link>
