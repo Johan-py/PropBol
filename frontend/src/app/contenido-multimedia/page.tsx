@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import FotosSection from '@/components/contenido-multimedia/FotosSection'
 import VideosSection from '@/components/contenido-multimedia/VideosSection'
 import PublicarSection from '@/components/contenido-multimedia/PublicarSection'
-import SuccessModal from '@/components/contenido-multimedia/SuccessModal'
 import PlanModal from '@/components/contenido-multimedia/PlanModal'
 
 type ImageItem = {
@@ -61,7 +60,6 @@ function ContenidoMultimediaPageContent() {
   const [isUploadingVideos, setIsUploadingVideos] = useState(false)
   const [isPublishing, setIsPublishing] = useState(false)
 
-  const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [showPlanModal, setShowPlanModal] = useState(false)
 
   const imageInputRef = useRef<HTMLInputElement | null>(null)
@@ -345,7 +343,7 @@ function ContenidoMultimediaPageContent() {
       await uploadImages(token)
       await uploadYoutubeLinks(token)
 
-      setShowSuccessModal(true)
+      router.push(`/resumen-final?id=${publicacionId}`)
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Ocurrió un error al registrar el contenido multimedia.'
@@ -384,8 +382,7 @@ function ContenidoMultimediaPageContent() {
 
           <button
             type="button"
-            onClick={() => router.push(`/propiedades/parametros?publicacionId=${publicacionId || ""}`)
-            }
+            onClick={() => router.push(`/propiedades/parametros?publicacionId=${publicacionId || ""}`)}
             style={{
               background: 'transparent',
               border: 'none',
@@ -442,14 +439,6 @@ function ContenidoMultimediaPageContent() {
           onPublish={handlePublish}
           publishError={isPublishing ? 'Publicando contenido multimedia...' : publishError}
           canPublish={hasMultimedia && !isPublishing}
-        />
-
-        <SuccessModal
-          open={showSuccessModal}
-          onClose={() => {
-            setShowSuccessModal(false)
-            router.push('/')
-          }}
         />
 
         <PlanModal
