@@ -1,5 +1,6 @@
 'use client'
 
+import { CapacidadSidebar } from '@/components/filters/CapacidadSidebar'
 import MisZonasSidebar from '@/components/map/MisZonasSidebar'
 import { point, polygon } from '@turf/helpers'
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon'
@@ -120,6 +121,17 @@ function BusquedaMapaContent() {
 
   //estado para controlar la autenticación
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCapacidadOpen, setIsCapacidadOpen] = useState(false)
+
+  const toggleCapacidad = () => {
+    setIsCapacidadOpen(!isCapacidadOpen)
+    if (!isCapacidadOpen) {
+      setActiveSidebarView('capacidad')
+      setIsSidebarOpen(true)
+    } else {
+      setActiveSidebarView('results')
+    }
+  }
   const [misZonas, setMisZonas] = useState<ZonaUsuario[]>([])
   const [newZoneName, setNewZoneName] = useState('Nueva zona')
   const [isCreatingCustomZone, setIsCreatingCustomZone] = useState(false)
@@ -141,7 +153,7 @@ function BusquedaMapaContent() {
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
   const [isMounted, setIsMounted] = useState(false)
   const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false)
-  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie'>('results')
+  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad'>('results')
 
   // --- INICIO ESTADOS HU8 ---
   const [isDrawingMode, setIsDrawingMode] = useState(false)
@@ -421,7 +433,7 @@ function BusquedaMapaContent() {
       try {
         const turfCoords = [...polygonPoints, polygonPoints[0]].map((p) => [p[1], p[0]])
         const drawPoly = polygon([turfCoords])
-        
+
         return properties.filter((p: any) => {
           if (p.lat == null || p.lng == null) return false
           const pt = point([p.lng, p.lat])
@@ -435,14 +447,15 @@ function BusquedaMapaContent() {
       }
     }
     if (selectedZoneId !== null) {
-      const zona = zonas.find((z: any) => z.id === selectedZoneId)
+      // CAMBIO: Usar zonasCombinadas para incluir las personalizadas del usuario
+      const zona = zonasCombinadas.find((z: any) => z.id === selectedZoneId)
       if (zona && zona.coordenadas && zona.coordenadas.length >= 3) {
         const coords = [...zona.coordenadas, zona.coordenadas[0]].map((c: any) => [c[1], c[0]])
         return properties.filter((p: any) => p.lat != null && booleanPointInPolygon(point([p.lng, p.lat]), polygon([coords])))
       }
     }
     return properties
-  }, [properties, isPolygonClosed, polygonPoints, selectedZoneId, zonas])
+  }, [properties, isPolygonClosed, polygonPoints, selectedZoneId, zonasCombinadas])
 
   // === 4. ORDENAMIENTO (Usando resultados filtrados) ===
   const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
@@ -452,11 +465,11 @@ function BusquedaMapaContent() {
   // === LÓGICA DE PAGINACIÓN ===
   const [listPage, setListPage] = useState(1);
   const [listPageSize, setListPageSize] = useState<PageSize>(10);
-  
+
   const listTotal = inmueblesOrdenados.length;
   const listTotalPages = Math.max(1, Math.ceil(listTotal / listPageSize));
   const listSafePage = Math.min(Math.max(1, listPage), listTotalPages);
-  
+
   const paginatedProperties = useMemo(() => {
     if (listTotal === 0) return [];
     const start = (listSafePage - 1) * listPageSize;
@@ -559,17 +572,15 @@ function BusquedaMapaContent() {
     <div className="flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90">
       <button
         onClick={() => setViewMode('grid')}
-        className={`p-1 rounded transition-colors ${
-          viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-        }`}
+        className={`p-1 rounded transition-colors ${viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
+          }`}
       >
         <LayoutGrid size={16} />
       </button>
       <button
         onClick={() => setViewMode('list')}
-        className={`p-1 rounded transition-colors ${
-          viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-        }`}
+        className={`p-1 rounded transition-colors ${viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
+          }`}
       >
         <ListIcon size={16} />
       </button>
@@ -587,11 +598,10 @@ function BusquedaMapaContent() {
         <EmptyState />
       ) : (
         <div
-          className={`gap-3 flex flex-col ${
-            viewMode === 'list'
+          className={`gap-3 flex flex-col ${viewMode === 'list'
               ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
               : ''
-          }`}
+            }`}
         >
           {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
             <div
@@ -600,9 +610,8 @@ function BusquedaMapaContent() {
                 setSelectedPropertyId(property.id)
                 onClickItem?.(property)
               }}
-              className={`cursor-pointer transition-all duration-200 rounded-xl ${
-                selectedPropertyId === property.id ? 'ring-2 ring-orange-400 ring-offset-1' : ''
-              }`}
+              className={`cursor-pointer transition-all duration-200 rounded-xl ${selectedPropertyId === property.id ? 'ring-2 ring-orange-400 ring-offset-1' : ''
+                }`}
             >
               {viewMode === 'grid' ? (
                 <PropertyCard
@@ -638,7 +647,7 @@ function BusquedaMapaContent() {
     </div>
   )
 
-    const renderListPaginationFooter = () => (
+  const renderListPaginationFooter = () => (
     <MapaListadoPaginacion
       total={listTotal}
       page={listSafePage}
@@ -661,9 +670,9 @@ function BusquedaMapaContent() {
         <div className="flex flex-col bg-white overflow-hidden" style={{ height: '100dvh' }}>
           <div className="shrink-0" style={{ zIndex: 1002, position: 'relative' }}>
             <FilterBar variant="map" onSearch={(f) => console.log('🔍 Filtros:', f)} onOpenSuperficieFilter={() => {
-             setIsSidebarOpen(true)
-             setActiveSidebarView('superficie')
-              }}  />
+              setIsSidebarOpen(true)
+              setActiveSidebarView('superficie')
+            }} />
           </div>
           <div className="flex flex-1 overflow-hidden">
             <div className="flex-1 relative">
@@ -734,10 +743,10 @@ function BusquedaMapaContent() {
         <div className="shrink-0 overflow-x-auto" style={{ zIndex: 1002, position: 'relative' }}>
           <div className="min-w-max">
             <FilterBar variant="map" onSearch={(f) => console.log('🔍 Filtros:', f)}
-             onOpenSuperficieFilter={() => {
-             setIsSidebarOpen(true)
-             setActiveSidebarView('superficie')
-              }} 
+              onOpenSuperficieFilter={() => {
+                setIsSidebarOpen(true)
+                setActiveSidebarView('superficie')
+              }}
             />
           </div>
         </div>
@@ -914,13 +923,13 @@ function BusquedaMapaContent() {
                   {MenuToggleComponent}
                 </div>
                 <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
-                <PropertyListMobile
-                  onClickItem={(p) => {
-                    setPinnedProperty(p)
-                    setSheetState('peek')
-                  }}
-                />
-                {renderListPaginationFooter()}
+                  <PropertyListMobile
+                    onClickItem={(p) => {
+                      setPinnedProperty(p)
+                      setSheetState('peek')
+                    }}
+                  />
+                  {renderListPaginationFooter()}
                 </div>
               </div>
             </div>
@@ -940,207 +949,217 @@ function BusquedaMapaContent() {
         onSearch={(nuevosFiltros) => {
           console.log('🔍 Buscando con filtros:', nuevosFiltros)
         }}
-        onOpenPriceFilter={() => { 
+        onOpenPriceFilter={() => {
           setIsPriceFilterOpen(true)
           setIsSidebarOpen(true)
         }}
         onOpenSuperficieFilter={() => {
-         setIsSidebarOpen(true)
-         setActiveSidebarView('superficie')
-         }}
+          setIsSidebarOpen(true)
+          setActiveSidebarView('superficie')
+        }}
+        isCapacidadActive={isCapacidadOpen}
+        onToggleCapacidad={toggleCapacidad}
       />
 
       <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200">
         {/* Panel lateral colapsable */}
         <aside
-          className={`bg-white border-r border-stone-200 flex flex-col z-10 transition-all duration-300 min-h-0 overflow-hidden ${
-            isSidebarOpen ? 'w-full md:w-[450px] h-[65dvh] md:h-full' : 'w-0'
-          }`}
+          className={`bg-white border-r border-stone-200 flex flex-col z-10 transition-all duration-300 min-h-0 overflow-hidden ${isSidebarOpen ? 'w-full md:w-[450px] h-[65dvh] md:h-full' : 'w-0'
+            }`}
         >
-        {/* ✅ MODIFICADO: ternario que alterna entre filtro de precio y resultados */}
-        {isPriceFilterOpen ? (
-          // Vista del filtro de precio — reemplaza temporalmente los resultados
-          <PriceFilterSidebar
-            isOpen={isPriceFilterOpen}
-            onClose={() => {
-              setIsPriceFilterOpen(false) // cierra el filtro
-              setIsSidebarOpen(true)      // asegura que el aside siga visible
-            }}
-          />
-        ) : 
-          isSidebarOpen && activeSidebarView === 'results' ? (
-            <div className="flex flex-col h-full min-h-0">
-              <div className="p-4 bg-white shrink-0">
-                <div className="flex justify-between items-center mb-4">
-                  <div className="flex flex-col">
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-1">
-                        <Filter className="w-4 h-4 text-orange-500" />
-                        <h1 className="text-base font-semibold text-stone-900 uppercase tracking-wide">
-                          Filtros{' '}
-                        </h1>
+          {/* ✅ MODIFICADO: ternario que alterna entre filtro de precio y resultados */}
+          {isPriceFilterOpen ? (
+            // Vista del filtro de precio — reemplaza temporalmente los resultados
+            <PriceFilterSidebar
+              isOpen={isPriceFilterOpen}
+              onClose={() => {
+                setIsPriceFilterOpen(false) // cierra el filtro
+                setIsSidebarOpen(true)      // asegura que el aside siga visible
+              }}
+              totalResultados={displayedProperties.length}
+            />
+          ) : isSidebarOpen && activeSidebarView === 'capacidad' ? (
+            <CapacidadSidebar
+              isOpen={true}
+              onClose={() => {
+                setIsCapacidadOpen(false)
+                setActiveSidebarView('results')
+              }}
+              onApply={(dormitoriosMin, dormitoriosMax, banosMin, banosMax) => {
+                console.log('Filtros capacidad:', { dormitoriosMin, dormitoriosMax, banosMin, banosMax })
+                setIsCapacidadOpen(false)
+                setActiveSidebarView('results')
+              }}
+          /> 
+        ) :
+            isSidebarOpen && activeSidebarView === 'results' ? (
+              <div className="flex flex-col h-full min-h-0">
+                <div className="p-4 bg-white shrink-0">
+                  <div className="flex justify-between items-center mb-4">
+                    <div className="flex flex-col">
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-1">
+                          <Filter className="w-4 h-4 text-orange-500" />
+                          <h1 className="text-base font-semibold text-stone-900 uppercase tracking-wide">
+                            Filtros{' '}
+                          </h1>
+                        </div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <h1 className="text-xl font-semibold text-slate-800">
+                            {isClusterView
+                              ? `${clusterProperties.length} propiedades en este clúster`
+                              : 'Resultados de búsqueda'}
+                          </h1>
+                        </div>
+                        <h2 className="text-sm font-bold text-slate-900">
+                          <span className="text-orange-500">
+                            {isClusterView ? clusterProperties.length : displayedProperties.length}
+                          </span>
+                          <span className="ml-2 text-gray-600 font-normal text-sm">
+                            {(isClusterView
+                              ? clusterProperties.length
+                              : displayedProperties.length) === 1
+                              ? 'propiedad encontrada'
+                              : 'propiedades encontradas'}
+                          </span>
+                        </h2>
+                        {isClusterView && (
+                          <button
+                            onClick={() => {
+                              setIsClusterView(false)
+                              setClusterProperties([])
+                              setActiveClusterIds([])
+                            }}
+                            className="text-sm text-orange-500 hover:underline flex items-center gap-1 mt-1 mb-2"
+                          >
+                            ← Volver a todos los resultados
+                          </button>
+                        )}
                       </div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <h1 className="text-xl font-semibold text-slate-800">
-                          {isClusterView
-                            ? `${clusterProperties.length} propiedades en este clúster`
-                            : 'Resultados de búsqueda'}
-                        </h1>
-                      </div>
-                      <h2 className="text-sm font-bold text-slate-900">
-                        <span className="text-orange-500">
-                          {isClusterView ? clusterProperties.length : displayedProperties.length}
-                        </span>
-                        <span className="ml-2 text-gray-600 font-normal text-sm">
-                          {(isClusterView
-                            ? clusterProperties.length
-                            : displayedProperties.length) === 1
-                            ? 'propiedad encontrada'
-                            : 'propiedades encontradas'}
-                        </span>
-                      </h2>
-                      {isClusterView && (
-                        <button
-                          onClick={() => {
-                            setIsClusterView(false)
-                            setClusterProperties([])
-                            setActiveClusterIds([])
-                          }}
-                          className="text-sm text-orange-500 hover:underline flex items-center gap-1 mt-1 mb-2"
-                        >
-                          ← Volver a todos los resultados
-                        </button>
-                      )}
+                    </div>
+                    <button
+                      onClick={() => setIsSidebarOpen(false)}
+                      className="p-1 hover:bg-stone-100 rounded-full transition-colors text-stone-400"
+                    >
+                      <ChevronLeft size={20} />
+                    </button>
+                  </div>
+
+                  <div className="relative border-b border-stone-100 pb-4 [&>div]:mb-0">
+                    <MenuOrdenamiento
+                      totalResultados={displayedProperties.length}
+                      ordenActual={ordenActual}
+                      onOrdenChange={cambiarOrden}
+                    />
+                    <div className="absolute right-0 bottom-4 flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90 origin-bottom-right">
+                      <button
+                        onClick={() => setViewMode('grid')}
+                        className={`p-1 rounded transition-colors ${viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
+                          }`}
+                      >
+                        <LayoutGrid size={16} />
+                      </button>
+                      <button
+                        onClick={() => setViewMode('list')}
+                        className={`p-1 rounded transition-colors ${viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
+                          }`}
+                      >
+                        <ListIcon size={16} />
+                      </button>
                     </div>
                   </div>
-                  <button
-                    onClick={() => setIsSidebarOpen(false)}
-                    className="p-1 hover:bg-stone-100 rounded-full transition-colors text-stone-400"
-                  >
-                    <ChevronLeft size={20} />
-                  </button>
                 </div>
 
-                <div className="relative border-b border-stone-100 pb-4 [&>div]:mb-0">
-                  <MenuOrdenamiento
-                    totalResultados={displayedProperties.length}
-                    ordenActual={ordenActual}
-                    onOrdenChange={cambiarOrden}
-                  />
-                  <div className="absolute right-0 bottom-4 flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90 origin-bottom-right">
-                    <button
-                      onClick={() => setViewMode('grid')}
-                      className={`p-1 rounded transition-colors ${
-                        viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-                      }`}
-                    >
-                      <LayoutGrid size={16} />
-                    </button>
-                    <button
-                      onClick={() => setViewMode('list')}
-                      className={`p-1 rounded transition-colors ${
-                        viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-                      }`}
-                    >
-                      <ListIcon size={16} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-              
 
-              {/* Lista de propiedades */}
-              <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
-                <div
-                  className="flex-1 min-h-0 overflow-y-auto p-4 bg-stone-50 no-scrollbar"
-                  onMouseEnter={() => setIsHoveringList(true)}
-                  onMouseLeave={() => {
-                    setIsHoveringList(false)
-                    setSelectedPropertyId(null)
-                    setHoveredId(null)
-                  }}
-                >
-                {isLoading ? (
-                  <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
-                    <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
-                    Actualizando resultados...
-                  </div>
-                ) : displayedProperties.length === 0 ? (
-                  <EmptyState />
-                ) : (
+                {/* Lista de propiedades */}
+                <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
                   <div
-                    className={`gap-4 flex flex-col ${
-                      viewMode === 'list'
-                        ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-                        : ''
-                    }`}
+                    className="flex-1 min-h-0 overflow-y-auto p-4 bg-stone-50 no-scrollbar"
+                    onMouseEnter={() => setIsHoveringList(true)}
+                    onMouseLeave={() => {
+                      setIsHoveringList(false)
+                      setSelectedPropertyId(null)
+                      setHoveredId(null)
+                    }}
                   >
-                    {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
-                        <div
-                          key={property.id}
-                          onMouseEnter={() => setHoveredId(property.id)}
-                          onMouseLeave={() => setHoveredId(null)}
-                          onClick={() => setSelectedPropertyId(property.id)}
-                          className={`cursor-pointer transition-all duration-200 rounded-xl relative ${
-                            viewMode === 'grid'
-                              ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
-                              : 'w-full py-1 hover:bg-stone-100'
-                          } ${
-                            selectedPropertyId === property.id
-                              ? 'ring-2 ring-orange-400 ring-offset-1 z-10'
-                              : ''
+                    {isLoading ? (
+                      <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
+                        <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+                        Actualizando resultados...
+                      </div>
+                    ) : displayedProperties.length === 0 ? (
+                      <EmptyState />
+                    ) : (
+                      <div
+                        className={`gap-4 flex flex-col ${viewMode === 'list'
+                            ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
+                            : ''
                           }`}
-                        >
-                          {viewMode === 'grid' ? (
-                            <PropertyCard
-                              imagen={
-                                property.thumbnailUrl ||
-                                property.imagen ||
-                                'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
-                              }
-                              estado={property.type}
-                              precio={
-                                property.currency === 'USD'
-                                  ? `$${property.price.toLocaleString('es-BO')} USD`
-                                  : `Bs ${property.price.toLocaleString('es-BO')}`
-                              }
-                              descripcion={property.descripcion || property.title}
-                              camas={property.nroCuartos ?? 0}
-                              banos={property.nroBanos ?? 0}
-                              metros={property.superficieM2 ?? 0}
-                            />
-                          ) : (
-                            <PropertyRow
-                              title={property.title}
-                              price={
-                                property.currency === 'USD'
-                                  ? `$${property.price.toLocaleString('es-BO')} USD`
-                                  : `Bs ${property.price.toLocaleString('es-BO')}`
-                              }
-                              size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
-                              contactType="whatsapp"
-                              image={
-                                property.thumbnailUrl ||
-                                property.imagen ||
-                                'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
-                              }
-                            />
-                          )}
-                        </div>
-                      )
+                      >
+                        {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
+                          <div
+                            key={property.id}
+                            onMouseEnter={() => setHoveredId(property.id)}
+                            onMouseLeave={() => setHoveredId(null)}
+                            onClick={() => setSelectedPropertyId(property.id)}
+                            className={`cursor-pointer transition-all duration-200 rounded-xl relative ${viewMode === 'grid'
+                                ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
+                                : 'w-full py-1 hover:bg-stone-100'
+                              } ${selectedPropertyId === property.id
+                                ? 'ring-2 ring-orange-400 ring-offset-1 z-10'
+                                : ''
+                              }`}
+                          >
+                            {viewMode === 'grid' ? (
+                              <PropertyCard
+                                imagen={
+                                  property.thumbnailUrl ||
+                                  property.imagen ||
+                                  'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
+                                }
+                                estado={property.type}
+                                precio={
+                                  property.currency === 'USD'
+                                    ? `$${property.price.toLocaleString('es-BO')} USD`
+                                    : `Bs ${property.price.toLocaleString('es-BO')}`
+                                }
+                                descripcion={property.descripcion || property.title}
+                                camas={property.nroCuartos ?? 0}
+                                banos={property.nroBanos ?? 0}
+                                metros={property.superficieM2 ?? 0}
+                              />
+                            ) : (
+                              <PropertyRow
+                                title={property.title}
+                                price={
+                                  property.currency === 'USD'
+                                    ? `$${property.price.toLocaleString('es-BO')} USD`
+                                    : `Bs ${property.price.toLocaleString('es-BO')}`
+                                }
+                                size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
+                                contactType="whatsapp"
+                                image={
+                                  property.thumbnailUrl ||
+                                  property.imagen ||
+                                  'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
+                                }
+                              />
+                            )}
+                          </div>
+                        )
+                        )}
+                      </div>
                     )}
                   </div>
-                )}
+                  {renderListPaginationFooter()}
+                </div>
               </div>
-              {renderListPaginationFooter()}
-              </div>
-            </div>
-            )  
-          : isSidebarOpen && activeSidebarView === 'superficie' ? (
-            <div className="flex flex-col h-full min-h-0 bg-white">
-              <SuperficieFilterSidebar onClose={() => setActiveSidebarView('results')} />
-            </div>
-        ) : null}
+            )
+              : isSidebarOpen && activeSidebarView === 'superficie' ? (
+                <div className="flex flex-col h-full min-h-0 bg-white">
+                  <SuperficieFilterSidebar onClose={() => setActiveSidebarView('results')} />
+                </div>
+              ) : null}
         </aside>
 
         {/* Área del mapa */}
@@ -1159,10 +1178,12 @@ function BusquedaMapaContent() {
           )}
           {/* --- INICIO BOTONES FLOTANTES HU8 --- */}
           <div className="absolute top-3 right-4 z-[1000] flex flex-col gap-2 items-end pointer-events-none">
-            {!isDrawingMode && !isPolygonClosed && !editingZoneId && (
+            {/* CAMBIO: Se removió !isPolygonClosed para que los botones sigan visibles tras dibujar */}
+            {!isDrawingMode && !editingZoneId && (
               <div className="flex flex-row gap-2 pointer-events-auto">
                 <button
                   onClick={() => {
+                    resetDrawing() // AÑADIDO: Limpia el mapa antes de iniciar un nuevo dibujo
                     resetEditingZone()
                     setIsCreatingCustomZone(false)
                     setIsDrawingMode(true)
@@ -1188,47 +1209,48 @@ function BusquedaMapaContent() {
             )}
 
             {isDrawingMode && !isPolygonClosed && (
-  <div className="flex flex-col items-end gap-2 pointer-events-auto">
-    <div className="flex flex-row gap-2">
-      <button
-        onClick={() => {
-          if (polygonPoints.length < 3) {
-            setDrawingError(true)
-            setTimeout(() => setDrawingError(false), 3000)
-          } else {
-            setIsPolygonClosed(true)
-            setIsDrawingMode(false)
-          }
-        }}
-        className="bg-[#ea580c] text-white px-4 py-2 rounded-lg shadow-md border border-orange-600 hover:bg-[#c2410c] transition-all text-sm font-semibold"
-      >
-        Finalizar dibujo
-      </button>
-      <button
-        onClick={resetDrawing}
-        className="bg-white text-red-600 px-4 py-2 rounded-lg shadow-md border border-stone-200 hover:bg-red-50 transition-all text-sm font-semibold"
-      >
-        Cancelar dibujo
-      </button>
-    </div>
+              <div className="flex flex-col items-end gap-2 pointer-events-auto">
+                <div className="flex flex-row gap-2">
+                  <button
+                    onClick={() => {
+                      if (polygonPoints.length < 3) {
+                        setDrawingError(true)
+                        setTimeout(() => setDrawingError(false), 3000)
+                      } else {
+                        setIsPolygonClosed(true)
+                        setIsDrawingMode(false)
+                      }
+                    }}
+                    className="bg-[#ea580c] text-white px-4 py-2 rounded-lg shadow-md border border-orange-600 hover:bg-[#c2410c] transition-all text-sm font-semibold"
+                  >
+                    Finalizar dibujo
+                  </button>
+                  <button
+                    onClick={resetDrawing}
+                    className="bg-white text-red-600 px-4 py-2 rounded-lg shadow-md border border-stone-200 hover:bg-red-50 transition-all text-sm font-semibold"
+                  >
+                    Cancelar dibujo
+                  </button>
+                </div>
 
-    {drawingError && (
-      <div className="bg-red-50 border border-red-300 text-red-600 px-3 py-2 rounded-lg text-xs font-medium shadow-md max-w-[220px] text-right">
-        ⚠️ Debes marcar al menos 3 puntos para finalizar la zona.
-      </div>
-    )}
+                {drawingError && (
+                  <div className="bg-red-50 border border-red-300 text-red-600 px-3 py-2 rounded-lg text-xs font-medium shadow-md max-w-[220px] text-right">
+                    ⚠️ Debes marcar al menos 3 puntos para finalizar la zona.
+                  </div>
+                )}
 
-    {!drawingError && (
-      <div className="bg-white/95 backdrop-blur-sm p-3 rounded-lg shadow-md border border-stone-200 text-xs text-stone-600 max-w-[220px] text-right">
-        Haz clic en el mapa para marcar los vértices. Cierra la zona tocando el punto inicial.
-      </div>
-    )}
-  </div>
-)}
-            
+                {!drawingError && (
+                  <div className="bg-white/95 backdrop-blur-sm p-3 rounded-lg shadow-md border border-stone-200 text-xs text-stone-600 max-w-[220px] text-right">
+                    Haz clic en el mapa para marcar los vértices. Cierra la zona tocando el punto inicial.
+                  </div>
+                )}
+              </div>
+            )}
+
           </div>
 
-          {isPolygonClosed && isCreatingCustomZone && !editingZoneId && (
+          {/* CAMBIO: Se removió isCreatingCustomZone para que aparezca siempre que haya un polígono cerrado */}
+          {isPolygonClosed && !editingZoneId && (
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000]">
               <button
                 onClick={resetDrawing}

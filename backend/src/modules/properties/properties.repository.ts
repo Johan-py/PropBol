@@ -111,15 +111,26 @@ export const propertiesRepository = {
       // Fallback: Si no hay texto, asumimos que viene de un botón antiguo de "Ciudades Destacadas"
       where.ubicacion = { ubicacionMaestraId: Number(filtros.locationId) }
     }
-    // ── FILTRO DE PRECIO ───────────────────────────────────────────
+    // ── FILTRO DE PRECIO con conversión de moneda ─────────────────
+    const TASA_CAMBIO_BOB = 6.96 // 1 USD = 6.96 BOB
+
+    let queryMinPrice = filtros.minPrice
+    let queryMaxPrice = filtros.maxPrice
+
+    // Si el usuario busca en BOB, convertimos a USD antes de consultar la BD
     if (filtros.currency) {
-      where.moneda = filtros.currency
-      if (filtros.minPrice != null) {
-        where.precio = { ...((where.precio as object) ?? {}), gte: filtros.minPrice }
+      const monedaUpper = filtros.currency.toUpperCase()
+      if (monedaUpper === 'BOB' || monedaUpper === 'BS') {
+        if (queryMinPrice != null) queryMinPrice = queryMinPrice / TASA_CAMBIO_BOB
+        if (queryMaxPrice != null) queryMaxPrice = queryMaxPrice / TASA_CAMBIO_BOB
       }
-      if (filtros.maxPrice != null) {
-        where.precio = { ...((where.precio as object) ?? {}), lte: filtros.maxPrice }
-      }
+    }
+
+    if (queryMinPrice != null) {
+      where.precio = { ...((where.precio as object) ?? {}), gte: queryMinPrice }
+    }
+    if (queryMaxPrice != null) {
+      where.precio = { ...((where.precio as object) ?? {}), lte: queryMaxPrice }
     }
 
     // ── ORDER BY ───────────────────────────────────────────────────────────
