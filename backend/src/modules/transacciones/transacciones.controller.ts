@@ -144,7 +144,9 @@ export const consultarEstadoPago = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Transacción no encontrada' })
     }
 
-    return res.json({ estado: transaccion.estado?.toLowerCase() ?? 'pendiente' })
+    const estadoRaw = transaccion.estado?.toLowerCase() ?? 'pendiente'
+    const estado = estadoRaw === 'completado' ? 'pagado' : estadoRaw
+    return res.json({ estado })
   } catch (error) {
     return res.status(500).json({ error: toMessage(error) })
   }
