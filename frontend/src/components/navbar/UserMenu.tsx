@@ -271,7 +271,7 @@ export default function UserMenu({
                 icon={Shield}
                 onClick={onClosePanel}
               />
-              {user.role === "ADMIN" && (
+              {user?.role === "ADMIN" && (
                 <MenuLink
                   label="Panel de Administrador"
                   href="/admin"
