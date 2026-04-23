@@ -46,7 +46,7 @@ export async function crearTransaccion(
     },
   });
 
-  return transaccion;
+  return { transaccion, plan };
 }
 
 export async function obtenerTransaccion(transaccionId: number) {
