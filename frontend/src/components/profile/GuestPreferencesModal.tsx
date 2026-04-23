@@ -13,20 +13,43 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
 
   if (!isOpen) return null;
 
-  const handleSave = () => {
-    // Aquí guardamos los datos temporalmente en localStorage
-    // El backend los tomará de aquí para guardarlos en el meta_data del modelo Visitor
-    const preferencias = { genero, edad, zona };
-    localStorage.setItem('guest_preferences', JSON.stringify(preferencias));
-    console.log("Preferencias de invitado guardadas:", preferencias);
-    
-    alert('¡Preferencias guardadas! Te mostraremos mejores resultados.');
-    onClose();
+  const handleSave = async () => {
+    const payload = {
+      genero: genero || undefined,
+      rango_edad: edad || undefined,  // ✅ Cambiado: enviar rango_edad
+      zona_interes: zona || undefined
+    };
+
+    try {
+      const response = await fetch('http://localhost:5000/api/telemetria/visitante', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Guardar en localStorage
+        localStorage.setItem('guest_preferences', JSON.stringify({
+          genero,
+          rango_edad: edad,
+          zona
+        }));
+
+        alert('¡Preferencias guardadas! Te mostraremos mejores resultados.');
+        onClose();
+      }
+    } catch (error) {
+      console.error("Error guardando preferencias:", error);
+      alert('Error al guardar preferencias');
+    }
   };
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-stone-900/40 backdrop-blur-sm animate-in fade-in duration-500">
-      {/* Usamos el mismo color de fondo crema de tu ProfileCard */}
       <div className="bg-[#fdf6e6] rounded-xl shadow-2xl max-w-md w-full p-7 m-4 border border-[#e5dfd7]">
         <div className="text-center mb-6">
           <h2 className="text-xl font-bold text-[#292524]">
@@ -36,7 +59,6 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
         </div>
 
         <div className="flex flex-col gap-4 mb-8">
-          {/* GÉNERO - Ajustado al Enum de Prisma */}
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-stone-700">Género:</label>
             <select
@@ -45,14 +67,13 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
               className="px-3 py-2 rounded text-sm bg-white border border-stone-300 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
             >
               <option value="">Seleccione...</option>
-              <option value="MASCULINO">Masculino</option>
-              <option value="FEMENINO">Femenino</option>
-              <option value="OTRO">Otro</option>
-              <option value="PREFIERO_NO_DECIR">Prefiero no decirlo</option>
+              <option value="MASCULINO">MASCULINO</option>
+              <option value="FEMENINO">FEMENINO</option>
+              <option value="OTRO">OTRO</option>
+              <option value="PREFIERO_NO_DECIR">PREFIERO_NO_DECIR</option>
             </select>
           </div>
 
-          {/* EDAD */}
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-stone-700">Rango de Edad:</label>
             <select
@@ -69,7 +90,6 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
             </select>
           </div>
 
-          {/* ZONA DE INTERÉS */}
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-stone-700">Zona de interés:</label>
             <input
@@ -83,13 +103,13 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
         </div>
 
         <div className="flex justify-end gap-3 font-semibold">
-          <button 
+          <button
             onClick={onClose}
             className="px-4 py-2 text-stone-500 hover:text-stone-700 transition-colors text-sm"
           >
             Cancelar
           </button>
-          <button 
+          <button
             className="px-5 py-2 bg-[#D97706] text-white rounded-md hover:bg-[#b45309] transition-all shadow-md active:scale-95 text-sm"
             onClick={handleSave}
           >
