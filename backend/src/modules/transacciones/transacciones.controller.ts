@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express'
 import { prisma } from '../../lib/prisma.client.js'
-import { crearTransaccion } from './servicios/transaccionServicios.js'
+import { crearTransaccion } from './servicios/transaccion.service.js'
+import { aplicarCupon } from "./servicios/cupon.service.js"
 
 interface AuthRequest extends Request {
   user?: { id: number }
@@ -24,7 +25,7 @@ export const generarPagoQr = async (req: AuthRequest, res: Response) => {
     const msg = toMessage(error)
     const status = msg === 'Plan no encontrado' ? 404 : 500
     return res.status(status).json({ error: msg })
-  }
+  }ss
 }
 
 export const obtenerPagoPendiente = async (req: Request, res: Response) => {
