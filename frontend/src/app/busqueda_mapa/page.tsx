@@ -659,19 +659,33 @@ function BusquedaMapaContent() {
     </div>
   )
 
-  const renderListPaginationFooter = () => (
-    <MapaListadoPaginacion
-      total={listTotal}
-      page={listSafePage}
-      pageSize={listPageSize}
-      onPageChange={setListPage}
-      onPageSizeChange={(s) => {
-        setListPageSize(s);
-        setListPage(1);
-      }}
-      hint={listTotal === 0 && error ? `Error al cargar: ${error}` : null}
-    />
-  );
+
+  const renderListPaginationFooter = () => {
+    if (isClusterView) {
+      return clusterProperties.length > 0 ? (
+        <div className="shrink-0 border-t border-stone-100 bg-stone-50 px-3 py-2">
+          <p className="text-[11px] text-stone-500 text-center sm:text-left">
+            Mostrando {clusterProperties.length}{" "}
+            {clusterProperties.length === 1 ? "propiedad del clúster" : "propiedades del clúster"}.
+          </p>
+        </div>
+      ) : null;
+    }
+
+    return listTotal > 0 ? (
+      <MapaListadoPaginacion
+        total={listTotal}
+        page={listSafePage}
+        pageSize={listPageSize}
+        onPageChange={setListPage}
+        onPageSizeChange={(s) => {
+          setListPageSize(s);
+          setListPage(1);
+        }}
+        hint={listTotal === 0 && error ? `Error al cargar: ${error}` : null}
+      />
+    ) : null;
+  };
 
   // ────────────────────────────────────────────────────────────────────────────
   // RENDER LANDSCAPE MÓVIL
