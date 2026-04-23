@@ -45,6 +45,7 @@ export const blogsService = {
       titulo?: string
       contenido?: string
       imagen?: string
+      categoria_id?: number
       accion?: 'borrador' | 'pendiente'
     }
   ) {
@@ -66,8 +67,12 @@ export const blogsService = {
       titulo: data.titulo,
       contenido: data.contenido,
       imagen: data.imagen,
+      categoria_id: data.categoria_id,
       ...(estado ? { estado } : {})
     })
+  },
+  async subirImagen(file: Express.Multer.File, usuario_id: number) {
+    return blogsRepository.uploadImage(file, usuario_id)
   },
   async cambiarEstado(id: number, estado: 'PUBLICADO' | 'RECHAZADO', razon_rechazo?: string) {
     const blog = await blogsRepository.findById(id)

@@ -1,11 +1,13 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
   createBlog,
   getBlogCategories,
+  updateBlog,
+  uploadBlogImage,
   type BlogCategoryOption,
   type BlogCreationAction,
 } from "@/services/blogs.service";
@@ -18,30 +20,58 @@ type FieldErrors = {
 };
 
 const INITIAL_ERRORS: FieldErrors = {};
+const AUTOSAVE_STORAGE_PREFIX = "propbol_blog_form";
+const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
-function isValidImageUrl(value: string) {
-  try {
-    const url = new URL(value);
-    return ["http:", "https:"].includes(url.protocol);
-  } catch {
-    return false;
-  }
+type BlogCreateFormProps = {
+  blogId?: number;
+  initialValues?: {
+    categoriaId: string;
+    contenido: string;
+    imagen: string;
+    titulo: string;
+  };
+  mode?: "create" | "edit";
+  statusLabel?: "BORRADOR" | "RECHAZADO";
+};
+
+function isValidImageFile(file: File) {
+  return (
+    ALLOWED_IMAGE_TYPES.includes(file.type) && file.size <= MAX_IMAGE_SIZE_BYTES
+  );
 }
 
-export default function BlogCreateForm() {
+export default function BlogCreateForm({
+  blogId,
+  initialValues,
+  mode = "create",
+  statusLabel,
+}: BlogCreateFormProps) {
   const router = useRouter();
+  const hasHydratedDraft = useRef(false);
   const [categories, setCategories] = useState<BlogCategoryOption[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [loadError, setLoadError] = useState("");
+  const [autosaveMessage, setAutosaveMessage] = useState("");
   const [submitError, setSubmitError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>(INITIAL_ERRORS);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
 
-  const [titulo, setTitulo] = useState("");
-  const [imagen, setImagen] = useState("");
-  const [categoriaId, setCategoriaId] = useState("");
-  const [contenido, setContenido] = useState("");
+  const [titulo, setTitulo] = useState(initialValues?.titulo ?? "");
+  const [imagen, setImagen] = useState(initialValues?.imagen ?? "");
+  const [categoriaId, setCategoriaId] = useState(initialValues?.categoriaId ?? "");
+  const [contenido, setContenido] = useState(initialValues?.contenido ?? "");
+
+  const autosaveKey = useMemo(
+    () =>
+      mode === "edit" && blogId
+        ? `${AUTOSAVE_STORAGE_PREFIX}:edit:${blogId}`
+        : `${AUTOSAVE_STORAGE_PREFIX}:create`,
+    [blogId, mode],
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -80,10 +110,119 @@ export default function BlogCreateForm() {
     };
   }, []);
 
-  const isFormDirty = useMemo(
-    () => Boolean(titulo.trim() || imagen.trim() || categoriaId || contenido.trim()),
-    [categoriaId, contenido, imagen, titulo],
-  );
+  useEffect(() => {
+    setTitulo(initialValues?.titulo ?? "");
+    setImagen(initialValues?.imagen ?? "");
+    setCategoriaId(initialValues?.categoriaId ?? "");
+    setContenido(initialValues?.contenido ?? "");
+    setSelectedImageFile(null);
+  }, [initialValues]);
+
+  useEffect(() => {
+    if (hasHydratedDraft.current) {
+      return;
+    }
+
+    hasHydratedDraft.current = true;
+
+    const rawDraft = window.localStorage.getItem(autosaveKey);
+
+    if (!rawDraft) {
+      return;
+    }
+
+    try {
+      const draft = JSON.parse(rawDraft) as {
+        categoriaId?: string;
+        contenido?: string;
+        imagen?: string;
+        titulo?: string;
+      };
+
+      setTitulo(draft.titulo ?? initialValues?.titulo ?? "");
+      setImagen(draft.imagen ?? initialValues?.imagen ?? "");
+      setCategoriaId(draft.categoriaId ?? initialValues?.categoriaId ?? "");
+      setContenido(draft.contenido ?? initialValues?.contenido ?? "");
+      setAutosaveMessage("Recuperamos un borrador local para que continúes editando.");
+    } catch {
+      window.localStorage.removeItem(autosaveKey);
+    }
+  }, [autosaveKey, initialValues]);
+
+  const imagePreviewUrl = useMemo(() => {
+    if (!selectedImageFile) {
+      return imagen.trim() || "";
+    }
+
+    return URL.createObjectURL(selectedImageFile);
+  }, [imagen, selectedImageFile]);
+
+  useEffect(() => {
+    if (!selectedImageFile || !imagePreviewUrl.startsWith("blob:")) {
+      return;
+    }
+
+    return () => {
+      window.URL.revokeObjectURL(imagePreviewUrl);
+    };
+  }, [imagePreviewUrl, selectedImageFile]);
+  const isFormDirty = useMemo(() => {
+    const baseTitulo = initialValues?.titulo?.trim() ?? "";
+    const baseImagen = initialValues?.imagen?.trim() ?? "";
+    const baseCategoriaId = initialValues?.categoriaId ?? "";
+    const baseContenido = initialValues?.contenido?.trim() ?? "";
+
+    return (
+      titulo.trim() !== baseTitulo ||
+      imagen.trim() !== baseImagen ||
+      categoriaId !== baseCategoriaId ||
+      contenido.trim() !== baseContenido
+    );
+  }, [categoriaId, contenido, imagen, initialValues, titulo]);
+
+  useEffect(() => {
+    const hasContent = Boolean(
+      titulo.trim() || imagen.trim() || categoriaId || contenido.trim(),
+    );
+
+    if (!hasContent) {
+      window.localStorage.removeItem(autosaveKey);
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      window.localStorage.setItem(
+        autosaveKey,
+        JSON.stringify({
+          categoriaId,
+          contenido,
+          imagen,
+          titulo,
+        }),
+      );
+    }, 500);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [autosaveKey, categoriaId, contenido, imagen, titulo]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!isFormDirty) {
+        return;
+      }
+
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isFormDirty]);
 
   const validate = () => {
     const nextErrors: FieldErrors = {};
@@ -92,10 +231,11 @@ export default function BlogCreateForm() {
       nextErrors.titulo = "El título es obligatorio.";
     }
 
-    if (!imagen.trim()) {
+    if (!selectedImageFile && !imagen.trim()) {
       nextErrors.imagen = "La imagen es obligatoria.";
-    } else if (!isValidImageUrl(imagen.trim())) {
-      nextErrors.imagen = "Ingresa una URL válida para la imagen.";
+    } else if (selectedImageFile && !isValidImageFile(selectedImageFile)) {
+      nextErrors.imagen =
+        "La imagen debe ser JPG, PNG o WebP y no superar los 5 MB.";
     }
 
     if (!categoriaId) {
@@ -121,21 +261,38 @@ export default function BlogCreateForm() {
     setIsSubmitting(true);
     setSubmitError("");
     setSuccessMessage("");
+    setAutosaveMessage("");
 
     try {
-      await createBlog({
+      const imageUrl = selectedImageFile
+        ? (await uploadBlogImage(selectedImageFile)).url
+        : imagen.trim();
+      const payload = {
         titulo: titulo.trim(),
-        imagen: imagen.trim(),
+        imagen: imageUrl,
         categoria_id: Number(categoriaId),
         contenido: contenido.trim(),
         accion,
-      });
+      };
+
+      if (mode === "edit" && blogId) {
+        await updateBlog(blogId, payload);
+      } else {
+        await createBlog(payload);
+      }
 
       setFieldErrors(INITIAL_ERRORS);
+      window.localStorage.removeItem(autosaveKey);
+      setImagen(imageUrl);
+      setSelectedImageFile(null);
       setSuccessMessage(
         accion === "borrador"
-          ? "El blog fue guardado como borrador exitosamente."
-          : "El blog fue enviado a revisión y quedó pendiente de aprobación.",
+          ? mode === "edit"
+            ? "Los cambios del blog fueron guardados como borrador."
+            : "El blog fue guardado como borrador exitosamente."
+          : mode === "edit"
+            ? "El blog fue actualizado y reenviado a revisión."
+            : "El blog fue enviado a revisión y quedó pendiente de aprobación.",
       );
 
       window.setTimeout(() => {
@@ -166,6 +323,7 @@ export default function BlogCreateForm() {
       return;
     }
 
+    window.localStorage.removeItem(autosaveKey);
     router.push("/blogs");
   };
 
@@ -180,29 +338,65 @@ export default function BlogCreateForm() {
         >
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-700">
-              Nuevo aporte al blog
+              {mode === "edit" ? "Editar blog" : "Nuevo aporte al blog"}
             </p>
             <h1 className="mt-2 text-4xl font-bold leading-tight text-stone-900">
-              Comparte tu conocimiento con la comunidad.
+              {mode === "edit"
+                ? "Ajusta tu artículo antes de volver a enviarlo."
+                : "Comparte tu conocimiento con la comunidad."}
             </h1>
+            {statusLabel ? (
+              <p className="mt-3 text-sm font-medium text-stone-500">
+                Estado actual: <span className="font-semibold text-stone-700">{statusLabel}</span>
+              </p>
+            ) : null}
           </div>
 
           <label className="block">
             <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">
-              URL de la imagen destacada
+              Imagen destacada
             </span>
-            <input
-              type="url"
-              value={imagen}
-              onChange={(event) => setImagen(event.target.value)}
-              placeholder="https://ejemplo.com/imagen.jpg"
-              className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm text-stone-900 outline-none transition focus:border-amber-500"
-            />
+            <div className="space-y-3">
+              <label className="flex min-h-[132px] cursor-pointer flex-col items-center justify-center rounded-3xl border border-dashed border-stone-300 bg-stone-50 px-6 py-5 text-center transition hover:border-amber-400 hover:bg-amber-50">
+                <span className="text-sm font-semibold text-stone-800">
+                  {selectedImageFile
+                    ? selectedImageFile.name
+                    : "Selecciona una imagen para la portada"}
+                </span>
+                <span className="mt-2 text-xs text-stone-500">
+                  Formatos permitidos: JPG, PNG o WebP. Máximo 5 MB.
+                </span>
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  className="sr-only"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0] ?? null;
+
+                    setSelectedImageFile(file);
+                    setFieldErrors((currentErrors) => ({
+                      ...currentErrors,
+                      imagen: undefined,
+                    }));
+                  }}
+                />
+              </label>
+
+              {imagePreviewUrl ? (
+                <div className="overflow-hidden rounded-3xl border border-stone-200 bg-stone-100">
+                  <img
+                    src={imagePreviewUrl}
+                    alt="Vista previa de la portada del blog"
+                    className="h-64 w-full object-cover"
+                  />
+                </div>
+              ) : null}
+            </div>
             {fieldErrors.imagen ? (
               <p className="mt-2 text-sm text-red-600">{fieldErrors.imagen}</p>
             ) : (
               <p className="mt-2 text-xs text-stone-500">
-                Usa una URL pública válida para la portada del artículo.
+                La imagen se subirá al bucket <span className="font-semibold">blogs</span> antes de guardar el artículo.
               </p>
             )}
           </label>
@@ -273,6 +467,11 @@ export default function BlogCreateForm() {
             </p>
           ) : null}
 
+          {autosaveMessage ? (
+            <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+              {autosaveMessage}
+            </p>
+          ) : null}
           {submitError ? (
             <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
               {submitError}
@@ -294,7 +493,7 @@ export default function BlogCreateForm() {
               disabled={isSubmitting || isLoadingCategories || Boolean(loadError)}
               className="inline-flex min-h-[52px] items-center justify-center rounded-2xl border border-stone-300 px-6 text-sm font-semibold text-stone-700 transition hover:border-stone-400 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              Guardar borrador
+              {mode === "edit" ? "Guardar cambios" : "Guardar borrador"}
             </button>
 
             <button
@@ -302,7 +501,11 @@ export default function BlogCreateForm() {
               disabled={isSubmitting || isLoadingCategories || Boolean(loadError)}
               className="inline-flex min-h-[52px] items-center justify-center rounded-2xl bg-amber-600 px-6 text-sm font-semibold text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {isSubmitting ? "Enviando..." : "Publicar"}
+              {isSubmitting
+                ? "Enviando..."
+                : mode === "edit"
+                  ? "Enviar nuevamente"
+                  : "Publicar"}
             </button>
 
             <button
@@ -320,8 +523,9 @@ export default function BlogCreateForm() {
           <div className="space-y-3">
             <h2 className="text-lg font-semibold text-stone-900">Publicación</h2>
             <p className="text-sm leading-6 text-stone-600">
-              Usa “Guardar borrador” si quieres continuar luego, o “Publicar”
-              para enviar tu blog a revisión del administrador.
+              {mode === "edit"
+                ? "Guarda los cambios localmente o reenvía tu blog a revisión cuando esté listo."
+                : "Usa “Guardar borrador” si quieres continuar luego, o “Publicar” para enviar tu blog a revisión del administrador."}
             </p>
           </div>
 

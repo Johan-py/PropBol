@@ -94,4 +94,19 @@ export const publicacionesService = {
 
     await publicacionesRepository.updateEstado(publicacionId, activa);
   },
+
+  // 👉 Nueva función HU‑5 v2
+  async validarPublicacionHU5(userId: number, data: Partial<Publicacion>) {
+    const count = await publicacionesRepository.countByUser(userId);
+    if (count >= 2) {
+      throw new Error("LIMIT_REACHED");
+    }
+
+    // Aquí no validamos campos (eso lo hace el validator),
+    // solo devolvemos estado de negocio
+    return {
+      estado: "Validado",
+      mensaje: "Publicación lista para guardar",
+    };
+  },
 };
