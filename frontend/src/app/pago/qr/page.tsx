@@ -1,19 +1,20 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { ArrowLeft, Clock } from 'lucide-react'
 import Stepper from '@/components/ui/Stepper'
 import { useCurrentPayment } from '@/hooks/payment/useCurrentPayment'
 import { usePaymentStatus } from '@/hooks/payment/usePaymentStatus'
 import { useCancelPayment } from '@/hooks/payment/useCancelPayment'
 import { QRDisplay } from '@/components/payment/QRDisplay'
-import { SuccessView } from '@/components/payment/SuccessView'
 import { ExpiredView } from '@/components/payment/ExpiredView'
 import { CancelPaymentModal } from '@/components/payment/CancelPaymentModal'
 
 const BANKS = ['BNB', 'Banco Unión', 'Económica', 'Fassil']
 
 export default function PagoQRPage() {
+  const router = useRouter()
   const { payment, loading, error } = useCurrentPayment()
   const { isModalOpen, openModal, closeModal, confirmCancel } = useCancelPayment()
   const { status } = usePaymentStatus(payment?.id ?? null)
@@ -46,6 +47,10 @@ export default function PagoQRPage() {
     localStorage.removeItem('currentPayment')
   }, [timeLeft, payment])
 
+  useEffect(() => {
+    if (status === 'pagado') router.push('/pago/confirmacion')
+  }, [status, router])
+
   const fmt = (s: number) =>
     `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
 
@@ -71,7 +76,6 @@ export default function PagoQRPage() {
       </div>
     )
 
-  if (status === 'pagado') return <SuccessView />
   if (isExpired) return <ExpiredView planId={payment?.planId} />
 
   return (
