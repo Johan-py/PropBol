@@ -1,17 +1,9 @@
-"use client";
-
 import { getPublishedBlogs } from "@/services/blogs.service";
 import BlogCard from "@/components/blog/BlogCard";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-export default function HomeBlogsSection() {
-  const router = useRouter();
-
-  const sortedBlogs = getPublishedBlogs()
-    .sort(
-      (a, b) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
-    );
+export default async function HomeBlogsSection() {
+  const sortedBlogs = await getPublishedBlogs(5);
 
   const topBlogs = sortedBlogs.slice(0, 3);
   const bottomBlogs = sortedBlogs.slice(3, 5);
@@ -19,7 +11,7 @@ export default function HomeBlogsSection() {
   if (sortedBlogs.length === 0) {
     return (
       <section className="py-16 text-center">
-        <p className="text-stone-500">Aún no hay blogs disponibles.</p>
+        <p className="text-stone-500 font-['Inter']">Aún no hay blogs disponibles.</p>
       </section>
     );
   }
@@ -33,22 +25,18 @@ export default function HomeBlogsSection() {
             Blogs
           </h2>
 
-          <button
-            onClick={() => router.push("/blogs")}
+          <Link
+            href="/blogs"
             className="hidden sm:block rounded-full bg-[#D97706] px-8 py-3 text-xs font-bold uppercase tracking-widest text-white transition-all hover:bg-stone-900 hover:shadow-xl"
           >
             Explorar Blogs
-          </button>
+          </Link>
         </div>
 
         {/* TOP GRID */}
         <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {topBlogs.map((blog) => (
-            <BlogCard
-              key={blog.id}
-              {...blog}
-              onClick={(id) => router.push(`/blog/${id}`)}
-            />
+            <BlogCard key={blog.id} {...blog} href={`/blog/${blog.id}`} />
           ))}
         </div>
       </div>
@@ -70,24 +58,21 @@ export default function HomeBlogsSection() {
             Exploramos la intersección entre la arquitectura de vanguardia, el mercado de capitales y el estilo de vida contemporáneo.
           </p>
 
-          <button
-            onClick={() => router.push("/blogs")}
+          <Link
+            href="/blogs"
             className="group flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-stone-900"
           >
             <span className="border-b-2 border-[#D97706] pb-1 transition-all group-hover:border-stone-900">
               Explorar todos los blogs
             </span>
-          </button>
+          </Link>
         </div>
 
         {/* RIGHT COLUMN: FEATURED BLOGS */}
         <div className="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-8">
           {bottomBlogs.map((blog, idx) => (
             <div key={blog.id} className={idx === 0 ? "md:mt-12" : ""}>
-              <BlogCard
-                {...blog}
-                onClick={(id) => router.push(`/blog/${id}`)}
-              />
+              <BlogCard {...blog} href={`/blog/${blog.id}`} />
             </div>
           ))}
         </div>
