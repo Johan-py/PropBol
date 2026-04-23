@@ -166,4 +166,16 @@ export class RecomendacionesRepository {
 
     return usuario?.zona_conexion || null
   }
+
+  async getInmueblesPorIds(ids: number[]) {
+  return await prisma.inmueble.findMany({
+    where: {
+      id: { in: ids },
+      estado: 'ACTIVO'
+    },
+    include: {
+      ubicacion: true
+    }
+  })
+}
 }
