@@ -28,8 +28,7 @@ function resolveSupabaseUrl() {
 
 function getSupabaseClient() {
   const supabaseUrl = resolveSupabaseUrl()
-  const supabaseKey =
-    process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_ANON_KEY
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_ANON_KEY
 
   if (!supabaseKey) {
     throw new Error('SUPABASE_SERVICE_ROLE_KEY o SUPABASE_ANON_KEY son requeridos')
@@ -62,7 +61,7 @@ export const blogsRepository = {
         where,
         skip,
         take: limit,
-        orderBy: { fecha_publicacion: 'desc' },
+        orderBy: [{ fecha_publicacion: 'desc' }, { fecha_creacion: 'desc' }],
         include: {
           usuario: {
             select: { id: true, nombre: true, apellido: true, avatar: true }
@@ -136,13 +135,11 @@ export const blogsRepository = {
     const extension = getFileExtension(file)
     const filePath = `${usuario_id}/${Date.now()}-${randomUUID()}.${extension}`
 
-    const { error } = await supabase.storage
-      .from('blogs')
-      .upload(filePath, file.buffer, {
-        cacheControl: '3600',
-        contentType: file.mimetype,
-        upsert: false
-      })
+    const { error } = await supabase.storage.from('blogs').upload(filePath, file.buffer, {
+      cacheControl: '3600',
+      contentType: file.mimetype,
+      upsert: false
+    })
 
     if (error) {
       throw new Error(`No se pudo subir la imagen del blog: ${error.message}`)
