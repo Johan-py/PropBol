@@ -1,6 +1,14 @@
 'use client'
-import { useState } from 'react'
+
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import PlanModal from '../../components/ui/PlanModal'
+import dynamic from 'next/dynamic'
+
+const MapaPinSelector = dynamic(
+  () => import('../../components/MapaPinSelector'),
+  { ssr: false }
+)
 
 type CampoError =
   | 'titulo'
@@ -14,8 +22,11 @@ type CampoError =
   | 'operacion'
   | null
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL //?? "http://localhost:5000";
+
 export default function MiRegistroPage() {
   const router = useRouter()
+  //const [mostrarPlanModal, setMostrarPlanModal] = useState(false)
 
   const [datos, setDatos] = useState({
     titulo: '',
@@ -34,6 +45,44 @@ export default function MiRegistroPage() {
   const [estado, setEstado] = useState<'ninguno' | 'exito' | 'error'>('ninguno')
   const [mensajeError, setMensajeError] = useState('')
   const [campoError, setCampoError] = useState<CampoError>(null)
+  const [pinCoords, setPinCoords] = useState<{ lat: number; lng: number } | null>(null)
+
+const [vertices, setVertices] = useState<[number, number][]>([])
+
+const [modoPinActivo, setModoPinActivo] = useState(false)
+
+const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
+
+  useEffect(() => {
+    const validarFlujo = async () => {
+      const token = localStorage.getItem('token')
+
+      if (!token) {
+        router.push('/sign-in') //entra al formulario solo si inicio sesion
+        return
+      }
+      
+      try {
+        const response = await fetch(`${API_URL}/api/publicaciones/flujo`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+
+        const result = await response.json()
+
+        if (!response.ok && result.message === 'LIMIT_REACHED') {
+          router.push('/Cobros-Limite')
+        }
+      } catch (error) {
+        //console.error('Error validando flujo de publicación:', error)
+        console.error(error)
+      }
+    }
+
+    validarFlujo()
+  }, []) //router
 
   const limpiarError = () => {
     setMensajeError('')
@@ -112,8 +161,6 @@ export default function MiRegistroPage() {
     }
 
     if (name === 'habitaciones') {
-      if (value !== '' && Number(value) < 0) return
-
       if (value === '') {
         setDatos({ ...datos, habitaciones: '' })
         if (campoError === 'habitaciones') limpiarError()
@@ -145,8 +192,6 @@ export default function MiRegistroPage() {
     }
 
     if (name === 'banos') {
-      if (value !== '' && Number(value) < 0) return
-
       if (value === '') {
         setDatos({ ...datos, banos: '' })
         if (campoError === 'banos') limpiarError()
@@ -469,10 +514,20 @@ export default function MiRegistroPage() {
     console.log('📤 Payload enviado al backend:', payload)
 
     try {
-      const response = await fetch('http://localhost:5000/api/properties', {
+      const token = localStorage.getItem('token')
+
+      if (!token) {
+        setMensajeError('DEBES INICIAR SESIÓN PARA REGISTRAR UNA PROPIEDAD')
+        setCampoError(null)
+        setEstado('error')
+        return
+      }
+
+      const response = await fetch(`${API_URL}/api/properties`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(payload)
       })
@@ -482,9 +537,15 @@ export default function MiRegistroPage() {
       console.log('📥 Respuesta backend:', result)
 
       if (!response.ok) {
+        if (result.message === 'LIMIT_REACHED') {
+          router.push('/Cobros-Limite')
+          return
+        }
+
         const erroresBackend =
-          result.errores?.map((e: any) => `• ${e.mensaje}`).join('\n') ||
+          result.errores?.map((e: { mensaje: string }) => `• ${e.mensaje}`).join('\n') ||
           result.mensaje ||
+          result.message ||
           'ERROR AL GUARDAR LA PROPIEDAD'
 
         console.error('❌ Error backend:', erroresBackend)
@@ -494,11 +555,20 @@ export default function MiRegistroPage() {
         return
       }
 
+      const publicacionId = result?.property?.publicacion?.id
+
+      if (!publicacionId) {
+        setMensajeError('No se recibió el ID de la publicación creada')
+        setEstado('error')
+        return
+      }
+
       console.log('✅ Propiedad guardada correctamente')
       setEstado('exito')
       setMensajeError('')
       setCampoError(null)
-      router.push('/contenido-multimedia')
+
+      router.push(`/contenido-multimedia?publicacionId=${publicacionId}`)
     } catch (error) {
       console.error('🔥 Error fetch:', error)
       setMensajeError('NO SE PUDO CONECTAR CON EL BACKEND')
@@ -557,9 +627,7 @@ export default function MiRegistroPage() {
                       }`}
                     />
                     {errorTitulo && <p className="text-red-500 text-sm mt-2">{mensajeError}</p>}
-                    <p className="text-xs text-gray-500 mt-1">
-                      {datos.titulo.length}/80 caracteres
-                    </p>
+                    <p className="text-xs text-gray-500 mt-1">{datos.titulo.length}/80 caracteres</p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
@@ -587,7 +655,7 @@ export default function MiRegistroPage() {
 
                     <div>
                       <label className="block text-[15px] font-bold text-gray-900 mb-2">
-                        Tipo Inmueble *
+                        Tipo de Inmueble *
                       </label>
                       <select
                         name="tipoInmueble"
@@ -652,11 +720,20 @@ export default function MiRegistroPage() {
                     <label className="block text-[15px] font-bold mb-2">Habitaciones</label>
                     <input
                       name="habitaciones"
-                      type="number"
-                      min={1}
-                      max={50}
+                      type="text"
+                      inputMode="numeric"
                       value={datos.habitaciones}
-                      onChange={manejarCambio}
+                      onChange={(e) => {
+                        const soloNumeros = limpiarSoloNumeros(e.target.value)
+                        manejarCambio({
+                          ...e,
+                          target: {
+                            ...e.target,
+                            name: 'habitaciones',
+                            value: soloNumeros
+                          }
+                        } as React.ChangeEvent<HTMLInputElement>)
+                      }}
                       className={`w-full p-3 rounded-xl border ${
                         errorHabitaciones ? 'border-red-500' : 'border-gray-200'
                       }`}
@@ -673,11 +750,20 @@ export default function MiRegistroPage() {
                     <label className="block text-[15px] font-bold mb-2">Baños</label>
                     <input
                       name="banos"
-                      type="number"
-                      min={1}
-                      max={50}
+                      type="text"
+                      inputMode="numeric"
                       value={datos.banos}
-                      onChange={manejarCambio}
+                      onChange={(e) => {
+                        const soloNumeros = limpiarSoloNumeros(e.target.value)
+                        manejarCambio({
+                          ...e,
+                          target: {
+                            ...e.target,
+                            name: 'banos',
+                            value: soloNumeros
+                          }
+                        } as React.ChangeEvent<HTMLInputElement>)
+                      }}
                       className={`w-full p-3 rounded-xl border ${
                         errorBanos ? 'border-red-500' : 'border-gray-200'
                       }`}
@@ -704,7 +790,7 @@ export default function MiRegistroPage() {
                   </div>
                 </div>
 
-                <div className="mt-6">
+                <div className="mt-4 w-full">
                   <label className="block text-[15px] font-bold mb-2">Zona</label>
                   <input
                     name="zona"
@@ -736,12 +822,78 @@ export default function MiRegistroPage() {
                   }`}
                   placeholder="Casa de dos plantas, amplia y moderna ubicada en una zona tranquila..."
                 />
-                {errorDescripcion && <p className="text-red-500 text-sm mt-2">{mensajeError}</p>}
+                {errorDescripcion && (
+                  <p className="text-red-500 text-sm mt-2">{mensajeError}</p>
+                )}
                 <p className="text-xs text-gray-500 mt-1">
                   {datos.descripcion.length}/300 caracteres
                 </p>
               </div>
+             <div className="mt-6">
+               
+              <div className="flex items-center justify-between mb-4 gap-4">
 
+            <div className="flex gap-3">
+
+             <button
+                type="button"
+               onClick={() => {
+             setModoPinActivo(true)
+             setModoDifuminadoActivo(false)
+               }}
+             className={`px-4 py-2 rounded-full text-sm ${
+                 modoPinActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
+             }`}
+             >
+                Pin
+              </button>
+
+                <button
+                 type="button"
+                 onClick={() => {
+                 setModoDifuminadoActivo(true)
+                 setModoPinActivo(false)
+                }}
+                className={`px-4 py-2 rounded-full text-sm ${
+                 modoDifuminadoActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
+             }`}
+                >
+                Difuminado
+             </button>
+
+         </div>
+
+             <button
+             type="button"
+             disabled={!pinCoords && vertices.length === 0}
+             onClick={() => {
+                setPinCoords(null)
+                setVertices([])
+                setModoPinActivo(false)
+                setModoDifuminadoActivo(false)
+            }}
+             className={`px-4 py-2 rounded-full text-sm transition ${
+            !pinCoords && vertices.length === 0
+          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          : 'bg-orange-500 text-white hover:bg-orange-600'
+         }`}
+        >
+             Eliminar selección
+        </button>
+
+         </div>
+
+           <div className="rounded-2xl overflow-hidden border border-gray-200 w-full h-[320px]">
+            <MapaPinSelector
+               pinCoords={pinCoords}
+               setPinCoords={setPinCoords}
+               vertices={vertices}
+               setVertices={setVertices}
+               modoPinActivo={modoPinActivo}
+               modoDifuminadoActivo={modoDifuminadoActivo}
+                 />
+              </div>
+             </div>
               <div className="mt-12 space-y-6">
                 <div className="flex justify-center md:justify-end gap-6">
                   <button

@@ -7,9 +7,10 @@ import { usePopularidad } from '@/hooks/usePopularidad'
 import { useSearchFilters } from '@/hooks/useSearchFilters'
 
 type Location = {
-  id: string | number
+  id: number
+  nivel: string
   nombre: string
-  departamento: string
+  contexto: string
 }
 
 type LocationSearchProps = {
@@ -22,36 +23,33 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [history, setHistory] = useState<string[]>([])
+  const [showAll, setShowAll] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({})
-
+  const [isAuth, setIsAuth] = useState(false)
   const { updateFilters } = useSearchFilters()
   const { registrarConsulta } = usePopularidad()
 
-  // ── Dropdown position: fixed so overflow:auto parents can't clip it ────────
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+
   const recalcDropdown = () => {
     if (!containerRef.current) return
-    const rect = containerRef.current.getBoundingClientRect()
     setDropdownStyle({
-      position: 'fixed',
-      top: rect.bottom + 8,
-      left: rect.left,
-      width: rect.width,
-      zIndex: 9999
+      position: 'absolute',
+      top: 'calc(100% + 8px)',
+      left: 0,
+      width: '100%',
+      zIndex: 50
     })
   }
 
+  // Sincronización de dimensiones y eventos de cierre
   useEffect(() => {
     if (!isOpen) return
-    let frame1 = 0
-    let frame2 = 0
-    frame1 = requestAnimationFrame(() => {
-      frame2 = requestAnimationFrame(recalcDropdown)
+    const frame1 = requestAnimationFrame(() => {
+      requestAnimationFrame(recalcDropdown)
     })
-    return () => {
-      if (frame1) cancelAnimationFrame(frame1)
-      if (frame2) cancelAnimationFrame(frame2)
-    }
+    return () => cancelAnimationFrame(frame1)
   }, [isOpen])
 
   useEffect(() => {
@@ -64,41 +62,134 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     }
   }, [isOpen])
 
-  // ── Selección de ubicación ─────────────────────────────────────────────────
+  // --- PERSISTENCIA: Carga Inicial Sincronizada ---
+  useEffect(() => {
+    const initHistory = async () => {
+      // 1. Cargar local primero para rapidez visual
+      const saved = localStorage.getItem('searchHistory')
+      if (saved) setHistory(JSON.parse(saved))
+
+      // 2. Si el usuario está autenticado, sincronizar con el servidor
+      const token = localStorage.getItem("token")
+      if (token) {
+        try {
+          const res = await fetch(`${API_BASE}/api/perfil/historial-busqueda`, {
+            headers: { 
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          })
+          if (res.ok) {
+            const data = await res.json()
+            // Asumiendo que el backend devuelve un array de strings o de objetos {termino: string}
+            const remoteHistory = data.map((h: any) => typeof h === 'string' ? h : h.termino)
+            
+            // SINCRONIZACIÓN: Guardar en el backend las búsquedas locales que no estén en el remoto
+            const localHistory = saved ? JSON.parse(saved) : [];
+            const missingInRemote = localHistory.filter((item: string) => !remoteHistory.includes(item));
+            
+            if (missingInRemote.length > 0) {
+              // Enviamos al backend desde la más antigua a la más nueva para mantener el orden
+              for (const item of [...missingInRemote].reverse()) {
+                try {
+                  await fetch(`${API_BASE}/api/perfil/historial-busqueda`, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ termino: item })
+                  });
+                } catch (e) {
+                  console.error("Error sincronizando historial local:", e);
+                }
+              }
+              // Unimos la historia local que no estaba y la remota, y guardamos hasta 20 items
+              const newHistory = [...missingInRemote, ...remoteHistory].slice(0, 20);
+              setHistory(newHistory);
+              localStorage.setItem('searchHistory', JSON.stringify(newHistory));
+            } else {
+              setHistory(remoteHistory)
+              localStorage.setItem('searchHistory', JSON.stringify(remoteHistory))
+            }
+          } else if (res.status === 401) {
+            console.warn("Sesión expirada o token inválido para historial")
+            setIsAuth(false)
+          }
+        } catch (error) {
+          console.error("Error cargando historial remoto:", error)
+        }
+      }
+    }
+    initHistory()
+  }, [isAuth]) // Depende de isAuth para recargar cuando el usuario inicia sesión
+
+  // --- PERSISTENCIA: Guardar ---
+  const saveToHistory = async (item: string) => {
+    if (!item.trim()) return
+
+    const updatedHistory = [item, ...history.filter((i) => i !== item)].slice(0, 20)
+    setHistory(updatedHistory)
+    localStorage.setItem('searchHistory', JSON.stringify(updatedHistory))
+
+    const token = localStorage.getItem("token")
+    if (token) {
+      try {
+        await fetch(`${API_BASE}/api/perfil/historial-busqueda`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ termino: item })
+        })
+      } catch (error) {
+        console.error("Error guardando en BD:", error)
+      }
+    }
+  }
+
+  // --- PERSISTENCIA: Eliminar ---
+  const handleDeleteItem = async (e: React.MouseEvent, term: string) => {
+    e.stopPropagation()
+    
+    // UI Primero (Optimista)
+    const updated = history.filter((h) => h !== term)
+    setHistory(updated)
+    localStorage.setItem('searchHistory', JSON.stringify(updated))
+
+    const token = localStorage.getItem("token")
+    if (token) {
+      try {
+        await fetch(`${API_BASE}/api/perfil/historial-busqueda/${encodeURIComponent(term)}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` }
+        })
+      } catch (error) {
+        console.error("Error eliminando en BD:", error)
+      }
+    }
+  }
+
   const handleSelectLocation = (loc: Location) => {
-    const fullName = `${loc.nombre} - ${loc.departamento} - Bolivia`
+    const displayValue = loc.nombre
     updateFilters({
       locationId: loc.id,
-      query: fullName
+      query: displayValue
     })
-    onChange(fullName)
-    saveToHistory(fullName)
+    onChange(displayValue)
+    saveToHistory(displayValue)
     setIsOpen(false)
-    registrarConsulta(loc.id, fullName)
+    registrarConsulta(loc.id, displayValue)
 
-    // Auto-submit tras elegir sugerencia
     setTimeout(() => {
       containerRef.current?.closest('form')?.requestSubmit()
     }, 100)
   }
 
-  useEffect(() => {
-    const savedHistory = localStorage.getItem('searchHistory')
-    if (savedHistory) {
-      setHistory(JSON.parse(savedHistory))
-    }
-  }, [])
-
-  const saveToHistory = (item: string) => {
-    const updatedHistory = [item, ...history.filter((i) => i !== item)].slice(0, 5)
-    setHistory(updatedHistory)
-    localStorage.setItem('searchHistory', JSON.stringify(updatedHistory))
-  }
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value
     const cleanValue = rawValue.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-]/gi, '').trimStart()
-
     onChange(cleanValue)
   }
 
@@ -122,7 +213,6 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
       }
       setIsLoading(true)
       try {
-        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
         const res = await fetch(`${API_BASE}/api/locations/search?q=${encodeURIComponent(value)}`)
         if (res.ok) {
           const data = await res.json()
@@ -139,21 +229,29 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     return () => clearTimeout(timer)
   }, [value, isSelected])
 
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem("token")
+      if (!token) {
+        setIsAuth(false)
+        return
+      }
+      try {
+        const res = await fetch(`${API_BASE}/api/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        setIsAuth(res.ok)
+      } catch (error) {
+        setIsAuth(false)
+      }
+    }
+    checkAuth()
+  }, [])
+
   return (
     <div className="w-full relative" ref={containerRef}>
-      {/* ELIMINADO EL LABEL CIUDAD/ZONA */}
-
-      <div
-        className={`h-[46px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${
-          isOpen && suggestions.length > 0
-            ? 'border-amber-600 ring-2 ring-amber-100'
-            : 'border-stone-300'
-        }`}
-      >
-        <MapPin
-          className={`w-5 h-5 flex-shrink-0 ${value ? 'text-amber-600' : 'text-stone-400'}`}
-        />
-
+      <div className={`h-[46px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${isOpen ? 'border-amber-600 ring-2 ring-amber-100' : 'border-stone-300'}`}>
+        <MapPin className={`w-5 h-5 flex-shrink-0 ${value ? 'text-amber-600' : 'text-stone-400'}`} />
         <div className="relative flex-1 flex items-center w-full h-full min-w-0">
           <input
             type="text"
@@ -161,83 +259,73 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             onChange={handleInputChange}
             onFocus={() => {
               setIsOpen(true)
-              requestAnimationFrame(() => {
-                recalcDropdown()
-              })
+              requestAnimationFrame(recalcDropdown)
             }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                setIsOpen(false)
-              }
-            }}
+            onKeyDown={(e) => e.key === 'Enter' && setIsOpen(false)}
             placeholder="Cochabamba, La Paz..."
-            className="w-full bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 font-inter pr-[70px] md:truncate overflow-x-auto whitespace-nowrap"
+            className="w-full bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 font-inter pr-[70px]"
           />
-
           <div className="absolute right-0 flex items-center gap-2 bg-white pl-2 h-full">
-            {isSelected && (
-              <Image
-                src="https://flagcdn.com/w20/bo.png"
-                alt="BO"
-                width={20}
-                height={14}
-                className="rounded-sm flex-shrink-0"
-              />
-            )}
-
-            {isLoading ? (
-              <Loader2 className="w-4 h-4 animate-spin text-amber-600" />
-            ) : (
-              value && (
-                <button
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    onChange('')
-                  }}
-                  type="button"
-                  className="p-1 hover:bg-stone-100 rounded-full transition-colors flex-shrink-0"
-                >
-                  <X className="w-4 h-4 text-stone-400 hover:text-red-500" />
-                </button>
-              )
+            {isSelected && <Image src="https://flagcdn.com/w20/bo.png" alt="BO" width={20} height={14} className="rounded-sm flex-shrink-0" />}
+            {isLoading ? <Loader2 className="w-4 h-4 animate-spin text-amber-600" /> : value && (
+              <button onClick={() => onChange('')} type="button" className="p-1 hover:bg-stone-100 rounded-full transition-colors flex-shrink-0">
+                <X className="w-4 h-4 text-stone-400 hover:text-red-500" />
+              </button>
             )}
           </div>
         </div>
       </div>
 
       {isOpen && (
-        <div className="absolute z-[100] w-full mt-2 bg-white border border-stone-200 rounded-xl shadow-xl overflow-hidden">
+        <div style={dropdownStyle} className="bg-white border border-stone-200 rounded-xl shadow-xl overflow-hidden">
           {value === '' && history.length > 0 && (
-            <div>
+            <div className="max-h-60 overflow-y-auto overscroll-contain"> 
               <div className="px-4 py-2 bg-stone-50 border-b border-stone-100">
-                <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">
-                  Búsquedas recientes
-                </span>
+                <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">Búsquedas recientes</span>
               </div>
-              {history.map((item, idx) => (
-                <button
-                  key={`hist-${idx}`}
-                  type="button"
-                  onClick={() => {
-                    onChange(item)
-                    setIsOpen(false)
-                    updateFilters({ query: item })
-                    setTimeout(() => {
-                      containerRef.current?.closest('form')?.requestSubmit()
-                    }, 100)
-                  }}
-                  className="w-full px-4 py-3 flex items-center gap-3 hover:bg-amber-50 transition-colors text-left border-b border-stone-50 last:border-0"
-                >
-                  <History className="w-3.5 h-3.5 text-stone-300" />
-                  <span className="text-sm text-stone-600">{item}</span>
-                </button>
+              {(showAll ? history : history.slice(0, 5)).map((item, idx) => (
+                <div key={`hist-${idx}`} className="group flex items-center justify-between hover:bg-amber-50 border-b border-stone-50 last:border-0">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onChange(item)
+                      setIsOpen(false)
+                      updateFilters({ query: item })
+                      saveToHistory(item) 
+                      setTimeout(() => containerRef.current?.closest('form')?.requestSubmit(), 100)
+                    }}
+                    className="flex-1 px-4 py-3 flex items-center gap-3 text-left"
+                  >
+                    <History className="w-3.5 h-3.5 text-stone-300" />
+                    <span className="text-sm text-stone-600">{item}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => handleDeleteItem(e, item)}
+                    className="pr-4 opacity-100 md:opacity-0 group-hover:opacity-100 text-stone-400 hover:text-red-500 transition-opacity p-2"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               ))}
+              {history.length > 5 && (
+                <div className="flex justify-end border-t border-stone-50">
+                  <button
+                    type="button"
+                    onClick={() => setShowAll(!showAll)}
+                    className={`px-4 py-2 text-xs font-bold transition-colors ${
+                      showAll ? "text-stone-500 hover:text-stone-700" : "text-amber-600 hover:text-amber-700"
+                    }`}
+                  >
+                    {showAll ? "Ver menos" : "Ver más"}
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
           {value.trim().length >= 2 && !isSelected && (
-            <>
+            <div className="max-h-[300px] overflow-y-auto">
               {isLoading ? (
                 <div className="px-4 py-6 text-center flex flex-col items-center gap-2">
                   <Loader2 className="w-5 h-5 animate-spin text-amber-600" />
@@ -254,17 +342,15 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                     >
                       <div className="flex items-center gap-3">
                         <Search className="w-3.5 h-3.5 text-stone-500" />
-                        <span className="text-sm font-bold text-stone-600">
-                          {loc.nombre} - {loc.departamento} - Bolivia
-                        </span>
+                        <div className="flex flex-col">
+                          <span className="text-sm font-bold text-stone-600">{loc.nombre}</span>
+                          <span className="text-xs text-stone-400">{loc.contexto}</span>
+                        </div>
                       </div>
-                      <Image
-                        src="https://flagcdn.com/w20/bo.png"
-                        alt="BO"
-                        width={20}
-                        height={14}
-                        className="rounded-sm"
-                      />
+                      <div className="text-[10px] font-bold px-2 py-1 bg-stone-100 text-stone-500 rounded-md uppercase">
+                        {loc.nivel}
+                      </div>
+                      <Image src="https://flagcdn.com/w20/bo.png" alt="BO" width={20} height={14} className="rounded-sm" />
                     </button>
                   ))}
                 </div>
@@ -273,7 +359,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                   <p className="text-sm text-stone-600 font-medium">No se encontraron resultados</p>
                 </div>
               )}
-            </>
+            </div>
           )}
         </div>
       )}

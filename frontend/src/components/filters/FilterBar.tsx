@@ -1,20 +1,28 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { CapacidadButton } from '../busqueda/capacidad/CapacidadButton'
 import {
   Home,
   Search as SearchIcon,
   DollarSign,
   Users,
   Maximize,
+  Award,
   SlidersHorizontal,
-  ChevronDown
+  ChevronDown,
+  Building,
+  Bed,
+  Trees,
+  Flower2
 } from 'lucide-react'
 import { useSearchFilters } from '@/hooks/useSearchFilters'
 import { LocationSearch } from '../layout/LocationSearch'
 import { ComboBox } from '../ui/ComboBox'
 import TransactionModeFilter from './TransactionModeFilter'
 import { useRouter } from 'next/navigation'
+import SuperficieFilter from './SuperficieFilter'
+
 
 interface FilterBarProps {
   onSearch?: (filtros: {
@@ -24,31 +32,39 @@ interface FilterBarProps {
     updatedAt: string
   }) => void
   variant?: 'home' | 'map'
+  onOpenPriceFilter?: () => void
+  onOpenSuperficieFilter?: () => void
+  isCapacidadActive?: boolean
+  onToggleCapacidad?: () => void
+  isPriceFilterActive?: boolean   
+  isSuperficieFilterActive?: boolean
 }
-
 type LocationValue =
   | string
   | {
-      nombre?: string
-      target?: {
-        value?: string
-      }
+    nombre?: string
+    target?: {
+      value?: string
     }
+  }
 
 // Botón Mock
 const MockFilterBtn = ({
   icon: Icon,
   text,
-  hasChevron = true
+  hasChevron = true,
+  onClick
 }: {
   icon?: any
   text: string
   hasChevron?: boolean
+  onClick?: () => void
 }) => (
   <button
     type="button"
     className="h-[36px] flex items-center justify-between bg-white border border-stone-200 text-stone-600 px-3 rounded-xl shadow-sm hover:border-stone-300 transition-all font-inter text-sm whitespace-nowrap gap-2 shrink-0 focus:outline-none cursor-default"
-    onClick={(e) => e.preventDefault()}
+    onClick={(e) => { e.preventDefault(); if (onClick) onClick() }}
+
   >
     <div className="flex items-center gap-2">
       {Icon && <Icon className="w-4 h-4 text-stone-500" />}
@@ -57,8 +73,29 @@ const MockFilterBtn = ({
     {hasChevron && <ChevronDown className="w-4 h-4 text-stone-400" />}
   </button>
 )
+const trackSearchTelemetria = async (filtros: {
+  tipoInmueble: string[]
+  modoInmueble: string[]
+  query: string
+  zona?: string
+}) => {
+  try {
+    await fetch('/api/telemetria/search', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ...filtros,
+        timestamp: new Date().toISOString(),
+        url: typeof window !== 'undefined' ? window.location.pathname : ''
+      })
+    })
+  } catch (error) {
+    console.error('Error tracking search:', error)
+  }
+}
 
-export default function FilterBar({ onSearch, variant = 'home' }: FilterBarProps) {
+export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad, isPriceFilterActive = false, isSuperficieFilterActive = false }: FilterBarProps) {
+
   const router = useRouter()
 
   const { updateFilters } = useSearchFilters()
@@ -82,28 +119,48 @@ export default function FilterBar({ onSearch, variant = 'home' }: FilterBarProps
     }
   }, [])
 
-  const handleSearch = (e?: React.FormEvent) => {
+  const propertyTypes = [
+    { label: 'Casas', icon: Home },
+    { label: 'Departamentos', icon: Building },
+    { label: 'Cuartos', icon: Bed },
+    { label: 'Terrenos', icon: Trees },
+    { label: 'Espacios Cementerio', icon: Flower2 }
+  ]
+
+  const handleSearch = async (e?: React.FormEvent) => {
     if (e) e.preventDefault()
     const tipoMap: Record<string, string> = {
-      Casa: 'CASA',
-      Departamento: 'DEPARTAMENTO',
-      Terreno: 'TERRENO',
-      Cuarto: 'CUARTO',
-      Espacios: 'ESPACIOS',
-      Cementerio: 'CEMENTERIO'
+      Casas: 'CASA',
+      Departamentos: 'DEPARTAMENTO',
+      Terrenos: 'TERRENO',
+      Cuartos: 'CUARTO',
+      "Espacios Cementerio": 'TERRENO_MORTUORIO'
     }
 
     const tipoFinal =
       tipoMap[tipoInmueble] ||
       (tipoInmueble !== 'Cualquier tipo' ? tipoInmueble.toUpperCase() : null)
 
+    const esTerreno = tipoFinal === 'TERRENO' || tipoFinal === 'TERRENO_MORTUORIO';
+
+    if (esTerreno) {
+      setModosSeleccionados(['VENTA']);
+    }
+
+    const modosFinales = esTerreno ? ['VENTA'] : modosSeleccionados;
+
     const nuevosFiltros = {
       tipoInmueble: tipoFinal ? [tipoFinal] : [],
-      modoInmueble: modosSeleccionados,
+      modoInmueble: modosFinales,
       query: ubicacionTexto,
       updatedAt: new Date().toISOString()
     }
-
+    await trackSearchTelemetria({
+      tipoInmueble: nuevosFiltros.tipoInmueble,
+      modoInmueble: nuevosFiltros.modoInmueble,
+      query: nuevosFiltros.query,
+      zona: ubicacionTexto
+    })
     updateFilters(nuevosFiltros)
 
     const params = new URLSearchParams()
@@ -153,9 +210,8 @@ export default function FilterBar({ onSearch, variant = 'home' }: FilterBarProps
           FILA INFERIOR: Todo lo demás
           ========================================= */}
       <div
-        className={`flex items-center w-full gap-3 relative z-[90] !overflow-visible ${
-          variant === 'map' ? 'flex-nowrap' : 'flex-col md:flex-row flex-wrap'
-        }`}
+        className={`flex items-center w-full gap-3 relative z-[90] !overflow-visible ${variant === 'map' ? 'flex-nowrap' : 'flex-col md:flex-row flex-wrap'
+          }`}
       >
         {/* 🔸 Tipo (Aislado con z-[100] para que salte por encima de todo) */}
         <div
@@ -165,7 +221,7 @@ export default function FilterBar({ onSearch, variant = 'home' }: FilterBarProps
             label={variant === 'map' ? '' : 'Tipo'}
             placeholder="Cualquier tipo"
             icon={Home}
-options={['Casa', 'Departamento', 'Terreno', 'Cuarto', 'Espacios', 'Cementerio']}
+            options={propertyTypes}
             onChange={(val: string) => setTipoInmueble(val)}
             value={tipoInmueble}
           />
@@ -187,18 +243,49 @@ options={['Casa', 'Departamento', 'Terreno', 'Cuarto', 'Espacios', 'Cementerio']
         {/* 🚀 FIX AISLAMIENTO DE SCROLL: 
             Solo estos botones tienen overflow-x-auto. Así los menús de la izquierda no se cortan. */}
         {variant === 'map' && (
-          <div className="flex items-center gap-3 flex-1 overflow-x-auto pb-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div className="flex items-center gap-3 flex-1 overflow-visible pb-1">
             <div className="shrink-0">
-              <MockFilterBtn icon={DollarSign} text="Precio" />
+              <button
+                type="button"
+                onClick={(e) => { e.preventDefault(); onOpenPriceFilter?.() }}
+                className={`h-[36px] flex items-center gap-2 px-3 rounded-xl shadow-sm transition-all text-sm whitespace-nowrap focus:outline-none border shrink-0 ${
+                  isPriceFilterActive
+                    ? 'bg-[#d97706] text-white border-[#d97706]'
+                    : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+                }`}
+              >
+                <DollarSign className={`w-4 h-4 ${isPriceFilterActive ? 'text-white' : 'text-stone-500'}`} />
+                <span>Precio</span>
+                <ChevronDown className={`w-4 h-4 ${isPriceFilterActive ? 'text-white' : 'text-stone-400'}`} />
+              </button>
             </div>
             <div className="shrink-0">
-              <MockFilterBtn icon={Users} text="Capacidad" />
+              <CapacidadButton
+                variant={variant}
+                isActive={isCapacidadActive}
+                onClick={onToggleCapacidad}
+              />
             </div>
             <div className="shrink-0">
-              <MockFilterBtn icon={Maximize} text="Metros" />
+              <button
+                type="button"
+                onClick={() => onOpenSuperficieFilter?.()}
+                className={`h-[36px] flex items-center gap-2 px-3 rounded-xl shadow-sm transition-all text-sm whitespace-nowrap focus:outline-none border shrink-0 ${
+                  isSuperficieFilterActive
+                    ? 'bg-[#d97706] text-white border-[#d97706]'
+                    : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+                }`}
+              >
+                <Maximize className={`w-4 h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-500'}`} />
+                <span>Metros</span>
+                <ChevronDown className={`w-4 h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-400'}`} />
+              </button>
             </div>
             <div className="shrink-0">
               <MockFilterBtn icon={SlidersHorizontal} text="Más Filtros" hasChevron={false} />
+            </div>
+            <div className="shrink-0">
+              <MockFilterBtn icon={Award} text="Recomendados" hasChevron={false} />
             </div>
           </div>
         )}
@@ -213,9 +300,8 @@ options={['Casa', 'Departamento', 'Terreno', 'Cuarto', 'Espacios', 'Cementerio']
         >
           <button
             type="submit"
-            className={`${
-              variant === 'map' ? 'h-[36px] px-6 shadow-md' : 'w-full md:w-auto h-[46px] px-10'
-            } bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95`}
+            className={`${variant === 'map' ? 'h-[36px] px-6 shadow-md' : 'w-full md:w-auto h-[46px] px-10'
+              } bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95`}
           >
             <SearchIcon size={18} />
             {variant === 'home' && 'BUSCAR'}

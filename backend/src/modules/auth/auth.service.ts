@@ -2,15 +2,33 @@ import crypto from 'node:crypto'
 import jwt from 'jsonwebtoken'
 
 import { env } from '../../config/env.js'
-import { enviarCodigoRegistro } from '../../lib/email.service.js'
+import { prisma } from '../../lib/prisma.client.js'
+import {
+  enviarCodigo2FA,
+  enviarCodigoRegistro,
+  enviarCorreoRecuperacionPassword
+} from '../../lib/email.service.js'
 import { generateToken, type JwtPayload } from '../../utils/jwt.js'
 import {
+  createPasswordRecovery,
   createSession,
   createUser,
   desactiveSessionByToken,
+  desactivarRecuperacionesPasswordActivas,
   findActiveSessionByToken,
+  findPasswordRecoveryByToken,
   findUser,
-  findUserByCorreo
+  findUserByCorreo,
+  markPasswordRecoveryAsUsed,
+  findUserById,
+  create2FACode,
+  invalidateActive2FACodesByUserId,
+  activate2FAByUserId,
+  deactivate2FAByUserId,
+  expire2FACode,
+  findActive2FACodeByUserId,
+  increment2FACodeAttempts,
+  mark2FACodeAsUsed
 } from './auth.repository.js'
 
 type LoginDTO = {
@@ -31,6 +49,11 @@ type VerifyRegisterCodeDTO = {
   verificationToken: string
   codigo: string
   password: string
+}
+
+type Verify2FADTO = {
+  userId: number
+  codigo: string
 }
 
 type PendingRegisterPayload = {
@@ -66,6 +89,16 @@ const MAX_LOGIN_ATTEMPTS = 5
 const LOGIN_BLOCK_TIME_MS = 15 * 60 * 1000
 
 const REGISTER_CODE_TTL_MINUTES = 5
+const TWO_FACTOR_CODE_TTL_MINUTES = 5
+
+// límite de solicitudes de recuperación
+const MAX_RECOVERY_REQUESTS = 3
+const RECOVERY_WINDOW_MS = 5 * 60 * 1000
+const recoveryRequests = new Map<string, number[]>()
+
+// límite de intentos por enlace
+const MAX_TOKEN_ATTEMPTS = 3
+const tokenAttempts = new Map<string, number>()
 const REGISTER_CODE_TTL_SECONDS = REGISTER_CODE_TTL_MINUTES * 60
 
 const loginAttempts = new Map<string, LoginAttemptState>()
@@ -103,27 +136,17 @@ const getBlockStatus = (correo: string) => {
   const state = getAttemptState(correo)
 
   if (!state.blockedUntil) {
-    return {
-      blocked: false,
-      retryAfterSeconds: 0
-    }
+    return { blocked: false, retryAfterSeconds: 0 }
   }
 
   const remainingMs = state.blockedUntil - Date.now()
 
   if (remainingMs <= 0) {
     loginAttempts.delete(correo)
-
-    return {
-      blocked: false,
-      retryAfterSeconds: 0
-    }
+    return { blocked: false, retryAfterSeconds: 0 }
   }
 
-  return {
-    blocked: true,
-    retryAfterSeconds: Math.ceil(remainingMs / 1000)
-  }
+  return { blocked: true, retryAfterSeconds: Math.ceil(remainingMs / 1000) }
 }
 
 const registerFailedAttempt = (correo: string) => {
@@ -150,7 +173,7 @@ const registerFailedAttempt = (correo: string) => {
     retryAfterSeconds: 0
   }
 }
-
+//prueba
 const clearFailedAttempts = (correo: string) => {
   loginAttempts.delete(correo)
 }
@@ -179,17 +202,19 @@ const normalizeRegisterPayload = (payload: RegisterDTO) => {
     throw new Error('Las contraseñas no coinciden')
   }
 
-  return {
-    nombre,
-    apellido,
-    correo,
-    password,
-    telefono
-  }
+  return { nombre, apellido, correo, password, telefono }
 }
 
 const generateRegisterCode = () => {
   return Math.floor(100000 + Math.random() * 900000).toString()
+}
+
+const generate2FACode = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString()
+}
+
+const hash2FACode = (codigo: string) => {
+  return crypto.createHash('sha256').update(codigo).digest('hex')
 }
 
 const signRegisterCode = ({
@@ -264,6 +289,10 @@ export const loginService = async (payload: LoginDTO) => {
     throw new AuthError('Usuario no encontrado', 404)
   }
 
+  if (user.activo === false) {
+    throw new AuthError('Esta cuenta está desactivada', 403)
+  }
+
   const isValidPassword = user.password === password
 
   if (!isValidPassword) {
@@ -287,6 +316,105 @@ export const loginService = async (payload: LoginDTO) => {
 
   clearFailedAttempts(correo)
 
+  if (user.two_factor_activo) {
+    const codigo = generate2FACode()
+    const codigoHash = hash2FACode(codigo)
+    const expiraEn = new Date(Date.now() + TWO_FACTOR_CODE_TTL_MINUTES * 60 * 1000)
+
+    await invalidateActive2FACodesByUserId(user.id)
+
+    await create2FACode({
+      usuarioId: user.id,
+      codigoHash,
+      expiraEn
+    })
+
+    const emailResult = await enviarCodigo2FA({
+      emailDestino: user.correo,
+      codigo,
+      nombreUsuario: user.nombre
+    })
+
+    if (!emailResult.success) {
+      throw new Error('No se pudo enviar el código de verificación 2FA. Intenta nuevamente.')
+    }
+
+    return {
+      requires2FA: true,
+      userId: user.id,
+      email: user.correo,
+      expiresInMinutes: TWO_FACTOR_CODE_TTL_MINUTES
+    }
+  }
+
+  const jwtPayload: JwtPayload = {
+    id: user.id,
+    correo: user.correo
+  }
+
+  const token = generateToken(jwtPayload)
+  const fechaExpiracion = new Date(Date.now() + 60 * 60 * 1000)
+
+  await createSession({
+    token,
+    usuarioId: user.id,
+    fechaExpiracion
+  })
+
+  return {
+    requires2FA: false,
+    user: {
+      id: user.id,
+      correo: user.correo,
+      nombre: user.nombre,
+      apellido: user.apellido,
+      rol: user.rol
+    },
+    token
+  }
+}
+
+export const verify2FAService = async ({ userId, codigo }: Verify2FADTO) => {
+  const normalizedCode = codigo?.trim()
+
+  if (!userId || !normalizedCode) {
+    throw new AuthError('El usuario y el código son obligatorios', 400)
+  }
+
+  if (!/^\d{6}$/.test(normalizedCode)) {
+    throw new AuthError('El código debe tener exactamente 6 dígitos numéricos', 400)
+  }
+
+  const user = await findUserById(userId)
+
+  if (!user) {
+    throw new AuthError('Usuario no encontrado', 404)
+  }
+
+  if (!user.two_factor_activo) {
+    throw new AuthError('El usuario no tiene autenticación en dos pasos activada', 400)
+  }
+
+  const activeCode = await findActive2FACodeByUserId(userId)
+
+  if (!activeCode) {
+    throw new AuthError('El código es incorrecto', 401)
+  }
+
+  if (activeCode.expiraEn.getTime() < Date.now()) {
+    await expire2FACode(activeCode.id)
+    throw new AuthError('El código ha expirado', 401)
+  }
+
+  const codigoHash = hash2FACode(normalizedCode)
+
+  if (codigoHash !== activeCode.codigoHash) {
+    await increment2FACodeAttempts(activeCode.id, activeCode.intentos ?? 0)
+    throw new AuthError('El código es incorrecto', 401)
+  }
+
+  await mark2FACodeAsUsed(activeCode.id)
+
   const jwtPayload: JwtPayload = {
     id: user.id,
     correo: user.correo
@@ -306,7 +434,8 @@ export const loginService = async (payload: LoginDTO) => {
       id: user.id,
       correo: user.correo,
       nombre: user.nombre,
-      apellido: user.apellido
+      apellido: user.apellido,
+      rol: user.rol
     },
     token
   }
@@ -382,6 +511,7 @@ export const verifyRegisterCodeService = async (payload: VerifyRegisterCodeDTO) 
   if (existingUser) {
     throw new AuthError(DUPLICATE_EMAIL_MESSAGE, 409)
   }
+
   let newUser
 
   try {
@@ -433,6 +563,10 @@ export const getMeService = async (token: string) => {
     throw new Error('Sesión inválida o expirada')
   }
 
+  if (session.usuario.activo === false) {
+    throw new AuthError('Esta cuenta está desactivada', 403)
+  }
+
   return {
     user: {
       id: session.usuario.id,
@@ -453,8 +587,83 @@ export const logoutService = async (token: string) => {
 
   await desactiveSessionByToken(token)
 
+  return { message: 'Logout exitoso' }
+}
+
+type VerifyPasswordDTO = {
+  userId: number
+  password: string
+}
+
+export const verifyPasswordService = async ({ userId, password }: VerifyPasswordDTO) => {
+  const trimmed = password?.trim()
+
+  if (!trimmed) {
+    throw new AuthError('La contraseña es obligatoria', 400)
+  }
+
+  const user = await findUserById(userId)
+
+  if (!user) {
+    throw new AuthError('Usuario no encontrado', 404)
+  }
+
+  if (user.password !== trimmed) {
+    throw new AuthError('Contraseña incorrecta', 401)
+  }
+
+  return { valid: true }
+}
+
+export const activate2FAService = async ({ userId, password }: VerifyPasswordDTO) => {
+  const trimmed = password?.trim()
+
+  if (!trimmed) {
+    throw new AuthError('La contraseña es obligatoria', 400)
+  }
+
+  const user = await findUserById(userId)
+
+  if (!user) {
+    throw new AuthError('Usuario no encontrado', 404)
+  }
+
+  if (user.password !== trimmed) {
+    throw new AuthError('Contraseña incorrecta', 401)
+  }
+
+  await activate2FAByUserId(userId)
+
   return {
-    message: 'Logout exitoso'
+    message: 'Verificación en dos pasos activada correctamente',
+    two_factor_activo: true
+  }
+}
+
+export const deactivate2FAService = async (userId: number) => {
+  const user = await findUserById(userId)
+
+  if (!user) {
+    throw new AuthError('Usuario no encontrado', 404)
+  }
+
+  await deactivate2FAByUserId(userId)
+
+  return {
+    message: 'Verificación en dos pasos desactivada correctamente',
+    two_factor_activo: false
+  }
+}
+
+export const get2FAStatusService = async (userId: number) => {
+  const user = await findUserById(userId)
+
+  if (!user) {
+    throw new AuthError('Usuario no encontrado', 404)
+  }
+
+  return {
+    two_factor_activo: user.two_factor_activo
   }
 }
 
@@ -487,9 +696,7 @@ export const loginWithGoogleCodeService = async (code: string) => {
 
   const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
       code: normalizedCode,
       client_id: env.GOOGLE_CLIENT_ID,
@@ -506,9 +713,7 @@ export const loginWithGoogleCodeService = async (code: string) => {
   }
 
   const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-    headers: {
-      Authorization: `Bearer ${tokenData.access_token}`
-    }
+    headers: { Authorization: `Bearer ${tokenData.access_token}` }
   })
 
   const googleUser = (await userInfoResponse.json()) as GoogleUserInfoResponse
@@ -527,6 +732,10 @@ export const loginWithGoogleCodeService = async (code: string) => {
 
   if (!user) {
     throw new AuthError('Esta cuenta de Google no está registrada. Regístrate primero.', 404)
+  }
+
+  if (user.activo === false) {
+    throw new AuthError('Esta cuenta está desactivada', 403)
   }
 
   const jwtPayload: JwtPayload = {
@@ -548,8 +757,148 @@ export const loginWithGoogleCodeService = async (code: string) => {
       id: user.id,
       correo: user.correo,
       nombre: user.nombre,
-      apellido: user.apellido
+      apellido: user.apellido,
+      rol: user.rol
     },
     token
+  }
+}
+type ForgotPasswordDTO = {
+  correo: string
+}
+
+const RESET_PASSWORD_TTL_MINUTES = 15
+
+export const forgotPasswordService = async (payload: ForgotPasswordDTO) => {
+  const correo = payload.correo?.trim().toLowerCase()
+
+  if (!correo) {
+    throw new Error('El correo es obligatorio')
+  }
+
+  const emailRegex = /\S+@\S+\.\S+/
+
+  if (!emailRegex.test(correo)) {
+    throw new Error('Formato de correo inválido')
+  }
+
+  const user = await findUserByCorreo(correo)
+
+  const now = Date.now()
+  const requests = (recoveryRequests.get(correo) ?? []).filter((t) => now - t < RECOVERY_WINDOW_MS)
+  if (requests.length >= MAX_RECOVERY_REQUESTS) {
+    throw new AuthError('Demasiadas solicitudes. Intenta nuevamente en 5 minutos.', 429)
+  }
+  recoveryRequests.set(correo, [...requests, now])
+
+  // Respuesta genérica para no revelar si el correo existe o no
+  if (!user) {
+    return {
+      message: 'Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.'
+    }
+  }
+
+  const resetToken = crypto.randomUUID()
+  const expiraEn = new Date(Date.now() + RESET_PASSWORD_TTL_MINUTES * 60 * 1000)
+
+  await desactivarRecuperacionesPasswordActivas(user.id)
+
+  await createPasswordRecovery({
+    usuarioId: user.id,
+    token: resetToken,
+    expiraEn
+  })
+
+  const resetLink = `${env.FRONTEND_URL}/reset-password?token=${resetToken}`
+
+  const emailResult = await enviarCorreoRecuperacionPassword({
+    emailDestino: user.correo,
+    nombreUsuario: user.nombre,
+    resetLink,
+    minutosExpiracion: RESET_PASSWORD_TTL_MINUTES
+  })
+
+  if (!emailResult.success) {
+    throw new Error('No se pudo enviar el correo de recuperación. Intenta nuevamente.')
+  }
+
+  return {
+    message: 'Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.'
+  }
+}
+
+type ResetPasswordDTO = {
+  token: string
+  password: string
+  confirmPassword: string
+}
+
+export const resetPasswordService = async (payload: ResetPasswordDTO) => {
+  const token = payload.token?.trim()
+  const password = payload.password?.trim()
+  const confirmPassword = payload.confirmPassword?.trim()
+
+  if (!token || !password || !confirmPassword) {
+    throw new AuthError('Todos los campos son obligatorios', 400)
+  }
+
+  if (password !== confirmPassword) {
+    throw new AuthError('Las contraseñas no coinciden', 400)
+  }
+
+  if (password.length < 8) {
+    throw new AuthError('La contraseña debe tener al menos 8 caracteres', 400)
+  }
+
+  if (!/[A-Z]/.test(password)) {
+    throw new AuthError('La contraseña debe contener al menos una mayúscula', 400)
+  }
+
+  if (!/[0-9]/.test(password)) {
+    throw new AuthError('La contraseña debe contener al menos un número', 400)
+  }
+
+  if (!/[^A-Za-z0-9]/.test(password)) {
+    throw new AuthError('La contraseña debe contener al menos un carácter especial', 400)
+  }
+
+  const recovery = await findPasswordRecoveryByToken(token)
+
+  if (!recovery || !recovery.activo) {
+    throw new AuthError('El enlace no es válido o ya fue utilizado', 400)
+  }
+
+  if (new Date() > recovery.expiraEn) {
+    throw new AuthError('El enlace ha expirado. Solicita uno nuevo.', 400)
+  }
+
+  const attempts = tokenAttempts.get(token) ?? 0
+  if (attempts >= MAX_TOKEN_ATTEMPTS) {
+    await markPasswordRecoveryAsUsed(recovery.id)
+    tokenAttempts.delete(token)
+    throw new AuthError('Demasiados intentos. El enlace ha sido invalidado.', 429)
+  }
+
+  tokenAttempts.set(token, attempts + 1)
+
+  await prisma.$transaction([
+    prisma.recuperacion_password.update({
+      where: { id: recovery.id },
+      data: { usadoEn: new Date(), activo: false }
+    }),
+    prisma.usuario.update({
+      where: { id: recovery.usuarioId },
+      data: { password }
+    }),
+    prisma.sesion.updateMany({
+      where: { usuarioId: recovery.usuarioId, estado: true },
+      data: { estado: false }
+    })
+  ])
+
+  tokenAttempts.delete(token)
+
+  return {
+    message: 'Contraseña actualizada correctamente. Ya puedes iniciar sesión.'
   }
 }
