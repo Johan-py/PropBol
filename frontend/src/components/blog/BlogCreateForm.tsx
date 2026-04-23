@@ -166,7 +166,6 @@ export default function BlogCreateForm({
       window.URL.revokeObjectURL(imagePreviewUrl);
     };
   }, [imagePreviewUrl, selectedImageFile]);
-
   const isFormDirty = useMemo(() => {
     const baseTitulo = initialValues?.titulo?.trim() ?? "";
     const baseImagen = initialValues?.imagen?.trim() ?? "";
@@ -268,7 +267,6 @@ export default function BlogCreateForm({
       const imageUrl = selectedImageFile
         ? (await uploadBlogImage(selectedImageFile)).url
         : imagen.trim();
-
       const payload = {
         titulo: titulo.trim(),
         imagen: imageUrl,
