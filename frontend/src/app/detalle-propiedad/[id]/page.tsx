@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useParams } from 'next/navigation'
@@ -30,10 +29,8 @@ export default function DetallePropiedadPage() {
 
   return (
     <main className="min-h-screen bg-[#ede7dc]">
-      <div className="mx-auto max-w-[1120px] px-4 py-8">
-
-        {/* Favoritos */}
-        <div className="mb-3 flex justify-end">
+      <div className="mx-auto w-full max-w-[1120px] px-4 py-8">
+        <div className="mb-4 flex justify-end">
           <button
             type="button"
             className="flex items-center gap-2 text-sm font-semibold text-[#d67a00]"
@@ -43,13 +40,9 @@ export default function DetallePropiedadPage() {
           </button>
         </div>
 
-        {/* Galería: ancho completo, fuera del grid */}
         <GaleriaPropiedad imagenes={detalle.imagenes} titulo={detalle.titulo} />
 
-        {/* Grid principal: empieza debajo de la galería */}
         <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_300px] lg:items-start">
-
-          {/* Columna izquierda */}
           <div className="space-y-5">
             <ResumenPropiedad detalle={detalle} />
             <DescripcionPropiedad descripcion={detalle.descripcion} />
@@ -57,11 +50,9 @@ export default function DetallePropiedadPage() {
             <UbicacionPropiedad mapa={detalle.mapa} />
           </div>
 
-          {/* Columna derecha: contacto sticky */}
           <div className="lg:sticky lg:top-16 lg:self-start">
             <ContactoPropiedad contacto={detalle.contacto} />
           </div>
-
         </div>
       </div>
     </main>
