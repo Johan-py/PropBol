@@ -8,6 +8,11 @@ export type BlogCategoryOption = {
   nombre: string;
 };
 
+type UploadedBlogImageResponse = {
+  path: string;
+  url: string;
+};
+
 export type CreateBlogPayload = {
   titulo: string;
   contenido: string;
@@ -24,6 +29,7 @@ export type EditableBlog = {
   categoria_id: number;
   estado: "BORRADOR" | "RECHAZADO";
 };
+
 type CreatedBlogResponse = {
   id: number;
   titulo: string;
@@ -38,6 +44,7 @@ type UserBlogRow = {
   categoria_id: number;
   estado: "BORRADOR" | "PENDIENTE" | "PUBLICADO" | "RECHAZADO";
 };
+
 const getApiUrl = () =>
   (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").replace(
     /\/$/,
@@ -197,4 +204,27 @@ export async function getEditableBlog(id: number): Promise<EditableBlog> {
     categoria_id: blog.categoria_id,
     estado: blog.estado,
   };
+}
+
+export async function uploadBlogImage(
+  file: File,
+): Promise<UploadedBlogImageResponse> {
+  const formData = new FormData();
+  formData.append("imagen", file);
+
+  const response = await fetch(`${getApiUrl()}/api/blogs/upload-image`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: formData,
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "No se pudo subir la imagen del blog");
+  }
+
+  return data;
 }
