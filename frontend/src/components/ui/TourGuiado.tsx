@@ -16,12 +16,6 @@ const TOUR_STEPS = [
     required: true,
   },
   {
-    id: "tour-inicio",
-    title: "Inicio",
-    description: "Navega a la página principal desde aquí.",
-    required: true,
-  },
-  {
     id: "tour-propiedades",
     title: "Propiedades",
     description: "Explora casas, departamentos, terrenos y más.",
@@ -40,18 +34,7 @@ const TOUR_STEPS = [
       "Conoce nuestros planes y beneficios para publicar tu inmueble.",
     required: true,
   },
-  {
-    id: "tour-contacto",
-    title: "Contáctanos",
-    description: "¿Tienes dudas? Escríbenos y te ayudamos.",
-    required: true,
-  },
-  {
-    id: "tour-nosotros",
-    title: "Sobre Nosotros",
-    description: "Conoce más sobre el equipo detrás de PropBol.",
-    required: true,
-  },
+
   {
     id: "tour-ayuda",
     title: "Ayuda",
@@ -70,6 +53,12 @@ const TOUR_STEPS = [
     description: "Accede a tu perfil, publicaciones y configuración.",
     required: true,
   },
+  //{
+  //  id: "tour-publicar",
+    //title: "Publica tu inmueble",
+    //description: "Anuncia tu propiedad de forma rápida y sencilla. Llega a miles de compradores.",
+    //required: true,
+  //},
   {
     id: "tour-footer-logo",
     title: "PropBol",
@@ -99,7 +88,8 @@ const TOUR_STEPS = [
   },
 ];
 
-const FOOTER_STEP_INDEX = 11; // índice desde donde empiezan los pasos del footer
+// Ahora los pasos del footer empiezan en el índice 8 (antes era 7)
+const FOOTER_STEP_INDEX = 8;
 
 export default function TourGuiado() {
   const [showTour, setShowTour] = useState(true);
@@ -139,20 +129,19 @@ export default function TourGuiado() {
     return () => window.removeEventListener("keydown", handleKey);
   }, [showTour, currentStep]);
 
-  // HU-05: Criterio 9 — Reactivación manual desde el botón Ayuda
+  // Reactivación manual desde el botón Ayuda
   useEffect(() => {
     const handleIniciarTour = () => {
       setCurrentStep(0);
       setHighlight(null);
       setShowTour(true);
     };
-
     window.addEventListener("propbol:iniciar-tour", handleIniciarTour);
     return () =>
       window.removeEventListener("propbol:iniciar-tour", handleIniciarTour);
   }, []);
 
-  // 📐 Medir la altura real del tooltip + recalcular en resize/zoom
+  // Medir altura del tooltip
   useEffect(() => {
     if (!showTour) return;
 
@@ -181,6 +170,7 @@ export default function TourGuiado() {
       window.visualViewport?.removeEventListener("scroll", measure);
     };
   }, [currentStep, showTour]);
+
   const applyHighlight = (el: HTMLElement) => {
     const isFooter = currentStep >= FOOTER_STEP_INDEX;
 
@@ -190,7 +180,6 @@ export default function TourGuiado() {
     });
 
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-
     timeoutRef.current = setTimeout(() => {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -200,7 +189,7 @@ export default function TourGuiado() {
     }, 50);
   };
 
-  //  Buscar elemento con reintentos
+  // Búsqueda del elemento con reintentos
   useEffect(() => {
     if (!showTour) return;
 
@@ -212,7 +201,6 @@ export default function TourGuiado() {
 
     const tryFind = () => {
       const el = document.getElementById(id);
-
       if (el) {
         if (retryRef.current) clearTimeout(retryRef.current);
         applyHighlight(el);
@@ -232,7 +220,6 @@ export default function TourGuiado() {
     };
 
     tryFind();
-
     return () => {
       if (retryRef.current) clearTimeout(retryRef.current);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -275,7 +262,6 @@ export default function TourGuiado() {
       top = highlight.top - H - GAP;
     }
 
-    // Clamp final: nunca salirse del viewport visible
     const minTop = vOffsetTop + 10;
     const maxTop = vOffsetTop + vh - H - 10;
     top = Math.max(minTop, Math.min(top, maxTop));
@@ -333,6 +319,7 @@ export default function TourGuiado() {
 
       {hasValid && (
         <div
+          ref={tooltipRef}
           style={{
             position: "fixed",
             top,
