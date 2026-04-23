@@ -24,7 +24,6 @@ export type EditableBlog = {
   categoria_id: number;
   estado: "BORRADOR" | "RECHAZADO";
 };
-
 type CreatedBlogResponse = {
   id: number;
   titulo: string;
@@ -39,7 +38,6 @@ type UserBlogRow = {
   categoria_id: number;
   estado: "BORRADOR" | "PENDIENTE" | "PUBLICADO" | "RECHAZADO";
 };
-
 const getApiUrl = () =>
   (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").replace(/\/$/, "");
 
