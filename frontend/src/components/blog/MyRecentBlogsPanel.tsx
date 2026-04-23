@@ -61,12 +61,10 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({
           <h2 className="text-stone-900 font-bold text-sm uppercase tracking-widest">
             Mis Blogs Recientes
           </h2>
-          <p className="text-stone-400 text-xs">
-            Panel de control editorial
-          </p>
+          <p className="text-stone-400 text-xs">Panel de control editorial</p>
         </div>
 
-        <Link href="/profile?tab=blogs">
+        <Link href="/mis-blogs">
           <button className="text-[#A67C00] font-bold text-xs uppercase tracking-tighter transition-colors hover:text-[#7d4b00]">
             Ver todos mis posts
           </button>
