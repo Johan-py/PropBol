@@ -34,12 +34,6 @@ model Usuario {
   two_factor_metodo                     String                  @default("email") @db.VarChar(20)
   two_factor_activado_en                DateTime?               @db.Timestamptz(6)
   controlador                           Boolean                 @default(false)
-<<<<<<< HEAD
-  fechaNacimiento                       DateTime?
-  telemetriaCompartida                  Boolean?                @default(false)
-  zonaConexion                          String?                 @db.VarChar(100)
-=======
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   notificacionWhatsapp                  Boolean?                @default(false)
   rolId                                 Int?
   notificacion_email                    Boolean?                @default(true)
@@ -52,16 +46,11 @@ model Usuario {
   zona_conexion                         String?                 @db.VarChar(100)
   autenticacion_social                  autenticacion_social[]
   bitacora_pagos                        bitacora_pagos[]
-<<<<<<< HEAD
-  cambio_email                          CambioEmail[]
-  codigo_2fa                            codigo_2fa[]
-=======
   blog                                  blog[]
   cambio_email                          CambioEmail[]
   codigo_2fa                            codigo_2fa[]
   comentario                            comentario[]
   comentario_like                       comentario_like[]
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   comparacion                           comparacion[]
   favorito                              favorito[]
   historial_busqueda                    historial_busqueda[]
@@ -168,17 +157,11 @@ model Inmueble {
   createdAt           DateTime?             @default(now()) @map("created_at") @db.Timestamp(6)
   updatedAt           DateTime?             @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   propietarioId       Int                   @map("propietario_id")
-<<<<<<< HEAD
-  detalle_comparacion detalle_comparacion[]
-  favorito            favorito[]
-  propietario         Usuario               @relation(fields: [propietarioId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "inmueble_propietario_fk")
-=======
   banoCompartido      Boolean?              @default(false)
   detalle_comparacion detalle_comparacion[]
   favorito            favorito[]
   propietario         Usuario               @relation(fields: [propietarioId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "inmueble_propietario_fk")
   inmueble_amenidad   inmueble_amenidad[]
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   inmueble_etiqueta   InmuebleEtiqueta[]
   marcador_mapa       MarcadorMapa[]
   propiedad_vista     propiedad_vista[]
@@ -202,10 +185,7 @@ model UbicacionInmueble {
   ubicacionMaestraId Int?               @map("ubicacion_maestra_id")
   barrio_id          Int?
   marcador_mapa      MarcadorMapa[]
-<<<<<<< HEAD
-=======
   barrio             barrio?            @relation(fields: [barrio_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   inmueble           Inmueble           @relation(fields: [inmuebleId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "ubicacion_inmueble_fk")
   ubicacion_maestra  ubicacion_maestra? @relation(fields: [ubicacionMaestraId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
@@ -224,13 +204,8 @@ model Etiqueta {
 model InmuebleEtiqueta {
   inmueble_id Int
   etiqueta_id Int
-<<<<<<< HEAD
-  etiqueta    Etiqueta @relation(fields: [etiqueta_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "inmueble_etiqueta_etiqueta_fk")
-  inmueble    Inmueble @relation(fields: [inmueble_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "inmueble_etiqueta_inmueble_fk")
-=======
   etiqueta    Etiqueta @relation(fields: [etiqueta_id], references: [id], onUpdate: NoAction, map: "inmueble_etiqueta_etiqueta_fk")
   inmueble    Inmueble @relation(fields: [inmueble_id], references: [id], onUpdate: NoAction, map: "inmueble_etiqueta_inmueble_fk")
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
   @@id([inmueble_id, etiqueta_id])
   @@map("inmueble_etiqueta")
@@ -338,11 +313,7 @@ model InteraccionMapa {
   @@map("interaccion_mapa")
 }
 
-<<<<<<< HEAD
-model BannerHome {
-=======
 model banner_home {
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   id             Int       @id @default(autoincrement())
   url_imagen     String
   orden          Int
@@ -547,14 +518,6 @@ model historial_password {
 }
 
 model propiedad_vista {
-<<<<<<< HEAD
-  id         Int      @id @default(autoincrement())
-  usuarioId  Int
-  inmuebleId Int
-  vistaEn    DateTime @default(now())
-  inmueble   Inmueble @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
-  usuario    Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
-=======
   id          Int      @id @default(autoincrement())
   usuarioId   Int
   inmuebleId  Int
@@ -562,7 +525,6 @@ model propiedad_vista {
   veces_visto Int?     @default(1) @db.SmallInt
   inmueble    Inmueble @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
   usuario     Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
   @@unique([usuarioId, inmuebleId])
   @@index([usuarioId, vistaEn])
@@ -667,8 +629,6 @@ model spatial_ref_sys {
   proj4text String? @db.VarChar(2048)
 }
 
-<<<<<<< HEAD
-=======
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model amenidad {
   id                Int                 @id @default(autoincrement())
@@ -797,7 +757,6 @@ model zona_geografica {
   @@unique([nombre, municipio_id], map: "zona_geografica_nombre_municipio_unique")
 }
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 enum Genero {
   MASCULINO
   FEMENINO
@@ -838,11 +797,8 @@ enum Categoria {
   DEPARTAMENTO
   TERRENO
   OFICINA
-<<<<<<< HEAD
-=======
   CUARTO
   TERRENO_MORTUORIO
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
   @@map("categoria")
 }
@@ -883,11 +839,8 @@ enum public_Categoria {
   DEPARTAMENTO
   TERRENO
   OFICINA
-<<<<<<< HEAD
-=======
   CUARTO
   TERRENO_MORTUORIO
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
   @@map("Categoria")
 }
@@ -956,8 +909,6 @@ enum public_TipoMultimedia {
   VIDEO
 
   @@map("TipoMultimedia")
-<<<<<<< HEAD
-=======
 }
 
 enum estado_blog {
@@ -965,5 +916,4 @@ enum estado_blog {
   PENDIENTE
   PUBLICADO
   RECHAZADO
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 }
