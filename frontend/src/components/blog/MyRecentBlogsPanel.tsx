@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MOCK_USER_BLOGS } from "@/lib/mock/blogs.mock";
 import { Blog } from "@/types/blog";
 
 const MAX_VISIBLE = 3;
@@ -28,7 +27,7 @@ interface MyRecentBlogsPanelProps {
 }
 
 const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({
-  blogs = MOCK_USER_BLOGS,
+  blogs = [],
 }) => {
   const visible = blogs.slice(0, MAX_VISIBLE);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -49,6 +48,14 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({
   }, []);
 
   if (!isAuthenticated) return null;
+
+  if (blogs.length === 0) {
+    return (
+      <section className="bg-white rounded-[32px] p-6 border border-stone-100 shadow-sm mb-10">
+        <p className="text-sm text-gray-400">No publicaste ningún blog aún</p>
+      </section>
+    );
+  }
 
   return (
     <section
