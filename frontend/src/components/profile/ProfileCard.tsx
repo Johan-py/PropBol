@@ -21,7 +21,7 @@ interface PerfilData {
   pais: string | null
   genero: string | null
   direccion: string | null
-  fechaNacimiento: string | null
+  fecha_nacimiento: string | null // ✅ UNA SOLA VARIABLE, exactamente como la base de datos
   telefonos: any[] | null
 }
 
@@ -61,7 +61,8 @@ function ProfileCardContent() {
   const [avatar, setAvatar] = useState<string | null>(null)
   const [tempAvatar, setTempAvatar] = useState<File | null>(null)
   const [previewAvatar, setPreviewAvatar] = useState<string | null>(null)
-  
+
+  // Estados para validaciones de error
   const [errorNombre, setErrorNombre] = useState("");
   const [errorFechaNacimiento, setErrorFechaNacimiento] = useState("");
 
@@ -123,17 +124,25 @@ function ProfileCardContent() {
         const perfil = data.perfil
         const foto = perfil.avatar || perfil.fotoPerfil || null
         setPerfilData(perfil)
-        
+
         setNombre(perfil.nombre || '')
         setOriginalNombre(perfil.nombre || '')
+
         setPais(perfil.pais || '')
         setOriginalPais(perfil.pais || '')
+
         setGenero(perfil.genero || '')
         setOriginalGenero(perfil.genero || '')
+
         setDireccion(perfil.direccion || '')
         setOriginalDireccion(perfil.direccion || '')
-        setFechaNacimiento(perfil.fechaNacimiento || '')
-        setOriginalFechaNacimiento(perfil.fechaNacimiento || '')
+
+        // ✅ Lógica de Develop: FORMATEAR LA FECHA PARA EL INPUT DATE
+        const fechaFormateada = perfil.fecha_nacimiento
+          ? new Date(perfil.fecha_nacimiento).toISOString().split('T')[0]
+          : ''
+        setFechaNacimiento(fechaFormateada)
+        setOriginalFechaNacimiento(fechaFormateada)
 
         setAvatar(foto)
         setOriginalEmail(perfil.correo || '')
@@ -179,7 +188,7 @@ function ProfileCardContent() {
 
       // Evaluamos únicamente los campos que faltan por llenar
       const fieldsToHighlight: string[] = []
-      if (!perfilData.fechaNacimiento) fieldsToHighlight.push('fechaNacimiento')
+      if (!perfilData.fecha_nacimiento) fieldsToHighlight.push('fechaNacimiento') // ✅ Lógica limpia
       if (!perfilData.pais) fieldsToHighlight.push('pais')
       if (!perfilData.genero) fieldsToHighlight.push('genero')
       if (!perfilData.direccion) fieldsToHighlight.push('direccion')
@@ -259,7 +268,7 @@ function ProfileCardContent() {
       await fetch(`${API_URL}/api/perfil/usuario/fecha-nacimiento`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
-        body: JSON.stringify({ fechaNacimiento })
+        body: JSON.stringify({ fecha_nacimiento: fechaNacimiento })
       })
       setOriginalFechaNacimiento(fechaNacimiento)
     } catch (error: any) {
@@ -273,7 +282,7 @@ function ProfileCardContent() {
 
     if (tieneDuplicados) {
       alert('No puedes guardar números de teléfono duplicados. Por favor, verifica la información.');
-      return; 
+      return;
     }
 
     try {
@@ -553,7 +562,6 @@ function ProfileCardContent() {
   return (
     <div 
       id="personal-data-form" 
-      // BUG 2 CORREGIDO: Se quitó el resaltado envolvente (isHighlighted). Solo se conserva la sombra base.
       className="bg-[#fdf6e6] border border-[#e5dfd7] p-5 md:p-8 rounded-xl flex flex-col md:flex-row gap-8 md:gap-10 items-center md:items-start transition-all duration-700 shadow-sm"
     >
       {/* PERFIL */}
@@ -562,12 +570,12 @@ function ProfileCardContent() {
           <div className="w-28 h-28 rounded-full bg-white border border-gray-300 flex items-center justify-center shadow-sm overflow-hidden">
               {(previewAvatar || (avatar && avatar.trim() !== "")) ? (
               <img
-                 src={previewAvatar || (avatar?.startsWith('http') ? avatar : `${API_URL}${avatar}`)}
-                 alt="Foto de perfil"
-                 className="w-full h-full object-cover"
-               />
-              ) : (
-               <User className="w-10 h-10 text-gray-400" />
+                src={previewAvatar || (avatar?.startsWith('http') ? avatar : `${API_URL}${avatar}`)}
+                alt="Foto de perfil"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <User className="w-10 h-10 text-gray-400" />
             )}
           </div>
 
@@ -604,7 +612,7 @@ function ProfileCardContent() {
         <h2 className="text-xl font-bold mb-6 text-stone-900 text-center md:text-left">Datos Personales</h2>
 
         <div className="flex flex-col gap-4">
-          
+
           {/* NOMBRE */}
           <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
             <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">Nombre Completo:</label>
@@ -719,7 +727,7 @@ function ProfileCardContent() {
               <div className="flex items-center gap-2">
                 <input
                   type="date"
-                  max="2999-12-31" // BUG 3 CORREGIDO: Fuerza a Chrome a pedir solo 4 dígitos para el año
+                  max="2999-12-31"
                   value={fechaNacimiento}
                   onFocus={() => { setCampoEditando('fechaNacimiento'); clearHighlight('fechaNacimiento'); }}
                   onChange={(e) => {
@@ -823,6 +831,7 @@ function ProfileCardContent() {
                   let age = today.getFullYear() - dob.getFullYear();
                   const m = today.getMonth() - dob.getMonth();
                   
+                  // Ajuste si el mes/día actual es anterior al de cumpleaños
                   if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
                     age--;
                   }
