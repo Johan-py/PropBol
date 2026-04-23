@@ -16,6 +16,12 @@ const TOUR_STEPS = [
     required: true,
   },
   {
+    id: "tour-inicio",
+    title: "Inicio",
+    description: "Navega a la página principal desde aquí.",
+    required: true,
+  },
+  {
     id: "tour-propiedades",
     mobileId: "tour-propiedades-mobile",
     title: "Propiedades",
@@ -37,7 +43,18 @@ const TOUR_STEPS = [
       "Conoce nuestros planes y beneficios para publicar tu inmueble.",
     required: true,
   },
-
+  {
+    id: "tour-contacto",
+    title: "Contáctanos",
+    description: "¿Tienes dudas? Escríbenos y te ayudamos.",
+    required: true,
+  },
+  {
+    id: "tour-nosotros",
+    title: "Sobre Nosotros",
+    description: "Conoce más sobre el equipo detrás de PropBol.",
+    required: true,
+  },
   {
     id: "tour-ayuda",
     mobileId: "tour-ayuda-mobile",
@@ -92,8 +109,7 @@ const TOUR_STEPS = [
   },
 ];
 
-// Ahora los pasos del footer empiezan en el índice 8 (antes era 7)
-const FOOTER_STEP_INDEX = 8;
+const FOOTER_STEP_INDEX = 11; // índice desde donde empiezan los pasos del footer
 
 export default function TourGuiado() {
   const [showTour, setShowTour] = useState(true);
@@ -133,19 +149,20 @@ export default function TourGuiado() {
     return () => window.removeEventListener("keydown", handleKey);
   }, [showTour, currentStep]);
 
-  // Reactivación manual desde el botón Ayuda
+  // HU-05: Criterio 9 — Reactivación manual desde el botón Ayuda
   useEffect(() => {
     const handleIniciarTour = () => {
       setCurrentStep(0);
       setHighlight(null);
       setShowTour(true);
     };
+
     window.addEventListener("propbol:iniciar-tour", handleIniciarTour);
     return () =>
       window.removeEventListener("propbol:iniciar-tour", handleIniciarTour);
   }, []);
 
-  // Medir altura del tooltip
+  // 📐 Medir la altura real del tooltip + recalcular en resize/zoom
   useEffect(() => {
     if (!showTour) return;
 
@@ -248,6 +265,7 @@ export default function TourGuiado() {
 
     const tryFind = () => {
       const el = document.getElementById(id);
+
       if (el) {
         if (retryRef.current) clearTimeout(retryRef.current);
         applyHighlight(el);
@@ -267,6 +285,7 @@ export default function TourGuiado() {
     };
 
     tryFind();
+
     return () => {
       if (retryRef.current) clearTimeout(retryRef.current);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -308,6 +327,7 @@ export default function TourGuiado() {
 
   let top = vOffsetTop + 80;
   let left = vOffsetLeft + (vw - tooltipW) / 2;
+
   if (hasValid) {
     const H = tooltipH;
     const GAP = PADDING + 12;
@@ -321,6 +341,7 @@ export default function TourGuiado() {
       top = highlight.top - H - GAP;
     }
 
+    // Clamp final: nunca salirse del viewport visible
     const minTop = vOffsetTop + 10;
     const maxTop = vOffsetTop + vh - H - 10;
     top = Math.max(minTop, Math.min(top, maxTop));

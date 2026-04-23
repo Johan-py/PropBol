@@ -15,7 +15,7 @@ import {
   X,
   ChevronDown,
 } from "lucide-react";
-
+ 
 import Logo from "../navbar/Logo";
 import NavLinks from "../navbar/NavLinks";
 import UserMenu from "../navbar/UserMenu";
@@ -23,7 +23,7 @@ import LogoutModal from "../navbar/LogoutModal";
 import { useNotifications } from "@/hooks/useNotifications";
 import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 import type { NotificationFilter } from "@/types/notification";
-
+ 
 export type User = {
   name: string;
   email: string;
@@ -42,33 +42,33 @@ type MeResponse = {
     rol?: string;
   };
 };
-
+ 
 class SessionValidationError extends Error {
   statusCode: number;
-
+ 
   constructor(message: string, statusCode: number) {
     super(message);
     this.name = "SessionValidationError";
     this.statusCode = statusCode;
   }
 }
-
+ 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const SESSION_EXPIRES_KEY = "propbol_session_expires";
-
+ 
 const filters: NotificationFilter[] = [
   "todas",
   "leida",
   "no leida",
   "archivada",
 ];
-
+ 
 export default function Navbar() {
   const router = useRouter();
   const panelRef = useRef<HTMLDivElement | null>(null);
   const notificationPanelRef = useRef<HTMLDivElement | null>(null);
   const [, setTick] = useState(0);
-
+ 
   const [user, setUser] = useState<User | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -126,7 +126,7 @@ export default function Navbar() {
     if (!expiresAt) return true;
     return Date.now() > Number(expiresAt);
   };
-
+ 
   const fetchCurrentUser = async (token: string) => {
     const response = await fetch(`${API_URL}/api/auth/me`, {
       method: "GET",
@@ -134,16 +134,16 @@ export default function Navbar() {
         Authorization: `Bearer ${token}`,
       },
     });
-
+ 
     const data = (await response.json()) as MeResponse;
-
+ 
     if (!response.ok || !data.user) {
       throw new SessionValidationError(
         data.message || "Sesión inválida o expirada",
         response.status,
       );
     }
-
+ 
     return data.user;
   };
 
@@ -151,32 +151,32 @@ export default function Navbar() {
     const savedUser = localStorage.getItem(USER_STORAGE_KEY);
     const expiresAt = localStorage.getItem(SESSION_EXPIRES_KEY);
     const token = localStorage.getItem("token");
-
+ 
     if (!savedUser || !expiresAt || !token) {
       clearSession(false);
       return;
     }
-
+ 
     if (Date.now() > Number(expiresAt)) {
       clearSession(false);
       return;
     }
-
+ 
     let parsedUser: User;
-
+ 
     try {
       parsedUser = JSON.parse(savedUser) as User;
     } catch {
       clearSession(false);
       return;
     }
-
+ 
     if (!navigator.onLine) {
       setUser(parsedUser);
       setIsLoggedIn(true);
       return;
     }
-
+ 
     try {
       const validatedUser = await fetchCurrentUser(token);
 
@@ -186,7 +186,7 @@ export default function Navbar() {
       localStorage.setItem("nombre", finalUser.name);
       localStorage.setItem("correo", finalUser.email);
       localStorage.setItem("avatar", finalUser.avatar ?? "");
-
+ 
       setUser(finalUser);
       setIsLoggedIn(true);
     } catch (error) {
@@ -197,7 +197,7 @@ export default function Navbar() {
         clearSession(false);
         return;
       }
-
+ 
       setUser(parsedUser);
       setIsLoggedIn(true);
     }
@@ -207,30 +207,30 @@ export default function Navbar() {
     if (!fecha) return "";
     const diff = Date.now() - new Date(fecha).getTime();
     const mins = Math.floor(diff / 60000);
-
+ 
     if (mins < 1) return "hace un momento";
     if (mins < 60) return `hace ${mins} min`;
-
+ 
     const hours = Math.floor(mins / 60);
     if (hours < 24) return `hace ${hours} h`;
-
+ 
     const days = Math.floor(hours / 24);
     if (days < 7) return `hace ${days} d`;
-
+ 
     return new Date(fecha).toLocaleDateString("es-BO", {
       day: "numeric",
       month: "short",
     });
   };
-
+ 
   useEffect(() => {
     const interval = setInterval(() => {
       setTick((t) => t + 1);
     }, 60000);
-
+ 
     return () => clearInterval(interval);
   }, []);
-
+ 
   useEffect(() => {
     void restoreSession();
 
@@ -241,14 +241,11 @@ export default function Navbar() {
     window.addEventListener("propbol:login", handleSessionChange);
     window.addEventListener("propbol:session-changed", handleSessionChange);
     window.addEventListener("online", handleOnline);
-
+ 
     return () => {
       window.removeEventListener("storage", handleSessionChange);
       window.removeEventListener("propbol:login", handleSessionChange);
-      window.removeEventListener(
-        "propbol:session-changed",
-        handleSessionChange,
-      );
+      window.removeEventListener("propbol:session-changed", handleSessionChange);
       window.removeEventListener("online", handleOnline);
     };
   }, [restoreSession]);
@@ -269,11 +266,22 @@ export default function Navbar() {
         toggleNotifications();
       }
     };
-
+ 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open, toggleNotifications]);
-
+ 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (user && isSessionExpired()) {
+        clearSession();
+        router.push("/");
+      }
+    }, 10000);
+ 
+    return () => clearInterval(interval);
+  }, [user, router, clearSession]);
+ 
   useEffect(() => {
     const interval = setInterval(() => {
       if (user && isSessionExpired()) {
@@ -287,11 +295,11 @@ export default function Navbar() {
 
   useEffect(() => {
     if (!open) return;
-
+ 
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === "Escape") toggleNotifications();
     };
-
+ 
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [open, toggleNotifications]);
@@ -315,21 +323,21 @@ export default function Navbar() {
     }
     setIsPanelOpen((prev) => !prev);
   };
-
+ 
   const handleLoginRedirect = () => router.push("/sign-in");
   const handleOpenLogoutModal = () => setShowLogoutModal(true);
-
+ 
   const handleCancelLogout = () => {
     if (isLoggingOut) return;
     setShowLogoutModal(false);
   };
-
+ 
   const handleConfirmLogout = async () => {
     if (isLoggingOut) return;
-
+ 
     setIsLoggingOut(true);
     const token = localStorage.getItem("token");
-
+ 
     if (token) {
       try {
         await fetch(`${API_URL}/api/auth/logout`, {
@@ -340,12 +348,12 @@ export default function Navbar() {
         console.warn("Error al cerrar sesión en el servidor:", err);
       }
     }
-
+ 
     clearSession();
     setIsLoggingOut(false);
     router.push("/");
   };
-
+ 
   return (
     <>
       <nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
@@ -355,7 +363,7 @@ export default function Navbar() {
               <Logo />
               <NavLinks />
             </div>
-
+ 
             <div className="flex items-center gap-4">
               <Link
                 href="/registro-inmueble"
@@ -381,7 +389,7 @@ export default function Navbar() {
                     </span>
                   )}
                 </button>
-
+ 
                 {open && (
                   <div
                     role="dialog"
@@ -415,16 +423,14 @@ export default function Navbar() {
                         </div>
                       )}
                     </div>
-
+ 
                     {!isOnline && (
                       <div className="flex items-center gap-2 border-b border-stone-100 bg-stone-50 px-4 py-2 text-xs text-stone-500">
                         <WifiOff className="h-3 w-3 shrink-0" />
-                        <span>
-                          Sin conexión. Se actualizará al reconectarte.
-                        </span>
+                        <span>Sin conexión. Se actualizará al reconectarte.</span>
                       </div>
                     )}
-
+ 
                     {!isLoggedIn ? (
                       <div className="px-4 py-6 text-center">
                         <p className="text-sm text-stone-500">
@@ -470,7 +476,7 @@ export default function Navbar() {
                             </button>
                           ))}
                         </div>
-
+ 
                         <div
                           ref={scrollContainerRef}
                           role="list"
@@ -482,7 +488,7 @@ export default function Navbar() {
                             const reachedBottom =
                               target.scrollTop + target.clientHeight >=
                               target.scrollHeight - 20;
-
+ 
                             if (reachedBottom && hasMore && !isLoadingMore) {
                               saveScrollPosition(target.scrollTop);
                               void loadMoreNotifications();
@@ -499,9 +505,7 @@ export default function Navbar() {
                               <p className="text-sm text-red-500">{error}</p>
                               <button
                                 type="button"
-                                onClick={() =>
-                                  void refreshNotifications(filter)
-                                }
+                                onClick={() => void refreshNotifications(filter)}
                                 className="mt-3 rounded border border-stone-300 px-3 py-1 text-sm text-stone-700 transition hover:bg-stone-50"
                               >
                                 Reintentar
@@ -545,16 +549,15 @@ export default function Navbar() {
                                           <span className="h-2 w-2 shrink-0 rounded-full bg-amber-500" />
                                         )}
                                         <p className="truncate text-sm font-semibold text-stone-900">
-                                          {notification.title?.trim() ||
-                                            "(Sin título)"}
+                                          {notification.title?.trim() || "(Sin título)"}
                                         </p>
                                       </div>
-
+ 
                                       <p className="mt-1 line-clamp-2 text-sm text-stone-600">
                                         {notification.description?.trim() ||
                                           "(Sin descripción disponible)"}
                                       </p>
-
+ 
                                       <div className="mt-2 flex items-center gap-2">
                                         <span className="text-[10px] uppercase text-stone-400">
                                           {notification.status}
@@ -567,7 +570,7 @@ export default function Navbar() {
                                         </span>
                                       </div>
                                     </div>
-
+ 
                                     <div
                                       className="flex shrink-0 items-center gap-2"
                                       onClick={(e) => e.stopPropagation()}
@@ -576,9 +579,7 @@ export default function Navbar() {
                                         <button
                                           type="button"
                                           onClick={() =>
-                                            void archiveNotification(
-                                              notification.id,
-                                            )
+                                            void archiveNotification(notification.id)
                                           }
                                           aria-label="Archivar notificación"
                                           className="text-stone-400 transition hover:text-amber-600 disabled:cursor-not-allowed disabled:opacity-40"
@@ -586,13 +587,11 @@ export default function Navbar() {
                                           <Archive className="h-4 w-4" />
                                         </button>
                                       )}
-
+ 
                                       <button
                                         type="button"
                                         onClick={() =>
-                                          void deleteNotification(
-                                            notification.id,
-                                          )
+                                          void deleteNotification(notification.id)
                                         }
                                         disabled={!isOnline}
                                         className="text-xs text-red-500 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-40"
@@ -611,7 +610,7 @@ export default function Navbar() {
                             </>
                           )}
                         </div>
-
+ 
                         <div className="border-t border-stone-100 px-4 py-3 text-center">
                           <Link
                             href="/notificaciones"
@@ -626,7 +625,7 @@ export default function Navbar() {
                   </div>
                 )}
               </div>
-
+ 
               <div className="relative" ref={panelRef}>
                 <UserMenu
                   user={user}
@@ -637,7 +636,7 @@ export default function Navbar() {
                   onOpenLogoutModal={handleOpenLogoutModal}
                 />
               </div>
-
+ 
               <button
                 id="tour-menu-mobile"
                 type="button"
@@ -651,14 +650,14 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
-
+ 
       <LogoutModal
         show={showLogoutModal}
         isLoggingOut={isLoggingOut}
         onCancel={handleCancelLogout}
         onConfirm={handleConfirmLogout}
       />
-
+ 
       {isMobileMenuOpen && (
         <div
           className="fixed inset-0 z-[9999] bg-black/40 md:hidden"
