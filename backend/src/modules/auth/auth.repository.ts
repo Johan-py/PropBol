@@ -91,20 +91,11 @@ export const findUser = async (correo: string) => {
       nombre: true,
       apellido: true,
       activo: true,
-<<<<<<< HEAD
-=======
       two_factor_activo: true,
-<<<<<<< HEAD
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
-    },
-  });
-};
-=======
       rol: true
     }
   })
 }
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 export const findUserByCorreo = async (correo: string) => {
   return await prisma.usuario.findUnique({
     where: { correo },
@@ -172,14 +163,9 @@ export const desactiveSessionByToken = async (token: string) => {
     }
   })
 }
-<<<<<<< HEAD
-export const desactivarRecuperacionesPasswordActivas = async (usuarioId: number) => {
-  return prisma.recuperacion_password.updateMany({
-=======
 
 export const invalidateActive2FACodesByUserId = async (usuarioId: number) => {
   return await prisma.codigo_2fa.updateMany({
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     where: {
       usuarioId,
       activo: true,
@@ -191,8 +177,6 @@ export const invalidateActive2FACodesByUserId = async (usuarioId: number) => {
   })
 }
 
-<<<<<<< HEAD
-=======
 export const create2FACode = async ({
   usuarioId,
   codigoHash,
@@ -225,7 +209,6 @@ export const desactivarRecuperacionesPasswordActivas = async (usuarioId: number)
   })
 }
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 export const createPasswordRecovery = async ({
   usuarioId,
   token,
@@ -259,8 +242,6 @@ export const markPasswordRecoveryAsUsed = async (id: number) => {
   })
 }
 
-<<<<<<< HEAD
-=======
 export const findActive2FACodeByUserId = async (usuarioId: number) => {
   return await prisma.codigo_2fa.findFirst({
     where: {
@@ -322,7 +303,6 @@ export const deactivate2FAByUserId = async (userId: number) => {
   })
 }
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 export const updateUserPassword = async (usuarioId: number, password: string) => {
   return prisma.usuario.update({
     where: { id: usuarioId },
@@ -336,8 +316,6 @@ export const invalidateAllUserSessions = async (usuarioId: number) => {
     data: { estado: false }
   })
 }
-<<<<<<< HEAD
-=======
 
 export const invalidateOtherUserSessions = async (usuarioId: number, currentToken: string) => {
   return prisma.sesion.updateMany({
@@ -349,4 +327,3 @@ export const invalidateOtherUserSessions = async (usuarioId: number, currentToke
     data: { estado: false }
   })
 }
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83

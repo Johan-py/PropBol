@@ -29,8 +29,5 @@ export const env = {
     process.env.EMAIL_PASSWORD ??
     process.env.BREVO_API_KEY ??
     requireEnv("EMAIL_PASSWORD"),
-<<<<<<< HEAD
-=======
   ADMIN_EMAIL: process.env.ADMIN_EMAIL ?? requireEnv("ADMIN_EMAIL"),
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 };

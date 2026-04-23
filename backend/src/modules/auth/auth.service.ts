@@ -1,24 +1,6 @@
 import crypto from 'node:crypto'
 import jwt from 'jsonwebtoken'
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { env } from '../../config/env.js'
-import { prisma } from '../../lib/prisma.client.js'
-import { enviarCodigoRegistro ,
-  enviarCorreoRecuperacionPassword} from '../../lib/email.service.js'
-import { generateToken, type JwtPayload } from '../../utils/jwt.js'
-=======
-import { env } from "../../config/env.js";
-import { prisma } from "../../lib/prisma.client.js";
-import {
-  enviarCodigo2FA,
-  enviarCodigoRegistro,
-  enviarCorreoRecuperacionPassword,
-} from "../../lib/email.service.js";
-import { generateToken, type JwtPayload } from "../../utils/jwt.js";
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
-=======
 import { env } from '../../config/env.js'
 import { prisma } from '../../lib/prisma.client.js'
 import {
@@ -27,7 +9,6 @@ import {
   enviarCorreoRecuperacionPassword
 } from '../../lib/email.service.js'
 import { generateToken, type JwtPayload } from '../../utils/jwt.js'
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 import {
   createPasswordRecovery,
   createSession,
@@ -38,12 +19,6 @@ import {
   findPasswordRecoveryByToken,
   findUser,
   findUserByCorreo,
-<<<<<<< HEAD
-  invalidateAllUserSessions,
-  markPasswordRecoveryAsUsed,
-  updateUserPassword
-} from './auth.repository.js'
-=======
   markPasswordRecoveryAsUsed,
   findUserById,
   create2FACode,
@@ -53,14 +28,8 @@ import {
   expire2FACode,
   findActive2FACodeByUserId,
   increment2FACodeAttempts,
-<<<<<<< HEAD
-  mark2FACodeAsUsed,
-} from "./auth.repository.js";
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
-=======
   mark2FACodeAsUsed
 } from './auth.repository.js'
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 
 type LoginDTO = {
   correo: string
@@ -119,24 +88,7 @@ const MAX_APELLIDO = 30
 const MAX_LOGIN_ATTEMPTS = 5
 const LOGIN_BLOCK_TIME_MS = 15 * 60 * 1000
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 const REGISTER_CODE_TTL_MINUTES = 5
-
-// límite de solicitudes de recuperación
-const MAX_RECOVERY_REQUESTS = 3
-const RECOVERY_WINDOW_MS = 5 * 60 * 1000
-const recoveryRequests = new Map<string, number[]>()
-
-// límite de intentos por enlace
-const MAX_TOKEN_ATTEMPTS = 3
-const tokenAttempts = new Map<string, number>()
-const REGISTER_CODE_TTL_SECONDS = REGISTER_CODE_TTL_MINUTES * 60
-=======
-const REGISTER_CODE_TTL_MINUTES = 5;
-=======
-const REGISTER_CODE_TTL_MINUTES = 5
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 const TWO_FACTOR_CODE_TTL_MINUTES = 5
 
 // límite de solicitudes de recuperación
@@ -145,16 +97,9 @@ const RECOVERY_WINDOW_MS = 5 * 60 * 1000
 const recoveryRequests = new Map<string, number[]>()
 
 // límite de intentos por enlace
-<<<<<<< HEAD
-const MAX_TOKEN_ATTEMPTS = 3;
-const tokenAttempts = new Map<string, number>();
-const REGISTER_CODE_TTL_SECONDS = REGISTER_CODE_TTL_MINUTES * 60;
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
-=======
 const MAX_TOKEN_ATTEMPTS = 3
 const tokenAttempts = new Map<string, number>()
 const REGISTER_CODE_TTL_SECONDS = REGISTER_CODE_TTL_MINUTES * 60
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 
 const loginAttempts = new Map<string, LoginAttemptState>()
 
@@ -642,15 +587,8 @@ export const logoutService = async (token: string) => {
 
   await desactiveSessionByToken(token)
 
-<<<<<<< HEAD
-  return { message: "Logout exitoso" };
-<<<<<<< HEAD
-=======
-};
-=======
   return { message: 'Logout exitoso' }
 }
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 
 type VerifyPasswordDTO = {
   userId: number
@@ -725,16 +663,9 @@ export const get2FAStatusService = async (userId: number) => {
   }
 
   return {
-<<<<<<< HEAD
-    two_factor_activo: user.two_factor_activo,
-  };
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
-};
-=======
     two_factor_activo: user.two_factor_activo
   }
 }
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 
 type GoogleTokenResponse = {
   access_token?: string
@@ -829,47 +760,9 @@ export const loginWithGoogleCodeService = async (code: string) => {
       apellido: user.apellido,
       rol: user.rol
     },
-<<<<<<< HEAD
-<<<<<<< HEAD
     token
   }
 }
-type ForgotPasswordDTO = {
-  correo: string
-}
-
-const RESET_PASSWORD_TTL_MINUTES = 15
-
-export const forgotPasswordService = async (payload: ForgotPasswordDTO) => {
-  const correo = payload.correo?.trim().toLowerCase()
-
-  if (!correo) {
-    throw new Error('El correo es obligatorio')
-  }
-
-  const emailRegex = /\S+@\S+\.\S+/
-
-  if (!emailRegex.test(correo)) {
-    throw new Error('Formato de correo inválido')
-  }
-
-  const user = await findUserByCorreo(correo)
-
-  const now = Date.now()
-  const requests = (recoveryRequests.get(correo) ?? []).filter(t => now - t < RECOVERY_WINDOW_MS)
-  if (requests.length >= MAX_RECOVERY_REQUESTS) {
-    throw new AuthError('Demasiadas solicitudes. Intenta nuevamente en 5 minutos.', 429)
-  }
-  recoveryRequests.set(correo, [...requests, now])
-=======
-    token,
-  };
-};
-=======
-    token
-  }
-}
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 type ForgotPasswordDTO = {
   correo: string
 }
@@ -896,18 +789,11 @@ export const forgotPasswordService = async (payload: ForgotPasswordDTO) => {
   if (requests.length >= MAX_RECOVERY_REQUESTS) {
     throw new AuthError('Demasiadas solicitudes. Intenta nuevamente en 5 minutos.', 429)
   }
-<<<<<<< HEAD
-  recoveryRequests.set(correo, [...requests, now]);
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
-=======
   recoveryRequests.set(correo, [...requests, now])
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 
   // Respuesta genérica para no revelar si el correo existe o no
   if (!user) {
     return {
-<<<<<<< HEAD
-<<<<<<< HEAD
       message: 'Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.'
     }
   }
@@ -916,54 +802,19 @@ export const forgotPasswordService = async (payload: ForgotPasswordDTO) => {
   const expiraEn = new Date(Date.now() + RESET_PASSWORD_TTL_MINUTES * 60 * 1000)
 
   await desactivarRecuperacionesPasswordActivas(user.id)
-=======
-      message:
-        "Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.",
-    };
-=======
-      message: 'Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.'
-    }
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
-  }
-
-  const resetToken = crypto.randomUUID()
-  const expiraEn = new Date(Date.now() + RESET_PASSWORD_TTL_MINUTES * 60 * 1000)
-
-<<<<<<< HEAD
-  await desactivarRecuperacionesPasswordActivas(user.id);
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
-=======
-  await desactivarRecuperacionesPasswordActivas(user.id)
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 
   await createPasswordRecovery({
     usuarioId: user.id,
     token: resetToken,
-<<<<<<< HEAD
-<<<<<<< HEAD
     expiraEn
   })
 
   const resetLink = `${env.FRONTEND_URL}/reset-password?token=${resetToken}`
-=======
-    expiraEn,
-  });
-
-  const resetLink = `${env.FRONTEND_URL}/reset-password?token=${resetToken}`;
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
-=======
-    expiraEn
-  })
-
-  const resetLink = `${env.FRONTEND_URL}/reset-password?token=${resetToken}`
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 
   const emailResult = await enviarCorreoRecuperacionPassword({
     emailDestino: user.correo,
     nombreUsuario: user.nombre,
     resetLink,
-<<<<<<< HEAD
-<<<<<<< HEAD
     minutosExpiracion: RESET_PASSWORD_TTL_MINUTES
   })
 
@@ -1029,108 +880,11 @@ export const resetPasswordService = async (payload: ResetPasswordDTO) => {
   }
 
   tokenAttempts.set(token, attempts + 1)
-=======
-    minutosExpiracion: RESET_PASSWORD_TTL_MINUTES,
-  });
-=======
-    minutosExpiracion: RESET_PASSWORD_TTL_MINUTES
-  })
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
-
-  if (!emailResult.success) {
-    throw new Error('No se pudo enviar el correo de recuperación. Intenta nuevamente.')
-  }
-
-  return {
-    message: 'Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.'
-  }
-}
-
-type ResetPasswordDTO = {
-  token: string
-  password: string
-  confirmPassword: string
-}
-
-export const resetPasswordService = async (payload: ResetPasswordDTO) => {
-  const token = payload.token?.trim()
-  const password = payload.password?.trim()
-  const confirmPassword = payload.confirmPassword?.trim()
-
-  if (!token || !password || !confirmPassword) {
-    throw new AuthError('Todos los campos son obligatorios', 400)
-  }
-
-  if (password !== confirmPassword) {
-    throw new AuthError('Las contraseñas no coinciden', 400)
-  }
-
-  if (password.length < 8) {
-    throw new AuthError('La contraseña debe tener al menos 8 caracteres', 400)
-  }
-
-  if (!/[A-Z]/.test(password)) {
-    throw new AuthError('La contraseña debe contener al menos una mayúscula', 400)
-  }
-
-  if (!/[0-9]/.test(password)) {
-    throw new AuthError('La contraseña debe contener al menos un número', 400)
-  }
-
-  if (!/[^A-Za-z0-9]/.test(password)) {
-    throw new AuthError('La contraseña debe contener al menos un carácter especial', 400)
-  }
-
-  const recovery = await findPasswordRecoveryByToken(token)
-
-  if (!recovery || !recovery.activo) {
-    throw new AuthError('El enlace no es válido o ya fue utilizado', 400)
-  }
-
-  if (new Date() > recovery.expiraEn) {
-    throw new AuthError('El enlace ha expirado. Solicita uno nuevo.', 400)
-  }
-
-  const attempts = tokenAttempts.get(token) ?? 0
-  if (attempts >= MAX_TOKEN_ATTEMPTS) {
-    await markPasswordRecoveryAsUsed(recovery.id)
-    tokenAttempts.delete(token)
-    throw new AuthError('Demasiados intentos. El enlace ha sido invalidado.', 429)
-  }
-
-<<<<<<< HEAD
-  tokenAttempts.set(token, attempts + 1);
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
-=======
-  tokenAttempts.set(token, attempts + 1)
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 
   await prisma.$transaction([
     prisma.recuperacion_password.update({
       where: { id: recovery.id },
-<<<<<<< HEAD
-<<<<<<< HEAD
       data: { usadoEn: new Date(), activo: false }
-    }),
-    prisma.usuario.update({
-      where: { id: recovery.usuarioId },
-      data: { password }
-    }),
-    prisma.sesion.updateMany({
-      where: { usuarioId: recovery.usuarioId, estado: true },
-      data: { estado: false }
-    })
-  ])
-
-  tokenAttempts.delete(token)
-
-  return { message: 'Contraseña actualizada correctamente. Ya puedes iniciar sesión.' }
-}
-=======
-      data: { usadoEn: new Date(), activo: false },
-=======
-      data: { usadoEn: new Date(), activo: false }
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
     }),
     prisma.usuario.update({
       where: { id: recovery.usuarioId },
@@ -1145,13 +899,6 @@ export const resetPasswordService = async (payload: ResetPasswordDTO) => {
   tokenAttempts.delete(token)
 
   return {
-<<<<<<< HEAD
-    message: "Contraseña actualizada correctamente. Ya puedes iniciar sesión.",
-  };
-};
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
-=======
     message: 'Contraseña actualizada correctamente. Ya puedes iniciar sesión.'
   }
 }
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca

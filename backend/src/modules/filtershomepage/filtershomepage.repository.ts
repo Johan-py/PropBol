@@ -64,22 +64,12 @@ export class FiltersHomepageRepository {
           titulo: u.inmueble.titulo ?? "Sin título",
         });
       }
-<<<<<<< HEAD
-
-      deptCounts.get(normalizedDept)!.add(u.inmuebleId);
-    }
-
-    const counts = Array.from(deptCounts.entries()).map(([dept, ids]) => ({
-      departamento: dept,
-      count: ids.size,
-=======
     }
 
     const counts = Array.from(deptMap.entries()).map(([dept, data]) => ({
       departamento: dept,
       count: data.ids.size,
       previews: data.previews,
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     }));
 
     return counts.sort((a, b) => b.count - a.count);

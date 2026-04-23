@@ -1,23 +1,16 @@
 import type { Request, Response } from "express";
 import {
   AuthError,
-<<<<<<< HEAD
-  forgotPasswordService,
-=======
   activate2FAService,
   deactivate2FAService,
   forgotPasswordService,
   get2FAStatusService,
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   getMeService,
   loginService,
   logoutService,
   registerUser,
   resetPasswordService,
-<<<<<<< HEAD
-=======
   verify2FAService,
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   verifyRegisterCodeService
 } from './auth.service.js'
 
@@ -164,8 +157,6 @@ export const verifyRegisterCodeController = async (
   }
 };
 
-<<<<<<< HEAD
-=======
 export const verify2FAController = async (
   req: Request<unknown, unknown, Verify2FABody>,
   res: Response
@@ -196,7 +187,6 @@ export const verify2FAController = async (
   }
 }
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 export const getMeController = async (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
 
@@ -255,8 +245,6 @@ export const logoutController = async (req: Request, res: Response) => {
   }
 };
 
-<<<<<<< HEAD
-=======
 export const activate2FAController = async (
   req: Request<unknown, unknown, VerifyPasswordBody>,
   res: Response
@@ -347,7 +335,6 @@ export const get2FAStatusController = async (req: Request, res: Response) => {
   }
 }
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 export const forgotPasswordController = async (req: Request, res: Response) => {
   try {
     const result = await forgotPasswordService(req.body)

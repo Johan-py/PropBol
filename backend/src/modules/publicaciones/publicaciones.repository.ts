@@ -18,8 +18,6 @@ export const publicacionesRepository = {
     return prisma.publicacion.count({ where: { usuarioId: userId } });
   },
 
-<<<<<<< HEAD
-=======
   async findByUserId(userId: number) {
     return prisma.publicacion.findMany({
       where: { usuarioId: userId },
@@ -45,7 +43,6 @@ export const publicacionesRepository = {
     });
   },
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   async create(
     userId: number,
     data: Omit<Publicacion, "id" | "usuarioId">,
@@ -57,13 +54,7 @@ export const publicacionesRepository = {
       },
     });
   },
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  // Agregar después de async create
-=======
 
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
   async findById(id: number) {
     return prisma.publicacion.findUnique({
       where: { id: id },
@@ -90,9 +81,6 @@ export const publicacionesRepository = {
     });
   },
 
-<<<<<<< HEAD
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
-=======
   // 👉 Nueva función HU‑5 v2
   async validarPublicacionHU5(userId: number, data: Partial<Publicacion>) {
     const count = await publicacionesRepository.countByUser(userId);
@@ -105,5 +93,4 @@ export const publicacionesRepository = {
       mensaje: "Publicación lista para guardar",
     };
   },
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 };

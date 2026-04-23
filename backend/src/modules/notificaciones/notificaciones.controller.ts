@@ -22,17 +22,10 @@ type NotificationParams = {
 }
 
 type CreateNotificationBody = {
-<<<<<<< HEAD
-  correo?: string;
-  titulo?: string;
-  mensaje?: string;
-};
-=======
   correo?: string
   titulo?: string
   mensaje?: string
 }
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 const getUserIdFromRequest = (req: AuthenticatedRequest) => {
   const userId = Number(req.user?.id)
@@ -153,17 +146,10 @@ export const createNotificationController = async (
     }
 
     const result = await createNotificationService({
-<<<<<<< HEAD
-      correo: req.body.correo ?? "",
-      titulo: req.body.titulo ?? "",
-      mensaje: req.body.mensaje ?? "",
-    });
-=======
       correo: req.body.correo ?? '',
       titulo: req.body.titulo ?? '',
       mensaje: req.body.mensaje ?? ''
     })
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
     return res.status(201).json(result)
   } catch (error) {
@@ -247,35 +233,6 @@ export const deleteNotificationController = async (
       message
     })
   }
-<<<<<<< HEAD
-};
-
-export const archiveNotificationController = async (
-  req: Request<NotificationParams>,
-  res: Response,
-) => {
-  try {
-    const usuarioId = getUserIdFromRequest(req as AuthenticatedRequest);
-
-    if (!usuarioId) {
-      return res.status(401).json({
-        message: "No autorizado",
-      });
-    }
-
-    const id = Number.parseInt(req.params.id, 10);
-    const result = await archiveNotificationService(id, usuarioId);
-
-    return res.status(200).json(result);
-  } catch (error) {
-    const { statusCode, message } = buildErrorResponse(error);
-
-    return res.status(statusCode).json({
-      message,
-    });
-  }
-};
-=======
 }
 
 export const archiveNotificationController = async (
@@ -297,4 +254,3 @@ export const archiveNotificationController = async (
     })
   }
 }
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83

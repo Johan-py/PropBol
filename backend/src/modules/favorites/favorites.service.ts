@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 // FavoritesService.ts
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 import { prisma } from '../../lib/prisma.client.js'
 
 export class FavoritesService {
@@ -21,10 +18,7 @@ export class FavoritesService {
             include: {
               ubicacion: true,
               publicaciones: {
-<<<<<<< HEAD
-=======
                 where: { estado: 'ACTIVA' }, // Solo publicaciones activas
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
                 include: { multimedia: true },
                 take: 1,
               },
@@ -38,9 +32,6 @@ export class FavoritesService {
       total,
       page,
       per_page: perPage,
-<<<<<<< HEAD
-      inmuebles: favoritos.map((f) => f.inmueble),
-=======
       data: favoritos.map((f) => ({
         id: f.id,
         agregadoEn: f.agregadoEn,
@@ -48,53 +39,10 @@ export class FavoritesService {
       })),
       inmuebles: favoritos.map((f) => f.inmueble),
       totalPages: Math.ceil(total / perPage)
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     }
   }
 
   static async add(usuarioId: number, inmuebleId: number) {
-<<<<<<< HEAD
-    const existing = await prisma.favorito.findFirst({
-      where: {
-        usuarioId: usuarioId,
-        inmuebleId: inmuebleId
-      }
-    })
-    
-    if (existing) throw new Error('ALREADY_EXISTS')
-
-    return await prisma.favorito.create({
-      data: { 
-        usuarioId: usuarioId, 
-        inmuebleId: inmuebleId 
-      },
-    })
-  }
-
-  static async remove(usuarioId: number, inmuebleId: number) {
-    const existing = await prisma.favorito.findFirst({
-      where: {
-        usuarioId: usuarioId,
-        inmuebleId: inmuebleId
-      }
-    })
-    
-    if (!existing) throw new Error('NOT_FOUND')
-
-    return await prisma.favorito.delete({
-      where: { id: existing.id },
-    })
-  }
-
-  static async isFavorite(usuarioId: number, inmuebleId: number): Promise<boolean> {
-    const existing = await prisma.favorito.findFirst({
-      where: {
-        usuarioId: usuarioId,
-        inmuebleId: inmuebleId
-      }
-    })
-    return !!existing
-=======
     try {
       // Usar create directamente con el unique compuesto
       return await prisma.favorito.create({
@@ -146,6 +94,5 @@ export class FavoritesService {
     } catch (error) {
       return false
     }
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   }
 }

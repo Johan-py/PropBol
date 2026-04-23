@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 import PDFDocument from 'pdfkit'
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 import { env } from "../config/env.js";
 
 const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
@@ -18,33 +15,23 @@ interface EmailSendResult {
   error?: unknown;
 }
 
-<<<<<<< HEAD
-=======
 interface BrevoAttachment {
   content: string; // base64
   name: string;
 }
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 const sendBrevoEmail = async ({
   to,
   subject,
   htmlContent,
   textContent,
-<<<<<<< HEAD
-=======
   bcc,
   attachment,
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 }: {
   to: string;
   subject: string;
   htmlContent: string;
   textContent: string;
-<<<<<<< HEAD
-}): Promise<EmailSendResult> => {
-  try {
-=======
   bcc?: string;
   attachment?: BrevoAttachment;
 }): Promise<EmailSendResult> => {
@@ -60,24 +47,13 @@ const sendBrevoEmail = async ({
     if (bcc) payload.bcc = [{ email: bcc }];
     if (attachment) payload.attachment = [attachment];
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     const response = await fetch(BREVO_API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "api-key": env.EMAIL_PASSWORD,
       },
-<<<<<<< HEAD
-      body: JSON.stringify({
-        sender: { name: "PropBol", email: env.EMAIL_USER },
-        to: [{ email: to }],
-        subject,
-        htmlContent,
-        textContent,
-      }),
-=======
       body: JSON.stringify(payload),
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     });
 
     if (!response.ok) {
@@ -95,8 +71,6 @@ const sendBrevoEmail = async ({
   }
 };
 
-<<<<<<< HEAD
-=======
 const enviarConReintentos = async (
   fn: () => Promise<EmailSendResult>,
   intentos = 3,
@@ -221,7 +195,6 @@ export const enviarComprobantePago = async ({
   );
 };
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 export const verifyEmailTransport = async (): Promise<void> => {
   if (!env.EMAIL_USER || !env.EMAIL_PASSWORD) {
     throw new Error("Credenciales de email no configuradas");
@@ -306,20 +279,6 @@ export const enviarCorreoRecuperacionPassword = async ({
   emailDestino,
   nombreUsuario,
   resetLink,
-<<<<<<< HEAD
-  minutosExpiracion
-}: {
-  emailDestino: string
-  nombreUsuario?: string
-  resetLink: string
-  minutosExpiracion: number
-}): Promise<EmailSendResult> => {
-  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : 'Hola,'
-
-  return sendBrevoEmail({
-    to: emailDestino,
-    subject: 'Restablece tu contraseña - PropBol',
-=======
   minutosExpiracion,
 }: {
   emailDestino: string;
@@ -332,7 +291,6 @@ export const enviarCorreoRecuperacionPassword = async ({
   return sendBrevoEmail({
     to: emailDestino,
     subject: "Restablece tu contraseña - PropBol",
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
     htmlContent: `
       <!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
       <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
@@ -359,11 +317,6 @@ export const enviarCorreoRecuperacionPassword = async ({
         </div>
       </body></html>
     `,
-<<<<<<< HEAD
-    textContent: `${saludo}\n\nRestablece tu contraseña desde este enlace: ${resetLink}\n\nExpira en ${minutosExpiracion} minutos.`
-  })
-}
-=======
     textContent: `${saludo}\n\nRestablece tu contraseña desde este enlace: ${resetLink}\n\nExpira en ${minutosExpiracion} minutos.`,
   });
 };
@@ -405,4 +358,3 @@ export const enviarCodigo2FA = async ({
     textContent: `${saludo}\n\nTu código de verificación es: ${codigo}\n\nEste código expirará en 5 minutos.`,
   });
 };
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83

@@ -5,20 +5,9 @@ import { publicacionesService } from "../modules/publicaciones/publicaciones.ser
 // Crear publicación (HU‑1 + HU‑5 v2)
 export const crearPublicacion = async (req: Request, res: Response) => {
   try {
-    const { titulo, descripcion } = req.body
-    const userId = (req as any).user.id // viene del middleware JWT
+    const { titulo, descripcion } = req.body;
+    const userId = (req as any).user.id; // viene del middleware JWT
 
-<<<<<<< HEAD
-    // 1. Contar cuántas propiedades tiene este usuario
-    const publicaciones = await prisma.publicacion.count({
-      where: { usuarioId: userId }
-    })
-
-    // 2. CORRECCIÓN MATEMÁTICA: Si ya tiene 2, cobramos (la 0 y la 1 son gratis)
-    if (publicaciones >= 2) {
-      // 3. USAMOS 402: "Payment Required" para no confundirlo con errores de Token
-      return res.status(402).json({ error: 'Límite de publicaciones gratuitas alcanzado' })
-=======
     // Validación HU‑5 v2: límite de publicaciones
     try {
       await publicacionesService.validarPublicacionHU5(userId, req.body);
@@ -33,7 +22,6 @@ export const crearPublicacion = async (req: Request, res: Response) => {
         estado: "Pendiente de revisión",
         error: error instanceof Error ? error.message : "Error de validación",
       });
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
     }
 
     // Flujo HU‑1: creación normal
@@ -42,19 +30,10 @@ export const crearPublicacion = async (req: Request, res: Response) => {
         titulo,
         descripcion,
         usuario: { connect: { id: userId } },
-        inmueble: { connect: { id: 1 } } // ajusta según tu lógica real
-      }
-    })
+        inmueble: { connect: { id: 1 } }, // ajusta según tu lógica real
+      },
+    });
 
-<<<<<<< HEAD
-    res.status(201).json(nueva)
-  } catch (error) {
-    res.status(500).json({ error: 'Error al crear publicación' })
-  }
-}
-// Listar publicaciones
-export const listarPublicaciones = async (req: Request, res: Response) => {
-=======
     return res.status(201).json({
       estado: "Validado",
       mensaje: "Publicación creada correctamente",
@@ -67,33 +46,27 @@ export const listarPublicaciones = async (req: Request, res: Response) => {
 
 // HU‑1: Listar publicaciones
 export const listarPublicaciones = async (_req: Request, res: Response) => {
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
   try {
-    const publicaciones = await prisma.publicacion.findMany()
-    res.json(publicaciones)
-  } catch (error) {
-    res.status(500).json({ error: 'Error al listar publicaciones' })
+    const publicaciones = await prisma.publicacion.findMany();
+    res.json(publicaciones);
+  } catch (_error) {
+    res.status(500).json({ error: "Error al listar publicaciones" });
   }
-}
+};
 
 // HU‑1: Validar publicaciones gratuitas (consulta simple)
 export const validarPublicacionesFree = async (req: Request, res: Response) => {
   try {
-    const userId = parseInt(req.params.id as string, 10)
+    const userId = parseInt(req.params.id as string, 10);
     const publicaciones = await prisma.publicacion.count({
-      where: { usuarioId: userId }
-    })
+      where: { usuarioId: userId },
+    });
 
-<<<<<<< HEAD
-    const limiteGratis = 3
-    const restantes = Math.max(limiteGratis - publicaciones, 0)
-=======
     const limiteGratis = 2;
     const restantes = Math.max(limiteGratis - publicaciones, 0);
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 
-    res.json({ restantes })
-  } catch (error) {
-    res.status(500).json({ error: 'Error al validar publicaciones gratuitas' })
+    res.json({ restantes });
+  } catch (_error) {
+    res.status(500).json({ error: "Error al validar publicaciones gratuitas" });
   }
-}
+};

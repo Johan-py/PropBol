@@ -1,21 +1,13 @@
 import {
   buscarPublicacionesPorUsuarioRepository,
   buscarPublicacionPorIdRepository,
-<<<<<<< HEAD
-=======
   buscarResumenFinalPorIdRepository,
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   actualizarPublicacionRepository,
   eliminarLogicamentePublicacionRepository,
   buscarDetallePublicacionPorIdRepository,
   buscarDetallePublicacionPorInmuebleIdRepository
 } from './publicacion.repository.js'
 
-<<<<<<< HEAD
-export const listarMisPublicacionesService = async (usuarioId: number) => {
-  if (Number.isNaN(usuarioId) || usuarioId <= 0) {
-    throw new Error("USUARIO_INVALIDO");
-=======
 type TipoAccionPermitido = 'VENTA' | 'ALQUILER' | 'ANTICRETO'
 
 type EditarPublicacionInput = {
@@ -67,7 +59,6 @@ const normalizarTipoMultimedia = (tipo: unknown) => normalizarTexto(tipo).toUppe
 const esNumeroPositivo = (valor: unknown) => {
   if (valor === undefined || valor === null || valor === '') {
     return false
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   }
 
   const numero = Number(valor)
@@ -131,80 +122,6 @@ export const listarMisPublicacionesService = async (usuarioId: number) => {
 }
 
 export const editarPublicacionService = async (
-<<<<<<< HEAD
-  publicacionId: number,
-  usuarioSolicitanteId: number,
-  data: any,
-) => {
-  if (Number.isNaN(publicacionId) || publicacionId <= 0) {
-    throw new Error("ID_INVALIDO");
-  }
-
-  if (Number.isNaN(usuarioSolicitanteId) || usuarioSolicitanteId <= 0) {
-    throw new Error("USUARIO_INVALIDO");
-  }
-
-  const publicacion = await buscarPublicacionPorIdRepository(publicacionId);
-
-  if (!publicacion) {
-    throw new Error("PUBLICACION_NO_EXISTE");
-  }
-
-  if (publicacion.usuarioId !== usuarioSolicitanteId) {
-    throw new Error("NO_AUTORIZADO");
-  }
-
-  const titulo = data?.titulo ?? data?.title;
-  const descripcion = data?.descripcion ?? data?.details;
-  const tipoAccion = data?.tipoAccion ?? data?.operationType;
-  const ubicacion = data?.ubicacion ?? data?.location;
-  const precioRaw = data?.precio ?? data?.price;
-
-  if (titulo !== undefined && !String(titulo).trim()) {
-    throw new Error("TITULO_INVALIDO");
-  }
-
-  if (descripcion !== undefined && !String(descripcion).trim()) {
-    throw new Error("DESCRIPCION_INVALIDA");
-  }
-
-  if (tipoAccion !== undefined && !String(tipoAccion).trim()) {
-    throw new Error("TIPO_ACCION_INVALIDO");
-  }
-
-  if (ubicacion !== undefined && !String(ubicacion).trim()) {
-    throw new Error("UBICACION_INVALIDA");
-  }
-
-  if (
-    precioRaw !== undefined &&
-    precioRaw !== null &&
-    precioRaw !== "" &&
-    (Number.isNaN(Number(precioRaw)) || Number(precioRaw) <= 0)
-  ) {
-    throw new Error("PRECIO_INVALIDO");
-  }
-
-  const actualizada = await actualizarPublicacionRepository(
-    publicacionId,
-    data,
-  );
-
-  return {
-    id: actualizada.id,
-    titulo: actualizada.titulo,
-    descripcion: actualizada.descripcion,
-    precio: Number(actualizada.inmueble.precio),
-    tipoAccion: actualizada.inmueble.tipoAccion,
-    ubicacion:
-      actualizada.inmueble.ubicacion?.direccion || "Ubicación no disponible",
-    imagenUrl: actualizada.multimedia?.[0]?.url ?? null,
-  };
-};
-
-export const eliminarPublicacionService = async (
-=======
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   publicacionId: number,
   usuarioSolicitanteId: number,
   data: EditarPublicacionInput

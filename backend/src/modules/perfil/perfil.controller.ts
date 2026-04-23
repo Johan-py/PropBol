@@ -1,9 +1,6 @@
 import type { Request, Response } from "express";
 import { prisma } from "../../lib/prisma.client.js";
-<<<<<<< HEAD
-=======
 import { publicacionesService } from "../publicaciones/publicaciones.service.js";
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 interface AuthRequest extends Request {
   usuario?: {

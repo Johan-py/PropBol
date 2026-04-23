@@ -1,9 +1,6 @@
 import type { Request, Response } from "express";
 import { prisma } from "../lib/prisma.client.js";
-<<<<<<< HEAD
-=======
 import { emitirComprobante } from "../modules/transacciones/servicios/comprobanteService.js";
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 // Generar Pago QR
 export const generarPagoQr = async (

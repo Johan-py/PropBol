@@ -2,10 +2,7 @@
 import type { Request, Response } from "express";
 import { prisma } from "../../lib/prisma.client.js";
 import { enviarCodigoCambioEmail } from "../../lib/email.service.js";
-<<<<<<< HEAD
-=======
 import { invalidateOtherUserSessions } from "../auth/auth.repository.js";
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 interface AuthRequest extends Request {
   usuario?: {
@@ -307,23 +304,14 @@ export const solicitarCambioEmail = async (req: AuthRequest, res: Response) => {
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
     const expiraEn = new Date(Date.now() + 5 * 60 * 1000);
 
-    // ✅ CORREGIDO: usar snake_case
     await prisma.cambioEmail.create({
       data: {
         token: otp,
-<<<<<<< HEAD
-        email_nuevo: emailNuevo,    // antes: emailNuevo
-        expira_en: expiraEn,         // antes: expiraEn
-        usuario_id: usuarioId        // antes: usuarioId
-      }
-    })
-=======
         email_nuevo: emailNuevo,
         expira_en: expiraEn,
         usuario_id: usuarioId,
       },
     });
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
     const emailEnviado = await enviarCodigoCambioEmail({
       emailDestino: emailNuevo,
@@ -363,22 +351,13 @@ export const confirmarCambioEmail = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ ok: false, msg: "Código requerido" });
     }
 
-    // ✅ CORREGIDO: usar usuario_id y completado_en
     const solicitud = await prisma.cambioEmail.findFirst({
       where: {
-<<<<<<< HEAD
-        usuario_id: usuarioId,        // antes: usuarioId
-        completado_en: null           // antes: completadoEn
-      },
-      orderBy: { creado_en: 'desc' }  // antes: creadoEn
-    })
-=======
         usuario_id: usuarioId,
         completado_en: null,
       },
       orderBy: { creado_en: "desc" },
     });
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
     if (!solicitud) {
       return res.status(404).json({
@@ -387,12 +366,7 @@ export const confirmarCambioEmail = async (req: AuthRequest, res: Response) => {
       });
     }
 
-<<<<<<< HEAD
-    // ✅ CORREGIDO: usar expira_en
-    if (new Date() > solicitud.expira_en) {  // antes: expiraEn
-=======
     if (new Date() > solicitud.expira_en) {
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
       return res.status(410).json({
         ok: false,
         msg: "Código expirado. Solicita un nuevo código",
@@ -406,19 +380,9 @@ export const confirmarCambioEmail = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    // ✅ CORREGIDO: usar email_nuevo y completado_en
     const [usuarioActualizado] = await prisma.$transaction([
       prisma.usuario.update({
         where: { id: usuarioId },
-<<<<<<< HEAD
-        data: { correo: solicitud.email_nuevo }  // antes: emailNuevo
-      }),
-      prisma.cambioEmail.update({
-        where: { id: solicitud.id },
-        data: { completado_en: new Date() }  // antes: completadoEn
-      })
-    ])
-=======
         data: { correo: solicitud.email_nuevo },
       }),
       prisma.cambioEmail.update({
@@ -426,7 +390,6 @@ export const confirmarCambioEmail = async (req: AuthRequest, res: Response) => {
         data: { completado_en: new Date() },
       }),
     ]);
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
     return res.json({
       ok: true,
@@ -440,8 +403,4 @@ export const confirmarCambioEmail = async (req: AuthRequest, res: Response) => {
       msg: "Error al confirmar cambio",
     });
   }
-<<<<<<< HEAD
-}
-=======
 };
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83

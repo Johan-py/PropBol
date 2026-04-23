@@ -1,9 +1,6 @@
 import { publicacionesRepository } from "./publicaciones.repository.js";
 import { Publicacion } from "@prisma/client";
-<<<<<<< HEAD
-=======
 import { suscripcionesService } from "../suscripciones/suscripciones.service.js";
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
 
 export const publicacionesService = {
   async listarTodas(): Promise<Publicacion[]> {
@@ -14,8 +11,6 @@ export const publicacionesService = {
     return publicacionesRepository.findGratis();
   },
 
-<<<<<<< HEAD
-=======
   async listarMisPublicaciones(userId: number) {
     return publicacionesRepository.findByUserId(userId);
   },
@@ -42,7 +37,6 @@ export const publicacionesService = {
     };
   },
 
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
   async crear(
     userId: number,
     data: Partial<Publicacion>,
@@ -72,8 +66,6 @@ export const publicacionesService = {
 
     return "FLOW_ALLOWED";
   },
-<<<<<<< HEAD
-=======
   // Agregar después de validarFlujo
   async eliminar(publicacionId: number, userId: number): Promise<void> {
     const publicacion = await publicacionesRepository.findById(publicacionId);
@@ -102,9 +94,6 @@ export const publicacionesService = {
 
     await publicacionesRepository.updateEstado(publicacionId, activa);
   },
-<<<<<<< HEAD
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
-=======
 
   // 👉 Nueva función HU‑5 v2
   async validarPublicacionHU5(userId: number, data: Partial<Publicacion>) {
@@ -120,5 +109,4 @@ export const publicacionesService = {
       mensaje: "Publicación lista para guardar",
     };
   },
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
 };
