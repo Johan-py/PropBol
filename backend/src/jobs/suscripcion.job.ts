@@ -1,8 +1,7 @@
 import cron from 'node-cron'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '../lib/prisma.client.js'
 import { notificarVencimiento } from '../services/email.service.js'
 
-const prisma = new PrismaClient()
 
 cron.schedule('0 8 * * *', async () => {
   console.log('🔄 Ejecutando job de suscripciones...')
