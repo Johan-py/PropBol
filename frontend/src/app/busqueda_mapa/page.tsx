@@ -950,15 +950,20 @@ function BusquedaMapaContent() {
           console.log('🔍 Buscando con filtros:', nuevosFiltros)
         }}
         onOpenPriceFilter={() => {
-          setIsPriceFilterOpen(true)
+          setIsPriceFilterOpen(prev => !prev)
           setIsSidebarOpen(true)
+          setActiveSidebarView('results')
         }}
         onOpenSuperficieFilter={() => {
+          setIsPriceFilterOpen(false)
           setIsSidebarOpen(true)
-          setActiveSidebarView('superficie')
+          setActiveSidebarView(prev => prev === 'superficie' ? 'results' : 'superficie')
         }}
         isCapacidadActive={isCapacidadOpen}
         onToggleCapacidad={toggleCapacidad}
+
+        isPriceFilterActive={isPriceFilterOpen}
+        isSuperficieFilterActive={activeSidebarView === 'superficie' && isSidebarOpen}
       />
 
       <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200">
