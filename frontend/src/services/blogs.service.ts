@@ -108,7 +108,10 @@ export const getPublishedBlogs = async (
     }));
   } catch (error) {
     console.error("Error al obtener los blogs publicados:", error);
-    return MOCK_PUBLIC_BLOGS.slice(0, limit);
+    if (error instanceof TypeError) {
+      return MOCK_PUBLIC_BLOGS.slice(0, limit);
+    }
+    return [];
   }
 };
 
