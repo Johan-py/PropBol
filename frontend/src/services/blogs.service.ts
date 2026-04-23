@@ -8,6 +8,11 @@ export type BlogCategoryOption = {
   nombre: string;
 };
 
+type UploadedBlogImageResponse = {
+  path: string;
+  url: string;
+};
+
 export type CreateBlogPayload = {
   titulo: string;
   contenido: string;
@@ -101,6 +106,29 @@ export async function createBlog(
 
   if (!response.ok) {
     throw new Error(data.message || "No se pudo crear el blog");
+  }
+
+  return data;
+}
+
+export async function uploadBlogImage(
+  file: File,
+): Promise<UploadedBlogImageResponse> {
+  const formData = new FormData();
+  formData.append("imagen", file);
+
+  const response = await fetch(`${getApiUrl()}/api/blogs/upload-image`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: formData,
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "No se pudo subir la imagen del blog");
   }
 
   return data;
