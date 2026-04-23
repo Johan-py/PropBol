@@ -13,22 +13,21 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
   const searchParams = useSearchParams()
   const { updateFilters } = useSearchFilters()
 
-  const [moneda, setMoneda] = useState<'BOB' | 'USD'>('USD')
-  const [minPrice, setMinPrice] = useState<string>('')
-  const [maxPrice, setMaxPrice] = useState<string>('')
+  const [moneda, setMoneda] = useState<'BOB' | 'USD'>((searchParams.get('currency') as 'BOB' | 'USD') || 'USD')
+  const [minPrice, setMinPrice] = useState<string>(searchParams.get('minPrice') || '')
+  const [maxPrice, setMaxPrice] = useState<string>(searchParams.get('maxPrice') || '')
   const [error, setError] = useState<string>('')
-  const [filtroAplicado, setFiltroAplicado] = useState(false)  
+  const [filtroAplicado, setFiltroAplicado] = useState(!!searchParams.get('minPrice') || !!searchParams.get('maxPrice'))  
 
-  // Cargar valores iniciales si existen en la URL o SessionStorage
+  // Cargar valores iniciales desde la URL al abrir
   useEffect(() => {
-    const saved = sessionStorage.getItem('propbol_global_filters')
-    if (saved) {
-      const parsed = JSON.parse(saved)
-      if (parsed.minPrice) setMinPrice(parsed.minPrice)
-      if (parsed.maxPrice) setMaxPrice(parsed.maxPrice)
-      if (parsed.currency) setMoneda(parsed.currency)
+    if (isOpen) {
+      setMinPrice(searchParams.get('minPrice') || '')
+      setMaxPrice(searchParams.get('maxPrice') || '')
+      setMoneda((searchParams.get('currency') as 'BOB' | 'USD') || 'USD')
+      setError('')
     }
-  }, [])
+  }, [isOpen, searchParams])
 
   if (!isOpen) return null;
 
@@ -41,14 +40,6 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
       setError('El precio mínimo no puede ser mayor al máximo')
       return
     }
-    const nuevosFiltros = {
-      minPrice: minPrice || null,
-      maxPrice: maxPrice || null,
-      currency: moneda,
-      updatedAt: new Date().toISOString()
-    }
-
-    updateFilters(nuevosFiltros)
 
     // Actualizar URL
     const params = new URLSearchParams(searchParams.toString())
@@ -205,6 +196,21 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
           </p>
         </div>
       )}
+
+      {/* Limpiar filtro */}
+      <button
+        type="button"
+        onClick={() => {
+          setMinPrice(''); setMaxPrice(''); setError(''); setFiltroAplicado(false)
+          const params = new URLSearchParams(searchParams.toString())
+          params.delete('minPrice'); params.delete('maxPrice')
+          params.delete('currency')
+          router.push(`/busqueda_mapa?${params.toString()}`)
+        }}
+        className="text-xs text-stone-400 hover:text-[#d97706] transition-colors underline text-center w-full"
+      >
+        Limpiar filtro
+      </button>
 
       {/* Botón Aplicar */}
       <button
