@@ -55,3 +55,24 @@ export const getInmueblesRecomendados = async (req: Request, res: Response) => {
     res.status(500).json({ success: false, error: 'Error al obtener resultados' })
   }
 }
+
+export const ordenarPorAfinidad = async (req: Request, res: Response) => {
+  try {
+    const usuarioId = (req as any).usuario?.id
+    if (!usuarioId) {
+      return res.status(401).json({ success: false, error: 'Usuario no autenticado' })
+    }
+
+    const { inmuebleIds } = req.body
+    if (!Array.isArray(inmuebleIds) || inmuebleIds.length === 0) {
+      return res.status(400).json({ success: false, error: 'inmuebleIds es requerido' })
+    }
+
+    const resultado = await recomendacionesService.ordenarPorAfinidad(inmuebleIds, usuarioId)
+    res.status(200).json({ success: true, data: resultado })
+  } catch (error) {
+    console.error('Error en ordenarPorAfinidad:', error)
+    res.status(500).json({ success: false, error: 'Error al ordenar por afinidad' })
+  }
+}
+
