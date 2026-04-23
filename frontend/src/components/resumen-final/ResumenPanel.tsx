@@ -295,3 +295,4 @@ export default function ResumenPanel({ publicacionId }: Props) {
     </>
   );
 }
+
