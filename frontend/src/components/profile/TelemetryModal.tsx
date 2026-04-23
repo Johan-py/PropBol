@@ -1,22 +1,20 @@
-
 'use client';
 import React from 'react';
-import { useRouter } from 'next/navigation';
 
+// 1. Agregamos onAccept a las propiedades esperadas
 interface TelemetryModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onAccept?: () => void; 
 }
 
-const TelemetryModal: React.FC<TelemetryModalProps> = ({ isOpen, onClose }) => {
-  const router = useRouter();
+// 2. Recibimos onAccept en los parámetros
+const TelemetryModal: React.FC<TelemetryModalProps> = ({ isOpen, onClose, onAccept }) => {
+  // Ya no necesitamos useRouter
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-stone-900/40 backdrop-blur-sm animate-in fade-in duration-700">
-      {/* CAMBIO AQUÍ: Se cambió 'max-w-lg' por 'max-w-2xl' para hacerlo más rectangular 
-         y se ajustó el padding a 'p-7' para equilibrar el diseño ancho.
-      */}
       <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-7 m-4 border border-[#f5f5f4]">
         {/* Título - Piedra 900 */}
         <div className="text-center mb-6">
@@ -56,14 +54,13 @@ const TelemetryModal: React.FC<TelemetryModalProps> = ({ isOpen, onClose }) => {
           >
             Entendido
           </button>
+          
+          {/* 3. CAMBIO AQUÍ: Nuevo texto y usamos onAccept */}
           <button 
             className="px-5 py-2 bg-[#D97706] text-white rounded-md hover:bg-[#b45309] transition-all shadow-md active:scale-95"
-            onClick={() => {
-              onClose();
-              router.push('/profile?focus=personal-data');
-            }}
+            onClick={onAccept}
           >
-            Configurar mi Cuenta
+            Completar mi perfil
           </button>
         </div>
       </div>
