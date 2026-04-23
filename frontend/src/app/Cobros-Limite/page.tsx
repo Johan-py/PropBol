@@ -6,7 +6,7 @@ import { jwtDecode } from 'jwt-decode'
 export default function Page() {
   const router = useRouter()
   const [visible, setVisible] = useState(false)
-  const [datosPlan, setDatosPlan] = useState({ total: 0, usadas: 0 })
+  const [datosPlan, setDatosPlan] = useState({ total: 2, usadas: 0 })
   const [cargando, setCargando] = useState(true)
 
   useEffect(() => {
@@ -22,7 +22,9 @@ export default function Page() {
       })
         .then((res) => res.json())
         .then((data) => {
-          setDatosPlan({ total: data.total, usadas: data.total - data.restantes })
+          const total = data.total ?? 2
+          const restantes = data.restantes ?? 0
+          setDatosPlan({ total, usadas: total - restantes })
           setCargando(false)
         })
         .catch((err) => console.error('Error:', err))
