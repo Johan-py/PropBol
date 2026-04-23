@@ -95,20 +95,18 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
     );
   }
 
-  const handleApprove = () => {
-    // TODO: enviar la aprobacion al backend cuando exista moderacion real.
-    updateBlogStatus(blog.id, "APROBADO");
+  const handleApprove = async () => {
+    await updateBlogStatus(blog.id, "APROBADO");
     router.push("/admin/blogs");
   };
 
-  const handleReject = () => {
+  const handleReject = async () => {
     if (!rejectionComment.trim()) {
       setFormError("Agrega un comentario para justificar el rechazo.");
       return;
     }
 
-    // TODO: enviar el rechazo y comentario al backend cuando exista moderacion real.
-    updateBlogStatus(blog.id, "RECHAZADO", rejectionComment);
+    await updateBlogStatus(blog.id, "RECHAZADO", rejectionComment);
     router.push("/admin/blogs");
   };
 
