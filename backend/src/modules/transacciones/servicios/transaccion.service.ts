@@ -1,6 +1,5 @@
 import { prisma } from "../../../lib/prisma.client.js";
 
-// Función auxiliar para redondear a 2 decimales
 function redondearADos(numero: number): number {
   return Math.round(numero * 100) / 100;
 }
@@ -9,7 +8,6 @@ export async function crearTransaccion(
   usuarioId: number,
   idSuscripcion: number,
 ) {
-  // Obtener el plan de suscripción
   const plan = await prisma.plan_suscripcion.findUnique({
     where: { id: idSuscripcion },
   });
@@ -20,7 +18,6 @@ export async function crearTransaccion(
   const ivaMonto = redondearADos(subtotal * (ivaPorcentaje / 100));
   const total = redondearADos(subtotal + ivaMonto);
 
-  // Crear la transacción
   const transaccion = await prisma.transacciones.create({
     data: {
       id_usuario: usuarioId,
@@ -36,7 +33,6 @@ export async function crearTransaccion(
     },
   });
 
-  // Registrar en bitácora
   await prisma.bitacora_pagos.create({
     data: {
       id_usuario: usuarioId,
