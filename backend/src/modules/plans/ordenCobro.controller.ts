@@ -1,7 +1,6 @@
 import type { Request, Response } from 'express'
-import { PrismaClient } from '@prisma/client'
+import { prisma } from '../../lib/prisma.client.js'
 
-const prisma = new PrismaClient()
 
 export const crearOrdenCobro = async (req: Request, res: Response) => {
   try {
