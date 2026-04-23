@@ -16,13 +16,18 @@ import { useRouter } from 'next/navigation'
 import TransactionModeFilter from './TransactionModeFilter'
 
 interface FilterBarProps {
-   variant?: string  
   onSearch?: (filtros: {
     query: string
     modoInmueble: string[]
     amenidades: string[]
     etiquetas: string[]
+    tipoInmueble?: string[]
   }) => void
+
+  onOpenPriceFilter?: () => void
+  onOpenSuperficieFilter?: () => void
+  isCapacidadActive?: boolean
+  variant?: string
 }
 
 const AMENIDADES = [
