@@ -74,7 +74,7 @@ function FooterBrand() {
   const pathname = usePathname()
 
   return (
-    <section className="border-t border-amber-600 pt-4">
+    <section id="tour-footer-logo" className="border-t border-amber-600 pt-4">
       <Logo
         className="w-fit"
         iconClassName="shadow-sm"
@@ -95,8 +95,16 @@ function FooterBrand() {
   )
 }
 
-function FooterSection({ actions, title }: { actions: FooterAction[]; title: string }) {
-  const router = useRouter()
+function FooterSection({
+  actions,
+  title,
+  id,
+}: {
+  actions: FooterAction[];
+  title: string;
+  id?: string;
+}) {
+  const router = useRouter();
 
   const handleProtectedNavigation = (action: FooterAction) => {
     if (!action.href) {
@@ -115,7 +123,7 @@ function FooterSection({ actions, title }: { actions: FooterAction[]; title: str
   }
 
   return (
-    <section className="border-t border-amber-600 pt-4">
+    <section id={id} className="border-t border-amber-600 pt-4">
       <h2 className="text-xl font-bold text-stone-900">{title}</h2>
       <ul className="mt-4 space-y-4">
         {actions.map((action) => (
@@ -161,7 +169,7 @@ function FooterSection({ actions, title }: { actions: FooterAction[]; title: str
 
 function FooterBottomBar() {
   return (
-    <div className="border-t border-stone-200">
+    <div id="tour-footer-redes" className="border-t border-stone-200">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-5 text-sm text-stone-600 sm:px-8 lg:flex-row lg:items-center lg:justify-between lg:px-10">
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
           <LogoMark className="rounded-md shadow-none" size={16} />
@@ -199,12 +207,24 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl px-6 py-10 sm:px-8 lg:px-10">
         <div className="grid gap-8 [grid-template-columns:repeat(auto-fit,minmax(180px,1fr))]">
           <FooterBrand />
-          <FooterSection actions={exploreActions} title="Explorar" />
-          <FooterSection actions={companyActions} title="Conócenos" />
-          <FooterSection actions={socialActions} title="Redes Sociales" />
+          <FooterSection
+            id="tour-footer-explorar"
+            actions={exploreActions}
+            title="Explorar"
+          />
+          <FooterSection
+            id="tour-footer-conocenos"
+            actions={companyActions}
+            title="Conócenos"
+          />
+          <FooterSection
+            id="tour-footer-redes-texto"
+            actions={socialActions}
+            title="Redes Sociales"
+          />
         </div>
       </div>
       <FooterBottomBar />
     </footer>
-  )
+  );
 }
