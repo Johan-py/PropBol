@@ -38,35 +38,6 @@ export default function NavLinks() {
           <ChevronDown className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`} />
         </button>
 
-
-      <Link
-        href="/propiedades"
-        className="hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition"
-      >
-        Propiedades
-      </Link>
-
-      <Link
-        href="/blogs"
-        className="hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition"
-      >
-        Blogs
-      </Link>
-
-      <Link
-        href="/cobros-suscripciones"
-        className="hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition"
-      >
-        Planes de membresia
-      </Link>
-
-      <Link
-        href="/ayuda"
-        className="hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition"
-      >
-        Ayuda
-      </Link>
-=======
         {open && (
           <div className="absolute top-full left-0 mt-2 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-50 py-2">
             {["Casas", "Departamentos", "Cuartos", "Terrenos", "Espacios de cementerios"].map((item) => (
@@ -83,12 +54,6 @@ export default function NavLinks() {
         )}
       </div>
 
-
-      <Link href="/blogs" className={linkStyle}>Blogs</Link>
-      <Link href="/cobros-suscripciones" className={linkStyle}>Planes de membresia</Link>
-      <Link href="/ayuda" className={linkStyle}>Ayuda</Link>
->>>>>>> 8536301fcf9e07d62083864936ac19772bd49b83
-=======
       {/* HU-05: Blogs */}
       <Link id="tour-blogs" href="/blogs" className={linkStyle}>
         Blogs
@@ -118,7 +83,6 @@ export default function NavLinks() {
         Ayuda
       </button>
 
->>>>>>> ae8074f43afab57f05b9fb8258dffe280cac5aca
     </div>
   );
 }
