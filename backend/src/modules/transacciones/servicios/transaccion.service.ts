@@ -37,7 +37,7 @@ function convertirDecimalANumber(valor: any): number {
   return 0;
 }
 
-export async function crearTransaccion(idUsuario: number, idSuscripcion: number) {
+export async function crearTransaccion(usuarioId: number, idSuscripcion: number) {
   // 1. Intentar obtener plan desde DB real
   let plan = await prisma.plan_suscripcion.findUnique({
     where: { id: idSuscripcion },
@@ -65,7 +65,7 @@ export async function crearTransaccion(idUsuario: number, idSuscripcion: number)
   if (!usandoMock) {
     transaccion = await prisma.transacciones.create({
       data: {
-        id_usuario: idUsuario,
+        id_usuario: usuarioId,
         id_suscripcion: idSuscripcion,
         subtotal,
         iva_porcentaje: 13,
@@ -73,7 +73,7 @@ export async function crearTransaccion(idUsuario: number, idSuscripcion: number)
         total,
         metodo_pago: 'QR_BANCARIO',
         fecha_intento: new Date(),
-        estado: 'pendiente',
+        estado: 'PENDIENTE',
         verificacion_requerida: true,
         monto_descuento: 0,
       },
@@ -83,7 +83,7 @@ export async function crearTransaccion(idUsuario: number, idSuscripcion: number)
     // Mock: generar ID temporal
     transaccion = {
       id: Math.floor(Math.random() * 10000),
-      id_usuario: idUsuario,
+      id_usuario: usuarioId,
       id_suscripcion: idSuscripcion,
       subtotal,
       iva_porcentaje: 13,
@@ -91,7 +91,7 @@ export async function crearTransaccion(idUsuario: number, idSuscripcion: number)
       total,
       metodo_pago: 'QR_BANCARIO',
       fecha_intento: new Date().toISOString(),
-      estado: 'pendiente',
+      estado: 'PENDIENTE',
       verificacion_requerida: true,
       monto_descuento: 0,
       plan_suscripcion: plan,
@@ -102,7 +102,7 @@ export async function crearTransaccion(idUsuario: number, idSuscripcion: number)
   if (!usandoMock) {
     await prisma.bitacora_pagos.create({
       data: {
-        id_usuario: idUsuario,
+        id_usuario: usuarioId,
         id_suscripcion: idSuscripcion,
         evento: 'TRANSACCION_CREADA',
         mensaje: `Transacción creada para plan ${plan.nombre_plan}`,
@@ -110,10 +110,9 @@ export async function crearTransaccion(idUsuario: number, idSuscripcion: number)
     }).catch(() => null);
   }
 
+  // ✅ IMPORTANTE: Devolver objeto con transaccion y plan
   return {
-    ...transaccion,
-    referencia: `REF-${transaccion.id}`,
-    fechaExpiracion: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
-    qrContent: plan.imagen_gr_url,
+    transaccion,
+    plan
   };
 }
