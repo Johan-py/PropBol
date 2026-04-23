@@ -188,6 +188,7 @@ function ProfileCardContent() {
 
       // Evaluamos únicamente los campos que faltan por llenar
       const fieldsToHighlight: string[] = []
+
       if (!perfilData.fecha_nacimiento) fieldsToHighlight.push('fechaNacimiento') // ✅ Lógica limpia
       if (!perfilData.pais) fieldsToHighlight.push('pais')
       if (!perfilData.genero) fieldsToHighlight.push('genero')
