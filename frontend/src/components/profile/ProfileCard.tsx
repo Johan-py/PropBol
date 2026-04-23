@@ -70,7 +70,7 @@ function ProfileCardContent() {
   const [avatar, setAvatar] = useState<string | null>(null)
   const [tempAvatar, setTempAvatar] = useState<File | null>(null)
   const [previewAvatar, setPreviewAvatar] = useState<string | null>(null)
-  
+
   // Estados para validaciones de error
   const [errorNombre, setErrorNombre] = useState("");
   const [errorFechaNacimiento, setErrorFechaNacimiento] = useState("");
@@ -119,21 +119,25 @@ function ProfileCardContent() {
         const perfil = data.perfil
         const foto = perfil.avatar || perfil.fotoPerfil || null
         setPerfilData(perfil)
-        
+
         setNombre(perfil.nombre || '')
         setOriginalNombre(perfil.nombre || '')
-        
+
         setPais(perfil.pais || '')
         setOriginalPais(perfil.pais || '')
-        
+
         setGenero(perfil.genero || '')
         setOriginalGenero(perfil.genero || '')
-        
+
         setDireccion(perfil.direccion || '')
         setOriginalDireccion(perfil.direccion || '')
-        
-        setFechaNacimiento(perfil.fechaNacimiento || '')
-        setOriginalFechaNacimiento(perfil.fechaNacimiento || '')
+
+        // ✅ FORMATEAR LA FECHA PARA EL INPUT DATE
+        const fechaFormateada = perfil.fecha_nacimiento
+          ? new Date(perfil.fecha_nacimiento).toISOString().split('T')[0]
+          : ''
+        setFechaNacimiento(fechaFormateada)
+        setOriginalFechaNacimiento(fechaFormateada)
 
         setAvatar(foto)
         setOriginalEmail(perfil.correo || '')
@@ -226,7 +230,7 @@ function ProfileCardContent() {
       await fetch(`${API_URL}/api/perfil/usuario/fecha-nacimiento`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
-        body: JSON.stringify({ fechaNacimiento })
+        body: JSON.stringify({ fecha_nacimiento: fechaNacimiento }) // ✅ CAMBIA ESTA LÍNEA
       })
       setOriginalFechaNacimiento(fechaNacimiento)
     } catch (error: any) {
@@ -240,7 +244,7 @@ function ProfileCardContent() {
 
     if (tieneDuplicados) {
       alert('No puedes guardar números de teléfono duplicados. Por favor, verifica la información.');
-      return; 
+      return;
     }
 
     try {
@@ -446,7 +450,7 @@ function ProfileCardContent() {
 
   const handleSaveAll = async () => {
     setIsLoading(true);
-    
+
     if (tempAvatar) {
       await subirFoto(tempAvatar)
       setTempAvatar(null)
@@ -463,7 +467,7 @@ function ProfileCardContent() {
     if (genero !== originalGenero) await guardarGenero();
     if (direccion !== originalDireccion) await guardarDireccion();
     if (fechaNacimiento !== originalFechaNacimiento) await guardarFechaNacimiento();
-    
+
     await guardarTelefonos();
 
     setCampoEditando(null);
@@ -506,24 +510,23 @@ function ProfileCardContent() {
   }
 
   return (
-    <div 
-      id="personal-data-form" 
-      className={`bg-[#fdf6e6] border border-[#e5dfd7] p-8 rounded-xl flex flex-col md:flex-row gap-10 items-center transition-all duration-700 ${
-        isHighlighted ? 'ring-4 ring-amber-400 shadow-xl shadow-amber-100 scale-[1.01]' : 'shadow-sm'
-      }`}
+    <div
+      id="personal-data-form"
+      className={`bg-[#fdf6e6] border border-[#e5dfd7] p-8 rounded-xl flex flex-col md:flex-row gap-10 items-center transition-all duration-700 ${isHighlighted ? 'ring-4 ring-amber-400 shadow-xl shadow-amber-100 scale-[1.01]' : 'shadow-sm'
+        }`}
     >
       {/* PERFIL */}
       <div className="flex flex-col items-center justify-center w-full md:w-1/3">
         <div className="relative mb-10">
           <div className="w-28 h-28 rounded-full bg-white border border-gray-300 flex items-center justify-center shadow-sm overflow-hidden">
-             {(previewAvatar || (avatar && avatar.trim() !== "")) ? (
+            {(previewAvatar || (avatar && avatar.trim() !== "")) ? (
               <img
-                 src={previewAvatar || (avatar?.startsWith('http') ? avatar : `${API_URL}${avatar}`)}
-                 alt="Foto de perfil"
-                 className="w-full h-full object-cover"
-               />
-              ) : (
-               <User className="w-10 h-10 text-gray-400" />
+                src={previewAvatar || (avatar?.startsWith('http') ? avatar : `${API_URL}${avatar}`)}
+                alt="Foto de perfil"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <User className="w-10 h-10 text-gray-400" />
             )}
           </div>
 
@@ -560,7 +563,7 @@ function ProfileCardContent() {
         <h2 className="text-xl font-bold mb-6 text-stone-900">Datos Personales</h2>
 
         <div className="flex flex-col gap-4">
-          
+
           {/* NOMBRE */}
           <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4">
             <label className="w-full md:w-40 font-medium text-stone-700">Nombre Completo:</label>
@@ -574,9 +577,8 @@ function ProfileCardContent() {
                     setNombre(soloLetras(e.target.value));
                     if (errorNombre) setErrorNombre("");
                   }}
-                  className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                    errorNombre ? "border-red-500 bg-red-50" : campoEditando === 'nombre' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
-                  }`}
+                  className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${errorNombre ? "border-red-500 bg-red-50" : campoEditando === 'nombre' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                    }`}
                 />
               </div>
               {errorNombre && <span className="text-red-500 text-xs mt-1">{errorNombre}</span>}
@@ -626,9 +628,8 @@ function ProfileCardContent() {
                         setTelefonos(telefonos.map((t) => t.id === tel.id ? { ...t, pais: seleccion.nombre, codigo: seleccion.codigo } : t))
                       }
                     }}
-                    className={`px-2 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                      campoEditando === keyCampo ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
-                    }`}
+                    className={`px-2 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${campoEditando === keyCampo ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                      }`}
                   >
                     {PAISES.map((p) => (
                       <option key={p.nombre} value={`${p.nombre} ${p.codigo}`}>{p.flag} {p.codigo}</option>
@@ -640,9 +641,8 @@ function ProfileCardContent() {
                     value={tel.numero}
                     onFocus={() => setCampoEditando(keyCampo)}
                     onChange={(e) => actualizarTelefono(tel.id, e.target.value)}
-                    className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                      campoEditando === keyCampo ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
-                    }`}
+                    className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${campoEditando === keyCampo ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                      }`}
                   />
                   {index === 0 && (
                     <button
@@ -681,9 +681,8 @@ function ProfileCardContent() {
                     setFechaNacimiento(e.target.value)
                     if (errorFechaNacimiento) setErrorFechaNacimiento("")
                   }}
-                  className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                    errorFechaNacimiento ? "border-red-500 bg-red-50" : campoEditando === 'fechaNacimiento' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
-                  }`}
+                  className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${errorFechaNacimiento ? "border-red-500 bg-red-50" : campoEditando === 'fechaNacimiento' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                    }`}
                 />
               </div>
               {errorFechaNacimiento && <span className="text-red-500 text-xs mt-1">{errorFechaNacimiento}</span>}
@@ -698,9 +697,8 @@ function ProfileCardContent() {
                 value={pais}
                 onFocus={() => setCampoEditando('pais')}
                 onChange={(e) => setPais(e.target.value)}
-                className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                  campoEditando === 'pais' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
-                }`}
+                className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${campoEditando === 'pais' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                  }`}
               >
                 <option value="">Seleccione un país</option>
                 <option value="Bolivia">Bolivia</option>
@@ -719,9 +717,8 @@ function ProfileCardContent() {
                 value={genero}
                 onFocus={() => setCampoEditando('genero')}
                 onChange={(e) => setGenero(e.target.value)}
-                className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                  campoEditando === 'genero' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
-                }`}
+                className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${campoEditando === 'genero' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                  }`}
               >
                 <option value="">Seleccione género</option>
                 <option value="Masculino">Masculino</option>
@@ -740,9 +737,8 @@ function ProfileCardContent() {
                 value={direccion}
                 onFocus={() => setCampoEditando('direccion')}
                 onChange={(e) => setDireccion(e.target.value)}
-                className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                  campoEditando === 'direccion' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
-                }`}
+                className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${campoEditando === 'direccion' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                  }`}
               />
             </div>
           </div>
@@ -774,7 +770,7 @@ function ProfileCardContent() {
                   const today = new Date(); // El sistema usa 2026 como fecha base
                   let age = today.getFullYear() - dob.getFullYear();
                   const m = today.getMonth() - dob.getMonth();
-                  
+
                   // Ajuste si el mes/día actual es anterior al de cumpleaños
                   if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
                     age--;
@@ -795,9 +791,8 @@ function ProfileCardContent() {
                 handleSaveAll();
               }}
               disabled={isLoading || !hayCambios}
-              className={`px-6 py-2 rounded-lg text-sm font-medium shadow-sm transition ${
-                !hayCambios ? "bg-orange-300 cursor-not-allowed text-white" : "bg-orange-500 hover:bg-orange-600 text-white"
-              }`}
+              className={`px-6 py-2 rounded-lg text-sm font-medium shadow-sm transition ${!hayCambios ? "bg-orange-300 cursor-not-allowed text-white" : "bg-orange-500 hover:bg-orange-600 text-white"
+                }`}
             >
               {isLoading ? 'Guardando...' : 'Guardar Cambios'}
             </button>

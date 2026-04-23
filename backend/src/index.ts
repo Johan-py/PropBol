@@ -1,10 +1,11 @@
-import path from "path";
-import "dotenv/config";
-import express from "express";
-import cors from "cors";
-import { env } from "./config/env.js";
-import type { Request, Response } from "express";
-import zonaRoutes from "./modules/perfil/zonaUsario.routes.js";
+import path from 'path'
+import 'dotenv/config'
+import express from 'express'
+import cors from 'cors'
+import { env } from './config/env.js'
+import type { Request, Response } from 'express'
+import zonaRoutes from './modules/perfil/zonaUsario.routes.js'
+import telemetriaRouter from "./modules/perfil/telemetria.routes.js";
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -166,6 +167,8 @@ app.use('/api/favorites', favoritesRoutes)
 app.use('/api/telemetria', telemetriaRoutes)
 app.use('/api/recomendaciones', recomendacionesRoutes)
 app.use('/api/blogs', blogsRoutes)
+app.use("/api/telemetria", telemetriaRouter);
+
 app.use('/api/transacciones', transaccionesRoutes)
 app.use('/api/planes', plansRoutes)
 // --------------------
