@@ -4,6 +4,18 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
+  BookOpen,
+  Camera,
+  Link,
+  List,
+  Quote,
+  Type,
+  Bold,
+  Italic,
+  MessageSquare,
+} from "lucide-react";
+
+import {
   createBlog,
   getBlogCategories,
   updateBlog,
@@ -23,6 +35,7 @@ const INITIAL_ERRORS: FieldErrors = {};
 const AUTOSAVE_STORAGE_PREFIX = "propbol_blog_form";
 const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
 
 type BlogCreateFormProps = {
   blogId?: number;
@@ -166,6 +179,7 @@ export default function BlogCreateForm({
       window.URL.revokeObjectURL(imagePreviewUrl);
     };
   }, [imagePreviewUrl, selectedImageFile]);
+
   const isFormDirty = useMemo(() => {
     const baseTitulo = initialValues?.titulo?.trim() ?? "";
     const baseImagen = initialValues?.imagen?.trim() ?? "";
@@ -328,51 +342,42 @@ export default function BlogCreateForm({
   };
 
   return (
-    <div className="rounded-[32px] border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
-        <form
-          className="space-y-6"
-          onSubmit={(event) => {
-            void handleSubmit(event, "pendiente");
-          }}
-        >
+    <div className="mx-auto max-w-6xl">
+      <div className="grid gap-12 lg:grid-cols-[1fr_320px]">
+        {/* Main Content Area */}
+        <div className="space-y-8">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-700">
+            <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#B45309]">
               {mode === "edit" ? "Editar blog" : "Nuevo aporte al blog"}
             </p>
-            <h1 className="mt-2 text-4xl font-bold leading-tight text-stone-900">
-              {mode === "edit"
-                ? "Ajusta tu artículo antes de volver a enviarlo."
-                : "Comparte tu conocimiento con la comunidad."}
+            <h1 className="font-heading mt-4 text-5xl font-extrabold leading-[1.1] tracking-tight text-[#1C1917]">
+              {mode === "edit" ? (
+                "Ajusta tu artículo antes de volver a enviarlo."
+              ) : (
+                <>
+                  Comparte tu conocimiento <br />
+                  <span className="italic text-[#B45309]">con la comunidad.</span>
+                </>
+              )}
             </h1>
-            {statusLabel ? (
-              <p className="mt-3 text-sm font-medium text-stone-500">
-                Estado actual: <span className="font-semibold text-stone-700">{statusLabel}</span>
-              </p>
-            ) : null}
           </div>
 
-          <label className="block">
-            <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">
-              Imagen destacada
-            </span>
-            <div className="space-y-3">
-              <label className="flex min-h-[132px] cursor-pointer flex-col items-center justify-center rounded-3xl border border-dashed border-stone-300 bg-stone-50 px-6 py-5 text-center transition hover:border-amber-400 hover:bg-amber-50">
-                <span className="text-sm font-semibold text-stone-800">
-                  {selectedImageFile
-                    ? selectedImageFile.name
-                    : "Selecciona una imagen para la portada"}
-                </span>
-                <span className="mt-2 text-xs text-stone-500">
-                  Formatos permitidos: JPG, PNG o WebP. Máximo 5 MB.
-                </span>
+          <form
+            id="blog-form"
+            className="space-y-8"
+            onSubmit={(event) => {
+              void handleSubmit(event, "pendiente");
+            }}
+          >
+            {/* Image Upload Section */}
+            <div className="space-y-2">
+              <label className="relative flex min-h-[300px] cursor-pointer flex-col items-center justify-center rounded-[32px] border-2 border-dashed border-[#E7E5E4] bg-[#FAFAFA] px-10 py-12 text-center transition hover:border-[#F59E0B] hover:bg-white group">
                 <input
                   type="file"
                   accept="image/png,image/jpeg,image/webp"
                   className="sr-only"
                   onChange={(event) => {
                     const file = event.target.files?.[0] ?? null;
-
                     setSelectedImageFile(file);
                     setFieldErrors((currentErrors) => ({
                       ...currentErrors,
@@ -380,164 +385,194 @@ export default function BlogCreateForm({
                     }));
                   }}
                 />
+
+                {imagePreviewUrl ? (
+                  <div className="absolute inset-0 overflow-hidden rounded-[32px]">
+                    <img
+                      src={imagePreviewUrl}
+                      alt="Preview"
+                      className="h-full w-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 transition group-hover:opacity-100 flex items-center justify-center">
+                      <Camera className="h-10 w-10 text-white" />
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-black/5">
+                      <Camera className="h-6 w-6 text-[#A8A29E]" />
+                    </div>
+                    <p className="text-base font-semibold text-[#1C1917]">
+                      Arrastra y suelta la imagen destacada
+                    </p>
+                    <p className="mt-1 text-xs font-medium text-[#78716C]">
+                      Recomendado: 1920×820px (JPG, PNG)
+                    </p>
+                  </>
+                )}
               </label>
-
-              {imagePreviewUrl ? (
-                <div className="overflow-hidden rounded-3xl border border-stone-200 bg-stone-100">
-                  <img
-                    src={imagePreviewUrl}
-                    alt="Vista previa de la portada del blog"
-                    className="h-64 w-full object-cover"
-                  />
-                </div>
-              ) : null}
+              {fieldErrors.imagen && (
+                <p className="px-2 text-sm font-medium text-red-500">{fieldErrors.imagen}</p>
+              )}
             </div>
-            {fieldErrors.imagen ? (
-              <p className="mt-2 text-sm text-red-600">{fieldErrors.imagen}</p>
-            ) : (
-              <p className="mt-2 text-xs text-stone-500">
-                La imagen se subirá al bucket <span className="font-semibold">blogs</span> antes de guardar el artículo.
-              </p>
-            )}
-          </label>
 
-          <label className="block">
-            <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">
-              Título del post
-            </span>
-            <input
-              type="text"
-              value={titulo}
-              onChange={(event) => setTitulo(event.target.value)}
-              placeholder="Escribe un título"
-              className="w-full rounded-2xl border border-stone-200 px-4 py-3 text-sm text-stone-900 outline-none transition focus:border-amber-500"
-            />
-            {fieldErrors.titulo ? (
-              <p className="mt-2 text-sm text-red-600">{fieldErrors.titulo}</p>
-            ) : null}
-          </label>
+            {/* Title Section */}
+            <div className="space-y-3">
+              <span className="px-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[#A8A29E]">
+                Titulo del post
+              </span>
+              <input
+                type="text"
+                value={titulo}
+                onChange={(event) => setTitulo(event.target.value)}
+                placeholder="Escribe un título"
+                className="w-full rounded-[20px] bg-[#F5F5F4] px-6 py-5 text-xl font-bold text-[#1C1917] placeholder:text-[#D6D3D1] outline-none transition focus:bg-white focus:ring-2 focus:ring-[#F59E0B]/20"
+              />
+              {fieldErrors.titulo && (
+                <p className="px-2 text-sm font-medium text-red-500">{fieldErrors.titulo}</p>
+              )}
+            </div>
 
-          <label className="block">
-            <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">
-              Categoría
-            </span>
-            <select
-              value={categoriaId}
-              onChange={(event) => setCategoriaId(event.target.value)}
-              disabled={isLoadingCategories}
-              className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm text-stone-900 outline-none transition focus:border-amber-500 disabled:cursor-not-allowed disabled:bg-stone-100"
-            >
-              <option value="">
-                {isLoadingCategories ? "Cargando categorías..." : "Selecciona una categoría"}
-              </option>
-              {categories.map((category) => (
-                <option key={category.id} value={String(category.id)}>
-                  {category.nombre}
-                </option>
+            {/* Category Section */}
+            <div className="space-y-3">
+              <span className="px-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[#A8A29E]">
+                Categoría
+              </span>
+              <div className="relative">
+                <select
+                  value={categoriaId}
+                  onChange={(event) => setCategoriaId(event.target.value)}
+                  disabled={isLoadingCategories}
+                  className="w-full appearance-none rounded-2xl bg-[#F5F5F4] px-6 py-4 text-sm font-semibold text-[#44403C] outline-none transition focus:bg-white focus:ring-2 focus:ring-[#F59E0B]/20 disabled:opacity-50"
+                >
+                  <option value="">
+                    {isLoadingCategories ? "Cargando..." : "Selecciona una categoría"}
+                  </option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={String(category.id)}>
+                      {category.nombre}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute right-6 top-1/2 -translate-y-1/2">
+                  <svg className="h-4 w-4 text-[#A8A29E]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+              {fieldErrors.categoria_id && (
+                <p className="px-2 text-sm font-medium text-red-500">{fieldErrors.categoria_id}</p>
+              )}
+            </div>
+
+            {/* Content Section */}
+            <div className="space-y-3">
+              <span className="px-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[#A8A29E]">
+                Contenido del artículo
+              </span>
+
+              <div className="rounded-[32px] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 overflow-hidden">
+                {/* Visual Toolbar */}
+                <div className="flex items-center gap-2 border-b border-[#F5F5F4] px-6 py-4">
+                  <button type="button" className="p-2 text-[#78716C] hover:bg-[#F5F5F4] rounded-lg transition"><Bold className="h-4 w-4" /></button>
+                  <button type="button" className="p-2 text-[#78716C] hover:bg-[#F5F5F4] rounded-lg transition"><Italic className="h-4 w-4" /></button>
+                  <button type="button" className="p-2 text-[#78716C] hover:bg-[#F5F5F4] rounded-lg transition"><List className="h-4 w-4" /></button>
+                  <button type="button" className="p-2 text-[#78716C] hover:bg-[#F5F5F4] rounded-lg transition"><Quote className="h-4 w-4" /></button>
+                  <div className="w-px h-6 bg-[#F5F5F4] mx-2" />
+                  <button type="button" className="p-2 text-[#78716C] hover:bg-[#F5F5F4] rounded-lg transition"><Link className="h-4 w-4" /></button>
+                </div>
+
+                <textarea
+                  value={contenido}
+                  onChange={(event) => setContenido(event.target.value)}
+                  placeholder="Comienza a escribir tu historia aquí..."
+                  rows={15}
+                  className="w-full px-8 py-8 text-lg leading-relaxed text-[#44403C] placeholder:text-[#D6D3D1] outline-none resize-none"
+                />
+              </div>
+              {fieldErrors.contenido && (
+                <p className="px-2 text-sm font-medium text-red-500">{fieldErrors.contenido}</p>
+              )}
+            </div>
+
+            {/* Feedback Messages */}
+            {loadError && <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600 font-medium">{loadError}</p>}
+            {autosaveMessage && <p className="rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-700 font-medium">{autosaveMessage}</p>}
+            {submitError && <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600 font-medium">{submitError}</p>}
+            {successMessage && <p className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 font-medium">{successMessage}</p>}
+          </form>
+        </div>
+
+        {/* Sidebar */}
+        <aside className="space-y-6 lg:pt-24">
+          {/* Action Card */}
+          <div className="rounded-[32px] bg-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 space-y-5">
+            <h2 className="text-xl font-bold text-[#1C1917]">Publicación</h2>
+
+            <div className="space-y-3">
+              <button
+                type="submit"
+                form="blog-form"
+                onClick={(e) => {
+                  e.preventDefault();
+                  void submitBlog("pendiente");
+                }}
+                disabled={isSubmitting || isLoadingCategories}
+                className="w-full flex h-[56px] items-center justify-center rounded-[20px] bg-[#B45309] text-sm font-bold uppercase tracking-wider text-white transition hover:bg-[#92400E] shadow-lg shadow-amber-900/10 disabled:opacity-50"
+              >
+                {isSubmitting ? "Enviando..." : "Publicar"}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => void submitBlog("borrador")}
+                disabled={isSubmitting || isLoadingCategories}
+                className="w-full flex h-[56px] items-center justify-center rounded-[20px] bg-[#E7E5E4] text-sm font-bold uppercase tracking-wider text-[#44403C] transition hover:bg-[#D6D3D1] disabled:opacity-50"
+              >
+                Guardar borrador
+              </button>
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-sm font-medium text-[#78716C]">Estado</span>
+              <span className="inline-flex items-center rounded-lg bg-[#E7E5E4] px-3 py-1 text-[10px] font-bold text-[#44403C]">
+                {statusLabel ?? "BORRADOR"}
+              </span>
+            </div>
+          </div>
+
+          {/* Guides Card */}
+          <div className="rounded-[32px] bg-[#F5F5F4]/60 p-8 space-y-6">
+            <div className="flex items-center gap-3">
+              <BookOpen className="h-5 w-5 text-[#B45309]" />
+              <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#78716C]">
+                Guías de un buen post
+              </h3>
+            </div>
+
+            <div className="space-y-6">
+              {[
+                {
+                  num: "01",
+                  text: "Prioriza la claridad sobre la complejidad. Usa encabezados descriptivos para guiar al lector.",
+                },
+                {
+                  num: "02",
+                  text: "Asegúrate de que todas las imágenes sean de alta resolución e incluyan créditos apropiados.",
+                },
+                {
+                  num: "03",
+                  text: "Los enlaces deben abrirse en pestañas nuevas y dirigir a fuentes autorizadas.",
+                },
+              ].map((item) => (
+                <div key={item.num} className="flex gap-4">
+                  <span className="text-xl font-black text-[#B45309] leading-none">{item.num}</span>
+                  <p className="text-xs font-medium leading-relaxed text-[#57534E]">
+                    {item.text}
+                  </p>
+                </div>
               ))}
-            </select>
-            {fieldErrors.categoria_id ? (
-              <p className="mt-2 text-sm text-red-600">
-                {fieldErrors.categoria_id}
-              </p>
-            ) : null}
-          </label>
-
-          <label className="block">
-            <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">
-              Contenido del artículo
-            </span>
-            <textarea
-              value={contenido}
-              onChange={(event) => setContenido(event.target.value)}
-              placeholder="Comienza a escribir tu historia aquí..."
-              rows={12}
-              className="w-full rounded-3xl border border-stone-200 px-4 py-4 text-sm leading-7 text-stone-900 outline-none transition focus:border-amber-500"
-            />
-            {fieldErrors.contenido ? (
-              <p className="mt-2 text-sm text-red-600">
-                {fieldErrors.contenido}
-              </p>
-            ) : null}
-          </label>
-
-          {loadError ? (
-            <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-              {loadError}
-            </p>
-          ) : null}
-
-          {autosaveMessage ? (
-            <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
-              {autosaveMessage}
-            </p>
-          ) : null}
-          {submitError ? (
-            <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-              {submitError}
-            </p>
-          ) : null}
-
-          {successMessage ? (
-            <p className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
-              {successMessage}
-            </p>
-          ) : null}
-
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <button
-              type="button"
-              onClick={() => {
-                void submitBlog("borrador");
-              }}
-              disabled={isSubmitting || isLoadingCategories || Boolean(loadError)}
-              className="inline-flex min-h-[52px] items-center justify-center rounded-2xl border border-stone-300 px-6 text-sm font-semibold text-stone-700 transition hover:border-stone-400 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {mode === "edit" ? "Guardar cambios" : "Guardar borrador"}
-            </button>
-
-            <button
-              type="submit"
-              disabled={isSubmitting || isLoadingCategories || Boolean(loadError)}
-              className="inline-flex min-h-[52px] items-center justify-center rounded-2xl bg-amber-600 px-6 text-sm font-semibold text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {isSubmitting
-                ? "Enviando..."
-                : mode === "edit"
-                  ? "Enviar nuevamente"
-                  : "Publicar"}
-            </button>
-
-            <button
-              type="button"
-              onClick={handleCancel}
-              disabled={isSubmitting}
-              className="inline-flex min-h-[52px] items-center justify-center rounded-2xl px-6 text-sm font-semibold text-stone-500 transition hover:bg-stone-50 hover:text-stone-700 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              Cancelar
-            </button>
-          </div>
-        </form>
-
-        <aside className="space-y-6 rounded-[28px] border border-stone-200 bg-stone-50 p-5">
-          <div className="space-y-3">
-            <h2 className="text-lg font-semibold text-stone-900">Publicación</h2>
-            <p className="text-sm leading-6 text-stone-600">
-              {mode === "edit"
-                ? "Guarda los cambios localmente o reenvía tu blog a revisión cuando esté listo."
-                : "Usa “Guardar borrador” si quieres continuar luego, o “Publicar” para enviar tu blog a revisión del administrador."}
-            </p>
-          </div>
-
-          <div className="space-y-3 border-t border-stone-200 pt-5">
-            <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-stone-500">
-              Guías de un buen post
-            </h3>
-            <ul className="space-y-2 text-sm leading-6 text-stone-600">
-              <li>Prioriza un título claro y una categoría consistente.</li>
-              <li>Usa una imagen pública válida para la portada.</li>
-              <li>Redacta contenido completo antes de enviarlo a revisión.</li>
-            </ul>
+            </div>
           </div>
         </aside>
       </div>
