@@ -13,10 +13,11 @@ export async function crearTransaccion(
   });
   if (!plan) throw new Error("Plan no encontrado");
 
-  const subtotal = Number(plan.precio_plan);
+  // precio_plan es el precio final con IVA incluido (ej: 99 Bs, 199 Bs)
+  const total = redondearADos(Number(plan.precio_plan));
   const ivaPorcentaje = 13;
-  const ivaMonto = redondearADos(subtotal * (ivaPorcentaje / 100));
-  const total = redondearADos(subtotal + ivaMonto);
+  const subtotal = redondearADos(total / (1 + ivaPorcentaje / 100));
+  const ivaMonto = redondearADos(total - subtotal);
 
   const transaccion = await prisma.transacciones.create({
     data: {

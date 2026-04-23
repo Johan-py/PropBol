@@ -1,6 +1,4 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
-
 import { prisma } from '../lib/prisma.client.js';
 
 export const getHistorialVistas = async (req: Request, res: Response) => {
