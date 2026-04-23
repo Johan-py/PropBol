@@ -22,6 +22,7 @@ export default function PagoQRPage() {
   const [timeLeft, setTimeLeft] = useState<number | null>(null)
   const [isExpired, setIsExpired] = useState(false)
   const [isConfirming, setIsConfirming] = useState(false)
+  const [confirmError, setConfirmError] = useState<string | null>(null)
   const expiredHandled = useRef(false)
 
   useEffect(() => {
@@ -54,25 +55,45 @@ export default function PagoQRPage() {
 
   const handleConfirmarPago = async () => {
     if (!payment || isConfirming) return
+    setConfirmError(null)
+
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setConfirmError('Debes iniciar sesión para confirmar el pago.')
+      return
+    }
+
     setIsConfirming(true)
     try {
-      const token = localStorage.getItem('token')
       const response = await fetch(`/api/transacciones/${payment.id}/confirmar`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          Authorization: `Bearer ${token}`,
         },
       })
+
       if (response.ok) {
         localStorage.removeItem('currentPayment')
         router.push('/pago/confirmacion')
+        return
+      }
+
+      const data = await response.json()
+      if (response.status === 409) {
+        // Pago ya confirmado — redirigir igual
+        localStorage.removeItem('currentPayment')
+        router.push('/pago/confirmacion')
+        return
+      }
+      if (response.status === 401) {
+        setConfirmError('Tu sesión expiró. Inicia sesión nuevamente.')
       } else {
-        const data = await response.json()
-        console.error('Error al confirmar:', data.error)
-        setIsConfirming(false)
+        setConfirmError(data.error ?? 'Error al confirmar el pago. Intenta de nuevo.')
       }
     } catch {
+      setConfirmError('Error de conexión. Verifica tu internet e intenta de nuevo.')
+    } finally {
       setIsConfirming(false)
     }
   }
@@ -276,6 +297,9 @@ export default function PagoQRPage() {
                 <CheckCircle size={16} />
                 {isConfirming ? 'Confirmando...' : 'Ya realicé el pago'}
               </button>
+              {confirmError && (
+                <p className="text-xs text-red-600 mt-2 text-center">{confirmError}</p>
+              )}
             </div>
 
             {/* Flecha "Atrás" → Confirmación */}
