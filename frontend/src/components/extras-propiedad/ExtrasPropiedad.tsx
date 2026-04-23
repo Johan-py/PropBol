@@ -13,7 +13,7 @@ export default function ExtrasPropiedad({
   onGuardar,
   onCancelar,
 }: Props) {
-  const [mostrarPanel, setMostrarPanel] = useState(false);
+  const [mostrarPanel, setMostrarPanel] = useState(true);
   const [nuevoParametro, setNuevoParametro] = useState("");
   const [parametros, setParametros] = useState<string[]>(valoresIniciales);
   const [indiceEdicion, setIndiceEdicion] = useState<number | null>(null);
@@ -26,11 +26,6 @@ export default function ExtrasPropiedad({
   const limpiarFormulario = () => {
     setNuevoParametro("");
     setIndiceEdicion(null);
-    setError("");
-  };
-
-  const abrirPanel = () => {
-    setMostrarPanel(true);
     setError("");
   };
 
@@ -50,7 +45,7 @@ export default function ExtrasPropiedad({
 
     const repetido = parametros.some(
       (item, index) =>
-        item.toLowerCase() === valor.toLowerCase() && index !== indiceEdicion,
+        item.toLowerCase() === valor.toLowerCase() && index !== indiceEdicion
     );
 
     if (repetido) {
@@ -73,7 +68,6 @@ export default function ExtrasPropiedad({
     setNuevoParametro(parametros[index]);
     setIndiceEdicion(index);
     setError("");
-    setMostrarPanel(true);
   };
 
   const eliminarParametro = (index: number) => {
@@ -87,115 +81,102 @@ export default function ExtrasPropiedad({
 
   const guardarParametros = () => {
     onGuardar?.(parametros);
-    setMostrarPanel(false);
     limpiarFormulario();
   };
 
+  if (!mostrarPanel) return null;
+
   return (
-    <div className="mt-6">
-      {!mostrarPanel && (
+    <div className="mt-4 rounded-2xl border border-neutral-300 bg-[#f5ede2] p-6">
+      <h3 className="mb-4 text-xl font-bold text-neutral-900">
+        Añadir parámetros personalizados
+      </h3>
+
+      <label className="mb-2 block text-sm font-semibold text-neutral-800">
+        Nuevo parámetro:
+      </label>
+
+      <div className="mb-3 flex flex-col gap-3 md:flex-row">
+        <input
+          type="text"
+          value={nuevoParametro}
+          onChange={(e) => {
+            setNuevoParametro(e.target.value);
+            if (error) setError("");
+          }}
+          placeholder="Ej: balcón, terraza, vista panorámica..."
+          className="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 outline-none focus:border-orange-400"
+        />
+
         <button
           type="button"
-          onClick={abrirPanel}
-          className="text-orange-500 font-semibold hover:underline"
+          onClick={agregarOActualizarParametro}
+          className="rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white hover:bg-orange-600"
         >
-          + Añadir otros parámetros
+          {indiceEdicion !== null ? "Actualizar" : "+ Agregar"}
         </button>
+      </div>
+
+      {error && (
+        <p className="mb-4 text-sm font-medium text-red-600">{error}</p>
       )}
 
-      {mostrarPanel && (
-        <div className="mt-4 rounded-2xl border border-neutral-300 bg-[#f5ede2] p-6">
-          <h3 className="mb-4 text-xl font-bold text-neutral-900">
-            Añadir parámetros personalizados
-          </h3>
+      <h4 className="mb-3 text-base font-semibold text-neutral-900">
+        Parámetros añadidos:
+      </h4>
 
-          <label className="mb-2 block text-sm font-semibold text-neutral-800">
-            Nuevo parámetro:
-          </label>
-
-          <div className="mb-3 flex flex-col gap-3 md:flex-row">
-            <input
-              type="text"
-              value={nuevoParametro}
-              onChange={(e) => {
-                setNuevoParametro(e.target.value);
-                if (error) setError("");
-              }}
-              placeholder="Ej: balcón, terraza, vista panorámica..."
-              className="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 outline-none focus:border-orange-400"
-            />
-
-            <button
-              type="button"
-              onClick={agregarOActualizarParametro}
-              className="rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white hover:bg-orange-600"
+      <div className="mb-6 flex flex-wrap gap-3">
+        {parametros.length === 0 ? (
+          <p className="text-sm text-neutral-600">
+            Aún no se añadieron parámetros.
+          </p>
+        ) : (
+          parametros.map((parametro, index) => (
+            <div
+              key={`${parametro}-${index}`}
+              className="flex items-center gap-2 rounded-full bg-black px-4 py-2 text-sm text-white"
             >
-              {indiceEdicion !== null ? "Actualizar" : "+ Agregar"}
-            </button>
-          </div>
+              <span>{parametro}</span>
 
-          {error && (
-            <p className="mb-4 text-sm font-medium text-red-600">{error}</p>
-          )}
+              <button
+                type="button"
+                onClick={() => editarParametro(index)}
+                className="text-orange-400"
+                title="Editar"
+              >
+                ✎
+              </button>
 
-          <h4 className="mb-3 text-base font-semibold text-neutral-900">
-            Parámetros añadidos:
-          </h4>
+              <button
+                type="button"
+                onClick={() => eliminarParametro(index)}
+                className="text-orange-400"
+                title="Eliminar"
+              >
+                ✖
+              </button>
+            </div>
+          ))
+        )}
+      </div>
 
-          <div className="mb-6 flex flex-wrap gap-3">
-            {parametros.length === 0 ? (
-              <p className="text-sm text-neutral-600">
-                Aún no se añadieron parámetros.
-              </p>
-            ) : (
-              parametros.map((parametro, index) => (
-                <div
-                  key={`${parametro}-${index}`}
-                  className="flex items-center gap-2 rounded-full bg-black px-4 py-2 text-sm text-white"
-                >
-                  <span>{parametro}</span>
+      <div className="flex justify-center gap-6 border-t border-neutral-400 pt-6">
+        <button
+          type="button"
+          onClick={cerrarPanel}
+          className="rounded-full bg-gray-300 px-8 py-2 font-medium text-neutral-800"
+        >
+          Cancelar
+        </button>
 
-                  <button
-                    type="button"
-                    onClick={() => editarParametro(index)}
-                    className="text-orange-400"
-                    title="Editar"
-                  >
-                    ✎
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => eliminarParametro(index)}
-                    className="text-orange-400"
-                    title="Eliminar"
-                  >
-                    ✖
-                  </button>
-                </div>
-              ))
-            )}
-          </div>
-
-          <div className="flex justify-center gap-6 border-t border-neutral-400 pt-6">
-            <button
-              type="button"
-              onClick={cerrarPanel}
-              className="rounded-full bg-gray-300 px-8 py-2 font-medium text-neutral-800"
-            >
-              Cancelar
-            </button>
-
-            <button
-              type="button"
-              onClick={guardarParametros}
-              className="rounded-full bg-orange-500 px-8 py-2 font-semibold text-white hover:bg-orange-600"
-            >
-              Guardar
-            </button>
-          </div>
-        </div>
-      )}
+        <button
+          type="button"
+          onClick={guardarParametros}
+          className="rounded-full bg-orange-500 px-8 py-2 font-semibold text-white hover:bg-orange-600"
+        >
+          Guardar
+        </button>
+      </div>
     </div>
   );
 }
