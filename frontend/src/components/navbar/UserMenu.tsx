@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import type { User } from "../layout/Navbar";
-import { User as UserIcon, Eye, FileText, Map, Star, Shield } from "lucide-react";
+import { User as UserIcon, Eye, FileText, Map, Star, Shield, LayoutDashboard } from "lucide-react";
 
 type UserMenuProps = {
   user: User | null;
@@ -271,6 +271,14 @@ export default function UserMenu({
                 icon={Shield}
                 onClick={onClosePanel}
               />
+              {user.role === "ADMIN" && (
+                <MenuLink
+                  label="Panel de Administrador"
+                  href="/admin"
+                  icon={LayoutDashboard}
+                  onClick={onClosePanel}
+                />
+              )}
             </div>
 
             <button
