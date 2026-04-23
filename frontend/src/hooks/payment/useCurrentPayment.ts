@@ -7,21 +7,36 @@ export function useCurrentPayment() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem('currentPayment')
-      if (!stored) {
-        setError('No hay pago en curso')
-        setLoading(false)
-        return
-      }
-      const data = JSON.parse(stored) as PaymentData
-      setPayment(data)
-    } catch {
-      setError('Error al leer el pago')
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+    const fetchPayment = async () => {
+      try {
+        // Cambie el fetch me leia mal la ruta
+        const response = await fetch('http://localhost:5000/api/transacciones/pendiente/1', {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
 
+        if (!response.ok) throw new Error('Error al obtener la transacción')
+
+        const data = await response.json()
+
+        const realPayment: PaymentData = {
+          id: data.id,
+          monto: data.monto,
+          referencia: data.referencia,
+          qrContent: data.qrContent,
+          estado: data.estado,
+          fechaExpiracion: data.fechaExpiracion
+        }
+
+        setPayment(realPayment)
+      } catch (_err) {
+        setError('Error al cargar el pago')
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchPayment()
+  }, [])
   return { payment, loading, error }
 }
