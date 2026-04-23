@@ -15,6 +15,7 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
 
   const handleSave = () => {
     // Aquí guardamos los datos temporalmente en localStorage
+    // El backend los tomará de aquí para guardarlos en el meta_data del modelo Visitor
     const preferencias = { genero, edad, zona };
     localStorage.setItem('guest_preferences', JSON.stringify(preferencias));
     console.log("Preferencias de invitado guardadas:", preferencias);
@@ -35,7 +36,7 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
         </div>
 
         <div className="flex flex-col gap-4 mb-8">
-          {/* GÉNERO */}
+          {/* GÉNERO - Ajustado al Enum de Prisma */}
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-stone-700">Género:</label>
             <select
@@ -44,9 +45,10 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
               className="px-3 py-2 rounded text-sm bg-white border border-stone-300 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
             >
               <option value="">Seleccione...</option>
-              <option value="Masculino">Masculino</option>
-              <option value="Femenino">Femenino</option>
-              <option value="Prefiero no decirlo">Prefiero no decirlo</option>
+              <option value="MASCULINO">Masculino</option>
+              <option value="FEMENINO">Femenino</option>
+              <option value="OTRO">Otro</option>
+              <option value="PREFIERO_NO_DECIR">Prefiero no decirlo</option>
             </select>
           </div>
 
