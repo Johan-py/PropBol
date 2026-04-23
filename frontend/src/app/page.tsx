@@ -2,6 +2,7 @@ import { HomeCarousel } from '@/components/home/HomeCarousel'
 import FeaturedCitiesSection from '@/components/home/FeaturedCitiesSection'
 import ExploreSection from '@/components/layout/ExploreSection'
 import { getCities } from '@/services/city.service'
+import VisualFiltersSection from "@/components/VisualFilters/VisualFiltersSection";
 interface BannerRaw {
   id: number
   url_imagen: string
@@ -72,6 +73,11 @@ export default async function Home() {
           {/* EXPLORE SECTION */}
           <section className="w-full">
             <ExploreSection />
+          </section>
+
+          {/* TU SECCIÓN DE FILTROS VISUALES */}
+          <section className="w-full">
+            <VisualFiltersSection />
           </section>
 
           <section className="w-full">
