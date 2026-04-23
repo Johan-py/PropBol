@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useState, useEffect, useRef } from "react";
 import type { User } from "../layout/Navbar";
 import { User as UserIcon, Eye, FileText, Map, Star, Shield } from "lucide-react";
 
@@ -42,6 +43,114 @@ export default function UserMenu({
   onLogin,
   onOpenLogoutModal,
 }: UserMenuProps) {
+
+  // Estado local para manejar los datos del usuario de forma independiente
+  const [localUser, setLocalUser] = useState<User | null>(user);
+  
+  // Usamos una referencia para saber si acabamos de hacer una actualización local.
+  // Esto actúa como un "escudo" temporal contra las props del padre.
+  const isLocalUpdateRef = useRef(false);
+
+  // Inicialización segura desde localStorage si está disponible (solo lado del cliente)
+  useEffect(() => {
+    if (user && typeof window !== 'undefined') {
+        const storedAvatar = localStorage.getItem('avatar');
+        const storedName = localStorage.getItem('nombre');
+        const storedEmail = localStorage.getItem('correo');
+        
+        setLocalUser(prev => ({
+            ...user,
+            avatar: storedAvatar || user.avatar,
+            name: storedName || user.name,
+            email: storedEmail || user.email
+        }));
+    } else {
+        setLocalUser(user);
+    }
+  }, []); // Solo se ejecuta una vez al montar
+
+  // 2. EL "REBELDE": Manejo de las actualizaciones provenientes del padre (Navbar)
+  useEffect(() => {
+    // Si la última actualización fue local, ignoramos las props del padre por un breve momento
+    // para evitar el "parpadeo" mientras el servidor refresca.
+    if (isLocalUpdateRef.current) {
+        // Reseteamos la bandera después de un breve delay
+        const timer = setTimeout(() => {
+            isLocalUpdateRef.current = false;
+        }, 4000); // Suficiente tiempo para que el router.refresh() termine
+        return () => clearTimeout(timer);
+    }
+
+    if (user) {
+      setLocalUser((prevLocal) => {
+        // Para ser extra seguros, incluso si aceptamos la prop del padre, 
+        // preferimos el localStorage si existe
+        const storedAvatar = typeof window !== 'undefined' ? localStorage.getItem('avatar') : null;
+        const storedName = typeof window !== 'undefined' ? localStorage.getItem('nombre') : null;
+        const storedEmail = typeof window !== 'undefined' ? localStorage.getItem('correo') : null;
+
+        return {
+          ...user,
+          avatar: storedAvatar || prevLocal?.avatar || user.avatar,
+          name: storedName || prevLocal?.name || user.name,
+          email: storedEmail || prevLocal?.email || user.email,
+        };
+      });
+    } else {
+      setLocalUser(null);
+    }
+  }, [user]);
+
+  // 3. LA "ANTENA": Escuchamos los cambios en vivo desde ProfileCard
+  useEffect(() => {
+    const handleCustomUpdate = (e: any) => {
+      if (e.detail && e.detail.key && e.detail.value) {
+        // Levantamos el escudo protector
+        isLocalUpdateRef.current = true;
+        
+        setLocalUser((prev) => {
+          if (!prev) return prev;
+          const keyMap: Record<string, keyof User> = {
+            'avatar': 'avatar',
+            'nombre': 'name',
+            'correo': 'email'
+          };
+          const userKey = keyMap[e.detail.key];
+          if (userKey) {
+            return { ...prev, [userKey]: e.detail.value };
+          }
+          return prev;
+        });
+      }
+    };
+
+    const handleStorageFallback = () => {
+      // Levantamos el escudo protector
+      isLocalUpdateRef.current = true;
+      
+      setLocalUser((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          avatar: localStorage.getItem('avatar') || prev.avatar,
+          name: localStorage.getItem('nombre') || prev.name,
+          email: localStorage.getItem('correo') || prev.email,
+        };
+      });
+    };
+
+    window.addEventListener('profileUpdate', handleCustomUpdate);
+    window.addEventListener('profileUpdated', handleStorageFallback);
+    // Escuchar también storage por si acaso, aunque CustomEvents son más confiables aquí
+    window.addEventListener('storage', handleStorageFallback);
+
+    return () => {
+      window.removeEventListener('profileUpdate', handleCustomUpdate);
+      window.removeEventListener('profileUpdated', handleStorageFallback);
+      window.removeEventListener('storage', handleStorageFallback);
+    };
+  }, []);
+
   return (
     <>
       <button
@@ -49,14 +158,14 @@ export default function UserMenu({
         className="p-2 text-gray-700 rounded-full hover:bg-black/5 transition focus:outline-none"
         aria-label="Abrir menú de usuario"
       >
-        {user?.avatar ? (
+        {localUser?.avatar ? (
           <img
             src={
-              user.avatar.startsWith("http")
-                ? user.avatar
-                : `${API_URL}${user.avatar}`
+              localUser.avatar.startsWith("http")
+                ? localUser.avatar
+                : `${API_URL}${localUser.avatar}`
             }
-            alt={user.name}
+            alt={localUser.name}
             className="w-6 h-6 rounded-full object-cover"
           />
         ) : (
@@ -92,29 +201,29 @@ export default function UserMenu({
           </button>
         </div>
 
-        {user ? (
+        {localUser ? (
           <>
             <div className="flex items-center gap-3 mb-4 px-1">
               <div className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 overflow-hidden border border-gray-100">
-                {user.avatar ? (
+                {localUser.avatar ? (
                   <img
                     src={
-                      user.avatar.startsWith("http")
-                        ? user.avatar
-                        : `${API_URL}${user.avatar}`
+                      localUser.avatar.startsWith("http")
+                        ? localUser.avatar
+                        : `${API_URL}${localUser.avatar}`
                     }
-                    alt={user.name}
+                    alt={localUser.name}
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  user.name.charAt(0).toUpperCase()
+                  localUser.name.charAt(0).toUpperCase()
                 )}
               </div>
               <div className="flex flex-col">
                 <p className="font-bold text-gray-800 text-sm leading-tight">
-                  {user.name}
+                  {localUser.name}
                 </p>
-                <p className="text-xs text-gray-500">{user.email}</p>
+                <p className="text-xs text-gray-500">{localUser.email}</p>
               </div>
             </div>
 
