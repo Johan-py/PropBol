@@ -1,4 +1,3 @@
-
 import { Request, Response } from "express";
 import { publicacionesService } from "./publicaciones.service.js";
 
@@ -8,38 +7,82 @@ export type AuthenticatedRequest = Request & {
 
 export const listarPublicaciones = async (_req: Request, res: Response) => {
   const publicaciones = await publicacionesService.listarTodas();
-  res.json(publicaciones);
+  return res.json(publicaciones);
 };
 
-export const listarPublicacionesGratis = async (_req: Request, res: Response) => {
+export const listarPublicacionesGratis = async (
+  _req: Request,
+  res: Response,
+) => {
   const publicaciones = await publicacionesService.listarGratis();
-  res.json(publicaciones);
+  return res.json(publicaciones);
 };
 
-export const crearPublicacion = async (req: AuthenticatedRequest, res: Response) => {
+export const crearPublicacion = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   try {
     if (!req.user) {
-      return res.status(401).json({ message: "No autenticado." });
+      return res.status(401).json({ message: "NOT_AUTHENTICATED" });
     }
+
     const nueva = await publicacionesService.crear(req.user.id, req.body);
-    res.status(201).json(nueva);
+
+    return res.status(201).json(nueva);
   } catch (error: unknown) {
-  if (error instanceof Error) {
-    res.status(403).json({ message: error.message });
+    if (error instanceof Error) {
+      if (error.message === "LIMIT_REACHED") {
+        return res.status(403).json({
+          message: "LIMIT_REACHED",
+          mensaje: "Has alcanzado el límite de publicaciones gratuitas.",
+        });
+      }
+
+      return res.status(400).json({
+        message: error.message,
+      });
+    }
+
+    return res.status(500).json({
+      message: "Error interno del servidor.",
+    });
   }
-}
 };
 
-export const flujoPublicacion = async (req: AuthenticatedRequest, res: Response) => {
+export const flujoPublicacion = async (
+  req: AuthenticatedRequest,
+  res: Response,
+) => {
   try {
     if (!req.user) {
-      return res.status(401).json({ message: "No autenticado. Redirigir a login." });
+      return res.status(401).json({
+        message: "NOT_AUTHENTICATED",
+        mensaje: "No autenticado. Redirigir a login.",
+      });
     }
-    const mensaje = await publicacionesService.validarFlujo(req.user.id);
-    res.status(200).json({ message: mensaje });
+
+    await publicacionesService.validarFlujo(req.user.id);
+
+    return res.status(200).json({
+      message: "FLOW_ALLOWED",
+    });
   } catch (error: unknown) {
-  if (error instanceof Error) {
-    res.status(403).json({ message: error.message });
+    if (error instanceof Error) {
+      if (error.message === "LIMIT_REACHED") {
+        return res.status(403).json({
+          message: "LIMIT_REACHED",
+          mensaje: "Has alcanzado el límite de publicaciones gratuitas.",
+        });
+      }
+
+      return res.status(400).json({
+        message: error.message,
+      });
+    }
+
+    return res.status(500).json({
+      message: "Error interno del servidor.",
+    });
   }
-}
 };

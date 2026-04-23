@@ -1,5 +1,5 @@
-import { RolNombre } from '@prisma/client'
-import { prisma } from '../../lib/prisma.config.js'
+import { RolNombre } from "@prisma/client";
+import { prisma } from "../../lib/prisma.client.js";
 
 interface CreateUserInput {
   nombre: string;
@@ -83,9 +83,18 @@ export const createUser = async (data: CreateUserInput) => {
   }
 };
 
+// Incluye el campo `activo` para que loginService pueda verificar si la cuenta está desactivada
 export const findUser = async (correo: string) => {
   return await prisma.usuario.findUnique({
     where: { correo },
+    select: {
+      id: true,
+      correo: true,
+      password: true,
+      nombre: true,
+      apellido: true,
+      activo: true,
+    },
   });
 };
 
@@ -128,7 +137,6 @@ export const findActiveSessionByToken = async (token: string) => {
     where: {
       token,
       estado: true,
-
       fechaExpiracion: {
         gt: new Date(),
       },
@@ -150,7 +158,66 @@ export const desactiveSessionByToken = async (token: string) => {
       estado: true,
     },
     data: {
-      estado: false,
+      estado: false
+    }
+  })
+}
+export const desactivarRecuperacionesPasswordActivas = async (usuarioId: number) => {
+  return prisma.recuperacion_password.updateMany({
+    where: {
+      usuarioId,
+      activo: true,
+      usadoEn: null
     },
-  });
-};
+    data: {
+      activo: false
+    }
+  })
+}
+
+export const createPasswordRecovery = async ({
+  usuarioId,
+  token,
+  expiraEn
+}: {
+  usuarioId: number
+  token: string
+  expiraEn: Date
+}) => {
+  return prisma.recuperacion_password.create({
+    data: {
+      usuarioId,
+      token,
+      expiraEn,
+      activo: true
+    }
+  })
+}
+
+export const findPasswordRecoveryByToken = async (token: string) => {
+  return prisma.recuperacion_password.findUnique({
+    where: { token },
+    include: { usuario: true }
+  })
+}
+
+export const markPasswordRecoveryAsUsed = async (id: number) => {
+  return prisma.recuperacion_password.update({
+    where: { id },
+    data: { usadoEn: new Date(), activo: false }
+  })
+}
+
+export const updateUserPassword = async (usuarioId: number, password: string) => {
+  return prisma.usuario.update({
+    where: { id: usuarioId },
+    data: { password }
+  })
+}
+
+export const invalidateAllUserSessions = async (usuarioId: number) => {
+  return prisma.sesion.updateMany({
+    where: { usuarioId, estado: true },
+    data: { estado: false }
+  })
+}

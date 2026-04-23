@@ -1,25 +1,32 @@
-import { Inmueble } from "../../types/inmueble";
-import { BedDouble, Bath, Maximize, MapPin, Star } from "lucide-react";
-import Image from "next/image";
+'use client'
+import { Inmueble } from '../../types/inmueble'
+import { BedDouble, Bath, Maximize, MapPin, Star } from 'lucide-react'
+import Image from 'next/image'
+import { useState } from 'react'
 
 interface TarjetaInmuebleProps {
-  inmueble: Inmueble;
+  inmueble: Inmueble
 }
 
 export const TarjetaInmueble = ({ inmueble }: TarjetaInmuebleProps) => {
-  const formatoMoneda = new Intl.NumberFormat("es-BO", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  });
+  const [isHovered, setIsHovered] = useState(false)
+  const formatoMoneda = new Intl.NumberFormat('es-BO', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0
+  })
 
   const ubicacionTexto =
-    typeof inmueble.ubicacion === "object" && inmueble.ubicacion !== null
-      ? `${inmueble.ubicacion.zona ?? ""}, ${inmueble.ubicacion.ciudad ?? ""}`
-      : "";
+    typeof inmueble.ubicacion === 'object' && inmueble.ubicacion !== null
+      ? `${inmueble.ubicacion.zona ?? ''}, ${inmueble.ubicacion.ciudad ?? ''}`
+      : ''
 
   return (
-    <div className="group flex flex-col w-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
+    <div
+      className="group flex flex-col w-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300 cursor-pointer"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <div className="relative aspect-[4/3] w-full bg-gray-200 overflow-hidden">
         <Image
           src={`https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&q=80&w=600&h=400&ixlib=rb-4.0.3`}
@@ -41,7 +48,11 @@ export const TarjetaInmueble = ({ inmueble }: TarjetaInmuebleProps) => {
           <h3 className="font-semibold text-lg text-gray-900 leading-tight line-clamp-1">
             {inmueble.titulo}
           </h3>
-          <span className="text-xs font-bold text-gray-900 whitespace-nowrap ml-2">
+          <span
+            className={`whitespace-nowrap ml-2 font-bold transition-all duration-300 ${
+              isHovered ? 'text-base text-[#ea580c]' : 'text-xs text-gray-900'
+            }`}
+          >
             {formatoMoneda.format(Number(inmueble.precio))}
           </span>
         </div>
@@ -54,18 +65,18 @@ export const TarjetaInmueble = ({ inmueble }: TarjetaInmuebleProps) => {
         <div className="mt-auto border-t border-gray-100 pt-3 flex items-center justify-between text-gray-600 text-sm font-medium">
           <div className="flex items-center gap-1.5" title="Habitaciones">
             <BedDouble className="w-4 h-4 text-blue-500" />
-            <span>{inmueble.nroCuartos ?? "-"}</span>
+            <span>{inmueble.nroCuartos ?? '-'}</span>
           </div>
           <div className="flex items-center gap-1.5" title="Baños">
             <Bath className="w-4 h-4 text-orange-500" />
-            <span>{inmueble.nroBanos ?? "-"}</span>
+            <span>{inmueble.nroBanos ?? '-'}</span>
           </div>
           <div className="flex items-center gap-1.5" title="Superficie total">
             <Maximize className="w-4 h-4 text-blue-500" />
-            <span>{inmueble.superficieM2 ?? "-"} m²</span>
+            <span>{inmueble.superficieM2 ?? '-'} m²</span>
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

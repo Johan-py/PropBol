@@ -1,6 +1,4 @@
-import { prisma } from "../../lib/prisma.config.js";
-
-
+import { prisma } from "../../lib/prisma.client.js";
 
 export class LocationsRepository {
   // Función auxiliar para generar variaciones con tildes (RegEx simple) --BitPro

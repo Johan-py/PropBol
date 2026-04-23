@@ -1,12 +1,6 @@
 import Link from "next/link";
 import type { User } from "../layout/Navbar";
-import {
-  User as UserIcon,
-  Eye,
-  FileText,
-  Map,
-  ArrowLeftRight,
-} from "lucide-react";
+import { User as UserIcon, Eye, FileText, Map, Star, Shield } from "lucide-react";
 
 type UserMenuProps = {
   user: User | null;
@@ -124,26 +118,23 @@ export default function UserMenu({
               </div>
             </div>
 
-            <Link
-              href="/profile"
-              onClick={onClosePanel}
-              className="flex justify-between items-center w-full text-black font-bold py-3 border-t border-b border-gray-200 hover:bg-black/5 px-2 mb-2 transition text-sm"
-            >
-              Mi perfil <span className="text-lg">›</span>
-            </Link>
-
             <div className="flex flex-col mb-4">
               <MenuLink
                 label="Mi cuenta"
-                href="/cuenta"
+                href="/profile"
                 icon={UserIcon}
                 onClick={onClosePanel}
               />
-              {/* ✅ Se mantienen ambas opciones: la nueva y la existente */}
               <MenuLink
                 label="Mis propiedades vistas"
                 href="/vistas"
                 icon={Eye}
+                onClick={onClosePanel}
+              />
+              <MenuLink
+                label="Mis favoritos"
+                href="/mis-favoritos"
+                icon={Star}
                 onClick={onClosePanel}
               />
               <MenuLink
@@ -154,8 +145,21 @@ export default function UserMenu({
               />
               <MenuLink
                 label="Mis zonas"
-                href="/zonas"
+                href="/profile/mis-zonas"
                 icon={Map}
+                onClick={onClosePanel}
+              />
+              <MenuLink
+                label="Mis comparaciones"
+                href="/mis-comparaciones"
+                icon={FileText}
+                onClick={onClosePanel}
+              />
+              {/* ✅ Botón de Seguridad — redirige a /profile/security */}
+              <MenuLink
+                label="Seguridad"
+                href="/profile/security"
+                icon={Shield}
                 onClick={onClosePanel}
               />
             </div>

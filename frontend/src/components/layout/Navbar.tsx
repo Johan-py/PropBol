@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
+  Archive,
   Bell,
   CheckCheck,
   Loader2,
@@ -26,16 +27,43 @@ export type User = {
   avatar?: string | null;
 };
 
+type MeResponse = {
+  message?: string;
+  user?: {
+    id: number;
+    nombre?: string;
+    apellido?: string;
+    correo: string;
+    avatar?: string | null;
+  };
+};
+
+class SessionValidationError extends Error {
+  statusCode: number;
+
+  constructor(message: string, statusCode: number) {
+    super(message);
+    this.name = "SessionValidationError";
+    this.statusCode = statusCode;
+  }
+}
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const USER_STORAGE_KEY = "propbol_user";
 const SESSION_EXPIRES_KEY = "propbol_session_expires";
-const SESSION_DURATION_MS = 60 * 60 * 1000;
 
-const filters: NotificationFilter[] = ["todas", "leida", "no leida"];
+const filters: NotificationFilter[] = [
+  "todas",
+  "leida",
+  "no leida",
+  "archivada",
+];
 
 export default function Navbar() {
   const router = useRouter();
   const panelRef = useRef<HTMLDivElement | null>(null);
   const notificationPanelRef = useRef<HTMLDivElement | null>(null);
+  const [, setTick] = useState(0);
 
   const [user, setUser] = useState<User | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -52,12 +80,14 @@ export default function Navbar() {
     isLoadingMore,
     error,
     isOnline,
-    notificationRef,
+    scrollContainerRef,
+    saveScrollPosition,
     toggleNotifications,
     setFilter,
     markAsRead,
     markAllAsRead,
     deleteNotification,
+    archiveNotification,
     loadMoreNotifications,
     hasMore,
     refreshNotifications,
@@ -89,14 +119,30 @@ export default function Navbar() {
     return Date.now() > Number(expiresAt);
   };
 
-  const restoreSession = () => {
+  const fetchCurrentUser = async (token: string) => {
+    const response = await fetch(`${API_URL}/api/auth/me`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = (await response.json()) as MeResponse;
+
+    if (!response.ok || !data.user) {
+      throw new SessionValidationError(
+        data.message || "Sesión inválida o expirada",
+        response.status,
+      );
+    }
+
+    return data.user;
+  };
+
+  const restoreSession = async () => {
     const savedUser = localStorage.getItem(USER_STORAGE_KEY);
     const expiresAt = localStorage.getItem(SESSION_EXPIRES_KEY);
     const token = localStorage.getItem("token");
-
-    const updatedName = localStorage.getItem("nombre");
-    const updatedEmail = localStorage.getItem("correo");
-    const updatedAvatar = localStorage.getItem("avatar");
 
     if (!savedUser || !expiresAt || !token) {
       clearSession(false);
@@ -108,28 +154,106 @@ export default function Navbar() {
       return;
     }
 
+    let parsedUser: User;
+
     try {
-      const parsedUser = JSON.parse(savedUser);
-      const finalUser: User = {
-        name: updatedName || parsedUser.name,
-        email: updatedEmail || parsedUser.email,
-        avatar: updatedAvatar || parsedUser.avatar || null,
-      };
-      setUser(finalUser);
-      setIsLoggedIn(true);
+      parsedUser = JSON.parse(savedUser) as User;
     } catch {
       clearSession(false);
+      return;
+    }
+
+    if (!navigator.onLine) {
+      setUser(parsedUser);
+      setIsLoggedIn(true);
+      return;
+    }
+
+    try {
+      const validatedUser = await fetchCurrentUser(token);
+
+      const finalName =
+        validatedUser.nombre && validatedUser.apellido
+          ? `${validatedUser.nombre} ${validatedUser.apellido}`
+          : validatedUser.nombre || validatedUser.correo;
+
+      const finalUser: User = {
+        name: finalName,
+        email: validatedUser.correo,
+        avatar: validatedUser.avatar ?? null,
+      };
+
+      localStorage.setItem(
+        USER_STORAGE_KEY,
+        JSON.stringify({
+          name: finalUser.name,
+          email: finalUser.email,
+          avatar: finalUser.avatar,
+        }),
+      );
+      localStorage.setItem("nombre", finalUser.name);
+      localStorage.setItem("correo", finalUser.email);
+      localStorage.setItem("avatar", finalUser.avatar ?? "");
+
+      setUser(finalUser);
+      setIsLoggedIn(true);
+    } catch (error) {
+      if (
+        error instanceof SessionValidationError &&
+        (error.statusCode === 401 || error.statusCode === 403)
+      ) {
+        clearSession(false);
+        return;
+      }
+
+      setUser(parsedUser);
+      setIsLoggedIn(true);
     }
   };
 
-  useEffect(() => {
-    restoreSession();
+  const formatRelativeTime = (fecha: string | null): string => {
+    if (!fecha) return "";
+    const diff = Date.now() - new Date(fecha).getTime();
+    const mins = Math.floor(diff / 60000);
 
-    const handleSessionChange = () => restoreSession();
+    if (mins < 1) return "hace un momento";
+    if (mins < 60) return `hace ${mins} min`;
+
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `hace ${hours} h`;
+
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `hace ${days} d`;
+
+    return new Date(fecha).toLocaleDateString("es-BO", {
+      day: "numeric",
+      month: "short",
+    });
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTick((t) => t + 1);
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    void restoreSession();
+
+    const handleSessionChange = () => {
+      void restoreSession();
+    };
+
+    const handleOnline = () => {
+      void restoreSession();
+    };
 
     window.addEventListener("storage", handleSessionChange);
     window.addEventListener("propbol:login", handleSessionChange);
     window.addEventListener("propbol:session-changed", handleSessionChange);
+    window.addEventListener("online", handleOnline);
 
     return () => {
       window.removeEventListener("storage", handleSessionChange);
@@ -138,8 +262,20 @@ export default function Navbar() {
         "propbol:session-changed",
         handleSessionChange,
       );
+      window.removeEventListener("online", handleOnline);
     };
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (user && isSessionExpired()) {
+        clearSession();
+        router.push("/");
+      }
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [user, router]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -157,25 +293,18 @@ export default function Navbar() {
         toggleNotifications();
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open, toggleNotifications]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (user && isSessionExpired()) {
-        clearSession();
-        router.push("/");
-      }
-    }, 10000);
-    return () => clearInterval(interval);
-  }, [user, router]);
-
-  useEffect(() => {
     if (!open) return;
+
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === "Escape") toggleNotifications();
     };
+
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [open, toggleNotifications]);
@@ -186,11 +315,11 @@ export default function Navbar() {
       router.push("/");
       return;
     }
+
     setIsPanelOpen((prev) => !prev);
   };
 
   const handleLoginRedirect = () => router.push("/sign-in");
-
   const handleOpenLogoutModal = () => setShowLogoutModal(true);
 
   const handleCancelLogout = () => {
@@ -200,19 +329,19 @@ export default function Navbar() {
 
   const handleConfirmLogout = async () => {
     if (isLoggingOut) return;
+
     setIsLoggingOut(true);
     const token = localStorage.getItem("token");
+
     if (token) {
       try {
-        await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/auth/logout`,
-          {
-            method: "POST",
-            headers: { Authorization: `Bearer ${token}` },
-          },
-        );
+        await fetch(`${API_URL}/api/auth/logout`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        });
       } catch {}
     }
+
     clearSession();
     setIsLoggingOut(false);
     router.push("/");
@@ -220,8 +349,8 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-40 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
-        <div className="container mx-auto px-4 py-4">
+      <nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
+        <div className="container mx-auto px-4 py-1.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
               <Logo />
@@ -229,7 +358,6 @@ export default function Navbar() {
             </div>
 
             <div className="flex items-center gap-4">
-              {/* NOTIFICACIONES */}
               <div className="relative" ref={notificationPanelRef}>
                 <button
                   type="button"
@@ -252,7 +380,7 @@ export default function Navbar() {
                     role="dialog"
                     aria-label="Panel de notificaciones"
                     aria-modal="true"
-                    className="fixed left-0 right-0 top-[57px] z-50 mx-2 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-lg sm:absolute sm:left-auto sm:right-0 sm:top-12 sm:mx-0 sm:w-80"
+                    className="fixed left-0 right-0 top-[41px] z-50 mx-2 overflow-hidden rounded-xl border border-stone-200 bg-white shadow-lg sm:absolute sm:left-auto sm:right-0 sm:top-10 sm:mx-0 sm:w-80"
                   >
                     <div className="flex items-center justify-between border-b border-stone-100 px-4 py-3">
                       <h3 className="text-sm font-semibold text-stone-900">
@@ -319,12 +447,15 @@ export default function Navbar() {
                                 ? "Todas"
                                 : item === "leida"
                                   ? "Leídas"
-                                  : "No leídas"}
+                                  : item === "no leida"
+                                    ? "No leídas"
+                                    : "Archivadas"}
                             </button>
                           ))}
                         </div>
 
                         <div
+                          ref={scrollContainerRef}
                           role="list"
                           aria-label="Lista de notificaciones"
                           aria-live="polite"
@@ -333,9 +464,13 @@ export default function Navbar() {
                             const target = e.currentTarget;
                             const reachedBottom =
                               target.scrollTop + target.clientHeight >=
-                              target.scrollHeight - 10;
+                              target.scrollHeight - 20;
+
                             if (reachedBottom && hasMore && !isLoadingMore) {
-                              void loadMoreNotifications();
+                              // @ts-ignore
+                              saveScrollPosition();
+                              // @ts-ignore
+                              void loadMoreNotifications(filter);
                             }
                           }}
                         >
@@ -370,39 +505,69 @@ export default function Navbar() {
                                 <div
                                   key={notification.id}
                                   role="listitem"
+                                  onClick={() => {
+                                    if (
+                                      notification.status === "no leida" &&
+                                      isOnline
+                                    ) {
+                                      void markAsRead(notification.id);
+                                    }
+                                  }}
                                   className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
                                     notification.status === "no leida"
-                                      ? "bg-amber-50"
+                                      ? "cursor-pointer bg-amber-50"
                                       : "bg-white"
                                   }`}
                                 >
                                   <div className="flex items-start justify-between gap-3">
                                     <div className="min-w-0 flex-1">
-                                      <p className="truncate text-sm font-semibold text-stone-900">
-                                        {notification.title?.trim() ||
-                                          "(Sin título)"}
-                                      </p>
+                                      <div className="flex items-center gap-2">
+                                        {notification.status === "no leida" && (
+                                          <span className="h-2 w-2 shrink-0 rounded-full bg-amber-500" />
+                                        )}
+                                        <p className="truncate text-sm font-semibold text-stone-900">
+                                          {notification.title?.trim() ||
+                                            "(Sin título)"}
+                                        </p>
+                                      </div>
+
                                       <p className="mt-1 line-clamp-2 text-sm text-stone-600">
                                         {notification.description?.trim() ||
                                           "(Sin descripción disponible)"}
                                       </p>
-                                      <span className="mt-2 inline-block text-[10px] uppercase text-stone-400">
-                                        {notification.status}
-                                      </span>
+
+                                      <div className="mt-2 flex items-center gap-2">
+                                        <span className="text-[10px] uppercase text-stone-400">
+                                          {notification.status}
+                                        </span>
+                                        <span className="text-[10px] text-stone-400">
+                                          ·{" "}
+                                          {formatRelativeTime(
+                                            notification.fechaCreacion || null,
+                                          )}
+                                        </span>
+                                      </div>
                                     </div>
-                                    <div className="flex shrink-0 items-center gap-2">
-                                      {notification.status === "no leida" && (
+
+                                    <div
+                                      className="flex shrink-0 items-center gap-2"
+                                      onClick={(e) => e.stopPropagation()}
+                                    >
+                                      {!notification.archivada && (
                                         <button
                                           type="button"
                                           onClick={() =>
-                                            void markAsRead(notification.id)
+                                            void archiveNotification(
+                                              notification.id,
+                                            )
                                           }
-                                          disabled={!isOnline}
-                                          className="text-xs text-amber-600 transition hover:text-amber-700 disabled:cursor-not-allowed disabled:opacity-40"
+                                          aria-label="Archivar notificación"
+                                          className="text-stone-400 transition hover:text-amber-600 disabled:cursor-not-allowed disabled:opacity-40"
                                         >
-                                          Leer
+                                          <Archive className="h-4 w-4" />
                                         </button>
                                       )}
+
                                       <button
                                         type="button"
                                         onClick={() =>
@@ -419,6 +584,7 @@ export default function Navbar() {
                                   </div>
                                 </div>
                               ))}
+
                               {isLoadingMore && (
                                 <p className="px-4 py-3 text-center text-xs text-stone-400">
                                   Cargando más notificaciones...
@@ -427,6 +593,7 @@ export default function Navbar() {
                             </>
                           )}
                         </div>
+
                         <div className="border-t border-stone-100 px-4 py-3 text-center">
                           <Link
                             href="/notificaciones"
@@ -442,7 +609,6 @@ export default function Navbar() {
                 )}
               </div>
 
-              {/* USER MENU */}
               <div className="relative" ref={panelRef}>
                 <UserMenu
                   user={user}
@@ -454,7 +620,6 @@ export default function Navbar() {
                 />
               </div>
 
-              {/* MOBILE MENU BUTTON */}
               <button
                 type="button"
                 onClick={() => setIsMobileMenuOpen(true)}
@@ -475,10 +640,9 @@ export default function Navbar() {
         onConfirm={handleConfirmLogout}
       />
 
-      {/* MOBILE MENU PANEL */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 z-50 bg-black/40 md:hidden"
+          className="fixed inset-0 z-[9999] bg-black/40 md:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
           aria-modal="true"
           role="dialog"
@@ -498,6 +662,7 @@ export default function Navbar() {
                 <X className="h-6 w-6 text-stone-600" />
               </button>
             </div>
+
             <nav className="mt-10 flex flex-col gap-4">
               <Link
                 href="/"
@@ -506,19 +671,37 @@ export default function Navbar() {
               >
                 Inicio
               </Link>
+
               <Link
-                href="#contacto"
+                href="/propiedades"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
-                Contáctanos
+                Propiedades
               </Link>
+
               <Link
-                href="#nosotros"
+                href="/blogs"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
-                Sobre Nosotros
+                Blogs
+              </Link>
+
+              <Link
+                href="/cobros-suscripciones"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+              >
+                Planes de membresia
+              </Link>
+
+              <Link
+                href="/ayuda"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+              >
+                Ayuda
               </Link>
             </nav>
           </div>

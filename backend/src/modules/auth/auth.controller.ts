@@ -1,11 +1,14 @@
-import type { Request, Response } from 'express'
+import type { Request, Response } from "express";
 import {
   AuthError,
+  forgotPasswordService,
+  getMeService,
   loginService,
   logoutService,
   registerUser,
-  verifyRegisterCodeService,
-} from "./auth.service.js";
+  resetPasswordService,
+  verifyRegisterCodeService
+} from './auth.service.js'
 
 type RegisterBody = {
   nombre: string;
@@ -103,7 +106,9 @@ export const registerController = async (
     const message =
       error instanceof Error ? error.message : "Error interno del servidor";
 
-    return res.status(400).json({ message });
+    return res.status(getRegisterErrorStatus(message)).json({
+      message: getRegisterErrorMessage(message),
+    });
   }
 };
 
@@ -139,6 +144,45 @@ export const verifyRegisterCodeController = async (
   }
 };
 
+export const getMeController = async (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({
+      message: "Token no proporcionado",
+    });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({
+      message: "Token no proporcionado",
+    });
+  }
+
+  try {
+    const result = await getMeService(token);
+
+    return res.status(200).json({
+      message: "Sesión válida",
+      ...result,
+    });
+  } catch (error) {
+    // ✅ Si es AuthError (ej: cuenta desactivada = 403), reenviar el status correcto
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
+    const message =
+      error instanceof Error ? error.message : "Sesión inválida o expirada";
+
+    return res.status(401).json({ message });
+  }
+};
+
 export const logoutController = async (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
 
@@ -146,7 +190,7 @@ export const logoutController = async (req: Request, res: Response) => {
     return res.status(401).json({ message: "Token no proporcionado" });
   }
 
-  const token = authHeader.split("Bearer ")[1];
+  const token = authHeader.split(" ")[1];
 
   try {
     const result = await logoutService(token);
@@ -157,3 +201,30 @@ export const logoutController = async (req: Request, res: Response) => {
     return res.status(400).json({ message });
   }
 };
+
+export const forgotPasswordController = async (req: Request, res: Response) => {
+  try {
+    const result = await forgotPasswordService(req.body)
+    return res.status(200).json(result)
+  } catch (error) {
+    return res.status(400).json({
+      message:
+        error instanceof Error
+          ? error.message
+          : 'Error al solicitar recuperación de contraseña'
+    })
+  }
+}
+
+export const resetPasswordController = async (req: Request, res: Response) => {
+  try {
+    const result = await resetPasswordService(req.body)
+    return res.status(200).json(result)
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({ message: error.message })
+    }
+    const message = error instanceof Error ? error.message : 'Error al restablecer contraseña'
+    return res.status(400).json({ message })
+  }
+}

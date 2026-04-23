@@ -1,4 +1,4 @@
-import { prisma } from '../../lib/prisma.config.js'
+import { prisma } from "../../lib/prisma.client.js";
 
 export interface FiltrosBusqueda {
   categoria?: string | string[];
@@ -11,70 +11,85 @@ export interface FiltrosBusqueda {
   superficie?: "menor-a-mayor" | "mayor-a-menor";
 }
 
+// Helper para limpiar las variaciones de Anticrético
+function normalizarModoAccion(m: string): string {
+  const v = m.toUpperCase().trim();
+  return v.includes("ANTICR") ? "ANTICRETO" : v;
+}
+
 export const propertiesRepository = {
   async getAll(filtros: FiltrosBusqueda = {}) {
     // ── WHERE ──────────────────────────────────────────────────────────────
     const where: any = { estado: "ACTIVO" };
 
+    // 1. Filtro de Categoría / Tipo Inmueble (Soporta múltiples selecciones)
+    const CATEGORIAS_VALIDAS = ["CASA", "DEPARTAMENTO", "TERRENO", "OFICINA"];
     const rawTipo = filtros.tipoInmueble || filtros.categoria;
     if (rawTipo) {
-      const valor = Array.isArray(rawTipo) ? rawTipo[0] : rawTipo;
-      if (valor && valor !== "Cualquier tipo") {
-        where.categoria = valor.toUpperCase().trim();
+      const rawArr = (Array.isArray(rawTipo) ? rawTipo : [rawTipo])
+        .map((t) => String(t).toUpperCase().trim())
+        .filter((t) => t && t !== "CUALQUIER TIPO");
+
+      const tipos = rawArr.filter((t) => CATEGORIAS_VALIDAS.includes(t));
+
+      if (rawArr.length > 0 && tipos.length === 0) {
+        return [];
+      } else if (tipos.length === 1) {
+        where.categoria = tipos[0];
+      } else if (tipos.length > 1) {
+        where.categoria = { in: tipos };
       }
     }
 
+    // 2. Filtro de Modo Inmueble (Soporta Venta, Alquiler, Anticrético simultáneos)
     if (filtros.modoInmueble) {
-      const valor = Array.isArray(filtros.modoInmueble)
-        ? filtros.modoInmueble[0]
-        : filtros.modoInmueble;
-      if (valor) {
-        const modoLimpio = valor.toUpperCase().includes("ANTICR")
-          ? "ANTICRETO"
-          : valor.toUpperCase();
-        where.tipoAccion = modoLimpio;
+      const modosRaw = Array.isArray(filtros.modoInmueble)
+        ? filtros.modoInmueble
+        : [filtros.modoInmueble];
+
+      const modos = modosRaw
+        .filter((m) => m && String(m).trim() !== "")
+        .map((m) => normalizarModoAccion(String(m)));
+
+      if (modos.length === 1) {
+        where.tipoAccion = modos[0];
+      } else if (modos.length > 1) {
+        where.tipoAccion = { in: modos };
       }
     }
 
-    if (filtros.locationId || (filtros.query && filtros.query.trim() !== "")) {
-      where.OR = [];
+    // 3. Filtro de Ubicación (EL CEREBRO JERÁRQUICO)
+    if (filtros.query && filtros.query.trim() !== '') {
+      const texto = filtros.query.trim()
 
-      // 1. Buscar por ID de zona exacta (Ideal cuando pases a producción)
-      if (filtros.locationId) {
-        where.OR.push({
-          ubicacion: { ubicacionMaestraId: Number(filtros.locationId) },
-        });
-      }
-
-      // 2. Buscar por texto (Salva la vida con datos de prueba o sin ID enlazado)
-      if (filtros.query && filtros.query.trim() !== "") {
-        // Extraemos la primera parte (Ej: Saca "Cala Cala" de "Cala Cala - Cochabamba - Bolivia")
-        const textoLimpio = filtros.query.split("-")[0].trim();
-
-        where.OR.push({
-          titulo: { contains: textoLimpio, mode: "insensitive" },
-        });
-        where.OR.push({
-          descripcion: { contains: textoLimpio, mode: "insensitive" },
-        });
-
-        // También buscamos en la dirección textual de la ubicación
-        where.OR.push({
+      where.OR = [
+        { titulo: { contains: texto, mode: 'insensitive' } },
+        { descripcion: { contains: texto, mode: 'insensitive' } },
+        {
           ubicacion: {
-            direccion: { contains: textoLimpio, mode: "insensitive" },
-          },
-        });
-      }
+            OR: [
+              // Nivel Micro
+              { direccion: { contains: texto, mode: 'insensitive' } },
+              // Jerarquía Nueva Completa
+              { barrio: { nombre: { contains: texto, mode: 'insensitive' } } },
+              { barrio: { zona: { nombre: { contains: texto, mode: 'insensitive' } } } },
+              { barrio: { zona: { municipio: { nombre: { contains: texto, mode: 'insensitive' } } } } },
+              { barrio: { zona: { municipio: { provincia: { nombre: { contains: texto, mode: 'insensitive' } } } } } },
+              { barrio: { zona: { municipio: { provincia: { departamento: { nombre: { contains: texto, mode: 'insensitive' } } } } } } },
+              // Tabla Maestra Legacy (Por compatibilidad con datos viejos)
+              { ubicacion_maestra: { nombre: { contains: texto, mode: 'insensitive' } } },
+              { ubicacion_maestra: { municipio: { contains: texto, mode: 'insensitive' } } },
+              { ubicacion_maestra: { departamento: { contains: texto, mode: 'insensitive' } } }
+            ]
+          }
+        }
+      ]
+    } else if (filtros.locationId) {
+      // Fallback: Si no hay texto, asumimos que viene de un botón antiguo de "Ciudades Destacadas"
+      where.ubicacion = { ubicacionMaestraId: Number(filtros.locationId) }
     }
 
     // ── ORDER BY ───────────────────────────────────────────────────────────
-    // mas-populares: ordena por ubicacion → ubicacion_maestra → popularidad desc
-    // Prisma soporta orderBy anidado siguiendo las relaciones del schema.
-    // Los inmuebles sin ubicacion o sin ubicacion_maestra quedan al final
-    // porque Prisma coloca nulls last por defecto en desc.
-    //
-    // Para precio y superficie: el frontend los maneja con criterioActivo,
-    // así que el backend solo necesita proveer el default y popularidad.
     const orderBy: any[] = [];
 
     if (filtros.precio === "menor-a-mayor") {
@@ -94,18 +109,19 @@ export const propertiesRepository = {
 
     orderBy.push({ id: "asc" }); // Desempate default
 
+    // ── EJECUCIÓN PRISMA ───────────────────────────────────────────────────
     return prisma.inmueble.findMany({
       where,
       orderBy,
       include: {
         ubicacion: {
           include: {
-            ubicacion_maestra: true, // Vital para mostrar zonas de Cochabamba
+            ubicacion_maestra: true,
           },
         },
         publicaciones: {
           where: { estado: "ACTIVA" },
-          include: { multimedia: true }, // Para obtener las fotos reales
+          include: { multimedia: true },
         },
       },
     });
