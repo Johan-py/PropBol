@@ -840,6 +840,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
                onClick={() => {
              setModoPinActivo(true)
              setModoDifuminadoActivo(false)
+             setVertices([])
                }}
              className={`px-4 py-2 rounded-full text-sm ${
                  modoPinActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
@@ -853,6 +854,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
                  onClick={() => {
                  setModoDifuminadoActivo(true)
                  setModoPinActivo(false)
+                 setPinCoords(null)
                 }}
                 className={`px-4 py-2 rounded-full text-sm ${
                  modoDifuminadoActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
