@@ -38,6 +38,8 @@ export const findSecurityUserByIdRepository = async (
   });
 };
 
+
+
 export const deactivateUserAccountRepository = async (userId: number): Promise<void> => {
   await prisma.$transaction([
     prisma.usuario.update({
