@@ -6,12 +6,23 @@ export interface FiltrosBusqueda {
   modoInmueble?: string | string[]
   query?: string
   locationId?: number
+  departamentoId?: string | number
+  provinciaId?: string | number
+  municipioId?: string | number
+  zonaId?: string | number
+  barrioId?: string | number
   fecha?: 'mas-recientes' | 'mas-populares' | 'mas-antiguos'
   precio?: 'menor-a-mayor' | 'mayor-a-menor'
   superficie?: 'menor-a-mayor' | 'mayor-a-menor'
   minPrice?: number | null
   maxPrice?: number | null
   currency?: string | null
+  
+  dormitoriosMin?: number
+  dormitoriosMax?: number
+  banosMin?: number
+  banosMax?: number
+  banoCompartido?: boolean
 }
 
 // Helper para limpiar las variaciones de Anticrético
@@ -71,9 +82,7 @@ export const propertiesRepository = {
         {
           ubicacion: {
             OR: [
-              // Nivel Micro
               { direccion: { contains: texto, mode: 'insensitive' } },
-              // Jerarquía Nueva Completa
               { barrio: { nombre: { contains: texto, mode: 'insensitive' } } },
               { barrio: { zona: { nombre: { contains: texto, mode: 'insensitive' } } } },
               {
@@ -99,10 +108,7 @@ export const propertiesRepository = {
                   }
                 }
               },
-              // Tabla Maestra Legacy (Por compatibilidad con datos viejos)
-              { ubicacion_maestra: { nombre: { contains: texto, mode: 'insensitive' } } },
-              { ubicacion_maestra: { municipio: { contains: texto, mode: 'insensitive' } } },
-              { ubicacion_maestra: { departamento: { contains: texto, mode: 'insensitive' } } }
+              { ubicacion_maestra: { nombre: { contains: texto, mode: 'insensitive' } } }
             ]
           }
         }
@@ -110,6 +116,29 @@ export const propertiesRepository = {
     } else if (filtros.locationId) {
       // Fallback: Si no hay texto, asumimos que viene de un botón antiguo de "Ciudades Destacadas"
       where.ubicacion = { ubicacionMaestraId: Number(filtros.locationId) }
+    }
+    // Si un nivel está seleccionado y no es "todos", lo aplicamos y las demás condiciones (else if) se ignoran.
+    if (filtros.barrioId && String(filtros.barrioId).toLowerCase() !== 'todos') {
+      where.ubicacion = { ...where.ubicacion, barrio_id: Number(filtros.barrioId) }
+    } else if (filtros.zonaId && String(filtros.zonaId).toLowerCase() !== 'todos') {
+      where.ubicacion = { ...where.ubicacion, barrio: { zona_id: Number(filtros.zonaId) } }
+    } else if (filtros.municipioId && String(filtros.municipioId).toLowerCase() !== 'todos') {
+      where.ubicacion = {
+        ...where.ubicacion,
+        barrio: { zona: { municipio_id: Number(filtros.municipioId) } }
+      }
+    } else if (filtros.provinciaId && String(filtros.provinciaId).toLowerCase() !== 'todos') {
+      where.ubicacion = {
+        ...where.ubicacion,
+        barrio: { zona: { municipio: { provincia_id: Number(filtros.provinciaId) } } }
+      }
+    } else if (filtros.departamentoId && String(filtros.departamentoId).toLowerCase() !== 'todos') {
+      where.ubicacion = {
+        ...where.ubicacion,
+        barrio: {
+          zona: { municipio: { provincia: { departamento_id: Number(filtros.departamentoId) } } }
+        }
+      }
     }
     // ── FILTRO DE PRECIO con conversión de moneda ─────────────────
     const TASA_CAMBIO_BOB = 6.96 // 1 USD = 6.96 BOB
@@ -131,6 +160,30 @@ export const propertiesRepository = {
     }
     if (queryMaxPrice != null) {
       where.precio = { ...((where.precio as object) ?? {}), lte: queryMaxPrice }
+    }
+
+    if (filtros.dormitoriosMin !== undefined || filtros.dormitoriosMax !== undefined) {
+      where.nroCuartos = {}
+      if (filtros.dormitoriosMin !== undefined) {
+        where.nroCuartos.gte = filtros.dormitoriosMin
+      }
+      if (filtros.dormitoriosMax !== undefined) {
+        where.nroCuartos.lte = filtros.dormitoriosMax
+      }
+    }
+
+     if (filtros.banosMin !== undefined || filtros.banosMax !== undefined) {
+      where.nroBanos = {}
+      if (filtros.banosMin !== undefined) {
+        where.nroBanos.gte = filtros.banosMin
+      }
+      if (filtros.banosMax !== undefined) {
+        where.nroBanos.lte = filtros.banosMax
+      }
+    }
+
+    if (filtros.banoCompartido !== undefined) {
+      where.banoCompartido = filtros.banoCompartido
     }
 
     // ── ORDER BY ───────────────────────────────────────────────────────────
@@ -160,6 +213,21 @@ export const propertiesRepository = {
       include: {
         ubicacion: {
           include: {
+            barrio: {
+              include: {
+                zona: {
+                  include: {
+                    municipio: {
+                      include: {
+                        provincia: {
+                          include: { departamento: true }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
             ubicacion_maestra: true
           }
         },

@@ -1,3 +1,4 @@
+"use client"
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type TouchEvent } from "react";
@@ -47,6 +48,7 @@ export function FeaturedCitiesSectionSkeleton() {
               </div>
             </div>
           ))}
+
         </div>
       </div>
     </section>
