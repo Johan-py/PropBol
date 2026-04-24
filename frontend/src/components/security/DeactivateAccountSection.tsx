@@ -494,7 +494,7 @@ export default function DeactivateAccountSection() {
                   }}
                   placeholder="123456"
                   maxLength={6}
-                  disabled={isVerifyingCode || !!emailCodeSuccess}
+                  disabled={isVerifyingCode}
                   className="w-full border-none bg-transparent text-sm text-neutral-900 outline-none disabled:opacity-50"
                 />
               </div>
@@ -516,7 +516,7 @@ export default function DeactivateAccountSection() {
               <button
                 type="button"
                 onClick={handleCancelEmailCode}
-                disabled={isVerifyingCode || !!emailCodeSuccess}
+                disabled={isVerifyingCode}
                 className="rounded-md border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 transition hover:bg-neutral-100 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Cancelar
@@ -525,7 +525,7 @@ export default function DeactivateAccountSection() {
               <button
                 type="button"
                 onClick={handleDeactivateAccountWithCode}
-                disabled={isVerifyingCode || !!emailCodeSuccess}
+                disabled={isVerifyingCode}
                 className="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isVerifyingCode ? "Verificando..." : "Desactivar cuenta"}
