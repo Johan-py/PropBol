@@ -10,6 +10,7 @@ type FooterAction = {
   isExternal?: boolean
   label: string
   requiresAuth?: boolean
+  id?: string
 }
 
 const exploreActions: FooterAction[] = [
@@ -28,7 +29,7 @@ const exploreActions: FooterAction[] = [
     href: '/busqueda_mapa?modoInmueble=ANTICRETO',
     requiresAuth: true
   },
-  { label: 'Publica tu inmueble', href: '/registro-inmueble', requiresAuth: true }
+  { label: 'Publica tu inmueble', href: '/registro-inmueble', requiresAuth: true,  id: 'tour-publicar' }
 ]
 
 const companyActions: FooterAction[] = [
@@ -130,6 +131,7 @@ function FooterSection({
           <li key={action.label}>
             {action.href && action.requiresAuth ? (
               <button
+                id={action.id}
                 type="button"
                 onClick={() => handleProtectedNavigation(action)}
                 className="text-left text-sm text-stone-600 transition-colors hover:text-amber-600"
@@ -138,6 +140,7 @@ function FooterSection({
               </button>
             ) : action.href && !action.isExternal ? (
               <Link
+                id={action.id}
                 href={action.href}
                 className="text-sm text-stone-600 transition-colors hover:text-amber-600"
               >
@@ -145,6 +148,7 @@ function FooterSection({
               </Link>
             ) : action.href ? (
               <a
+                id={action.id}
                 href={action.href}
                 target={action.isExternal ? '_blank' : undefined}
                 rel={action.isExternal ? 'noreferrer' : undefined}
@@ -154,6 +158,7 @@ function FooterSection({
               </a>
             ) : (
               <button
+                id={action.id} 
                 type="button"
                 className="text-left text-sm text-stone-600 transition-colors hover:text-amber-600"
               >

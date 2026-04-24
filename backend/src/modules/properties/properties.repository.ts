@@ -12,6 +12,12 @@ export interface FiltrosBusqueda {
   minPrice?: number | null
   maxPrice?: number | null
   currency?: string | null
+  
+  dormitoriosMin?: number
+  dormitoriosMax?: number
+  banosMin?: number
+  banosMax?: number
+  banoCompartido?: boolean
 }
 
 // Helper para limpiar las variaciones de Anticrético
@@ -131,6 +137,30 @@ export const propertiesRepository = {
     }
     if (queryMaxPrice != null) {
       where.precio = { ...((where.precio as object) ?? {}), lte: queryMaxPrice }
+    }
+
+    if (filtros.dormitoriosMin !== undefined || filtros.dormitoriosMax !== undefined) {
+      where.nroCuartos = {}
+      if (filtros.dormitoriosMin !== undefined) {
+        where.nroCuartos.gte = filtros.dormitoriosMin
+      }
+      if (filtros.dormitoriosMax !== undefined) {
+        where.nroCuartos.lte = filtros.dormitoriosMax
+      }
+    }
+
+     if (filtros.banosMin !== undefined || filtros.banosMax !== undefined) {
+      where.nroBanos = {}
+      if (filtros.banosMin !== undefined) {
+        where.nroBanos.gte = filtros.banosMin
+      }
+      if (filtros.banosMax !== undefined) {
+        where.nroBanos.lte = filtros.banosMax
+      }
+    }
+
+    if (filtros.banoCompartido !== undefined) {
+      where.banoCompartido = filtros.banoCompartido
     }
 
     // ── ORDER BY ───────────────────────────────────────────────────────────
