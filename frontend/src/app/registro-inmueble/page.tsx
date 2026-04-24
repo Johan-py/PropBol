@@ -20,6 +20,7 @@ type CampoError =
   | 'precio'
   | 'area'
   | 'operacion'
+  | 'mapa'
   | null
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL //?? "http://localhost:5000";
@@ -497,6 +498,23 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
       return
     }
 
+    const tienePin = pinCoords !== null
+    const tieneDifuminado = vertices.length >= 3
+
+    if (!tienePin && !tieneDifuminado) {
+      setMensajeError('DEBE MARCAR UNA UBICACIÓN EN EL MAPA (PIN O ZONA DIFUMINADA)')
+      setCampoError('mapa')
+      setEstado('error')
+      return
+    }
+
+    const centroide = tieneDifuminado && !tienePin
+      ? {
+          lat: vertices.reduce((s, p) => s + p[0], 0) / vertices.length,
+          lng: vertices.reduce((s, p) => s + p[1], 0) / vertices.length
+        }
+      : null
+
     const payload = {
       titulo: tituloLimpio,
       tipoAccion: datos.operacion,
@@ -508,7 +526,10 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
       descripcion: descripcionLimpia,
       direccion: direccionLimpia,
       zona: zonaLimpia,
-      ciudad: datos.ciudad
+      ciudad: datos.ciudad,
+      latitud: tienePin ? pinCoords!.lat : centroide!.lat,
+      longitud: tienePin ? pinCoords!.lng : centroide!.lng,
+      verticesDifuminado: tieneDifuminado ? vertices : undefined
     }
 
     console.log('📤 Payload enviado al backend:', payload)
@@ -586,6 +607,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
   const errorPrecio = campoError === 'precio'
   const errorArea = campoError === 'area'
   const errorOperacion = campoError === 'operacion'
+  const errorMapa = campoError === 'mapa'
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -885,7 +907,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
 
          </div>
 
-           <div className="relative z-0 rounded-2xl overflow-hidden border border-gray-200 max-w-full h-[320px]">
+           <div className={`relative z-0 rounded-2xl overflow-hidden border max-w-full h-[320px] ${errorMapa ? 'border-red-500' : 'border-gray-200'}`}>
             <MapaPinSelector
                pinCoords={pinCoords}
                setPinCoords={setPinCoords}
@@ -895,6 +917,9 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
                modoDifuminadoActivo={modoDifuminadoActivo}
                  />
               </div>
+              {errorMapa && (
+                <p className="text-red-500 text-sm mt-2">{mensajeError}</p>
+              )}
              </div>
               <div className="mt-12 space-y-6">
                 <div className="flex justify-center md:justify-end gap-6">
