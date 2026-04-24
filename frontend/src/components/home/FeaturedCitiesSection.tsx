@@ -1,4 +1,3 @@
-"use client"
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type TouchEvent } from "react";
