@@ -12,15 +12,13 @@ export const reglasValidacionHU5 = [
   body("direccion")
     .isLength({ min: 5 })
     .withMessage("La dirección debe tener al menos 5 caracteres"),
-  body("precio")
-    .isNumeric()
-    .withMessage("El precio debe ser un número válido"),
+  body("precio").isNumeric().withMessage("El precio debe ser un número válido"),
 ];
 
 export const manejarErroresPublicacion = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

@@ -16,10 +16,14 @@ export const publicacionesService = {
   },
 
   async obtenerEstadisticasPublicaciones(userId: number) {
-    const totalPublicaciones = await publicacionesRepository.countByUser(userId);
-    const limite = await suscripcionesService.obtenerLimitePublicaciones(userId);
-    const tieneSuscripcion = await suscripcionesService.tieneSuscripcionActiva(userId);
-    const suscripcion = await suscripcionesService.obtenerSuscripcionActiva(userId);
+    const totalPublicaciones =
+      await publicacionesRepository.countByUser(userId);
+    const limite =
+      await suscripcionesService.obtenerLimitePublicaciones(userId);
+    const tieneSuscripcion =
+      await suscripcionesService.tieneSuscripcionActiva(userId);
+    const suscripcion =
+      await suscripcionesService.obtenerSuscripcionActiva(userId);
 
     return {
       totalPublicaciones,
@@ -28,11 +32,11 @@ export const publicacionesService = {
       tieneSuscripcion,
       suscripcion: suscripcion
         ? {
-          id: suscripcion.id,
-          planNombre: suscripcion.plan_suscripcion?.nombre_plan,
-          fechaInicio: suscripcion.fecha_inicio,
-          fechaFin: suscripcion.fecha_fin,
-        }
+            id: suscripcion.id,
+            planNombre: suscripcion.plan_suscripcion?.nombre_plan,
+            fechaInicio: suscripcion.fecha_inicio,
+            fechaFin: suscripcion.fecha_fin,
+          }
         : null,
     };
   },
@@ -81,7 +85,11 @@ export const publicacionesService = {
     await publicacionesRepository.deleteById(publicacionId);
   },
 
-  async cambiarEstado(publicacionId: number, userId: number, activa: boolean): Promise<void> {
+  async cambiarEstado(
+    publicacionId: number,
+    userId: number,
+    activa: boolean,
+  ): Promise<void> {
     const publicacion = await publicacionesRepository.findById(publicacionId);
 
     if (!publicacion) {

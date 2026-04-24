@@ -100,7 +100,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           SESSION_EXPIRES_KEY,
           String(Date.now() + SESSION_DURATION_MS),
         );
-        localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(buildSessionUser(data.user)));
+        localStorage.setItem(
+          USER_STORAGE_KEY,
+          JSON.stringify(buildSessionUser(data.user)),
+        );
 
         window.dispatchEvent(new Event("propbol:session-changed"));
       } catch {

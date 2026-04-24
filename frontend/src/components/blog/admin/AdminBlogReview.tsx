@@ -28,10 +28,12 @@ function StatusBanner({
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-green-600">
           Estado actual
         </p>
-        <h2 className="mt-2 text-2xl font-bold font-montserrat">Artículo publicado</h2>
+        <h2 className="mt-2 text-2xl font-bold font-montserrat">
+          Artículo publicado
+        </h2>
         <p className="mt-2 text-sm leading-7">
-          Este blog ya fue aprobado en la demo, por lo que no volverá a
-          aparecer en la pestaña de pendientes.
+          Este blog ya fue aprobado en la demo, por lo que no volverá a aparecer
+          en la pestaña de pendientes.
         </p>
       </div>
     );
@@ -42,7 +44,9 @@ function StatusBanner({
       <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-600">
         Estado actual
       </p>
-      <h2 className="mt-2 text-2xl font-bold font-montserrat">Artículo rechazado</h2>
+      <h2 className="mt-2 text-2xl font-bold font-montserrat">
+        Artículo rechazado
+      </h2>
       <p className="mt-2 text-sm leading-7">
         Comentario registrado: {rejectionComment || "Sin comentario adicional."}
       </p>
@@ -170,7 +174,9 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
           </div>
 
           <div className="mx-auto mt-10 max-w-4xl space-y-9 text-lg leading-9 text-stone-700 font-inter">
-            <p className="text-2xl leading-10 text-stone-800 font-montserrat font-bold">{blog.excerpt}</p>
+            <p className="text-2xl leading-10 text-stone-800 font-montserrat font-bold">
+              {blog.excerpt}
+            </p>
             <p className="text-xl leading-9 text-stone-600">{blog.lead}</p>
 
             {blog.sections.map((section, index) => (
@@ -182,7 +188,9 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
                 )}
 
                 {section.paragraphs.map((paragraph, paragraphIndex) => (
-                  <p key={`${blog.id}-${index}-${paragraphIndex}`}>{paragraph}</p>
+                  <p key={`${blog.id}-${index}-${paragraphIndex}`}>
+                    {paragraph}
+                  </p>
                 ))}
               </section>
             ))}
@@ -221,7 +229,9 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
                 </label>
 
                 {formError && (
-                  <p className="text-sm font-medium text-red-600 font-inter">{formError}</p>
+                  <p className="text-sm font-medium text-red-600 font-inter">
+                    {formError}
+                  </p>
                 )}
 
                 <div className="flex flex-col gap-3 sm:flex-row sm:justify-end font-inter">

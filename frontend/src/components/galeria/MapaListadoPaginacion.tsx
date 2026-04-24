@@ -30,11 +30,21 @@ export default function MapaListadoPaginacion({
   const showPaginationControls = !disabled && totalPages > 1;
 
   const visiblePages = useMemo(() => {
-  if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
+    if (totalPages <= 7)
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
 
     if (safePage <= 4) return [1, 2, 3, 4, 5, "...", totalPages];
-    if (safePage >= totalPages - 3) return [1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
-    
+    if (safePage >= totalPages - 3)
+      return [
+        1,
+        "...",
+        totalPages - 4,
+        totalPages - 3,
+        totalPages - 2,
+        totalPages - 1,
+        totalPages,
+      ];
+
     return [1, "...", safePage - 1, safePage, safePage + 1, "...", totalPages];
   }, [safePage, totalPages]);
 
@@ -48,11 +58,12 @@ export default function MapaListadoPaginacion({
           <span className="whitespace-nowrap">Por página</span>
           <select
             className="border border-stone-200 rounded-md px-2 py-1 text-xs bg-white disabled:opacity-50"
-
             value={pageSize}
             disabled={disabled}
             onChange={(e) =>
-              onPageSizeChange(Number(e.target.value) as (typeof PAGE_SIZE_OPTIONS)[number])
+              onPageSizeChange(
+                Number(e.target.value) as (typeof PAGE_SIZE_OPTIONS)[number],
+              )
             }
           >
             {PAGE_SIZE_OPTIONS.map((n) => (
@@ -60,11 +71,13 @@ export default function MapaListadoPaginacion({
                 {n}
               </option>
             ))}
-
           </select>
         </label>
         {showPaginationControls ? (
-          <div className="flex items-center gap-1 shrink-0" aria-label="Paginación">
+          <div
+            className="flex items-center gap-1 shrink-0"
+            aria-label="Paginación"
+          >
             <button
               type="button"
               disabled={safePage <= 1}
@@ -75,9 +88,14 @@ export default function MapaListadoPaginacion({
               <ChevronLeft size={16} />
             </button>
             <div className="flex items-center gap-1 justify-center no-scrollbar">
-              {visiblePages.map((n, idx) => (
+              {visiblePages.map((n, idx) =>
                 n === "..." ? (
-                  <span key={`dots-${idx}`} className="px-1 text-stone-400 text-xs">...</span>
+                  <span
+                    key={`dots-${idx}`}
+                    className="px-1 text-stone-400 text-xs"
+                  >
+                    ...
+                  </span>
                 ) : (
                   <button
                     key={n}
@@ -91,8 +109,8 @@ export default function MapaListadoPaginacion({
                   >
                     {n}
                   </button>
-                )
-              ))}
+                ),
+              )}
             </div>
             <button
               type="button"
@@ -112,10 +130,14 @@ export default function MapaListadoPaginacion({
           : `Mostrando ${from}–${to} de ${total}`}
       </p>
       {!disabled && totalPages > 1 && safePage >= totalPages && (
-        <p className="text-[11px] text-stone-400 text-center">No hay más resultados para mostrar.</p>
+        <p className="text-[11px] text-stone-400 text-center">
+          No hay más resultados para mostrar.
+        </p>
       )}
       {disabled && hint ? (
-        <p className="text-[11px] text-red-600/90 text-center sm:text-left break-words">{hint}</p>
+        <p className="text-[11px] text-red-600/90 text-center sm:text-left break-words">
+          {hint}
+        </p>
       ) : null}
     </div>
   );

@@ -10,7 +10,7 @@ interface CarouselItem {
   location: string;
   count?: number;
   filterParam: string;
-   previews?: Array<{ imagen: string; titulo: string }>;
+  previews?: Array<{ imagen: string; titulo: string }>;
 }
 
 interface PropertyCarouselProps {
@@ -35,34 +35,34 @@ export default function PropertyCarousel({
     });
   };
 
-    useEffect(() => {
+  useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
-       const onWheel = (e: WheelEvent) => {
+    const onWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        e.preventDefault(); 
+        e.preventDefault();
         el.scrollLeft += e.deltaY;
       }
     };
-    
+
     el.addEventListener("wheel", onWheel, { passive: false });
 
     return () => el.removeEventListener("wheel", onWheel);
   }, []);
 
   const handleCardClick = (filterParam: string) => {
-  const modoMap: Record<"alquiler" | "venta", string> = {
-    alquiler: "ALQUILER",
-    venta: "VENTA",
+    const modoMap: Record<"alquiler" | "venta", string> = {
+      alquiler: "ALQUILER",
+      venta: "VENTA",
+    };
+
+    const params = new URLSearchParams({
+      modoInmueble: modoMap[category],
+      query: filterParam,
+    });
+
+    router.push(`/busqueda_mapa?${params.toString()}`);
   };
-
-  const params = new URLSearchParams({
-    modoInmueble: modoMap[category],
-    query: filterParam,
-  });
-
-  router.push(`/busqueda_mapa?${params.toString()}`);
-};
 
   return (
     <div className="mb-10">
@@ -88,7 +88,12 @@ export default function PropertyCarousel({
         <div
           ref={scrollRef}
           className=" flex gap-3 overflow-x-auto scroll-smooth px-9 py-2"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none", overscrollBehaviorX: "contain", touchAction: "pan-x"}}
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            overscrollBehaviorX: "contain",
+            touchAction: "pan-x",
+          }}
         >
           {items.map((item, i) => (
             <PropertyCard

@@ -1,45 +1,45 @@
-'use client'
-import { Fragment, useEffect, useState } from 'react'
-import { Polygon, Marker, useMap } from 'react-leaflet'
-import L from 'leaflet'
-import type { ZonaPredefinida } from '@/types/zona'
+"use client";
+import { Fragment, useEffect, useState } from "react";
+import { Polygon, Marker, useMap } from "react-leaflet";
+import L from "leaflet";
+import type { ZonaPredefinida } from "@/types/zona";
 
-const MIN_ZOOM_LABELS = 13 // criterio 15: ocultar labels en zoom-out
+const MIN_ZOOM_LABELS = 13; // criterio 15: ocultar labels en zoom-out
 
 function centroide(coords: [number, number][]): [number, number] {
   return [
     coords.reduce((s, c) => s + c[0], 0) / coords.length,
-    coords.reduce((s, c) => s + c[1], 0) / coords.length
-  ]
+    coords.reduce((s, c) => s + c[1], 0) / coords.length,
+  ];
 }
 
 // criterio 21: ignorar coordenadas inválidas silenciosamente
 function esValido(coords: unknown): coords is [number, number][] {
-  if (!Array.isArray(coords) || coords.length < 3) return false
+  if (!Array.isArray(coords) || coords.length < 3) return false;
   return coords.every(
     (c) =>
       Array.isArray(c) &&
       c.length === 2 &&
-      typeof c[0] === 'number' &&
-      typeof c[1] === 'number' &&
+      typeof c[0] === "number" &&
+      typeof c[1] === "number" &&
       !isNaN(c[0]) &&
       !isNaN(c[1]) &&
       c[0] >= -90 &&
       c[0] <= 90 &&
       c[1] >= -180 &&
-      c[1] <= 180
-  )
+      c[1] <= 180,
+  );
 }
 
 // criterio 20: word-wrap; criterio 8: cursor pointer; criterio 23: tabindex + keydown→click
 function labelIcon(nombre: string, isSelected: boolean): L.DivIcon {
-  const color = isSelected ? '#ea580c' : '#1a1a1a'
+  const color = isSelected ? "#ea580c" : "#1a1a1a";
   const shadow = isSelected
-    ? '0 0 4px rgba(255,255,255,0.9), 0 0 8px rgba(255,255,255,0.6)'
-    : '0 1px 3px rgba(255,255,255,0.95), 0 -1px 3px rgba(255,255,255,0.95), 1px 0 3px rgba(255,255,255,0.95), -1px 0 3px rgba(255,255,255,0.95)'
+    ? "0 0 4px rgba(255,255,255,0.9), 0 0 8px rgba(255,255,255,0.6)"
+    : "0 1px 3px rgba(255,255,255,0.95), 0 -1px 3px rgba(255,255,255,0.95), 1px 0 3px rgba(255,255,255,0.95), -1px 0 3px rgba(255,255,255,0.95)";
 
   return L.divIcon({
-    className: '',
+    className: "",
     html: `<div
       tabindex="0"
       role="button"
@@ -66,36 +66,40 @@ function labelIcon(nombre: string, isSelected: boolean): L.DivIcon {
       ${nombre}
     </div>`,
     iconSize: [140, 28],
-    iconAnchor: [70, 14]
-  })
+    iconAnchor: [70, 14],
+  });
 }
 
 interface Props {
-  zonas: ZonaPredefinida[]
-  selectedZoneId: number | null
-  onZoneSelect: (id: number | null) => void
+  zonas: ZonaPredefinida[];
+  selectedZoneId: number | null;
+  onZoneSelect: (id: number | null) => void;
 }
 
-export default function ZonasOverlay({ zonas, selectedZoneId, onZoneSelect }: Props) {
-  const map = useMap()
-  const [zoom, setZoom] = useState(() => map.getZoom())
+export default function ZonasOverlay({
+  zonas,
+  selectedZoneId,
+  onZoneSelect,
+}: Props) {
+  const map = useMap();
+  const [zoom, setZoom] = useState(() => map.getZoom());
 
   // criterio 15: escuchar cambios de zoom
   useEffect(() => {
-    const handler = () => setZoom(map.getZoom())
-    map.on('zoomend', handler)
+    const handler = () => setZoom(map.getZoom());
+    map.on("zoomend", handler);
     return () => {
-      map.off('zoomend', handler)
-    }
-  }, [map])
+      map.off("zoomend", handler);
+    };
+  }, [map]);
 
   return (
     <>
       {zonas
         .filter((z) => esValido(z.coordenadas))
         .map((zona) => {
-          const sel = zona.id === selectedZoneId
-          const c = centroide(zona.coordenadas)
+          const sel = zona.id === selectedZoneId;
+          const c = centroide(zona.coordenadas);
 
           return (
             <Fragment key={zona.id}>
@@ -108,47 +112,47 @@ export default function ZonasOverlay({ zonas, selectedZoneId, onZoneSelect }: Pr
               <Polygon
                 positions={zona.coordenadas}
                 pathOptions={{
-                  color: sel ? '#ea580c' : '#64748b',
+                  color: sel ? "#ea580c" : "#64748b",
                   weight: sel ? 2 : 1.8, // criterio 16
-                  dashArray: sel ? '6,6' : undefined, // criterio 6
-                  fillColor: sel ? '#ea580c' : '#94a3b8',
-                  fillOpacity: sel ? 0.25 : 0.10, // criterio 7
-                  lineJoin: 'round',
-                  lineCap: 'round'
+                  dashArray: sel ? "6,6" : undefined, // criterio 6
+                  fillColor: sel ? "#ea580c" : "#94a3b8",
+                  fillOpacity: sel ? 0.25 : 0.1, // criterio 7
+                  lineJoin: "round",
+                  lineCap: "round",
                 }}
                 // criterio 13/14: no capturar eventos de mapa accidentalmente
                 bubblingMouseEvents={false as any}
                 eventHandlers={{
                   click: (e) => {
-                    L.DomEvent.stopPropagation(e)
-                    onZoneSelect(sel ? null : zona.id)
+                    L.DomEvent.stopPropagation(e);
+                    onZoneSelect(sel ? null : zona.id);
                   },
                   // criterio 8: cursor pointer
                   mouseover: (e) => {
-                     const layer = e.target as L.Path
-                     const el = layer.getElement()
+                    const layer = e.target as L.Path;
+                    const el = layer.getElement();
 
-                    if (el) (el as HTMLElement).style.cursor = 'pointer'
+                    if (el) (el as HTMLElement).style.cursor = "pointer";
 
-                     if (!sel) {
+                    if (!sel) {
                       layer.setStyle({
                         weight: 3,
-                        fillOpacity: 0.13
-                      })
+                        fillOpacity: 0.13,
+                      });
                     }
                   },
 
                   mouseout: (e) => {
-                    const layer = e.target as L.Path
+                    const layer = e.target as L.Path;
 
                     if (!sel) {
-                       layer.setStyle({
-                         weight: 1.8,
-                         fillOpacity: 0.10
-                       })
+                      layer.setStyle({
+                        weight: 1.8,
+                        fillOpacity: 0.1,
+                      });
                     }
-                  }
-               }}
+                  },
+                }}
               />
 
               {/* criterio 15: ocultar labels en zoom-out */}
@@ -161,15 +165,15 @@ export default function ZonasOverlay({ zonas, selectedZoneId, onZoneSelect }: Pr
                   zIndexOffset={-100} // criterio 11/12: labels bajo clusters y GPS
                   eventHandlers={{
                     click: (e) => {
-                      L.DomEvent.stopPropagation(e)
-                      onZoneSelect(sel ? null : zona.id)
-                    }
+                      L.DomEvent.stopPropagation(e);
+                      onZoneSelect(sel ? null : zona.id);
+                    },
                   }}
                 />
               )}
             </Fragment>
-          )
+          );
         })}
     </>
-  )
+  );
 }

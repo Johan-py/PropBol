@@ -30,101 +30,101 @@ export const cambiarPassword = async (req: AuthRequest, res: Response) => {
     }
 
     const usuario = await prisma.usuario.findUnique({
-  where: { id: usuarioId },
-});
-
-if (!usuario) {
-  return res.status(404).json({
-    ok: false,
-    msg: "Usuario no encontrado",
-  });
-}
-
-const ahora = new Date();
-
-if (
-  usuario.bloqueo_cambio_password_hasta &&
-  ahora >= usuario.bloqueo_cambio_password_hasta
-) {
-  await prisma.usuario.update({
-    where: { id: usuarioId },
-    data: {
-      intentos_fallidos_cambio_password: 0,
-      bloqueo_cambio_password_hasta: null,
-    },
-  });
-
-  usuario.intentos_fallidos_cambio_password = 0;
-  usuario.bloqueo_cambio_password_hasta = null;
-}
-
-if (
-  usuario.bloqueo_cambio_password_hasta &&
-  ahora < usuario.bloqueo_cambio_password_hasta
-) {
-  return res.status(423).json({
-    ok: false,
-    bloqueado: true,
-    bloqueoHasta: usuario.bloqueo_cambio_password_hasta,
-    intentosFallidos: 5,
-    msg: "Has superado los 5 intentos fallidos. Intenta más tarde.",
-  });
-}
-
-if (usuario.intentos_fallidos_cambio_password >= 5) {
-  return res.status(423).json({
-    ok: false,
-    bloqueado: true,
-    bloqueoHasta: usuario.bloqueo_cambio_password_hasta,
-    intentosFallidos: 5,
-    msg: "Has superado los 5 intentos fallidos. Intenta más tarde.",
-  });
-}
-
-const passwordIncorrecta = usuario.password !== passwordActual;
-
-if (passwordIncorrecta) {
-  const nuevosIntentos = Math.min(
-    usuario.intentos_fallidos_cambio_password + 1,
-    5
-  );
-
-  if (nuevosIntentos >= 5) {
-    const bloqueoHasta = new Date(Date.now() + 5 * 60 * 1000);
-
-    await prisma.usuario.update({
       where: { id: usuarioId },
-      data: {
-        intentos_fallidos_cambio_password: 5,
-        bloqueo_cambio_password_hasta: bloqueoHasta,
-      },
     });
 
-    return res.status(423).json({
-      ok: false,
-      bloqueado: true,
-      bloqueoHasta,
-      intentosFallidos: 5,
-      msg: "Has superado los 5 intentos fallidos. Intenta más tarde.",
-    });
-  }
+    if (!usuario) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Usuario no encontrado",
+      });
+    }
 
-  await prisma.usuario.update({
-    where: { id: usuarioId },
-    data: {
-      intentos_fallidos_cambio_password: nuevosIntentos,
-      bloqueo_cambio_password_hasta: null,
-    },
-  });
+    const ahora = new Date();
 
-  return res.status(401).json({
-    ok: false,
-    bloqueado: false,
-    intentosFallidos: nuevosIntentos,
-    intentosRestantes: 5 - nuevosIntentos,
-    msg: `La contraseña actual es incorrecta. Intento ${nuevosIntentos} de 5.`,
-  });
-}
+    if (
+      usuario.bloqueo_cambio_password_hasta &&
+      ahora >= usuario.bloqueo_cambio_password_hasta
+    ) {
+      await prisma.usuario.update({
+        where: { id: usuarioId },
+        data: {
+          intentos_fallidos_cambio_password: 0,
+          bloqueo_cambio_password_hasta: null,
+        },
+      });
+
+      usuario.intentos_fallidos_cambio_password = 0;
+      usuario.bloqueo_cambio_password_hasta = null;
+    }
+
+    if (
+      usuario.bloqueo_cambio_password_hasta &&
+      ahora < usuario.bloqueo_cambio_password_hasta
+    ) {
+      return res.status(423).json({
+        ok: false,
+        bloqueado: true,
+        bloqueoHasta: usuario.bloqueo_cambio_password_hasta,
+        intentosFallidos: 5,
+        msg: "Has superado los 5 intentos fallidos. Intenta más tarde.",
+      });
+    }
+
+    if (usuario.intentos_fallidos_cambio_password >= 5) {
+      return res.status(423).json({
+        ok: false,
+        bloqueado: true,
+        bloqueoHasta: usuario.bloqueo_cambio_password_hasta,
+        intentosFallidos: 5,
+        msg: "Has superado los 5 intentos fallidos. Intenta más tarde.",
+      });
+    }
+
+    const passwordIncorrecta = usuario.password !== passwordActual;
+
+    if (passwordIncorrecta) {
+      const nuevosIntentos = Math.min(
+        usuario.intentos_fallidos_cambio_password + 1,
+        5,
+      );
+
+      if (nuevosIntentos >= 5) {
+        const bloqueoHasta = new Date(Date.now() + 5 * 60 * 1000);
+
+        await prisma.usuario.update({
+          where: { id: usuarioId },
+          data: {
+            intentos_fallidos_cambio_password: 5,
+            bloqueo_cambio_password_hasta: bloqueoHasta,
+          },
+        });
+
+        return res.status(423).json({
+          ok: false,
+          bloqueado: true,
+          bloqueoHasta,
+          intentosFallidos: 5,
+          msg: "Has superado los 5 intentos fallidos. Intenta más tarde.",
+        });
+      }
+
+      await prisma.usuario.update({
+        where: { id: usuarioId },
+        data: {
+          intentos_fallidos_cambio_password: nuevosIntentos,
+          bloqueo_cambio_password_hasta: null,
+        },
+      });
+
+      return res.status(401).json({
+        ok: false,
+        bloqueado: false,
+        intentosFallidos: nuevosIntentos,
+        intentosRestantes: 5 - nuevosIntentos,
+        msg: `La contraseña actual es incorrecta. Intento ${nuevosIntentos} de 5.`,
+      });
+    }
 
     await prisma.usuario.update({
       where: { id: usuarioId },
@@ -165,98 +165,98 @@ export const verificarPassword = async (req: AuthRequest, res: Response) => {
     }
 
     const usuario = await prisma.usuario.findUnique({
-  where: { id: usuarioId },
-});
-
-if (!usuario) {
-  return res.status(404).json({ ok: false, msg: "Usuario no encontrado" });
-}
-
-const ahora = new Date();
-
-if (
-  usuario.bloqueo_cambio_password_hasta &&
-  ahora >= usuario.bloqueo_cambio_password_hasta
-) {
-  await prisma.usuario.update({
-    where: { id: usuarioId },
-    data: {
-      intentos_fallidos_cambio_password: 0,
-      bloqueo_cambio_password_hasta: null,
-    },
-  });
-
-  usuario.intentos_fallidos_cambio_password = 0;
-  usuario.bloqueo_cambio_password_hasta = null;
-}
-
-if (
-  usuario.bloqueo_cambio_password_hasta &&
-  ahora < usuario.bloqueo_cambio_password_hasta
-) {
-  return res.status(423).json({
-    ok: false,
-    bloqueado: true,
-    bloqueoHasta: usuario.bloqueo_cambio_password_hasta,
-    intentosFallidos: 5,
-    msg: "Has superado los 5 intentos fallidos. Intenta más tarde.",
-  });
-}
-
-if (usuario.intentos_fallidos_cambio_password >= 5) {
-  return res.status(423).json({
-    ok: false,
-    bloqueado: true,
-    bloqueoHasta: usuario.bloqueo_cambio_password_hasta,
-    intentosFallidos: 5,
-    msg: "Has superado los 5 intentos fallidos. Intenta más tarde.",
-  });
-}
-
-const validPassword = passwordActual === usuario.password;
-
-if (!validPassword) {
-  const nuevosIntentos = Math.min(
-    usuario.intentos_fallidos_cambio_password + 1,
-    5
-  );
-
-  if (nuevosIntentos >= 5) {
-    const bloqueoHasta = new Date(Date.now() + 5 * 60 * 1000);
-
-    await prisma.usuario.update({
       where: { id: usuarioId },
-      data: {
-        intentos_fallidos_cambio_password: 5,
-        bloqueo_cambio_password_hasta: bloqueoHasta,
-      },
     });
 
-    return res.status(423).json({
-      ok: false,
-      bloqueado: true,
-      bloqueoHasta,
-      intentosFallidos: 5,
-      msg: "Has superado los 5 intentos fallidos. Intenta más tarde.",
-    });
-  }
+    if (!usuario) {
+      return res.status(404).json({ ok: false, msg: "Usuario no encontrado" });
+    }
 
-  await prisma.usuario.update({
-    where: { id: usuarioId },
-    data: {
-      intentos_fallidos_cambio_password: nuevosIntentos,
-      bloqueo_cambio_password_hasta: null,
-    },
-  });
+    const ahora = new Date();
 
-  return res.status(401).json({
-    ok: false,
-    bloqueado: false,
-    intentosFallidos: nuevosIntentos,
-    intentosRestantes: 5 - nuevosIntentos,
-    msg: `Contraseña incorrecta. Intento ${nuevosIntentos} de 5.`,
-  });
-}
+    if (
+      usuario.bloqueo_cambio_password_hasta &&
+      ahora >= usuario.bloqueo_cambio_password_hasta
+    ) {
+      await prisma.usuario.update({
+        where: { id: usuarioId },
+        data: {
+          intentos_fallidos_cambio_password: 0,
+          bloqueo_cambio_password_hasta: null,
+        },
+      });
+
+      usuario.intentos_fallidos_cambio_password = 0;
+      usuario.bloqueo_cambio_password_hasta = null;
+    }
+
+    if (
+      usuario.bloqueo_cambio_password_hasta &&
+      ahora < usuario.bloqueo_cambio_password_hasta
+    ) {
+      return res.status(423).json({
+        ok: false,
+        bloqueado: true,
+        bloqueoHasta: usuario.bloqueo_cambio_password_hasta,
+        intentosFallidos: 5,
+        msg: "Has superado los 5 intentos fallidos. Intenta más tarde.",
+      });
+    }
+
+    if (usuario.intentos_fallidos_cambio_password >= 5) {
+      return res.status(423).json({
+        ok: false,
+        bloqueado: true,
+        bloqueoHasta: usuario.bloqueo_cambio_password_hasta,
+        intentosFallidos: 5,
+        msg: "Has superado los 5 intentos fallidos. Intenta más tarde.",
+      });
+    }
+
+    const validPassword = passwordActual === usuario.password;
+
+    if (!validPassword) {
+      const nuevosIntentos = Math.min(
+        usuario.intentos_fallidos_cambio_password + 1,
+        5,
+      );
+
+      if (nuevosIntentos >= 5) {
+        const bloqueoHasta = new Date(Date.now() + 5 * 60 * 1000);
+
+        await prisma.usuario.update({
+          where: { id: usuarioId },
+          data: {
+            intentos_fallidos_cambio_password: 5,
+            bloqueo_cambio_password_hasta: bloqueoHasta,
+          },
+        });
+
+        return res.status(423).json({
+          ok: false,
+          bloqueado: true,
+          bloqueoHasta,
+          intentosFallidos: 5,
+          msg: "Has superado los 5 intentos fallidos. Intenta más tarde.",
+        });
+      }
+
+      await prisma.usuario.update({
+        where: { id: usuarioId },
+        data: {
+          intentos_fallidos_cambio_password: nuevosIntentos,
+          bloqueo_cambio_password_hasta: null,
+        },
+      });
+
+      return res.status(401).json({
+        ok: false,
+        bloqueado: false,
+        intentosFallidos: nuevosIntentos,
+        intentosRestantes: 5 - nuevosIntentos,
+        msg: `Contraseña incorrecta. Intento ${nuevosIntentos} de 5.`,
+      });
+    }
 
     await prisma.usuario.update({
       where: { id: usuarioId },
@@ -321,7 +321,7 @@ export const solicitarCambioEmail = async (req: AuthRequest, res: Response) => {
 
     if (!emailEnviado.success) {
       console.error(
-        `❌ Error al enviar email a ${emailNuevo}, pero el OTP fue guardado`
+        `❌ Error al enviar email a ${emailNuevo}, pero el OTP fue guardado`,
       );
     }
 

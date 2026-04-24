@@ -1,12 +1,19 @@
-'use client'
+"use client";
 
-import 'leaflet/dist/leaflet.css'
-import { MapContainer, TileLayer, Marker, Polygon, CircleMarker, useMapEvents } from 'react-leaflet'
-import { useState } from 'react'
-import L from 'leaflet'
+import "leaflet/dist/leaflet.css";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Polygon,
+  CircleMarker,
+  useMapEvents,
+} from "react-leaflet";
+import { useState } from "react";
+import L from "leaflet";
 
 const pinIcon = L.divIcon({
-  className: '',
+  className: "",
   html: `
     <div style="
       position: relative;
@@ -29,43 +36,43 @@ const pinIcon = L.divIcon({
     </div>
   `,
   iconSize: [20, 20],
-  iconAnchor: [10, 20]
-})
+  iconAnchor: [10, 20],
+});
 
 type Props = {
-  pinCoords: { lat: number; lng: number } | null
-  setPinCoords: (v: { lat: number; lng: number } | null) => void
+  pinCoords: { lat: number; lng: number } | null;
+  setPinCoords: (v: { lat: number; lng: number } | null) => void;
 
-  vertices: [number, number][]
-  setVertices: (v: [number, number][]) => void
+  vertices: [number, number][];
+  setVertices: (v: [number, number][]) => void;
 
-  modoPinActivo: boolean
-  modoDifuminadoActivo: boolean
-}
+  modoPinActivo: boolean;
+  modoDifuminadoActivo: boolean;
+};
 
 function EventosMapa({
   modoPinActivo,
   modoDifuminadoActivo,
   setPinCoords,
   vertices,
-  setVertices
+  setVertices,
 }: any) {
   useMapEvents({
     click(e) {
       if (modoPinActivo) {
         setPinCoords({
           lat: e.latlng.lat,
-          lng: e.latlng.lng
-        })
+          lng: e.latlng.lng,
+        });
       }
 
       if (modoDifuminadoActivo) {
-        setVertices([...vertices, [e.latlng.lat, e.latlng.lng]])
+        setVertices([...vertices, [e.latlng.lat, e.latlng.lng]]);
       }
-    }
-  })
+    },
+  });
 
-  return null
+  return null;
 }
 
 export default function MapaPinSelector({
@@ -74,14 +81,14 @@ export default function MapaPinSelector({
   vertices,
   setVertices,
   modoPinActivo,
-  modoDifuminadoActivo
+  modoDifuminadoActivo,
 }: Props) {
   return (
     <MapContainer
       center={[-17.3895, -66.1568]}
       zoom={13}
       scrollWheelZoom
-      style={{ height: '320px', width: '100%' }}
+      style={{ height: "320px", width: "100%" }}
     >
       <TileLayer
         attribution="&copy; OpenStreetMap"
@@ -96,35 +103,32 @@ export default function MapaPinSelector({
         setVertices={setVertices}
       />
 
-     {pinCoords && (
-  <Marker
-    position={[pinCoords.lat, pinCoords.lng]}
-    icon={pinIcon}
-  />
-)}
+      {pinCoords && (
+        <Marker position={[pinCoords.lat, pinCoords.lng]} icon={pinIcon} />
+      )}
 
-{vertices.length >= 3 && (
-  <Polygon
-    positions={vertices}
-    pathOptions={{
-      color: '#f97316',
-      fillOpacity: 0.3
-    }}
-  />
-)}
+      {vertices.length >= 3 && (
+        <Polygon
+          positions={vertices}
+          pathOptions={{
+            color: "#f97316",
+            fillOpacity: 0.3,
+          }}
+        />
+      )}
 
-{vertices.map((p, i) => (
-  <CircleMarker
-    key={i}
-    center={p}
-    radius={5}
-    pathOptions={{
-      color: '#f97316',
-      fillColor: '#f97316',
-      fillOpacity: 1
-    }}
-  />
-))}
+      {vertices.map((p, i) => (
+        <CircleMarker
+          key={i}
+          center={p}
+          radius={5}
+          pathOptions={{
+            color: "#f97316",
+            fillColor: "#f97316",
+            fillOpacity: 1,
+          }}
+        />
+      ))}
     </MapContainer>
-  )
+  );
 }

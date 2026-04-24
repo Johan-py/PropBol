@@ -1,30 +1,36 @@
+"use client";
 
-'use client'
-
-import { useMemo, useState } from 'react'
+import { useMemo, useState } from "react";
 
 interface Props {
   imagenes: Array<{
-    id: number
-    url: string
-    tipo: string
-    pesoMb: number | null
-  }>
-  titulo: string
+    id: number;
+    url: string;
+    tipo: string;
+    pesoMb: number | null;
+  }>;
+  titulo: string;
 }
 
 export default function GaleriaPropiedad({ imagenes, titulo }: Props) {
   const imagenesValidas = useMemo(
-    () => imagenes.filter((img) => img.tipo === 'IMAGEN'),
-    [imagenes]
-  )
+    () => imagenes.filter((img) => img.tipo === "IMAGEN"),
+    [imagenes],
+  );
 
   const lista =
     imagenesValidas.length > 0
       ? imagenesValidas
-      : [{ id: 0, url: '/placeholder-house.jpg', tipo: 'IMAGEN', pesoMb: null }]
+      : [
+          {
+            id: 0,
+            url: "/placeholder-house.jpg",
+            tipo: "IMAGEN",
+            pesoMb: null,
+          },
+        ];
 
-  const [imagenPrincipal, setImagenPrincipal] = useState(lista[0].url)
+  const [imagenPrincipal, setImagenPrincipal] = useState(lista[0].url);
 
   return (
     <section className="grid gap-3 lg:grid-cols-[1.65fr_1fr]">
@@ -38,7 +44,7 @@ export default function GaleriaPropiedad({ imagenes, titulo }: Props) {
 
       <div className="grid grid-cols-2 gap-3">
         {lista.slice(0, 4).map((img, index) => {
-          const esUltima = index === 3 && lista.length >= 4
+          const esUltima = index === 3 && lista.length >= 4;
 
           return (
             <button
@@ -59,9 +65,9 @@ export default function GaleriaPropiedad({ imagenes, titulo }: Props) {
                 </div>
               )}
             </button>
-          )
+          );
         })}
       </div>
     </section>
-  )
+  );
 }

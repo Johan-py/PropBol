@@ -5,7 +5,10 @@ import {
   validarPublicacionesFree,
 } from "../controllers/publicacionesController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
-import { reglasValidacionHU5, manejarErroresPublicacion } from "../middleware/erroresPublicacion.js";
+import {
+  reglasValidacionHU5,
+  manejarErroresPublicacion,
+} from "../middleware/erroresPublicacion.js";
 
 const router = Router();
 
@@ -13,9 +16,9 @@ const router = Router();
 router.post(
   "/publicaciones",
   authMiddleware,
-  reglasValidacionHU5,       // validaciones HU‑5 v2
+  reglasValidacionHU5, // validaciones HU‑5 v2
   manejarErroresPublicacion, // agrupación de errores HU‑5 v2
-  crearPublicacion           // flujo HU‑1 original
+  crearPublicacion, // flujo HU‑1 original
 );
 
 // HU‑1: Listar publicaciones

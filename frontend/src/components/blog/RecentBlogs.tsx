@@ -1,6 +1,6 @@
-import React from 'react'
-import { MOCK_USER_BLOGS } from '@/lib/mock/blogs.mock'
-import UserBlogCard from './UserBlogCard'
+import React from "react";
+import { MOCK_USER_BLOGS } from "@/lib/mock/blogs.mock";
+import UserBlogCard from "./UserBlogCard";
 
 const RecentBlogs = () => {
   // se muestran los blogs que tenemos en el mock
@@ -13,7 +13,7 @@ const RecentBlogs = () => {
         ))}
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default RecentBlogs
+export default RecentBlogs;

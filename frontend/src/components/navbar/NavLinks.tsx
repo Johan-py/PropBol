@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
@@ -10,7 +10,10 @@ export default function NavLinks() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setOpen(false);
       }
     };
@@ -18,11 +21,11 @@ export default function NavLinks() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const linkStyle = "hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition";
+  const linkStyle =
+    "hover:text-[#E68B25] hover:bg-[#E68B25]/10 px-3 py-2 rounded-md transition";
 
   return (
     <div className="hidden md:flex items-center gap-6 text-[15px] font-medium text-gray-700">
-
       {/* HU-05: Inicio */}
       <Link id="tour-inicio" href="/" className={linkStyle}>
         Inicio
@@ -32,15 +35,23 @@ export default function NavLinks() {
       <div id="tour-propiedades" className="relative" ref={dropdownRef}>
         <button
           onClick={() => setOpen(!open)}
-          className={`flex items-center gap-1 px-3 py-2 rounded-md transition ${open ? 'text-[#E68B25] bg-[#E68B25]/10' : 'hover:text-[#E68B25] hover:bg-[#E68B25]/10'}`}
+          className={`flex items-center gap-1 px-3 py-2 rounded-md transition ${open ? "text-[#E68B25] bg-[#E68B25]/10" : "hover:text-[#E68B25] hover:bg-[#E68B25]/10"}`}
         >
           Propiedades
-          <ChevronDown className={`h-4 w-4 transition-transform ${open ? 'rotate-180' : ''}`} />
+          <ChevronDown
+            className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`}
+          />
         </button>
 
         {open && (
           <div className="absolute top-full left-0 mt-2 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-50 py-2">
-            {["Casas", "Departamentos", "Cuartos", "Terrenos", "Espacios de cementerios"].map((item) => (
+            {[
+              "Casas",
+              "Departamentos",
+              "Cuartos",
+              "Terrenos",
+              "Espacios de cementerios",
+            ].map((item) => (
               <Link
                 key={item}
                 href="/propiedades"
@@ -82,7 +93,6 @@ export default function NavLinks() {
       >
         Ayuda
       </button>
-
     </div>
   );
 }

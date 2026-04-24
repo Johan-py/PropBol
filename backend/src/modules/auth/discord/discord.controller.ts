@@ -82,11 +82,17 @@ export const startDiscordLoginController = (_req: Request, res: Response) => {
   return res.redirect(buildDiscordAuthUrl("login"));
 };
 
-export const startDiscordRegisterController = (_req: Request, res: Response) => {
+export const startDiscordRegisterController = (
+  _req: Request,
+  res: Response,
+) => {
   return res.redirect(buildDiscordAuthUrl("register"));
 };
 
-export const discordCallbackController = async (req: Request, res: Response) => {
+export const discordCallbackController = async (
+  req: Request,
+  res: Response,
+) => {
   const code = typeof req.query.code === "string" ? req.query.code : "";
   const error = typeof req.query.error === "string" ? req.query.error : "";
   const state =

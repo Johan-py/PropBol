@@ -1,5 +1,5 @@
-'use client';
-import React, { useState } from 'react';
+"use client";
+import React, { useState } from "react";
 
 interface UserPreferencesModalProps {
   isOpen: boolean;
@@ -7,30 +7,34 @@ interface UserPreferencesModalProps {
   onSuccess: () => void;
 }
 
-export default function UserPreferencesModal({ isOpen, onClose, onSuccess }: UserPreferencesModalProps) {
-  const [genero, setGenero] = useState('');
-  const [fechaNacimiento, setFechaNacimiento] = useState('');
+export default function UserPreferencesModal({
+  isOpen,
+  onClose,
+  onSuccess,
+}: UserPreferencesModalProps) {
+  const [genero, setGenero] = useState("");
+  const [fechaNacimiento, setFechaNacimiento] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState("");
 
   if (!isOpen) return null;
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMsg('');
+    setErrorMsg("");
     setIsLoading(true);
 
     // Validación: ambos campos son requeridos
     if (!genero) {
-      setErrorMsg('Por favor selecciona tu género');
+      setErrorMsg("Por favor selecciona tu género");
       setIsLoading(false);
       return;
     }
 
     if (!fechaNacimiento) {
-      setErrorMsg('Por favor ingresa tu fecha de nacimiento');
+      setErrorMsg("Por favor ingresa tu fecha de nacimiento");
       setIsLoading(false);
       return;
     }
@@ -41,35 +45,40 @@ export default function UserPreferencesModal({ isOpen, onClose, onSuccess }: Use
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
 
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
       age--;
     }
 
     if (age < 18) {
-      setErrorMsg('Debes ser mayor de 18 años para guardar tu perfil.');
+      setErrorMsg("Debes ser mayor de 18 años para guardar tu perfil.");
       setIsLoading(false);
       return;
     }
 
     // Envío al endpoint correcto: /api/telemetria/aceptar
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
 
       if (!token) {
-        setErrorMsg('No hay sesión activa. Por favor inicia sesión nuevamente.');
+        setErrorMsg(
+          "No hay sesión activa. Por favor inicia sesión nuevamente.",
+        );
         setIsLoading(false);
         return;
       }
 
       const response = await fetch(`${API_URL}/api/telemetria/aceptar`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           genero: genero,
-          fecha_nacimiento: fechaNacimiento
+          fecha_nacimiento: fechaNacimiento,
         }),
       });
 
@@ -77,20 +86,22 @@ export default function UserPreferencesModal({ isOpen, onClose, onSuccess }: Use
 
       if (response.ok && data.success) {
         // Disparar evento para actualizar otros componentes
-        window.dispatchEvent(new Event('profileUpdated'));
-        window.dispatchEvent(new Event('storage'));
+        window.dispatchEvent(new Event("profileUpdated"));
+        window.dispatchEvent(new Event("storage"));
 
         // Guardar en localStorage que ya vio/aceptó la telemetría
-        localStorage.setItem('has_seen_telemetry', 'true');
-        localStorage.setItem('telemetria_compartida', 'true');
+        localStorage.setItem("has_seen_telemetry", "true");
+        localStorage.setItem("telemetria_compartida", "true");
 
         onSuccess();
       } else {
-        setErrorMsg(data.message || 'Error al guardar los datos en el servidor.');
+        setErrorMsg(
+          data.message || "Error al guardar los datos en el servidor.",
+        );
       }
     } catch (error) {
-      console.error('Error de red:', error);
-      setErrorMsg('No se pudo conectar con el servidor. Verifica tu conexión.');
+      console.error("Error de red:", error);
+      setErrorMsg("No se pudo conectar con el servidor. Verifica tu conexión.");
     } finally {
       setIsLoading(false);
     }
@@ -99,17 +110,16 @@ export default function UserPreferencesModal({ isOpen, onClose, onSuccess }: Use
   return (
     <div className="fixed inset-0 z-[10000] flex items-center justify-center bg-stone-900/40 backdrop-blur-sm p-4">
       <div className="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden relative border border-stone-100 animate-in zoom-in duration-300">
-
         <div className="p-8">
           <h2 className="text-2xl font-bold text-[#292524] mb-2 text-center">
             Completa tu perfil
           </h2>
           <p className="text-[#78716c] mb-6 text-sm text-center">
-            Estos datos nos ayudan a personalizar tu experiencia en la plataforma.
+            Estos datos nos ayudan a personalizar tu experiencia en la
+            plataforma.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-
             {/* ALERTA VISUAL DE ERRORES */}
             {errorMsg && (
               <div className="p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-lg flex items-start gap-2 animate-in fade-in slide-in-from-top-2">
@@ -128,11 +138,13 @@ export default function UserPreferencesModal({ isOpen, onClose, onSuccess }: Use
                 value={genero}
                 onChange={(e) => {
                   setGenero(e.target.value);
-                  setErrorMsg('');
+                  setErrorMsg("");
                 }}
                 className="w-full p-3 rounded-lg border-2 border-[#fcd34d] bg-[#fffbeb] text-stone-800 focus:outline-none focus:border-[#D97706] focus:ring-1 focus:ring-[#D97706] transition-colors"
               >
-                <option value="" disabled>Selecciona tu género</option>
+                <option value="" disabled>
+                  Selecciona tu género
+                </option>
                 <option value="MASCULINO">Masculino</option>
                 <option value="FEMENINO">Femenino</option>
                 <option value="OTRO">Otro</option>
@@ -151,12 +163,12 @@ export default function UserPreferencesModal({ isOpen, onClose, onSuccess }: Use
                 max={(() => {
                   const date = new Date();
                   date.setFullYear(date.getFullYear() - 18);
-                  return date.toISOString().split('T')[0];
+                  return date.toISOString().split("T")[0];
                 })()}
                 value={fechaNacimiento}
                 onChange={(e) => {
                   setFechaNacimiento(e.target.value);
-                  setErrorMsg('');
+                  setErrorMsg("");
                 }}
                 className="w-full p-3 rounded-lg border-2 border-[#fcd34d] bg-[#fffbeb] text-stone-800 focus:outline-none focus:border-[#D97706] focus:ring-1 focus:ring-[#D97706] transition-colors"
               />
@@ -185,7 +197,7 @@ export default function UserPreferencesModal({ isOpen, onClose, onSuccess }: Use
                     Guardando...
                   </span>
                 ) : (
-                  'Guardar Perfil'
+                  "Guardar Perfil"
                 )}
               </button>
             </div>

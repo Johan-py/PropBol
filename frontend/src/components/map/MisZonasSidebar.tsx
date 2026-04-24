@@ -1,35 +1,43 @@
-'use client'
+"use client";
 
-import { ChevronRight, Plus, Pencil, Trash2, Check, X, Map as MapIcon } from 'lucide-react'
+import {
+  ChevronRight,
+  Plus,
+  Pencil,
+  Trash2,
+  Check,
+  X,
+  Map as MapIcon,
+} from "lucide-react";
 
 export interface ZonaPersonalizada {
-  id: string
-  usuarioId?: number
-  nombre: string
+  id: string;
+  usuarioId?: number;
+  nombre: string;
 }
 
 interface MisZonasSidebarProps {
-  isOpen: boolean
-  onClose: () => void
-  isAuthenticated: boolean
-  zonas: ZonaPersonalizada[]
-  editingZoneId?: string | null
-  editingZoneName?: string
-  isSavingEditZone?: boolean
-  onEditingZoneNameChange?: (name: string) => void
-  onConfirmEditZone?: () => void
-  onCancelEditZone?: () => void
-  draftZoneName?: string
-  isDraftZoneVisible?: boolean
-  isSavingDraftZone?: boolean
-  onDraftZoneNameChange?: (name: string) => void
-  onConfirmDraftZone?: () => void
-  onCancelDraftZone?: () => void
-  onAddZone: () => void
-  onEditZone: (id: string) => void
-  onDeleteZone: (id: string) => void
-  currentUserId?: number
-  onZoneSelect?: (id: number) => void
+  isOpen: boolean;
+  onClose: () => void;
+  isAuthenticated: boolean;
+  zonas: ZonaPersonalizada[];
+  editingZoneId?: string | null;
+  editingZoneName?: string;
+  isSavingEditZone?: boolean;
+  onEditingZoneNameChange?: (name: string) => void;
+  onConfirmEditZone?: () => void;
+  onCancelEditZone?: () => void;
+  draftZoneName?: string;
+  isDraftZoneVisible?: boolean;
+  isSavingDraftZone?: boolean;
+  onDraftZoneNameChange?: (name: string) => void;
+  onConfirmDraftZone?: () => void;
+  onCancelDraftZone?: () => void;
+  onAddZone: () => void;
+  onEditZone: (id: string) => void;
+  onDeleteZone: (id: string) => void;
+  currentUserId?: number;
+  onZoneSelect?: (id: number) => void;
 }
 
 // Asegúrate de que tenga "export default function"
@@ -39,12 +47,12 @@ export default function MisZonasSidebar({
   isAuthenticated,
   zonas,
   editingZoneId = null,
-  editingZoneName = '',
+  editingZoneName = "",
   isSavingEditZone = false,
   onEditingZoneNameChange,
   onConfirmEditZone,
   onCancelEditZone,
-  draftZoneName = '',
+  draftZoneName = "",
   isDraftZoneVisible = false,
   isSavingDraftZone = false,
   onDraftZoneNameChange,
@@ -59,7 +67,7 @@ export default function MisZonasSidebar({
   return (
     <>
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/20 z-[1050] md:hidden transition-opacity"
           onClick={onClose}
         />
@@ -67,7 +75,7 @@ export default function MisZonasSidebar({
 
       <aside
         className={`absolute top-0 right-0 h-full w-full sm:w-80 bg-white shadow-2xl z-[1100] transform transition-transform duration-300 ease-in-out flex flex-col border-l border-stone-200 ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
+          isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="flex items-center justify-between px-4 pt-4 pb-2">
@@ -82,7 +90,6 @@ export default function MisZonasSidebar({
 
         {/* Contenido principal condicionado por la autenticación */}
         <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
-          
           {/* El botón ahora siempre es visible */}
           <button
             onClick={onAddZone}
@@ -96,7 +103,8 @@ export default function MisZonasSidebar({
             <div className="flex flex-col items-center justify-center h-full text-center text-stone-500 gap-3 mt-8">
               <MapIcon className="w-12 h-12 text-stone-300" />
               <p className="text-sm">
-                Crea una cuenta para guardar tus zonas de búsqueda personalizadas.
+                Crea una cuenta para guardar tus zonas de búsqueda
+                personalizadas.
               </p>
             </div>
           ) : (
@@ -108,7 +116,7 @@ export default function MisZonasSidebar({
                 </div>
               ) : (
                 <ul className="flex flex-col gap-2 mt-2">
-                  {zonas.map((zona) => (
+                  {zonas.map((zona) =>
                     editingZoneId === zona.id ? (
                       <li
                         key={zona.id}
@@ -116,7 +124,9 @@ export default function MisZonasSidebar({
                       >
                         <input
                           value={editingZoneName}
-                          onChange={(event) => onEditingZoneNameChange?.(event.target.value)}
+                          onChange={(event) =>
+                            onEditingZoneNameChange?.(event.target.value)
+                          }
                           placeholder="Nueva zona"
                           maxLength={100}
                           className="min-w-0 flex-1 text-sm text-stone-700 placeholder:text-stone-400 placeholder:italic bg-transparent outline-none"
@@ -151,8 +161,8 @@ export default function MisZonasSidebar({
                         <div className="flex items-center gap-1 opacity-100">
                           <button
                             onClick={(event) => {
-                              event.stopPropagation()
-                              onEditZone(zona.id)
+                              event.stopPropagation();
+                              onEditZone(zona.id);
                             }}
                             className="p-1.5 text-stone-400 hover:text-orange-500 hover:bg-orange-50 rounded-md transition-colors"
                             title="Editar zona"
@@ -161,8 +171,8 @@ export default function MisZonasSidebar({
                           </button>
                           <button
                             onClick={(event) => {
-                              event.stopPropagation()
-                              onDeleteZone(zona.id)
+                              event.stopPropagation();
+                              onDeleteZone(zona.id);
                             }}
                             className="p-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
                             title="Eliminar zona"
@@ -171,14 +181,16 @@ export default function MisZonasSidebar({
                           </button>
                         </div>
                       </li>
-                    )
-                  ))}
+                    ),
+                  )}
 
                   {isDraftZoneVisible && (
                     <li className="flex items-center gap-2 p-2.5 bg-stone-50 border border-stone-200 rounded-xl shadow-sm">
                       <input
                         value={draftZoneName}
-                        onChange={(event) => onDraftZoneNameChange?.(event.target.value)}
+                        onChange={(event) =>
+                          onDraftZoneNameChange?.(event.target.value)
+                        }
                         placeholder="Nueva zona"
                         maxLength={100}
                         className="min-w-0 flex-1 text-sm text-stone-700 placeholder:text-stone-400 placeholder:italic bg-transparent outline-none"
@@ -209,5 +221,5 @@ export default function MisZonasSidebar({
         </div>
       </aside>
     </>
-  )
+  );
 }

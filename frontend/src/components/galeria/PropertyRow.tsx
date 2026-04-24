@@ -1,23 +1,23 @@
-'use client'
-import ContactButton from './ContactButton' // <-- Importas tu componente
-import Image from 'next/image'
-import { useState } from 'react'
-import { MapPin } from 'lucide-react'
+"use client";
+import ContactButton from "./ContactButton"; // <-- Importas tu componente
+import Image from "next/image";
+import { useState } from "react";
+import { MapPin } from "lucide-react";
 
 export default function PropertyRow({
   title,
   price,
   size,
   contactType,
-  image
+  image,
 }: {
-  title: string
-  price: string
-  size: string
-  contactType: string
-  image: string
+  title: string;
+  price: string;
+  size: string;
+  contactType: string;
+  image: string;
 }) {
-  const [isHovered, setIsHovered] = useState(false)
+  const [isHovered, setIsHovered] = useState(false);
   return (
     <div
       className="relative grid grid-cols-[40px_70px_minmax(0,1fr)_50px] gap-2 px-3 py-2 items-center cursor-pointer transition-colors hover:bg-stone-50 rounded-lg"
@@ -43,7 +43,7 @@ export default function PropertyRow({
       {/* PRECIO */}
       <span
         className={`font-semibold transition-all duration-300 ${
-          isHovered ? 'text-sm text-[#ea580c]' : 'text-[11px] text-gray-700'
+          isHovered ? "text-sm text-[#ea580c]" : "text-[11px] text-gray-700"
         }`}
       >
         {price}
@@ -51,7 +51,9 @@ export default function PropertyRow({
 
       {/* DETALLE */}
       <div className="flex flex-col overflow-hidden min-w-0">
-        <span className="text-[11px] font-medium text-gray-800 truncate">{title}</span>
+        <span className="text-[11px] font-medium text-gray-800 truncate">
+          {title}
+        </span>
         <span className="text-[10px] text-gray-500">{size}</span>
       </div>
 
@@ -60,5 +62,5 @@ export default function PropertyRow({
         <ContactButton type={contactType} variant="table" />
       </div>
     </div>
-  )
+  );
 }

@@ -23,23 +23,24 @@ export default function BlogsPage() {
     loadMore,
   } = useBlogFeed();
 
-const [myBlogs, setMyBlogs] = useState<Blog[]>([]);
+  const [myBlogs, setMyBlogs] = useState<Blog[]>([]);
 
-useEffect(() => {
-  const token = localStorage.getItem("token");
+  useEffect(() => {
+    const token = localStorage.getItem("token");
 
-  if (!token) return;
+    if (!token) return;
 
-  fetch("http://localhost:5000/api/blogs/mis-blogs", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then((res) => res.json())
-    .then((data) => {setMyBlogs(data.data ?? data);
+    fetch("http://localhost:5000/api/blogs/mis-blogs", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     })
-    .catch(console.error);
-}, []);
+      .then((res) => res.json())
+      .then((data) => {
+        setMyBlogs(data.data ?? data);
+      })
+      .catch(console.error);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#fbf6ef_0%,#f5efe7_45%,#ffffff_100%)]">

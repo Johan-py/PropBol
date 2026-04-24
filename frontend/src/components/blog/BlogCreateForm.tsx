@@ -36,7 +36,6 @@ const AUTOSAVE_STORAGE_PREFIX = "propbol_blog_form";
 const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
-
 type BlogCreateFormProps = {
   blogId?: number;
   initialValues?: {
@@ -75,7 +74,9 @@ export default function BlogCreateForm({
 
   const [titulo, setTitulo] = useState(initialValues?.titulo ?? "");
   const [imagen, setImagen] = useState(initialValues?.imagen ?? "");
-  const [categoriaId, setCategoriaId] = useState(initialValues?.categoriaId ?? "");
+  const [categoriaId, setCategoriaId] = useState(
+    initialValues?.categoriaId ?? "",
+  );
   const [contenido, setContenido] = useState(initialValues?.contenido ?? "");
 
   const autosaveKey = useMemo(
@@ -156,7 +157,9 @@ export default function BlogCreateForm({
       setImagen(draft.imagen ?? initialValues?.imagen ?? "");
       setCategoriaId(draft.categoriaId ?? initialValues?.categoriaId ?? "");
       setContenido(draft.contenido ?? initialValues?.contenido ?? "");
-      setAutosaveMessage("Recuperamos un borrador local para que continúes editando.");
+      setAutosaveMessage(
+        "Recuperamos un borrador local para que continúes editando.",
+      );
     } catch {
       window.localStorage.removeItem(autosaveKey);
     }
@@ -356,7 +359,9 @@ export default function BlogCreateForm({
               ) : (
                 <>
                   Comparte tu conocimiento <br />
-                  <span className="italic text-[#B45309]">con la comunidad.</span>
+                  <span className="italic text-[#B45309]">
+                    con la comunidad.
+                  </span>
                 </>
               )}
             </h1>
@@ -412,7 +417,9 @@ export default function BlogCreateForm({
                 )}
               </label>
               {fieldErrors.imagen && (
-                <p className="px-2 text-sm font-medium text-red-500">{fieldErrors.imagen}</p>
+                <p className="px-2 text-sm font-medium text-red-500">
+                  {fieldErrors.imagen}
+                </p>
               )}
             </div>
 
@@ -429,7 +436,9 @@ export default function BlogCreateForm({
                 className="w-full rounded-[20px] bg-[#F5F5F4] px-6 py-5 text-xl font-bold text-[#1C1917] placeholder:text-[#D6D3D1] outline-none transition focus:bg-white focus:ring-2 focus:ring-[#F59E0B]/20"
               />
               {fieldErrors.titulo && (
-                <p className="px-2 text-sm font-medium text-red-500">{fieldErrors.titulo}</p>
+                <p className="px-2 text-sm font-medium text-red-500">
+                  {fieldErrors.titulo}
+                </p>
               )}
             </div>
 
@@ -446,7 +455,9 @@ export default function BlogCreateForm({
                   className="w-full appearance-none rounded-2xl bg-[#F5F5F4] px-6 py-4 text-sm font-semibold text-[#44403C] outline-none transition focus:bg-white focus:ring-2 focus:ring-[#F59E0B]/20 disabled:opacity-50"
                 >
                   <option value="">
-                    {isLoadingCategories ? "Cargando..." : "Selecciona una categoría"}
+                    {isLoadingCategories
+                      ? "Cargando..."
+                      : "Selecciona una categoría"}
                   </option>
                   {categories.map((category) => (
                     <option key={category.id} value={String(category.id)}>
@@ -455,13 +466,25 @@ export default function BlogCreateForm({
                   ))}
                 </select>
                 <div className="pointer-events-none absolute right-6 top-1/2 -translate-y-1/2">
-                  <svg className="h-4 w-4 text-[#A8A29E]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  <svg
+                    className="h-4 w-4 text-[#A8A29E]"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </div>
               </div>
               {fieldErrors.categoria_id && (
-                <p className="px-2 text-sm font-medium text-red-500">{fieldErrors.categoria_id}</p>
+                <p className="px-2 text-sm font-medium text-red-500">
+                  {fieldErrors.categoria_id}
+                </p>
               )}
             </div>
 
@@ -474,12 +497,37 @@ export default function BlogCreateForm({
               <div className="rounded-[32px] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 overflow-hidden">
                 {/* Visual Toolbar */}
                 <div className="flex items-center gap-2 border-b border-[#F5F5F4] px-6 py-4">
-                  <button type="button" className="p-2 text-[#78716C] hover:bg-[#F5F5F4] rounded-lg transition"><Bold className="h-4 w-4" /></button>
-                  <button type="button" className="p-2 text-[#78716C] hover:bg-[#F5F5F4] rounded-lg transition"><Italic className="h-4 w-4" /></button>
-                  <button type="button" className="p-2 text-[#78716C] hover:bg-[#F5F5F4] rounded-lg transition"><List className="h-4 w-4" /></button>
-                  <button type="button" className="p-2 text-[#78716C] hover:bg-[#F5F5F4] rounded-lg transition"><Quote className="h-4 w-4" /></button>
+                  <button
+                    type="button"
+                    className="p-2 text-[#78716C] hover:bg-[#F5F5F4] rounded-lg transition"
+                  >
+                    <Bold className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    className="p-2 text-[#78716C] hover:bg-[#F5F5F4] rounded-lg transition"
+                  >
+                    <Italic className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    className="p-2 text-[#78716C] hover:bg-[#F5F5F4] rounded-lg transition"
+                  >
+                    <List className="h-4 w-4" />
+                  </button>
+                  <button
+                    type="button"
+                    className="p-2 text-[#78716C] hover:bg-[#F5F5F4] rounded-lg transition"
+                  >
+                    <Quote className="h-4 w-4" />
+                  </button>
                   <div className="w-px h-6 bg-[#F5F5F4] mx-2" />
-                  <button type="button" className="p-2 text-[#78716C] hover:bg-[#F5F5F4] rounded-lg transition"><Link className="h-4 w-4" /></button>
+                  <button
+                    type="button"
+                    className="p-2 text-[#78716C] hover:bg-[#F5F5F4] rounded-lg transition"
+                  >
+                    <Link className="h-4 w-4" />
+                  </button>
                 </div>
 
                 <textarea
@@ -491,15 +539,33 @@ export default function BlogCreateForm({
                 />
               </div>
               {fieldErrors.contenido && (
-                <p className="px-2 text-sm font-medium text-red-500">{fieldErrors.contenido}</p>
+                <p className="px-2 text-sm font-medium text-red-500">
+                  {fieldErrors.contenido}
+                </p>
               )}
             </div>
 
             {/* Feedback Messages */}
-            {loadError && <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600 font-medium">{loadError}</p>}
-            {autosaveMessage && <p className="rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-700 font-medium">{autosaveMessage}</p>}
-            {submitError && <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600 font-medium">{submitError}</p>}
-            {successMessage && <p className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 font-medium">{successMessage}</p>}
+            {loadError && (
+              <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600 font-medium">
+                {loadError}
+              </p>
+            )}
+            {autosaveMessage && (
+              <p className="rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-700 font-medium">
+                {autosaveMessage}
+              </p>
+            )}
+            {submitError && (
+              <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600 font-medium">
+                {submitError}
+              </p>
+            )}
+            {successMessage && (
+              <p className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 font-medium">
+                {successMessage}
+              </p>
+            )}
           </form>
         </div>
 
@@ -566,7 +632,9 @@ export default function BlogCreateForm({
                 },
               ].map((item) => (
                 <div key={item.num} className="flex gap-4">
-                  <span className="text-xl font-black text-[#B45309] leading-none">{item.num}</span>
+                  <span className="text-xl font-black text-[#B45309] leading-none">
+                    {item.num}
+                  </span>
                   <p className="text-xs font-medium leading-relaxed text-[#57534E]">
                     {item.text}
                   </p>

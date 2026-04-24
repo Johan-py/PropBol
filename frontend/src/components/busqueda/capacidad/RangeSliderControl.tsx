@@ -1,16 +1,16 @@
-'use client'
+"use client";
 
-import { Bed, Bath } from 'lucide-react'
+import { Bed, Bath } from "lucide-react";
 
 interface RangeSliderControlProps {
-  label: 'dormitorios' | 'banos'  // ← tipo específico
-  minValue: number
-  maxValue: number
-  absoluteMin: number
-  absoluteMax: number
-  onMinChange: (value: number) => void
-  onMaxChange: (value: number) => void
-  unit?: string
+  label: "dormitorios" | "banos"; // ← tipo específico
+  minValue: number;
+  maxValue: number;
+  absoluteMin: number;
+  absoluteMax: number;
+  onMinChange: (value: number) => void;
+  onMaxChange: (value: number) => void;
+  unit?: string;
 }
 
 export function RangeSliderControl({
@@ -21,11 +21,11 @@ export function RangeSliderControl({
   absoluteMax,
   onMinChange,
   onMaxChange,
-  unit = '+'
+  unit = "+",
 }: RangeSliderControlProps) {
-  const Icon = label === 'dormitorios' ? Bed : Bath
-  const title = label === 'dormitorios' ? 'DORMITORIOS' : 'BAÑOS'
-  
+  const Icon = label === "dormitorios" ? Bed : Bath;
+  const title = label === "dormitorios" ? "DORMITORIOS" : "BAÑOS";
+
   return (
     <div className="space-y-3">
       <div className="flex justify-between items-center">
@@ -69,5 +69,5 @@ export function RangeSliderControl({
         </span>
       </div>
     </div>
-  )
+  );
 }

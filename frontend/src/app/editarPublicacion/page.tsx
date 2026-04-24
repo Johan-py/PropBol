@@ -25,7 +25,7 @@ const normalizeProperty = (property: any) => ({
 export default function Home() {
   const [globalError, setGlobalError] = useState<string | null>(null);
   const [properties, setProperties] = useState(
-    initialProperties.map((p: any) => normalizeProperty(p))
+    initialProperties.map((p: any) => normalizeProperty(p)),
   );
   const [editingProperty, setEditingProperty] = useState<any>(null);
   const [formData, setFormData] = useState<any>(null);
@@ -35,7 +35,9 @@ export default function Home() {
   const [pendingEdit, setPendingEdit] = useState<any>(null);
   const [successMessage, setSuccessMessage] = useState("");
 
-  const userProperties = properties.filter((p: any) => p.ownerId === currentUser.id);
+  const userProperties = properties.filter(
+    (p: any) => p.ownerId === currentUser.id,
+  );
 
   const handleEditClick = (property: any) => {
     setPendingEdit(property);
@@ -98,7 +100,7 @@ export default function Home() {
       const updatedProperty = normalizeProperty(formData);
 
       setProperties((prev: any[]) =>
-        prev.map((p) => (p.id === formData.id ? updatedProperty : p))
+        prev.map((p) => (p.id === formData.id ? updatedProperty : p)),
       );
 
       setSuccessMessage("Publicación actualizada correctamente");
@@ -116,7 +118,9 @@ export default function Home() {
   };
 
   const handleDelete = (id: any) => {
-    const confirmDelete = window.confirm("¿Estás seguro de eliminar esta publicación?");
+    const confirmDelete = window.confirm(
+      "¿Estás seguro de eliminar esta publicación?",
+    );
     if (!confirmDelete) return;
 
     setProperties((prev: any[]) => prev.filter((p) => p.id !== id));
@@ -169,7 +173,9 @@ export default function Home() {
       {showConfirmEdit && (
         <Modal onClose={() => setShowConfirmEdit(false)}>
           <div className="p-2">
-            <h2 className="text-xl font-bold mb-2 text-gray-800">Editar publicación</h2>
+            <h2 className="text-xl font-bold mb-2 text-gray-800">
+              Editar publicación
+            </h2>
             <p className="text-gray-500 mb-6">
               ¿Quieres abrir el formulario de edición para esta propiedad?
             </p>
@@ -223,7 +229,9 @@ export default function Home() {
                 />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold mb-3 text-gray-800">Confirmar cambios</h2>
+            <h2 className="text-2xl font-bold mb-3 text-gray-800">
+              Confirmar cambios
+            </h2>
             <p className="text-gray-500 mb-8">
               ¿Desea guardar los cambios realizados en la publicación?
             </p>
@@ -247,5 +255,3 @@ export default function Home() {
     </div>
   );
 }
-
-

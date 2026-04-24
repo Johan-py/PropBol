@@ -1,40 +1,43 @@
-'use client'
+"use client";
 
-import { Newspaper, Clock } from 'lucide-react'
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { Newspaper, Clock } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 
 export default function AdminDashboard() {
-  const [pendingCount, setPendingCount] = useState<number | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [pendingCount, setPendingCount] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchPendingCount = async () => {
       try {
-        const token = localStorage.getItem('token')
-        if (!token) return
+        const token = localStorage.getItem("token");
+        if (!token) return;
 
-        const response = await fetch(`${API_URL}/api/blogs/admin?estado=PENDIENTE&limit=1`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
+        const response = await fetch(
+          `${API_URL}/api/blogs/admin?estado=PENDIENTE&limit=1`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
 
         if (response.ok) {
-          const data = await response.json()
-          setPendingCount(data.total)
+          const data = await response.json();
+          setPendingCount(data.total);
         }
       } catch (error) {
-        console.error('Error fetching pending blogs count:', error)
+        console.error("Error fetching pending blogs count:", error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    fetchPendingCount()
-  }, [])
+    fetchPendingCount();
+  }, []);
 
   return (
     <div className="min-h-screen bg-stone-50 py-12">
@@ -54,7 +57,9 @@ export default function AdminDashboard() {
           <section className="space-y-6">
             <div className="flex items-center gap-2 border-b border-stone-200 pb-2">
               <Clock className="h-5 w-5 text-amber-600" />
-              <h2 className="text-xl font-bold font-montserrat text-stone-900">Pendientes</h2>
+              <h2 className="text-xl font-bold font-montserrat text-stone-900">
+                Pendientes
+              </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -88,5 +93,5 @@ export default function AdminDashboard() {
         </div>
       </div>
     </div>
-  )
+  );
 }

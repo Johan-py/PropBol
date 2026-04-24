@@ -1,19 +1,19 @@
-import { prisma } from '../../lib/prisma.client.js'
+import { prisma } from "../../lib/prisma.client.js";
 
 export class TelemetriaRepository {
   async guardarBusqueda(usuarioId: number | null, ip: string, metaData: any) {
-    const treintaMinutosAtras = new Date(Date.now() - 30 * 60 * 1000)
+    const treintaMinutosAtras = new Date(Date.now() - 30 * 60 * 1000);
 
     const visitorExistente = await prisma.visitor.findFirst({
       where: {
         ip: ip,
-        fecha_visita: { gte: treintaMinutosAtras }
-      }
-    })
+        fecha_visita: { gte: treintaMinutosAtras },
+      },
+    });
 
     if (visitorExistente) {
-      const metaDataExistente = (visitorExistente.meta_data as any) || {}
-      const busquedasAnteriores = metaDataExistente.busquedas || []
+      const metaDataExistente = (visitorExistente.meta_data as any) || {};
+      const busquedasAnteriores = metaDataExistente.busquedas || [];
 
       return await prisma.visitor.update({
         where: { id: visitorExistente.id },
@@ -21,10 +21,10 @@ export class TelemetriaRepository {
           meta_data: {
             ...metaDataExistente,
             busquedas: [...busquedasAnteriores, metaData],
-            ultimaBusqueda: new Date().toISOString()
-          }
-        }
-      })
+            ultimaBusqueda: new Date().toISOString(),
+          },
+        },
+      });
     } else {
       return await prisma.visitor.create({
         data: {
@@ -32,10 +32,10 @@ export class TelemetriaRepository {
           usuario_id: usuarioId,
           meta_data: {
             busquedas: [metaData],
-            primeraVisita: new Date().toISOString()
-          }
-        }
-      })
+            primeraVisita: new Date().toISOString(),
+          },
+        },
+      });
     }
   }
 
@@ -44,36 +44,36 @@ export class TelemetriaRepository {
       where: {
         usuarioId_inmuebleId: {
           usuarioId: usuarioId,
-          inmuebleId: inmuebleId
-        }
+          inmuebleId: inmuebleId,
+        },
       },
       update: {
-        vistaEn: new Date()
+        vistaEn: new Date(),
       },
       create: {
         usuarioId: usuarioId,
         inmuebleId: inmuebleId,
-        vistaEn: new Date()
-      }
-    })
+        vistaEn: new Date(),
+      },
+    });
   }
 
   async obtenerInmueblesRecomendados(usuarioId: number): Promise<number[]> {
     const vistas = await prisma.propiedad_vista.findMany({
       where: { usuarioId },
-      orderBy: { vistaEn: 'desc' },
+      orderBy: { vistaEn: "desc" },
       take: 20,
-      select: { inmuebleId: true }
-    })
+      select: { inmuebleId: true },
+    });
 
     const favoritos = await prisma.favorito.findMany({
       where: { usuarioId },
-      select: { inmuebleId: true }
-    })
+      select: { inmuebleId: true },
+    });
 
-    const idsFavoritos = favoritos.map((f) => f.inmuebleId)
-    const idsVistos = vistas.map((v) => v.inmuebleId)
+    const idsFavoritos = favoritos.map((f) => f.inmuebleId);
+    const idsVistos = vistas.map((v) => v.inmuebleId);
 
-    return [...new Set([...idsFavoritos, ...idsVistos])]
+    return [...new Set([...idsFavoritos, ...idsVistos])];
   }
 }

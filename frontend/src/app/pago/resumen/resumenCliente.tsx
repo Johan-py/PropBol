@@ -1,33 +1,39 @@
-
 "use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import ResumenTransaccion from '@/components/pago/resumenTransaccion';
-import Stepper from '@/components/ui/Stepper';
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import ResumenTransaccion from "@/components/pago/resumenTransaccion";
+import Stepper from "@/components/ui/Stepper";
 
 export default function ResumenCliente() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const planIdParam = searchParams.get('planId');
+  const planIdParam = searchParams.get("planId");
 
   const [transaccion, setTransaccion] = useState<any>(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [metodoSeleccionado, setMetodoSeleccionado] = useState<string | null>(null);
-  const [codigoCupon, setCodigoCupon] = useState('');
+  const [metodoSeleccionado, setMetodoSeleccionado] = useState<string | null>(
+    null,
+  );
+  const [codigoCupon, setCodigoCupon] = useState("");
   const [aplicandoCupon, setAplicandoCupon] = useState(false);
-  const [mensajeCupon, setMensajeCupon] = useState<{ texto: string; error: boolean } | null>(null);
+  const [mensajeCupon, setMensajeCupon] = useState<{
+    texto: string;
+    error: boolean;
+  } | null>(null);
 
-  const [tipoFacturacion, setTipoFacturacion] = useState<'mensual' | 'anual'>('mensual');
+  const [tipoFacturacion, setTipoFacturacion] = useState<"mensual" | "anual">(
+    "mensual",
+  );
   const [descuentoPorcentaje, setDescuentoPorcentaje] = useState(0);
 
-  const nombreMetodo: Record<string, string> = { qr: 'QR Bancario' };
+  const nombreMetodo: Record<string, string> = { qr: "QR Bancario" };
 
   useEffect(() => {
     if (!planIdParam) {
-      setError('No se especificó un plan');
+      setError("No se especificó un plan");
       setCargando(false);
       return;
     }
@@ -35,25 +41,25 @@ export default function ResumenCliente() {
     const idSuscripcion = parseInt(planIdParam, 10);
 
     if (isNaN(idSuscripcion)) {
-      setError('ID inválido');
+      setError("ID inválido");
       setCargando(false);
       return;
     }
 
     async function iniciarTransaccion() {
       try {
-        const res = await fetch('/api/transacciones', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const res = await fetch("/api/transacciones", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ idSuscripcion }),
         });
 
-        if (!res.ok) throw new Error('Error al crear la transacción');
+        if (!res.ok) throw new Error("Error al crear la transacción");
 
         const data = await res.json();
         setTransaccion(data);
       } catch (err: any) {
-        setError(err.message || 'Error desconocido');
+        setError(err.message || "Error desconocido");
       } finally {
         setCargando(false);
       }
@@ -63,7 +69,7 @@ export default function ResumenCliente() {
   }, [planIdParam]);
 
   useEffect(() => {
-    if (tipoFacturacion === 'anual') {
+    if (tipoFacturacion === "anual") {
       setDescuentoPorcentaje(15);
     } else {
       setDescuentoPorcentaje(0);
@@ -78,8 +84,8 @@ export default function ResumenCliente() {
         subtotalBase: 0,
         descuentoMonto: 0,
         totalFinal: 0,
-        fechaInicio: '',
-        fechaFin: '',
+        fechaInicio: "",
+        fechaFin: "",
       };
     }
 
@@ -87,23 +93,19 @@ export default function ResumenCliente() {
     const subtotalAnual = subtotalMensual * 12;
 
     const subtotalBase =
-      tipoFacturacion === 'mensual'
-        ? subtotalMensual
-        : subtotalAnual;
+      tipoFacturacion === "mensual" ? subtotalMensual : subtotalAnual;
 
-    const descuentoMonto =
-      (subtotalBase * descuentoPorcentaje) / 100;
+    const descuentoMonto = (subtotalBase * descuentoPorcentaje) / 100;
 
     const descuentoCupon = Number(transaccion.monto_descuento || 0);
 
-    const totalFinal =
-      subtotalBase - descuentoMonto - descuentoCupon;
+    const totalFinal = subtotalBase - descuentoMonto - descuentoCupon;
 
     const fechaInicio = new Date();
 
     const fechaFin = new Date(fechaInicio);
 
-    if (tipoFacturacion === 'mensual') {
+    if (tipoFacturacion === "mensual") {
       fechaFin.setMonth(fechaFin.getMonth() + 1);
     } else {
       fechaFin.setFullYear(fechaFin.getFullYear() + 1);
@@ -123,17 +125,16 @@ export default function ResumenCliente() {
   const manejarContinuar = () => {
     if (metodoSeleccionado && transaccion) {
       localStorage.setItem(
-        'currentPayment',
+        "currentPayment",
         JSON.stringify({
           id: transaccion.id,
           monto: calculos.totalFinal,
           referencia: transaccion.referencia || transaccion.id,
-          estado: 'pendiente',
+          estado: "pendiente",
           billingCycle: tipoFacturacion,
           grossAmount: calculos.subtotalBase,
           discountAmount:
-            calculos.descuentoMonto +
-            Number(transaccion.monto_descuento || 0),
+            calculos.descuentoMonto + Number(transaccion.monto_descuento || 0),
           netAmount: calculos.totalFinal,
           subtotalAnual: calculos.subtotalAnual,
           fechaInicio: calculos.fechaInicio,
@@ -142,9 +143,8 @@ export default function ResumenCliente() {
             transaccion.fechaExpiracion ||
             new Date(Date.now() + 30 * 60 * 1000).toISOString(),
           qrContent:
-            transaccion.plan_suscripcion?.imagen_gr_url ||
-            '/qrs/estandar.png',
-        })
+            transaccion.plan_suscripcion?.imagen_gr_url || "/qrs/estandar.png",
+        }),
       );
 
       router.push(`/pago/qr?transaccionId=${transaccion.id}`);
@@ -153,7 +153,7 @@ export default function ResumenCliente() {
 
   const aplicarCupon = async () => {
     if (!codigoCupon.trim()) {
-      setMensajeCupon({ texto: 'Ingresa un código', error: true });
+      setMensajeCupon({ texto: "Ingresa un código", error: true });
       return;
     }
 
@@ -161,8 +161,8 @@ export default function ResumenCliente() {
 
     try {
       const res = await fetch(`/api/transacciones/${transaccion.id}/cupon`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           codigo: codigoCupon.trim(),
           totalOriginal: calculos.subtotalBase,
@@ -171,7 +171,7 @@ export default function ResumenCliente() {
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.error || 'Error al aplicar cupón');
+      if (!res.ok) throw new Error(data.error || "Error al aplicar cupón");
 
       setTransaccion((prev: any) => ({
         ...prev,
@@ -184,10 +184,10 @@ export default function ResumenCliente() {
         error: false,
       });
 
-      setCodigoCupon('');
+      setCodigoCupon("");
     } catch (err: any) {
       setMensajeCupon({
-        texto: err.message || 'Error desconocido',
+        texto: err.message || "Error desconocido",
         error: true,
       });
     } finally {
@@ -221,70 +221,60 @@ export default function ResumenCliente() {
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        
         <div>
           <div className="border border-gray-200 rounded-lg p-6 mb-6 shadow-md">
             <div className="flex items-center mb-3">
               <span className="text-3xl mr-3">🏠</span>
-              <h2 className="text-xl font-bold">
-                Plan {plan.nombre_plan}
-              </h2>
+              <h2 className="text-xl font-bold">Plan {plan.nombre_plan}</h2>
             </div>
 
             <p className="text-gray-600">
-              {plan.nro_publicaciones_plan} publicaciones activas · Vigencia{' '}
-              {plan.duración_plan_días} días · Galería {plan.fotos_galeria} fotos
+              {plan.nro_publicaciones_plan} publicaciones activas · Vigencia{" "}
+              {plan.duración_plan_días} días · Galería {plan.fotos_galeria}{" "}
+              fotos
             </p>
           </div>
 
           <div className="border border-gray-200 rounded-lg p-6 mb-6 bg-white shadow-md">
-            <h3 className="text-xl font-semibold mb-4">
-              TIPO DE FACTURACIÓN
-            </h3>
+            <h3 className="text-xl font-semibold mb-4">TIPO DE FACTURACIÓN</h3>
 
             <div className="grid grid-cols-2 gap-4">
               <button
-                onClick={() => setTipoFacturacion('mensual')}
+                onClick={() => setTipoFacturacion("mensual")}
                 className={`p-4 rounded-lg border text-left transition ${
-                  tipoFacturacion === 'mensual'
-                    ? 'border-orange-500 bg-orange-50'
-                    : 'border-gray-200 hover:bg-gray-50'
+                  tipoFacturacion === "mensual"
+                    ? "border-orange-500 bg-orange-50"
+                    : "border-gray-200 hover:bg-gray-50"
                 }`}
               >
                 <div className="font-semibold text-gray-900">Mensual</div>
-                <div className="text-sm text-gray-500">
-                  Pago mes a mes
-                </div>
+                <div className="text-sm text-gray-500">Pago mes a mes</div>
               </button>
 
               <button
-                onClick={() => setTipoFacturacion('anual')}
+                onClick={() => setTipoFacturacion("anual")}
                 className={`p-4 rounded-lg border text-left transition ${
-                  tipoFacturacion === 'anual'
-                    ? 'border-orange-500 bg-orange-50'
-                    : 'border-gray-200 hover:bg-gray-50'
+                  tipoFacturacion === "anual"
+                    ? "border-orange-500 bg-orange-50"
+                    : "border-gray-200 hover:bg-gray-50"
                 }`}
               >
                 <div className="font-semibold text-gray-900">Anual</div>
-                <div className="text-sm text-green-600">
-                  15% de descuento
-                </div>
+                <div className="text-sm text-green-600">15% de descuento</div>
               </button>
             </div>
           </div>
 
           <div className="border border-gray-200 rounded-lg p-6 bg-white shadow-md">
-            <h3 className="text-xl font-semibold mb-4">
-              MÉTODO DE PAGO
-            </h3>
+            <h3 className="text-xl font-semibold mb-4">MÉTODO DE PAGO</h3>
 
             <div
               className={`flex items-start p-3 border rounded-lg cursor-pointer transition ${
-                metodoSeleccionado === 'qr'
-                  ? 'border-green-500 bg-green-50'
-                  : 'border-gray-200 bg-gray-50 hover:bg-gray-100'
+                metodoSeleccionado === "qr"
+                  ? "border-green-500 bg-green-50"
+                  : "border-gray-200 bg-gray-50 hover:bg-gray-100"
               }`}
-              onClick={() => setMetodoSeleccionado('qr')}
+              onClick={() => setMetodoSeleccionado("qr")}
             >
               <span className="text-2xl mr-4">📱</span>
 
@@ -301,14 +291,14 @@ export default function ResumenCliente() {
               disabled={!metodoSeleccionado}
               className={`w-full mt-6 py-3 rounded-lg font-semibold transition shadow-md ${
                 metodoSeleccionado
-                  ? 'bg-orange-600 text-white hover:bg-orange-700'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  ? "bg-orange-600 text-white hover:bg-orange-700"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
               }`}
             >
-              Continuar con{' '}
+              Continuar con{" "}
               {metodoSeleccionado
                 ? nombreMetodo[metodoSeleccionado]
-                : 'un método'}
+                : "un método"}
             </button>
 
             <Link
@@ -341,7 +331,7 @@ export default function ResumenCliente() {
                 <span>Bs. {calculos.subtotalMensual.toFixed(2)}</span>
               </div>
 
-              {tipoFacturacion === 'anual' && (
+              {tipoFacturacion === "anual" && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal anual</span>
                   <span>Bs. {calculos.subtotalAnual.toFixed(2)}</span>
@@ -400,16 +390,14 @@ export default function ResumenCliente() {
                 disabled={aplicandoCupon}
                 className="bg-orange-600 text-white px-4 py-2 rounded text-sm hover:bg-orange-700 disabled:bg-orange-300"
               >
-                {aplicandoCupon ? 'Aplicando...' : 'Aplicar'}
+                {aplicandoCupon ? "Aplicando..." : "Aplicar"}
               </button>
             </div>
 
             {mensajeCupon && (
               <p
                 className={`text-xs mt-2 ${
-                  mensajeCupon.error
-                    ? 'text-red-600'
-                    : 'text-green-600'
+                  mensajeCupon.error ? "text-red-600" : "text-green-600"
                 }`}
               >
                 {mensajeCupon.texto}

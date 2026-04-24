@@ -60,9 +60,11 @@ export default function EditForm({
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
         <div>
-          <label htmlFor="title" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label
+            htmlFor="title"
+            className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2"
+          >
             Título Propiedad
           </label>
           <input
@@ -83,7 +85,10 @@ export default function EditForm({
         </div>
 
         <div>
-          <label htmlFor="details" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label
+            htmlFor="details"
+            className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2"
+          >
             Detalles de la Propiedad
           </label>
           <input
@@ -104,7 +109,10 @@ export default function EditForm({
         </div>
 
         <div>
-          <label htmlFor="operationType" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label
+            htmlFor="operationType"
+            className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2"
+          >
             Tipo Operación
           </label>
           <select
@@ -125,12 +133,17 @@ export default function EditForm({
             ))}
           </select>
           {fieldErrors.operationType && (
-            <p className="mt-1 text-sm text-red-500">{fieldErrors.operationType}</p>
+            <p className="mt-1 text-sm text-red-500">
+              {fieldErrors.operationType}
+            </p>
           )}
         </div>
 
         <div>
-          <label htmlFor="location" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label
+            htmlFor="location"
+            className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2"
+          >
             Ubicación
           </label>
           <input
@@ -151,7 +164,10 @@ export default function EditForm({
         </div>
 
         <div className="md:col-span-1">
-          <label htmlFor="price" className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2">
+          <label
+            htmlFor="price"
+            className="block text-[11px] font-semibold tracking-[0.14em] text-gray-600 uppercase mb-2"
+          >
             Precio
           </label>
           <input

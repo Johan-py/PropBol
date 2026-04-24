@@ -8,7 +8,6 @@ export default async function HomeBlogsSection() {
   const topBlogs = sortedBlogs.slice(0, 3);
   const bottomBlogs = sortedBlogs.slice(3, 5);
 
-
   return (
     <section className="w-full py-20 px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto space-y-24">
       {/* TOP SECTION: BLOGS HEADER */}
@@ -34,7 +33,9 @@ export default async function HomeBlogsSection() {
             ))
           ) : (
             <div className="col-span-full py-12 text-center border-2 border-dashed border-stone-100 rounded-[32px]">
-              <p className="text-stone-400 font-['Inter']">Aún no hay blogs publicados.</p>
+              <p className="text-stone-400 font-['Inter']">
+                Aún no hay blogs publicados.
+              </p>
             </div>
           )}
         </div>
@@ -55,7 +56,8 @@ export default async function HomeBlogsSection() {
             </div>
 
             <p className="font-['Inter'] text-lg leading-relaxed text-stone-600 max-w-sm">
-              Exploramos la intersección entre la arquitectura de vanguardia, el mercado de capitales y el estilo de vida contemporáneo.
+              Exploramos la intersección entre la arquitectura de vanguardia, el
+              mercado de capitales y el estilo de vida contemporáneo.
             </p>
 
             <Link

@@ -1,99 +1,113 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { useSearchFilters } from '@/hooks/useSearchFilters'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useState, useEffect } from "react";
+import { useSearchFilters } from "@/hooks/useSearchFilters";
+import { useRouter, useSearchParams } from "next/navigation";
 interface PriceFilterSidebarProps {
-  isOpen: boolean;  
+  isOpen: boolean;
   onClose: () => void;
   totalResultados?: number;
 }
-export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = -1 }: PriceFilterSidebarProps) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const { updateFilters } = useSearchFilters()
+export default function PriceFilterSidebar({
+  isOpen,
+  onClose,
+  totalResultados = -1,
+}: PriceFilterSidebarProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { updateFilters } = useSearchFilters();
 
-  const [moneda, setMoneda] = useState<'BOB' | 'USD'>((searchParams.get('currency') as 'BOB' | 'USD') || 'USD')
-  const [minPrice, setMinPrice] = useState<string>(searchParams.get('minPrice') || '')
-  const [maxPrice, setMaxPrice] = useState<string>(searchParams.get('maxPrice') || '')
-  const [error, setError] = useState<string>('')
-  const [filtroAplicado, setFiltroAplicado] = useState(!!searchParams.get('minPrice') || !!searchParams.get('maxPrice'))  
+  const [moneda, setMoneda] = useState<"BOB" | "USD">(
+    (searchParams.get("currency") as "BOB" | "USD") || "USD",
+  );
+  const [minPrice, setMinPrice] = useState<string>(
+    searchParams.get("minPrice") || "",
+  );
+  const [maxPrice, setMaxPrice] = useState<string>(
+    searchParams.get("maxPrice") || "",
+  );
+  const [error, setError] = useState<string>("");
+  const [filtroAplicado, setFiltroAplicado] = useState(
+    !!searchParams.get("minPrice") || !!searchParams.get("maxPrice"),
+  );
 
   // Cargar valores iniciales desde la URL al abrir
   useEffect(() => {
     if (isOpen) {
-      setMinPrice(searchParams.get('minPrice') || '')
-      setMaxPrice(searchParams.get('maxPrice') || '')
-      setMoneda((searchParams.get('currency') as 'BOB' | 'USD') || 'USD')
-      setError('')
+      setMinPrice(searchParams.get("minPrice") || "");
+      setMaxPrice(searchParams.get("maxPrice") || "");
+      setMoneda((searchParams.get("currency") as "BOB" | "USD") || "USD");
+      setError("");
     }
-  }, [isOpen, searchParams])
+  }, [isOpen, searchParams]);
 
   if (!isOpen) return null;
 
   const handleApply = () => {
     if (Number(minPrice) < 0 || Number(maxPrice) < 0) {
-      setError('Solo se permiten números positivos')
-      return
+      setError("Solo se permiten números positivos");
+      return;
     }
     if (minPrice && maxPrice && Number(minPrice) > Number(maxPrice)) {
-      setError('El precio mínimo no puede ser mayor al máximo')
-      return
+      setError("El precio mínimo no puede ser mayor al máximo");
+      return;
     }
 
     // Actualizar URL
-    const params = new URLSearchParams(searchParams.toString())
-    if (minPrice) params.set('minPrice', minPrice)
-    else params.delete('minPrice')
+    const params = new URLSearchParams(searchParams.toString());
+    if (minPrice) params.set("minPrice", minPrice);
+    else params.delete("minPrice");
 
-    if (maxPrice) params.set('maxPrice', maxPrice)
-    else params.delete('maxPrice')
+    if (maxPrice) params.set("maxPrice", maxPrice);
+    else params.delete("maxPrice");
 
-    params.set('currency', moneda)
+    params.set("currency", moneda);
 
-    router.push(`/busqueda_mapa?${params.toString()}`)
-    setFiltroAplicado(true)
-    onClose()
-  }
+    router.push(`/busqueda_mapa?${params.toString()}`);
+    setFiltroAplicado(true);
+    onClose();
+  };
 
-  const LIMITE_MAX = moneda === 'USD' ? 500000 : 3500000
+  const LIMITE_MAX = moneda === "USD" ? 500000 : 3500000;
 
   const formatearMiles = (valor: string): string => {
-    if (!valor) return ''
-    return Number(valor).toLocaleString('es-BO')
-  }
-  const handleMonedaChange = (nuevaMoneda: 'BOB' | 'USD') => {
-    setMoneda(nuevaMoneda)
-    setMinPrice('')
-    setMaxPrice('')
-    setError('')
-  }
+    if (!valor) return "";
+    return Number(valor).toLocaleString("es-BO");
+  };
+  const handleMonedaChange = (nuevaMoneda: "BOB" | "USD") => {
+    setMoneda(nuevaMoneda);
+    setMinPrice("");
+    setMaxPrice("");
+    setError("");
+  };
   return (
     <div className="flex flex-col gap-8 p-6 w-full bg-white h-full overflow-y-auto">
       <div>
         <h3 className="font-bold text-sm text-stone-800 uppercase tracking-wide mb-1 text-center">
           Filtrar por Precio
         </h3>
-        <p className="text-sm text-stone-500 mb-4 text-center">Seleccione el tipo de moneda:</p>
+        <p className="text-sm text-stone-500 mb-4 text-center">
+          Seleccione el tipo de moneda:
+        </p>
 
         {/* Toggle de Moneda */}
         <div className="flex bg-stone-100 rounded-full p-1 w-fit mb-6 shadow-inner mx-auto">
           <button
-            onClick={() => handleMonedaChange('BOB')}
+            onClick={() => handleMonedaChange("BOB")}
             className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
-              moneda === 'BOB'
-                ? 'bg-[#d97706] text-white shadow-sm'
-                : 'text-stone-500 hover:text-stone-700'
+              moneda === "BOB"
+                ? "bg-[#d97706] text-white shadow-sm"
+                : "text-stone-500 hover:text-stone-700"
             }`}
           >
             $BOB
           </button>
           <button
-            onClick={() => handleMonedaChange('USD')}
+            onClick={() => handleMonedaChange("USD")}
             className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
-              moneda === 'USD'
-                ? 'bg-[#d97706] text-white shadow-sm'
-                : 'text-stone-500 hover:text-stone-700'
+              moneda === "USD"
+                ? "bg-[#d97706] text-white shadow-sm"
+                : "text-stone-500 hover:text-stone-700"
             }`}
           >
             $USD
@@ -110,15 +124,23 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
               min="0"
               value={minPrice}
               onChange={(e) => {
-                const val = e.target.value
-                if (Number(val) < 0) { setError('Solo se permiten números positivos'); return }
-                setError('')
-                setMinPrice(val)
+                const val = e.target.value;
+                if (Number(val) < 0) {
+                  setError("Solo se permiten números positivos");
+                  return;
+                }
+                setError("");
+                setMinPrice(val);
               }}
-              onKeyDown={(e) => { if (e.key === '-') e.preventDefault() }}
+              onKeyDown={(e) => {
+                if (e.key === "-") e.preventDefault();
+              }}
               onPaste={(e) => {
-                const texto = e.clipboardData.getData('text')
-                if (!/^\d*\.?\d*$/.test(texto)) { e.preventDefault(); setError('Formato no válido') }
+                const texto = e.clipboardData.getData("text");
+                if (!/^\d*\.?\d*$/.test(texto)) {
+                  e.preventDefault();
+                  setError("Formato no válido");
+                }
               }}
               className="border border-stone-300 rounded-lg px-3 py-2 text-sm w-full outline-none focus:border-[#d97706] focus:ring-1 focus:ring-[#d97706] transition-all"
             />
@@ -131,28 +153,37 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
               min="0"
               value={maxPrice}
               onChange={(e) => {
-                const val = e.target.value
-                if (Number(val) < 0) { setError('Solo se permiten números positivos'); return }
-                setError('')
-                setMaxPrice(val)
+                const val = e.target.value;
+                if (Number(val) < 0) {
+                  setError("Solo se permiten números positivos");
+                  return;
+                }
+                setError("");
+                setMaxPrice(val);
               }}
-              onKeyDown={(e) => { if (e.key === '-') e.preventDefault() }}
+              onKeyDown={(e) => {
+                if (e.key === "-") e.preventDefault();
+              }}
               onPaste={(e) => {
-                const texto = e.clipboardData.getData('text')
-                if (!/^\d*\.?\d*$/.test(texto)) { e.preventDefault(); setError('Formato no válido') }
+                const texto = e.clipboardData.getData("text");
+                if (!/^\d*\.?\d*$/.test(texto)) {
+                  e.preventDefault();
+                  setError("Formato no válido");
+                }
               }}
               className="border border-stone-300 rounded-lg px-3 py-2 text-sm w-full outline-none focus:border-[#d97706] focus:ring-1 focus:ring-[#d97706] transition-all"
             />
           </div>
         </div>
-        {error && (
-          <p className="text-red-500 text-xs mt-2">{error}</p>
-        )}
-        {!error && minPrice && maxPrice && Number(minPrice) > Number(maxPrice) && (
-          <p className="text-red-500 text-xs mt-1">
-            El precio mínimo no puede ser mayor al máximo
-          </p>
-        )}
+        {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
+        {!error &&
+          minPrice &&
+          maxPrice &&
+          Number(minPrice) > Number(maxPrice) && (
+            <p className="text-red-500 text-xs mt-1">
+              El precio mínimo no puede ser mayor al máximo
+            </p>
+          )}
       </div>
 
       {/* Día 3 - sliders bidireccionales sincronizados con inputs */}
@@ -163,25 +194,40 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
         <div className="flex items-center gap-2">
           <span className="text-xs text-stone-500 w-8">Min</span>
           <input
-            type="range" min="0" max={LIMITE_MAX} step="100"
+            type="range"
+            min="0"
+            max={LIMITE_MAX}
+            step="100"
             value={Number(minPrice) || 0}
-            onChange={(e) => { setMinPrice(e.target.value); setError('') }}
+            onChange={(e) => {
+              setMinPrice(e.target.value);
+              setError("");
+            }}
             className="flex-1 accent-[#d97706]"
           />
           <span className="text-xs text-stone-600 w-20 text-right">
-            {formatearMiles(minPrice) || '0'} {moneda}
+            {formatearMiles(minPrice) || "0"} {moneda}
           </span>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-xs text-stone-500 w-8">Máx</span>
           <input
-            type="range" min="0" max={LIMITE_MAX} step="100"
+            type="range"
+            min="0"
+            max={LIMITE_MAX}
+            step="100"
             value={Number(maxPrice) || LIMITE_MAX}
-            onChange={(e) => { setMaxPrice(e.target.value); setError('') }}
+            onChange={(e) => {
+              setMaxPrice(e.target.value);
+              setError("");
+            }}
             className="flex-1 accent-[#d97706]"
           />
           <span className="text-xs text-stone-600 w-20 text-right">
-            {maxPrice ? formatearMiles(maxPrice) : `${(LIMITE_MAX/1000).toLocaleString('es-BO')}K`} {moneda}
+            {maxPrice
+              ? formatearMiles(maxPrice)
+              : `${(LIMITE_MAX / 1000).toLocaleString("es-BO")}K`}{" "}
+            {moneda}
           </span>
         </div>
       </div>
@@ -192,7 +238,8 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
           <span className="text-xl">🔍</span>
           <p className="text-sm font-semibold text-stone-700">Sin resultados</p>
           <p className="text-xs text-stone-400">
-            No se encontraron propiedades dentro del rango de precio seleccionado
+            No se encontraron propiedades dentro del rango de precio
+            seleccionado
           </p>
         </div>
       )}
@@ -201,11 +248,15 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
       <button
         type="button"
         onClick={() => {
-          setMinPrice(''); setMaxPrice(''); setError(''); setFiltroAplicado(false)
-          const params = new URLSearchParams(searchParams.toString())
-          params.delete('minPrice'); params.delete('maxPrice')
-          params.delete('currency')
-          router.push(`/busqueda_mapa?${params.toString()}`)
+          setMinPrice("");
+          setMaxPrice("");
+          setError("");
+          setFiltroAplicado(false);
+          const params = new URLSearchParams(searchParams.toString());
+          params.delete("minPrice");
+          params.delete("maxPrice");
+          params.delete("currency");
+          router.push(`/busqueda_mapa?${params.toString()}`);
         }}
         className="text-xs text-stone-400 hover:text-[#d97706] transition-colors underline text-center w-full"
       >
@@ -220,5 +271,5 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
         Aplicar
       </button>
     </div>
-  )
+  );
 }

@@ -1,84 +1,87 @@
-"use client"
+"use client";
 
-import { useEffect, useState, type MouseEvent as ReactMouseEvent } from "react"
-import Image from "next/image"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { useEffect, useState, type MouseEvent as ReactMouseEvent } from "react";
+import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 type Props = {
-  images: string[]
-  cityName: string
-}
+  images: string[];
+  cityName: string;
+};
 
-const FALLBACK_IMAGE = "/placeholder-house.jpg"
-const EDGE_ACTIVATION_WIDTH = 72
+const FALLBACK_IMAGE = "/placeholder-house.jpg";
+const EDGE_ACTIVATION_WIDTH = 72;
 
 export default function CityCarousel({ images, cityName }: Props) {
-  const carouselImages = images.length > 0 ? images : [FALLBACK_IMAGE]
-  const [index, setIndex] = useState(0)
-  const [activeEdge, setActiveEdge] = useState<"left" | "right" | null>(null)
-  const [imageError, setImageError] = useState(false)
+  const carouselImages = images.length > 0 ? images : [FALLBACK_IMAGE];
+  const [index, setIndex] = useState(0);
+  const [activeEdge, setActiveEdge] = useState<"left" | "right" | null>(null);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
-    setIndex(0)
-    setImageError(false)
-    setActiveEdge(null)
-  }, [images])
+    setIndex(0);
+    setImageError(false);
+    setActiveEdge(null);
+  }, [images]);
 
   useEffect(() => {
-    setImageError(false)
-  }, [index])
+    setImageError(false);
+  }, [index]);
 
   useEffect(() => {
     if (carouselImages.length <= 1) {
-      return
+      return;
     }
 
     const intervalId = window.setInterval(() => {
-      setIndex((currentIndex) => (currentIndex + 1) % carouselImages.length)
-    }, 4000)
+      setIndex((currentIndex) => (currentIndex + 1) % carouselImages.length);
+    }, 4000);
 
     return () => {
-      window.clearInterval(intervalId)
-    }
-  }, [carouselImages.length])
+      window.clearInterval(intervalId);
+    };
+  }, [carouselImages.length]);
 
-  const activeImage = carouselImages[index] ?? FALLBACK_IMAGE
-  const hasMultipleImages = carouselImages.length > 1
+  const activeImage = carouselImages[index] ?? FALLBACK_IMAGE;
+  const hasMultipleImages = carouselImages.length > 1;
 
   const handleMouseMove = (event: ReactMouseEvent<HTMLDivElement>) => {
     if (!hasMultipleImages) {
-      return
+      return;
     }
 
-    const bounds = event.currentTarget.getBoundingClientRect()
-    const offsetX = event.clientX - bounds.left
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const offsetX = event.clientX - bounds.left;
 
     if (offsetX <= EDGE_ACTIVATION_WIDTH) {
-      setActiveEdge("left")
-      return
+      setActiveEdge("left");
+      return;
     }
 
     if (bounds.width - offsetX <= EDGE_ACTIVATION_WIDTH) {
-      setActiveEdge("right")
-      return
+      setActiveEdge("right");
+      return;
     }
 
-    setActiveEdge(null)
-  }
+    setActiveEdge(null);
+  };
 
   const handleMouseLeave = () => {
-    setActiveEdge(null)
-  }
+    setActiveEdge(null);
+  };
 
   const showPreviousImage = (event: ReactMouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation()
-    setIndex((currentIndex) => (currentIndex - 1 + carouselImages.length) % carouselImages.length)
-  }
+    event.stopPropagation();
+    setIndex(
+      (currentIndex) =>
+        (currentIndex - 1 + carouselImages.length) % carouselImages.length,
+    );
+  };
 
   const showNextImage = (event: ReactMouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation()
-    setIndex((currentIndex) => (currentIndex + 1) % carouselImages.length)
-  }
+    event.stopPropagation();
+    setIndex((currentIndex) => (currentIndex + 1) % carouselImages.length);
+  };
 
   return (
     <div
@@ -131,8 +134,8 @@ export default function CityCarousel({ images, cityName }: Props) {
             key={`${image}-${dotIndex}`}
             type="button"
             onClick={(event) => {
-              event.stopPropagation()
-              setIndex(dotIndex)
+              event.stopPropagation();
+              setIndex(dotIndex);
             }}
             className={`h-2.5 rounded-full transition-all ${
               dotIndex === index ? "w-6 bg-white" : "w-2.5 bg-white/65"
@@ -142,5 +145,5 @@ export default function CityCarousel({ images, cityName }: Props) {
         ))}
       </div>
     </div>
-  )
+  );
 }

@@ -1,12 +1,19 @@
-'use client'
+"use client";
 
-import { CapacidadSidebar } from '@/components/filters/CapacidadSidebar'
-import MisZonasSidebar from '@/components/map/MisZonasSidebar'
-import { point, polygon } from '@turf/helpers'
-import booleanPointInPolygon from '@turf/boolean-point-in-polygon'
-import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from 'react'
+import { CapacidadSidebar } from "@/components/filters/CapacidadSidebar";
+import MisZonasSidebar from "@/components/map/MisZonasSidebar";
+import { point, polygon } from "@turf/helpers";
+import booleanPointInPolygon from "@turf/boolean-point-in-polygon";
+import {
+  useState,
+  useEffect,
+  useRef,
+  Suspense,
+  useCallback,
+  useMemo,
+} from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import nextDynamic from 'next/dynamic'
+import nextDynamic from "next/dynamic";
 import {
   ChevronLeft,
   ChevronRight,
@@ -15,286 +22,308 @@ import {
   ChevronUp,
   ChevronDown,
   X,
-  Filter
-} from 'lucide-react'
+  Filter,
+} from "lucide-react";
 
 // === HOOKS ===
-import { useProperties } from '@/hooks/useProperties'
-import { useOrdenamiento } from '@/hooks/useOrdenamiento'
-import { useZonas } from '@/hooks/useZonas'
+import { useProperties } from "@/hooks/useProperties";
+import { useOrdenamiento } from "@/hooks/useOrdenamiento";
+import { useZonas } from "@/hooks/useZonas";
 
 // === COMPONENTES ===
-import FilterBar from '@/components/filters/FilterBar'
-import PriceFilterSidebar from '@/components/filters/PriceFilterSidebar'
-import PropertyCard from '@/components/layout/PropertyCard'
-import PropertyRow from '@/components/galeria/PropertyRow'
-import EmptyState from '@/components/galeria/EmptyState'
-import MapaListadoPaginacion, { PageSize } from "@/components/galeria/MapaListadoPaginacion";
-import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenamiento'
-import { ErrorState } from '@/components/ClusterSidebar'
-import SuperficieFilterSidebar from '@/components/filters/SuperficieFilterSidebar'
+import FilterBar from "@/components/filters/FilterBar";
+import PriceFilterSidebar from "@/components/filters/PriceFilterSidebar";
+import PropertyCard from "@/components/layout/PropertyCard";
+import PropertyRow from "@/components/galeria/PropertyRow";
+import EmptyState from "@/components/galeria/EmptyState";
+import MapaListadoPaginacion, {
+  PageSize,
+} from "@/components/galeria/MapaListadoPaginacion";
+import { MenuOrdenamiento } from "@/components/busqueda/ordenamiento/MenuOrdenamiento";
+import { ErrorState } from "@/components/ClusterSidebar";
+import SuperficieFilterSidebar from "@/components/filters/SuperficieFilterSidebar";
 
 // Carga dinámica del mapa (sin SSR)
-const MapView = nextDynamic(() => import('./MapView'), {
+const MapView = nextDynamic(() => import("./MapView"), {
   ssr: false,
   loading: () => (
     <div className="h-full w-full bg-stone-100 animate-pulse flex items-center justify-center text-stone-400">
       Cargando mapa de Bolivia...
     </div>
-  )
-})
+  ),
+});
 
 // === HOOKS DE DETECCIÓN MÓVIL ===
 function useIsMobile(breakpoint = 768) {
-  const [isMobile, setIsMobile] = useState(false)
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${breakpoint - 1}px)`)
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches)
-    mql.addEventListener('change', handler)
-    setIsMobile(mql.matches)
-    return () => mql.removeEventListener('change', handler)
-  }, [breakpoint])
-  return isMobile
+    const mql = window.matchMedia(`(max-width: ${breakpoint - 1}px)`);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener("change", handler);
+    setIsMobile(mql.matches);
+    return () => mql.removeEventListener("change", handler);
+  }, [breakpoint]);
+  return isMobile;
 }
 
 function useIsLandscapeMobile() {
-  const [isLandscape, setIsLandscape] = useState(false)
+  const [isLandscape, setIsLandscape] = useState(false);
   useEffect(() => {
     const handler = () => {
-      setIsLandscape(window.innerWidth > window.innerHeight && window.innerHeight < 500)
-    }
-    window.addEventListener('resize', handler)
-    window.addEventListener('orientationchange', handler)
-    handler()
+      setIsLandscape(
+        window.innerWidth > window.innerHeight && window.innerHeight < 500,
+      );
+    };
+    window.addEventListener("resize", handler);
+    window.addEventListener("orientationchange", handler);
+    handler();
     return () => {
-      window.removeEventListener('resize', handler)
-      window.removeEventListener('orientationchange', handler)
-    }
-  }, [])
-  return isLandscape
+      window.removeEventListener("resize", handler);
+      window.removeEventListener("orientationchange", handler);
+    };
+  }, []);
+  return isLandscape;
 }
 
-const SHEET_H = { peek: '50%', full: '100%' } as const
-type SheetState = 'hidden' | 'peek' | 'full'
+const SHEET_H = { peek: "50%", full: "100%" } as const;
+type SheetState = "hidden" | "peek" | "full";
 
 const LIST_PAGE_SIZES = [10, 20, 50, 100] as const;
-const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
+const API_URL = (
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+).replace(/\/$/, "");
 
 interface ZonaUsuario {
-  id: number
-  nombre: string
+  id: number;
+  nombre: string;
   geometria: {
-    type: 'Polygon'
-    coordinates: number[][][]
-  }
+    type: "Polygon";
+    coordinates: number[][][];
+  };
 }
 
-function extraerCoordenadasDeGeometria(geometria: ZonaUsuario['geometria'] | null | undefined): [number, number][] {
-  if (!geometria || geometria.type !== 'Polygon' || !Array.isArray(geometria.coordinates?.[0])) {
-    return []
+function extraerCoordenadasDeGeometria(
+  geometria: ZonaUsuario["geometria"] | null | undefined,
+): [number, number][] {
+  if (
+    !geometria ||
+    geometria.type !== "Polygon" ||
+    !Array.isArray(geometria.coordinates?.[0])
+  ) {
+    return [];
   }
 
-  const ring = geometria.coordinates[0]
+  const ring = geometria.coordinates[0];
   const puntos = ring
     .map((coord) => {
-      if (!Array.isArray(coord) || coord.length < 2) return null
-      return [Number(coord[1]), Number(coord[0])] as [number, number]
+      if (!Array.isArray(coord) || coord.length < 2) return null;
+      return [Number(coord[1]), Number(coord[0])] as [number, number];
     })
-    .filter((coord): coord is [number, number] => Boolean(coord))
+    .filter((coord): coord is [number, number] => Boolean(coord));
 
   if (puntos.length >= 2) {
-    const [firstLat, firstLng] = puntos[0]
-    const [lastLat, lastLng] = puntos[puntos.length - 1]
+    const [firstLat, firstLng] = puntos[0];
+    const [lastLat, lastLng] = puntos[puntos.length - 1];
     if (firstLat === lastLat && firstLng === lastLng) {
-      return puntos.slice(0, -1)
+      return puntos.slice(0, -1);
     }
   }
 
-  return puntos
+  return puntos;
 }
 
 function BusquedaMapaContent() {
-  const [isMisZonasOpen, setIsMisZonasOpen] = useState(false)
+  const [isMisZonasOpen, setIsMisZonasOpen] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const filterResetKey = searchParams.toString();
 
   //estado para controlar la autenticación
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isCapacidadOpen, setIsCapacidadOpen] = useState(false)
+  const [isCapacidadOpen, setIsCapacidadOpen] = useState(false);
 
   const toggleCapacidad = () => {
-    setIsCapacidadOpen(!isCapacidadOpen)
+    setIsCapacidadOpen(!isCapacidadOpen);
     if (!isCapacidadOpen) {
-      setActiveSidebarView('capacidad')
-      setIsSidebarOpen(true)
+      setActiveSidebarView("capacidad");
+      setIsSidebarOpen(true);
     } else {
-      setActiveSidebarView('results')
+      setActiveSidebarView("results");
     }
-  }
-  const [misZonas, setMisZonas] = useState<ZonaUsuario[]>([])
-  const [newZoneName, setNewZoneName] = useState('Nueva zona')
-  const [isCreatingCustomZone, setIsCreatingCustomZone] = useState(false)
-  const [isSavingNewZone, setIsSavingNewZone] = useState(false)
-  const [editingZoneId, setEditingZoneId] = useState<string | null>(null)
-  const [editingZoneName, setEditingZoneName] = useState('')
-  const [editingPolygonPoints, setEditingPolygonPoints] = useState<[number, number][]>([])
-  const [isSavingEditedZone, setIsSavingEditedZone] = useState(false)
+  };
+  const [misZonas, setMisZonas] = useState<ZonaUsuario[]>([]);
+  const [newZoneName, setNewZoneName] = useState("Nueva zona");
+  const [isCreatingCustomZone, setIsCreatingCustomZone] = useState(false);
+  const [isSavingNewZone, setIsSavingNewZone] = useState(false);
+  const [editingZoneId, setEditingZoneId] = useState<string | null>(null);
+  const [editingZoneName, setEditingZoneName] = useState("");
+  const [editingPolygonPoints, setEditingPolygonPoints] = useState<
+    [number, number][]
+  >([]);
+  const [isSavingEditedZone, setIsSavingEditedZone] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     setIsAuthenticated(!!token);
   }, []);
 
   // === 1. ESTADOS COMPARTIDOS ===
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [sheetState, setSheetState] = useState<SheetState>('peek')
-  const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
-  const [isMounted, setIsMounted] = useState(false)
-  const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false)
-  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad'>('results')
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [sheetState, setSheetState] = useState<SheetState>("peek");
+  const [pinnedProperty, setPinnedProperty] = useState<any | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+  const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false);
+  const [activeSidebarView, setActiveSidebarView] = useState<
+    "results" | "superficie" | "capacidad"
+  >("results");
 
   // --- INICIO ESTADOS HU8 ---
-  const [isDrawingMode, setIsDrawingMode] = useState(false)
-  const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([])
-  const [isPolygonClosed, setIsPolygonClosed] = useState(false)
+  const [isDrawingMode, setIsDrawingMode] = useState(false);
+  const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([]);
+  const [isPolygonClosed, setIsPolygonClosed] = useState(false);
   // -- Función para reiniciar el modo dibujo y limpiar el polígono --
-  const [drawingError, setDrawingError] = useState(false)
+  const [drawingError, setDrawingError] = useState(false);
 
   const resetEditingZone = useCallback(() => {
-    setEditingZoneId(null)
-    setEditingZoneName('')
-    setEditingPolygonPoints([])
-    setIsSavingEditedZone(false)
-  }, [])
+    setEditingZoneId(null);
+    setEditingZoneName("");
+    setEditingPolygonPoints([]);
+    setIsSavingEditedZone(false);
+  }, []);
 
   const resetDrawing = () => {
-    setIsDrawingMode(false)
-    setIsPolygonClosed(false)
-    setPolygonPoints([])
-    setIsCreatingCustomZone(false)
-  }
+    setIsDrawingMode(false);
+    setIsPolygonClosed(false);
+    setPolygonPoints([]);
+    setIsCreatingCustomZone(false);
+  };
   // --- FIN ESTADOS HU8 ---
 
-  const isMobile = useIsMobile()
-  const isLandscape = useIsLandscapeMobile()
+  const isMobile = useIsMobile();
+  const isLandscape = useIsLandscapeMobile();
 
-  const [isSuperficieSidebarOpen, setIsSuperficieSidebarOpen] = useState(false)
+  const [isSuperficieSidebarOpen, setIsSuperficieSidebarOpen] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true)
-  }, [])
+    setIsMounted(true);
+  }, []);
 
   // === 2. EXTRACCIÓN DE DATOS BASE Y ZONAS (develop) ===
-  const { properties, isLoading, error } = useProperties()
-  const { zonas } = useZonas()
-  const [selectedZoneId, setSelectedZoneId] = useState<number | null>(null)
+  const { properties, isLoading, error } = useProperties();
+  const { zonas } = useZonas();
+  const [selectedZoneId, setSelectedZoneId] = useState<number | null>(null);
 
   const cargarMisZonas = useCallback(async () => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token");
     if (!token) {
-      setMisZonas([])
-      return
+      setMisZonas([]);
+      return;
     }
 
     try {
       const response = await fetch(`${API_URL}/api/perfil/zonas`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       if (!response.ok) {
-        throw new Error('No se pudieron cargar tus zonas')
+        throw new Error("No se pudieron cargar tus zonas");
       }
 
-      const data = await response.json()
-      setMisZonas(Array.isArray(data) ? data : [])
+      const data = await response.json();
+      setMisZonas(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error('Error cargando mis zonas:', err)
-      setMisZonas([])
+      console.error("Error cargando mis zonas:", err);
+      setMisZonas([]);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (!isAuthenticated) {
-      setMisZonas([])
-      return
+      setMisZonas([]);
+      return;
     }
-    cargarMisZonas()
-  }, [isAuthenticated, cargarMisZonas])
+    cargarMisZonas();
+  }, [isAuthenticated, cargarMisZonas]);
 
   const zonasCombinadas = useMemo(() => {
     const zonasUsuarioParaMapa = misZonas
       .map((zonaUsuario) => {
-        const coordenadas = extraerCoordenadasDeGeometria(zonaUsuario.geometria)
-        if (coordenadas.length < 3) return null
+        const coordenadas = extraerCoordenadasDeGeometria(
+          zonaUsuario.geometria,
+        );
+        if (coordenadas.length < 3) return null;
 
         return {
           id: -zonaUsuario.id,
           nombre: zonaUsuario.nombre,
           coordenadas,
-          color: '#ea580c',
+          color: "#ea580c",
           activa: true,
-          creadoEn: new Date().toISOString()
-        }
+          creadoEn: new Date().toISOString(),
+        };
       })
-      .filter((zona): zona is NonNullable<typeof zona> => Boolean(zona))
+      .filter((zona): zona is NonNullable<typeof zona> => Boolean(zona));
 
-    return [...zonas, ...zonasUsuarioParaMapa]
-  }, [zonas, misZonas])
+    return [...zonas, ...zonasUsuarioParaMapa];
+  }, [zonas, misZonas]);
 
   const zonasSidebar = useMemo(
-    () => misZonas.map((zona) => ({ id: String(zona.id), nombre: zona.nombre })),
-    [misZonas]
-  )
+    () =>
+      misZonas.map((zona) => ({ id: String(zona.id), nombre: zona.nombre })),
+    [misZonas],
+  );
 
   const saveDraftZone = useCallback(async () => {
-    if (!isAuthenticated || isSavingNewZone || !isCreatingCustomZone) return
-    if (polygonPoints.length < 3) return
+    if (!isAuthenticated || isSavingNewZone || !isCreatingCustomZone) return;
+    if (polygonPoints.length < 3) return;
 
-    const token = localStorage.getItem('token')
-    if (!token) return
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
-    setIsSavingNewZone(true)
+    setIsSavingNewZone(true);
     try {
-      const ring = [...polygonPoints, polygonPoints[0]].map(([lat, lng]) => [lng, lat])
-      const nombreFinal = newZoneName.trim() || 'Nueva zona'
+      const ring = [...polygonPoints, polygonPoints[0]].map(([lat, lng]) => [
+        lng,
+        lat,
+      ]);
+      const nombreFinal = newZoneName.trim() || "Nueva zona";
 
       const response = await fetch(`${API_URL}/api/perfil/zonas`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           nombre: nombreFinal.slice(0, 100),
           geometria: {
-            type: 'Polygon',
-            coordinates: [ring]
-          }
-        })
-      })
+            type: "Polygon",
+            coordinates: [ring],
+          },
+        }),
+      });
 
       if (!response.ok) {
-        throw new Error('No se pudo guardar la zona')
+        throw new Error("No se pudo guardar la zona");
       }
 
-      const zonaCreada = await response.json()
-      await cargarMisZonas()
+      const zonaCreada = await response.json();
+      await cargarMisZonas();
 
       if (zonaCreada?.id) {
-        setSelectedZoneId(-Number(zonaCreada.id))
+        setSelectedZoneId(-Number(zonaCreada.id));
       }
 
-      setIsPolygonClosed(false)
-      setPolygonPoints([])
-      setIsDrawingMode(false)
-      setIsCreatingCustomZone(false)
-      setNewZoneName('Nueva zona')
+      setIsPolygonClosed(false);
+      setPolygonPoints([]);
+      setIsDrawingMode(false);
+      setIsCreatingCustomZone(false);
+      setNewZoneName("Nueva zona");
     } catch (err) {
-      console.error('Error guardando zona:', err)
+      console.error("Error guardando zona:", err);
     } finally {
-      setIsSavingNewZone(false)
+      setIsSavingNewZone(false);
     }
   }, [
     isAuthenticated,
@@ -302,80 +331,83 @@ function BusquedaMapaContent() {
     isCreatingCustomZone,
     polygonPoints,
     newZoneName,
-    cargarMisZonas
-  ])
+    cargarMisZonas,
+  ]);
 
   const cancelDraftZone = useCallback(() => {
-    setNewZoneName('Nueva zona')
-    setIsMisZonasOpen(true)
-    resetDrawing()
-  }, [])
+    setNewZoneName("Nueva zona");
+    setIsMisZonasOpen(true);
+    resetDrawing();
+  }, []);
 
   const startEditZone = useCallback(
     (id: string) => {
-      const zoneId = Number(id)
-      if (Number.isNaN(zoneId)) return
+      const zoneId = Number(id);
+      if (Number.isNaN(zoneId)) return;
 
-      const zone = misZonas.find((item) => item.id === zoneId)
-      if (!zone) return
+      const zone = misZonas.find((item) => item.id === zoneId);
+      if (!zone) return;
 
-      const points = extraerCoordenadasDeGeometria(zone.geometria)
-      if (points.length < 3) return
+      const points = extraerCoordenadasDeGeometria(zone.geometria);
+      if (points.length < 3) return;
 
-      setEditingZoneId(id)
-      setEditingZoneName(zone.nombre)
-      setEditingPolygonPoints(points)
-      setIsCreatingCustomZone(false)
-      setIsDrawingMode(false)
-      setIsPolygonClosed(false)
-      setPolygonPoints([])
-      setSelectedZoneId(-zoneId)
-      setIsMisZonasOpen(true)
-      setIsSidebarOpen(false)
+      setEditingZoneId(id);
+      setEditingZoneName(zone.nombre);
+      setEditingPolygonPoints(points);
+      setIsCreatingCustomZone(false);
+      setIsDrawingMode(false);
+      setIsPolygonClosed(false);
+      setPolygonPoints([]);
+      setSelectedZoneId(-zoneId);
+      setIsMisZonasOpen(true);
+      setIsSidebarOpen(false);
     },
-    [misZonas]
-  )
+    [misZonas],
+  );
 
   const saveEditedZone = useCallback(async () => {
-    if (!editingZoneId || isSavingEditedZone || editingPolygonPoints.length < 3) return
+    if (!editingZoneId || isSavingEditedZone || editingPolygonPoints.length < 3)
+      return;
 
-    const token = localStorage.getItem('token')
-    if (!token) return
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
-    const zoneId = Number(editingZoneId)
-    if (Number.isNaN(zoneId)) return
+    const zoneId = Number(editingZoneId);
+    if (Number.isNaN(zoneId)) return;
 
-    setIsSavingEditedZone(true)
+    setIsSavingEditedZone(true);
     try {
-      const ring = [...editingPolygonPoints, editingPolygonPoints[0]].map(([lat, lng]) => [lng, lat])
-      const nombreFinal = editingZoneName.trim() || 'Nueva zona'
+      const ring = [...editingPolygonPoints, editingPolygonPoints[0]].map(
+        ([lat, lng]) => [lng, lat],
+      );
+      const nombreFinal = editingZoneName.trim() || "Nueva zona";
 
       const response = await fetch(`${API_URL}/api/perfil/zonas/${zoneId}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           nombre: nombreFinal.slice(0, 100),
           geometria: {
-            type: 'Polygon',
-            coordinates: [ring]
-          }
-        })
-      })
+            type: "Polygon",
+            coordinates: [ring],
+          },
+        }),
+      });
 
       if (!response.ok) {
-        throw new Error('No se pudo actualizar la zona')
+        throw new Error("No se pudo actualizar la zona");
       }
 
-      await cargarMisZonas()
-      setSelectedZoneId(-zoneId)
-      resetEditingZone()
+      await cargarMisZonas();
+      setSelectedZoneId(-zoneId);
+      resetEditingZone();
     } catch (err) {
-      console.error('Error actualizando zona:', err)
+      console.error("Error actualizando zona:", err);
     } finally {
-      setIsSavingEditedZone(false)
+      setIsSavingEditedZone(false);
     }
   }, [
     editingZoneId,
@@ -383,84 +415,101 @@ function BusquedaMapaContent() {
     editingPolygonPoints,
     editingZoneName,
     cargarMisZonas,
-    resetEditingZone
-  ])
+    resetEditingZone,
+  ]);
 
   const cancelEditZone = useCallback(() => {
-    resetEditingZone()
-  }, [resetEditingZone])
+    resetEditingZone();
+  }, [resetEditingZone]);
 
   const deleteZone = useCallback(
     async (id: string) => {
-      const token = localStorage.getItem('token')
-      const zoneId = Number(id)
-      if (!token || Number.isNaN(zoneId)) return
+      const token = localStorage.getItem("token");
+      const zoneId = Number(id);
+      if (!token || Number.isNaN(zoneId)) return;
 
-      const confirmed = window.confirm('¿Eliminar esta zona?')
-      if (!confirmed) return
+      const confirmed = window.confirm("¿Eliminar esta zona?");
+      if (!confirmed) return;
 
       try {
         const response = await fetch(`${API_URL}/api/perfil/zonas/${zoneId}`, {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` }
-        })
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         if (!response.ok) {
-          throw new Error('No se pudo eliminar la zona')
+          throw new Error("No se pudo eliminar la zona");
         }
 
         if (selectedZoneId === -zoneId) {
-          setSelectedZoneId(null)
+          setSelectedZoneId(null);
         }
 
         if (editingZoneId === id) {
-          resetEditingZone()
+          resetEditingZone();
         }
 
-        await cargarMisZonas()
+        await cargarMisZonas();
       } catch (err) {
-        console.error('Error eliminando zona:', err)
+        console.error("Error eliminando zona:", err);
       }
     },
-    [cargarMisZonas, selectedZoneId, editingZoneId, resetEditingZone]
-  )
+    [cargarMisZonas, selectedZoneId, editingZoneId, resetEditingZone],
+  );
 
   // === 3. LÓGICA MATEMÁTICA HU8 (Filtro por polígono) ===
   const displayedProperties = useMemo(() => {
-    if (!properties) return []
+    if (!properties) return [];
     if (isPolygonClosed && polygonPoints.length >= 3) {
-      console.log('📐 [Turf.js] Polígono cerrado. Calculando intersecciones...')
+      console.log(
+        "📐 [Turf.js] Polígono cerrado. Calculando intersecciones...",
+      );
       try {
-        const turfCoords = [...polygonPoints, polygonPoints[0]].map((p) => [p[1], p[0]])
-        const drawPoly = polygon([turfCoords])
+        const turfCoords = [...polygonPoints, polygonPoints[0]].map((p) => [
+          p[1],
+          p[0],
+        ]);
+        const drawPoly = polygon([turfCoords]);
 
         return properties.filter((p: any) => {
-          if (p.lat == null || p.lng == null) return false
-          const pt = point([p.lng, p.lat])
-          const isInside = booleanPointInPolygon(pt, drawPoly)
-          if (isInside) console.log(`✅ Adentro: ${p.title}`)
-          return isInside
-        })
+          if (p.lat == null || p.lng == null) return false;
+          const pt = point([p.lng, p.lat]);
+          const isInside = booleanPointInPolygon(pt, drawPoly);
+          if (isInside) console.log(`✅ Adentro: ${p.title}`);
+          return isInside;
+        });
       } catch (err) {
-        console.error('Error en validación geométrica:', err)
-        return properties
+        console.error("Error en validación geométrica:", err);
+        return properties;
       }
     }
     if (selectedZoneId !== null) {
       // CAMBIO: Usar zonasCombinadas para incluir las personalizadas del usuario
-      const zona = zonasCombinadas.find((z: any) => z.id === selectedZoneId)
+      const zona = zonasCombinadas.find((z: any) => z.id === selectedZoneId);
       if (zona && zona.coordenadas && zona.coordenadas.length >= 3) {
-        const coords = [...zona.coordenadas, zona.coordenadas[0]].map((c: any) => [c[1], c[0]])
-        return properties.filter((p: any) => p.lat != null && booleanPointInPolygon(point([p.lng, p.lat]), polygon([coords])))
+        const coords = [...zona.coordenadas, zona.coordenadas[0]].map(
+          (c: any) => [c[1], c[0]],
+        );
+        return properties.filter(
+          (p: any) =>
+            p.lat != null &&
+            booleanPointInPolygon(point([p.lng, p.lat]), polygon([coords])),
+        );
       }
     }
-    return properties
-  }, [properties, isPolygonClosed, polygonPoints, selectedZoneId, zonasCombinadas])
+    return properties;
+  }, [
+    properties,
+    isPolygonClosed,
+    polygonPoints,
+    selectedZoneId,
+    zonasCombinadas,
+  ]);
 
   // === 4. ORDENAMIENTO (Usando resultados filtrados) ===
   const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
-    inmuebles: displayedProperties
-  })
+    inmuebles: displayedProperties,
+  });
 
   // === LÓGICA DE PAGINACIÓN ===
   const [listPage, setListPage] = useState(1);
@@ -485,180 +534,201 @@ function BusquedaMapaContent() {
   }, [listPage, listTotalPages]);
 
   // === 5. ESTADOS VISUALES Y DE CLUSTERS (develop + HU8) ===
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
-  const [hoveredId, setHoveredId] = useState<string | null>(null)
-  const [isHoveringList, setIsHoveringList] = useState(false)
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
+    null,
+  );
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [isHoveringList, setIsHoveringList] = useState(false);
 
-  const [clusterProperties, setClusterProperties] = useState<any[]>([])
-  const [isClusterView, setIsClusterView] = useState(false)
-  const [activeClusterIds, setActiveClusterIds] = useState<string[]>([])
+  const [clusterProperties, setClusterProperties] = useState<any[]>([]);
+  const [isClusterView, setIsClusterView] = useState(false);
+  const [activeClusterIds, setActiveClusterIds] = useState<string[]>([]);
 
-  const dragStartY = useRef<number | null>(null)
-  const dragStartState = useRef<SheetState>('peek')
+  const dragStartY = useRef<number | null>(null);
+  const dragStartState = useRef<SheetState>("peek");
 
   // Hover con debounce de 200 ms → vuela el mapa al marcador
   useEffect(() => {
     if (!hoveredId) {
       if (!isHoveringList) {
-        setSelectedPropertyId(null)
+        setSelectedPropertyId(null);
       }
-      return
+      return;
     }
 
     const timeout = setTimeout(() => {
       if (isHoveringList) {
-        setSelectedPropertyId(hoveredId)
+        setSelectedPropertyId(hoveredId);
       }
-    }, 200)
+    }, 200);
 
-    return () => clearTimeout(timeout)
-  }, [hoveredId, isHoveringList])
+    return () => clearTimeout(timeout);
+  }, [hoveredId, isHoveringList]);
 
   // Sincronización del mapa con el colapso del panel lateral
   useEffect(() => {
-    const t = setTimeout(() => window.dispatchEvent(new Event('resize')), 310)
-    return () => clearTimeout(t)
-  }, [isSidebarOpen, sheetState])
+    const t = setTimeout(() => window.dispatchEvent(new Event("resize")), 310);
+    return () => clearTimeout(t);
+  }, [isSidebarOpen, sheetState]);
 
   function handleClusterClick(props: any[]) {
-    setClusterProperties(props)
-    setIsClusterView(true)
-    setActiveClusterIds(props.map((p: any) => p.id))
+    setClusterProperties(props);
+    setIsClusterView(true);
+    setActiveClusterIds(props.map((p: any) => p.id));
   }
 
   const handleMapSelect = useCallback(
     (id: string | null) => {
-      setSelectedPropertyId(id)
+      setSelectedPropertyId(id);
 
       if (id) {
-        const prop = inmueblesOrdenados.find((p: any) => p.id === id)
+        const prop = inmueblesOrdenados.find((p: any) => p.id === id);
         if (prop) {
-          setPinnedProperty(prop)
-          setSheetState('peek')
+          setPinnedProperty(prop);
+          setSheetState("peek");
         }
       } else {
-        setPinnedProperty(null)
-        setIsClusterView(false)
-        setActiveClusterIds([])
-        setClusterProperties([])
+        setPinnedProperty(null);
+        setIsClusterView(false);
+        setActiveClusterIds([]);
+        setClusterProperties([]);
       }
     },
-    [inmueblesOrdenados]
-  )
+    [inmueblesOrdenados],
+  );
 
   // HU4 - Abre el detalle de la propiedad en una nueva pestaña.
   // Se usa property.id porque en filtros corresponde al inmuebleId.
   const abrirDetallePropiedad = (propertyId: string | number) => {
-    window.open(`/detalle-propiedad/${propertyId}`, '_blank', 'noopener,noreferrer')
-  }
+    window.open(
+      `/detalle-propiedad/${propertyId}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
+  };
 
   // Eventos táctiles para el Bottom Sheet
   function onTouchStart(e: React.TouchEvent) {
-    dragStartY.current = e.touches[0].clientY
-    dragStartState.current = sheetState === 'hidden' ? 'peek' : sheetState
+    dragStartY.current = e.touches[0].clientY;
+    dragStartState.current = sheetState === "hidden" ? "peek" : sheetState;
   }
 
   function onTouchEnd(e: React.TouchEvent) {
-    if (dragStartY.current === null) return
-    const dy = dragStartY.current - e.changedTouches[0].clientY
+    if (dragStartY.current === null) return;
+    const dy = dragStartY.current - e.changedTouches[0].clientY;
     if (Math.abs(dy) < 20) {
-      dragStartY.current = null
-      return
+      dragStartY.current = null;
+      return;
     }
     if (dy > 40) {
-      setSheetState(dragStartState.current === 'peek' ? 'full' : 'full')
+      setSheetState(dragStartState.current === "peek" ? "full" : "full");
     } else if (dy < -40) {
-      setSheetState(dragStartState.current === 'full' ? 'peek' : 'hidden')
+      setSheetState(dragStartState.current === "full" ? "peek" : "hidden");
     }
-    dragStartY.current = null
+    dragStartY.current = null;
   }
 
   // ── COMPONENTES COMPARTIDOS MÓVILES ───────────────────────
   const MenuToggleComponent = (
     <div className="flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90">
       <button
-        onClick={() => setViewMode('grid')}
-        className={`p-1 rounded transition-colors ${viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-          }`}
+        onClick={() => setViewMode("grid")}
+        className={`p-1 rounded transition-colors ${
+          viewMode === "grid"
+            ? "bg-white text-[#ea580c] shadow-sm"
+            : "text-stone-400"
+        }`}
       >
         <LayoutGrid size={16} />
       </button>
       <button
-        onClick={() => setViewMode('list')}
-        className={`p-1 rounded transition-colors ${viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-          }`}
+        onClick={() => setViewMode("list")}
+        className={`p-1 rounded transition-colors ${
+          viewMode === "list"
+            ? "bg-white text-[#ea580c] shadow-sm"
+            : "text-stone-400"
+        }`}
       >
         <ListIcon size={16} />
       </button>
     </div>
-  )
+  );
 
-  const PropertyListMobile = ({ onClickItem }: { onClickItem?: (p: any) => void }) => (
+  const PropertyListMobile = ({
+    onClickItem,
+  }: {
+    onClickItem?: (p: any) => void;
+  }) => (
     <div className="flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar">
       {isLoading ? (
         <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2">
-          <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />{' '}
+          <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />{" "}
           Actualizando...
         </div>
       ) : displayedProperties.length === 0 ? (
         <EmptyState />
       ) : (
         <div
-          className={`gap-3 flex flex-col ${viewMode === 'list'
-              ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-              : ''
-            }`}
+          className={`gap-3 flex flex-col ${
+            viewMode === "list"
+              ? "divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm"
+              : ""
+          }`}
         >
-          {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
-            <div
-              key={property.id}
-              onClick={() => {
-                // HU4 - Mantiene la selección visual actual
-                setSelectedPropertyId(property.id)
+          {(isClusterView ? clusterProperties : paginatedProperties).map(
+            (property: any) => (
+              <div
+                key={property.id}
+                onClick={() => {
+                  // HU4 - Mantiene la selección visual actual
+                  setSelectedPropertyId(property.id);
 
-                // HU4 - Conserva el comportamiento existente del listado móvil
-                onClickItem?.(property)
+                  // HU4 - Conserva el comportamiento existente del listado móvil
+                  onClickItem?.(property);
 
-                // HU4 - Abre el detalle en una nueva pestaña
-                abrirDetallePropiedad(property.id)
-            }}
-              className={`cursor-pointer transition-all duration-200 rounded-xl ${selectedPropertyId === property.id ? 'ring-2 ring-orange-400 ring-offset-1' : ''
+                  // HU4 - Abre el detalle en una nueva pestaña
+                  abrirDetallePropiedad(property.id);
+                }}
+                className={`cursor-pointer transition-all duration-200 rounded-xl ${
+                  selectedPropertyId === property.id
+                    ? "ring-2 ring-orange-400 ring-offset-1"
+                    : ""
                 }`}
-            >
-              {viewMode === 'grid' ? (
-                <PropertyCard
-                  imagen=""
-                  estado={property.type}
-                  precio={
-                    property.currency === 'USD'
-                      ? `$${property.price.toLocaleString('es-BO')} USD`
-                      : `Bs ${property.price.toLocaleString('es-BO')}`
-                  }
-                  descripcion={property.descripcion || property.title}
-                  camas={property.nroCuartos ?? 0}
-                  banos={property.nroBanos ?? 0}
-                  metros={property.superficieM2 ?? 0}
-                />
-              ) : (
-                <PropertyRow
-                  title={property.title}
-                  price={
-                    property.currency === 'USD'
-                      ? `$${property.price.toLocaleString('es-BO')} USD`
-                      : `Bs ${property.price.toLocaleString('es-BO')}`
-                  }
-                  size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
-                  contactType="whatsapp"
-                  image=""
-                />
-              )}
-            </div>
-          ))}
+              >
+                {viewMode === "grid" ? (
+                  <PropertyCard
+                    imagen=""
+                    estado={property.type}
+                    precio={
+                      property.currency === "USD"
+                        ? `$${property.price.toLocaleString("es-BO")} USD`
+                        : `Bs ${property.price.toLocaleString("es-BO")}`
+                    }
+                    descripcion={property.descripcion || property.title}
+                    camas={property.nroCuartos ?? 0}
+                    banos={property.nroBanos ?? 0}
+                    metros={property.superficieM2 ?? 0}
+                  />
+                ) : (
+                  <PropertyRow
+                    title={property.title}
+                    price={
+                      property.currency === "USD"
+                        ? `$${property.price.toLocaleString("es-BO")} USD`
+                        : `Bs ${property.price.toLocaleString("es-BO")}`
+                    }
+                    size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
+                    contactType="whatsapp"
+                    image=""
+                  />
+                )}
+              </div>
+            ),
+          )}
         </div>
       )}
     </div>
-  )
-
+  );
 
   const renderListPaginationFooter = () => {
     if (isClusterView) {
@@ -666,7 +736,10 @@ function BusquedaMapaContent() {
         <div className="shrink-0 border-t border-stone-100 bg-stone-50 px-3 py-2">
           <p className="text-[11px] text-stone-500 text-center sm:text-left">
             Mostrando {clusterProperties.length}{" "}
-            {clusterProperties.length === 1 ? "propiedad del clúster" : "propiedades del clúster"}.
+            {clusterProperties.length === 1
+              ? "propiedad del clúster"
+              : "propiedades del clúster"}
+            .
           </p>
         </div>
       ) : null;
@@ -693,12 +766,22 @@ function BusquedaMapaContent() {
   if (isMounted && (isMobile || isLandscape)) {
     if (isLandscape) {
       return (
-        <div className="flex flex-col bg-white overflow-hidden" style={{ height: '100dvh' }}>
-          <div className="shrink-0" style={{ zIndex: 1002, position: 'relative' }}>
-            <FilterBar variant="map" onSearch={(f) => console.log('🔍 Filtros:', f)} onOpenSuperficieFilter={() => {
-              setIsSidebarOpen(true)
-              setActiveSidebarView('superficie')
-            }} />
+        <div
+          className="flex flex-col bg-white overflow-hidden"
+          style={{ height: "100dvh" }}
+        >
+          <div
+            className="shrink-0"
+            style={{ zIndex: 1002, position: "relative" }}
+          >
+            <FilterBar
+              variant="map"
+              onSearch={(f) => console.log("🔍 Filtros:", f)}
+              onOpenSuperficieFilter={() => {
+                setIsSidebarOpen(true);
+                setActiveSidebarView("superficie");
+              }}
+            />
           </div>
           <div className="flex flex-1 overflow-hidden">
             <div className="flex-1 relative">
@@ -720,21 +803,28 @@ function BusquedaMapaContent() {
                   onEditablePointDrag={(index, lat, lng) => {
                     setEditingPolygonPoints((prev) =>
                       prev.map((point, pointIndex) =>
-                        pointIndex === index ? [lat, lng] : point
-                      )
-                    )
+                        pointIndex === index ? [lat, lng] : point,
+                      ),
+                    );
                   }}
                   onMapClick={(latlng) => {
                     if (isDrawingMode && !isPolygonClosed) {
-                      setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
+                      setPolygonPoints((prev) => [
+                        ...prev,
+                        [latlng.lat, latlng.lng],
+                      ]);
                     }
                   }}
                   onPointClick={(index) => {
-                    if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
-                      setIsPolygonClosed(true)
-                      setIsDrawingMode(false)
+                    if (
+                      isDrawingMode &&
+                      index === 0 &&
+                      polygonPoints.length >= 3
+                    ) {
+                      setIsPolygonClosed(true);
+                      setIsDrawingMode(false);
                       if (isCreatingCustomZone) {
-                        setIsMisZonasOpen(true)
+                        setIsMisZonasOpen(true);
                       }
                     }
                   }}
@@ -745,9 +835,13 @@ function BusquedaMapaContent() {
               <div className="px-3 py-2 border-b border-stone-100 flex items-center justify-between shrink-0">
                 <span className="text-sm font-semibold text-slate-700">
                   <span className="text-orange-500">
-                    {isClusterView ? clusterProperties.length : displayedProperties.length}
+                    {isClusterView
+                      ? clusterProperties.length
+                      : displayedProperties.length}
                   </span>
-                  <span className="ml-1 text-gray-500 font-normal text-xs">props.</span>
+                  <span className="ml-1 text-gray-500 font-normal text-xs">
+                    props.
+                  </span>
                 </span>
                 {MenuToggleComponent}
               </div>
@@ -758,20 +852,28 @@ function BusquedaMapaContent() {
             </div>
           </div>
         </div>
-      )
+      );
     }
 
     // ────────────────────────────────────────────────────────────────────────────
     // RENDER PORTRAIT MÓVIL — Bottom Sheet
     // ────────────────────────────────────────────────────────────────────────────
     return (
-      <div className="flex flex-col overflow-hidden bg-white" style={{ height: '100dvh' }}>
-        <div className="shrink-0 overflow-x-auto" style={{ zIndex: 1002, position: 'relative' }}>
+      <div
+        className="flex flex-col overflow-hidden bg-white"
+        style={{ height: "100dvh" }}
+      >
+        <div
+          className="shrink-0 overflow-x-auto"
+          style={{ zIndex: 1002, position: "relative" }}
+        >
           <div className="min-w-max">
-            <FilterBar variant="map" onSearch={(f) => console.log('🔍 Filtros:', f)}
+            <FilterBar
+              variant="map"
+              onSearch={(f) => console.log("🔍 Filtros:", f)}
               onOpenSuperficieFilter={() => {
-                setIsSidebarOpen(true)
-                setActiveSidebarView('superficie')
+                setIsSidebarOpen(true);
+                setActiveSidebarView("superficie");
               }}
             />
           </div>
@@ -795,21 +897,24 @@ function BusquedaMapaContent() {
               onEditablePointDrag={(index, lat, lng) => {
                 setEditingPolygonPoints((prev) =>
                   prev.map((point, pointIndex) =>
-                    pointIndex === index ? [lat, lng] : point
-                  )
-                )
+                    pointIndex === index ? [lat, lng] : point,
+                  ),
+                );
               }}
               onMapClick={(latlng) => {
                 if (isDrawingMode && !isPolygonClosed) {
-                  setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
+                  setPolygonPoints((prev) => [
+                    ...prev,
+                    [latlng.lat, latlng.lng],
+                  ]);
                 }
               }}
               onPointClick={(index) => {
                 if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
-                  setIsPolygonClosed(true)
-                  setIsDrawingMode(false)
+                  setIsPolygonClosed(true);
+                  setIsDrawingMode(false);
                   if (isCreatingCustomZone) {
-                    setIsMisZonasOpen(true)
+                    setIsMisZonasOpen(true);
                   }
                 }
               }}
@@ -817,11 +922,11 @@ function BusquedaMapaContent() {
               activeClusterIds={activeClusterIds}
             />
           </div>
-          {sheetState === 'hidden' && (
+          {sheetState === "hidden" && (
             <button
-              onClick={() => setSheetState('peek')}
+              onClick={() => setSheetState("peek")}
               className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[20] bg-white rounded-full px-5 py-3 shadow-xl border border-stone-200 flex items-center gap-2 text-sm font-semibold text-slate-700 active:scale-95 transition-transform"
-              style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.18)' }}
+              style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.18)" }}
             >
               <ListIcon size={16} className="text-orange-500" /> Ver lista
               {displayedProperties.length > 0 && (
@@ -832,37 +937,43 @@ function BusquedaMapaContent() {
               <ChevronUp size={16} className="text-stone-400" />
             </button>
           )}
-          {sheetState !== 'hidden' && (
+          {sheetState !== "hidden" && (
             <div
               className="absolute left-0 right-0 bottom-0 z-[30] bg-white rounded-t-2xl shadow-[0_-4px_24px_rgba(0,0,0,0.12)] flex flex-col"
               style={{
                 height: SHEET_H[sheetState],
-                transition: 'height 0.3s cubic-bezier(0.32,0.72,0,1)'
+                transition: "height 0.3s cubic-bezier(0.32,0.72,0,1)",
               }}
               onTouchStart={onTouchStart}
               onTouchEnd={onTouchEnd}
             >
               <div
                 className="shrink-0 overflow-x-auto"
-                style={{ zIndex: 10, position: 'relative' }}
+                style={{ zIndex: 10, position: "relative" }}
               >
                 <div
                   className="w-10 h-1.5 bg-stone-300 hover:bg-orange-400 rounded-full mb-3 transition-colors"
-                  onClick={() => setSheetState((s) => (s === 'full' ? 'peek' : 'full'))}
+                  onClick={() =>
+                    setSheetState((s) => (s === "full" ? "peek" : "full"))
+                  }
                 />
                 <div className="flex items-center justify-between w-full px-4 pb-2">
                   <span className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
                     <span className="text-orange-500">
-                      {isClusterView ? clusterProperties.length : displayedProperties.length}
+                      {isClusterView
+                        ? clusterProperties.length
+                        : displayedProperties.length}
                     </span>
-                    <span className="text-gray-500 font-normal">propiedades</span>
+                    <span className="text-gray-500 font-normal">
+                      propiedades
+                    </span>
                   </span>
                   {isClusterView && (
                     <button
                       onClick={() => {
-                        setIsClusterView(false)
-                        setClusterProperties([])
-                        setActiveClusterIds([])
+                        setIsClusterView(false);
+                        setClusterProperties([]);
+                        setActiveClusterIds([]);
                       }}
                       className="text-xs text-orange-500 hover:underline px-2"
                     >
@@ -872,19 +983,19 @@ function BusquedaMapaContent() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={(e) => {
-                        e.stopPropagation()
-                        setSheetState('hidden')
+                        e.stopPropagation();
+                        setSheetState("hidden");
                       }}
                       className="flex items-center gap-1 text-xs text-stone-400 hover:text-stone-600 bg-stone-100 rounded-full px-2 py-1"
                     >
                       <X size={12} />
                       <span>Ocultar</span>
                     </button>
-                    {sheetState === 'peek' ? (
+                    {sheetState === "peek" ? (
                       <button
                         onClick={(e) => {
-                          e.stopPropagation()
-                          setSheetState('full')
+                          e.stopPropagation();
+                          setSheetState("full");
                         }}
                         className="text-stone-400 hover:text-stone-600 p-1"
                       >
@@ -893,8 +1004,8 @@ function BusquedaMapaContent() {
                     ) : (
                       <button
                         onClick={(e) => {
-                          e.stopPropagation()
-                          setSheetState('peek')
+                          e.stopPropagation();
+                          setSheetState("peek");
                         }}
                         className="text-stone-400 hover:text-stone-600 p-1"
                       >
@@ -914,8 +1025,8 @@ function BusquedaMapaContent() {
                   <div className="mx-4 mb-3 relative shrink-0">
                     <button
                       onClick={() => {
-                        setPinnedProperty(null)
-                        setSelectedPropertyId(null)
+                        setPinnedProperty(null);
+                        setSelectedPropertyId(null);
                       }}
                       className="absolute top-2 right-2 z-10 bg-white rounded-full p-1 shadow text-stone-400 hover:text-stone-600"
                     >
@@ -926,11 +1037,13 @@ function BusquedaMapaContent() {
                         imagen=""
                         estado={pinnedProperty.type}
                         precio={
-                          pinnedProperty.currency === 'USD'
-                            ? `$${pinnedProperty.price.toLocaleString('es-BO')} USD`
-                            : `Bs ${pinnedProperty.price.toLocaleString('es-BO')}`
+                          pinnedProperty.currency === "USD"
+                            ? `$${pinnedProperty.price.toLocaleString("es-BO")} USD`
+                            : `Bs ${pinnedProperty.price.toLocaleString("es-BO")}`
                         }
-                        descripcion={pinnedProperty.descripcion || pinnedProperty.title}
+                        descripcion={
+                          pinnedProperty.descripcion || pinnedProperty.title
+                        }
                         camas={pinnedProperty.nroCuartos ?? 0}
                         banos={pinnedProperty.nroBanos ?? 0}
                         metros={pinnedProperty.superficieM2 ?? 0}
@@ -951,8 +1064,8 @@ function BusquedaMapaContent() {
                 <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
                   <PropertyListMobile
                     onClickItem={(p) => {
-                      setPinnedProperty(p)
-                      setSheetState('peek')
+                      setPinnedProperty(p);
+                      setSheetState("peek");
                     }}
                   />
                   {renderListPaginationFooter()}
@@ -962,7 +1075,7 @@ function BusquedaMapaContent() {
           )}
         </div>
       </div>
-    )
+    );
   }
 
   // ────────────────────────────────────────────────────────────────────────────
@@ -973,30 +1086,34 @@ function BusquedaMapaContent() {
       <FilterBar
         variant="map"
         onSearch={(nuevosFiltros) => {
-          console.log('🔍 Buscando con filtros:', nuevosFiltros)
+          console.log("🔍 Buscando con filtros:", nuevosFiltros);
         }}
         onOpenPriceFilter={() => {
-          setIsPriceFilterOpen(prev => !prev)
-          setIsSidebarOpen(true)
-          setActiveSidebarView('results')
+          setIsPriceFilterOpen((prev) => !prev);
+          setIsSidebarOpen(true);
+          setActiveSidebarView("results");
         }}
         onOpenSuperficieFilter={() => {
-          setIsPriceFilterOpen(false)
-          setIsSidebarOpen(true)
-          setActiveSidebarView(prev => prev === 'superficie' ? 'results' : 'superficie')
+          setIsPriceFilterOpen(false);
+          setIsSidebarOpen(true);
+          setActiveSidebarView((prev) =>
+            prev === "superficie" ? "results" : "superficie",
+          );
         }}
         isCapacidadActive={isCapacidadOpen}
         onToggleCapacidad={toggleCapacidad}
-
         isPriceFilterActive={isPriceFilterOpen}
-        isSuperficieFilterActive={activeSidebarView === 'superficie' && isSidebarOpen}
+        isSuperficieFilterActive={
+          activeSidebarView === "superficie" && isSidebarOpen
+        }
       />
 
       <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200">
         {/* Panel lateral colapsable */}
         <aside
-          className={`bg-white border-r border-stone-200 flex flex-col z-10 transition-all duration-300 min-h-0 overflow-hidden ${isSidebarOpen ? 'w-full md:w-[450px] h-[65dvh] md:h-full' : 'w-0'
-            }`}
+          className={`bg-white border-r border-stone-200 flex flex-col z-10 transition-all duration-300 min-h-0 overflow-hidden ${
+            isSidebarOpen ? "w-full md:w-[450px] h-[65dvh] md:h-full" : "w-0"
+          }`}
         >
           {/* ✅ MODIFICADO: ternario que alterna entre filtro de precio y resultados */}
           {isPriceFilterOpen ? (
@@ -1004,199 +1121,218 @@ function BusquedaMapaContent() {
             <PriceFilterSidebar
               isOpen={isPriceFilterOpen}
               onClose={() => {
-                setIsPriceFilterOpen(false) // cierra el filtro
-                setIsSidebarOpen(true)      // asegura que el aside siga visible
+                setIsPriceFilterOpen(false); // cierra el filtro
+                setIsSidebarOpen(true); // asegura que el aside siga visible
               }}
               totalResultados={displayedProperties.length}
             />
-          ) : isSidebarOpen && activeSidebarView === 'capacidad' ? (
+          ) : isSidebarOpen && activeSidebarView === "capacidad" ? (
             <CapacidadSidebar
               isOpen={true}
               onClose={() => {
-                setIsCapacidadOpen(false)
-                setActiveSidebarView('results')
+                setIsCapacidadOpen(false);
+                setActiveSidebarView("results");
               }}
               onApply={(dormitoriosMin, dormitoriosMax, banosMin, banosMax) => {
-                console.log('Filtros capacidad:', { dormitoriosMin, dormitoriosMax, banosMin, banosMax })
-                setIsCapacidadOpen(false)
-                setActiveSidebarView('results')
+                console.log("Filtros capacidad:", {
+                  dormitoriosMin,
+                  dormitoriosMax,
+                  banosMin,
+                  banosMax,
+                });
+                setIsCapacidadOpen(false);
+                setActiveSidebarView("results");
               }}
-          /> 
-        ) :
-            isSidebarOpen && activeSidebarView === 'results' ? (
-              <div className="flex flex-col h-full min-h-0">
-                <div className="p-4 bg-white shrink-0">
-                  <div className="flex justify-between items-center mb-4">
-                    <div className="flex flex-col">
-                      <div className="flex flex-col gap-1">
-                        <div className="flex items-center gap-1">
-                          <Filter className="w-4 h-4 text-orange-500" />
-                          <h1 className="text-base font-semibold text-stone-900 uppercase tracking-wide">
-                            Filtros{' '}
-                          </h1>
-                        </div>
-                        <div className="flex items-center gap-2 mb-2">
-                          <h1 className="text-xl font-semibold text-slate-800">
-                            {isClusterView
-                              ? `${clusterProperties.length} propiedades en este clúster`
-                              : 'Resultados de búsqueda'}
-                          </h1>
-                        </div>
-                        <h2 className="text-sm font-bold text-slate-900">
-                          <span className="text-orange-500">
-                            {isClusterView ? clusterProperties.length : displayedProperties.length}
-                          </span>
-                          <span className="ml-2 text-gray-600 font-normal text-sm">
-                            {(isClusterView
-                              ? clusterProperties.length
-                              : displayedProperties.length) === 1
-                              ? 'propiedad encontrada'
-                              : 'propiedades encontradas'}
-                          </span>
-                        </h2>
-                        {isClusterView && (
-                          <button
-                            onClick={() => {
-                              setIsClusterView(false)
-                              setClusterProperties([])
-                              setActiveClusterIds([])
-                            }}
-                            className="text-sm text-orange-500 hover:underline flex items-center gap-1 mt-1 mb-2"
-                          >
-                            ← Volver a todos los resultados
-                          </button>
-                        )}
+            />
+          ) : isSidebarOpen && activeSidebarView === "results" ? (
+            <div className="flex flex-col h-full min-h-0">
+              <div className="p-4 bg-white shrink-0">
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex flex-col">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-1">
+                        <Filter className="w-4 h-4 text-orange-500" />
+                        <h1 className="text-base font-semibold text-stone-900 uppercase tracking-wide">
+                          Filtros{" "}
+                        </h1>
                       </div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <h1 className="text-xl font-semibold text-slate-800">
+                          {isClusterView
+                            ? `${clusterProperties.length} propiedades en este clúster`
+                            : "Resultados de búsqueda"}
+                        </h1>
+                      </div>
+                      <h2 className="text-sm font-bold text-slate-900">
+                        <span className="text-orange-500">
+                          {isClusterView
+                            ? clusterProperties.length
+                            : displayedProperties.length}
+                        </span>
+                        <span className="ml-2 text-gray-600 font-normal text-sm">
+                          {(isClusterView
+                            ? clusterProperties.length
+                            : displayedProperties.length) === 1
+                            ? "propiedad encontrada"
+                            : "propiedades encontradas"}
+                        </span>
+                      </h2>
+                      {isClusterView && (
+                        <button
+                          onClick={() => {
+                            setIsClusterView(false);
+                            setClusterProperties([]);
+                            setActiveClusterIds([]);
+                          }}
+                          className="text-sm text-orange-500 hover:underline flex items-center gap-1 mt-1 mb-2"
+                        >
+                          ← Volver a todos los resultados
+                        </button>
+                      )}
                     </div>
+                  </div>
+                  <button
+                    onClick={() => setIsSidebarOpen(false)}
+                    className="p-1 hover:bg-stone-100 rounded-full transition-colors text-stone-400"
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
+                </div>
+
+                <div className="relative border-b border-stone-100 pb-4 [&>div]:mb-0">
+                  <MenuOrdenamiento
+                    totalResultados={displayedProperties.length}
+                    ordenActual={ordenActual}
+                    onOrdenChange={cambiarOrden}
+                  />
+                  <div className="absolute right-0 bottom-4 flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90 origin-bottom-right">
                     <button
-                      onClick={() => setIsSidebarOpen(false)}
-                      className="p-1 hover:bg-stone-100 rounded-full transition-colors text-stone-400"
+                      onClick={() => setViewMode("grid")}
+                      className={`p-1 rounded transition-colors ${
+                        viewMode === "grid"
+                          ? "bg-white text-[#ea580c] shadow-sm"
+                          : "text-stone-400"
+                      }`}
                     >
-                      <ChevronLeft size={20} />
+                      <LayoutGrid size={16} />
+                    </button>
+                    <button
+                      onClick={() => setViewMode("list")}
+                      className={`p-1 rounded transition-colors ${
+                        viewMode === "list"
+                          ? "bg-white text-[#ea580c] shadow-sm"
+                          : "text-stone-400"
+                      }`}
+                    >
+                      <ListIcon size={16} />
                     </button>
                   </div>
-
-                  <div className="relative border-b border-stone-100 pb-4 [&>div]:mb-0">
-                    <MenuOrdenamiento
-                      totalResultados={displayedProperties.length}
-                      ordenActual={ordenActual}
-                      onOrdenChange={cambiarOrden}
-                    />
-                    <div className="absolute right-0 bottom-4 flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90 origin-bottom-right">
-                      <button
-                        onClick={() => setViewMode('grid')}
-                        className={`p-1 rounded transition-colors ${viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-                          }`}
-                      >
-                        <LayoutGrid size={16} />
-                      </button>
-                      <button
-                        onClick={() => setViewMode('list')}
-                        className={`p-1 rounded transition-colors ${viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-                          }`}
-                      >
-                        <ListIcon size={16} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-
-                {/* Lista de propiedades */}
-                <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
-                  <div
-                    className="flex-1 min-h-0 overflow-y-auto p-4 bg-stone-50 no-scrollbar"
-                    onMouseEnter={() => setIsHoveringList(true)}
-                    onMouseLeave={() => {
-                      setIsHoveringList(false)
-                      setSelectedPropertyId(null)
-                      setHoveredId(null)
-                    }}
-                  >
-                    {isLoading ? (
-                      <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
-                        <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
-                        Actualizando resultados...
-                      </div>
-                    ) : displayedProperties.length === 0 ? (
-                      <EmptyState />
-                    ) : (
-                      <div
-                        className={`gap-4 flex flex-col ${viewMode === 'list'
-                            ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-                            : ''
-                          }`}
-                      >
-                        {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
-                          <div
-                            key={property.id}
-                            onMouseEnter={() => setHoveredId(property.id)}
-                            onMouseLeave={() => setHoveredId(null)}
-                            onClick={() => {
-                              // HU4 - Mantiene la selección visual en resultados
-                              setSelectedPropertyId(property.id)
-
-                              // HU4 - Abre el detalle de la propiedad en una nueva pestaña
-                              abrirDetallePropiedad(property.id)
-                            }}
-                            className={`cursor-pointer transition-all duration-200 rounded-xl relative ${viewMode === 'grid'
-                                ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
-                                : 'w-full py-1 hover:bg-stone-100'
-                              } ${selectedPropertyId === property.id
-                                ? 'ring-2 ring-orange-400 ring-offset-1 z-10'
-                                : ''
-                              }`}
-                          >
-                            {viewMode === 'grid' ? (
-                              <PropertyCard
-                                imagen={
-                                  property.thumbnailUrl ||
-                                  property.imagen ||
-                                  'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
-                                }
-                                estado={property.type}
-                                precio={
-                                  property.currency === 'USD'
-                                    ? `$${property.price.toLocaleString('es-BO')} USD`
-                                    : `Bs ${property.price.toLocaleString('es-BO')}`
-                                }
-                                descripcion={property.descripcion || property.title}
-                                camas={property.nroCuartos ?? 0}
-                                banos={property.nroBanos ?? 0}
-                                metros={property.superficieM2 ?? 0}
-                              />
-                            ) : (
-                              <PropertyRow
-                                title={property.title}
-                                price={
-                                  property.currency === 'USD'
-                                    ? `$${property.price.toLocaleString('es-BO')} USD`
-                                    : `Bs ${property.price.toLocaleString('es-BO')}`
-                                }
-                                size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
-                                contactType="whatsapp"
-                                image={
-                                  property.thumbnailUrl ||
-                                  property.imagen ||
-                                  'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
-                                }
-                              />
-                            )}
-                          </div>
-                        )
-                        )}
-                      </div>
-                    )}
-                  </div>
-                  {renderListPaginationFooter()}
                 </div>
               </div>
-            )
-              : isSidebarOpen && activeSidebarView === 'superficie' ? (
-                <div className="flex flex-col h-full min-h-0 bg-white">
-                  <SuperficieFilterSidebar onClose={() => setActiveSidebarView('results')} />
+
+              {/* Lista de propiedades */}
+              <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
+                <div
+                  className="flex-1 min-h-0 overflow-y-auto p-4 bg-stone-50 no-scrollbar"
+                  onMouseEnter={() => setIsHoveringList(true)}
+                  onMouseLeave={() => {
+                    setIsHoveringList(false);
+                    setSelectedPropertyId(null);
+                    setHoveredId(null);
+                  }}
+                >
+                  {isLoading ? (
+                    <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse">
+                      <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+                      Actualizando resultados...
+                    </div>
+                  ) : displayedProperties.length === 0 ? (
+                    <EmptyState />
+                  ) : (
+                    <div
+                      className={`gap-4 flex flex-col ${
+                        viewMode === "list"
+                          ? "divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm"
+                          : ""
+                      }`}
+                    >
+                      {(isClusterView
+                        ? clusterProperties
+                        : paginatedProperties
+                      ).map((property: any) => (
+                        <div
+                          key={property.id}
+                          onMouseEnter={() => setHoveredId(property.id)}
+                          onMouseLeave={() => setHoveredId(null)}
+                          onClick={() => {
+                            // HU4 - Mantiene la selección visual en resultados
+                            setSelectedPropertyId(property.id);
+
+                            // HU4 - Abre el detalle de la propiedad en una nueva pestaña
+                            abrirDetallePropiedad(property.id);
+                          }}
+                          className={`cursor-pointer transition-all duration-200 rounded-xl relative ${
+                            viewMode === "grid"
+                              ? "transform scale-95 origin-top mx-auto mb-[-4%]"
+                              : "w-full py-1 hover:bg-stone-100"
+                          } ${
+                            selectedPropertyId === property.id
+                              ? "ring-2 ring-orange-400 ring-offset-1 z-10"
+                              : ""
+                          }`}
+                        >
+                          {viewMode === "grid" ? (
+                            <PropertyCard
+                              imagen={
+                                property.thumbnailUrl ||
+                                property.imagen ||
+                                "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80"
+                              }
+                              estado={property.type}
+                              precio={
+                                property.currency === "USD"
+                                  ? `$${property.price.toLocaleString("es-BO")} USD`
+                                  : `Bs ${property.price.toLocaleString("es-BO")}`
+                              }
+                              descripcion={
+                                property.descripcion || property.title
+                              }
+                              camas={property.nroCuartos ?? 0}
+                              banos={property.nroBanos ?? 0}
+                              metros={property.superficieM2 ?? 0}
+                            />
+                          ) : (
+                            <PropertyRow
+                              title={property.title}
+                              price={
+                                property.currency === "USD"
+                                  ? `$${property.price.toLocaleString("es-BO")} USD`
+                                  : `Bs ${property.price.toLocaleString("es-BO")}`
+                              }
+                              size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
+                              contactType="whatsapp"
+                              image={
+                                property.thumbnailUrl ||
+                                property.imagen ||
+                                "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80"
+                              }
+                            />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              ) : null}
+                {renderListPaginationFooter()}
+              </div>
+            </div>
+          ) : isSidebarOpen && activeSidebarView === "superficie" ? (
+            <div className="flex flex-col h-full min-h-0 bg-white">
+              <SuperficieFilterSidebar
+                onClose={() => setActiveSidebarView("results")}
+              />
+            </div>
+          ) : null}
         </aside>
 
         {/* Área del mapa */}
@@ -1220,11 +1356,11 @@ function BusquedaMapaContent() {
               <div className="flex flex-row gap-2 pointer-events-auto">
                 <button
                   onClick={() => {
-                    resetDrawing() // AÑADIDO: Limpia el mapa antes de iniciar un nuevo dibujo
-                    resetEditingZone()
-                    setIsCreatingCustomZone(false)
-                    setIsDrawingMode(true)
-                    setIsSidebarOpen(true)
+                    resetDrawing(); // AÑADIDO: Limpia el mapa antes de iniciar un nuevo dibujo
+                    resetEditingZone();
+                    setIsCreatingCustomZone(false);
+                    setIsDrawingMode(true);
+                    setIsSidebarOpen(true);
                   }}
                   className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 transition-all text-sm font-semibold"
                 >
@@ -1233,7 +1369,7 @@ function BusquedaMapaContent() {
                 <button
                   onClick={() => {
                     if (!isAuthenticated) {
-                      router.push('/sign-in');
+                      router.push("/sign-in");
                     } else {
                       setIsMisZonasOpen(true);
                     }
@@ -1251,11 +1387,11 @@ function BusquedaMapaContent() {
                   <button
                     onClick={() => {
                       if (polygonPoints.length < 3) {
-                        setDrawingError(true)
-                        setTimeout(() => setDrawingError(false), 3000)
+                        setDrawingError(true);
+                        setTimeout(() => setDrawingError(false), 3000);
                       } else {
-                        setIsPolygonClosed(true)
-                        setIsDrawingMode(false)
+                        setIsPolygonClosed(true);
+                        setIsDrawingMode(false);
                       }
                     }}
                     className="bg-[#ea580c] text-white px-4 py-2 rounded-lg shadow-md border border-orange-600 hover:bg-[#c2410c] transition-all text-sm font-semibold"
@@ -1278,12 +1414,12 @@ function BusquedaMapaContent() {
 
                 {!drawingError && (
                   <div className="bg-white/95 backdrop-blur-sm p-3 rounded-lg shadow-md border border-stone-200 text-xs text-stone-600 max-w-[220px] text-right">
-                    Haz clic en el mapa para marcar los vértices. Cierra la zona tocando el punto inicial.
+                    Haz clic en el mapa para marcar los vértices. Cierra la zona
+                    tocando el punto inicial.
                   </div>
                 )}
               </div>
             )}
-
           </div>
 
           {/* CAMBIO: Se removió isCreatingCustomZone para que aparezca siempre que haya un polígono cerrado */}
@@ -1318,21 +1454,24 @@ function BusquedaMapaContent() {
               onEditablePointDrag={(index, lat, lng) => {
                 setEditingPolygonPoints((prev) =>
                   prev.map((point, pointIndex) =>
-                    pointIndex === index ? [lat, lng] : point
-                  )
-                )
+                    pointIndex === index ? [lat, lng] : point,
+                  ),
+                );
               }}
               onMapClick={(latlng) => {
                 if (isDrawingMode && !isPolygonClosed) {
-                  setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
+                  setPolygonPoints((prev) => [
+                    ...prev,
+                    [latlng.lat, latlng.lng],
+                  ]);
                 }
               }}
               onPointClick={(index) => {
                 if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
-                  setIsPolygonClosed(true)
-                  setIsDrawingMode(false)
+                  setIsPolygonClosed(true);
+                  setIsDrawingMode(false);
                   if (isCreatingCustomZone) {
-                    setIsMisZonasOpen(true)
+                    setIsMisZonasOpen(true);
                   }
                 }
               }}
@@ -1350,7 +1489,12 @@ function BusquedaMapaContent() {
           onEditingZoneNameChange={setEditingZoneName}
           onConfirmEditZone={saveEditedZone}
           onCancelEditZone={cancelEditZone}
-          isDraftZoneVisible={isAuthenticated && isCreatingCustomZone && isPolygonClosed && polygonPoints.length >= 3}
+          isDraftZoneVisible={
+            isAuthenticated &&
+            isCreatingCustomZone &&
+            isPolygonClosed &&
+            polygonPoints.length >= 3
+          }
           draftZoneName={newZoneName}
           isSavingDraftZone={isSavingNewZone}
           onDraftZoneNameChange={setNewZoneName}
@@ -1359,7 +1503,7 @@ function BusquedaMapaContent() {
           onAddZone={() => {
             setIsMisZonasOpen(true);
             resetEditingZone();
-            setNewZoneName('Nueva zona');
+            setNewZoneName("Nueva zona");
             setIsCreatingCustomZone(true);
             setIsDrawingMode(true);
             setIsPolygonClosed(false);
@@ -1369,17 +1513,17 @@ function BusquedaMapaContent() {
           onEditZone={startEditZone}
           onDeleteZone={deleteZone}
           onZoneSelect={(id) => {
-            const zoneId = Number(id)
-            if (Number.isNaN(zoneId)) return
-            setSelectedZoneId(-zoneId)
+            const zoneId = Number(id);
+            if (Number.isNaN(zoneId)) return;
+            setSelectedZoneId(-zoneId);
           }}
         />
       </main>
     </div>
-  )
+  );
 }
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export default function BusquedaMapaPage() {
   return (
@@ -1392,5 +1536,5 @@ export default function BusquedaMapaPage() {
     >
       <BusquedaMapaContent />
     </Suspense>
-  )
+  );
 }

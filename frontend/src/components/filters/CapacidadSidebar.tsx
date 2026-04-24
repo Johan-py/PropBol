@@ -1,38 +1,42 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { X } from 'lucide-react'
-import { RangeSliderControl } from '../busqueda/capacidad/RangeSliderControl'
+import { useState } from "react";
+import { X } from "lucide-react";
+import { RangeSliderControl } from "../busqueda/capacidad/RangeSliderControl";
 
-type TipoBano = 'cualquiera' | 'privado' | 'compartido'
+type TipoBano = "cualquiera" | "privado" | "compartido";
 
 interface CapacidadSidebarProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen: boolean;
+  onClose: () => void;
   onApply?: (
     dormitoriosMin: number,
     dormitoriosMax: number,
     banosMin: number,
     banosMax: number,
-    tipoBano: TipoBano
-  ) => void
+    tipoBano: TipoBano,
+  ) => void;
 }
 
-export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarProps) {
-  const [dormitoriosMin, setDormitoriosMin] = useState(1)
-  const [dormitoriosMax, setDormitoriosMax] = useState(10)
-  const [banosMin, setBanosMin] = useState(1)
-  const [banosMax, setBanosMax] = useState(8)
-  const [tipoBano, setTipoBano] = useState<TipoBano>('cualquiera')
+export function CapacidadSidebar({
+  isOpen,
+  onClose,
+  onApply,
+}: CapacidadSidebarProps) {
+  const [dormitoriosMin, setDormitoriosMin] = useState(1);
+  const [dormitoriosMax, setDormitoriosMax] = useState(10);
+  const [banosMin, setBanosMin] = useState(1);
+  const [banosMax, setBanosMax] = useState(8);
+  const [tipoBano, setTipoBano] = useState<TipoBano>("cualquiera");
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   const handleApply = () => {
     if (onApply) {
-      onApply(dormitoriosMin, dormitoriosMax, banosMin, banosMax, tipoBano)
+      onApply(dormitoriosMin, dormitoriosMax, banosMin, banosMax, tipoBano);
     }
-    onClose()
-  }
+    onClose();
+  };
 
   return (
     <div className="flex flex-col h-full min-h-0 bg-white">
@@ -79,23 +83,26 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
 
           {/* Selector de tipo de baño */}
           <div className="space-y-3">
-            <p className="text-xs font-medium text-gray-600 mb-4">Tipo de baño:</p>
+            <p className="text-xs font-medium text-gray-600 mb-4">
+              Tipo de baño:
+            </p>
             <div className="flex gap-10">
               <label className="flex items-center gap-2 text-sm text-stone-700 font-medium cursor-pointer">
                 <div className="relative inline-flex shadow-sm">
                   <input
                     type="checkbox"
-                    checked={tipoBano === 'cualquiera'}
-                    onChange={() => setTipoBano('cualquiera')}
+                    checked={tipoBano === "cualquiera"}
+                    onChange={() => setTipoBano("cualquiera")}
                     className={`
                       w-[28px] h-[18px] rounded border cursor-pointer appearance-none
-                      ${tipoBano === 'cualquiera'
-                        ? 'bg-[#d97706] border-[#d97706]'
-                        : 'bg-white border-gray-400'
+                      ${
+                        tipoBano === "cualquiera"
+                          ? "bg-[#d97706] border-[#d97706]"
+                          : "bg-white border-gray-400"
                       }
                     `}
                   />
-                  {tipoBano === 'cualquiera' && (
+                  {tipoBano === "cualquiera" && (
                     <svg
                       className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[11px] h-[11px] pointer-events-none"
                       viewBox="0 0 24 24"
@@ -116,17 +123,18 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
                 <div className="relative inline-flex shadow-sm">
                   <input
                     type="checkbox"
-                    checked={tipoBano === 'privado'}
-                    onChange={() => setTipoBano('privado')}
+                    checked={tipoBano === "privado"}
+                    onChange={() => setTipoBano("privado")}
                     className={`
                       w-[28px] h-[18px] rounded border cursor-pointer appearance-none
-                      ${tipoBano === 'privado'
-                        ? 'bg-[#d97706] border-[#d97706]'
-                        : 'bg-white border-gray-400'
+                      ${
+                        tipoBano === "privado"
+                          ? "bg-[#d97706] border-[#d97706]"
+                          : "bg-white border-gray-400"
                       }
                     `}
                   />
-                  {tipoBano === 'privado' && (
+                  {tipoBano === "privado" && (
                     <svg
                       className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[11px] h-[11px] pointer-events-none"
                       viewBox="0 0 24 24"
@@ -147,17 +155,18 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
                 <div className="relative inline-flex shadow-sm">
                   <input
                     type="checkbox"
-                    checked={tipoBano === 'compartido'}
-                    onChange={() => setTipoBano('compartido')}
+                    checked={tipoBano === "compartido"}
+                    onChange={() => setTipoBano("compartido")}
                     className={`
                       w-[28px] h-[18px] rounded border cursor-pointer appearance-none
-                      ${tipoBano === 'compartido'
-                        ? 'bg-[#d97706] border-[#d97706]'
-                        : 'bg-white border-gray-400'
+                      ${
+                        tipoBano === "compartido"
+                          ? "bg-[#d97706] border-[#d97706]"
+                          : "bg-white border-gray-400"
                       }
                     `}
                   />
-                  {tipoBano === 'compartido' && (
+                  {tipoBano === "compartido" && (
                     <svg
                       className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[11px] h-[11px] pointer-events-none"
                       viewBox="0 0 24 24"
@@ -222,5 +231,5 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
         </button>
       </div>
     </div>
-  )
+  );
 }

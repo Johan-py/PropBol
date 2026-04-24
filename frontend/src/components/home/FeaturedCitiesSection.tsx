@@ -234,7 +234,9 @@ export default function FeaturedCitiesSection({ cities }: Props) {
                     type="button"
                     onClick={() => goTo(dotIndex)}
                     className={`h-2.5 rounded-full transition-all ${
-                      dotIndex === index ? "w-8 bg-amber-500" : "w-2.5 bg-stone-300"
+                      dotIndex === index
+                        ? "w-8 bg-amber-500"
+                        : "w-2.5 bg-stone-300"
                     }`}
                     aria-label={`Mostrar grupo de ciudades ${dotIndex + 1}`}
                   />

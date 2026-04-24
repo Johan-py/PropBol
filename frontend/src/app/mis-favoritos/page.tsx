@@ -62,7 +62,7 @@ export default function MisFavoritos() {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       if (!response.ok) {
@@ -100,7 +100,7 @@ export default function MisFavoritos() {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       if (response.ok) {
@@ -116,8 +116,12 @@ export default function MisFavoritos() {
   };
 
   const getImagenUrl = (inmueble: Inmueble): string => {
-    const publicacionActiva = inmueble.publicaciones?.find(p => p.multimedia?.length);
-    const primeraImagen = publicacionActiva?.multimedia?.find(m => m.tipo === "IMAGEN");
+    const publicacionActiva = inmueble.publicaciones?.find(
+      (p) => p.multimedia?.length,
+    );
+    const primeraImagen = publicacionActiva?.multimedia?.find(
+      (m) => m.tipo === "IMAGEN",
+    );
 
     if (primeraImagen?.url) {
       if (primeraImagen.url.startsWith("/uploads")) {
@@ -179,7 +183,8 @@ export default function MisFavoritos() {
               No tienes favoritos aún
             </h3>
             <p className="text-gray-400 text-sm">
-              Explora nuestras propiedades y marca las que más te gusten con el botón ⭐
+              Explora nuestras propiedades y marca las que más te gusten con el
+              botón ⭐
             </p>
           </div>
         ) : (
@@ -188,7 +193,8 @@ export default function MisFavoritos() {
               {favoritos.map((fav) => {
                 const inmueble = fav.inmueble;
                 const imagenUrl = getImagenUrl(inmueble);
-                const ciudad = inmueble.ubicacion?.ciudad || "Ubicación no especificada";
+                const ciudad =
+                  inmueble.ubicacion?.ciudad || "Ubicación no especificada";
                 const habitaciones = inmueble.nroCuartos || 0;
                 const banos = inmueble.nroBanos || 0;
 
@@ -265,7 +271,9 @@ export default function MisFavoritos() {
 
                         {/* Botón Ver Detalle */}
                         <button
-                          onClick={() => window.location.href = `/propiedad/${inmueble.id}`}
+                          onClick={() =>
+                            (window.location.href = `/propiedad/${inmueble.id}`)
+                          }
                           className="flex-1 bg-[#E87B00] text-white py-2.5 rounded-lg text-sm font-bold hover:bg-orange-600 transition-colors flex items-center justify-center gap-2"
                         >
                           <Eye size={16} />
@@ -305,10 +313,11 @@ export default function MisFavoritos() {
                     <button
                       key={pageNum}
                       onClick={() => setPage(pageNum)}
-                      className={`w-9 h-9 flex items-center justify-center rounded-md text-sm font-bold transition-colors ${page === pageNum
+                      className={`w-9 h-9 flex items-center justify-center rounded-md text-sm font-bold transition-colors ${
+                        page === pageNum
                           ? "bg-[#E87B00] text-white"
                           : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
-                        }`}
+                      }`}
                     >
                       {pageNum}
                     </button>

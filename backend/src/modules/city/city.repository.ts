@@ -1,16 +1,16 @@
-import { prisma } from "../../lib/prisma.client.js"
+import { prisma } from "../../lib/prisma.client.js";
 
 type RawFeaturedCity = {
-  id: number
-  nombre: string
-  slug: string
-  descripcion: string | null
-  popularidad: number | null
+  id: number;
+  nombre: string;
+  slug: string;
+  descripcion: string | null;
+  popularidad: number | null;
   ciudad_imagen: Array<{
-    url: string
-    orden: number | null
-  }>
-}
+    url: string;
+    orden: number | null;
+  }>;
+};
 
 export class CityRepository {
   async findFeatured(limit: number) {
@@ -40,7 +40,7 @@ export class CityRepository {
         },
       ],
       take: limit,
-    }) as Promise<RawFeaturedCity[]>
+    }) as Promise<RawFeaturedCity[]>;
   }
 
   async findLocationReference(cityName: string) {
@@ -85,19 +85,19 @@ export class CityRepository {
         },
       },
       take: 24,
-    })
+    });
 
-    const counts = new Map<string, number>()
+    const counts = new Map<string, number>();
 
     for (const location of locations) {
       const candidates = [
         location.zona?.trim(),
         location.ubicacion_maestra?.municipio?.trim(),
         location.ubicacion_maestra?.nombre?.trim(),
-      ].filter((value): value is string => Boolean(value))
+      ].filter((value): value is string => Boolean(value));
 
       for (const candidate of candidates) {
-        counts.set(candidate, (counts.get(candidate) ?? 0) + 1)
+        counts.set(candidate, (counts.get(candidate) ?? 0) + 1);
       }
     }
 
@@ -105,6 +105,6 @@ export class CityRepository {
       .sort((left, right) => right[1] - left[1])
       .slice(0, 2)
       .map(([label]) => label)
-      .join(", ")
+      .join(", ");
   }
 }

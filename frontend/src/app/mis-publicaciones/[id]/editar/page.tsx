@@ -1,113 +1,123 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import {
   editarPublicacion,
-  obtenerDetallePublicacion
-} from '@/services/publicacion.service'
-import type { EditarPublicacionPayload } from '@/types/publicacion'
+  obtenerDetallePublicacion,
+} from "@/services/publicacion.service";
+import type { EditarPublicacionPayload } from "@/types/publicacion";
 
 type FormState = {
-  titulo: string
-  descripcion: string
-  precio: string
-  tipoAccion: 'VENTA' | 'ALQUILER' | 'ANTICRETO'
-  ubicacion: string
-}
+  titulo: string;
+  descripcion: string;
+  precio: string;
+  tipoAccion: "VENTA" | "ALQUILER" | "ANTICRETO";
+  ubicacion: string;
+};
 
 export default function EditarPublicacionPage() {
-  const params = useParams()
-  const router = useRouter()
+  const params = useParams();
+  const router = useRouter();
 
-  const publicacionId = Number(params.id)
+  const publicacionId = Number(params.id);
 
   const [form, setForm] = useState<FormState>({
-    titulo: '',
-    descripcion: '',
-    precio: '',
-    tipoAccion: 'VENTA',
-    ubicacion: ''
-  })
+    titulo: "",
+    descripcion: "",
+    precio: "",
+    tipoAccion: "VENTA",
+    ubicacion: "",
+  });
 
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   useEffect(() => {
     const cargarDetalle = async () => {
       try {
-        setLoading(true)
-        setError('')
+        setLoading(true);
+        setError("");
 
-        const detalle = await obtenerDetallePublicacion(publicacionId)
+        const detalle = await obtenerDetallePublicacion(publicacionId);
 
         setForm({
-          titulo: detalle.titulo ?? '',
-          descripcion: detalle.descripcion ?? '',
-          precio: detalle.precio ? String(detalle.precio) : '',
-          tipoAccion: detalle.tipoOperacion ?? 'VENTA',
-          ubicacion: detalle.ubicacionTexto ?? ''
-        })
+          titulo: detalle.titulo ?? "",
+          descripcion: detalle.descripcion ?? "",
+          precio: detalle.precio ? String(detalle.precio) : "",
+          tipoAccion: detalle.tipoOperacion ?? "VENTA",
+          ubicacion: detalle.ubicacionTexto ?? "",
+        });
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'No se pudo cargar la publicación')
+        setError(
+          err instanceof Error
+            ? err.message
+            : "No se pudo cargar la publicación",
+        );
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
     if (!Number.isNaN(publicacionId) && publicacionId > 0) {
-      void cargarDetalle()
+      void cargarDetalle();
     } else {
-      setLoading(false)
-      setError('El id de la publicación es inválido')
+      setLoading(false);
+      setError("El id de la publicación es inválido");
     }
-  }, [publicacionId])
+  }, [publicacionId]);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]: value
-    }))
-  }
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
-      setSaving(true)
-      setError('')
-      setSuccess('')
+      setSaving(true);
+      setError("");
+      setSuccess("");
 
       const payload: EditarPublicacionPayload = {
         titulo: form.titulo.trim(),
         descripcion: form.descripcion.trim(),
         precio: Number(form.precio),
         tipoAccion: form.tipoAccion,
-        ubicacion: form.ubicacion.trim()
-      }
+        ubicacion: form.ubicacion.trim(),
+      };
 
-      await editarPublicacion(publicacionId, payload)
+      await editarPublicacion(publicacionId, payload);
 
-      setSuccess('Publicación actualizada correctamente')
+      setSuccess("Publicación actualizada correctamente");
 
       setTimeout(() => {
-        router.push('/mis-publicaciones')
-        router.refresh()
-      }, 900)
+        router.push("/mis-publicaciones");
+        router.refresh();
+      }, 900);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No se pudo actualizar la publicación')
+      setError(
+        err instanceof Error
+          ? err.message
+          : "No se pudo actualizar la publicación",
+      );
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
   if (loading) {
-    return <div className="px-4 py-8">Cargando datos de la publicación...</div>
+    return <div className="px-4 py-8">Cargando datos de la publicación...</div>;
   }
 
   return (
@@ -207,7 +217,7 @@ export default function EditarPublicacionPage() {
         <div className="flex flex-col gap-3 pt-2 sm:flex-row">
           <button
             type="button"
-            onClick={() => router.push('/mis-publicaciones')}
+            onClick={() => router.push("/mis-publicaciones")}
             className="h-11 flex-1 rounded-lg border border-[#9a9a9a] bg-white text-[14px] font-medium text-[#2c2c2c] transition hover:bg-gray-50"
           >
             Cancelar
@@ -218,10 +228,10 @@ export default function EditarPublicacionPage() {
             disabled={saving}
             className="h-11 flex-1 rounded-lg bg-[#D97706] text-[14px] font-medium text-white transition hover:bg-[#bf6905] disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {saving ? 'Guardando...' : 'Guardar cambios'}
+            {saving ? "Guardando..." : "Guardar cambios"}
           </button>
         </div>
       </form>
     </div>
-  )
+  );
 }

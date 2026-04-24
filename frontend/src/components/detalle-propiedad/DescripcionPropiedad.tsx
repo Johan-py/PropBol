@@ -1,18 +1,17 @@
+"use client";
 
-'use client'
-
-import { useState } from 'react'
-import { ChevronDown } from 'lucide-react'
+import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 
 interface Props {
-  descripcion: string
+  descripcion: string;
 }
 
 export default function DescripcionPropiedad({ descripcion }: Props) {
-  const [expandido, setExpandido] = useState(false)
+  const [expandido, setExpandido] = useState(false);
 
-  const texto = descripcion || 'Sin descripción disponible'
-  const textoCorto = texto.length > 220 ? `${texto.slice(0, 220)}...` : texto
+  const texto = descripcion || "Sin descripción disponible";
+  const textoCorto = texto.length > 220 ? `${texto.slice(0, 220)}...` : texto;
 
   return (
     <section className="rounded-2xl border border-[#beb4a8] bg-[#ede7dc] px-6 py-5">
@@ -30,10 +29,12 @@ export default function DescripcionPropiedad({ descripcion }: Props) {
           onClick={() => setExpandido((prev) => !prev)}
           className="mt-3 flex items-center gap-1 text-sm font-semibold text-[#2b2b2b]"
         >
-          {expandido ? 'Ver menos' : 'Ver toda la descripción'}
-          <ChevronDown className={`h-4 w-4 transition ${expandido ? 'rotate-180' : ''}`} />
+          {expandido ? "Ver menos" : "Ver toda la descripción"}
+          <ChevronDown
+            className={`h-4 w-4 transition ${expandido ? "rotate-180" : ""}`}
+          />
         </button>
       )}
     </section>
-  )
+  );
 }

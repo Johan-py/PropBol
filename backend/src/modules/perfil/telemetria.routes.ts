@@ -48,6 +48,9 @@ router.get("/estado", telemetriaController.obtenerEstadoTelemetria);
 GET http://localhost:3000/api/telemetria/estadisticas/filtros
 Authorization: Bearer TOKEN_DE_ADMIN_AQUI
 */
-router.get("/estadisticas/filtros", telemetriaController.getEstadisticasFiltros);
+router.get(
+  "/estadisticas/filtros",
+  telemetriaController.getEstadisticasFiltros,
+);
 
 export default router;

@@ -13,8 +13,7 @@ export const ADMIN_MODERATION_BLOGS_MOCK: AdminModerationBlog[] = [
       "https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=1600&q=80",
     excerpt:
       "Un repaso por zonas emergentes, tipologias con mejor retorno y senales de demanda sostenida para el cierre de gestion.",
-    lead:
-      "Santa Cruz mantiene un ritmo de crecimiento que vuelve especialmente atractivas las inversiones residenciales y mixtas en corredores con alta conectividad.",
+    lead: "Santa Cruz mantiene un ritmo de crecimiento que vuelve especialmente atractivas las inversiones residenciales y mixtas en corredores con alta conectividad.",
     sections: [
       {
         heading: "Por que Santa Cruz sigue liderando",
@@ -47,8 +46,7 @@ export const ADMIN_MODERATION_BLOGS_MOCK: AdminModerationBlog[] = [
       "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=1600&q=80",
     excerpt:
       "Materiales honestos, espacios serenos y eficiencia energetica se combinan para definir una nueva sensibilidad urbana.",
-    lead:
-      "La arquitectura contemporanea esta abandonando el exceso ornamental para priorizar luz natural, proporciones limpias y experiencia espacial.",
+    lead: "La arquitectura contemporanea esta abandonando el exceso ornamental para priorizar luz natural, proporciones limpias y experiencia espacial.",
     sections: [
       {
         paragraphs: [
@@ -79,8 +77,7 @@ export const ADMIN_MODERATION_BLOGS_MOCK: AdminModerationBlog[] = [
       "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1600&q=80",
     excerpt:
       "Una guia clara sobre presupuesto, validacion legal y criterios practicos para tomar una primera decision de compra con mas confianza.",
-    lead:
-      "Comprar la primera propiedad suele venir acompanado de dudas sobre financiamiento, ubicacion y documentacion, por eso la informacion debe ser precisa y aterrizada.",
+    lead: "Comprar la primera propiedad suele venir acompanado de dudas sobre financiamiento, ubicacion y documentacion, por eso la informacion debe ser precisa y aterrizada.",
     sections: [
       {
         paragraphs: [
@@ -105,8 +102,7 @@ export const ADMIN_MODERATION_BLOGS_MOCK: AdminModerationBlog[] = [
       "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1600&q=80",
     excerpt:
       "Como combinar tonos neutros, capas tactiles y piezas funcionales para lograr espacios habitables y sofisticados.",
-    lead:
-      "El minimalismo calido propone bajar el ruido visual sin renunciar a la sensacion de hogar, usando materiales nobles y una composicion contenida.",
+    lead: "El minimalismo calido propone bajar el ruido visual sin renunciar a la sensacion de hogar, usando materiales nobles y una composicion contenida.",
     sections: [
       {
         paragraphs: [
@@ -131,8 +127,7 @@ export const ADMIN_MODERATION_BLOGS_MOCK: AdminModerationBlog[] = [
       "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1600&q=80",
     excerpt:
       "Orden visual, luz y puesta en escena pueden cambiar por completo la percepcion de valor de una propiedad publicada.",
-    lead:
-      "Una buena sesion fotografica comienza mucho antes de encender la camara: limpieza, estilismo ligero y recorrido narrativo son decisivos.",
+    lead: "Una buena sesion fotografica comienza mucho antes de encender la camara: limpieza, estilismo ligero y recorrido narrativo son decisivos.",
     sections: [
       {
         paragraphs: [
@@ -156,8 +151,7 @@ export const ADMIN_MODERATION_BLOGS_MOCK: AdminModerationBlog[] = [
       "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1600&q=80",
     excerpt:
       "Sobrevalorar por expectativa emocional o subvalorar por urgencia son dos fallas que pueden deteriorar toda la estrategia comercial.",
-    lead:
-      "Una publicacion creible parte de un precio consistente con zona, metraje, estado del inmueble y comparables recientes.",
+    lead: "Una publicacion creible parte de un precio consistente con zona, metraje, estado del inmueble y comparables recientes.",
     sections: [
       {
         paragraphs: [

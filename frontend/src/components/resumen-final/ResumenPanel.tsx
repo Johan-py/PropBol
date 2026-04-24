@@ -81,7 +81,7 @@ function getAuthToken(): string | null {
 }
 
 async function obtenerResumenFinal(
-  publicacionId: number
+  publicacionId: number,
 ): Promise<ResumenFinalData> {
   const token = getAuthToken();
 
@@ -95,7 +95,7 @@ async function obtenerResumenFinal(
 
   if (!API_BASE_URL) {
     throw new Error(
-      "La variable NEXT_PUBLIC_API_URL no está configurada en el frontend"
+      "La variable NEXT_PUBLIC_API_URL no está configurada en el frontend",
     );
   }
 
@@ -108,7 +108,7 @@ async function obtenerResumenFinal(
         Authorization: `Bearer ${token}`,
       },
       cache: "no-store",
-    }
+    },
   );
 
   const payload: ResumenFinalApiResponse | { ok: false; message?: string } =
@@ -147,7 +147,9 @@ export default function ResumenPanel({ publicacionId }: Props) {
         const resumen = await obtenerResumenFinal(publicacionId);
         setData(resumen);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Error al cargar resumen");
+        setError(
+          err instanceof Error ? err.message : "Error al cargar resumen",
+        );
       } finally {
         setLoading(false);
       }
@@ -295,4 +297,3 @@ export default function ResumenPanel({ publicacionId }: Props) {
     </>
   );
 }
-

@@ -1,4 +1,4 @@
-import PDFDocument from 'pdfkit'
+import PDFDocument from "pdfkit";
 import { env } from "../config/env.js";
 
 const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
@@ -78,7 +78,8 @@ const enviarConReintentos = async (
   for (let i = 0; i < intentos; i++) {
     const resultado = await fn();
     if (resultado.success) return resultado;
-    if (i < intentos - 1) await new Promise((r) => setTimeout(r, 1000 * 2 ** i));
+    if (i < intentos - 1)
+      await new Promise((r) => setTimeout(r, 1000 * 2 ** i));
   }
   return { success: false, error: `Falló tras ${intentos} intentos` };
 };
@@ -100,11 +101,11 @@ const generarPDFComprobante = ({
     const doc = new PDFDocument({ margin: 50 });
     const chunks: Buffer[] = [];
 
-    doc.on('data', (chunk: Buffer) => chunks.push(chunk));
-    doc.on('end', () => resolve(Buffer.concat(chunks)));
-    doc.on('error', reject);
+    doc.on("data", (chunk: Buffer) => chunks.push(chunk));
+    doc.on("end", () => resolve(Buffer.concat(chunks)));
+    doc.on("error", reject);
 
-    doc.fontSize(20).text('PropBol — Comprobante de Pago', { align: 'center' });
+    doc.fontSize(20).text("PropBol — Comprobante de Pago", { align: "center" });
     doc.moveDown();
     doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke();
     doc.moveDown();
@@ -114,12 +115,19 @@ const generarPDFComprobante = ({
     doc.text(`Titular: ${nombreUsuario}`);
     doc.text(`Plan: ${nombrePlan}`);
     doc.text(`Monto: Bs. ${monto.toFixed(2)}`);
-    doc.text(`Fecha y hora: ${fechaHora.toLocaleString('es-BO', { timeZone: 'America/La_Paz' })}`);
+    doc.text(
+      `Fecha y hora: ${fechaHora.toLocaleString("es-BO", { timeZone: "America/La_Paz" })}`,
+    );
 
     doc.moveDown();
     doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke();
     doc.moveDown();
-    doc.fontSize(10).fillColor('gray').text('Este comprobante es válido como constancia de pago.', { align: 'center' });
+    doc
+      .fontSize(10)
+      .fillColor("gray")
+      .text("Este comprobante es válido como constancia de pago.", {
+        align: "center",
+      });
 
     doc.end();
   });
@@ -140,10 +148,18 @@ export const enviarComprobantePago = async ({
   monto: number;
   fechaHora: Date;
 }): Promise<EmailSendResult> => {
-  const pdfBuffer = await generarPDFComprobante({ idTransaccion, nombreUsuario, nombrePlan, monto, fechaHora });
-  const pdfBase64 = pdfBuffer.toString('base64');
+  const pdfBuffer = await generarPDFComprobante({
+    idTransaccion,
+    nombreUsuario,
+    nombrePlan,
+    monto,
+    fechaHora,
+  });
+  const pdfBase64 = pdfBuffer.toString("base64");
 
-  const fechaStr = fechaHora.toLocaleString('es-BO', { timeZone: 'America/La_Paz' });
+  const fechaStr = fechaHora.toLocaleString("es-BO", {
+    timeZone: "America/La_Paz",
+  });
 
   return enviarConReintentos(() =>
     sendBrevoEmail({

@@ -1,48 +1,51 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import Link from 'next/link'
-import { useMemo, useState } from 'react'
-import { ChevronRight } from 'lucide-react'
-import { useAdminBlogModeration } from '@/hooks/useAdminBlogModeration'
-import type { AdminModerationBlog, AdminModerationStatus } from '@/types/adminModerationBlog'
+import Image from "next/image";
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import { ChevronRight } from "lucide-react";
+import { useAdminBlogModeration } from "@/hooks/useAdminBlogModeration";
+import type {
+  AdminModerationBlog,
+  AdminModerationStatus,
+} from "@/types/adminModerationBlog";
 
 const FILTERS: Array<{
-  label: string
-  value: AdminModerationStatus
+  label: string;
+  value: AdminModerationStatus;
 }> = [
-  { label: 'Pendientes', value: 'PENDIENTE' },
-  { label: 'Aprobados', value: 'APROBADO' },
-  { label: 'Rechazados', value: 'RECHAZADO' }
-]
+  { label: "Pendientes", value: "PENDIENTE" },
+  { label: "Aprobados", value: "APROBADO" },
+  { label: "Rechazados", value: "RECHAZADO" },
+];
 
 function formatDate(date: string) {
-  return new Intl.DateTimeFormat('es-BO', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric'
-  }).format(new Date(date))
+  return new Intl.DateTimeFormat("es-BO", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(date));
 }
 
 function getStatusStyles(status: AdminModerationStatus) {
-  if (status === 'APROBADO') {
-    return 'bg-green-50 text-green-700'
+  if (status === "APROBADO") {
+    return "bg-green-50 text-green-700";
   }
 
-  if (status === 'RECHAZADO') {
-    return 'bg-red-50 text-red-700'
+  if (status === "RECHAZADO") {
+    return "bg-red-50 text-red-700";
   }
 
-  return 'bg-amber-50 text-amber-700'
+  return "bg-amber-50 text-amber-700";
 }
 
 function EmptyState({ filter }: { filter: AdminModerationStatus }) {
   const copy =
-    filter === 'PENDIENTE'
-      ? 'No hay blogs pendientes por revisar.'
-      : filter === 'APROBADO'
-        ? 'Aún no hay blogs aprobados.'
-        : 'Todavía no hay blogs rechazados.'
+    filter === "PENDIENTE"
+      ? "No hay blogs pendientes por revisar."
+      : filter === "APROBADO"
+        ? "Aún no hay blogs aprobados."
+        : "Todavía no hay blogs rechazados.";
 
   return (
     <div className="rounded-3xl border border-dashed border-stone-300 bg-white px-6 py-14 text-center text-stone-500">
@@ -51,11 +54,11 @@ function EmptyState({ filter }: { filter: AdminModerationStatus }) {
       </p>
       <p className="mt-3 text-base font-inter">{copy}</p>
     </div>
-  )
+  );
 }
 
 function BlogRow({ blog }: { blog: AdminModerationBlog }) {
-  const actionLabel = blog.status === 'PENDIENTE' ? 'Revisar' : 'Ver detalle'
+  const actionLabel = blog.status === "PENDIENTE" ? "Revisar" : "Ver detalle";
 
   return (
     <article className="grid gap-4 border-t border-stone-200 px-5 py-5 first:border-t-0 md:grid-cols-[minmax(0,2.6fr)_1.1fr_0.9fr_0.9fr_0.8fr] md:items-center md:px-6">
@@ -77,23 +80,35 @@ function BlogRow({ blog }: { blog: AdminModerationBlog }) {
           <h2 className="mt-2 text-xl font-bold leading-tight text-stone-900 font-montserrat">
             {blog.title}
           </h2>
-          <p className="mt-2 text-sm text-stone-600 font-inter">{blog.excerpt}</p>
+          <p className="mt-2 text-sm text-stone-600 font-inter">
+            {blog.excerpt}
+          </p>
         </div>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-stone-400">Autor</p>
-        <p className="mt-2 text-base font-medium text-stone-700">{blog.authorName}</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-stone-400">
+          Autor
+        </p>
+        <p className="mt-2 text-base font-medium text-stone-700">
+          {blog.authorName}
+        </p>
         <p className="text-sm text-stone-500">{blog.authorRole}</p>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-stone-400">Fecha</p>
-        <p className="mt-2 text-base font-medium text-stone-700">{formatDate(blog.submittedAt)}</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-stone-400">
+          Fecha
+        </p>
+        <p className="mt-2 text-base font-medium text-stone-700">
+          {formatDate(blog.submittedAt)}
+        </p>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-stone-400">Estado</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-stone-400">
+          Estado
+        </p>
         <span
           className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] ${getStatusStyles(blog.status)}`}
         >
@@ -110,39 +125,41 @@ function BlogRow({ blog }: { blog: AdminModerationBlog }) {
         </Link>
       </div>
 
-      {blog.status === 'RECHAZADO' && blog.rejectionComment && (
+      {blog.status === "RECHAZADO" && blog.rejectionComment && (
         <div className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700 md:col-span-5 font-inter">
-          <span className="font-semibold">Comentario de rechazo:</span> {blog.rejectionComment}
+          <span className="font-semibold">Comentario de rechazo:</span>{" "}
+          {blog.rejectionComment}
         </div>
       )}
     </article>
-  )
+  );
 }
 
 export default function AdminBlogsModeration() {
-  const { blogs, isReady } = useAdminBlogModeration()
-  const [activeFilter, setActiveFilter] = useState<AdminModerationStatus>('PENDIENTE')
+  const { blogs, isReady } = useAdminBlogModeration();
+  const [activeFilter, setActiveFilter] =
+    useState<AdminModerationStatus>("PENDIENTE");
 
   const filteredBlogs = useMemo(
     () => blogs.filter((blog) => blog.status === activeFilter),
-    [activeFilter, blogs]
-  )
+    [activeFilter, blogs],
+  );
 
   const counts = useMemo(
     () =>
       blogs.reduce<Record<AdminModerationStatus, number>>(
         (accumulator, blog) => {
-          accumulator[blog.status] += 1
-          return accumulator
+          accumulator[blog.status] += 1;
+          return accumulator;
         },
         {
           PENDIENTE: 0,
           APROBADO: 0,
-          RECHAZADO: 0
-        }
+          RECHAZADO: 0,
+        },
       ),
-    [blogs]
-  )
+    [blogs],
+  );
 
   if (!isReady) {
     return (
@@ -151,7 +168,7 @@ export default function AdminBlogsModeration() {
           Cargando panel de moderacion...
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -166,9 +183,9 @@ export default function AdminBlogsModeration() {
               Gestión de Blogs
             </h1>
             <p className="mt-5 text-lg leading-8 text-stone-600 font-inter">
-              Revisa, aprueba o rechaza las últimas publicaciones de la comunidad inmobiliaria. El
-              estado queda guardado localmente para esta demo mientras no exista integración con
-              backend.
+              Revisa, aprueba o rechaza las últimas publicaciones de la
+              comunidad inmobiliaria. El estado queda guardado localmente para
+              esta demo mientras no exista integración con backend.
             </p>
             {/* TODO: validar permisos de acceso desde backend cuando exista autenticacion de roles. */}
           </div>
@@ -182,8 +199,8 @@ export default function AdminBlogsModeration() {
                   onClick={() => setActiveFilter(filter.value)}
                   className={`inline-flex min-h-[52px] items-center justify-center rounded-full px-5 text-sm font-semibold uppercase tracking-[0.18em] transition-colors font-inter ${
                     activeFilter === filter.value
-                      ? 'bg-amber-600 text-white'
-                      : 'text-stone-500 hover:bg-stone-100 hover:text-stone-800'
+                      ? "bg-amber-600 text-white"
+                      : "text-stone-500 hover:bg-stone-100 hover:text-stone-800"
                   }`}
                 >
                   {filter.label}
@@ -230,5 +247,5 @@ export default function AdminBlogsModeration() {
         </div>
       </div>
     </div>
-  )
+  );
 }

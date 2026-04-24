@@ -30,12 +30,16 @@ export default function InfoPropiedad({ data }: Props) {
 
       <div className="space-y-4 text-base text-gray-700 md:text-lg">
         <p>
-          <span className="font-semibold text-[#0f172a]">Título del anuncio:</span>{" "}
+          <span className="font-semibold text-[#0f172a]">
+            Título del anuncio:
+          </span>{" "}
           {valorTexto(data.publicacion.titulo)}
         </p>
 
         <p>
-          <span className="font-semibold text-[#0f172a]">Tipo de operación:</span>{" "}
+          <span className="font-semibold text-[#0f172a]">
+            Tipo de operación:
+          </span>{" "}
           {valorTexto(data.datosGenerales.tipoOperacion)}
         </p>
 

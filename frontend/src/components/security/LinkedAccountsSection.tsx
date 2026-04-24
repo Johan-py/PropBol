@@ -98,19 +98,19 @@ function SocialCard({
               : onLink(account.id)
           }
           disabled={actionLoadingId === account.id}
-         className={`inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition disabled:cursor-not-allowed disabled:opacity-70 ${
-         account.status === "vinculado"
-         ? "bg-red-500 hover:bg-red-600"
-         : account.id === "facebook"
-         ? "bg-[#1877F2] hover:brightness-95"
-         : "bg-[#5865F2] hover:brightness-95"
-         }`}
+          className={`inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition disabled:cursor-not-allowed disabled:opacity-70 ${
+            account.status === "vinculado"
+              ? "bg-red-500 hover:bg-red-600"
+              : account.id === "facebook"
+                ? "bg-[#1877F2] hover:brightness-95"
+                : "bg-[#5865F2] hover:brightness-95"
+          }`}
         >
           {actionLoadingId === account.id
             ? "Procesando..."
             : account.status === "vinculado"
-            ? "Desvincular"
-            : "Vincular"}
+              ? "Desvincular"
+              : "Vincular"}
         </button>
       </div>
     </article>
@@ -119,11 +119,7 @@ function SocialCard({
 
 function DiscordIcon() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-6 w-6 fill-white"
-      aria-hidden="true"
-    >
+    <svg viewBox="0 0 24 24" className="h-6 w-6 fill-white" aria-hidden="true">
       <path d="M20.317 4.369A19.79 19.79 0 0 0 15.885 3c-.191.328-.403.769-.552 1.117a18.27 18.27 0 0 0-5.333 0A11.64 11.64 0 0 0 9.448 3a19.736 19.736 0 0 0-4.433 1.369C2.211 8.58 1.443 12.686 1.826 16.735A19.923 19.923 0 0 0 7.239 19.5c.438-.6.828-1.235 1.164-1.904-.634-.24-1.239-.541-1.813-.896.152-.111.301-.227.445-.347 3.495 1.643 7.285 1.643 10.739 0 .146.12.294.236.446.347-.575.355-1.182.656-1.817.896.336.669.726 1.304 1.164 1.904a19.874 19.874 0 0 0 5.416-2.765c.451-4.695-.769-8.763-3.666-12.366ZM9.349 14.546c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.84 2.154-1.909 2.154Zm5.303 0c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.831 2.154-1.909 2.154Z" />
     </svg>
   );
@@ -176,8 +172,8 @@ export default function LinkedAccountsSection() {
                     ? "usuario.facebook@mock.com"
                     : "usuario.discord@mock.com",
               }
-            : account
-        )
+            : account,
+        ),
       );
 
       setActionLoadingId(null);
@@ -199,12 +195,12 @@ export default function LinkedAccountsSection() {
     if (!accountToUnlink) return;
 
     const linkedAccountsCount = accounts.filter(
-      (account) => account.status === "vinculado"
+      (account) => account.status === "vinculado",
     ).length;
 
     if (linkedAccountsCount <= 1) {
       setErrorMessage(
-        "No puedes desvincular el único método de acceso disponible."
+        "No puedes desvincular el único método de acceso disponible.",
       );
       setAccountToUnlink(null);
       return;
@@ -221,8 +217,8 @@ export default function LinkedAccountsSection() {
                 status: "no-vinculado",
                 linkedEmail: "",
               }
-            : account
-        )
+            : account,
+        ),
       );
 
       setActionLoadingId(null);

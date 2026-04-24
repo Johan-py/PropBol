@@ -1,16 +1,18 @@
-import React from 'react'
-import { useRouter } from 'next/navigation'
+import React from "react";
+import { useRouter } from "next/navigation";
 
 interface ExpiredViewProps {
-  planId?: string
+  planId?: string;
 }
 
 export function ExpiredView({ planId }: ExpiredViewProps) {
-  const router = useRouter()
+  const router = useRouter();
 
   const handleBack = () => {
-    router.push(planId ? `/pago/resumen?planId=${planId}` : '/cobros-suscripciones')
-  }
+    router.push(
+      planId ? `/pago/resumen?planId=${planId}` : "/cobros-suscripciones",
+    );
+  };
 
   return (
     <div className="min-h-screen bg-red-50 dark:bg-red-950 flex items-center justify-center p-4">
@@ -30,5 +32,5 @@ export function ExpiredView({ planId }: ExpiredViewProps) {
         </button>
       </div>
     </div>
-  )
+  );
 }

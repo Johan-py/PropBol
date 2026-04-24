@@ -1,184 +1,186 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
-const PENDING_2FA_KEY = 'pending2FA'
-const REDIRECT_AFTER_LOGIN_KEY = 'redirectAfterLogin'
-const DEFAULT_POST_LOGIN_REDIRECT = '/'
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+const PENDING_2FA_KEY = "pending2FA";
+const REDIRECT_AFTER_LOGIN_KEY = "redirectAfterLogin";
+const DEFAULT_POST_LOGIN_REDIRECT = "/";
 
 type Verify2FAResponse = {
-  message?: string
-  token?: string
+  message?: string;
+  token?: string;
   user?: {
-    id: number
-    correo: string
-    nombre?: string
-    apellido?: string
-    avatar?: string | null
-  }
-}
+    id: number;
+    correo: string;
+    nombre?: string;
+    apellido?: string;
+    avatar?: string | null;
+  };
+};
 
 type Pending2FAData = {
-  userId: number
-  email?: string
-  expiresInMinutes?: number
-  createdAt?: number
-}
+  userId: number;
+  email?: string;
+  expiresInMinutes?: number;
+  createdAt?: number;
+};
 
 const saveSession = (
   token: string,
   user?: {
-    id: number
-    correo: string
-    nombre?: string
-    apellido?: string
-    avatar?: string | null
+    id: number;
+    correo: string;
+    nombre?: string;
+    apellido?: string;
+    avatar?: string | null;
   },
 ) => {
-  localStorage.setItem('token', token)
+  localStorage.setItem("token", token);
 
   const userName =
     user?.nombre && user?.apellido
       ? `${user.nombre} ${user.apellido}`
-      : user?.nombre || user?.correo || 'Usuario'
+      : user?.nombre || user?.correo || "Usuario";
 
   localStorage.setItem(
-    'propbol_user',
+    "propbol_user",
     JSON.stringify({
       name: userName,
-      email: user?.correo ?? '',
+      email: user?.correo ?? "",
       avatar: user?.avatar ?? null,
     }),
-  )
+  );
 
-  localStorage.setItem('nombre', userName)
-  localStorage.setItem('correo', user?.correo ?? '')
-  localStorage.setItem('avatar', user?.avatar ?? '')
+  localStorage.setItem("nombre", userName);
+  localStorage.setItem("correo", user?.correo ?? "");
+  localStorage.setItem("avatar", user?.avatar ?? "");
   localStorage.setItem(
-    'propbol_session_expires',
+    "propbol_session_expires",
     String(Date.now() + 60 * 60 * 1000),
-  )
+  );
 
-  window.dispatchEvent(new Event('propbol:login'))
-  window.dispatchEvent(new Event('propbol:session-changed'))
-  window.dispatchEvent(new Event('auth-state-changed'))
-}
+  window.dispatchEvent(new Event("propbol:login"));
+  window.dispatchEvent(new Event("propbol:session-changed"));
+  window.dispatchEvent(new Event("auth-state-changed"));
+};
 
 const getRedirectAfterLogin = () => {
-  const redirect = localStorage.getItem(REDIRECT_AFTER_LOGIN_KEY)
+  const redirect = localStorage.getItem(REDIRECT_AFTER_LOGIN_KEY);
 
-  if (!redirect || !redirect.startsWith('/')) {
-    return DEFAULT_POST_LOGIN_REDIRECT
+  if (!redirect || !redirect.startsWith("/")) {
+    return DEFAULT_POST_LOGIN_REDIRECT;
   }
 
-  return redirect
-}
+  return redirect;
+};
 
 const clearRedirectAfterLogin = () => {
-  localStorage.removeItem(REDIRECT_AFTER_LOGIN_KEY)
-}
+  localStorage.removeItem(REDIRECT_AFTER_LOGIN_KEY);
+};
 
 const getPending2FA = (): Pending2FAData | null => {
-  const raw = localStorage.getItem(PENDING_2FA_KEY)
+  const raw = localStorage.getItem(PENDING_2FA_KEY);
 
-  if (!raw) return null
+  if (!raw) return null;
 
   try {
-    return JSON.parse(raw) as Pending2FAData
+    return JSON.parse(raw) as Pending2FAData;
   } catch {
-    return null
+    return null;
   }
-}
+};
 
 const clearPending2FA = () => {
-  localStorage.removeItem(PENDING_2FA_KEY)
-}
+  localStorage.removeItem(PENDING_2FA_KEY);
+};
 
 export default function TwoFactorVerificationForm() {
-  const router = useRouter()
-  const [code, setCode] = useState('')
-  const [error, setError] = useState('')
-  const [successMessage, setSuccessMessage] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter();
+  const [code, setCode] = useState("");
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const pending2FA = typeof window !== 'undefined' ? getPending2FA() : null
+  const pending2FA = typeof window !== "undefined" ? getPending2FA() : null;
 
   const handleCodeChange = (value: string) => {
-    const onlyNumbers = value.replace(/\D/g, '').slice(0, 6)
-    setCode(onlyNumbers)
-    setError('')
-  }
+    const onlyNumbers = value.replace(/\D/g, "").slice(0, 6);
+    setCode(onlyNumbers);
+    setError("");
+  };
 
   const handleCodePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const pasted = e.clipboardData.getData('text')
-    const cleaned = pasted.trim().replace(/\D/g, '').slice(0, 6)
+    const pasted = e.clipboardData.getData("text");
+    const cleaned = pasted.trim().replace(/\D/g, "").slice(0, 6);
 
-    setCode(cleaned)
-    setError('')
-  }
+    setCode(cleaned);
+    setError("");
+  };
 
   const handleVerifyCode = async () => {
     if (code.length !== 6) {
-      setError('Ingresa un código válido de 6 dígitos')
-      return
+      setError("Ingresa un código válido de 6 dígitos");
+      return;
     }
 
     if (!pending2FA?.userId) {
-      setError('No se encontró una verificación pendiente. Inicia sesión nuevamente.')
-      return
+      setError(
+        "No se encontró una verificación pendiente. Inicia sesión nuevamente.",
+      );
+      return;
     }
 
-    setError('')
-    setSuccessMessage('')
-    setIsLoading(true)
+    setError("");
+    setSuccessMessage("");
+    setIsLoading(true);
 
     try {
       const response = await fetch(`${API_URL}/api/auth/verify-2fa`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: pending2FA.userId,
           codigo: code,
         }),
-      })
+      });
 
-      const data = (await response.json()) as Verify2FAResponse
+      const data = (await response.json()) as Verify2FAResponse;
 
       if (!response.ok) {
-        setError(data.message || 'No se pudo verificar el código')
-        return
+        setError(data.message || "No se pudo verificar el código");
+        return;
       }
 
       if (!data.token) {
-        setError('El servidor no devolvió un token válido')
-        return
+        setError("El servidor no devolvió un token válido");
+        return;
       }
 
-      saveSession(data.token, data.user)
-      clearPending2FA()
-      setSuccessMessage(data.message || 'Verificación 2FA exitosa')
+      saveSession(data.token, data.user);
+      clearPending2FA();
+      setSuccessMessage(data.message || "Verificación 2FA exitosa");
 
-      const redirect = getRedirectAfterLogin()
-      clearRedirectAfterLogin()
+      const redirect = getRedirectAfterLogin();
+      clearRedirectAfterLogin();
 
       window.setTimeout(() => {
-        router.push(redirect)
-      }, 800)
+        router.push(redirect);
+      }, 800);
     } catch {
-      setError('No se pudo conectar con el servidor. Intenta nuevamente.')
+      setError("No se pudo conectar con el servidor. Intenta nuevamente.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleBackToLogin = () => {
-    clearPending2FA()
-    router.push('/sign-in')
-  }
+    clearPending2FA();
+    router.push("/sign-in");
+  };
 
   return (
     <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-md">
@@ -192,7 +194,8 @@ export default function TwoFactorVerificationForm() {
 
       {pending2FA?.email && (
         <p className="mt-2 text-sm text-gray-500">
-          Código enviado a: <span className="font-medium">{pending2FA.email}</span>
+          Código enviado a:{" "}
+          <span className="font-medium">{pending2FA.email}</span>
         </p>
       )}
 
@@ -210,8 +213,8 @@ export default function TwoFactorVerificationForm() {
           placeholder="123456"
           className={`w-full rounded-md border px-3 py-2 text-sm outline-none ${
             error
-              ? 'border-red-400 focus:border-red-500'
-              : 'border-gray-300 focus:border-orange-500'
+              ? "border-red-400 focus:border-red-500"
+              : "border-gray-300 focus:border-orange-500"
           }`}
         />
 
@@ -236,9 +239,9 @@ export default function TwoFactorVerificationForm() {
           disabled={code.length !== 6 || isLoading}
           className="flex-1 rounded-md bg-orange-500 py-2 text-sm font-semibold text-white hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-orange-300"
         >
-          {isLoading ? 'Verificando...' : 'Verificar código'}
+          {isLoading ? "Verificando..." : "Verificar código"}
         </button>
       </div>
     </div>
-  )
+  );
 }

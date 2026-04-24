@@ -47,7 +47,9 @@ function ParametrosPageContent() {
   const publicacionId = publicacionIdParam ? Number(publicacionIdParam) : null;
   const origen = searchParams.get("origen");
 
-  const [catalogoParametros, setCatalogoParametros] = useState<ParametroBackend[]>([]);
+  const [catalogoParametros, setCatalogoParametros] = useState<
+    ParametroBackend[]
+  >([]);
   const [parametrosGuardados, setParametrosGuardados] = useState<string[]>([]);
   const [cargando, setCargando] = useState(true);
   const [guardando, setGuardando] = useState(false);
@@ -60,7 +62,11 @@ function ParametrosPageContent() {
       return;
     }
 
-    if (origen === "multimedia" && publicacionId && !Number.isNaN(publicacionId)) {
+    if (
+      origen === "multimedia" &&
+      publicacionId &&
+      !Number.isNaN(publicacionId)
+    ) {
       router.push(`/contenido-multimedia?publicacionId=${publicacionId}`);
       return;
     }
@@ -94,12 +100,15 @@ function ParametrosPageContent() {
         const publicacionJson = await publicacionRes.json().catch(() => null);
 
         if (!catalogoRes.ok) {
-          throw new Error(catalogoJson?.message || "No se pudieron obtener los parámetros.");
+          throw new Error(
+            catalogoJson?.message || "No se pudieron obtener los parámetros.",
+          );
         }
 
         if (!publicacionRes.ok) {
           throw new Error(
-            publicacionJson?.message || "No se pudieron obtener los parámetros de la publicación."
+            publicacionJson?.message ||
+              "No se pudieron obtener los parámetros de la publicación.",
           );
         }
 
@@ -107,7 +116,9 @@ function ParametrosPageContent() {
           ? catalogoJson.data
           : [];
 
-        const parametrosPublicacion: ParametroPublicacion[] = Array.isArray(publicacionJson?.data)
+        const parametrosPublicacion: ParametroPublicacion[] = Array.isArray(
+          publicacionJson?.data,
+        )
           ? publicacionJson.data
               .map((item: any) => ({
                 id: item.parametros_personalizados?.id,
@@ -117,10 +128,14 @@ function ParametrosPageContent() {
           : [];
 
         setCatalogoParametros(catalogo);
-        setParametrosGuardados(parametrosPublicacion.map((item) => item.nombre));
+        setParametrosGuardados(
+          parametrosPublicacion.map((item) => item.nombre),
+        );
       } catch (error) {
         const mensajeError =
-          error instanceof Error ? error.message : "Error al cargar parámetros.";
+          error instanceof Error
+            ? error.message
+            : "Error al cargar parámetros.";
         setMensaje(mensajeError);
       } finally {
         setCargando(false);
@@ -132,7 +147,8 @@ function ParametrosPageContent() {
 
   const crearParametroSiNoExiste = async (nombre: string, token: string) => {
     const existente = catalogoParametros.find(
-      (item) => item.nombre.trim().toLowerCase() === nombre.trim().toLowerCase()
+      (item) =>
+        item.nombre.trim().toLowerCase() === nombre.trim().toLowerCase(),
     );
 
     if (existente) return existente;
@@ -153,7 +169,9 @@ function ParametrosPageContent() {
 
     if (!response.ok) {
       throw new Error(
-        data?.mensaje || data?.message || `No se pudo crear el parámetro "${nombre}".`
+        data?.mensaje ||
+          data?.message ||
+          `No se pudo crear el parámetro "${nombre}".`,
       );
     }
 
@@ -204,14 +222,16 @@ function ParametrosPageContent() {
           body: JSON.stringify({
             parametros: parametrosConId,
           }),
-        }
+        },
       );
 
       const data = await response.json().catch(() => null);
 
       if (!response.ok) {
         throw new Error(
-          data?.mensaje || data?.message || "No se pudieron guardar los parámetros."
+          data?.mensaje ||
+            data?.message ||
+            "No se pudieron guardar los parámetros.",
         );
       }
 
@@ -239,7 +259,8 @@ function ParametrosPageContent() {
         </h1>
 
         <p className="mb-6 text-gray-600">
-          Aquí puedes agregar o editar parámetros personalizados para tu inmueble.
+          Aquí puedes agregar o editar parámetros personalizados para tu
+          inmueble.
         </p>
 
         {mensaje && (

@@ -70,7 +70,9 @@ type DiscordPopupErrorMessage = {
   message: string;
 };
 
-type DiscordPopupMessage = DiscordPopupSuccessMessage | DiscordPopupErrorMessage;
+type DiscordPopupMessage =
+  | DiscordPopupSuccessMessage
+  | DiscordPopupErrorMessage;
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const LOGIN_TIMEOUT_MS = 10000;
@@ -501,43 +503,44 @@ export default function LoginForm() {
         return;
       }
 
-    if (data.requires2FA) {
-  if (!data.userId) {
-    clearClientSession();
-    setErrorMessage("No se pudo iniciar la verificación en dos pasos");
-    return;
-  }
+      if (data.requires2FA) {
+        if (!data.userId) {
+          clearClientSession();
+          setErrorMessage("No se pudo iniciar la verificación en dos pasos");
+          return;
+        }
 
-  savePending2FA({
-    userId: data.userId,
-    email: data.email,
-    expiresInMinutes: data.expiresInMinutes,
-  });
+        savePending2FA({
+          userId: data.userId,
+          email: data.email,
+          expiresInMinutes: data.expiresInMinutes,
+        });
 
-  setSuccessMessage(data.message || "Te enviamos un código de verificación");
-  setPassword("");
+        setSuccessMessage(
+          data.message || "Te enviamos un código de verificación",
+        );
+        setPassword("");
 
-  window.setTimeout(() => {
-    router.push("/sign-in/verify-2fa");
-  }, 800);
+        window.setTimeout(() => {
+          router.push("/sign-in/verify-2fa");
+        }, 800);
 
-  return;
-  }
+        return;
+      }
 
-  if (!data.token) {
-    clearClientSession();
-    setErrorMessage("El servidor no devolvió un token válido");
-    return;
-  }
+      if (!data.token) {
+        clearClientSession();
+        setErrorMessage("El servidor no devolvió un token válido");
+        return;
+      }
 
-    await finalizeValidatedSession(data.token, data.user);
+      await finalizeValidatedSession(data.token, data.user);
 
-  setSuccessMessage(data.message || "Inicio de sesión exitoso");
+      setSuccessMessage(data.message || "Inicio de sesión exitoso");
 
-  window.setTimeout(() => {
-   redirectAfterSuccessfulLogin();
-  }, 1000);
-
+      window.setTimeout(() => {
+        redirectAfterSuccessfulLogin();
+      }, 1000);
     } catch (error) {
       clearClientSession();
       setPassword("");
@@ -549,12 +552,12 @@ export default function LoginForm() {
   };
 
   const handleFacebookLogin = () => {
-  setGoogleError("");
-  setSuccessMessage("");
-  setErrorMessage("Inicio de sesión con Facebook próximamente disponible.");
-};
+    setGoogleError("");
+    setSuccessMessage("");
+    setErrorMessage("Inicio de sesión con Facebook próximamente disponible.");
+  };
 
-const handleDiscordLogin = () => {
+  const handleDiscordLogin = () => {
     clearClientSession();
     setGoogleError("");
     setErrorMessage("");
@@ -656,9 +659,7 @@ const handleDiscordLogin = () => {
       }
 
       clearClientSession();
-      setGoogleError(
-        data.message || "No se pudo iniciar sesión con Discord.",
-      );
+      setGoogleError(data.message || "No se pudo iniciar sesión con Discord.");
       setIsLoadingDiscord(false);
       popup.close();
     }
@@ -772,8 +773,8 @@ const handleDiscordLogin = () => {
             <p className="mt-1 text-xs text-red-500">{errors.password}</p>
           )}
         </div>
-        
-         <div className="-mt-2 text-left">
+
+        <div className="-mt-2 text-left">
           <Link
             href="/forgot-password"
             className="text-sm font-medium text-orange-500 hover:underline"
@@ -821,34 +822,34 @@ const handleDiscordLogin = () => {
             {googleError}
           </p>
         )}
-        
-  <div className="space-y-3">
-  <button
-    type="button"
-    onClick={handleFacebookLogin}
-    className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#1877F2] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:brightness-95"
-  >
-    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/15 text-base font-bold text-white">
-      f
-    </span>
-    Continuar con Facebook
-  </button>
 
-  <button
-    type="button"
-    onClick={handleDiscordLogin}
-    className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#5865F2] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:brightness-95"
-  >
-    <svg
-      viewBox="0 0 24 24"
-      className="h-5 w-5 fill-white"
-      aria-hidden="true"
-    >
-      <path d="M20.317 4.369A19.79 19.79 0 0 0 15.885 3c-.191.328-.403.769-.552 1.117a18.27 18.27 0 0 0-5.333 0A11.64 11.64 0 0 0 9.448 3a19.736 19.736 0 0 0-4.433 1.369C2.211 8.58 1.443 12.686 1.826 16.735A19.923 19.923 0 0 0 7.239 19.5c.438-.6.828-1.235 1.164-1.904-.634-.24-1.239-.541-1.813-.896.152-.111.301-.227.445-.347 3.495 1.643 7.285 1.643 10.739 0 .146.12.294.236.446.347-.575.355-1.182.656-1.817.896.336.669.726 1.304 1.164 1.904a19.874 19.874 0 0 0 5.416-2.765c.451-4.695-.769-8.763-3.666-12.366ZM9.349 14.546c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.84 2.154-1.909 2.154Zm5.303 0c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.831 2.154-1.909 2.154Z" />
-    </svg>
-    Continuar con Discord
-  </button>
-</div>
+        <div className="space-y-3">
+          <button
+            type="button"
+            onClick={handleFacebookLogin}
+            className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#1877F2] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:brightness-95"
+          >
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/15 text-base font-bold text-white">
+              f
+            </span>
+            Continuar con Facebook
+          </button>
+
+          <button
+            type="button"
+            onClick={handleDiscordLogin}
+            className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#5865F2] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:brightness-95"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              className="h-5 w-5 fill-white"
+              aria-hidden="true"
+            >
+              <path d="M20.317 4.369A19.79 19.79 0 0 0 15.885 3c-.191.328-.403.769-.552 1.117a18.27 18.27 0 0 0-5.333 0A11.64 11.64 0 0 0 9.448 3a19.736 19.736 0 0 0-4.433 1.369C2.211 8.58 1.443 12.686 1.826 16.735A19.923 19.923 0 0 0 7.239 19.5c.438-.6.828-1.235 1.164-1.904-.634-.24-1.239-.541-1.813-.896.152-.111.301-.227.445-.347 3.495 1.643 7.285 1.643 10.739 0 .146.12.294.236.446.347-.575.355-1.182.656-1.817.896.336.669.726 1.304 1.164 1.904a19.874 19.874 0 0 0 5.416-2.765c.451-4.695-.769-8.763-3.666-12.366ZM9.349 14.546c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.84 2.154-1.909 2.154Zm5.303 0c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.831 2.154-1.909 2.154Z" />
+            </svg>
+            Continuar con Discord
+          </button>
+        </div>
 
         <button
           type="button"

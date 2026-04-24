@@ -37,5 +37,7 @@ export const propertyValidationRules = [
     .isLength({ min: 50, max: 300 })
     .withMessage("La descripción debe tener entre 50 y 300 caracteres")
     .matches(/^[a-zA-Z0-9\s.,;:()]+$/)
-    .withMessage("La descripción solo puede contener caracteres alfanuméricos y básicos"),
+    .withMessage(
+      "La descripción solo puede contener caracteres alfanuméricos y básicos",
+    ),
 ];

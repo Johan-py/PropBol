@@ -45,7 +45,7 @@ export default function ExtrasPropiedad({
 
     const repetido = parametros.some(
       (item, index) =>
-        item.toLowerCase() === valor.toLowerCase() && index !== indiceEdicion
+        item.toLowerCase() === valor.toLowerCase() && index !== indiceEdicion,
     );
 
     if (repetido) {

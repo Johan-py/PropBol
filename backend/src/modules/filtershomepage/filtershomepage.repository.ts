@@ -17,30 +17,33 @@ export class FiltersHomepageRepository {
             departamento: true,
           },
         },
-      inmueble: {
-  select: {
-    id: true,
-    titulo: true,
-    publicaciones: {        
-      select: {
-        multimedia: {     
-          where: {
-            tipo: $Enums.TipoMultimedia.IMAGEN,
-          },
+        inmueble: {
           select: {
-            url: true,
+            id: true,
+            titulo: true,
+            publicaciones: {
+              select: {
+                multimedia: {
+                  where: {
+                    tipo: $Enums.TipoMultimedia.IMAGEN,
+                  },
+                  select: {
+                    url: true,
+                  },
+                  take: 1,
+                },
+              },
+              take: 1,
+            },
           },
-          take: 1,
         },
       },
-      take: 1,
-    },
-  },
-},
-},
-});
+    });
 
-    const deptMap = new Map<string, { ids: Set<number>; previews: Array<{ imagen: string; titulo: string }> }>();
+    const deptMap = new Map<
+      string,
+      { ids: Set<number>; previews: Array<{ imagen: string; titulo: string }> }
+    >();
 
     for (const u of ubicaciones) {
       const rawDept = u.ubicacion_maestra?.departamento;
@@ -54,13 +57,13 @@ export class FiltersHomepageRepository {
 
       const entry = deptMap.get(dept)!;
       entry.ids.add(u.inmuebleId);
-        
-        const primeraPublicacion = u.inmueble?.publicaciones?.[0];
+
+      const primeraPublicacion = u.inmueble?.publicaciones?.[0];
       const primeraImagen = primeraPublicacion?.multimedia?.[0]?.url;
 
       if (entry.previews.length < 6 && primeraImagen) {
-         entry.previews.push({
-        imagen: primeraImagen,
+        entry.previews.push({
+          imagen: primeraImagen,
           titulo: u.inmueble.titulo ?? "Sin título",
         });
       }

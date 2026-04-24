@@ -25,18 +25,16 @@ export default function PropertyCard({
   onClick,
   variant = "alquiler",
   isEmpty = false,
-   previews = [],
+  previews = [],
 }: PropertyCardProps) {
-   const isAlquiler = variant === "alquiler";
+  const isAlquiler = variant === "alquiler";
 
   const slides: Preview[] =
-    previews.length > 0
-      ? previews
-      : [{ imagen: image, titulo: title }];
+    previews.length > 0 ? previews : [{ imagen: image, titulo: title }];
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-   useEffect(() => {
+  useEffect(() => {
     if (slides.length <= 1) return;
 
     const interval = setInterval(() => {
@@ -48,7 +46,6 @@ export default function PropertyCard({
 
   const currentSlide = slides[currentIndex];
   const showImage = !isEmpty && currentSlide.imagen;
-
 
   return (
     <div
@@ -78,10 +75,22 @@ export default function PropertyCard({
               strokeWidth={1.5}
             >
               <rect x="3" y="3" width="18" height="18" rx="2" />
-              <path d="M3 15l5-5 4 4 3-3 6 6" strokeLinecap="round" strokeLinejoin="round" />
-              <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" stroke="none" />
+              <path
+                d="M3 15l5-5 4 4 3-3 6 6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <circle
+                cx="8.5"
+                cy="8.5"
+                r="1.5"
+                fill="currentColor"
+                stroke="none"
+              />
             </svg>
-            <span className="text-[10px] font-medium text-gray-400">Sin imagen</span>
+            <span className="text-[10px] font-medium text-gray-400">
+              Sin imagen
+            </span>
           </div>
         ) : (
           <>
@@ -149,11 +158,11 @@ export default function PropertyCard({
                 isEmpty ? "text-gray-400" : "text-orange-500"
               }`}
             >
-              {isEmpty ? "Sin propiedades" : `${count.toLocaleString()} Propiedades`}
+              {isEmpty
+                ? "Sin propiedades"
+                : `${count.toLocaleString()} Propiedades`}
             </span>
-            {!isEmpty && (
-              <span className="text-orange-400 text-[10px]">→</span>
-            )}
+            {!isEmpty && <span className="text-orange-400 text-[10px]">→</span>}
           </div>
         )}
       </div>

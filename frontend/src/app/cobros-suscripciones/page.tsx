@@ -1,88 +1,106 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Plan = {
-  id: number
-  name: string
-  price: number
-  description: string
-  comment: string
-  benefits: string[]
-  subscribers: number
-}
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  comment: string;
+  benefits: string[];
+  subscribers: number;
+};
 
 const plansData: Plan[] = [
   {
     id: 1,
-    name: 'Básico',
+    name: "Básico",
     price: 0,
-    description: 'Ideal para comenzar',
-    comment: 'Perfecto para empezar y explorar nuestras funciones esenciales sin complicaciones.',
-    benefits: ['3 publicaciones activas', 'Acceso limitado', 'Soporte basico', '1 usuario'],
-    subscribers: 25
+    description: "Ideal para comenzar",
+    comment:
+      "Perfecto para empezar y explorar nuestras funciones esenciales sin complicaciones.",
+    benefits: [
+      "3 publicaciones activas",
+      "Acceso limitado",
+      "Soporte basico",
+      "1 usuario",
+    ],
+    subscribers: 25,
   },
   {
     id: 2,
-    name: 'Estándar',
+    name: "Estándar",
     price: 99,
-    description: 'Para usuarios intermedios',
+    description: "Para usuarios intermedios",
     comment:
-      'La opcion mas elegida para empresas pequeñas: balance perfecto entre funciones y precio.',
-    benefits: ['10 publicaciones activas', 'Acceso completo', 'Soporte prioritario', '5 usuarios'],
-    subscribers: 60
+      "La opcion mas elegida para empresas pequeñas: balance perfecto entre funciones y precio.",
+    benefits: [
+      "10 publicaciones activas",
+      "Acceso completo",
+      "Soporte prioritario",
+      "5 usuarios",
+    ],
+    subscribers: 60,
   },
   {
     id: 3,
-    name: 'Pro',
+    name: "Pro",
     price: 199,
-    description: 'Maximo rendimiento',
+    description: "Maximo rendimiento",
     comment:
-      'Todo incluido, ideal para usuarios avanzados o empresas que buscan maximo rendimiento.',
-    benefits: ['Publicaciones ilimitadas', 'Todo incluido', 'Soporte 24/7', 'Usuarios ilimitados'],
-    subscribers: 10
-  }
-]
+      "Todo incluido, ideal para usuarios avanzados o empresas que buscan maximo rendimiento.",
+    benefits: [
+      "Publicaciones ilimitadas",
+      "Todo incluido",
+      "Soporte 24/7",
+      "Usuarios ilimitados",
+    ],
+    subscribers: 10,
+  },
+];
 
 export default function CobrosSuscripciones() {
-  const [plans] = useState(plansData)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const router = useRouter()
+  const [plans] = useState(plansData);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token");
 
-    if (token && token !== 'undefined' && token !== 'null') {
-      setIsLoggedIn(true)
+    if (token && token !== "undefined" && token !== "null") {
+      setIsLoggedIn(true);
     }
-  }, [])
+  }, []);
 
-  const maxSubscribers = Math.max(...plans.map((p) => p.subscribers))
-  const mostPopularId = plans.find((p) => p.subscribers === maxSubscribers)?.id
+  const maxSubscribers = Math.max(...plans.map((p) => p.subscribers));
+  const mostPopularId = plans.find((p) => p.subscribers === maxSubscribers)?.id;
 
-  const currentPlanId = 1
+  const currentPlanId = 1;
 
   const handleSubscription = (plan: Plan) => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token");
 
-    const url = `/pago/resumen?planId=${plan.id}&precio=${plan.price}`
+    const url = `/pago/resumen?planId=${plan.id}&precio=${plan.price}`;
 
-    if (!token || token === 'undefined' || token === 'null') {
-      localStorage.setItem('redirectAfterLogin', '/cobros-suscripciones')
-      localStorage.setItem('selectedPlan', JSON.stringify(plan))
-      router.push('/sign-in')
-      return
+    if (!token || token === "undefined" || token === "null") {
+      localStorage.setItem("redirectAfterLogin", "/cobros-suscripciones");
+      localStorage.setItem("selectedPlan", JSON.stringify(plan));
+      router.push("/sign-in");
+      return;
     }
 
-    router.push(url)
-  }
+    router.push(url);
+  };
 
   return (
     <div className="min-h-screen bg-stone-50 flex justify-center p-10 font-inter">
       <div className="w-full max-w-6xl">
         <div className="mb-10">
-          <h1 className="text-4xl font-bold text-stone-900">Planes de membresía</h1>
+          <h1 className="text-4xl font-bold text-stone-900">
+            Planes de membresía
+          </h1>
 
           <p className="text-stone-400 mt-2 text-lg">
             Amplia tu alcance en el mercado inmobiliario de Bolivia.
@@ -101,7 +119,7 @@ export default function CobrosSuscripciones() {
                 hover:border-amber-400
                 hover:shadow-2xl
                 hover:-translate-y-1
-                ${plan.id === mostPopularId ? 'border-amber-400 shadow-lg' : ''}
+                ${plan.id === mostPopularId ? "border-amber-400 shadow-lg" : ""}
               `}
             >
               {plan.id === mostPopularId && (
@@ -117,19 +135,26 @@ export default function CobrosSuscripciones() {
               )}
 
               <div>
-                <h2 className="text-2xl font-semibold text-stone-900 mb-2">{plan.name}</h2>
+                <h2 className="text-2xl font-semibold text-stone-900 mb-2">
+                  {plan.name}
+                </h2>
 
                 <p className="text-3xl font-bold text-amber-600 mb-2">
-                  {plan.price === 0 ? 'Gratis' : `Bs. ${plan.price}`}
+                  {plan.price === 0 ? "Gratis" : `Bs. ${plan.price}`}
                   <span className="text-sm text-stone-500"> / mes</span>
                 </p>
 
-                <p className="text-sm text-stone-600 mb-4">{plan.description}</p>
+                <p className="text-sm text-stone-600 mb-4">
+                  {plan.description}
+                </p>
               </div>
 
               <ul className="space-y-2 mb-4">
                 {plan.benefits.map((b, i) => (
-                  <li key={i} className="flex items-center gap-2 text-sm text-stone-700">
+                  <li
+                    key={i}
+                    className="flex items-center gap-2 text-sm text-stone-700"
+                  >
                     <span className="text-green-500 font-bold">✔</span>
                     {b}
                   </li>
@@ -145,20 +170,20 @@ export default function CobrosSuscripciones() {
                   p-2 rounded-xl text-white transition
                   ${
                     isLoggedIn && plan.id === currentPlanId
-                      ? 'bg-stone-400 cursor-not-allowed'
-                      : 'bg-amber-600 hover:bg-amber-700'
+                      ? "bg-stone-400 cursor-not-allowed"
+                      : "bg-amber-600 hover:bg-amber-700"
                   }
                 `}
               >
                 {isLoggedIn && plan.id === currentPlanId
-                  ? 'Tu plan actual'
-                  : 'Suscribirse'}
+                  ? "Tu plan actual"
+                  : "Suscribirse"}
               </button>
             </div>
           ))}
         </div>
       </div>
     </div>
-  )
+  );
 }
 //// autenticado

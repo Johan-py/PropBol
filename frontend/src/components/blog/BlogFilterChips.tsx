@@ -22,10 +22,11 @@ export default function BlogFilterChips({
         type="button"
         onClick={() => onToggleCategory(null)}
         aria-pressed={activeCategory === null}
-        className={`${baseChipClassName} ${activeCategory === null
+        className={`${baseChipClassName} ${
+          activeCategory === null
             ? "border-stone-900 bg-stone-900 text-white"
             : "border-stone-300 bg-white text-stone-700 hover:border-stone-500 hover:text-stone-900"
-          }`}
+        }`}
       >
         TODOS
       </button>
@@ -39,10 +40,11 @@ export default function BlogFilterChips({
             type="button"
             onClick={() => onToggleCategory(category)}
             aria-pressed={isActive}
-            className={`${baseChipClassName} ${isActive
+            className={`${baseChipClassName} ${
+              isActive
                 ? "border-stone-900 bg-stone-900 text-white"
                 : "border-stone-300 bg-white text-stone-700 hover:border-stone-500 hover:text-stone-900"
-              }`}
+            }`}
           >
             {category}
           </button>

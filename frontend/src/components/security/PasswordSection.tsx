@@ -76,12 +76,12 @@ export default function PasswordSection() {
 
   const claveIntentos = useMemo(
     () => `cambio_password_intentos_${usuarioKey}`,
-    [usuarioKey]
+    [usuarioKey],
   );
 
   const claveBloqueo = useMemo(
     () => `cambio_password_bloqueado_hasta_${usuarioKey}`,
-    [usuarioKey]
+    [usuarioKey],
   );
 
   const bloqueado =
@@ -278,8 +278,8 @@ export default function PasswordSection() {
             {isLoading
               ? "Verificando..."
               : bloqueado
-              ? "Bloqueado"
-              : "Cambiar contraseña"}
+                ? "Bloqueado"
+                : "Cambiar contraseña"}
           </button>
         </form>
       </div>

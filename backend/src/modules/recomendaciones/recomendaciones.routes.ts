@@ -1,13 +1,13 @@
-import { Router } from 'express'
+import { Router } from "express";
 import {
   getRecomendacionesGlobales,
-  getInmueblesRecomendados
-} from './recomendaciones.controller.js'
-import { validarJWT } from '../../middleware/validarJWT.js'
+  getInmueblesRecomendados,
+} from "./recomendaciones.controller.js";
+import { validarJWT } from "../../middleware/validarJWT.js";
 
-const router = Router()
+const router = Router();
 
-router.get('/globales', validarJWT, getRecomendacionesGlobales)
-router.get('/inmuebles', getInmueblesRecomendados)
+router.get("/globales", validarJWT, getRecomendacionesGlobales);
+router.get("/inmuebles", getInmueblesRecomendados);
 
-export default router
+export default router;
