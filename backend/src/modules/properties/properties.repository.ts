@@ -12,6 +12,12 @@ export interface FiltrosBusqueda {
   minPrice?: number | null
   maxPrice?: number | null
   currency?: string | null
+  
+  dormitoriosMin?: number
+  dormitoriosMax?: number
+  banosMin?: number
+  banosMax?: number
+  banoCompartido?: boolean
 }
 
 // Helper para limpiar las variaciones de Anticrético
