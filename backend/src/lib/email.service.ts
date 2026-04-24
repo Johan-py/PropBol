@@ -240,6 +240,8 @@ export const enviarCodigoCambioEmail = async ({
   });
 };
 
+
+
 export const enviarCodigoRegistro = async ({
   emailDestino,
   codigo,
@@ -356,5 +358,43 @@ export const enviarCodigo2FA = async ({
       </body></html>
     `,
     textContent: `${saludo}\n\nTu código de verificación es: ${codigo}\n\nEste código expirará en 5 minutos.`,
+  });
+};
+
+export const enviarCodigoDesactivacionCuenta = async ({
+  emailDestino,
+  codigo,
+  nombreUsuario,
+}: EnviarCodigoParams): Promise<EmailSendResult> => {
+  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : "Hola,";
+
+  return sendBrevoEmail({
+    to: emailDestino,
+    subject: "Código de verificación - Desactivación de cuenta PropBol",
+    htmlContent: `
+      <!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
+      <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
+        <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:10px;overflow:hidden;">
+          <div style="background:#dc2626;padding:20px;text-align:center;">
+            <h1 style="color:#fff;margin:0;font-size:24px;">Desactivación de cuenta</h1>
+          </div>
+          <div style="padding:30px;">
+            <p style="font-size:16px;color:#333;">${saludo}</p>
+            <p style="font-size:16px;color:#333;">Ingresa el siguiente código para confirmar la desactivación de tu cuenta:</p>
+            <div style="background:#fee2e2;padding:20px;text-align:center;margin:25px 0;border-radius:8px;border:1px solid #fecaca;">
+              <span style="font-size:36px;font-weight:bold;letter-spacing:5px;color:#b91c1c;">${codigo}</span>
+            </div>
+            <p style="font-size:14px;color:#666;">Este código expirará en <strong style="color:#dc2626;">5 minutos</strong>.</p>
+            <div style="background:#fef2f2;border-left:4px solid #dc2626;padding:12px;margin:20px 0;">
+              <p style="margin:0;font-size:13px;color:#7f1d1d;">Si no solicitaste esta acción, ignora este mensaje.</p>
+            </div>
+          </div>
+          <div style="background:#f9fafb;padding:20px;text-align:center;border-top:1px solid #e5e7eb;">
+            <p style="font-size:12px;color:#9ca3af;margin:0;">Este es un mensaje automático, por favor no responder.</p>
+          </div>
+        </div>
+      </body></html>
+    `,
+    textContent: `${saludo}\n\nTu código de verificación para desactivar la cuenta es: ${codigo}\n\nEste código expirará en 5 minutos.`,
   });
 };
