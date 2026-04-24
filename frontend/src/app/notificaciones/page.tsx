@@ -181,34 +181,34 @@ export default function NotificationsPage() {
                 <div className="flex items-start justify-between gap-3">
                   <div
                     className="min-w-0 flex-1 cursor-pointer"
-                onClick={() => {
-                  if (notification.status === 'no leida' && isOnline) {
-                    void markAsRead(notification.id)
-                  }
+                    onClick={() => {
+                      if (notification.status === 'no leida' && isOnline) {
+                        void markAsRead(notification.id)
+                      }
 
-                  router.push(`/notificaciones/${notification.id}`)
-                }}
-                onKeyDown={(event) => {
+                      router.push(`/notificaciones/${notification.id}`)
+                    }}
+                    onKeyDown={(event) => {
                       if (event.key === 'Enter' || event.key === ' ') {
-                    if (notification.status === 'no leida' && isOnline) {
-                      void markAsRead(notification.id)
-                    }
+                        if (notification.status === 'no leida' && isOnline) {
+                          void markAsRead(notification.id)
+                        }
 
-                    router.push(`/notificaciones/${notification.id}`)
-                  }
-                }}
+                        router.push(`/notificaciones/${notification.id}`)
+                      }
+                    }}
                     role="button"
                     tabIndex={0}
-              >
+                  >
                     <div className="flex items-start gap-2">
-                    {notification.status === 'no leida' && (
-                      <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-amber-500" />
-                    )}
+                      {notification.status === 'no leida' && (
+                        <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-amber-500" />
+                      )}
 
                       <div className="min-w-0">
                         <h2 className="truncate text-sm font-semibold text-stone-900">
-                      {notification.title?.trim() || '(Sin título)'}
-                    </h2>
+                          {notification.title?.trim() || '(Sin título)'}
+                        </h2>
 
                         <p className="mt-1 break-words text-sm text-stone-600">
                           {notification.description?.trim() || '(Sin descripción disponible)'}
@@ -221,40 +221,40 @@ export default function NotificationsPage() {
                     <div className="text-right">
                       <p
                         className={`text-[11px] font-semibold uppercase tracking-wide ${
-                        notification.status === 'no leida' ? 'text-amber-600' : 'text-stone-400'
-                      }`}
-                    >
-                      {notification.status}
+                          notification.status === 'no leida' ? 'text-amber-600' : 'text-stone-400'
+                        }`}
+                      >
+                        {notification.status}
                       </p>
 
-                    {notification.fechaCreacion && (
+                      {notification.fechaCreacion && (
                         <p className="mt-1 text-[11px] text-stone-400">
-                        {formatRelativeTime(notification.fechaCreacion)}
+                          {formatRelativeTime(notification.fechaCreacion)}
                         </p>
-                    )}
-                  </div>
+                      )}
+                    </div>
 
-                  <div className="flex items-center gap-3">
-                    {!notification.archivada && (
-                      <button
-                        onClick={() => void archiveNotification(notification.id)}
-                        className="flex items-center gap-1 text-xs text-stone-400 transition hover:text-amber-600"
-                      >
+                    <div className="flex items-center gap-3">
+                      {!notification.archivada && (
+                        <button
+                          onClick={() => void archiveNotification(notification.id)}
+                          className="flex items-center gap-1 text-xs text-stone-400 transition hover:text-amber-600"
+                        >
                           <Archive className="h-3.5 w-3.5" />
-                        Archivar
-                      </button>
-                    )}
+                          Archivar
+                        </button>
+                      )}
 
-                    <button
-                      onClick={() => void deleteNotification(notification.id)}
-                      className="flex items-center gap-1 text-xs text-stone-400 transition hover:text-red-500"
-                    >
+                      <button
+                        onClick={() => void deleteNotification(notification.id)}
+                        className="flex items-center gap-1 text-xs text-stone-400 transition hover:text-red-500"
+                      >
                         <Trash2 className="h-3.5 w-3.5" />
-                      Eliminar
-                    </button>
+                        Eliminar
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
               </article>
             ))}
 
