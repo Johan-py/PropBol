@@ -300,3 +300,80 @@ export const buscarDetallePublicacionPorIdRepository = async (publicacionId: num
     }
   })
 }
+
+export const buscarDetallePublicacionPorInmuebleIdRepository = async (inmuebleId: number) => {
+  return prisma.publicacion.findFirst({
+    where: {
+      inmuebleId,
+      estado: {
+        not: 'ELIMINADA'
+      }
+    },
+    select: {
+      id: true,
+      titulo: true,
+      descripcion: true,
+      estado: true,
+      fechaPublicacion: true,
+      usuarioId: true,
+      inmuebleId: true,
+      usuario: {
+        select: {
+          id: true,
+          nombre: true,
+          apellido: true,
+          correo: true,
+          telefonos: {
+            select: {
+              codigoPais: true,
+              numero: true,
+              principal: true
+            }
+          }
+        }
+      },
+      inmueble: {
+        select: {
+          id: true,
+          titulo: true,
+          tipoAccion: true,
+          categoria: true,
+          precio: true,
+          superficieM2: true,
+          nroCuartos: true,
+          nroBanos: true,
+          descripcion: true,
+          estado: true,
+          ubicacion: {
+            select: {
+              direccion: true,
+              latitud: true,
+              longitud: true
+            }
+          },
+          inmueble_etiqueta: {
+            select: {
+              etiqueta: {
+                select: {
+                  id: true,
+                  nombre: true
+                }
+              }
+            }
+          }
+        }
+      },
+      multimedia: {
+        select: {
+          id: true,
+          url: true,
+          tipo: true,
+          pesoMb: true
+        },
+        orderBy: {
+          id: 'asc'
+        }
+      }
+    }
+  })
+}

@@ -1,0 +1,60 @@
+    import {
+    countActiveSocialLinksByUser,
+    deactivateSocialLinkByUserAndProvider,
+    findSocialLinkByUserAndProvider,
+    listSocialLinksByUser,
+    } from "../auth.repository.js";
+
+    const SUPPORTED_PROVIDERS = ["facebook", "discord"] as const;
+
+    export const getSocialLinksService = async (usuarioId: number) => {
+    const links = await listSocialLinksByUser(usuarioId);
+
+    const facebook = links.find((item) => item.proveedor === "facebook");
+    const discord = links.find((item) => item.proveedor === "discord");
+
+    return {
+        facebook: {
+        linked: Boolean(facebook),
+        linkedEmail: facebook?.correoProveedor ?? null,
+        },
+        discord: {
+        linked: Boolean(discord),
+        linkedEmail: discord?.correoProveedor ?? null,
+        },
+    };
+    };
+
+    export const unlinkSocialProviderService = async (
+    usuarioId: number,
+    provider: string,
+    ) => {
+    if (
+        !SUPPORTED_PROVIDERS.includes(
+        provider as (typeof SUPPORTED_PROVIDERS)[number],
+        )
+    ) {
+        throw new Error("Proveedor no soportado.");
+    }
+
+    const existingLink = await findSocialLinkByUserAndProvider(usuarioId, provider);
+
+    if (!existingLink) {
+        throw new Error("La red social no está vinculada.");
+    }
+
+    const activeLinksCount = await countActiveSocialLinksByUser(usuarioId);
+
+    if (activeLinksCount <= 1) {
+        throw new Error(
+        "No puedes desvincular esta red porque es tu único método de acceso activo.",
+        );
+    }
+
+    await deactivateSocialLinkByUserAndProvider(usuarioId, provider);
+
+    return {
+        message: "La red social fue desvinculada correctamente.",
+        provider,
+    };
+    };

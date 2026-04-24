@@ -313,7 +313,7 @@ model InteraccionMapa {
   @@map("interaccion_mapa")
 }
 
-model BannerHome {
+model banner_home {
   id             Int       @id @default(autoincrement())
   url_imagen     String
   orden          Int

@@ -4,7 +4,8 @@ import {
   buscarResumenFinalPorIdRepository,
   actualizarPublicacionRepository,
   eliminarLogicamentePublicacionRepository,
-  buscarDetallePublicacionPorIdRepository
+  buscarDetallePublicacionPorIdRepository,
+  buscarDetallePublicacionPorInmuebleIdRepository
 } from './publicacion.repository.js'
 
 type TipoAccionPermitido = 'VENTA' | 'ALQUILER' | 'ANTICRETO'
@@ -378,6 +379,64 @@ export const obtenerDetallePublicacionService = async (publicacionId: number) =>
 
   return {
     id: publicacion.id,
+    titulo: publicacion.titulo,
+    precio: Number(publicacion.inmueble.precio),
+    tipoInmueble: publicacion.inmueble.categoria ?? null,
+    tipoOperacion: publicacion.inmueble.tipoAccion,
+    ubicacionTexto: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
+    descripcion:
+      publicacion.descripcion || publicacion.inmueble.descripcion || 'Sin descripción disponible',
+    imagenes: publicacion.multimedia.map((item) => ({
+      id: item.id,
+      url: item.url,
+      tipo: item.tipo,
+      pesoMb: item.pesoMb ? Number(item.pesoMb) : null
+    })),
+    detalles: {
+      habitaciones: publicacion.inmueble.nroCuartos ?? null,
+      banos: publicacion.inmueble.nroBanos ?? null,
+      superficieUtil: publicacion.inmueble.superficieM2
+        ? Number(publicacion.inmueble.superficieM2)
+        : null
+    },
+    caracteristicasAdicionales:
+      publicacion.inmueble.inmueble_etiqueta?.map((item) => item.etiqueta.nombre) ?? [],
+    mapa: {
+      latitud: publicacion.inmueble.ubicacion?.latitud
+        ? Number(publicacion.inmueble.ubicacion.latitud)
+        : null,
+      longitud: publicacion.inmueble.ubicacion?.longitud
+        ? Number(publicacion.inmueble.ubicacion.longitud)
+        : null,
+      direccion: publicacion.inmueble.ubicacion?.direccion || null
+    },
+    contacto: {
+      nombre: `${publicacion.usuario.nombre} ${publicacion.usuario.apellido}`,
+      correo: publicacion.usuario.correo ?? null,
+      telefono: telefonoPrincipal
+        ? `${telefonoPrincipal.codigoPais} ${telefonoPrincipal.numero}`
+        : null
+    }
+  }
+}
+
+export const obtenerDetallePublicacionPorInmuebleService = async (inmuebleId: number) => {
+  if (Number.isNaN(inmuebleId) || inmuebleId <= 0) {
+    throw new Error('ID_INVALIDO')
+  }
+
+  const publicacion = await buscarDetallePublicacionPorInmuebleIdRepository(inmuebleId)
+
+  if (!publicacion || publicacion.estado === 'ELIMINADA') {
+    throw new Error('PUBLICACION_NO_EXISTE')
+  }
+
+  const telefonoPrincipal =
+    publicacion.usuario.telefonos.find((item) => item.principal) ?? publicacion.usuario.telefonos[0]
+
+  return {
+    id: publicacion.id,
+    inmuebleId: publicacion.inmueble.id,
     titulo: publicacion.titulo,
     precio: Number(publicacion.inmueble.precio),
     tipoInmueble: publicacion.inmueble.categoria ?? null,
