@@ -21,6 +21,7 @@ import {
   markAllNotificationsAsReadController,
   markNotificationAsReadController
 } from './modules/notificaciones/notificaciones.controller.js'
+import notificationStreamRoutes from './modules/notificaciones/notificaciones-stream.routes.js'
 import { BannersController } from './modules/banners/banners.controller.js'
 import { FiltersHomepageController } from './modules/filtershomepage/filtershomepage.controller.js'
 import { CityController } from './modules/city/city.controller.js'
@@ -58,6 +59,7 @@ import {
 
 import {
   discordCallbackController,
+  getDiscordLinkUrlController,
   startDiscordLoginController,
   startDiscordRegisterController
 } from './modules/auth/discord/discord.controller.js'
@@ -66,6 +68,18 @@ import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
 import publicacionRoutes from './modules/publicacion/publicacion.routes.js'
 import router from './modules/registro-publicacion/publicacion.routes.js'
 import parametrosRoutes from './modules/parametros-publicacion/parametros.routes.js'
+
+import {
+  facebookCallbackController,
+  getFacebookLinkUrlController,
+  startFacebookLoginController,
+  startFacebookRegisterController,
+} from "./modules/auth/facebook/facebook.controller.js";
+
+import {
+  getSocialLinksController,
+  unlinkSocialProviderController,
+} from "./modules/auth/social-links/social-links.controller.js";
 
 import securityRoutes from './routes/security.routes.js'
 // --------------------
@@ -93,6 +107,7 @@ import recomendacionesRoutes from './modules/recomendaciones/recomendaciones.rou
 import transaccionesRoutes from './modules/transacciones/transacciones.routes.js'
 import plansRoutes from './modules/plans/plans.routes.js'
 import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js'
+import whatsappRoutes from './modules/whatsapp/whatsapp.routes.js'
 
 import './jobs/suscripcion.job.js'
 
@@ -174,6 +189,7 @@ app.use('/api/telemetria', telemetriaRouter)
 
 app.use('/api/transacciones', transaccionesRoutes)
 app.use('/api/planes', plansRoutes)
+app.use('/api/whatsapp', whatsappRoutes)
 
 // --------------------
 // MOCK / TEST
@@ -209,6 +225,21 @@ app.get('/api/auth/google/callback', googleCallbackController)
 app.get('/api/auth/discord/login', startDiscordLoginController)
 app.get('/api/auth/discord/register', startDiscordRegisterController)
 app.get('/api/auth/discord/callback', discordCallbackController)
+app.get("/api/auth/facebook/login", startFacebookLoginController);
+app.get("/api/auth/facebook/register", startFacebookRegisterController);
+app.get("/api/auth/facebook/callback", facebookCallbackController);
+app.get("/api/auth/social-links", requireAuth, getSocialLinksController);
+app.delete(
+  "/api/auth/social-links/:provider",
+  requireAuth,
+  unlinkSocialProviderController,
+);
+app.get(
+  "/api/auth/facebook/link-url",
+  requireAuth,
+  getFacebookLinkUrlController,
+);
+app.get("/api/auth/discord/link-url", requireAuth, getDiscordLinkUrlController);
 //comentario
 
 // --------------------
@@ -258,6 +289,7 @@ app.get('/api/properties/inmuebles', propertiesController.getAll)
 app.post('/notificaciones', requireAuth, createNotificationController)
 app.get('/notificaciones', requireAuth, getNotificationsController)
 app.get('/notificaciones/unread-count', requireAuth, getUnreadCountController)
+app.use('/notificaciones', notificationStreamRoutes)
 app.get('/notificaciones/:id', requireAuth, getNotificationByIdController)
 app.patch('/notificaciones/:id/read', requireAuth, markNotificationAsReadController)
 app.patch('/notificaciones/read-all', requireAuth, markAllNotificationsAsReadController)
