@@ -53,6 +53,50 @@ type GooglePopupSuccessPayload = {
   };
 };
 
+type DiscordPopupSuccessPayload = {
+  type: "propbol:discord-login-success";
+  message: string;
+  token: string;
+  user: {
+    id: number;
+    correo: string;
+    nombre?: string;
+    apellido?: string;
+  };
+};
+
+type DiscordPopupErrorPayload = {
+  type: "propbol:discord-login-error";
+  code: string;
+  message: string;
+};
+
+type DiscordPopupMessage =
+  | DiscordPopupSuccessPayload
+  | DiscordPopupErrorPayload;
+
+type FacebookPopupSuccessPayload = {
+  type: "propbol:facebook-login-success";
+  message: string;
+  token: string;
+  user: {
+    id: number;
+    correo: string;
+    nombre?: string;
+    apellido?: string;
+  };
+};
+
+type FacebookPopupErrorPayload = {
+  type: "propbol:facebook-login-error";
+  code: string;
+  message: string;
+};
+
+type FacebookPopupMessage =
+  | FacebookPopupSuccessPayload
+  | FacebookPopupErrorPayload;
+
 const MAX_NAME_LENGTH = 30;
 const MAX_LAST_NAME_LENGTH = 30;
 const SESSION_DURATION_MS = 60 * 60 * 1000;
@@ -136,6 +180,62 @@ const saveGoogleSession = (payload: GooglePopupSuccessPayload) => {
   window.dispatchEvent(new Event("auth-state-changed"));
 };
 
+const saveDiscordSession = (payload: DiscordPopupSuccessPayload) => {
+  const userName =
+    payload.user.nombre && payload.user.apellido
+      ? `${payload.user.nombre} ${payload.user.apellido}`
+      : payload.user.nombre || payload.user.correo || "Usuario";
+
+  localStorage.setItem("token", payload.token);
+  localStorage.setItem(
+    "propbol_user",
+    JSON.stringify({
+      name: userName,
+      email: payload.user.correo,
+      avatar: null,
+    }),
+  );
+  localStorage.setItem("nombre", userName);
+  localStorage.setItem("correo", payload.user.correo);
+  localStorage.setItem("avatar", "");
+  localStorage.setItem(
+    "propbol_session_expires",
+    String(Date.now() + SESSION_DURATION_MS),
+  );
+
+  window.dispatchEvent(new Event("propbol:login"));
+  window.dispatchEvent(new Event("propbol:session-changed"));
+  window.dispatchEvent(new Event("auth-state-changed"));
+};
+
+const saveFacebookSession = (payload: FacebookPopupSuccessPayload) => {
+  const userName =
+    payload.user.nombre && payload.user.apellido
+      ? `${payload.user.nombre} ${payload.user.apellido}`
+      : payload.user.nombre || payload.user.correo || "Usuario";
+
+  localStorage.setItem("token", payload.token);
+  localStorage.setItem(
+    "propbol_user",
+    JSON.stringify({
+      name: userName,
+      email: payload.user.correo,
+      avatar: null,
+    }),
+  );
+  localStorage.setItem("nombre", userName);
+  localStorage.setItem("correo", payload.user.correo);
+  localStorage.setItem("avatar", "");
+  localStorage.setItem(
+    "propbol_session_expires",
+    String(Date.now() + SESSION_DURATION_MS),
+  );
+
+  window.dispatchEvent(new Event("propbol:login"));
+  window.dispatchEvent(new Event("propbol:session-changed"));
+  window.dispatchEvent(new Event("auth-state-changed"));
+};
+
 export default function SignUpForm() {
   const router = useRouter();
   const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
@@ -149,6 +249,7 @@ export default function SignUpForm() {
   const confirmPasswordContainerRef = useRef<HTMLDivElement>(null);
   const [serverError, setServerError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoadingFacebook, setIsLoadingFacebook] = useState(false);
 
   const onlyLettersRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
   const onlyNumbersRegex = /^[0-9]*$/;
@@ -458,6 +559,209 @@ export default function SignUpForm() {
     }
   };
 
+  const handleFacebookRegister = () => {
+    setServerError("");
+    setIsLoadingFacebook(true);
+
+    const popupWidth = 500;
+    const popupHeight = 600;
+    const left = window.screenX + (window.outerWidth - popupWidth) / 2;
+    const top = window.screenY + (window.outerHeight - popupHeight) / 2;
+
+    const popupWindow = window.open(
+      `${API_URL}/api/auth/facebook/register`,
+      "facebook-register",
+      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`,
+    );
+
+    if (
+      !popupWindow ||
+      popupWindow.closed ||
+      typeof popupWindow.closed === "undefined"
+    ) {
+      setServerError(
+        "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.",
+      );
+      setIsLoadingFacebook(false);
+      return;
+    }
+
+    const popup = popupWindow;
+    popup.focus();
+
+    const expectedOrigin = new URL(API_URL).origin;
+    let authWasResolved = false;
+    let checkPopupIntervalId = 0;
+    let facebookTimeoutId = 0;
+
+    function cleanup() {
+      window.removeEventListener("message", handleMessage);
+      window.clearInterval(checkPopupIntervalId);
+      window.clearTimeout(facebookTimeoutId);
+      setIsLoadingFacebook(false);
+    }
+
+    async function handleMessage(event: MessageEvent<FacebookPopupMessage>) {
+      if (event.origin !== expectedOrigin) return;
+
+      const data = event.data;
+      if (
+        !data ||
+        typeof data !== "object" ||
+        !("type" in data) ||
+        (data.type !== "propbol:facebook-login-success" &&
+          data.type !== "propbol:facebook-login-error")
+      ) {
+        return;
+      }
+
+      authWasResolved = true;
+      cleanup();
+
+      if (data.type === "propbol:facebook-login-success") {
+        try {
+          saveFacebookSession(data);
+          popup.close();
+          router.replace("/");
+        } catch {
+          setServerError("No se pudo guardar la sesión iniciada con Facebook.");
+          popup.close();
+        }
+        return;
+      }
+
+      setServerError(
+        data.message || "No se pudo completar el registro con Facebook.",
+      );
+      popup.close();
+    }
+
+    checkPopupIntervalId = window.setInterval(() => {
+      if (!popup.closed) return;
+
+      cleanup();
+
+      if (!authWasResolved) {
+        setServerError(
+          "Cancelaste el registro con Facebook. Puedes intentarlo nuevamente.",
+        );
+      }
+    }, 500);
+
+    facebookTimeoutId = window.setTimeout(
+      () => {
+        cleanup();
+        if (!popup.closed) popup.close();
+        setServerError(
+          "La autenticación con Facebook tardó demasiado. Por favor intenta nuevamente.",
+        );
+      },
+      2 * 60 * 1000,
+    );
+
+    window.addEventListener("message", handleMessage);
+  };
+
+  const handleDiscordRegister = () => {
+    setServerError("");
+
+    const popupWidth = 500;
+    const popupHeight = 600;
+    const left = window.screenX + (window.outerWidth - popupWidth) / 2;
+    const top = window.screenY + (window.outerHeight - popupHeight) / 2;
+
+    const popupWindow = window.open(
+      `${API_URL}/api/auth/discord/register`,
+      "discord-register",
+      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`,
+    );
+
+    if (
+      !popupWindow ||
+      popupWindow.closed ||
+      typeof popupWindow.closed === "undefined"
+    ) {
+      setServerError(
+        "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.",
+      );
+      return;
+    }
+
+    const popup = popupWindow;
+    popup.focus();
+
+    const expectedOrigin = new URL(API_URL).origin;
+    let authWasResolved = false;
+    let checkPopupIntervalId = 0;
+    let discordTimeoutId = 0;
+
+    function cleanup() {
+      window.removeEventListener("message", handleMessage);
+      window.clearInterval(checkPopupIntervalId);
+      window.clearTimeout(discordTimeoutId);
+    }
+
+    async function handleMessage(event: MessageEvent<DiscordPopupMessage>) {
+      if (event.origin !== expectedOrigin) return;
+
+      const data = event.data;
+      if (
+        !data ||
+        typeof data !== "object" ||
+        !("type" in data) ||
+        (data.type !== "propbol:discord-login-success" &&
+          data.type !== "propbol:discord-login-error")
+      ) {
+        return;
+      }
+
+      authWasResolved = true;
+      cleanup();
+
+      if (data.type === "propbol:discord-login-success") {
+        try {
+          saveDiscordSession(data);
+          popup.close();
+          router.replace("/");
+        } catch {
+          setServerError("No se pudo guardar la sesión iniciada con Discord.");
+          popup.close();
+        }
+        return;
+      }
+
+      setServerError(
+        data.message || "No se pudo completar el registro con Discord.",
+      );
+      popup.close();
+    }
+
+    checkPopupIntervalId = window.setInterval(() => {
+      if (!popup.closed) return;
+
+      cleanup();
+
+      if (!authWasResolved) {
+        setServerError(
+          "Cancelaste el registro con Discord. Puedes intentarlo nuevamente.",
+        );
+      }
+    }, 500);
+
+    discordTimeoutId = window.setTimeout(
+      () => {
+        cleanup();
+        if (!popup.closed) popup.close();
+        setServerError(
+          "La autenticación con Discord tardó demasiado. Por favor intenta nuevamente.",
+        );
+      },
+      2 * 60 * 1000,
+    );
+
+    window.addEventListener("message", handleMessage);
+  };
+
   const handleGoogleSuccess = async (payload: GooglePopupSuccessPayload) => {
     setServerError("");
 
@@ -722,6 +1026,37 @@ export default function SignUpForm() {
               onError={setServerError}
               disabled={isSubmitting}
             />
+
+            <div className="space-y-3">
+              <button
+                type="button"
+                onClick={handleFacebookRegister}
+                disabled={isLoadingFacebook}
+                className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#1877F2] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/15 text-base font-bold text-white">
+                  f
+                </span>
+                {isLoadingFacebook
+                  ? "Autenticando..."
+                  : "Registrarse con Facebook"}
+              </button>
+
+              <button
+                type="button"
+                onClick={handleDiscordRegister}
+                className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#5865F2] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:brightness-95"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  className="h-5 w-5 fill-white"
+                  aria-hidden="true"
+                >
+                  <path d="M20.317 4.369A19.79 19.79 0 0 0 15.885 3c-.191.328-.403.769-.552 1.117a18.27 18.27 0 0 0-5.333 0A11.64 11.64 0 0 0 9.448 3a19.736 19.736 0 0 0-4.433 1.369C2.211 8.58 1.443 12.686 1.826 16.735A19.923 19.923 0 0 0 7.239 19.5c.438-.6.828-1.235 1.164-1.904-.634-.24-1.239-.541-1.813-.896.152-.111.301-.227.445-.347 3.495 1.643 7.285 1.643 10.739 0 .146.12.294.236.446.347-.575.355-1.182.656-1.817.896.336.669.726 1.304 1.164 1.904a19.874 19.874 0 0 0 5.416-2.765c.451-4.695-.769-8.763-3.666-12.366ZM9.349 14.546c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.84 2.154-1.909 2.154Zm5.303 0c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.831 2.154-1.909 2.154Z" />
+                </svg>
+                Registrarse con Discord
+              </button>
+            </div>
 
             <button
               type="button"
