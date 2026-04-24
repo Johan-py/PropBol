@@ -310,15 +310,15 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
               ))}
               {history.length > 5 && (
                 <div className="flex justify-end border-t border-stone-50">
-                <button
-                  type="button"
+                  <button
+                    type="button"
                     onClick={() => setShowAll(!showAll)}
                     className={`px-4 py-2 text-xs font-bold transition-colors ${
                       showAll ? "text-stone-500 hover:text-stone-700" : "text-amber-600 hover:text-amber-700"
                     }`}
                   >
                     {showAll ? "Ver menos" : "Ver más"}
-                </button>
+                  </button>
                 </div>
               )}
             </div>
