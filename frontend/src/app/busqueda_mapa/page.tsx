@@ -546,6 +546,12 @@ function BusquedaMapaContent() {
     [inmueblesOrdenados]
   )
 
+  // HU4 - Abre el detalle de la propiedad en una nueva pestaña.
+  // Se usa property.id porque en filtros corresponde al inmuebleId.
+  const abrirDetallePropiedad = (propertyId: string | number) => {
+    window.open(`/detalle-propiedad/${propertyId}`, '_blank', 'noopener,noreferrer')
+  }
+
   // Eventos táctiles para el Bottom Sheet
   function onTouchStart(e: React.TouchEvent) {
     dragStartY.current = e.touches[0].clientY
@@ -599,16 +605,22 @@ function BusquedaMapaContent() {
       ) : (
         <div
           className={`gap-3 flex flex-col ${viewMode === 'list'
-              ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-              : ''
+            ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
+            : ''
             }`}
         >
           {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
             <div
               key={property.id}
               onClick={() => {
+                // HU4 - Mantiene la selección visual actual
                 setSelectedPropertyId(property.id)
+
+                // HU4 - Conserva el comportamiento existente del listado móvil
                 onClickItem?.(property)
+
+                // HU4 - Abre el detalle en una nueva pestaña
+                abrirDetallePropiedad(property.id)
               }}
               className={`cursor-pointer transition-all duration-200 rounded-xl ${selectedPropertyId === property.id ? 'ring-2 ring-orange-400 ring-offset-1' : ''
                 }`}
@@ -647,19 +659,33 @@ function BusquedaMapaContent() {
     </div>
   )
 
-  const renderListPaginationFooter = () => (
-    <MapaListadoPaginacion
-      total={listTotal}
-      page={listSafePage}
-      pageSize={listPageSize}
-      onPageChange={setListPage}
-      onPageSizeChange={(s) => {
-        setListPageSize(s);
-        setListPage(1);
-      }}
-      hint={listTotal === 0 && error ? `Error al cargar: ${error}` : null}
-    />
-  );
+
+  const renderListPaginationFooter = () => {
+    if (isClusterView) {
+      return clusterProperties.length > 0 ? (
+        <div className="shrink-0 border-t border-stone-100 bg-stone-50 px-3 py-2">
+          <p className="text-[11px] text-stone-500 text-center sm:text-left">
+            Mostrando {clusterProperties.length}{" "}
+            {clusterProperties.length === 1 ? "propiedad del clúster" : "propiedades del clúster"}.
+          </p>
+        </div>
+      ) : null;
+    }
+
+    return listTotal > 0 ? (
+      <MapaListadoPaginacion
+        total={listTotal}
+        page={listSafePage}
+        pageSize={listPageSize}
+        onPageChange={setListPage}
+        onPageSizeChange={(s) => {
+          setListPageSize(s);
+          setListPage(1);
+        }}
+        hint={listTotal === 0 && error ? `Error al cargar: ${error}` : null}
+      />
+    ) : null;
+  };
 
   // ────────────────────────────────────────────────────────────────────────────
   // RENDER LANDSCAPE MÓVIL
@@ -990,13 +1016,21 @@ function BusquedaMapaContent() {
                 setIsCapacidadOpen(false)
                 setActiveSidebarView('results')
               }}
-              onApply={(dormitoriosMin, dormitoriosMax, banosMin, banosMax) => {
-                console.log('Filtros capacidad:', { dormitoriosMin, dormitoriosMax, banosMin, banosMax })
+              onApply={(dormitoriosMin, dormitoriosMax, banosMin, banosMax, tipoBano) => {
+                const params = new URLSearchParams(searchParams.toString())
+                params.set('dormitoriosMin', dormitoriosMin.toString())
+                params.set('dormitoriosMax', dormitoriosMax.toString())
+                params.set('banosMin', banosMin.toString())
+                params.set('banosMax', banosMax.toString())
+                params.set('tipoBano', tipoBano)
+
+                router.push(`/busqueda_mapa?${params.toString()}`)
+
                 setIsCapacidadOpen(false)
                 setActiveSidebarView('results')
               }}
-          /> 
-        ) :
+            />
+          ) :
             isSidebarOpen && activeSidebarView === 'results' ? (
               <div className="flex flex-col h-full min-h-0">
                 <div className="p-4 bg-white shrink-0">
@@ -1097,8 +1131,8 @@ function BusquedaMapaContent() {
                     ) : (
                       <div
                         className={`gap-4 flex flex-col ${viewMode === 'list'
-                            ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-                            : ''
+                          ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
+                          : ''
                           }`}
                       >
                         {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
@@ -1106,10 +1140,16 @@ function BusquedaMapaContent() {
                             key={property.id}
                             onMouseEnter={() => setHoveredId(property.id)}
                             onMouseLeave={() => setHoveredId(null)}
-                            onClick={() => setSelectedPropertyId(property.id)}
+                            onClick={() => {
+                              // HU4 - Mantiene la selección visual en resultados
+                              setSelectedPropertyId(property.id)
+
+                              // HU4 - Abre el detalle de la propiedad en una nueva pestaña
+                              abrirDetallePropiedad(property.id)
+                            }}
                             className={`cursor-pointer transition-all duration-200 rounded-xl relative ${viewMode === 'grid'
-                                ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
-                                : 'w-full py-1 hover:bg-stone-100'
+                              ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
+                              : 'w-full py-1 hover:bg-stone-100'
                               } ${selectedPropertyId === property.id
                                 ? 'ring-2 ring-orange-400 ring-offset-1 z-10'
                                 : ''
