@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:5000';
 
 export async function PATCH(
-  _request: Request,
+  request: Request,
   { params }: { params: { id: string } }
 ) {
   const id = parseInt(params.id, 10);
@@ -12,13 +12,20 @@ export async function PATCH(
     return NextResponse.json({ error: 'ID inválido' }, { status: 400 });
   }
 
-  const response = await fetch(`${BACKEND_URL}/api/transacciones/${id}/cancelar`, {
+  const authHeader = request.headers.get('Authorization');
+  const body = await request.json();
+
+  const response = await fetch(`${BACKEND_URL}/api/transacciones/${id}/actualizar`, {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      ...(authHeader ? { Authorization: authHeader } : {}),
+    },
+    body: JSON.stringify(body),
   }).catch(() => null);
 
   if (!response || !response.ok) {
-    return NextResponse.json({ error: 'Error al cancelar transacción' }, { status: 500 });
+    return NextResponse.json({ error: 'Error al actualizar transacción' }, { status: 500 });
   }
 
   const data = await response.json();
