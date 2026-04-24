@@ -75,4 +75,3 @@ export const ordenarPorAfinidad = async (req: Request, res: Response) => {
     res.status(500).json({ success: false, error: 'Error al ordenar por afinidad' })
   }
 }
-

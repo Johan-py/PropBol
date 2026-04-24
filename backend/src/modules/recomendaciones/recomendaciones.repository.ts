@@ -168,14 +168,14 @@ export class RecomendacionesRepository {
   }
 
   async getInmueblesPorIds(ids: number[]) {
-  return await prisma.inmueble.findMany({
-    where: {
-      id: { in: ids },
-      estado: 'ACTIVO'
-    },
-    include: {
-      ubicacion: true
-    }
-  })
-}
+    return await prisma.inmueble.findMany({
+      where: {
+        id: { in: ids },
+        estado: 'ACTIVO'
+      },
+      include: {
+        ubicacion: true
+      }
+    })
+  }
 }

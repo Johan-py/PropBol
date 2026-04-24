@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const BACKEND_URL = process.env.RECOMENDACIONES_API_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  'http://localhost:5000'
+const BACKEND_URL =
+  process.env.RECOMENDACIONES_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
 export async function POST(req: NextRequest) {
   try {
@@ -22,9 +21,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(data, { status: response.status })
   } catch (error) {
     console.error('Error en proxy de ordenar:', error)
-    return NextResponse.json(
-      { success: false, error: 'Error al ordenar' },
-      { status: 500 }
-    )
+    return NextResponse.json({ success: false, error: 'Error al ordenar' }, { status: 500 })
   }
 }
