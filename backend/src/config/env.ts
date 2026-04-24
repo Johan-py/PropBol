@@ -36,16 +36,9 @@ export const env = {
     process.env.EMAIL_PASSWORD ??
     process.env.BREVO_API_KEY ??
     requireEnv("EMAIL_PASSWORD"),
-<<<<<<< HEAD
-  EVOLUTION_API_URL: process.env.EVOLUTION_API_URL ?? "http://localhost:8080",
-  EVOLUTION_API_KEY: process.env.EVOLUTION_API_KEY ?? "",
-  EVOLUTION_INSTANCE: process.env.EVOLUTION_INSTANCE ?? "propbol",
-    
-=======
     
   ADMIN_EMAIL: process.env.ADMIN_EMAIL ?? requireEnv("ADMIN_EMAIL"),
   EVOLUTION_API_URL: process.env.EVOLUTION_API_URL ?? "http://localhost:8080",
   EVOLUTION_API_KEY: process.env.EVOLUTION_API_KEY ?? "",
   EVOLUTION_INSTANCE: process.env.EVOLUTION_INSTANCE ?? "propbol",
->>>>>>> f2490fe4ae7ba0ecde23a47fa09aa857bf71f995
 };

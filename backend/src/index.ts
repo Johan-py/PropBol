@@ -103,10 +103,6 @@ import { verifyEmailTransport } from './lib/email.service.js'
 import favoritesRoutes from './modules/favorites/favorites.routes.js'
 import telemetriaRoutes from './modules/telemetria/telemetria.routes.js'
 import recomendacionesRoutes from './modules/recomendaciones/recomendaciones.routes.js'
-<<<<<<< HEAD
-import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js';
-import whatsappRoutes from './modules/whatsapp/whatsapp.routes.js'
-=======
 import transaccionesRoutes from './modules/transacciones/transacciones.routes.js'
 import plansRoutes from './modules/plans/plans.routes.js'
 import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js'
@@ -114,7 +110,6 @@ import whatsappRoutes from './modules/whatsapp/whatsapp.routes.js'
 
 import './jobs/suscripcion.job.js'
 
->>>>>>> f2490fe4ae7ba0ecde23a47fa09aa857bf71f995
 // --------------------
 // SERVER
 // --------------------
@@ -189,16 +184,12 @@ app.use('/api/favorites', favoritesRoutes)
 app.use('/api/telemetria', telemetriaRoutes)
 app.use('/api/recomendaciones', recomendacionesRoutes)
 app.use('/api/blogs', blogsRoutes)
-<<<<<<< HEAD
-app.use('/api/whatsapp', whatsappRoutes)
-=======
 app.use('/api/telemetria', telemetriaRouter)
 
 app.use('/api/transacciones', transaccionesRoutes)
 app.use('/api/planes', plansRoutes)
 app.use('/api/whatsapp', whatsappRoutes)
 
->>>>>>> f2490fe4ae7ba0ecde23a47fa09aa857bf71f995
 // --------------------
 // MOCK / TEST
 // --------------------
