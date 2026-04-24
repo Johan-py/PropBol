@@ -79,14 +79,31 @@ const TOUR_STEPS = [
 
 const FOOTER_STEP_INDEX = 8;
 
+// ✅ Helpers para saber si el usuario está logueado
+const isLoggedIn = () => {
+  if (typeof window === "undefined") return false;
+  return !!localStorage.getItem("token");
+};
+
+// ✅ Flag para saber si el tour fue activado manualmente por el botón Ayuda
+const MANUAL_TOUR_FLAG = "propbol_tour_manual";
+
 export default function TourGuiado() {
-  const [showTour, setShowTour] = useState(true);
+  const [showTour, setShowTour] = useState(false); // ← empieza en false, se decide en useEffect
   const [currentStep, setCurrentStep] = useState(0);
   const [highlight, setHighlight] = useState<DOMRect | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const retryRef = useRef<NodeJS.Timeout | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [tooltipH, setTooltipH] = useState(180);
+
+  // ✅ Decidir si mostrar el tour al montar
+  useEffect(() => {
+    if (isLoggedIn()) {
+      setShowTour(true);
+    }
+    // Si no está logueado, no se muestra — salvo que lo active el botón Ayuda
+  }, []);
 
   // 🔒 Bloquear scroll + ir al inicio
   useEffect(() => {
@@ -118,18 +135,19 @@ export default function TourGuiado() {
   }, [showTour, currentStep]);
 
   // 🔁 Reactivación manual desde el botón Ayuda
+  // ✅ Funciona para usuarios logueados Y no logueados
   useEffect(() => {
     const handleIniciarTour = () => {
       setHighlight(null);
       setCurrentStep(0);
-      setShowTour(true);
+      setShowTour(true); // ← siempre se abre cuando viene del botón Ayuda
     };
     window.addEventListener("propbol:iniciar-tour", handleIniciarTour);
     return () =>
       window.removeEventListener("propbol:iniciar-tour", handleIniciarTour);
   }, []);
 
-  // 📐 Medir altura del tooltip — siempre está montado cuando showTour=true
+  // 📐 Medir altura del tooltip
   useEffect(() => {
     if (!showTour) return;
 
@@ -302,7 +320,7 @@ export default function TourGuiado() {
         </svg>
       </div>
 
-      {/* ✅ Tooltip SIEMPRE renderizado — solo se oculta con opacity */}
+      {/* Tooltip siempre renderizado — solo se oculta con opacity */}
       <div
         ref={tooltipRef}
         style={{
