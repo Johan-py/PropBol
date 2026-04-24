@@ -17,6 +17,27 @@ export const findUserPasswordByIdRepository = async (
   })
 }
 
+export type SecurityUserRecord = {
+  id: number;
+  password: string | null;
+  correo: string;
+  nombre: string;
+};
+
+export const findSecurityUserByIdRepository = async (
+  userId: number,
+): Promise<SecurityUserRecord | null> => {
+  return await prisma.usuario.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      password: true,
+      correo: true,
+      nombre: true,
+    },
+  });
+};
+
 export const deactivateUserAccountRepository = async (userId: number): Promise<void> => {
   await prisma.$transaction([
     prisma.usuario.update({
