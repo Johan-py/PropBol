@@ -22,6 +22,7 @@ import {
   markAllNotificationsAsReadController,
   markNotificationAsReadController
 } from './modules/notificaciones/notificaciones.controller.js'
+import notificationStreamRoutes from './modules/notificaciones/notificaciones-stream.routes.js'
 import { BannersController } from './modules/banners/banners.controller.js'
 import { FiltersHomepageController } from './modules/filtershomepage/filtershomepage.controller.js'
 import { CityController } from './modules/city/city.controller.js'
@@ -289,6 +290,7 @@ app.get('/api/properties/inmuebles', propertiesController.getAll)
 app.post('/notificaciones', requireAuth, createNotificationController)
 app.get('/notificaciones', requireAuth, getNotificationsController)
 app.get('/notificaciones/unread-count', requireAuth, getUnreadCountController)
+app.use('/notificaciones', notificationStreamRoutes)
 app.get('/notificaciones/:id', requireAuth, getNotificationByIdController)
 app.patch('/notificaciones/:id/read', requireAuth, markNotificationAsReadController)
 app.patch('/notificaciones/read-all', requireAuth, markAllNotificationsAsReadController)
