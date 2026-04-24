@@ -11,10 +11,10 @@ import {
   Award,
   SlidersHorizontal,
   ChevronDown,
-  Building, 
-  Bed,      
-  Trees,    
-  Flower2   
+  Building,
+  Bed,
+  Trees,
+  Flower2
 } from 'lucide-react'
 import { useSearchFilters } from '@/hooks/useSearchFilters'
 import { LocationSearch } from '../layout/LocationSearch'
@@ -33,7 +33,7 @@ interface FilterBarProps {
   }) => void
   variant?: 'home' | 'map'
   onOpenPriceFilter?: () => void
-   onOpenSuperficieFilter?: () => void 
+  onOpenSuperficieFilter?: () => void
   isCapacidadActive?: boolean
   onToggleCapacidad?: () => void
   isPriceFilterActive?: boolean   
@@ -42,11 +42,11 @@ interface FilterBarProps {
 type LocationValue =
   | string
   | {
-      nombre?: string
-      target?: {
-        value?: string
-      }
+    nombre?: string
+    target?: {
+      value?: string
     }
+  }
 
 // Botón Mock
 const MockFilterBtn = ({
@@ -63,8 +63,8 @@ const MockFilterBtn = ({
   <button
     type="button"
     className="h-[36px] flex items-center justify-between bg-white border border-stone-200 text-stone-600 px-3 rounded-xl shadow-sm hover:border-stone-300 transition-all font-inter text-sm whitespace-nowrap gap-2 shrink-0 focus:outline-none cursor-default"
-     onClick={(e) => { e.preventDefault(); if (onClick) onClick() }}
-   
+    onClick={(e) => { e.preventDefault(); if (onClick) onClick() }}
+
   >
     <div className="flex items-center gap-2">
       {Icon && <Icon className="w-4 h-4 text-stone-500" />}
@@ -211,7 +211,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
           ========================================= */}
       <div
         className={`flex items-center w-full gap-3 relative z-[90] !overflow-visible ${variant === 'map' ? 'flex-nowrap' : 'flex-col md:flex-row flex-wrap'
-        }`}
+          }`}
       >
         {/* 🔸 Tipo (Aislado con z-[100] para que salte por encima de todo) */}
         <div
@@ -267,20 +267,20 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
               />
             </div>
             <div className="shrink-0">
-  <button
-    type="button"
-    onClick={() => onOpenSuperficieFilter?.()}
+              <button
+                type="button"
+                onClick={() => onOpenSuperficieFilter?.()}
                 className={`h-[36px] flex items-center gap-2 px-3 rounded-xl shadow-sm transition-all text-sm whitespace-nowrap focus:outline-none border shrink-0 ${
                   isSuperficieFilterActive
                     ? 'bg-[#d97706] text-white border-[#d97706]'
                     : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
                 }`}
-  >
+              >
                 <Maximize className={`w-4 h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-500'}`} />
-    <span>Metros</span>
+                <span>Metros</span>
                 <ChevronDown className={`w-4 h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-400'}`} />
-  </button>
-</div>
+              </button>
+            </div>
             <div className="shrink-0">
               <MockFilterBtn icon={SlidersHorizontal} text="Más Filtros" hasChevron={false} />
             </div>
@@ -311,7 +311,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     <Award className="w-4 h-4 text-stone-500" />
     <span>Recomendados</span>
   </button>
-            </div>
+</div>
           </div>
         )}
 
@@ -326,7 +326,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
           <button
             type="submit"
             className={`${variant === 'map' ? 'h-[36px] px-6 shadow-md' : 'w-full md:w-auto h-[46px] px-10'
-            } bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95`}
+              } bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95`}
           >
             <SearchIcon size={18} />
             {variant === 'home' && 'BUSCAR'}
