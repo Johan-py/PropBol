@@ -13,11 +13,7 @@ import {
   WifiOff,
   Settings,
   X,
-<<<<<<< HEAD
   ChevronDown,
-=======
-  ChevronDown
->>>>>>> 15cf0898 (fix(navbar): refactor menú móvil, añade acordeón y auto-cierre)
 } from "lucide-react";
  
 import Logo from "../navbar/Logo";
@@ -35,9 +31,6 @@ export type User = {
   role?: string | null;
 };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 type MeResponse = {
   message?: string;
   user?: {
@@ -70,32 +63,6 @@ const filters: NotificationFilter[] = [
   "archivada",
 ];
  
-=======
-/*type MeResponse = {
-=======
-type _MeResponse = {
->>>>>>> a2899c68 (feat(navbar): actualizar links y limpiar tipos no usados)
-=======
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type MeResponse = {
->>>>>>> 9132249f (feat(navbar): actualizar links y mantener tipos originales)
-  message?: string
-  perfil?: {
-    id: number
-    nombre?: string
-    apellido?: string
-    correo: string
-    avatar?: string | null
-  }
-}
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
-const USER_STORAGE_KEY = 'propbol_user'
-const SESSION_EXPIRES_KEY = 'propbol_session_expires'
-
-const filters: NotificationFilter[] = ['todas', 'leida', 'no leida', 'archivada']
-
->>>>>>> ffee0b38 (feat(navbar): actualizar links y limpiar tipos no usados)
 export default function Navbar() {
   const router = useRouter();
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -194,24 +161,9 @@ export default function Navbar() {
       clearSession(false);
       return;
     }
-<<<<<<< HEAD
  
     let parsedUser: User;
  
-=======
-
-    if (!navigator.onLine) {
-      try {
-        const parsedUser = JSON.parse(savedUser)
-        setUser(parsedUser)
-        setIsLoggedIn(true)
-      } catch {
-        clearSession(false)
-      }
-      return
-    }
-
->>>>>>> 5f456f00 (feat: agregar funcionalidades al Navbar)
     try {
       parsedUser = JSON.parse(savedUser) as User;
     } catch {
@@ -404,7 +356,6 @@ export default function Navbar() {
  
   return (
     <>
-      {/* CAMBIO CLAVE: z-[9999] para ganar al mapa siempre */}
       <nav className="sticky top-0 z-[9999] w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
         <div className="container mx-auto px-4 py-1.5">
           <div className="flex items-center justify-between">
@@ -533,7 +484,6 @@ export default function Navbar() {
                           aria-live="polite"
                           className="max-h-[60vh] overflow-y-auto sm:max-h-80"
                           onScroll={(e) => {
-<<<<<<< HEAD
                             const target = e.currentTarget;
                             const reachedBottom =
                               target.scrollTop + target.clientHeight >=
@@ -542,20 +492,6 @@ export default function Navbar() {
                             if (reachedBottom && hasMore && !isLoadingMore) {
                               saveScrollPosition(target.scrollTop);
                               void loadMoreNotifications();
-=======
-                            const target = e.currentTarget
-                            const reachedBottom =
-                              target.scrollTop + target.clientHeight >= target.scrollHeight - 20
-                            if (reachedBottom && hasMore && !isLoadingMore) {
-                              // @ts-ignore
-                              saveScrollPosition()
-<<<<<<< HEAD
-                              void loadMoreNotifications()
->>>>>>> 5f456f00 (feat: agregar funcionalidades al Navbar)
-=======
-                              // @ts-ignore 
-                              void loadMoreNotifications(filter)
->>>>>>> 3aec37b6 (fix(navbar): corregir argumentos de TypeScript en notificaciones)
                             }
                           }}
                         >
@@ -724,7 +660,7 @@ export default function Navbar() {
  
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 z-[10000] bg-black/40 md:hidden"
+          className="fixed insert-0 z-[9999] bg-black/40 md:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
           aria-modal="true"
           role="dialog"
@@ -748,7 +684,6 @@ export default function Navbar() {
             <nav className="mt-10 flex flex-col gap-2">
               <Link
                 href="/registro-inmueble"
-<<<<<<< HEAD
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"
               >
@@ -788,97 +723,25 @@ export default function Navbar() {
               </div>
 
               <Link
-<<<<<<< HEAD
                 id="tour-blogs-mobile"
                 href="/blogs"
-=======
->>>>>>> 741afe0e (feat(navbar): se añadio botón publicar y acordeón)
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"
-              >
-<<<<<<< HEAD
-<<<<<<< HEAD
-                Blogs
-=======
-                href="/propiedades"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
-                Propiedades
->>>>>>> 5f456f00 (feat: agregar funcionalidades al Navbar)
+                Blogs
               </Link>
 
               <Link
-<<<<<<< HEAD
-<<<<<<< HEAD
                 id="tour-planes-mobile"
-=======
-                href="/propiedades"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
-              >
-                Blogs
-              </Link>
-
-              <Link
->>>>>>> d00542e1 (fix: Eliminar el atributo href duplicado en el componente Navbar)
                 href="/cobros-suscripciones"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
                 Planes de membresía
               </Link>
-=======
-                Inicio
-=======
-                Publica tu inmueble
->>>>>>> 741afe0e (feat(navbar): se añadio botón publicar y acordeón)
-              </Link>
-
-              <div className="flex flex-col">
-                <button
-                  onClick={() => setIsPropiedadesOpen(!isPropiedadesOpen)}
-                  className="flex w-full items-center justify-between rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
-                >
-                  <span>Propiedades</span>
-                  <ChevronDown className={`h-5 w-5 transition-transform duration-200 ${isPropiedadesOpen ? "rotate-180" : ""}`} />
-                </button>
-                <div className={`flex flex-col overflow-hidden transition-all duration-300 ${isPropiedadesOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"}`}>
-                  {[
-                    { name: "Casas", href: "/busqueda_mapa?tipo=casa" },
-                    { name: "Departamentos", href: "/busqueda_mapa?tipo=departamento" },
-                    { name: "Cuartos", href: "/busqueda_mapa?tipo=cuarto" },
-                    { name: "Terrenos", href: "/busqueda_mapa?tipo=terreno" },
-                    { name: "Espacios de cementerios", href: "/busqueda_mapa?tipo=cementerio" },
-                  ].map((item) => (
-                    <Link key={item.name} href={item.href} onClick={() => setIsMobileMenuOpen(false)} className="pl-8 py-2 text-base text-gray-600 hover:text-[#E68B25]">
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
->>>>>>> 15cf0898 (fix(navbar): refactor menú móvil, añade acordeón y auto-cierre)
 
               <Link
                 id="tour-ayuda-mobile"
-=======
-                href="/blogs"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
-              >
-                Blogs
-              </Link>
-
-              <Link
-                href="/cobros-suscripciones"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
-              >
-                Planes de membresia
-              </Link>
-
-              <Link
->>>>>>> 5f456f00 (feat: agregar funcionalidades al Navbar)
                 href="/ayuda"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
@@ -890,22 +753,5 @@ export default function Navbar() {
         </div>
       )}
     </>
-<<<<<<< HEAD
   );
-<<<<<<< HEAD
 }
-=======
-  )
-<<<<<<< HEAD
-}
-<<<<<<< HEAD
->>>>>>> 5f456f00 (feat: agregar funcionalidades al Navbar)
-=======
-// Fuerza de cam
->>>>>>> 2c4e26fc (fix(navbar): forzar paso de check de typescript)
-=======
-}
->>>>>>> 314b6112 (fix(navbar): corregir argumentos de TypeScript en notificaciones)
-=======
-}
->>>>>>> 15cf0898 (fix(navbar): refactor menú móvil, añade acordeón y auto-cierre)

@@ -30,7 +30,6 @@ export default function NavLinks() {
 
   return (
     <div className="hidden md:flex items-center gap-6 text-[15px] font-medium text-gray-700">
-<<<<<<< HEAD
 
       {/* HU-05: Inicio */}
       <Link id="tour-inicio" href="/" className={linkStyle}>
@@ -39,9 +38,6 @@ export default function NavLinks() {
 
       {/* HU-05: Propiedades con dropdown */}
       <div id="tour-propiedades" className="relative" ref={dropdownRef}>
-=======
-      <div className="relative" ref={dropdownRef}>
->>>>>>> 741afe0e (feat(navbar): se añadio botón publicar y acordeón)
         <button
           onClick={() => setOpen(!open)}
           className={`flex items-center gap-1 px-3 py-2 rounded-md transition ${open ? 'text-[#E68B25] bg-[#E68B25]/10' : 'hover:text-[#E68B25] hover:bg-[#E68B25]/10'}`}
@@ -51,7 +47,6 @@ export default function NavLinks() {
         </button>
 
         {open && (
-<<<<<<< HEAD
           <div className="absolute top-full left-0 mt-2 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-50 py-2">
             {["Casas", "Departamentos", "Cuartos", "Terrenos", "Espacios de cementerios"].map((item) => (
               <Link
@@ -61,17 +56,6 @@ export default function NavLinks() {
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#E68B25]"
               >
                 {item}
-=======
-          <div className="absolute top-full left-0 mt-2 w-56 rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 z-[9999] py-2 border border-stone-100">
-            {categorias.map((item) => (
-              <Link 
-                key={item.name} 
-                href={item.href} 
-                onClick={() => setOpen(false)} 
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#E68B25]"
-              >
-                {item.name}
->>>>>>> b6afc3df (fix(navbar): corregir redirección de categorías y capas de filtros del mapa)
               </Link>
             ))}
           </div>
