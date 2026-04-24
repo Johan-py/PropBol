@@ -139,6 +139,30 @@ export const propertiesRepository = {
       where.precio = { ...((where.precio as object) ?? {}), lte: queryMaxPrice }
     }
 
+    if (filtros.dormitoriosMin !== undefined || filtros.dormitoriosMax !== undefined) {
+      where.nroCuartos = {}
+      if (filtros.dormitoriosMin !== undefined) {
+        where.nroCuartos.gte = filtros.dormitoriosMin
+      }
+      if (filtros.dormitoriosMax !== undefined) {
+        where.nroCuartos.lte = filtros.dormitoriosMax
+      }
+    }
+
+     if (filtros.banosMin !== undefined || filtros.banosMax !== undefined) {
+      where.nroBanos = {}
+      if (filtros.banosMin !== undefined) {
+        where.nroBanos.gte = filtros.banosMin
+      }
+      if (filtros.banosMax !== undefined) {
+        where.nroBanos.lte = filtros.banosMax
+      }
+    }
+
+    if (filtros.banoCompartido !== undefined) {
+      where.banoCompartido = filtros.banoCompartido
+    }
+
     // ── ORDER BY ───────────────────────────────────────────────────────────
     const orderBy: any[] = []
 
