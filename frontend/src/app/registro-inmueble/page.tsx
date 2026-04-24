@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import PlanModal from '../../components/ui/PlanModal'
+//import PlanModal from '../../components/ui/PlanModal'
 import dynamic from 'next/dynamic'
 import { ErrorValidacion, EstadoPublicacion } from "../../types/publicacion";
 import ErrorPanel from "../../components/publicacion/ErrorPanel";
@@ -977,7 +977,7 @@ export default function MiRegistroPage() {
 
                 {estado === 'exito' && (
                   <div className="bg-white border-2 border-green-400 rounded-2xl p-4 shadow-md max-w-md ml-auto">
-                    Publicación registrada correctamente ✅
+    
                   </div>
                 )}
               </div>
