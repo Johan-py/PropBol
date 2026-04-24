@@ -29,8 +29,10 @@ export default function CreatePostPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-      <BlogCreateForm />
+    <div className="min-h-screen bg-[#FAFAFA]/50 py-12 sm:py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <BlogCreateForm />
+      </div>
     </div>
   );
 }

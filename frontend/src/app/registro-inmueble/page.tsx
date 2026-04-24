@@ -866,7 +866,7 @@ export default function MiRegistroPage() {
               </section>
             </div>
 
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full min-w-0">
               <div className="flex-grow">
                 <label className="block text-[15px] font-bold text-gray-900 mb-2">
                   DESCRIPCION DETALLADA *
@@ -889,7 +889,73 @@ export default function MiRegistroPage() {
                   {datos.descripcion.length}/300 caracteres
                 </p>
               </div>
+             <div className="mt-6">
+               
+              <div className="flex items-center justify-between mb-4 gap-4">
 
+            <div className="flex gap-3">
+
+             <button
+                type="button"
+               onClick={() => {
+             setModoPinActivo(true)
+             setModoDifuminadoActivo(false)
+             setVertices([])
+               }}
+             className={`px-4 py-2 rounded-full text-sm ${
+                 modoPinActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
+             }`}
+             >
+                Pin
+              </button>
+
+                <button
+                 type="button"
+                 onClick={() => {
+                 setModoDifuminadoActivo(true)
+                 setModoPinActivo(false)
+                 setPinCoords(null)
+                }}
+                className={`px-4 py-2 rounded-full text-sm ${
+                 modoDifuminadoActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
+             }`}
+                >
+                Difuminado
+             </button>
+
+         </div>
+
+             <button
+             type="button"
+             disabled={!pinCoords && vertices.length === 0}
+             onClick={() => {
+                setPinCoords(null)
+                setVertices([])
+                setModoPinActivo(false)
+                setModoDifuminadoActivo(false)
+            }}
+             className={`px-4 py-2 rounded-full text-sm transition ${
+            !pinCoords && vertices.length === 0
+          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          : 'bg-orange-500 text-white hover:bg-orange-600'
+         }`}
+        >
+             Eliminar selección
+        </button>
+
+         </div>
+
+           <div className="relative z-0 rounded-2xl overflow-hidden border border-gray-200 max-w-full h-[320px]">
+            <MapaPinSelector
+               pinCoords={pinCoords}
+               setPinCoords={setPinCoords}
+               vertices={vertices}
+               setVertices={setVertices}
+               modoPinActivo={modoPinActivo}
+               modoDifuminadoActivo={modoDifuminadoActivo}
+                 />
+              </div>
+             </div>
               <div className="mt-12 space-y-6">
                 <div className="flex justify-center md:justify-end gap-6">
                   <button

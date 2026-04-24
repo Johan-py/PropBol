@@ -5,7 +5,7 @@ import { BlogCategory } from "@/types/publicBlog";
 type BlogFilterChipsProps = {
   categories: readonly BlogCategory[];
   activeCategory: BlogCategory | null;
-  onToggleCategory: (category: BlogCategory) => void;
+  onToggleCategory: (category: BlogCategory | null) => void;
 };
 
 const baseChipClassName =
@@ -18,6 +18,18 @@ export default function BlogFilterChips({
 }: BlogFilterChipsProps) {
   return (
     <div className="flex min-w-max gap-3 sm:min-w-0 sm:flex-wrap">
+      <button
+        type="button"
+        onClick={() => onToggleCategory(null)}
+        aria-pressed={activeCategory === null}
+        className={`${baseChipClassName} ${activeCategory === null
+            ? "border-stone-900 bg-stone-900 text-white"
+            : "border-stone-300 bg-white text-stone-700 hover:border-stone-500 hover:text-stone-900"
+          }`}
+      >
+        TODOS
+      </button>
+
       {categories.map((category) => {
         const isActive = activeCategory === category;
 
@@ -27,11 +39,10 @@ export default function BlogFilterChips({
             type="button"
             onClick={() => onToggleCategory(category)}
             aria-pressed={isActive}
-            className={`${baseChipClassName} ${
-              isActive
+            className={`${baseChipClassName} ${isActive
                 ? "border-stone-900 bg-stone-900 text-white"
                 : "border-stone-300 bg-white text-stone-700 hover:border-stone-500 hover:text-stone-900"
-            }`}
+              }`}
           >
             {category}
           </button>
