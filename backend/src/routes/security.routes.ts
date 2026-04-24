@@ -3,6 +3,8 @@ import { requireAuth } from "../middleware/auth.middleware.js";
 import {
   deactivateAccountController,
   validateCurrentPasswordController,
+  verifyDeactivateAccountCodeController,
+  sendDeactivateAccountCodeController,
 } from "../modules/security/security.controller.js";
 
 const router = Router();
@@ -11,6 +13,18 @@ router.post(
   "/validate-password",
   requireAuth,
   validateCurrentPasswordController,
+);
+
+router.post(
+  "/deactivate-account/send-code",
+  requireAuth,
+  sendDeactivateAccountCodeController,
+);
+
+router.post(
+  "/deactivate-account/verify-code",
+  requireAuth,
+  verifyDeactivateAccountCodeController,
 );
 
 router.delete("/deactivate-account", requireAuth, deactivateAccountController);
