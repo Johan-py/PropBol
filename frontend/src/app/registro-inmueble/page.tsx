@@ -807,7 +807,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
               </section>
             </div>
 
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full min-w-0">
               <div className="flex-grow">
                 <label className="block text-[15px] font-bold text-gray-900 mb-2">
                   DESCRIPCION DETALLADA *
@@ -885,7 +885,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
 
          </div>
 
-           <div className="rounded-2xl overflow-hidden border border-gray-200 w-full h-[320px]">
+           <div className="relative z-0 rounded-2xl overflow-hidden border border-gray-200 max-w-full h-[320px]">
             <MapaPinSelector
                pinCoords={pinCoords}
                setPinCoords={setPinCoords}
