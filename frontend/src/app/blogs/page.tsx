@@ -9,7 +9,16 @@ import BlogFilterChips from "@/components/blog/BlogFilterChips";
 import FeaturedBlogSpotlight from "@/components/blog/FeaturedBlogSpotlight";
 import { useBlogFeed } from "@/hooks/useBlogFeed";
 import { Blog } from "@/types/blog";
-import error from "next/error";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+
+type UserBlogResponse = {
+  id: number;
+  titulo: string;
+  estado: Blog["estado"];
+  imagen?: string | null;
+  fecha_creacion?: string;
+};
 
 export default function BlogsPage() {
   const {
@@ -23,23 +32,45 @@ export default function BlogsPage() {
     loadMore,
   } = useBlogFeed();
 
-const [myBlogs, setMyBlogs] = useState<Blog[]>([]);
+  const [myBlogs, setMyBlogs] = useState<Blog[]>([]);
 
-useEffect(() => {
-  const token = localStorage.getItem("token");
+  useEffect(() => {
+    const token = localStorage.getItem("token");
 
-  if (!token) return;
+    if (!token) return;
 
-  fetch("http://localhost:5000/api/blogs/mis-blogs", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then((res) => res.json())
-    .then((data) => {setMyBlogs(data.data ?? data);
-    })
-    .catch(console.error);
-}, []);
+    const loadMyBlogs = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/blogs/mis-blogs`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error("No se pudieron cargar tus blogs");
+        }
+
+        const data = (await res.json()) as UserBlogResponse[];
+
+        setMyBlogs(
+          data.map((blog) => ({
+            id: blog.id,
+            titulo: blog.titulo,
+            estado: blog.estado,
+            fecha: blog.fecha_creacion
+              ? new Date(blog.fecha_creacion).toLocaleDateString("es-BO")
+              : "",
+            imagenUrl: blog.imagen || "/placeholder-house.jpg",
+          })),
+        );
+      } catch (loadError) {
+        console.error(loadError);
+      }
+    };
+
+    void loadMyBlogs();
+  }, []);
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#fbf6ef_0%,#f5efe7_45%,#ffffff_100%)]">
