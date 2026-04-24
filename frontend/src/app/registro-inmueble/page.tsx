@@ -807,7 +807,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
               </section>
             </div>
 
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full min-w-0">
               <div className="flex-grow">
                 <label className="block text-[15px] font-bold text-gray-900 mb-2">
                   DESCRIPCION DETALLADA *
@@ -840,6 +840,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
                onClick={() => {
              setModoPinActivo(true)
              setModoDifuminadoActivo(false)
+             setVertices([])
                }}
              className={`px-4 py-2 rounded-full text-sm ${
                  modoPinActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
@@ -853,6 +854,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
                  onClick={() => {
                  setModoDifuminadoActivo(true)
                  setModoPinActivo(false)
+                 setPinCoords(null)
                 }}
                 className={`px-4 py-2 rounded-full text-sm ${
                  modoDifuminadoActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
@@ -883,7 +885,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
 
          </div>
 
-           <div className="rounded-2xl overflow-hidden border border-gray-200 w-full h-[320px]">
+           <div className="relative z-0 rounded-2xl overflow-hidden border border-gray-200 max-w-full h-[320px]">
             <MapaPinSelector
                pinCoords={pinCoords}
                setPinCoords={setPinCoords}
