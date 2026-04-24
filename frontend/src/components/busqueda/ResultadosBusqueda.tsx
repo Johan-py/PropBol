@@ -77,6 +77,17 @@ export const ResultadosBusqueda = () => {
         const res = await fetch(url)
         if (!res.ok) throw new Error('Error de red al conectar con el servidor')
 
+        const orden = searchParams.get('orden')
+        if (orden === 'recomendados') {
+       const cached = sessionStorage.getItem('recomendaciones_resultado')
+        if (cached) {
+          setInmueblesRaw(JSON.parse(cached))
+         sessionStorage.removeItem('recomendaciones_resultado')
+         setCargando(false)
+         return
+       }
+       }
+
         const data = await res.json()
 
         if (data && data.ok === true && Array.isArray(data.data)) {

@@ -78,6 +78,10 @@ interface BlogApiRow {
   };
 }
 
+export type PublicBlogDetail = PublicBlogCard & {
+  content: string;
+};
+
 export const getPublishedBlogs = async (
   limit: number = 10,
 ): Promise<PublicBlogCard[]> => {
@@ -112,6 +116,54 @@ export const getPublishedBlogs = async (
       return MOCK_PUBLIC_BLOGS.slice(0, limit);
     }
     return [];
+  }
+};
+
+export const getPublishedBlogById = async (
+  id: string,
+): Promise<PublicBlogDetail | null> => {
+  const apiUrl = getApiUrl();
+
+  try {
+    const response = await fetch(`${apiUrl}/api/blogs/${id}`, {
+      cache: "no-store",
+    });
+
+    if (response.status === 404) {
+      return null;
+    }
+
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`);
+    }
+
+    const row = (await response.json()) as BlogApiRow;
+
+    return {
+      id: String(row.id),
+      title: row.titulo,
+      excerpt: row.resumen || row.contenido.substring(0, 150) + "...",
+      imageUrl: row.imagen || "/placeholder-blog.jpg",
+      category: (row.categoria_blog?.nombre || "General") as BlogCategory,
+      authorName:
+        `${row.usuario?.nombre || ""} ${row.usuario?.apellido || ""}`.trim() ||
+        "Anónimo",
+      publishedAt: row.fecha_publicacion || row.fecha_creacion,
+      content: row.contenido,
+    };
+  } catch (error) {
+    console.error("Error al obtener el detalle del blog:", error);
+
+    const fallbackBlog = MOCK_PUBLIC_BLOGS.find((blog) => blog.id === id);
+
+    if (!fallbackBlog) {
+      return null;
+    }
+
+    return {
+      ...fallbackBlog,
+      content: fallbackBlog.excerpt,
+    };
   }
 };
 
