@@ -1,25 +1,24 @@
 import type { Request, Response } from "express";
 import { env } from "../../../config/env.js";
 import {
-  linkDiscordToCurrentUserByCodeService,
-  loginWithDiscordCodeService,
-  registerWithDiscordCodeService,
-} from "./discord.service.js";
-import { DiscordAuthError } from "./discord.types.js";
+  linkFacebookToCurrentUserByCodeService,
+  loginWithFacebookCodeService,
+  registerWithFacebookCodeService,
+} from "./facebook.service.js";
+import {
+  FacebookAuthError,
+  type FacebookStatePayload,
+} from "./facebook.types.js";
 
-type DiscordFlowMode = "login" | "register";
+type FacebookFlowMode = "login" | "register";
 
-type DiscordStatePayload =
-  | { mode: "login" | "register" }
-  | { mode: "link"; sessionToken: string };
-
-const encodeState = (value: DiscordStatePayload) => {
+const encodeState = (value: FacebookStatePayload) => {
   return Buffer.from(JSON.stringify(value), "utf-8").toString("base64url");
 };
 
 const decodeState = (
   rawState: string | undefined,
-): DiscordStatePayload | null => {
+): FacebookStatePayload | null => {
   if (!rawState?.trim()) return null;
 
   if (rawState === "login" || rawState === "register") {
@@ -29,7 +28,7 @@ const decodeState = (
   try {
     const parsed = JSON.parse(
       Buffer.from(rawState, "base64url").toString("utf-8"),
-    ) as DiscordStatePayload;
+    ) as FacebookStatePayload;
 
     if (!parsed || typeof parsed !== "object" || !("mode" in parsed)) {
       return null;
@@ -41,8 +40,8 @@ const decodeState = (
   }
 };
 
-const buildDiscordAuthUrl = (
-  mode: DiscordFlowMode | "link",
+const buildFacebookAuthUrl = (
+  mode: FacebookFlowMode | "link",
   sessionToken?: string,
 ) => {
   const state =
@@ -54,12 +53,12 @@ const buildDiscordAuthUrl = (
       : mode;
 
   return (
-    "https://discord.com/oauth2/authorize?" +
+    "https://www.facebook.com/v25.0/dialog/oauth?" +
     new URLSearchParams({
-      client_id: env.DISCORD_CLIENT_ID,
-      redirect_uri: env.DISCORD_CALLBACK_URL,
+      client_id: env.FACEBOOK_CLIENT_ID,
+      redirect_uri: env.FACEBOOK_CALLBACK_URL,
       response_type: "code",
-      scope: "identify email",
+      scope: "email,public_profile",
       state,
     }).toString()
   );
@@ -78,7 +77,7 @@ const sendPopupResponse = (
   res: Response,
   payload:
     | {
-        type: "propbol:discord-login-success";
+        type: "propbol:facebook-login-success";
         message: string;
         token: string;
         user: {
@@ -89,19 +88,19 @@ const sendPopupResponse = (
         };
       }
     | {
-        type: "propbol:discord-login-error";
+        type: "propbol:facebook-login-error";
         code: string;
         message: string;
-         }
+      }
     | {
         type: "propbol:social-link-success";
-        provider: "discord";
+        provider: "facebook";
         message: string;
         linkedEmail: string | null;
       }
     | {
         type: "propbol:social-link-error";
-        provider: "discord";
+        provider: "facebook";
         code: string;
         message: string;
       },
@@ -114,7 +113,7 @@ const sendPopupResponse = (
     <html lang="es">
     <head>
       <meta charset="UTF-8" />
-      <title>Autenticación con Discord</title>
+      <title>Autenticación con Facebook</title>
     </head>
     <body>
       <p>${escapeHtml(fallbackMessage)}</p>
@@ -134,18 +133,18 @@ const sendPopupResponse = (
     </html>`);
 };
 
-export const startDiscordLoginController = (_req: Request, res: Response) => {
-  return res.redirect(buildDiscordAuthUrl("login"));
+export const startFacebookLoginController = (_req: Request, res: Response) => {
+  return res.redirect(buildFacebookAuthUrl("login"));
 };
 
-export const startDiscordRegisterController = (
+export const startFacebookRegisterController = (
   _req: Request,
   res: Response,
 ) => {
-  return res.redirect(buildDiscordAuthUrl("register"));
+  return res.redirect(buildFacebookAuthUrl("register"));
 };
 
-export const getDiscordLinkUrlController = (req: Request, res: Response) => {
+export const getFacebookLinkUrlController = (req: Request, res: Response) => {
   const authorization = req.headers.authorization ?? "";
   const token = authorization.startsWith("Bearer ")
     ? authorization.slice("Bearer ".length).trim()
@@ -153,16 +152,16 @@ export const getDiscordLinkUrlController = (req: Request, res: Response) => {
 
   if (!token) {
     return res.status(401).json({
-      message: "No se encontró una sesión válida para vincular Discord.",
+      message: "No se encontró una sesión válida para vincular Facebook.",
     });
   }
 
   return res.status(200).json({
-    url: buildDiscordAuthUrl("link", token),
+    url: buildFacebookAuthUrl("link", token),
   });
 };
 
-export const discordCallbackController = async (
+export const facebookCallbackController = async (
   req: Request,
   res: Response,
 ) => {
@@ -176,15 +175,16 @@ export const discordCallbackController = async (
     if (state?.mode === "link") {
       return sendPopupResponse(res, {
         type: "propbol:social-link-error",
-        provider: "discord",
-        code: "DISCORD_AUTH_FAILED",
-        message: "La vinculación con Discord fue cancelada o falló.",
+        provider: "facebook",
+        code: "FACEBOOK_AUTH_FAILED",
+        message: "La vinculación con Facebook fue cancelada o falló.",
       });
     }
+
     return sendPopupResponse(res, {
-      type: "propbol:discord-login-error",
-      code: "DISCORD_AUTH_FAILED",
-      message: "La autenticación con Discord fue cancelada o falló.",
+      type: "propbol:facebook-login-error",
+      code: "FACEBOOK_AUTH_FAILED",
+      message: "La autenticación con Facebook fue cancelada o falló.",
     });
   }
 
@@ -192,59 +192,62 @@ export const discordCallbackController = async (
     if (state?.mode === "link") {
       return sendPopupResponse(res, {
         type: "propbol:social-link-error",
-        provider: "discord",
-        code: "DISCORD_AUTH_FAILED",
-        message: "Discord no devolvió un código válido.",
+        provider: "facebook",
+        code: "FACEBOOK_AUTH_FAILED",
+        message: "Facebook no devolvió un código válido.",
       });
     }
+
     return sendPopupResponse(res, {
-      type: "propbol:discord-login-error",
-      code: "DISCORD_AUTH_FAILED",
-      message: "Discord no devolvió un código válido.",
+      type: "propbol:facebook-login-error",
+      code: "FACEBOOK_AUTH_FAILED",
+      message: "Facebook no devolvió un código válido.",
     });
   }
 
   try {
-     if (state?.mode === "link") {
-      const result = await linkDiscordToCurrentUserByCodeService(
+    if (state?.mode === "link") {
+      const result = await linkFacebookToCurrentUserByCodeService(
         state.sessionToken,
         code,
       );
 
       return sendPopupResponse(res, {
         type: "propbol:social-link-success",
-        provider: "discord",
+        provider: "facebook",
         message: result.message,
         linkedEmail: result.linkedEmail,
       });
     }
 
     const mode = state?.mode === "register" ? "register" : "login";
+
     const result =
       mode === "register"
-        ? await registerWithDiscordCodeService(code)
-        : await loginWithDiscordCodeService(code);
+        ? await registerWithFacebookCodeService(code)
+        : await loginWithFacebookCodeService(code);
 
     return sendPopupResponse(res, {
-      type: "propbol:discord-login-success",
+      type: "propbol:facebook-login-success",
       message: result.message,
       token: result.token,
       user: result.user,
     });
   } catch (error) {
-    console.error("[Discord Auth Error]", error);
+    console.error("[Facebook Auth Error]", error);
 
-    if (error instanceof DiscordAuthError) {
+    if (error instanceof FacebookAuthError) {
       if (state?.mode === "link") {
         return sendPopupResponse(res, {
           type: "propbol:social-link-error",
-          provider: "discord",
+          provider: "facebook",
           code: error.code,
           message: error.message,
         });
       }
+
       return sendPopupResponse(res, {
-        type: "propbol:discord-login-error",
+        type: "propbol:facebook-login-error",
         code: error.code,
         message: error.message,
       });
@@ -253,19 +256,19 @@ export const discordCallbackController = async (
     if (state?.mode === "link") {
       return sendPopupResponse(res, {
         type: "propbol:social-link-error",
-        provider: "discord",
-        code: "DISCORD_AUTH_FAILED",
-        message: "No se pudo completar la vinculación con Discord.",
+        provider: "facebook",
+        code: "FACEBOOK_AUTH_FAILED",
+        message: "No se pudo completar la vinculación con Facebook.",
       });
     }
 
     return sendPopupResponse(res, {
-      type: "propbol:discord-login-error",
-      code: "DISCORD_AUTH_FAILED",
+      type: "propbol:facebook-login-error",
+      code: "FACEBOOK_AUTH_FAILED",
       message:
-          state?.mode === "register"
-          ? "No se pudo completar el registro con Discord."
-          : "No se pudo completar el inicio de sesión con Discord.",
+        state?.mode === "register"
+          ? "No se pudo completar el registro con Facebook."
+          : "No se pudo completar el inicio de sesión con Facebook.",
     });
   }
 };

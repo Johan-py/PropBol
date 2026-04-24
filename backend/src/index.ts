@@ -58,6 +58,7 @@ import {
 
 import {
   discordCallbackController,
+  getDiscordLinkUrlController,
   startDiscordLoginController,
   startDiscordRegisterController
 } from './modules/auth/discord/discord.controller.js'
@@ -66,6 +67,18 @@ import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
 import publicacionRoutes from './modules/publicacion/publicacion.routes.js'
 import router from './modules/registro-publicacion/publicacion.routes.js'
 import parametrosRoutes from './modules/parametros-publicacion/parametros.routes.js'
+
+import {
+  facebookCallbackController,
+  getFacebookLinkUrlController,
+  startFacebookLoginController,
+  startFacebookRegisterController,
+} from "./modules/auth/facebook/facebook.controller.js";
+
+import {
+  getSocialLinksController,
+  unlinkSocialProviderController,
+} from "./modules/auth/social-links/social-links.controller.js";
 
 import securityRoutes from './routes/security.routes.js'
 // --------------------
@@ -211,6 +224,21 @@ app.get('/api/auth/google/callback', googleCallbackController)
 app.get('/api/auth/discord/login', startDiscordLoginController)
 app.get('/api/auth/discord/register', startDiscordRegisterController)
 app.get('/api/auth/discord/callback', discordCallbackController)
+app.get("/api/auth/facebook/login", startFacebookLoginController);
+app.get("/api/auth/facebook/register", startFacebookRegisterController);
+app.get("/api/auth/facebook/callback", facebookCallbackController);
+app.get("/api/auth/social-links", requireAuth, getSocialLinksController);
+app.delete(
+  "/api/auth/social-links/:provider",
+  requireAuth,
+  unlinkSocialProviderController,
+);
+app.get(
+  "/api/auth/facebook/link-url",
+  requireAuth,
+  getFacebookLinkUrlController,
+);
+app.get("/api/auth/discord/link-url", requireAuth, getDiscordLinkUrlController);
 //comentario
 
 // --------------------
