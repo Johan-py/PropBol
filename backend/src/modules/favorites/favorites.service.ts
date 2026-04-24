@@ -45,12 +45,12 @@ export class FavoritesService {
   static async add(usuarioId: number, inmuebleId: number) {
     try {
       // Usar create directamente con el unique compuesto
-    return await prisma.favorito.create({
-      data: { 
+      return await prisma.favorito.create({
+        data: {
           usuarioId,
           inmuebleId
-      },
-    })
+        },
+      })
     } catch (error: any) {
       // P2002 es el error de Prisma para unique constraint violation
       if (error.code === 'P2002') {
@@ -64,13 +64,13 @@ export class FavoritesService {
     try {
       // Eliminar directamente usando el unique compuesto
       return await prisma.favorito.delete({
-      where: {
+        where: {
           usuarioId_inmuebleId: {
             usuarioId,
             inmuebleId
           }
-      }
-    })
+        }
+      })
     } catch (error: any) {
       // P2025 es el error de Prisma para registro no encontrado
       if (error.code === 'P2025') {
@@ -83,13 +83,13 @@ export class FavoritesService {
   static async isFavorite(usuarioId: number, inmuebleId: number): Promise<boolean> {
     try {
       const favorite = await prisma.favorito.findUnique({
-      where: {
+        where: {
           usuarioId_inmuebleId: {
             usuarioId,
             inmuebleId
           }
-      }
-    })
+        }
+      })
       return !!favorite
     } catch (error) {
       return false
