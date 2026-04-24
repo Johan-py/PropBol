@@ -47,8 +47,12 @@ export default function Logo({
   textClassName = ''
 }: LogoProps) {
   return (
+     // HU-05: ID de referencia para el tour guiado - Paso "Inicio"
+    // Este enlace será resaltado por el tour para indicar cómo volver al home
     <Link
       href="/"
+        id="tour-logo"
+        
       onClick={onClick}
       className={`flex items-center gap-2 p-0.5 transition hover:opacity-80 ${className}`}
     >
