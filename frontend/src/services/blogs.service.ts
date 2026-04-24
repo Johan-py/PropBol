@@ -45,22 +45,6 @@ type UserBlogRow = {
   estado: "BORRADOR" | "PENDIENTE" | "PUBLICADO" | "RECHAZADO";
 };
 
-const getApiUrl = () =>
-  (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").replace(
-    /\/$/,
-    "",
-  );
-
-const getToken = () => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("No hay sesión activa. Inicia sesión nuevamente.");
-  }
-
-  return token;
-};
-
 interface BlogApiRow {
   id: number;
   titulo: string;
@@ -76,6 +60,31 @@ interface BlogApiRow {
   categoria_blog?: {
     nombre: string;
   };
+}
+
+const getApiUrl = () =>
+  (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").replace(
+    /\/$/,
+    "",
+  );
+
+const getToken = () => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("No hay sesion activa. Inicia sesion nuevamente.");
+  }
+
+  return token;
+};
+
+function getMockCategories(): BlogCategoryOption[] {
+  return Array.from(new Set(MOCK_PUBLIC_BLOGS.map((blog) => blog.category))).map(
+    (category, index) => ({
+      id: index + 1,
+      nombre: category,
+    }),
+  );
 }
 
 export const getPublishedBlogs = async (
@@ -98,35 +107,42 @@ export const getPublishedBlogs = async (
     return rows.map((row: BlogApiRow) => ({
       id: String(row.id),
       title: row.titulo,
-      excerpt: row.resumen || row.contenido.substring(0, 150) + "...",
+      excerpt: row.resumen || `${row.contenido.substring(0, 150)}...`,
       imageUrl: row.imagen || "/placeholder-blog.jpg",
       category: (row.categoria_blog?.nombre || "General") as BlogCategory,
       authorName:
         `${row.usuario?.nombre || ""} ${row.usuario?.apellido || ""}`.trim() ||
-        "Anónimo",
+        "Anonimo",
       publishedAt: row.fecha_publicacion || row.fecha_creacion,
     }));
   } catch (error) {
     console.error("Error al obtener los blogs publicados:", error);
+
     if (error instanceof TypeError) {
       return MOCK_PUBLIC_BLOGS.slice(0, limit);
     }
+
     return [];
   }
 };
 
 export async function getBlogCategories(): Promise<BlogCategoryOption[]> {
-  const response = await fetch(`${getApiUrl()}/api/blogs/categorias`, {
-    cache: "no-store",
-  });
+  try {
+    const response = await fetch(`${getApiUrl()}/api/blogs/categorias`, {
+      cache: "no-store",
+    });
 
-  const data = await response.json();
+    const data = await response.json();
 
-  if (!response.ok) {
-    throw new Error(data.message || "No se pudieron cargar las categorías");
+    if (!response.ok) {
+      throw new Error(data.message || "No se pudieron cargar las categorias");
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error al obtener las categorias del blog:", error);
+    return getMockCategories();
   }
-
-  return data;
 }
 
 export async function createBlog(
@@ -189,7 +205,7 @@ export async function getEditableBlog(id: number): Promise<EditableBlog> {
   const blog = (data as UserBlogRow[]).find((row) => row.id === id);
 
   if (!blog) {
-    throw new Error("No se encontró el blog solicitado.");
+    throw new Error("No se encontro el blog solicitado.");
   }
 
   if (blog.estado !== "BORRADOR" && blog.estado !== "RECHAZADO") {
