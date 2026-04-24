@@ -23,6 +23,13 @@ export const env = {
   DISCORD_CALLBACK_URL:
     process.env.DISCORD_CALLBACK_URL ??
     "http://localhost:5000/api/auth/discord/callback",
+
+  FACEBOOK_CLIENT_ID: requireEnv("FACEBOOK_CLIENT_ID"),
+  FACEBOOK_CLIENT_SECRET: requireEnv("FACEBOOK_CLIENT_SECRET"),
+  FACEBOOK_CALLBACK_URL:
+    process.env.FACEBOOK_CALLBACK_URL ??
+    "http://localhost:5000/api/auth/facebook/callback",
+
   FRONTEND_URL: process.env.FRONTEND_URL ?? "http://localhost:3000",
   EMAIL_USER: requireEnv("EMAIL_USER"),
   EMAIL_PASSWORD:
