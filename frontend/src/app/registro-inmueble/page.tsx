@@ -42,6 +42,7 @@ export default function MiRegistroPage() {
   const [mensajeError, setMensajeError] = useState('')
   const [campoError, setCampoError] = useState<CampoError>(null)
 
+
   const [estadoPublicacion, setEstadoPublicacion] = useState<EstadoPublicacion>("idle")
   const [progreso, setProgreso] = useState(0)
   const [payloadPendiente, setPayloadPendiente] = useState<any>(null)
@@ -59,6 +60,7 @@ export default function MiRegistroPage() {
     descripcion: useRef<HTMLTextAreaElement>(null),
   }
 
+  
   const erroresHU5: ErrorValidacion[] = campoError && estado === 'error' && mensajeError
     ? [{ campo: campoError as any, seccion: "Información Básica", mensaje: mensajeError }]
     : [];
@@ -70,6 +72,7 @@ export default function MiRegistroPage() {
       ref.current.focus();
     }
   }
+  
 
   useEffect(() => {
     const validarFlujo = async () => {
@@ -530,6 +533,8 @@ export default function MiRegistroPage() {
 
     console.log('📤 Payload enviado al backend:', payload)
 
+    // --- 🟢 INICIO CONEXIÓN HU-5 ---
+    // En lugar de hacer el fetch directo, guardamos el payload y abrimos el modal
     setPayloadPendiente(payload);
     setEstadoPublicacion("confirmando");
     setProgreso(0);
@@ -537,6 +542,7 @@ export default function MiRegistroPage() {
     // --------------------------------
   }
 
+  
   const ejecutarPublicacion = async () => {
     setEstadoPublicacion("publicando");
     setProgreso(0);
@@ -615,7 +621,7 @@ export default function MiRegistroPage() {
       setEstadoPublicacion("error_publicacion");
     }
   }
-  // ---------------------------------------------------------------------
+  
 
   const errorTitulo = campoError === 'titulo'
   const errorDescripcion = campoError === 'descripcion'
@@ -662,7 +668,7 @@ export default function MiRegistroPage() {
                       Título del anuncio *
                     </label>
                     <input
-                      ref={refs.titulo} // 🟢 REFERENCIA HU-5
+                      ref={refs.titulo} 
                       name="titulo"
                       value={datos.titulo}
                       onChange={manejarCambio}
@@ -681,7 +687,7 @@ export default function MiRegistroPage() {
                         Tipo de operación *
                       </label>
                       <select
-                        ref={refs.operacion} // 🟢 REFERENCIA HU-5
+                        ref={refs.operacion} 
                         name="operacion"
                         value={datos.operacion}
                         onChange={manejarCambio}
@@ -704,7 +710,7 @@ export default function MiRegistroPage() {
                         Tipo de Inmueble *
                       </label>
                       <select
-                        ref={refs.tipoInmueble} // 🟢 REFERENCIA HU-5
+                        ref={refs.tipoInmueble} 
                         name="tipoInmueble"
                         value={datos.tipoInmueble}
                         onChange={manejarCambio}
@@ -724,7 +730,7 @@ export default function MiRegistroPage() {
                       Precio USD$ *
                     </label>
                     <input
-                      ref={refs.precio} // 🟢 REFERENCIA HU-5
+                      ref={refs.precio} 
                       name="precio"
                       type="text"
                       inputMode="numeric"
@@ -750,7 +756,7 @@ export default function MiRegistroPage() {
                   <div>
                     <label className="block text-[15px] font-bold mb-2">Área total (m²)</label>
                     <input
-                      ref={refs.area} // 🟢 REFERENCIA HU-5
+                      ref={refs.area} 
                       name="area"
                       type="text"
                       inputMode="numeric"
@@ -768,7 +774,7 @@ export default function MiRegistroPage() {
                   <div>
                     <label className="block text-[15px] font-bold mb-2">Habitaciones</label>
                     <input
-                      ref={refs.habitaciones} // 🟢 REFERENCIA HU-5
+                      ref={refs.habitaciones} 
                       name="habitaciones"
                       type="text"
                       inputMode="numeric"
@@ -799,7 +805,7 @@ export default function MiRegistroPage() {
                   <div>
                     <label className="block text-[15px] font-bold mb-2">Baños</label>
                     <input
-                      ref={refs.banos} // 🟢 REFERENCIA HU-5
+                      ref={refs.banos} 
                       name="banos"
                       type="text"
                       inputMode="numeric"
@@ -826,7 +832,7 @@ export default function MiRegistroPage() {
                   <div>
                     <label className="block text-[15px] font-bold mb-2">Dirección *</label>
                     <input
-                      ref={refs.direccion} // 🟢 REFERENCIA HU-5
+                      ref={refs.direccion} 
                       name="direccion"
                       value={datos.direccion}
                       onChange={manejarCambio}
@@ -845,7 +851,7 @@ export default function MiRegistroPage() {
                 <div className="mt-6">
                   <label className="block text-[15px] font-bold mb-2">Zona</label>
                   <input
-                    ref={refs.zona} // 🟢 REFERENCIA HU-5
+                    ref={refs.zona} 
                     name="zona"
                     value={datos.zona}
                     onChange={manejarCambio}
@@ -866,7 +872,7 @@ export default function MiRegistroPage() {
                   DESCRIPCION DETALLADA *
                 </label>
                 <textarea
-                  ref={refs.descripcion} // 🟢 REFERENCIA HU-5
+                  ref={refs.descripcion} 
                   name="descripcion"
                   value={datos.descripcion}
                   onChange={manejarCambio}
@@ -913,7 +919,7 @@ export default function MiRegistroPage() {
         </div>
       </main>
 
-      {/* --- 🟢 COMPONENTE MODAL DE TU HU-5 (FASE 2) --- */}
+      {}
       {(estadoPublicacion !== "idle") && (
         <PublicarModal
           estado={estadoPublicacion as any} 
