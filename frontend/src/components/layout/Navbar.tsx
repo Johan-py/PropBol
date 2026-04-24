@@ -484,14 +484,14 @@ export default function Navbar() {
                           aria-live="polite"
                           className="max-h-[60vh] overflow-y-auto sm:max-h-80"
                           onScroll={(e) => {
-                            const target = e.currentTarget;
+                            const target = e.currentTarget
+                            saveScrollPosition(target.scrollTop)
+
                             const reachedBottom =
-                              target.scrollTop + target.clientHeight >=
-                              target.scrollHeight - 20;
- 
+                              target.scrollTop + target.clientHeight >= target.scrollHeight - 20
+
                             if (reachedBottom && hasMore && !isLoadingMore) {
-                              saveScrollPosition(target.scrollTop);
-                              void loadMoreNotifications();
+                              void loadMoreNotifications()
                             }
                           }}
                         >
