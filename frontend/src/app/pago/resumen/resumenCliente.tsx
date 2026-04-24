@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ResumenTransaccion from '@/components/pago/resumenTransaccion';
@@ -19,6 +20,9 @@ export default function ResumenCliente() {
   const [aplicandoCupon, setAplicandoCupon] = useState(false);
   const [mensajeCupon, setMensajeCupon] = useState<{ texto: string; error: boolean } | null>(null);
 
+  const [tipoFacturacion, setTipoFacturacion] = useState<'mensual' | 'anual'>('mensual');
+  const [descuentoPorcentaje, setDescuentoPorcentaje] = useState(0);
+
   const nombreMetodo: Record<string, string> = { qr: 'QR Bancario' };
 
   useEffect(() => {
@@ -29,6 +33,7 @@ export default function ResumenCliente() {
     }
 
     const idSuscripcion = parseInt(planIdParam, 10);
+
     if (isNaN(idSuscripcion)) {
       setError('ID inválido');
       setCargando(false);
@@ -57,24 +62,90 @@ export default function ResumenCliente() {
     iniciarTransaccion();
   }, [planIdParam]);
 
+  useEffect(() => {
+    if (tipoFacturacion === 'anual') {
+      setDescuentoPorcentaje(15);
+    } else {
+      setDescuentoPorcentaje(0);
+    }
+  }, [tipoFacturacion]);
+
+  const calculos = useMemo(() => {
+    if (!transaccion) {
+      return {
+        subtotalMensual: 0,
+        subtotalAnual: 0,
+        subtotalBase: 0,
+        descuentoMonto: 0,
+        totalFinal: 0,
+        fechaInicio: '',
+        fechaFin: '',
+      };
+    }
+
+    const subtotalMensual = Number(transaccion.total || 0);
+    const subtotalAnual = subtotalMensual * 12;
+
+    const subtotalBase =
+      tipoFacturacion === 'mensual'
+        ? subtotalMensual
+        : subtotalAnual;
+
+    const descuentoMonto =
+      (subtotalBase * descuentoPorcentaje) / 100;
+
+    const descuentoCupon = Number(transaccion.monto_descuento || 0);
+
+    const totalFinal =
+      subtotalBase - descuentoMonto - descuentoCupon;
+
+    const fechaInicio = new Date();
+
+    const fechaFin = new Date(fechaInicio);
+
+    if (tipoFacturacion === 'mensual') {
+      fechaFin.setMonth(fechaFin.getMonth() + 1);
+    } else {
+      fechaFin.setFullYear(fechaFin.getFullYear() + 1);
+    }
+
+    return {
+      subtotalMensual,
+      subtotalAnual,
+      subtotalBase,
+      descuentoMonto,
+      totalFinal,
+      fechaInicio: fechaInicio.toLocaleDateString(),
+      fechaFin: fechaFin.toLocaleDateString(),
+    };
+  }, [transaccion, tipoFacturacion, descuentoPorcentaje]);
+
   const manejarContinuar = () => {
     if (metodoSeleccionado && transaccion) {
-      localStorage.setItem('currentPayment', JSON.stringify({
-        id: transaccion.id,
-        monto: transaccion.total,
-        referencia: transaccion.referencia || transaccion.id,
-        estado: 'pendiente',
-        fechaExpiracion:
-          transaccion.fechaExpiracion ||
-          new Date(Date.now() + 30 * 60 * 1000).toISOString(),
-        qrContent:
-          transaccion.plan_suscripcion?.imagen_gr_url ||
-          '/qrs/estandar.png',
-        planNombre: transaccion.plan_suscripcion?.nombre_plan || null,
-        subtotal: transaccion.subtotal ?? null,
-        iva_monto: transaccion.iva_monto ?? null,
-        planId: planIdParam,
-      }));
+      localStorage.setItem(
+        'currentPayment',
+        JSON.stringify({
+          id: transaccion.id,
+          monto: calculos.totalFinal,
+          referencia: transaccion.referencia || transaccion.id,
+          estado: 'pendiente',
+          billingCycle: tipoFacturacion,
+          grossAmount: calculos.subtotalBase,
+          discountAmount:
+            calculos.descuentoMonto +
+            Number(transaccion.monto_descuento || 0),
+          netAmount: calculos.totalFinal,
+          subtotalAnual: calculos.subtotalAnual,
+          fechaInicio: calculos.fechaInicio,
+          fechaFin: calculos.fechaFin,
+          fechaExpiracion:
+            transaccion.fechaExpiracion ||
+            new Date(Date.now() + 30 * 60 * 1000).toISOString(),
+          qrContent:
+            transaccion.plan_suscripcion?.imagen_gr_url ||
+            '/qrs/estandar.png',
+        })
+      );
 
       router.push(`/pago/qr?transaccionId=${transaccion.id}`);
     }
@@ -94,7 +165,7 @@ export default function ResumenCliente() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           codigo: codigoCupon.trim(),
-          totalOriginal: transaccion.total,
+          totalOriginal: calculos.subtotalBase,
         }),
       });
 
@@ -104,11 +175,15 @@ export default function ResumenCliente() {
 
       setTransaccion((prev: any) => ({
         ...prev,
-        total: data.total,
+        total: prev.total,
         monto_descuento: data.monto_descuento,
       }));
 
-      setMensajeCupon({ texto: '¡Cupón aplicado!', error: false });
+      setMensajeCupon({
+        texto: `¡Cupón aplicado! Descuento de Bs. ${data.monto_descuento}`,
+        error: false,
+      });
+
       setCodigoCupon('');
     } catch (err: any) {
       setMensajeCupon({
@@ -140,12 +215,13 @@ export default function ResumenCliente() {
       <h1 className="text-3xl font-bold mb-2 text-gray-900">
         Resumen de compra
       </h1>
+
       <p className="text-gray-500 mb-6">
         Verifica tu pedido antes de realizar el pago
       </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* IZQUIERDA */}
+        
         <div>
           <div className="border border-gray-200 rounded-lg p-6 mb-6 shadow-md">
             <div className="flex items-center mb-3">
@@ -154,10 +230,47 @@ export default function ResumenCliente() {
                 Plan {plan.nombre_plan}
               </h2>
             </div>
+
             <p className="text-gray-600">
               {plan.nro_publicaciones_plan} publicaciones activas · Vigencia{' '}
               {plan.duración_plan_días} días · Galería {plan.fotos_galeria} fotos
             </p>
+          </div>
+
+          <div className="border border-gray-200 rounded-lg p-6 mb-6 bg-white shadow-md">
+            <h3 className="text-xl font-semibold mb-4">
+              TIPO DE FACTURACIÓN
+            </h3>
+
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                onClick={() => setTipoFacturacion('mensual')}
+                className={`p-4 rounded-lg border text-left transition ${
+                  tipoFacturacion === 'mensual'
+                    ? 'border-orange-500 bg-orange-50'
+                    : 'border-gray-200 hover:bg-gray-50'
+                }`}
+              >
+                <div className="font-semibold text-gray-900">Mensual</div>
+                <div className="text-sm text-gray-500">
+                  Pago mes a mes
+                </div>
+              </button>
+
+              <button
+                onClick={() => setTipoFacturacion('anual')}
+                className={`p-4 rounded-lg border text-left transition ${
+                  tipoFacturacion === 'anual'
+                    ? 'border-orange-500 bg-orange-50'
+                    : 'border-gray-200 hover:bg-gray-50'
+                }`}
+              >
+                <div className="font-semibold text-gray-900">Anual</div>
+                <div className="text-sm text-green-600">
+                  15% de descuento
+                </div>
+              </button>
+            </div>
           </div>
 
           <div className="border border-gray-200 rounded-lg p-6 bg-white shadow-md">
@@ -174,6 +287,7 @@ export default function ResumenCliente() {
               onClick={() => setMetodoSeleccionado('qr')}
             >
               <span className="text-2xl mr-4">📱</span>
+
               <div>
                 <div className="font-bold">Pago por QR</div>
                 <div className="text-sm text-gray-500">
@@ -206,9 +320,66 @@ export default function ResumenCliente() {
           </div>
         </div>
 
-        {/* DERECHA */}
         <div>
           <ResumenTransaccion transaccion={transaccion} />
+
+          <div className="mt-6 border border-gray-200 rounded-lg p-6 bg-white shadow-md">
+            <h3 className="text-lg font-semibold mb-4 text-gray-900">
+              Resumen de facturación
+            </h3>
+
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Tipo de facturación</span>
+                <span className="font-medium capitalize">
+                  {tipoFacturacion}
+                </span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-gray-600">Subtotal mensual</span>
+                <span>Bs. {calculos.subtotalMensual.toFixed(2)}</span>
+              </div>
+
+              {tipoFacturacion === 'anual' && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Subtotal anual</span>
+                  <span>Bs. {calculos.subtotalAnual.toFixed(2)}</span>
+                </div>
+              )}
+
+              {descuentoPorcentaje > 0 && (
+                <div className="flex justify-between text-green-600">
+                  <span>Descuento anual ({descuentoPorcentaje}%)</span>
+                  <span>- Bs. {calculos.descuentoMonto.toFixed(2)}</span>
+                </div>
+              )}
+
+              {Number(transaccion.monto_descuento || 0) > 0 && (
+                <div className="flex justify-between text-green-600">
+                  <span>Cupón aplicado</span>
+                  <span>
+                    - Bs. {Number(transaccion.monto_descuento).toFixed(2)}
+                  </span>
+                </div>
+              )}
+
+              <div className="flex justify-between">
+                <span className="text-gray-600">Inicio</span>
+                <span>{calculos.fechaInicio}</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span className="text-gray-600">Fin</span>
+                <span>{calculos.fechaFin}</span>
+              </div>
+
+              <div className="border-t pt-3 flex justify-between font-bold text-base text-gray-900">
+                <span>Total</span>
+                <span>Bs. {calculos.totalFinal.toFixed(2)}</span>
+              </div>
+            </div>
+          </div>
 
           <div className="mt-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
             <label className="block text-sm font-medium text-gray-700 mb-2">
