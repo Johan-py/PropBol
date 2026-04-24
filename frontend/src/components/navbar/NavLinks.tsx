@@ -23,11 +23,6 @@ export default function NavLinks() {
   return (
     <div className="hidden md:flex items-center gap-6 text-[15px] font-medium text-gray-700">
 
-      {/* HU-05: Inicio */}
-      <Link id="tour-inicio" href="/" className={linkStyle}>
-        Inicio
-      </Link>
-
       {/* HU-05: Propiedades con dropdown */}
       <div id="tour-propiedades" className="relative" ref={dropdownRef}>
         <button
@@ -62,16 +57,6 @@ export default function NavLinks() {
       {/* HU-05: Planes de membresía */}
       <Link id="tour-planes" href="/cobros-suscripciones" className={linkStyle}>
         Planes de membresía
-      </Link>
-
-      {/* HU-05: Contáctanos */}
-      <Link id="tour-contacto" href="#contacto" className={linkStyle}>
-        Contáctanos
-      </Link>
-
-      {/* HU-05: Sobre Nosotros */}
-      <Link id="tour-nosotros" href="#nosotros" className={linkStyle}>
-        Sobre Nosotros
       </Link>
 
       {/* HU-05: Botón de ayuda que reactiva el tour guiado */}
