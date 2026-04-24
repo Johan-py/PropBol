@@ -12,6 +12,8 @@ import {
 import { findUserByCorreo } from '../auth/auth.repository.js'
 import { sendNotificationEmail } from '../email/notification-email.service.js'
 import { emitNotificationEvent } from './notificaciones.events.js'
+import { enviarMensajeWhatsapp, formatearTelefono } from '../whatsapp/whatsapp.service.js'
+import { prisma } from '../../lib/prisma.client.js'
 
 type NotificationFilter = 'todas' | 'leida' | 'no leida' | 'archivada'
 
@@ -191,6 +193,26 @@ export const createNotificationService = async ({
     }
   } catch (error) {
     console.error('Error enviando correo de notificación:', error)
+  }
+  try {
+    if (user.notificacion_whatsapp === true) {
+      const telefonoPrincipal = await prisma.telefono.findFirst({
+        where: { usuarioId: user.id, principal: true }
+      })
+
+      if (telefonoPrincipal) {
+        const numero = formatearTelefono(
+          telefonoPrincipal.codigoPais,
+          telefonoPrincipal.numero
+        )
+        await enviarMensajeWhatsapp({
+          telefono: numero,
+          mensaje: `*${notification.titulo}*\n\n${notification.mensaje}\n\n_PropBol - Tu plataforma inmobiliaria en Bolivia_`
+        })
+      }
+    }
+  } catch (error) {
+    console.error('Error enviando WhatsApp de notificación:', error)
   }
 
   return {
