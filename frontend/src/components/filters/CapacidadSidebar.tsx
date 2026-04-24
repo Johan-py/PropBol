@@ -6,6 +6,11 @@ import { RangeSliderControl } from '../busqueda/capacidad/RangeSliderControl'
 
 type TipoBano = 'cualquiera' | 'privado' | 'compartido'
 
+const DEFAULT_DORM_MIN = 1
+const DEFAULT_DORM_MAX = 10
+const DEFAULT_BANOS_MIN = 1
+const DEFAULT_BANOS_MAX = 10
+
 interface CapacidadSidebarProps {
   isOpen: boolean
   onClose: () => void
@@ -19,11 +24,61 @@ interface CapacidadSidebarProps {
 }
 
 export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarProps) {
-  const [dormitoriosMin, setDormitoriosMin] = useState(1)
-  const [dormitoriosMax, setDormitoriosMax] = useState(10)
-  const [banosMin, setBanosMin] = useState(1)
-  const [banosMax, setBanosMax] = useState(8)
+  const [dormitoriosMin, setDormitoriosMin] = useState(DEFAULT_DORM_MIN)
+  const [dormitoriosMax, setDormitoriosMax] = useState(DEFAULT_DORM_MAX)
+  const [banosMin, setBanosMin] = useState(DEFAULT_BANOS_MIN)
+  const [banosMax, setBanosMax] = useState(DEFAULT_BANOS_MAX)
   const [tipoBano, setTipoBano] = useState<TipoBano>('cualquiera')
+  const [dormitoriosError, setDormitoriosError] = useState('')
+  const [banosError, setBanosError] = useState('')
+
+  // Validación: min no puede superar a max
+  const handleDormitoriosMinChange = (val: number) => {
+    if (val <= dormitoriosMax) {
+      setDormitoriosMin(val)
+      setDormitoriosError('')
+    } else {
+      setDormitoriosError('El mínimo no puede ser mayor que el máximo')
+    }
+  }
+
+  const handleDormitoriosMaxChange = (val: number) => {
+    if (val >= dormitoriosMin) {
+      setDormitoriosMax(val)
+      setDormitoriosError('')
+    } else {
+      setDormitoriosError('El máximo no puede ser menor que el mínimo')
+    }
+  }
+
+  const handleBanosMinChange = (val: number) => {
+    if (val <= banosMax) {
+      setBanosMin(val)
+      setBanosError('')
+    } else {
+      setBanosError('El mínimo no puede ser mayor que el máximo')
+    }
+  }
+
+  const handleBanosMaxChange = (val: number) => {
+    if (val >= banosMin) {
+      setBanosMax(val)
+      setBanosError('')
+    } else {
+      setBanosError('El máximo no puede ser menor que el mínimo')
+    }
+  }
+
+  // Limpiar filtros
+  const handleClear = () => {
+    setDormitoriosMin(DEFAULT_DORM_MIN)
+    setDormitoriosMax(DEFAULT_DORM_MAX)
+    setBanosMin(DEFAULT_BANOS_MIN)
+    setBanosMax(DEFAULT_BANOS_MAX)
+    setTipoBano('cualquiera')
+    setDormitoriosError('')
+    setBanosError('')
+  }
 
   if (!isOpen) return null
 
@@ -45,41 +100,44 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
           onClick={onClose}
           className="absolute right-4 p-1 hover:bg-stone-100 rounded-full transition-colors"
         >
-          <X size={20} className="text-stone-400" />
+          <X size={20} className="text-stone-500" />
         </button>
       </div>
 
       {/* Texto descriptivo */}
-      <div className="px-4 pt-0 pb-2">
+      <div className="px-4 pt-0 pb-1">
         <p className="text-sm text-gray-700 text-center">
           Selecciona el rango de dormitorios y baños deseados
         </p>
       </div>
 
       {/* DORMITORIOS */}
-      <div className="px-6 pt-5 space-y-6 mb-16">
+      <div className="px-6 pt-5 space-y-6 mb-8">
         <RangeSliderControl
           label="dormitorios"
           minValue={dormitoriosMin}
           maxValue={dormitoriosMax}
           absoluteMin={1}
           absoluteMax={10}
-          onMinChange={setDormitoriosMin}
-          onMaxChange={setDormitoriosMax}
+          onMinChange={handleDormitoriosMinChange}
+          onMaxChange={handleDormitoriosMaxChange}
           unit="+"
         />
+
+        {dormitoriosError && <p className="text-xs text-red-500 mt-1">{dormitoriosError}</p>}
 
         {/* BAÑOS - Primero el selector de tipo */}
         <div className="space-y-4">
           <div className="flex justify-between items-center">
-            <span className=" mb-1 font-bold text-xs text-black uppercase tracking-wide flex items-center gap-2">
+            <span className="mb-1 font-bold text-xs text-black uppercase tracking-wide flex items-center gap-2">
               BAÑOS
+              <Bath className="w-6 h-6 text-stone-500" />
             </span>
           </div>
 
           {/* Selector de tipo de baño */}
           <div className="space-y-3">
-            <p className="text-xs font-medium text-gray-600 mb-4">Tipo de baño:</p>
+            <p className="text-xs font-medium text-gray-800 mb-4">Tipo de baño:</p>
             <div className="flex gap-10">
               <label className="flex items-center gap-2 text-sm text-stone-700 font-medium cursor-pointer">
                 <div className="relative inline-flex shadow-sm">
@@ -177,39 +235,48 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
           </div>
 
           {/* Sliders de cantidad de baños */}
-          <div className="space-y-3 pt-7 border-t border-gray-400 mt-2">
+          <div className="space-y-3 pt-6 border-t border-gray-400 mt-6">
             <div className="flex items-center gap-2">
               <span className="text-xs text-stone-600 w-8">Min</span>
               <input
                 type="range"
                 min={1}
-                max={8}
+                max={10}
                 step={1}
                 value={banosMin}
-                onChange={(e) => setBanosMin(Number(e.target.value))}
+                onChange={(e) => handleBanosMinChange(Number(e.target.value))}
                 className="flex-1 accent-[#d97706] h-2 rounded-lg"
               />
-              <span className="text-xs text-stone-600 w-16 text-right">
-                {banosMin}+
-              </span>
+              <span className="text-xs text-stone-600 w-16 text-right">{banosMin}+</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs text-stone-600 w-8">Máx</span>
               <input
                 type="range"
                 min={1}
-                max={8}
+                max={10}
                 step={1}
                 value={banosMax}
-                onChange={(e) => setBanosMax(Number(e.target.value))}
+                onChange={(e) => handleBanosMaxChange(Number(e.target.value))}
                 className="flex-1 accent-[#d97706] h-2 rounded-lg"
               />
-              <span className="text-xs text-stone-600 w-16 text-right">
-                {banosMax}+
-              </span>
+              <span className="text-xs text-stone-600 w-16 text-right">{banosMax}+</span>
             </div>
+            {banosError && (
+              <p className="text-xs text-red-500 mt-1">{banosError}</p>
+            )}
           </div>
         </div>
+      </div>
+
+
+      <div >
+        <button
+          onClick={handleClear}
+          className="w-full text-gray-700 text-xs underline underline-offset-4 hover:text-gray-700 transition-colors"
+        >
+          Limpiar Filtros
+        </button>
       </div>
 
       {/* Botón Aplicar */}
