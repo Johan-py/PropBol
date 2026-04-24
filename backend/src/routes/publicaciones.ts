@@ -5,16 +5,23 @@ import {
   validarPublicacionesFree,
 } from "../controllers/publicacionesController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
+import { reglasValidacionHU5, manejarErroresPublicacion } from "../middleware/erroresPublicacion.js";
 
 const router = Router();
 
-// Crear publicación
-router.post("/publicaciones", authMiddleware, crearPublicacion);
+// HU‑1 + HU‑5 v2: Crear publicación con validación previa
+router.post(
+  "/publicaciones",
+  authMiddleware,
+  reglasValidacionHU5,       // validaciones HU‑5 v2
+  manejarErroresPublicacion, // agrupación de errores HU‑5 v2
+  crearPublicacion           // flujo HU‑1 original
+);
 
-// Listar publicaciones
+// HU‑1: Listar publicaciones
 router.get("/publicaciones", listarPublicaciones);
 
-// Validar publicaciones gratuitas
+// HU‑1: Validar publicaciones gratuitas (consulta simple)
 router.get(
   "/users/:id/publicaciones/free",
   authMiddleware,
