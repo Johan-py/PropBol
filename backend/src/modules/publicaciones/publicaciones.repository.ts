@@ -54,4 +54,43 @@ export const publicacionesRepository = {
       },
     });
   },
+
+  async findById(id: number) {
+    return prisma.publicacion.findUnique({
+      where: { id: id },
+      include: {
+        inmueble: true,
+        multimedia: true,
+      },
+    });
+  },
+
+  async deleteById(id: number) {
+    return prisma.publicacion.delete({
+      where: { id: id },
+    });
+  },
+
+  async updateEstado(id: number, activa: boolean) {
+    // ✅ ACTIVA cuando el toggle está ON, PAUSADA cuando está OFF
+    const estado = activa ? "ACTIVA" : "PAUSADA";
+
+    return prisma.publicacion.update({
+      where: { id: id },
+      data: { estado: estado },
+    });
+  },
+
+  // 👉 Nueva función HU‑5 v2
+  async validarPublicacionHU5(userId: number, data: Partial<Publicacion>) {
+    const count = await publicacionesRepository.countByUser(userId);
+    if (count >= 2) {
+      throw new Error("LIMIT_REACHED");
+    }
+
+    return {
+      estado: "Validado",
+      mensaje: "Publicación lista para guardar",
+    };
+  },
 };
