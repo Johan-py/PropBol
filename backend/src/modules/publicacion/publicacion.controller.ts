@@ -242,8 +242,8 @@ export const eliminarPublicacionController = async (req: AuthRequest, res: Respo
       ok: false,
       message: 'No se puede eliminar la publicación, intente nuevamente'
     })
-      }
-    }
+  }
+}
 
 export const obtenerDetallePublicacionController = async (req: Request, res: Response) => {
   const publicacionId = Number(req.params.id)
