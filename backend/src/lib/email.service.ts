@@ -115,6 +115,7 @@ const generarPDFComprobante = ({
     doc.text(`Plan: ${nombrePlan}`);
     doc.text(`Monto: Bs. ${monto.toFixed(2)}`);
     doc.text(`Fecha y hora: ${fechaHora.toLocaleString('es-BO', { timeZone: 'America/La_Paz' })}`);
+    doc.text(`Moneda: BOB / Bolivianos`);
 
     doc.moveDown();
     doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke();
@@ -177,6 +178,10 @@ export const enviarComprobantePago = async ({
                   <td style="padding:10px;border:1px solid #e5e7eb;font-weight:bold;color:#374151;">Fecha y hora</td>
                   <td style="padding:10px;border:1px solid #e5e7eb;color:#333;">${fechaStr}</td>
                 </tr>
+                <tr style="background:#f9fafb;">
+                  <td style="padding:10px;border:1px solid #e5e7eb;font-weight:bold;color:#374151;">Moneda</td>
+                  <td style="padding:10px;border:1px solid #e5e7eb;color:#333;">BOB / Bolivianos</td>
+                </tr>
               </table>
               <p style="font-size:14px;color:#666;">El comprobante en PDF está adjunto a este correo.</p>
             </div>
@@ -186,7 +191,7 @@ export const enviarComprobantePago = async ({
           </div>
         </body></html>
       `,
-      textContent: `Hola ${nombreUsuario},\n\nTu pago ha sido procesado.\n\nN° Transacción: #${idTransaccion}\nPlan: ${nombrePlan}\nMonto: Bs. ${monto.toFixed(2)}\nFecha: ${fechaStr}\n\nEl comprobante PDF está adjunto.`,
+      textContent: `Hola ${nombreUsuario},\n\nTu pago ha sido procesado.\n\nN° Transacción: #${idTransaccion}\nPlan: ${nombrePlan}\nMonto: Bs. ${monto.toFixed(2)}\nFecha: ${fechaStr}\nMoneda: BOB / Bolivianos\n\nEl comprobante PDF está adjunto.`,
       attachment: {
         content: pdfBase64,
         name: `comprobante-${idTransaccion}.pdf`,

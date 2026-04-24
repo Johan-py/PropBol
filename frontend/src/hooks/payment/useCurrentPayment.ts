@@ -32,7 +32,11 @@ export function useCurrentPayment() {
           referencia: data.referencia,
           qrContent: data.qrContent,
           estado: data.estado,
-          fechaExpiracion: data.fechaExpiracion
+          fechaExpiracion: data.fechaExpiracion,
+          planNombre: data.planNombre ?? undefined,
+          subtotal: data.subtotal ?? undefined,
+          iva_monto: data.iva_monto ?? undefined,
+          planId: data.planId != null ? String(data.planId) : undefined,
         }
 
         setPayment(realPayment)

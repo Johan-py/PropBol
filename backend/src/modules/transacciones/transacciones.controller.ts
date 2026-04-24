@@ -123,7 +123,8 @@ export const obtenerPagoPendiente = async (req: Request, res: Response) => {
       ).toISOString(),
       subtotal: Number(transaccion.subtotal),
       iva_monto: Number(transaccion.iva_monto),
-      planNombre: transaccion.plan_suscripcion?.nombre_plan ?? null
+      planNombre: transaccion.plan_suscripcion?.nombre_plan ?? null,
+      planId: transaccion.id_suscripcion
     })
   } catch (error) {
     return res.status(500).json({ error: toMessage(error) })
