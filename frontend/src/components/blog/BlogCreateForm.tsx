@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import BlogLinkModal from "./BlogLinkModal";
 
 import {
   createBlog,
@@ -81,6 +82,8 @@ export default function BlogCreateForm({
   const [categoriaId, setCategoriaId] = useState(initialValues?.categoriaId ?? "");
   const [contenido, setContenido] = useState(initialValues?.contenido ?? "");
   const [showPreview, setShowPreview] = useState(true);
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
+  const [selectionForLink, setSelectionForLink] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const autosaveKey = useMemo(
@@ -375,10 +378,37 @@ export default function BlogCreateForm({
   };
 
   const insertLink = () => {
-    const url = window.prompt("Introduce la URL del enlace:");
-    if (url) {
-      applyFormatting("[", `](${url})`);
-    }
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end);
+
+    setSelectionForLink(selectedText);
+    setIsLinkModalOpen(true);
+  };
+
+  const handleLinkConfirm = (url: string, linkText: string = selectionForLink) => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = textarea.value;
+
+    const newText =
+      text.substring(0, start) +
+      `[${linkText}](${url})` +
+      text.substring(end);
+
+    setContenido(newText);
+
+    setTimeout(() => {
+      textarea.focus();
+      const newCursorPos = start + linkText.length + url.length + 4; // [text](url) -> 4 extra chars
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+    }, 0);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -730,6 +760,13 @@ export default function BlogCreateForm({
           </div>
         </aside>
       </div>
+
+      <BlogLinkModal
+        isOpen={isLinkModalOpen}
+        initialText={selectionForLink}
+        onClose={() => setIsLinkModalOpen(false)}
+        onConfirm={handleLinkConfirm}
+      />
     </div>
   );
 }
