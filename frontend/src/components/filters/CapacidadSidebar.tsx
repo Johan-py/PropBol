@@ -6,6 +6,11 @@ import { RangeSliderControl } from '../busqueda/capacidad/RangeSliderControl'
 
 type TipoBano = 'cualquiera' | 'privado' | 'compartido'
 
+const DEFAULT_DORM_MIN = 1
+const DEFAULT_DORM_MAX = 10
+const DEFAULT_BANOS_MIN = 1
+const DEFAULT_BANOS_MAX = 10
+
 interface CapacidadSidebarProps {
   isOpen: boolean
   onClose: () => void
@@ -19,11 +24,46 @@ interface CapacidadSidebarProps {
 }
 
 export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarProps) {
-  const [dormitoriosMin, setDormitoriosMin] = useState(1)
-  const [dormitoriosMax, setDormitoriosMax] = useState(10)
-  const [banosMin, setBanosMin] = useState(1)
-  const [banosMax, setBanosMax] = useState(8)
+  const [dormitoriosMin, setDormitoriosMin] = useState(DEFAULT_DORM_MIN)
+  const [dormitoriosMax, setDormitoriosMax] = useState(DEFAULT_DORM_MAX)
+  const [banosMin, setBanosMin] = useState(DEFAULT_BANOS_MIN)
+  const [banosMax, setBanosMax] = useState(DEFAULT_BANOS_MAX)
   const [tipoBano, setTipoBano] = useState<TipoBano>('cualquiera')
+
+  // Validación: min no puede superar a max
+  const handleDormitoriosMinChange = (val: number) => {
+    if (val <= dormitoriosMax) {
+      setDormitoriosMin(val)
+    }
+  }
+
+  const handleDormitoriosMaxChange = (val: number) => {
+    if (val >= dormitoriosMin) {
+      setDormitoriosMax(val)
+    }
+  }
+
+  const handleBanosMinChange = (val: number) => {
+    if (val <= banosMax) {
+      setBanosMin(val)
+    }
+  }
+
+  const handleBanosMaxChange = (val: number) => {
+    if (val >= banosMin) {
+      setBanosMax(val)
+    }
+  }
+
+  // Limpiar filtros
+  const handleClear = () => {
+    setDormitoriosMin(DEFAULT_DORM_MIN)
+    setDormitoriosMax(DEFAULT_DORM_MAX)
+    setBanosMin(DEFAULT_BANOS_MIN)
+    setBanosMax(DEFAULT_BANOS_MAX)
+    setTipoBano('cualquiera')
+  }
+
 
   if (!isOpen) return null
 
@@ -64,8 +104,8 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
           maxValue={dormitoriosMax}
           absoluteMin={1}
           absoluteMax={10}
-          onMinChange={setDormitoriosMin}
-          onMaxChange={setDormitoriosMax}
+          onMinChange={handleDormitoriosMinChange}
+          onMaxChange={handleDormitoriosMaxChange}
           unit="+"
         />
 
@@ -186,7 +226,7 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
                 max={8}
                 step={1}
                 value={banosMin}
-                onChange={(e) => setBanosMin(Number(e.target.value))}
+                onChange={(e) => handleBanosMinChange(Number(e.target.value))}
                 className="flex-1 accent-[#d97706] h-2 rounded-lg"
               />
               <span className="text-xs text-stone-600 w-16 text-right">
@@ -201,7 +241,7 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
                 max={8}
                 step={1}
                 value={banosMax}
-                onChange={(e) => setBanosMax(Number(e.target.value))}
+                onChange={(e) => handleBanosMaxChange(Number(e.target.value))}
                 className="flex-1 accent-[#d97706] h-2 rounded-lg"
               />
               <span className="text-xs text-stone-600 w-16 text-right">
@@ -210,6 +250,15 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
             </div>
           </div>
         </div>
+      </div>
+
+       <div className="px-4 mt-0">
+        <button
+          onClick={handleClear}
+          className="w-full text-gray-500 text-xs underline underline-offset-4 hover:text-gray-700 transition-colors"
+        >
+          Limpiar Filtros
+        </button>
       </div>
 
       {/* Botón Aplicar */}
