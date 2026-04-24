@@ -81,6 +81,11 @@ export default function MapaPinSelector({
       center={[-17.3895, -66.1568]}
       zoom={13}
       scrollWheelZoom
+       maxBounds={[
+       [-17.50, -66.30],
+       [-17.30, -66.05]
+       ]}
+      maxBoundsViscosity={1.0}
       style={{ height: '320px', width: '100%' }}
     >
       <TileLayer
@@ -100,6 +105,8 @@ export default function MapaPinSelector({
   <Marker
     position={[pinCoords.lat, pinCoords.lng]}
     icon={pinIcon}
+    draggable={true}
+    
   />
 )}
 
