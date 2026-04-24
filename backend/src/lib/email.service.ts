@@ -89,12 +89,14 @@ const generarPDFComprobante = ({
   nombrePlan,
   monto,
   fechaHora,
+  tipoFacturacion = 'mensual',
 }: {
   idTransaccion: number;
   nombreUsuario: string;
   nombrePlan: string;
   monto: number;
   fechaHora: Date;
+  tipoFacturacion?: string;
 }): Promise<Buffer> => {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ margin: 50 });
@@ -113,6 +115,7 @@ const generarPDFComprobante = ({
     doc.text(`N° de transacción: ${idTransaccion}`);
     doc.text(`Titular: ${nombreUsuario}`);
     doc.text(`Plan: ${nombrePlan}`);
+    doc.text(`Tipo de facturación: ${tipoFacturacion === 'anual' ? 'Anual' : 'Mensual'}`);
     doc.text(`Monto: Bs. ${monto.toFixed(2)}`);
     doc.text(`Fecha y hora: ${fechaHora.toLocaleString('es-BO', { timeZone: 'America/La_Paz' })}`);
     doc.text(`Moneda: BOB / Bolivianos`);
@@ -133,6 +136,7 @@ export const enviarComprobantePago = async ({
   nombrePlan,
   monto,
   fechaHora,
+  tipoFacturacion = 'mensual',
 }: {
   emailUsuario: string;
   nombreUsuario: string;
@@ -140,8 +144,9 @@ export const enviarComprobantePago = async ({
   nombrePlan: string;
   monto: number;
   fechaHora: Date;
+  tipoFacturacion?: string;
 }): Promise<EmailSendResult> => {
-  const pdfBuffer = await generarPDFComprobante({ idTransaccion, nombreUsuario, nombrePlan, monto, fechaHora });
+  const pdfBuffer = await generarPDFComprobante({ idTransaccion, nombreUsuario, nombrePlan, monto, fechaHora, tipoFacturacion });
   const pdfBase64 = pdfBuffer.toString('base64');
 
   const fechaStr = fechaHora.toLocaleString('es-BO', { timeZone: 'America/La_Paz' });
@@ -171,6 +176,10 @@ export const enviarComprobantePago = async ({
                   <td style="padding:10px;border:1px solid #e5e7eb;color:#333;">${nombrePlan}</td>
                 </tr>
                 <tr style="background:#f9fafb;">
+                  <td style="padding:10px;border:1px solid #e5e7eb;font-weight:bold;color:#374151;">Facturación</td>
+                  <td style="padding:10px;border:1px solid #e5e7eb;color:#333;">${tipoFacturacion === 'anual' ? 'Anual' : 'Mensual'}</td>
+                </tr>
+                <tr>
                   <td style="padding:10px;border:1px solid #e5e7eb;font-weight:bold;color:#374151;">Monto</td>
                   <td style="padding:10px;border:1px solid #e5e7eb;color:#333;">Bs. ${monto.toFixed(2)}</td>
                 </tr>
@@ -191,7 +200,7 @@ export const enviarComprobantePago = async ({
           </div>
         </body></html>
       `,
-      textContent: `Hola ${nombreUsuario},\n\nTu pago ha sido procesado.\n\nN° Transacción: #${idTransaccion}\nPlan: ${nombrePlan}\nMonto: Bs. ${monto.toFixed(2)}\nFecha: ${fechaStr}\nMoneda: BOB / Bolivianos\n\nEl comprobante PDF está adjunto.`,
+      textContent: `Hola ${nombreUsuario},\n\nTu pago ha sido procesado.\n\nN° Transacción: #${idTransaccion}\nPlan: ${nombrePlan}\nFacturación: ${tipoFacturacion === 'anual' ? 'Anual' : 'Mensual'}\nMonto: Bs. ${monto.toFixed(2)}\nFecha: ${fechaStr}\nMoneda: BOB / Bolivianos\n\nEl comprobante PDF está adjunto.`,
       attachment: {
         content: pdfBase64,
         name: `comprobante-${idTransaccion}.pdf`,

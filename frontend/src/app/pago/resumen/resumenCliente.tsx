@@ -124,35 +124,24 @@ export default function ResumenCliente() {
     };
   }, [transaccion, tipoFacturacion, descuentoPorcentaje]);
 
-  const manejarContinuar = () => {
-    if (metodoSeleccionado && transaccion) {
-      localStorage.setItem(
-        'currentPayment',
-        JSON.stringify({
-          id: transaccion.id,
-          monto: calculos.totalFinal,
-          referencia: transaccion.referencia || transaccion.id,
-          estado: 'pendiente',
-          billingCycle: tipoFacturacion,
-          grossAmount: calculos.subtotalBase,
-          discountAmount:
-            calculos.descuentoMonto +
-            Number(transaccion.monto_descuento || 0),
-          netAmount: calculos.totalFinal,
-          subtotalAnual: calculos.subtotalAnual,
-          fechaInicio: calculos.fechaInicio,
-          fechaFin: calculos.fechaFin,
-          fechaExpiracion:
-            transaccion.fechaExpiracion ||
-            new Date(Date.now() + 30 * 60 * 1000).toISOString(),
-          qrContent:
-            transaccion.plan_suscripcion?.imagen_gr_url ||
-            '/qrs/estandar.png',
-        })
-      );
+  const manejarContinuar = async () => {
+    if (!metodoSeleccionado || !transaccion) return;
 
-      router.push(`/pago/qr?transaccionId=${transaccion.id}`);
-    }
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+    await fetch(`/api/transacciones/${transaccion.id}/actualizar`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({
+        tipoFacturacion,
+        totalFinal: calculos.totalFinal,
+      }),
+    });
+
+    router.push(`/pago/qr?transaccionId=${transaccion.id}`);
   };
 
   const aplicarCupon = async () => {

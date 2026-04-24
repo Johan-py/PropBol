@@ -154,12 +154,6 @@ importers:
 
   frontend:
     dependencies:
-      '@prisma/adapter-pg':
-        specifier: ^7.6.0
-        version: 7.7.0
-      '@prisma/client':
-        specifier: ^7.6.0
-        version: 7.7.0(prisma@7.7.0(@types/react-dom@18.3.7(@types/react@18.3.28))(@types/react@18.3.28)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.3))(typescript@5.9.3)
       '@turf/boolean-point-in-polygon':
         specifier: ^7.3.4
         version: 7.3.4
@@ -184,9 +178,6 @@ importers:
       next:
         specifier: 14.1.0
         version: 14.1.0(@babel/core@7.29.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      pg:
-        specifier: ^8.20.0
-        version: 8.20.0
       qrcode.react:
         specifier: ^4.2.0
         version: 4.2.0(react@18.3.1)

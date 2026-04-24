@@ -16,13 +16,11 @@ const BANKS = ['BNB', 'Banco Unión', 'Económica', 'Fassil']
 export default function PagoQRPage() {
   const router = useRouter()
   const { payment, loading, error } = useCurrentPayment()
-  const { isModalOpen, openModal, closeModal, confirmCancel } = useCancelPayment()
+  const { isModalOpen, openModal, closeModal, confirmCancel } = useCancelPayment(payment)
   const { status } = usePaymentStatus(payment?.id ?? null)
 
   const [timeLeft, setTimeLeft] = useState<number | null>(null)
   const [isExpired, setIsExpired] = useState(false)
-  const [isConfirming, setIsConfirming] = useState(false)
-  const [confirmError, setConfirmError] = useState<string | null>(null)
   const expiredHandled = useRef(false)
 
   useEffect(() => {
@@ -53,55 +51,23 @@ export default function PagoQRPage() {
     if (status === 'pagado') router.push('/pago/confirmacion')
   }, [status, router])
 
-  const handleConfirmarPago = async () => {
-    if (!payment || isConfirming) return
-    setConfirmError(null)
-
-    const token = localStorage.getItem('token')
-    if (!token) {
-      setConfirmError('Debes iniciar sesión para confirmar el pago.')
-      return
-    }
-
-    setIsConfirming(true)
-    try {
-      const response = await fetch(`/api/transacciones/${payment.id}/confirmar`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        localStorage.removeItem('currentPayment')
-        router.push('/pago/confirmacion')
-        return
-      }
-
-      const data = await response.json()
-      if (response.status === 409) {
-        // Pago ya confirmado — redirigir igual
-        localStorage.removeItem('currentPayment')
-        router.push('/pago/confirmacion')
-        return
-      }
-      if (response.status === 401) {
-        setConfirmError('Tu sesión expiró. Inicia sesión nuevamente.')
-      } else {
-        setConfirmError(data.error ?? 'Error al confirmar el pago. Intenta de nuevo.')
-      }
-    } catch {
-      setConfirmError('Error de conexión. Verifica tu internet e intenta de nuevo.')
-    } finally {
-      setIsConfirming(false)
-    }
+  const handleConfirmarPago = () => {
+    if (!payment) return
+    localStorage.setItem('currentPayment', JSON.stringify(payment))
+    router.push('/pago/pendiente')
   }
 
   const fmt = (s: number) =>
     `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
 
   const isUrgent = timeLeft !== null && timeLeft < 60
+
+  const qrImageSrc = (() => {
+    if (!payment?.planNombre || !payment?.tipoFacturacion) return undefined
+    const plan = payment.planNombre.toLowerCase().includes('pro') ? 'pro' : 'estandar'
+    const billing = payment.tipoFacturacion === 'anual' ? 'anual' : 'mensual'
+    return `/qrs/${plan}-${billing}.png`
+  })()
 
   if (loading)
     return (
@@ -192,7 +158,11 @@ export default function PagoQRPage() {
 
             {/* QR card */}
             <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-8 flex flex-col items-center">
-              <QRDisplay value={payment.qrContent || 'PROBOL_TEST_TOKEN'} size={250} />
+              <QRDisplay
+                value={payment.qrContent || 'PROBOL_TEST_TOKEN'}
+                imageSrc={qrImageSrc}
+                size={250}
+              />
 
               <p className="text-xs text-stone-400 mt-3 text-center">
                 250×250 px renderizado · Mínimo requerido 200×200 px · Optimizado para cualquier cámara de celular
@@ -227,7 +197,12 @@ export default function PagoQRPage() {
               <h3 className="font-semibold text-stone-800 mb-4">Resumen del pago</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between text-stone-700">
-                  <span>{payment.planNombre ?? 'Plan'}</span>
+                  <span>
+                    {payment.planNombre ?? 'Plan'}
+                    {payment.tipoFacturacion === 'anual' && (
+                      <span className="ml-1.5 text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded font-medium">Anual</span>
+                    )}
+                  </span>
                   <span>Bs. {Number(payment.subtotal ?? 0).toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-stone-500">
@@ -291,15 +266,11 @@ export default function PagoQRPage() {
               </p>
               <button
                 onClick={handleConfirmarPago}
-                disabled={isConfirming}
-                className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white py-2.5 rounded-lg text-sm font-semibold transition-colors"
+                className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-lg text-sm font-semibold transition-colors"
               >
                 <CheckCircle size={16} />
-                {isConfirming ? 'Confirmando...' : 'Ya realicé el pago'}
+                Ya realicé el pago
               </button>
-              {confirmError && (
-                <p className="text-xs text-red-600 mt-2 text-center">{confirmError}</p>
-              )}
             </div>
 
             {/* Flecha "Atrás" → Confirmación */}

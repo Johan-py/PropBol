@@ -37,6 +37,7 @@ export function useCurrentPayment() {
           subtotal: data.subtotal ?? undefined,
           iva_monto: data.iva_monto ?? undefined,
           planId: data.planId != null ? String(data.planId) : undefined,
+          tipoFacturacion: data.tipoFacturacion ?? undefined,
         }
 
         setPayment(realPayment)
