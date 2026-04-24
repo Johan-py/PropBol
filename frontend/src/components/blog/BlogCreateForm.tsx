@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 import BlogLinkModal from "./BlogLinkModal";
 
 import {
@@ -641,7 +642,7 @@ export default function BlogCreateForm({
                     <div className="flex-1 px-8 py-8 overflow-y-auto max-h-[600px] prose prose-stone prose-amber">
                       {contenido ? (
                         <ReactMarkdown
-                          remarkPlugins={[remarkGfm]}
+                          remarkPlugins={[remarkGfm, remarkBreaks]}
                           components={{
                             h1: ({ ...props }) => <h1 className="text-3xl font-bold mb-4 text-[#1C1917]" {...props} />,
                             h2: ({ ...props }) => <h2 className="text-2xl font-bold mb-3 text-[#1C1917]" {...props} />,
