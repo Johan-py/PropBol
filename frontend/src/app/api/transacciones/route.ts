@@ -6,10 +6,19 @@ export async function POST(request: Request) {
     if (!idSuscripcion) {
       return NextResponse.json({ error: 'Falta el ID del plan' }, { status: 400 });
     }
+
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader) {
+      return NextResponse.json({ error: 'Debes iniciar sesión para suscribirte' }, { status: 401 });
+    }
+
     const response = await fetch(`${BACKEND_URL}/api/transacciones`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idSuscripcion, idUsuario: 1 }), // TODO: obtener usuario autenticado
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: authHeader,
+      },
+      body: JSON.stringify({ idSuscripcion }),
     });
 
     if (!response.ok) {
