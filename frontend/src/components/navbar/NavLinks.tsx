@@ -31,12 +31,7 @@ export default function NavLinks() {
   return (
     <div className="hidden md:flex items-center gap-6 text-[15px] font-medium text-gray-700">
 
-      {/* HU-05: Inicio */}
-      <Link id="tour-inicio" href="/" className={linkStyle}>
-        Inicio
-      </Link>
-
-      {/* HU-05: Propiedades con dropdown */}
+      {/* Propiedades con dropdown corregido */}
       <div id="tour-propiedades" className="relative" ref={dropdownRef}>
         <button
           onClick={() => setOpen(!open)}
@@ -48,41 +43,28 @@ export default function NavLinks() {
 
         {open && (
           <div className="absolute top-full left-0 mt-2 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-50 py-2">
-            {["Casas", "Departamentos", "Cuartos", "Terrenos", "Espacios de cementerios"].map((item) => (
+            {categorias.map((item) => (
               <Link
-                key={item}
-                href="/propiedades"
+                key={item.name}
+                href={item.href}
                 onClick={() => setOpen(false)}
                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#E68B25]"
               >
-                {item}
+                {item.name}
               </Link>
             ))}
           </div>
         )}
       </div>
 
-      {/* HU-05: Blogs */}
       <Link id="tour-blogs" href="/blogs" className={linkStyle}>
         Blogs
       </Link>
 
-      {/* HU-05: Planes de membresía */}
       <Link id="tour-planes" href="/cobros-suscripciones" className={linkStyle}>
         Planes de membresía
       </Link>
 
-      {/* HU-05: Contáctanos */}
-      <Link id="tour-contacto" href="#contacto" className={linkStyle}>
-        Contáctanos
-      </Link>
-
-      {/* HU-05: Sobre Nosotros */}
-      <Link id="tour-nosotros" href="#nosotros" className={linkStyle}>
-        Sobre Nosotros
-      </Link>
-
-      {/* HU-05: Botón de ayuda que reactiva el tour guiado */}
       <button
         id="tour-ayuda"
         onClick={() => window.dispatchEvent(new Event("propbol:iniciar-tour"))}
