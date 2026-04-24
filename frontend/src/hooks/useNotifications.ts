@@ -457,11 +457,15 @@ export function useNotifications() {
 
     eventSource.addEventListener('connected', () => {})
 
-    eventSource.addEventListener('notifications-updated', () => {
-      void refreshNotifications(filter, { silent: true })
+    const realtimeEvents = ['created', 'read', 'read-all', 'deleted', 'archived']
+
+      realtimeEvents.forEach((eventName) => {
+      eventSource.addEventListener(eventName, () => {
+        void refreshNotifications(filter, { silent: true })
+      })
     })
 
-    eventSource.addEventListener('ping', () => {})
+eventSource.addEventListener('ping', () => {})
 
     eventSource.onerror = () => {
       eventSource.close()
