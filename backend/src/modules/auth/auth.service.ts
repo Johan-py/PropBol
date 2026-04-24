@@ -365,7 +365,7 @@ export const loginService = async (payload: LoginDTO) => {
     requires2FA: false,
     user: {
       id: user.id,
-    correo: user.correo,
+      correo: user.correo,
       nombre: user.nombre,
       apellido: user.apellido,
       rol: user.rol
