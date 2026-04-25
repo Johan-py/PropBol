@@ -37,6 +37,7 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
   const [imagen, setImagen] = useState(initialValues?.imagen ?? '')
   const [categoriaId, setCategoriaId] = useState(initialValues?.categoriaId ?? '')
   const [contenido, setContenido] = useState(initialValues?.contenido ?? '')
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>(INITIAL_ERRORS)
 
   const [categories, setCategories] = useState<BlogCategoryOption[]>([])
   const [isLoadingCategories, setIsLoadingCategories] = useState(true)
@@ -184,6 +185,28 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
 
     setContenido(newText)
   }
+  // Validar formulario
+  const validate = () => {
+    const nextErrors: FieldErrors = {}
+
+    if (!titulo.trim()) {
+      nextErrors.titulo = 'El título es obligatorio.'
+    }
+
+    if (!imagen.trim()) {
+      nextErrors.imagen = 'La imagen es obligatoria.'
+    }
+
+    if (!categoriaId) {
+      nextErrors.categoria_id = 'Selecciona una categoría.'
+    }
+
+    if (!contenido.trim()) {
+      nextErrors.contenido = 'El contenido es obligatorio.'
+    }
+
+    return nextErrors
+  }
 
   // retorno mínimo para no romper nada
   return {
@@ -203,6 +226,9 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     imagePreviewUrl,
     isFormDirty,
     applyFormatting,
-    insertLink
+    insertLink,
+    fieldErrors,
+    setFieldErrors,
+    validate
   }
 }
