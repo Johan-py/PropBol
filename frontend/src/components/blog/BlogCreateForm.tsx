@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import BlogLinkModal from "./BlogLinkModal";
+import BlogPublishModal from "./BlogPublishModal";
 
 import BlogFormHeader from "./form/BlogFormHeader";
 import BlogImageSection from "./form/BlogImageSection";
@@ -28,6 +29,8 @@ export default function BlogCreateForm({
   mode = "create",
   statusLabel,
 }: BlogCreateFormProps) {
+  const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+
   const {
     titulo,
     setTitulo,
@@ -56,12 +59,9 @@ export default function BlogCreateForm({
     setSelectedImageFile,
     submitBlog,
     router,
-    autosaveKey
+    autosaveKey,
+    validate,
   } = useBlogForm({ blogId, initialValues, mode });
-
-
-
-
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if ((e.ctrlKey || e.metaKey) && !e.shiftKey) {
@@ -82,6 +82,26 @@ export default function BlogCreateForm({
     }
   };
 
+  const handleAction = (accion: "borrador" | "pendiente") => {
+    if (accion === "borrador") {
+      void submitBlog("borrador");
+      return;
+    }
+
+    // Para publicar, validamos primero
+    const errors = validate();
+    setFieldErrors(errors);
+
+    if (Object.keys(errors).length === 0) {
+      setIsPublishModalOpen(true);
+    }
+  };
+
+  const handleConfirmPublish = () => {
+    setIsPublishModalOpen(false);
+    void submitBlog("pendiente");
+  };
+
   return (
     <div className="mx-auto max-w-6xl">
       <div className="grid gap-12 lg:grid-cols-[1fr_320px]">
@@ -94,7 +114,7 @@ export default function BlogCreateForm({
             className="space-y-8"
             onSubmit={(event) => {
               event.preventDefault();
-              void submitBlog("pendiente");
+              handleAction("pendiente");
             }}
           >
             {/* Image Upload Section */}
@@ -141,7 +161,7 @@ export default function BlogCreateForm({
         <BlogSidebar
           statusLabel={statusLabel}
           isSubmitting={isSubmitting}
-          onAction={(accion) => void submitBlog(accion)}
+          onAction={handleAction}
         />
       </div>
 
@@ -150,6 +170,13 @@ export default function BlogCreateForm({
         initialText={selectionForLink}
         onClose={() => setIsLinkModalOpen(false)}
         onConfirm={handleLinkConfirm}
+      />
+
+      <BlogPublishModal
+        isOpen={isPublishModalOpen}
+        isSubmitting={isSubmitting}
+        onClose={() => setIsPublishModalOpen(false)}
+        onConfirm={handleConfirmPublish}
       />
     </div>
   );
