@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 
 import {
   BookOpen,
-  Camera,
   Link,
   List,
   Quote,
@@ -21,6 +20,7 @@ import remarkBreaks from "remark-breaks";
 import BlogLinkModal from "./BlogLinkModal";
 
 import BlogFormHeader from "./form/BlogFormHeader";
+import BlogImageSection from "./form/BlogImageSection";
 
 import {
   createBlog,
@@ -448,51 +448,14 @@ export default function BlogCreateForm({
             }}
           >
             {/* Image Upload Section */}
-            <div className="space-y-2">
-              <label className="relative flex min-h-[300px] cursor-pointer flex-col items-center justify-center rounded-[32px] border-2 border-dashed border-[#E7E5E4] bg-[#FAFAFA] px-10 py-12 text-center transition hover:border-[#F59E0B] hover:bg-white group">
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                  className="sr-only"
-                  onChange={(event) => {
-                    const file = event.target.files?.[0] ?? null;
-                    setSelectedImageFile(file);
-                    setFieldErrors((currentErrors) => ({
-                      ...currentErrors,
-                      imagen: undefined,
-                    }));
-                  }}
-                />
-
-                {imagePreviewUrl ? (
-                  <div className="absolute inset-0 overflow-hidden rounded-[32px]">
-                    <img
-                      src={imagePreviewUrl}
-                      alt="Preview"
-                      className="h-full w-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 transition group-hover:opacity-100 flex items-center justify-center">
-                      <Camera className="h-10 w-10 text-white" />
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-black/5">
-                      <Camera className="h-6 w-6 text-[#A8A29E]" />
-                    </div>
-                    <p className="text-base font-semibold text-[#1C1917]">
-                      Arrastra y suelta la imagen destacada
-                    </p>
-                    <p className="mt-1 text-xs font-medium text-[#78716C]">
-                      Recomendado: 1920×820px (JPG, PNG)
-                    </p>
-                  </>
-                )}
-              </label>
-              {fieldErrors.imagen && (
-                <p className="px-2 text-sm font-medium text-red-500">{fieldErrors.imagen}</p>
-              )}
-            </div>
+            <BlogImageSection
+              imagePreviewUrl={imagePreviewUrl}
+              onImageChange={(file) => {
+                setSelectedImageFile(file);
+                setFieldErrors((prev) => ({ ...prev, imagen: undefined }));
+              }}
+              error={fieldErrors.imagen}
+            />
 
             {/* Title Section */}
             <div className="space-y-3">
