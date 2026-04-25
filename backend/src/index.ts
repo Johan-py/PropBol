@@ -7,6 +7,7 @@ import type { Request, Response } from 'express'
 import { prisma } from './lib/prisma.client.js'
 import zonaRoutes from './modules/perfil/zonaUsario.routes.js'
 import telemetriaRouter from './modules/perfil/telemetria.routes.js'
+import locationRoutes from './modules/locations/locations.routes.js'
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -191,6 +192,7 @@ app.use('/api/telemetria', telemetriaRouter)
 app.use('/api/transacciones', transaccionesRoutes)
 app.use('/api/planes', plansRoutes)
 app.use('/api/whatsapp', whatsappRoutes)
+app.use('/api/locations', locationRoutes)
 
 // --------------------
 // MOCK / TEST

@@ -14,13 +14,15 @@ import {
   Building,
   Bed,
   Trees,
-  Flower2
+  Flower2,
+  MapPin
 } from 'lucide-react'
 import { useSearchFilters } from '@/hooks/useSearchFilters'
 import { LocationSearch } from '../layout/LocationSearch'
 import { ComboBox } from '../ui/ComboBox'
 import TransactionModeFilter from './TransactionModeFilter'
 import { useRouter } from 'next/navigation'
+import { UbicacionEspecificaPanel } from './UbicacionEspecificaPanel';
 import SuperficieFilter from './SuperficieFilter'
 
 
@@ -102,6 +104,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
   const [modosSeleccionados, setModosSeleccionados] = useState<string[]>(['VENTA'])
   const [tipoInmueble, setTipoInmueble] = useState<string>('Cualquier tipo')
   const [ubicacionTexto, setUbicacionTexto] = useState('')
+  const [isZonaOpen, setIsZonaOpen] = useState(false)
 
   useEffect(() => {
     const saved = sessionStorage.getItem('propbol_global_filters')
@@ -238,6 +241,21 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
             Solo estos botones tienen overflow-x-auto. Así los menús de la izquierda no se cortan. */}
         {variant === 'map' && (
           <div className="flex items-center gap-3 flex-1 overflow-visible pb-1">
+          <div className="shrink-0">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                window.dispatchEvent(new CustomEvent('abrirPanelUbicacion'));
+              }}
+              className="h-[36px] flex items-center gap-2 px-4 rounded-xl shadow-sm transition-all text-sm font-medium focus:outline-none shrink-0 bg-[#d97706] text-white border-transparent hover:bg-[#b95e00]"
+            >
+                <MapPin className="w-4 h-4 text-white" />
+                <span>Zona</span>
+              </button>
+          </div>
+
+            {/* Resto de botones existentes */}
             <div className="shrink-0">
               <button
                 type="button"
@@ -253,6 +271,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                 <ChevronDown className={`w-4 h-4 ${isPriceFilterActive ? 'text-white' : 'text-stone-400'}`} />
               </button>
             </div>
+            
             <div className="shrink-0">
               <CapacidadButton
                 variant={variant}
@@ -260,6 +279,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                 onClick={onToggleCapacidad}
               />
             </div>
+            
             <div className="shrink-0">
               <button
                 type="button"
@@ -275,37 +295,37 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                 <ChevronDown className={`w-4 h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-400'}`} />
               </button>
             </div>
+            
             <div className="shrink-0">
               <MockFilterBtn icon={SlidersHorizontal} text="Más Filtros" hasChevron={false} />
             </div>
+            
             <div className="shrink-0">
-  <button
-    type="button"
-    onClick={async () => {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
-      const params = new URLSearchParams({ orden: 'recomendados' })
-      if (token) {
-        const res = await fetch(`/api/inmuebles/recomendados?${params}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-        const data = await res.json()
-        console.log('Recomendados:', data)
-        if (data.success && data.data.length > 0) {
-  // Guardar recomendaciones en sessionStorage para que ResultadosBusqueda las lea
-           sessionStorage.setItem('recomendaciones_resultado', JSON.stringify(data.data))
-            router.push('/busqueda_mapa?orden=recomendados')
-}
-      } else {
-        // Usuario no logueado — redirigir a búsqueda general
-        router.push('/busqueda_mapa?orden=recomendados')
-      }
-    }}
-    className="h-[36px] flex items-center justify-between bg-white border border-stone-200 text-stone-600 px-3 rounded-xl shadow-sm hover:border-orange-400 hover:text-orange-500 transition-all font-inter text-sm whitespace-nowrap gap-2 shrink-0 focus:outline-none"
-  >
-    <Award className="w-4 h-4 text-stone-500" />
-    <span>Recomendados</span>
-  </button>
-</div>
+              <button
+                type="button"
+                onClick={async () => {
+                  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+                  const params = new URLSearchParams({ orden: 'recomendados' })
+                  if (token) {
+                    const res = await fetch(`/api/inmuebles/recomendados?${params}`, {
+                      headers: { Authorization: `Bearer ${token}` }
+                    })
+                    const data = await res.json()
+                    console.log('Recomendados:', data)
+                    if (data.success && data.data.length > 0) {
+                      sessionStorage.setItem('recomendaciones_resultado', JSON.stringify(data.data))
+                      router.push('/busqueda_mapa?orden=recomendados')
+                    }
+                  } else {
+                    router.push('/busqueda_mapa?orden=recomendados')
+                  }
+                }}
+                className="h-[36px] flex items-center justify-between bg-white border border-stone-200 text-stone-600 px-3 rounded-xl shadow-sm hover:border-orange-400 hover:text-orange-500 transition-all font-inter text-sm whitespace-nowrap gap-2 shrink-0 focus:outline-none"
+              >
+                <Award className="w-4 h-4 text-stone-500" />
+                <span>Recomendados</span>
+              </button>
+            </div>
           </div>
         )}
 

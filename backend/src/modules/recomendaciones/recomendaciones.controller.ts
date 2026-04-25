@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { RecomendacionesService } from './recomendaciones.service.js'
+import { cache } from '../../lib/cache.service.js'
 
 const recomendacionesService = new RecomendacionesService()
 
@@ -75,4 +76,17 @@ export const ordenarPorAfinidad = async (req: Request, res: Response) => {
     res.status(500).json({ success: false, error: 'Error al ordenar por afinidad' })
   }
 }
+export const invalidarCacheUsuario = async (req: Request, res: Response) => {
+  try {
+    const usuarioId = (req as any).usuario?.id
+    if (!usuarioId) {
+      return res.status(401).json({ success: false, error: 'Usuario no autenticado' })
+    }
+    cache.invalidateUsuario(usuarioId)
+    res.status(200).json({ success: true, message: 'Caché invalidado' })
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Error al invalidar caché' })
+  }
+}
+
 
