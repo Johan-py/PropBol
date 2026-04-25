@@ -241,6 +241,7 @@ interface MapViewProps {
   onPointClick?: (index: number) => void
   isLoading?: boolean
   error?: string | null
+  onClusterDissolve?: () => void
 }
 
 const vertexHandleIcon = L.divIcon({
@@ -258,6 +259,15 @@ const vertexHandleIcon = L.divIcon({
   iconSize: [12, 12],
   iconAnchor: [6, 6]
 })
+function ZoomHandler({ onClusterDissolve }: { onClusterDissolve?: () => void }) {
+  const map = useMap()
+  useEffect(() => {
+    const handler = () => onClusterDissolve?.()
+    map.on('zoomend', handler)
+    return () => { map.off('zoomend', handler) }
+  }, [map, onClusterDissolve])
+  return null
+}
 
 export default function MapView({
   properties = [],
@@ -279,6 +289,7 @@ export default function MapView({
   onPointClick,
   zonas = [],
   selectedZoneId = null,
+  onClusterDissolve,
   onZoneSelect
 }: MapViewProps) {
   const [isMounted, setIsMounted] = useState(false)
@@ -338,6 +349,7 @@ export default function MapView({
         />
 
         <ZoomControls />
+        <ZoomHandler onClusterDissolve={onClusterDissolve} />
         <MapMouseHandler onMouseLeave={() => setHoveredPinId(null)} />
         <MapClickHandler
           onMapClick={(latlng) => {
@@ -439,6 +451,7 @@ export default function MapView({
         </Marker>
 
         <MarkerClusterGroup
+          key={activeClusterIds.join(',')}
           iconCreateFunction={(cluster: any) => {
             const markers = cluster.getAllChildMarkers()
             const ids = markers.map((m: any) => String(m.options.alt ?? '')).filter(Boolean)
