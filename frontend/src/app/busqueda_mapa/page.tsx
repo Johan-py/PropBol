@@ -702,7 +702,7 @@ function BusquedaMapaContent() {
           setListPageSize(s);
           setListPage(1);
         }}
-        hint={listTotal === 0 && error ? `Error al cargar: ${error}` : null}
+        hint={error ? `Error al cargar: ${error}` : null}
       />
     ) : null;
   };
