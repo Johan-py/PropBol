@@ -182,7 +182,7 @@ export default function VisualFiltersSection() {
   }));
 
   return (
-    <section className="w-full px-4 md:px-8 py-8 flex justify-center">
+    <section id="tour-filtros-visuales" className="w-full px-4 md:px-8 py-8 flex justify-center">
       <div className="w-full max-w-[1100px]">
         <PropertyCarousel title="Alquileres" items={alquilerItems} category="alquiler" />
         <PropertyCarousel title="En Venta" items={ventaItems} category="venta" />
