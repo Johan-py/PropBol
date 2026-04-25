@@ -113,6 +113,38 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     return () => window.clearTimeout(timeoutId)
   }, [autosaveKey, titulo, imagen, categoriaId, contenido])
 
+  //url para previsualizar imagen
+  const imagePreviewUrl = useMemo(() => {
+    return imagen.trim() || ''
+  }, [imagen])
+
+  // Detectar cambios en el formulario (si no está “sucio”)
+  const isFormDirty = useMemo(() => {
+    const baseTitulo = initialValues?.titulo?.trim() ?? ''
+    const baseImagen = initialValues?.imagen?.trim() ?? ''
+    const baseCategoriaId = initialValues?.categoriaId ?? ''
+    const baseContenido = initialValues?.contenido?.trim() ?? ''
+
+    return (
+      titulo.trim() !== baseTitulo ||
+      imagen.trim() !== baseImagen ||
+      categoriaId !== baseCategoriaId ||
+      contenido.trim() !== baseContenido
+    )
+  }, [titulo, imagen, categoriaId, contenido, initialValues])
+
+  // Advertencia de salida
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!isFormDirty) return
+      event.preventDefault()
+      event.returnValue = ''
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [isFormDirty])
+
   // retorno mínimo para no romper nada
   return {
     titulo,
@@ -127,6 +159,8 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     isLoadingCategories,
     textareaRef,
     router,
-    autosaveKey
+    autosaveKey,
+    imagePreviewUrl,
+    isFormDirty
   }
 }
