@@ -16,12 +16,6 @@ const TOUR_STEPS = [
     required: true,
   },
   {
-    id: "tour-inicio",
-    title: "Inicio",
-    description: "Navega a la página principal desde aquí.",
-    required: true,
-  },
-  {
     id: "tour-propiedades",
     mobileId: "tour-propiedades-mobile",
     title: "Propiedades",
@@ -39,20 +33,7 @@ const TOUR_STEPS = [
     id: "tour-planes",
     mobileId: "tour-planes-mobile",
     title: "Planes de membresía",
-    description:
-      "Conoce nuestros planes y beneficios para publicar tu inmueble.",
-    required: true,
-  },
-  {
-    id: "tour-contacto",
-    title: "Contáctanos",
-    description: "¿Tienes dudas? Escríbenos y te ayudamos.",
-    required: true,
-  },
-  {
-    id: "tour-nosotros",
-    title: "Sobre Nosotros",
-    description: "Conoce más sobre el equipo detrás de PropBol.",
+    description: "Conoce nuestros planes y beneficios para publicar tu inmueble.",
     required: true,
   },
   {
@@ -60,6 +41,27 @@ const TOUR_STEPS = [
     mobileId: "tour-ayuda-mobile",
     title: "Ayuda",
     description: "Vuelve a ver este tour cuando quieras desde aquí.",
+    required: true,
+  },
+  {
+    id: "tour-buscador",
+    title: "Buscador de propiedades",
+    description:
+      "Filtra por tipo de operación (Venta, Alquiler o Anticrético), elige el tipo de inmueble y escribe una ubicación para encontrar la propiedad ideal.",
+    required: true,
+  },
+  {
+    id: "tour-filtros-visuales",
+    title: "Explora por ciudad y tipo",
+    description:
+      "Aquí puedes ver propiedades en alquiler o venta agrupadas por departamento, y también explorar por tipo de inmueble: casas, departamentos, oficinas y terrenos.",
+    required: true,
+  },
+  {
+    id: "tour-publicar-home",
+    title: "Publica tu inmueble",
+    description:
+      "¿Tienes una propiedad para vender o alquilar? Haz clic aquí para registrar tu inmueble y llegar a miles de compradores e inquilinos.",
     required: true,
   },
   {
@@ -83,8 +85,7 @@ const TOUR_STEPS = [
   {
     id: "tour-footer-logo",
     title: "PropBol",
-    description:
-      "Nuestra misión: revolucionar el mercado inmobiliario en Bolivia.",
+    description: "Nuestra misión: revolucionar el mercado inmobiliario en Bolivia.",
     required: true,
   },
   {
@@ -96,29 +97,44 @@ const TOUR_STEPS = [
   {
     id: "tour-footer-conocenos",
     title: "Conócenos",
-    description:
-      "Accede a información sobre nosotros, términos y políticas de privacidad.",
+    description: "Accede a información sobre nosotros, términos y políticas de privacidad.",
     required: true,
   },
   {
     id: "tour-footer-redes",
     title: "Redes Sociales",
-    description:
-      "Síguenos en Facebook e Instagram para estar al tanto de las novedades.",
+    description: "Síguenos en Facebook e Instagram para estar al tanto de las novedades.",
     required: true,
   },
 ];
 
-const FOOTER_STEP_INDEX = 11; // índice desde donde empiezan los pasos del footer
+const FOOTER_STEP_INDEX = 11;
+
+// ✅ Helpers para saber si el usuario está logueado
+const isLoggedIn = () => {
+  if (typeof window === "undefined") return false;
+  return !!localStorage.getItem("token");
+};
+
+// ✅ Flag para saber si el tour fue activado manualmente por el botón Ayuda
+const MANUAL_TOUR_FLAG = "propbol_tour_manual";
 
 export default function TourGuiado() {
-  const [showTour, setShowTour] = useState(true);
+  const [showTour, setShowTour] = useState(false); // ← empieza en false, se decide en useEffect
   const [currentStep, setCurrentStep] = useState(0);
   const [highlight, setHighlight] = useState<DOMRect | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const retryRef = useRef<NodeJS.Timeout | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [tooltipH, setTooltipH] = useState(180);
+
+  // ✅ Decidir si mostrar el tour al montar
+  useEffect(() => {
+    if (isLoggedIn()) {
+      setShowTour(true);
+    }
+    // Si no está logueado, no se muestra — salvo que lo active el botón Ayuda
+  }, []);
 
   // 🔒 Bloquear scroll + ir al inicio
   useEffect(() => {
@@ -149,20 +165,20 @@ export default function TourGuiado() {
     return () => window.removeEventListener("keydown", handleKey);
   }, [showTour, currentStep]);
 
-  // HU-05: Criterio 9 — Reactivación manual desde el botón Ayuda
+  // 🔁 Reactivación manual desde el botón Ayuda
+  // ✅ Funciona para usuarios logueados Y no logueados
   useEffect(() => {
     const handleIniciarTour = () => {
-      setCurrentStep(0);
       setHighlight(null);
-      setShowTour(true);
+      setCurrentStep(0);
+      setShowTour(true); // ← siempre se abre cuando viene del botón Ayuda
     };
-
     window.addEventListener("propbol:iniciar-tour", handleIniciarTour);
     return () =>
       window.removeEventListener("propbol:iniciar-tour", handleIniciarTour);
   }, []);
 
-  // 📐 Medir la altura real del tooltip + recalcular en resize/zoom
+  // 📐 Medir altura del tooltip
   useEffect(() => {
     if (!showTour) return;
 
@@ -265,7 +281,6 @@ export default function TourGuiado() {
 
     const tryFind = () => {
       const el = document.getElementById(id);
-
       if (el) {
         if (retryRef.current) clearTimeout(retryRef.current);
         applyHighlight(el);
@@ -285,7 +300,6 @@ export default function TourGuiado() {
     };
 
     tryFind();
-
     return () => {
       if (retryRef.current) clearTimeout(retryRef.current);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -331,21 +345,15 @@ export default function TourGuiado() {
   if (hasValid) {
     const H = tooltipH;
     const GAP = PADDING + 12;
-
     const spaceBelow = vOffsetTop + vh - highlight.bottom;
     const spaceAbove = highlight.top - vOffsetTop;
 
-    if (spaceBelow >= H + GAP || spaceBelow > spaceAbove) {
-      top = highlight.bottom + GAP;
-    } else {
-      top = highlight.top - H - GAP;
-    }
+    top =
+      spaceBelow >= H + GAP || spaceBelow > spaceAbove
+        ? highlight.bottom + GAP
+        : highlight.top - H - GAP;
 
-    // Clamp final: nunca salirse del viewport visible
-    const minTop = vOffsetTop + 10;
-    const maxTop = vOffsetTop + vh - H - 10;
-    top = Math.max(minTop, Math.min(top, maxTop));
-
+    top = Math.max(vOffsetTop + 10, Math.min(top, vOffsetTop + vh - H - 10));
     left = Math.max(
       vOffsetLeft + 12,
       Math.min(
@@ -357,6 +365,7 @@ export default function TourGuiado() {
 
   return (
     <>
+      {/* Overlay oscuro con recorte */}
       <div
         style={{
           position: "fixed",
@@ -397,111 +406,92 @@ export default function TourGuiado() {
         </svg>
       </div>
 
-      {hasValid && (
-        <div
-          ref={tooltipRef}
-          style={{
-            position: "fixed",
-            top,
-            left,
-            width: tooltipW,
-            zIndex: 9999,
-            background: "#fff",
-            borderRadius: 12,
-            padding: tooltipPad,
-            boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
-            maxHeight: `${vh - 20}px`,
-            overflowY: "auto",
-          }}
-        >
-          <div style={{ display: "flex", gap: 4, marginBottom: 10 }}>
-            {TOUR_STEPS.map((_, i) => (
-              <span
-                key={i}
-                style={{
-                  flex: 1,
-                  height: 3,
-                  borderRadius: 99,
-                  background: i <= currentStep ? "#E68B25" : "#e5e7eb",
-                }}
-              />
-            ))}
-          </div>
+      {/* Tooltip siempre renderizado — solo se oculta con opacity */}
+      <div
+        ref={tooltipRef}
+        style={{
+          position: "fixed",
+          top,
+          left,
+          width: tooltipW,
+          zIndex: 9999,
+          background: "#fff",
+          borderRadius: 12,
+          padding: tooltipPad,
+          boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
+          opacity: hasValid ? 1 : 0,
+          pointerEvents: hasValid ? "all" : "none",
+          transition: "opacity 0.15s ease",
+          maxHeight: `${vh - 20}px`,
+          overflowY: "auto",
+        }}
+      >
+        {/* Barras de progreso */}
+        <div style={{ display: "flex", gap: 4, marginBottom: 10 }}>
+          {TOUR_STEPS.map((_, i) => (
+            <span
+              key={i}
+              style={{
+                flex: 1,
+                height: 3,
+                borderRadius: 99,
+                background: i <= currentStep ? "#E68B25" : "#e5e7eb",
+              }}
+            />
+          ))}
+        </div>
 
-          <p style={{ fontWeight: 700, fontSize: fontTitle, marginBottom: 4 }}>
-            {TOUR_STEPS[currentStep].title}
-          </p>
+        <p style={{ fontWeight: 700, fontSize: fontTitle, marginBottom: 4 }}>
+          {TOUR_STEPS[currentStep].title}
+        </p>
 
+        <p style={{ fontSize: fontDesc, color: "#374151", marginBottom: !hasValid ? 8 : 14 }}>
+          {TOUR_STEPS[currentStep].description}
+        </p>
+
+        {!hasValid && (
           <p
             style={{
-              fontSize: fontDesc,
-              color: "#374151",
-              marginBottom: !hasValid ? 8 : 14,
+              fontSize: fontMeta,
+              color: "#9ca3af",
+              marginBottom: 14,
+              fontStyle: "italic",
             }}
           >
-            {TOUR_STEPS[currentStep].description}
+            Esta sección no está visible en tu dispositivo actual.
           </p>
-          {!hasValid && (
-            <p
-              style={{
-                fontSize: fontMeta,
-                color: "#9ca3af",
-                marginBottom: 14,
-                fontStyle: "italic",
-              }}
-            >
-              Esta sección no está visible en tu dispositivo actual.
-            </p>
-          )}
+        )}
 
-          <div
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <button
+            onClick={handleSkip}
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              fontSize: fontSkip,
+              color: "#9ca3af",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              minHeight: 44,
+              padding: "0 4px",
             }}
           >
-            <button
-              onClick={handleSkip}
-              style={{
-                fontSize: fontSkip,
-                color: "#9ca3af",
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                minHeight: 44,
-                padding: "0 4px",
-              }}
-            >
-              Saltar tour
-            </button>
+            Saltar tour
+          </button>
 
-            <div style={{ display: "flex", gap: 8 }}>
-              {currentStep > 0 && (
-                <button
-                  onClick={() => setCurrentStep((prev) => prev - 1)}
-                  style={{
-                    background: "none",
-                    color: "#E68B25",
-                    border: "1px solid #E68B25",
-                    borderRadius: 8,
-                    padding: isMobile ? "8px 10px" : "10px 14px",
-                    fontSize: fontBtn,
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    minHeight: 44,
-                  }}
-                >
-                  ← Anterior
-                </button>
-              )}
-
+          <div style={{ display: "flex", gap: 8 }}>
+            {currentStep > 0 && (
               <button
-                onClick={handleNext}
+                onClick={() => setCurrentStep((prev) => prev - 1)}
                 style={{
-                  background: "#E68B25",
-                  color: "#fff",
-                  border: "none",
+                  background: "none",
+                  color: "#E68B25",
+                  border: "1px solid #E68B25",
                   borderRadius: 8,
                   padding: isMobile ? "8px 12px" : "10px 18px",
                   fontSize: fontBtn,
@@ -510,14 +500,28 @@ export default function TourGuiado() {
                   minHeight: 44,
                 }}
               >
-                {currentStep < TOUR_STEPS.length - 1
-                  ? "Siguiente →"
-                  : "Finalizar"}
+                ← Anterior
               </button>
-            </div>
+            )}
+
+            <button
+              onClick={handleNext}
+              style={{
+                background: "#E68B25",
+                color: "#fff",
+                border: "none",
+                borderRadius: 8,
+                padding: "8px 18px",
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              {currentStep < TOUR_STEPS.length - 1 ? "Siguiente →" : "Finalizar"}
+            </button>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 }

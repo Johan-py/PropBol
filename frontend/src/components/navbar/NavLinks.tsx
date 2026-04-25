@@ -3,8 +3,11 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
+import { useRouter } from "next/navigation";
+
 
 export default function NavLinks() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -67,10 +70,16 @@ export default function NavLinks() {
 
       <button
         id="tour-ayuda"
-        onClick={() => window.dispatchEvent(new Event("propbol:iniciar-tour"))}
+        onClick={() => {
+          router.push("/"); // ir al inicio
+
+          setTimeout(() => {
+            window.dispatchEvent(new Event("propbol:iniciar-tour"));
+          }, 300);
+        }}
         className={linkStyle}
-      >
-        Ayuda
+        >
+         Ayuda
       </button>
 
     </div>
