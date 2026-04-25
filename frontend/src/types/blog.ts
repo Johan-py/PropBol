@@ -9,7 +9,7 @@ export type BlogStatus =
   | 'BORRADOR'
 
 export interface Blog {
-  id: number
+  id: number | string
   titulo: string
   fecha: string
   estado: BlogStatus
