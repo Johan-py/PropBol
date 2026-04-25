@@ -357,7 +357,7 @@ export default function Navbar() {
   return (
     <>
       <nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
-        <div className="container mx-auto px-4 py-1.5">
+        <div className="mx-auto max-w-[1440px] px-4 py-1.5 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
               <Logo />
