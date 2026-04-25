@@ -10,6 +10,7 @@ import BlogImageSection from "./form/BlogImageSection";
 import BlogInfoFields from "./form/BlogInfoFields";
 import BlogEditorSection from "./form/BlogEditorSection";
 import BlogSidebar from "./form/BlogSidebar";
+import { useBlogForm } from "@/hooks/useBlogForm";
 
 import {
   createBlog,
@@ -57,70 +58,38 @@ export default function BlogCreateForm({
   mode = "create",
   statusLabel,
 }: BlogCreateFormProps) {
-  const router = useRouter();
-  const hasHydratedDraft = useRef(false);
-  const [categories, setCategories] = useState<BlogCategoryOption[]>([]);
-  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
-  const [loadError, setLoadError] = useState("");
-  const [autosaveMessage, setAutosaveMessage] = useState("");
-  const [submitError, setSubmitError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [fieldErrors, setFieldErrors] = useState<FieldErrors>(INITIAL_ERRORS);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
+  const {
+    titulo,
+    setTitulo,
+    categoriaId,
+    setCategoriaId,
+    contenido,
+    setContenido,
+    categories,
+    isLoadingCategories,
+    loadError,
+    autosaveMessage,
+    isSubmitting,
+    submitError,
+    successMessage,
+    fieldErrors,
+    setFieldErrors,
+    textareaRef,
+    imagePreviewUrl,
+    isFormDirty,
+    applyFormatting,
+    insertLink,
+    handleLinkConfirm,
+    setIsLinkModalOpen,
+    isLinkModalOpen,
+    selectionForLink,
+    setSelectedImageFile,
+    submitBlog,
+    router,
+    autosaveKey
+  } = useBlogForm({ blogId, initialValues, mode });
 
-  const [titulo, setTitulo] = useState(initialValues?.titulo ?? "");
-  const [imagen, setImagen] = useState(initialValues?.imagen ?? "");
-  const [categoriaId, setCategoriaId] = useState(initialValues?.categoriaId ?? "");
-  const [contenido, setContenido] = useState(initialValues?.contenido ?? "");
-  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
-  const [selectionForLink, setSelectionForLink] = useState("");
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const autosaveKey = useMemo(
-    () =>
-      mode === "edit" && blogId
-        ? `${AUTOSAVE_STORAGE_PREFIX}:edit:${blogId}`
-        : `${AUTOSAVE_STORAGE_PREFIX}:create`,
-    [blogId, mode],
-  );
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const loadCategories = async () => {
-      try {
-        const rows = await getBlogCategories();
-
-        if (!isMounted) {
-          return;
-        }
-
-        setCategories(rows);
-        setLoadError("");
-      } catch (error) {
-        if (!isMounted) {
-          return;
-        }
-
-        setLoadError(
-          error instanceof Error
-            ? error.message
-            : "No se pudieron cargar las categorías del blog.",
-        );
-      } finally {
-        if (isMounted) {
-          setIsLoadingCategories(false);
-        }
-      }
-    };
-
-    void loadCategories();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   useEffect(() => {
     setTitulo(initialValues?.titulo ?? "");
