@@ -346,11 +346,7 @@ export default function Navbar() {
 
   return (
     <>
-<<<<<<< HEAD
       <nav className="sticky top-0 z-[9999] w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
-=======
-      <nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
->>>>>>> 28602f7d842dadbb72fdccc597527b1b2b032f5d
         <div className="mx-auto max-w-[1440px] px-4 py-1.5 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
@@ -484,10 +480,6 @@ export default function Navbar() {
 
                             const reachedBottom =
                               target.scrollTop + target.clientHeight >= target.scrollHeight - 20
-<<<<<<< HEAD
-=======
-
->>>>>>> 28602f7d842dadbb72fdccc597527b1b2b032f5d
                             if (reachedBottom && hasMore && !isLoadingMore) {
                               void loadMoreNotifications()
                             }
