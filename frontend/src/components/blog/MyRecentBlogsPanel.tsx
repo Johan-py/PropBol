@@ -35,9 +35,13 @@ function getStatusClass(estado: string) {
   return STATUS_STYLES[estado] ?? "bg-stone-50 text-stone-500 border-stone-200";
 }
 
-const MyRecentBlogsPanel: React.FC = () => {
+interface MyRecentBlogsPanelProps {
+  blogs?: Blog[];
+}
+
+const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({ blogs: propBlogs }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [internalBlogs, setInternalBlogs] = useState<Blog[]>([]);
 
   useEffect(() => {
     const syncAuthState = async () => {
@@ -50,9 +54,9 @@ const MyRecentBlogsPanel: React.FC = () => {
           const res = await fetch(`${API_URL}/api/blogs/mis-blogs`, {
             headers: { Authorization: `Bearer ${token}` }
           });
-          
+
           if (!res.ok) throw new Error('Error al obtener blogs');
-          
+
           const data = await res.json();
           const mapped: Blog[] = data.map((b: any) => ({
             id: b.id,
@@ -63,8 +67,8 @@ const MyRecentBlogsPanel: React.FC = () => {
               ? new Date(b.fecha_creacion).toLocaleDateString('es-BO')
               : ''
           }));
-          setBlogs(mapped);
-        } catch {}
+          setInternalBlogs(mapped);
+        } catch { }
       }
     };
 
@@ -80,6 +84,7 @@ const MyRecentBlogsPanel: React.FC = () => {
 
   if (!isAuthenticated) return null;
 
+  const blogs = propBlogs || internalBlogs;
   const visible = blogs.slice(0, MAX_VISIBLE);
 
   if (blogs.length === 0) {
