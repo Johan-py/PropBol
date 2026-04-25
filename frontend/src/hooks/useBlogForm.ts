@@ -89,6 +89,30 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     }
   }, [])
 
+  // Autoguardado
+  useEffect(() => {
+    const hasContent = Boolean(titulo.trim() || imagen.trim() || categoriaId || contenido.trim())
+
+    if (!hasContent) {
+      window.localStorage.removeItem(autosaveKey)
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      window.localStorage.setItem(
+        autosaveKey,
+        JSON.stringify({
+          titulo,
+          imagen,
+          categoriaId,
+          contenido
+        })
+      )
+    }, 500)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [autosaveKey, titulo, imagen, categoriaId, contenido])
+
   // retorno mínimo para no romper nada
   return {
     titulo,
