@@ -2,7 +2,13 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { BlogCategoryOption, getBlogCategories } from '@/services/blogs.service'
+import {
+  BlogCategoryOption,
+  getBlogCategories,
+  createBlog,
+  updateBlog,
+  BlogCreationAction
+} from '@/services/blogs.service'
 
 const AUTOSAVE_STORAGE_PREFIX = 'propbol_blog_form'
 
@@ -41,6 +47,9 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
 
   const [categories, setCategories] = useState<BlogCategoryOption[]>([])
   const [isLoadingCategories, setIsLoadingCategories] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
 
   const autosaveKey = useMemo(
     () =>
@@ -208,6 +217,45 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     return nextErrors
   }
 
+  // Envía el formulario
+  const submitBlog = async (accion: BlogCreationAction) => {
+    const errors = validate()
+    setFieldErrors(errors)
+
+    if (Object.keys(errors).length > 0) return
+
+    setIsSubmitting(true)
+    setSubmitError('')
+    setSuccessMessage('')
+
+    try {
+      const payload = {
+        titulo: titulo.trim(),
+        imagen: imagen.trim(),
+        categoria_id: Number(categoriaId),
+        contenido: contenido.trim(),
+        accion
+      }
+
+      if (mode === 'edit' && blogId) {
+        await updateBlog(blogId, payload)
+      } else {
+        await createBlog(payload)
+      }
+
+      setSuccessMessage('Blog guardado exitosamente.')
+      window.localStorage.removeItem(autosaveKey)
+
+      setTimeout(() => {
+        router.push('/blogs')
+      }, 1200)
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Error al guardar')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   // retorno mínimo para no romper nada
   return {
     titulo,
@@ -229,6 +277,10 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     insertLink,
     fieldErrors,
     setFieldErrors,
-    validate
+    validate,
+    submitBlog,
+    isSubmitting,
+    submitError,
+    successMessage
   }
 }
