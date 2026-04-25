@@ -538,6 +538,7 @@ function BusquedaMapaContent() {
     setClusterProperties(props)
     setIsClusterView(true)
     setActiveClusterIds(props.map((p: any) => p.id))
+    setSheetState('peek')
   }
 
   const handleMapSelect = useCallback(
