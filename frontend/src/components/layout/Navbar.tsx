@@ -1,5 +1,5 @@
 "use client";
- 
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -99,25 +99,28 @@ export default function Navbar() {
     isLoggedIn,
     setIsLoggedIn,
   } = useNotifications();
- 
-  const clearSession = useCallback((emitEvent = true) => {
-    localStorage.removeItem(USER_STORAGE_KEY);
-    localStorage.removeItem(SESSION_EXPIRES_KEY);
-    localStorage.removeItem("token");
-    localStorage.removeItem("nombre");
-    localStorage.removeItem("correo");
-    localStorage.removeItem("avatar");
-    setUser(null);
-    setIsPanelOpen(false);
-    setShowLogoutModal(false);
-    setIsLoggedIn(false);
- 
-    if (emitEvent) {
-      window.dispatchEvent(new Event("propbol:session-changed"));
-      window.dispatchEvent(new Event("auth-state-changed"));
-    }
-  }, [setIsLoggedIn]);
- 
+
+  const clearSession = useCallback(
+    (emitEvent = true) => {
+      localStorage.removeItem(USER_STORAGE_KEY);
+      localStorage.removeItem(SESSION_EXPIRES_KEY);
+      localStorage.removeItem("token");
+      localStorage.removeItem("nombre");
+      localStorage.removeItem("correo");
+      localStorage.removeItem("avatar");
+      setUser(null);
+      setIsPanelOpen(false);
+      setShowLogoutModal(false);
+      setIsLoggedIn(false);
+
+      if (emitEvent) {
+        window.dispatchEvent(new Event("propbol:session-changed"));
+        window.dispatchEvent(new Event("auth-state-changed"));
+      }
+    },
+    [setIsLoggedIn],
+  );
+
   const isSessionExpired = () => {
     const expiresAt = localStorage.getItem(SESSION_EXPIRES_KEY);
     if (!expiresAt) return true;
@@ -143,7 +146,7 @@ export default function Navbar() {
  
     return data.user;
   };
- 
+
   const restoreSession = useCallback(async () => {
     const savedUser = localStorage.getItem(USER_STORAGE_KEY);
     const expiresAt = localStorage.getItem(SESSION_EXPIRES_KEY);
@@ -199,7 +202,7 @@ export default function Navbar() {
       setIsLoggedIn(true);
     }
   }, [clearSession, setIsLoggedIn]);
- 
+
   const formatRelativeTime = (fecha: string | null): string => {
     if (!fecha) return "";
     const diff = Date.now() - new Date(fecha).getTime();
@@ -230,10 +233,10 @@ export default function Navbar() {
  
   useEffect(() => {
     void restoreSession();
- 
+
     const handleSessionChange = () => void restoreSession();
     const handleOnline = () => void restoreSession();
- 
+
     window.addEventListener("storage", handleSessionChange);
     window.addEventListener("propbol:login", handleSessionChange);
     window.addEventListener("propbol:session-changed", handleSessionChange);
@@ -246,7 +249,7 @@ export default function Navbar() {
       window.removeEventListener("online", handleOnline);
     };
   }, [restoreSession]);
- 
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -280,6 +283,17 @@ export default function Navbar() {
   }, [user, router, clearSession]);
  
   useEffect(() => {
+    const interval = setInterval(() => {
+      if (user && isSessionExpired()) {
+        clearSession();
+        router.push("/");
+      }
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [user, router, clearSession]);
+
+  useEffect(() => {
     if (!open) return;
  
     const handleEsc = (event: KeyboardEvent) => {
@@ -289,7 +303,18 @@ export default function Navbar() {
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [open, toggleNotifications]);
- 
+
+  useEffect(() => {
+    const abrir = () => setIsMobileMenuOpen(true);
+    const cerrar = () => setIsMobileMenuOpen(false);
+    window.addEventListener("propbol:abrir-menu-movil", abrir);
+    window.addEventListener("propbol:cerrar-menu-movil", cerrar);
+    return () => {
+      window.removeEventListener("propbol:abrir-menu-movil", abrir);
+      window.removeEventListener("propbol:cerrar-menu-movil", cerrar);
+    };
+  }, []);
+
   const togglePanel = () => {
     if (user && isSessionExpired()) {
       clearSession();
@@ -464,12 +489,10 @@ export default function Navbar() {
                             saveScrollPosition(target.scrollTop)
 
                             const reachedBottom =
-                              target.scrollTop + target.clientHeight >=
-                              target.scrollHeight - 20;
- 
+                              target.scrollTop + target.clientHeight >= target.scrollHeight - 20
+
                             if (reachedBottom && hasMore && !isLoadingMore) {
-                              saveScrollPosition(target.scrollTop);
-                              void loadMoreNotifications();
+                              void loadMoreNotifications()
                             }
                           }}
                         >
@@ -510,7 +533,9 @@ export default function Navbar() {
                                       void markAsRead(notification.id);
                                     }
                                     toggleNotifications();
-                                    router.push(`/notificaciones/${notification.id}`);
+                                    router.push(
+                                      `/notificaciones/${notification.id}`,
+                                    );
                                   }}
                                   className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
                                     notification.status === "no leida"
