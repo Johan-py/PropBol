@@ -139,7 +139,7 @@ export default function Navbar() {
 
     if (!response.ok || !data.user) {
       throw new SessionValidationError(
-        data.message || "Sesión inválida o expirada",
+        data.message || "Sesion invalida o expirada",
         response.status,
       );
     }
@@ -228,7 +228,7 @@ export default function Navbar() {
     return () => clearInterval(interval);
   }, []);
 
-  // Restaurar sesión y escuchar cambios
+  // Restaurar sesion y escuchar cambios
   useEffect(() => {
     void restoreSession();
 
@@ -270,7 +270,7 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open, toggleNotifications]);
 
-  // Verificar expiración de sesión cada 10 segundos (una sola instancia)
+  // Verificar expiracion de sesion cada 10 segundos (una sola instancia)
   useEffect(() => {
     const interval = setInterval(() => {
       if (user && isSessionExpired()) {
@@ -294,7 +294,7 @@ export default function Navbar() {
     return () => document.removeEventListener("keydown", handleEsc);
   }, [open, toggleNotifications]);
 
-  // Escuchar eventos para abrir/cerrar menú móvil desde el tour
+  // Escuchar eventos para abrir/cerrar menu movil desde el tour
   useEffect(() => {
     const abrir = () => setIsMobileMenuOpen(true);
     const cerrar = () => setIsMobileMenuOpen(false);
@@ -336,7 +336,7 @@ export default function Navbar() {
           headers: { Authorization: `Bearer ${token}` },
         });
       } catch (err) {
-        console.warn("Error al cerrar sesión en el servidor:", err);
+        console.warn("Error al cerrar sesion en el servidor:", err);
       }
     }
 
@@ -412,7 +412,7 @@ export default function Navbar() {
                           <Link
                             href="/configuracion/notificaciones"
                             onClick={toggleNotifications}
-                            aria-label="Configuración de notificaciones"
+                            aria-label="Configuracion de notificaciones"
                             className="rounded-full p-2 text-stone-500 transition hover:bg-stone-100 hover:text-stone-700"
                           >
                             <Settings className="h-4 w-4" />
@@ -433,14 +433,14 @@ export default function Navbar() {
                     {!isOnline && (
                       <div className="flex items-center gap-2 border-b border-stone-100 bg-stone-50 px-4 py-2 text-xs text-stone-500">
                         <WifiOff className="h-3 w-3 shrink-0" />
-                        <span>Sin conexión. Se actualizará al reconectarte.</span>
+                        <span>Sin conexion. Se actualizara al reconectarte.</span>
                       </div>
                     )}
 
                     {!isLoggedIn ? (
                       <div className="px-4 py-6 text-center">
                         <p className="text-sm text-stone-500">
-                          Inicia sesión para recibir notificaciones
+                          Inicia sesion para recibir notificaciones
                         </p>
                         <div className="mt-3 flex justify-center">
                           <button
@@ -448,7 +448,7 @@ export default function Navbar() {
                             onClick={handleLoginRedirect}
                             className="rounded-full bg-amber-600 px-4 py-1.5 text-xs font-medium text-white transition hover:bg-amber-700"
                           >
-                            Iniciar sesión
+                            Iniciar sesion
                           </button>
                         </div>
                       </div>
@@ -475,9 +475,9 @@ export default function Navbar() {
                               {item === "todas"
                                 ? "Todas"
                                 : item === "leida"
-                                  ? "Leídas"
+                                  ? "Leidas"
                                   : item === "no leida"
-                                    ? "No leídas"
+                                    ? "No leidas"
                                     : "Archivadas"}
                             </button>
                           ))}
@@ -493,7 +493,8 @@ export default function Navbar() {
                             const target = e.currentTarget;
                             saveScrollPosition(target.scrollTop);
                             const reachedBottom =
-                              target.scrollTop + target.clientHeight >= target.scrollHeight - 20;
+                              target.scrollTop + target.clientHeight >=
+                              target.scrollHeight - 20;
                             if (reachedBottom && hasMore && !isLoadingMore) {
                               void loadMoreNotifications();
                             }
@@ -553,13 +554,13 @@ export default function Navbar() {
                                           <span className="h-2 w-2 shrink-0 rounded-full bg-amber-500" />
                                         )}
                                         <p className="truncate text-sm font-semibold text-stone-900">
-                                          {notification.title?.trim() || "(Sin título)"}
+                                          {notification.title?.trim() || "(Sin titulo)"}
                                         </p>
                                       </div>
 
                                       <p className="mt-1 line-clamp-2 text-sm text-stone-600">
                                         {notification.description?.trim() ||
-                                          "(Sin descripción disponible)"}
+                                          "(Sin descripcion disponible)"}
                                       </p>
 
                                       <div className="mt-2 flex items-center gap-2">
@@ -567,7 +568,7 @@ export default function Navbar() {
                                           {notification.status}
                                         </span>
                                         <span className="text-[10px] text-stone-400">
-                                          ·{" "}
+                                          {"· "}
                                           {formatRelativeTime(
                                             notification.fechaCreacion || null,
                                           )}
@@ -585,7 +586,7 @@ export default function Navbar() {
                                           onClick={() =>
                                             void archiveNotification(notification.id)
                                           }
-                                          aria-label="Archivar notificación"
+                                          aria-label="Archivar notificacion"
                                           className="text-stone-400 transition hover:text-amber-600 disabled:cursor-not-allowed disabled:opacity-40"
                                         >
                                           <Archive className="h-4 w-4" />
@@ -608,7 +609,7 @@ export default function Navbar() {
                               ))}
                               {isLoadingMore && (
                                 <p className="px-4 py-3 text-center text-xs text-stone-400">
-                                  Cargando más notificaciones...
+                                  Cargando mas notificaciones...
                                 </p>
                               )}
                             </>
@@ -646,7 +647,7 @@ export default function Navbar() {
                 type="button"
                 onClick={() => setIsMobileMenuOpen(true)}
                 className="rounded-full p-2 transition duration-200 hover:bg-black/5 hover:shadow-sm md:hidden"
-                aria-label="Abrir menú de navegación"
+                aria-label="Abrir menu de navegacion"
               >
                 <Menu className="h-6 w-6 text-stone-600" />
               </button>
@@ -679,7 +680,7 @@ export default function Navbar() {
                 type="button"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-full p-2 transition duration-200 hover:bg-black/5"
-                aria-label="Cerrar menú"
+                aria-label="Cerrar menu"
               >
                 <X className="h-6 w-6 text-stone-600" />
               </button>
@@ -719,10 +720,10 @@ export default function Navbar() {
                       onClick={() => {
                         setIsMobileMenuOpen(false);
                         const tipoMap: Record<string, string> = {
-                          "Casas": "CASA",
-                          "Departamentos": "DEPARTAMENTO",
-                          "Cuartos": "CUARTO",
-                          "Terrenos": "TERRENO",
+                          Casas: "CASA",
+                          Departamentos: "DEPARTAMENTO",
+                          Cuartos: "CUARTO",
+                          Terrenos: "TERRENO",
                           "Espacios de cementerios": "TERRENO_MORTUORIO",
                         };
                         const tipoFinal = tipoMap[item];
@@ -734,11 +735,11 @@ export default function Navbar() {
                           updatedAt: new Date().toISOString(),
                         };
                         const currentFilters = JSON.parse(
-                          sessionStorage.getItem("propbol_global_filters") || "{}"
+                          sessionStorage.getItem("propbol_global_filters") || "{}",
                         );
                         sessionStorage.setItem(
                           "propbol_global_filters",
-                          JSON.stringify({ ...currentFilters, ...nuevosFiltros })
+                          JSON.stringify({ ...currentFilters, ...nuevosFiltros }),
                         );
                         const params = new URLSearchParams();
                         modosFinales.forEach((m) => params.append("modoInmueble", m));
@@ -768,7 +769,7 @@ export default function Navbar() {
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
-                Planes de membresía
+                Planes de membresia
               </Link>
 
               <button

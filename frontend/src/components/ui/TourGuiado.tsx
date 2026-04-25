@@ -110,8 +110,11 @@ const isLoggedIn = () => {
   return !!localStorage.getItem("token");
 };
 
+// ✅ Flag para saber si el tour fue activado manualmente por el botón Ayuda
+const MANUAL_TOUR_FLAG = "propbol_tour_manual";
+
 export default function TourGuiado() {
-  const [showTour, setShowTour] = useState(false);
+  const [showTour, setShowTour] = useState(false); // ← empieza en false, se decide en useEffect
   const [currentStep, setCurrentStep] = useState(0);
   const [highlight, setHighlight] = useState<DOMRect | null>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -162,7 +165,7 @@ export default function TourGuiado() {
     const handleIniciarTour = () => {
       setHighlight(null);
       setCurrentStep(0);
-      setShowTour(true);
+      setShowTour(true); // ← siempre se abre cuando viene del botón Ayuda
     };
     window.addEventListener("propbol:iniciar-tour", handleIniciarTour);
     return () =>
