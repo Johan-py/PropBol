@@ -249,8 +249,9 @@ export const comentariosRepository = {
       }
     })
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { _count, ...rest } = comentario as any
+    const { _count, ...rest } = comentario as unknown as {
+      _count: { comentario_like: number }
+    } & Record<string, unknown>
     return {
       ...rest,
       likes: _count?.comentario_like || 0,
@@ -285,8 +286,10 @@ export const comentariosRepository = {
     ])
 
     const mappedData = data.map((comentario) => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const { _count, comentario_like, ...rest } = comentario as any
+      const { _count, comentario_like, ...rest } = comentario as unknown as {
+        _count: { comentario_like: number }
+        comentario_like?: unknown[]
+      } & Record<string, unknown>
       return {
         ...rest,
         likes: _count?.comentario_like || 0,
