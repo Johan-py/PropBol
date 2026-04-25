@@ -36,6 +36,8 @@ export class FiltersHomepageRepository {
           tipoAccion: tipoAccion,
           estado: $Enums.EstadoInmueble.ACTIVO,
         },
+        latitud: { not: 0 },
+        longitud: { not: 0 },
       },
       select: {
         inmuebleId: true,
@@ -105,6 +107,10 @@ export class FiltersHomepageRepository {
       where: {
         estado: $Enums.EstadoInmueble.ACTIVO,
         categoria: { not: null },
+        ubicacion: {
+          latitud: { not: 0 },
+          longitud: { not: 0 }
+        }
       },
       _count: {
         id: true,
