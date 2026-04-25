@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { BlogCategoryOption } from '@/services/blogs.service'
+import { BlogCategoryOption, getBlogCategories } from '@/services/blogs.service'
 
 const AUTOSAVE_STORAGE_PREFIX = 'propbol_blog_form'
 
@@ -38,8 +38,8 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
   const [categoriaId, setCategoriaId] = useState(initialValues?.categoriaId ?? '')
   const [contenido, setContenido] = useState(initialValues?.contenido ?? '')
 
-  const [categories, _setCategories] = useState<BlogCategoryOption[]>([])
-  const [isLoadingCategories, _setIsLoadingCategories] = useState(true)
+  const [categories, setCategories] = useState<BlogCategoryOption[]>([])
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true)
 
   const autosaveKey = useMemo(
     () =>
@@ -66,6 +66,28 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
       window.localStorage.removeItem(autosaveKey)
     }
   }, [autosaveKey, initialValues])
+
+  // Carga de categorías
+  useEffect(() => {
+    let isMounted = true
+
+    const load = async () => {
+      try {
+        const rows = await getBlogCategories()
+        if (isMounted) setCategories(rows)
+      } catch {
+        // luego manejamos error pe
+      } finally {
+        if (isMounted) setIsLoadingCategories(false)
+      }
+    }
+
+    void load()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   // retorno mínimo para no romper nada
   return {
