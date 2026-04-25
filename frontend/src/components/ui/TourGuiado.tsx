@@ -40,6 +40,13 @@ const TOUR_STEPS = [
     required: true,
   },
   {
+    id: "tour-buscador",
+    title: "Buscador de propiedades",
+    description:
+      "Filtra por tipo de operación (Venta, Alquiler o Anticrético), elige el tipo de inmueble y escribe una ubicación para encontrar la propiedad ideal.",
+    required: true,
+  },
+  {
     id: "tour-notificaciones",
     title: "Notificaciones",
     description: "Aquí aparecerán tus alertas y novedades importantes.",
@@ -77,7 +84,7 @@ const TOUR_STEPS = [
   },
 ];
 
-const FOOTER_STEP_INDEX = 8;
+const FOOTER_STEP_INDEX = 9;
 
 // ✅ Helpers para saber si el usuario está logueado
 const isLoggedIn = () => {
