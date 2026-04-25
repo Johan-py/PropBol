@@ -1,151 +1,68 @@
-"use client";
-
-import { Trash2, Edit3 } from "lucide-react";
-import Image from "next/image";
-
-type EstadoBlog = "BORRADOR" | "PENDIENTE" | "PUBLICADO" | "RECHAZADO";
-
-type UserBlog = {
-  id: number;
-  titulo: string;
-  imagen: string | null;
-  estado: EstadoBlog;
-  fecha_creacion: string | null;
-  fecha_publicacion: string | null;
-};
+import React from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { Blog } from '@/types/blog'
+import { Trash2, Edit3 } from 'lucide-react'
 
 interface UserBlogCardProps {
-  blog: UserBlog;
-  imageSrc: string;
-  onView: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
+  blog: Blog
 }
 
-export default function UserBlogCard({
-  blog,
-  imageSrc,
-  onView,
-  onEdit,
-  onDelete,
-}: UserBlogCardProps) {
-  const isEditable = blog.estado === "BORRADOR" || blog.estado === "RECHAZADO";
+const UserBlogCard: React.FC<UserBlogCardProps> = ({ blog }) => {
+  const isEditable = blog.estado === 'Borrador' || blog.estado === 'Rechazado'
 
   return (
-    <article
-      onClick={onView}
-      className="group cursor-pointer overflow-hidden rounded-[22px] border border-[#E8DED0] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
-    >
-      {/* Imagen */}
-      <div className="relative h-56 bg-[#E5E0DA]">
+    <div className="flex items-center gap-4 p-4 bg-white border border-gray-100 rounded-xl shadow-sm">
+      {/* 1. Imagen Miniatura (HU7) */}
+      <div className="relative w-24 h-20 overflow-hidden rounded-lg flex-shrink-0 bg-gray-100">
         <Image
-          src={imageSrc}
+          src={blog.imagenUrl || '/placeholder-house.jpg'}
           alt={blog.titulo}
           fill
-          unoptimized
-          className="object-cover transition duration-300 group-hover:scale-105"
+          className="object-cover"
         />
-
-        <span
-          className={`absolute left-4 top-4 rounded-full px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.12em] ${getEstadoBadgeClass(
-            blog.estado
-          )}`}
-        >
-          {getEstadoLabel(blog.estado)}
-        </span>
       </div>
 
-      {/* Contenido */}
-      <div className="p-6">
-        <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-[#9A8F84]">
-          {getFechaVisible(blog)}
-        </p>
+      {/* 2. Contenido de la Card */}
+      <div className="flex-1 min-w-0">
+        <div className="flex justify-between items-start">
+          {/* Título y Fecha (HU7) */}
+          <div className="flex flex-col">
+            <h3 className="text-sm font-bold text-gray-800 line-clamp-1">{blog.titulo}</h3>
+            <span className="text-[10px] text-gray-400 font-medium mt-1">{blog.fecha}</span>
+          </div>
 
-        <h3 className="mb-8 line-clamp-2 min-h-[64px] text-2xl font-semibold leading-tight text-[#1F1F1F] transition group-hover:text-[#D97706]">
-          {blog.titulo}
-        </h3>
-
-        <div className="flex items-center justify-between border-t border-[#EEE6DC] pt-4">
-          {isEditable ? (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit();
-              }}
-              className="flex items-center gap-1 text-xs font-bold text-[#3F3F3F] transition hover:text-[#B47A00]"
-            >
-              <Edit3 size={14} />
-              {blog.estado === "BORRADOR" ? "Continuar" : "Editar"}
-            </button>
-          ) : (
-            <span className="flex items-center gap-1 text-xs font-bold text-gray-300">
-              <Edit3 size={14} />
-              Editar
-            </span>
-          )}
-
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
-            }}
-            className="flex items-center gap-1 text-xs font-bold text-red-400 transition hover:text-red-600"
-          >
-            <Trash2 size={14} />
-            Eliminar
+          {/* Icono de eliminar (HU11) */}
+          <button className="text-red-400 hover:text-red-600 transition-colors ml-2">
+            <Trash2 size={16} />
           </button>
         </div>
+
+        <div className="flex items-center justify-between mt-3">
+          {/* 3. Etiqueta de Estado (HU7 / HU11) */}
+          <span className="text-[10px] px-2 py-0.5 rounded-full font-bold border border-gray-200 bg-gray-50 text-gray-500 uppercase">
+            {blog.estado}
+          </span>
+
+          {/* Botón Editar (HU11) */}
+          {isEditable ? (
+            <Link
+              href={`/blog/${blog.id}/edit`}
+              className="flex items-center gap-1 text-blue-500 hover:text-blue-700 transition-colors"
+            >
+              <Edit3 size={14} />
+              <span className="text-xs font-semibold uppercase">Editar</span>
+            </Link>
+          ) : (
+            <span className="flex items-center gap-1 text-gray-300">
+              <Edit3 size={14} />
+              <span className="text-xs font-semibold uppercase">Editar</span>
+            </span>
+          )}
+        </div>
       </div>
-    </article>
-  );
+    </div>
+  )
 }
 
-function getEstadoLabel(estado: EstadoBlog) {
-  switch (estado) {
-    case "PUBLICADO":
-      return "Aprobado";
-    case "PENDIENTE":
-      return "Pendiente";
-    case "RECHAZADO":
-      return "Rechazado";
-    case "BORRADOR":
-      return "Borrador";
-    default:
-      return estado;
-  }
-}
-
-function getEstadoBadgeClass(estado: EstadoBlog) {
-  switch (estado) {
-    case "PUBLICADO":
-      return "bg-[#E8F7EE] text-[#198754] border border-[#BFE8CD]";
-    case "PENDIENTE":
-      return "bg-[#EAF2FF] text-[#2563EB] border border-[#C7DDFE]";
-    case "RECHAZADO":
-      return "bg-[#FDECEC] text-[#D94848] border border-[#F3BABA]";
-    case "BORRADOR":
-      return "bg-[#F1F2F4] text-[#596270] border border-[#D9DEE5]";
-    default:
-      return "bg-gray-100 text-gray-700 border border-gray-200";
-  }
-}
-
-function getFechaVisible(blog: UserBlog) {
-  const fecha =
-    blog.estado === "PUBLICADO" && blog.fecha_publicacion
-      ? blog.fecha_publicacion
-      : blog.fecha_creacion;
-
-  if (!fecha) return "Sin fecha";
-
-  return new Date(fecha)
-    .toLocaleDateString("es-BO", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    })
-    .replace(".", "")
-    .toUpperCase();
-}
+export default UserBlogCard

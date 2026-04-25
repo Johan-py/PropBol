@@ -44,7 +44,10 @@ export default function MisBlogsPage() {
       },
     })
       .then((res) => res.json())
-      .then((data) => setBlogs(Array.isArray(data) ? data : []))
+      .then((data) => {
+        const lista = Array.isArray(data) ? data : data.blogs || data.data || [];
+        setBlogs(lista);
+      })
       .finally(() => setLoading(false));
   }, [router]);
 
@@ -208,15 +211,19 @@ export default function MisBlogsPage() {
                   </h2>
 
                   <div className="flex justify-between items-center border-t border-[#EEE6DC] pt-4">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        router.push(`/blog/${blog.id}/edit`);
-                      }}
-                      className="text-xs font-bold text-[#3F3F3F] hover:text-[#B47A00] transition"
-                    >
-                      ✎ {blog.estado === "BORRADOR" ? "Continuar" : "Editar"}
-                    </button>
+                    {blog.estado === "BORRADOR" || blog.estado === "RECHAZADO" ? (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(`/blog/${blog.id}/edit`);
+                        }}
+                        className="text-xs font-bold text-[#3F3F3F] hover:text-[#B47A00] transition"
+                      >
+                        ✎ {blog.estado === "BORRADOR" ? "Continuar" : "Editar"}
+                      </button>
+                    ) : (
+                      <span className="text-xs font-bold text-gray-300">✎ Editar</span>
+                    )}
 
                     <button
                       onClick={(e) => {
