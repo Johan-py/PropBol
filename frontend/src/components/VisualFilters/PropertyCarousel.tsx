@@ -56,11 +56,19 @@ export default function PropertyCarousel({
     venta: "VENTA",
   };
 
+  const modo = modoMap[category];
   const params = new URLSearchParams({
-    modoInmueble: modoMap[category],
-    // Cambia 'query' por 'ciudad' si así lo configuraron tus compañeros
-    ciudad: filterParam, 
+    modoInmueble: modo,
+    query: filterParam, 
   });
+
+  const currentFilters = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}');
+  sessionStorage.setItem('propbol_global_filters', JSON.stringify({
+    ...currentFilters,
+    modoInmueble: [modo],
+    query: filterParam,
+    updatedAt: new Date().toISOString()
+  }));
 
   router.push(`/busqueda_mapa?${params.toString()}`);
 };
