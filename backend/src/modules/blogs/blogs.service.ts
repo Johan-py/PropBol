@@ -126,8 +126,16 @@ export const comentariosService = {
     return comentariosRepository.create(data);
   },
 
-  async listarPorBlog(blog_id: number) {
-    return comentariosRepository.findByBlogId(blog_id);
+  async listarPorBlog(blog_id: number, usuario_id?: number, page: number = 1, limit: number = 10) {
+    return comentariosRepository.findByBlogId({ blog_id, usuario_id, page, limit });
+  },
+
+  async actualizar(id: number, usuario_id: number, data: { contenido: string }) {
+    const comentario = await comentariosRepository.findById(id);
+    if (!comentario) throw new Error("COMENTARIO_NOT_FOUND");
+    if (comentario.usuario_id !== usuario_id) throw new Error("FORBIDDEN");
+
+    return comentariosRepository.update(id, data);
   },
 
   async toggleLike(usuario_id: number, comentario_id: number) {
