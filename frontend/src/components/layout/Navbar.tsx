@@ -536,7 +536,9 @@ export default function Navbar() {
                                       void markAsRead(notification.id);
                                     }
                                     toggleNotifications();
-                                    router.push(`/notificaciones/${notification.id}`);
+                                    router.push(
+                                      `/notificaciones/${notification.id}`,
+                                    );
                                   }}
                                   className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
                                     notification.status === "no leida"

@@ -17,24 +17,28 @@ const TOUR_STEPS = [
   },
   {
     id: "tour-propiedades",
+    mobileId: "tour-propiedades-mobile",
     title: "Propiedades",
     description: "Explora casas, departamentos, terrenos y más.",
     required: true,
   },
   {
     id: "tour-blogs",
+    mobileId: "tour-blogs-mobile",
     title: "Blogs",
     description: "Lee artículos y consejos sobre el mercado inmobiliario.",
     required: true,
   },
   {
     id: "tour-planes",
+    mobileId: "tour-planes-mobile",
     title: "Planes de membresía",
     description: "Conoce nuestros planes y beneficios para publicar tu inmueble.",
     required: true,
   },
   {
     id: "tour-ayuda",
+    mobileId: "tour-ayuda-mobile",
     title: "Ayuda",
     description: "Vuelve a ver este tour cuando quieras desde aquí.",
     required: true,
@@ -98,74 +102,32 @@ const TOUR_STEPS = [
   },
 ];
 
-const FOOTER_STEP_INDEX = 8;
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+const FOOTER_STEP_INDEX = 11;
 
-const getToken = (): string | null => {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem("token");
-};
-
-// ✅ Lee de localStorage — sin llamada de red, instantáneo
-const checkControladorYMostrar = (
-  setShowTour: (v: boolean) => void,
-  isManualRef: React.MutableRefObject<boolean>
-) => {
-  const token = getToken();
-  if (!token) return;
-  const controlador = localStorage.getItem("controlador");
-  console.log("[Tour] controlador desde localStorage:", controlador);
-  if (controlador === "false" || controlador === null) {
-    console.log("[Tour] mostrando tour...");
-    isManualRef.current = false;
-    setShowTour(true);
-  } else {
-    console.log("[Tour] controlador es true, no se muestra el tour");
-  }
-};
-
-const marcarControlador = async () => {
-  const token = getToken();
-  if (!token) return;
-  try {
-    await fetch("http://localhost:5000/api/auth/marcar-controlador",  {
-      method: "PATCH",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    // ✅ Actualizar localStorage también para que no vuelva a aparecer
-    localStorage.setItem("controlador", "true");
-  } catch {
-    // silencioso
-  }
+// ✅ Helpers para saber si el usuario está logueado
+const isLoggedIn = () => {
+  if (typeof window === "undefined") return false;
+  return !!localStorage.getItem("token");
 };
 
 export default function TourGuiado() {
   const [showTour, setShowTour] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [highlight, setHighlight] = useState<DOMRect | null>(null);
-  const isManualRef = useRef(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const retryRef = useRef<NodeJS.Timeout | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [tooltipH, setTooltipH] = useState(180);
 
-  // Al montar: chequeo instantáneo desde localStorage
+  // ✅ Decidir si mostrar el tour al montar
   useEffect(() => {
-    checkControladorYMostrar(setShowTour, isManualRef);
+    if (isLoggedIn()) {
+      setShowTour(true);
+    }
+    // Si no está logueado, no se muestra — salvo que lo active el botón Ayuda
   }, []);
 
-  // Escucha cuando el token se guarda (login/registro exitoso)
-  useEffect(() => {
-    const handleTokenGuardado = () => {
-      console.log("[Tour] evento propbol:token-guardado recibido");
-      checkControladorYMostrar(setShowTour, isManualRef);
-    };
-    window.addEventListener("propbol:token-guardado", handleTokenGuardado);
-    return () =>
-      window.removeEventListener("propbol:token-guardado", handleTokenGuardado);
-  }, []);
-
-  // Bloquear scroll al abrir
+  // 🔒 Bloquear scroll + ir al inicio
   useEffect(() => {
     if (showTour) {
       document.body.style.overflow = "hidden";
@@ -176,7 +138,7 @@ export default function TourGuiado() {
     }
   }, [showTour]);
 
-  // Navegación por teclado
+  // ⌨️ Navegación por teclado
   useEffect(() => {
     if (!showTour) return;
     const handleKey = (e: KeyboardEvent) => {
@@ -187,18 +149,17 @@ export default function TourGuiado() {
       if (e.key === "ArrowRight") {
         if (currentStep < TOUR_STEPS.length - 1)
           setCurrentStep((prev) => prev + 1);
-        else handleFinish();
+        else setShowTour(false);
       }
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [showTour, currentStep]);
 
-  // Activación manual desde el botón Ayuda
+  // 🔁 Reactivación manual desde el botón Ayuda
+  // ✅ Funciona para usuarios logueados Y no logueados
   useEffect(() => {
     const handleIniciarTour = () => {
-      console.log("[Tour] activado manualmente desde botón Ayuda");
-      isManualRef.current = true;
       setHighlight(null);
       setCurrentStep(0);
       setShowTour(true);
@@ -208,15 +169,36 @@ export default function TourGuiado() {
       window.removeEventListener("propbol:iniciar-tour", handleIniciarTour);
   }, []);
 
-  // Medir altura del tooltip
+  // 📐 Medir altura del tooltip
   useEffect(() => {
     if (!showTour) return;
 
     const measure = () => {
-      if (tooltipRef.current) setTooltipH(tooltipRef.current.offsetHeight);
+      if (tooltipRef.current) {
+        setTooltipH(tooltipRef.current.offsetHeight);
+      }
       const step = TOUR_STEPS[currentStep];
-      const el = document.getElementById(step.id);
-      if (el) setHighlight(el.getBoundingClientRect());
+      const isMobileNav =
+        (window.visualViewport?.width ?? window.innerWidth) < 768;
+      const mobileId =
+        "mobileId" in step
+          ? (step as typeof step & { mobileId: string }).mobileId
+          : undefined;
+      const id = isMobileNav && mobileId ? mobileId : step.id;
+      const el = document.getElementById(id);
+      if (el) {
+        const rect = el.getBoundingClientRect();
+        const vh = window.visualViewport?.height ?? window.innerHeight;
+        // Solo actualiza si el elemento ya está visible en el viewport
+        if (
+          rect.width > 0 &&
+          rect.height > 0 &&
+          rect.top < vh &&
+          rect.bottom > 0
+        ) {
+          setHighlight(rect);
+        }
+      }
     };
 
     measure();
@@ -238,24 +220,53 @@ export default function TourGuiado() {
 
   const applyHighlight = (el: HTMLElement) => {
     const isFooter = currentStep >= FOOTER_STEP_INDEX;
-    el.scrollIntoView({ behavior: "auto", block: isFooter ? "start" : "center" });
 
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => {
+
+    if (isFooter) {
+      document.body.style.overflow = "";
+      // Esperar un frame para que el browser procese el overflow antes de scrollear
       requestAnimationFrame(() => {
+        el.scrollIntoView({ behavior: "auto", block: "start" });
         requestAnimationFrame(() => {
-          setHighlight(el.getBoundingClientRect());
+          requestAnimationFrame(() => {
+            setHighlight(el.getBoundingClientRect());
+            document.body.style.overflow = "hidden";
+          });
         });
       });
-    }, 50);
+    } else {
+      el.scrollIntoView({ behavior: "auto", block: "center" });
+      timeoutRef.current = setTimeout(() => {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            setHighlight(el.getBoundingClientRect());
+          });
+        });
+      }, 50);
+    }
   };
 
-  // Búsqueda del elemento con reintentos
+  // Búsqueda del elemento con reintentos y manejo de menú móvil
   useEffect(() => {
     if (!showTour) return;
 
     const step = TOUR_STEPS[currentStep];
-    const id = step.id;
+    const isMobileNav =
+      (window.visualViewport?.width ?? window.innerWidth) < 768;
+    const mobileId =
+      "mobileId" in step
+        ? (step as typeof step & { mobileId: string }).mobileId
+        : undefined;
+    const needsMobileMenu = isMobileNav && !!mobileId;
+    const id = needsMobileMenu ? mobileId! : step.id;
+
+    if (needsMobileMenu) {
+      window.dispatchEvent(new Event("propbol:abrir-menu-movil"));
+    } else if (isMobileNav) {
+      window.dispatchEvent(new Event("propbol:cerrar-menu-movil"));
+    }
+
     let attempts = 0;
     const maxAttempts = 10;
 
@@ -272,7 +283,7 @@ export default function TourGuiado() {
           if (step.required === false) {
             setCurrentStep((prev) => prev + 1);
           } else {
-            console.warn(`[Tour] Elemento ${id} no encontrado`);
+            console.warn(`Elemento ${id} no encontrado`);
           }
           setHighlight(null);
         }
@@ -286,23 +297,18 @@ export default function TourGuiado() {
     };
   }, [currentStep, showTour]);
 
-  const closeTour = async () => {
-    setShowTour(false);
-    if (!isManualRef.current) {
-      console.log("[Tour] marcando controlador como visto en BD...");
-      await marcarControlador();
-    }
-  };
-
-  const handleFinish = () => closeTour();
-  const handleSkip = () => closeTour();
-
   const handleNext = () => {
     if (currentStep < TOUR_STEPS.length - 1) {
       setCurrentStep((prev) => prev + 1);
     } else {
-      handleFinish();
+      window.dispatchEvent(new Event("propbol:cerrar-menu-movil"));
+      setShowTour(false);
     }
+  };
+
+  const handleSkip = () => {
+    window.dispatchEvent(new Event("propbol:cerrar-menu-movil"));
+    setShowTour(false);
   };
 
   if (!showTour) return null;
@@ -315,8 +321,17 @@ export default function TourGuiado() {
   const vOffsetTop = window.visualViewport?.offsetTop ?? 0;
   const vOffsetLeft = window.visualViewport?.offsetLeft ?? 0;
 
-  let top = vOffsetTop + vh / 2 - tooltipH / 2;
-  let left = vOffsetLeft + vw / 2 - 150;
+  const tooltipW = Math.min(300, vw - 24);
+  const isMobile = vw < 480;
+  const tooltipPad = isMobile ? "12px" : "16px";
+  const fontTitle = isMobile ? 13 : 14;
+  const fontDesc = isMobile ? 12 : 13;
+  const fontMeta = isMobile ? 10 : 11;
+  const fontBtn = isMobile ? 12 : 13;
+  const fontSkip = isMobile ? 11 : 12;
+
+  let top = vOffsetTop + 80;
+  let left = vOffsetLeft + (vw - tooltipW) / 2;
 
   if (hasValid) {
     const H = tooltipH;
@@ -332,14 +347,32 @@ export default function TourGuiado() {
     top = Math.max(vOffsetTop + 10, Math.min(top, vOffsetTop + vh - H - 10));
     left = Math.max(
       vOffsetLeft + 12,
-      Math.min(highlight.left + highlight.width / 2 - 150, vOffsetLeft + vw - 312)
+      Math.min(
+        highlight.left + highlight.width / 2 - tooltipW / 2,
+        vOffsetLeft + vw - tooltipW - 12,
+      ),
     );
   }
 
   return (
     <>
-      <div style={{ position: "fixed", inset: 0, zIndex: 9998, pointerEvents: "all" }}>
-        <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
+      {/* Overlay oscuro con recorte */}
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: 9998,
+          pointerEvents: "all",
+        }}
+      >
+        <svg
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+          }}
+        >
           <defs>
             <mask id="tm">
               <rect width="100%" height="100%" fill="white" />
@@ -355,21 +388,27 @@ export default function TourGuiado() {
               )}
             </mask>
           </defs>
-          <rect width="100%" height="100%" fill="rgba(0,0,0,0.75)" mask="url(#tm)" />
+          <rect
+            width="100%"
+            height="100%"
+            fill="rgba(0,0,0,0.75)"
+            mask="url(#tm)"
+          />
         </svg>
       </div>
 
+      {/* Tooltip siempre renderizado — solo se oculta con opacity */}
       <div
         ref={tooltipRef}
         style={{
           position: "fixed",
           top,
           left,
-          width: 300,
+          width: tooltipW,
           zIndex: 9999,
           background: "#fff",
           borderRadius: 12,
-          padding: "16px",
+          padding: tooltipPad,
           boxShadow: "0 8px 32px rgba(0,0,0,0.18)",
           opacity: hasValid ? 1 : 0,
           pointerEvents: hasValid ? "all" : "none",
@@ -378,6 +417,7 @@ export default function TourGuiado() {
           overflowY: "auto",
         }}
       >
+        {/* Barras de progreso */}
         <div style={{ display: "flex", gap: 4, marginBottom: 10 }}>
           {TOUR_STEPS.map((_, i) => (
             <span
@@ -392,17 +432,45 @@ export default function TourGuiado() {
           ))}
         </div>
 
-        <p style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }}>
+        <p style={{ fontWeight: 700, fontSize: fontTitle, marginBottom: 4 }}>
           {TOUR_STEPS[currentStep].title}
         </p>
-        <p style={{ fontSize: 13, marginBottom: 14 }}>
+
+        <p style={{ fontSize: fontDesc, color: "#374151", marginBottom: !hasValid ? 8 : 14 }}>
           {TOUR_STEPS[currentStep].description}
         </p>
 
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        {!hasValid && (
+          <p
+            style={{
+              fontSize: fontMeta,
+              color: "#9ca3af",
+              marginBottom: 14,
+              fontStyle: "italic",
+            }}
+          >
+            Esta sección no está visible en tu dispositivo actual.
+          </p>
+        )}
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <button
             onClick={handleSkip}
-            style={{ fontSize: 12, color: "#9ca3af", background: "none", border: "none", cursor: "pointer" }}
+            style={{
+              fontSize: fontSkip,
+              color: "#9ca3af",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              minHeight: 44,
+              padding: "0 4px",
+            }}
           >
             Saltar tour
           </button>
@@ -416,15 +484,17 @@ export default function TourGuiado() {
                   color: "#E68B25",
                   border: "1px solid #E68B25",
                   borderRadius: 8,
-                  padding: "8px 14px",
-                  fontSize: 13,
+                  padding: isMobile ? "8px 12px" : "10px 18px",
+                  fontSize: fontBtn,
                   fontWeight: 600,
                   cursor: "pointer",
+                  minHeight: 44,
                 }}
               >
                 ← Anterior
               </button>
             )}
+
             <button
               onClick={handleNext}
               style={{
@@ -433,9 +503,10 @@ export default function TourGuiado() {
                 border: "none",
                 borderRadius: 8,
                 padding: "8px 18px",
-                fontSize: 13,
+                fontSize: fontBtn,
                 fontWeight: 600,
                 cursor: "pointer",
+                minHeight: 44,
               }}
             >
               {currentStep < TOUR_STEPS.length - 1 ? "Siguiente →" : "Finalizar"}
