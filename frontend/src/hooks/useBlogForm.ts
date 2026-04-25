@@ -1,17 +1,10 @@
 'use client'
 
-/*import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import {
-  getBlogCategories,
-  uploadBlogImage,
-  createBlog,
-  updateBlog,
-  BlogCategoryOption,
-  BlogCreationAction
-} from "@/services/blogs.service";*/
+import { useMemo, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { BlogCategoryOption } from '@/services/blogs.service'
 
-//const AUTOSAVE_STORAGE_PREFIX = "propbol_blog_form";
+const AUTOSAVE_STORAGE_PREFIX = 'propbol_blog_form'
 
 export type FieldErrors = {
   categoria_id?: string
@@ -34,3 +27,42 @@ export interface UseBlogFormProps {
 }
 
 export const INITIAL_ERRORS: FieldErrors = {}
+
+export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
+  const router = useRouter()
+  const _hasHydratedDraft = useRef(false)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  const [titulo, setTitulo] = useState(initialValues?.titulo ?? '')
+  const [imagen, setImagen] = useState(initialValues?.imagen ?? '')
+  const [categoriaId, setCategoriaId] = useState(initialValues?.categoriaId ?? '')
+  const [contenido, setContenido] = useState(initialValues?.contenido ?? '')
+
+  const [categories, _setCategories] = useState<BlogCategoryOption[]>([])
+  const [isLoadingCategories, _setIsLoadingCategories] = useState(true)
+
+  const autosaveKey = useMemo(
+    () =>
+      mode === 'edit' && blogId
+        ? `${AUTOSAVE_STORAGE_PREFIX}:edit:${blogId}`
+        : `${AUTOSAVE_STORAGE_PREFIX}:create`,
+    [blogId, mode]
+  )
+
+  // retorno mínimo para no romper nada
+  return {
+    titulo,
+    setTitulo,
+    imagen,
+    setImagen,
+    categoriaId,
+    setCategoriaId,
+    contenido,
+    setContenido,
+    categories,
+    isLoadingCategories,
+    textareaRef,
+    router,
+    autosaveKey
+  }
+}
