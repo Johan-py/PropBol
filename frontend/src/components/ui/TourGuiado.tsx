@@ -47,6 +47,13 @@ const TOUR_STEPS = [
     required: true,
   },
   {
+    id: "tour-filtros-visuales",
+    title: "Explora por ciudad y tipo",
+    description:
+      "Aquí puedes ver propiedades en alquiler o venta agrupadas por departamento, y también explorar por tipo de inmueble: casas, departamentos, oficinas y terrenos.",
+    required: true,
+  },
+  {
     id: "tour-publicar-home",
     title: "Publica tu inmueble",
     description:
@@ -91,7 +98,7 @@ const TOUR_STEPS = [
   },
 ];
 
-const FOOTER_STEP_INDEX = 10;
+const FOOTER_STEP_INDEX = 11;
 
 // ✅ Helpers para saber si el usuario está logueado
 const isLoggedIn = () => {
