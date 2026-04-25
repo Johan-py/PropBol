@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { BlogCategoryOption } from '@/services/blogs.service'
 
@@ -48,6 +48,24 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
         : `${AUTOSAVE_STORAGE_PREFIX}:create`,
     [blogId, mode]
   )
+  // Hidratación de borrador
+  useEffect(() => {
+    if (_hasHydratedDraft.current) return
+    _hasHydratedDraft.current = true
+
+    const rawDraft = window.localStorage.getItem(autosaveKey)
+    if (!rawDraft) return
+
+    try {
+      const draft = JSON.parse(rawDraft)
+      setTitulo(draft.titulo ?? initialValues?.titulo ?? '')
+      setImagen(draft.imagen ?? initialValues?.imagen ?? '')
+      setCategoriaId(draft.categoriaId ?? initialValues?.categoriaId ?? '')
+      setContenido(draft.contenido ?? initialValues?.contenido ?? '')
+    } catch {
+      window.localStorage.removeItem(autosaveKey)
+    }
+  }, [autosaveKey, initialValues])
 
   // retorno mínimo para no romper nada
   return {
