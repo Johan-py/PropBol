@@ -59,17 +59,18 @@ export default function PropertyTypeGrid({ items }: PropertyTypeGridProps) {
             terrenos: "TERRENO",
       };
       const tipo = tipoMap[item.key] ?? item.key.toUpperCase();
-      const modo = "VENTA";
-      const params = new URLSearchParams({
-         tipoInmueble: tipo,
-        modoInmueble: modo, 
-        });
+      
+      const modos = ["VENTA", "ALQUILER", "ANTICRETO"];
+
+      const params = new URLSearchParams();
+      params.set("tipoInmueble", tipo);
+      modos.forEach(m => params.append("modoInmueble", m));
 
       const currentFilters = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}');
       sessionStorage.setItem('propbol_global_filters', JSON.stringify({
         ...currentFilters,
         tipoInmueble: [tipo],
-        modoInmueble: [modo],
+        modoInmueble: modos,
         query: "",
         updatedAt: new Date().toISOString()
       }));
