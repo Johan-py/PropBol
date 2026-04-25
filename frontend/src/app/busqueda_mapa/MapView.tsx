@@ -439,6 +439,7 @@ export default function MapView({
         </Marker>
 
         <MarkerClusterGroup
+          key={activeClusterIds.join(',')}
           iconCreateFunction={(cluster: any) => {
             const markers = cluster.getAllChildMarkers()
             const ids = markers.map((m: any) => String(m.options.alt ?? '')).filter(Boolean)
