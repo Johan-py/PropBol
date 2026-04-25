@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState } from 'react'
 import { ComboBox } from '../ui/ComboBox'
@@ -10,7 +10,7 @@ import { useSearchFilters } from '@/hooks/useSearchFilters'
 const searchOptions = [
   { id: 'venta', name: 'Venta' },
   { id: 'alquiler', name: 'Alquiler' },
-  { id: 'anticreto', name: 'Anticrético' }
+  { id: 'anticreto', name: 'AnticrÃ©tico' }
 ]
 
 export default function ExploreSection() {
@@ -78,7 +78,6 @@ export default function ExploreSection() {
     if (location.trim() !== '') params.set('query', location.trim())
 
     const finalUrl = `/busqueda_mapa?${params.toString()}`
-    console.log('🚀 Navegando desde Home a:', finalUrl)
     router.push(finalUrl)
   }
 
@@ -89,7 +88,7 @@ export default function ExploreSection() {
         <div className="md:hidden">
           <div className="rounded-2xl bg-white p-4 shadow-xl border border-stone-100 flex flex-col gap-4">
             <ComboBox
-              label="Operación"
+              label="OperaciÃ³n"
               placeholder="Selecciona"
               options={searchOptions.map((opt) => ({
                 label: opt.name,
@@ -129,7 +128,7 @@ export default function ExploreSection() {
 
         {/*  DESKTOP  */}
         <div className="hidden md:block">
-          <div className="rounded-2xl bg-white p-6 shadow-xl border border-stone-100 flex flex-col gap-6">
+          <div id="tour-buscador" className="rounded-2xl bg-white p-6 shadow-xl border border-stone-100 flex flex-col gap-6">
             <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
               {searchOptions.map((option) => {
                 const isSelected = selectedOption.includes(option.id)
@@ -150,7 +149,7 @@ export default function ExploreSection() {
                         isSelected ? 'bg-amber-500 border-amber-500' : 'bg-white border-stone-300'
                       }`}
                     >
-                      {isSelected && <span className="text-white text-sm font-bold">✓</span>}
+                      {isSelected && <span className="text-white text-sm font-bold">âœ“</span>}
                     </div>
                     <span
                       className={`font-semibold font-montserrat text-lg transition-colors ${
@@ -201,3 +200,4 @@ export default function ExploreSection() {
     </section>
   )
 }
+

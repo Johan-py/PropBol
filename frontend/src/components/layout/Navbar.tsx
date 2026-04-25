@@ -347,7 +347,7 @@ export default function Navbar() {
   return (
     <>
       <nav className="sticky top-0 z-[9999] w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
-        <div className="container mx-auto px-4 py-1.5">
+        <div className="mx-auto max-w-[1440px] px-4 py-1.5 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
               <Logo />
@@ -356,6 +356,7 @@ export default function Navbar() {
 
             <div className="flex items-center gap-4">
               <Link
+                id="tour-publicar-home"
                 href="/registro-inmueble"
                 className="hidden md:block rounded-md bg-[#E68B25] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-amber-700"
               >
@@ -474,13 +475,13 @@ export default function Navbar() {
                           aria-live="polite"
                           className="max-h-[60vh] overflow-y-auto sm:max-h-80"
                           onScroll={(e) => {
-                            const target = e.currentTarget;
+                            const target = e.currentTarget
+                            saveScrollPosition(target.scrollTop)
+
                             const reachedBottom =
-                              target.scrollTop + target.clientHeight >=
-                              target.scrollHeight - 20;
+                              target.scrollTop + target.clientHeight >= target.scrollHeight - 20
                             if (reachedBottom && hasMore && !isLoadingMore) {
-                              saveScrollPosition(target.scrollTop);
-                              void loadMoreNotifications();
+                              void loadMoreNotifications()
                             }
                           }}
                         >

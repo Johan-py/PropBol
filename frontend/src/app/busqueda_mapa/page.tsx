@@ -605,8 +605,8 @@ function BusquedaMapaContent() {
       ) : (
         <div
           className={`gap-3 flex flex-col ${viewMode === 'list'
-              ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-              : ''
+            ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
+            : ''
             }`}
         >
           {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
@@ -621,7 +621,7 @@ function BusquedaMapaContent() {
 
                 // HU4 - Abre el detalle en una nueva pestaña
                 abrirDetallePropiedad(property.id)
-            }}
+              }}
               className={`cursor-pointer transition-all duration-200 rounded-xl ${selectedPropertyId === property.id ? 'ring-2 ring-orange-400 ring-offset-1' : ''
                 }`}
             >
@@ -1016,13 +1016,19 @@ function BusquedaMapaContent() {
                 setIsCapacidadOpen(false)
                 setActiveSidebarView('results')
               }}
-              onApply={(dormitoriosMin, dormitoriosMax, banosMin, banosMax) => {
-                console.log('Filtros capacidad:', { dormitoriosMin, dormitoriosMax, banosMin, banosMax })
+              onApply={(dormitoriosMin, dormitoriosMax, banosMin, banosMax, tipoBano) => {
+                const params = new URLSearchParams(searchParams.toString())
+                params.set('dormitoriosMin', dormitoriosMin.toString())
+                params.set('dormitoriosMax', dormitoriosMax.toString())
+                params.set('banosMin', banosMin.toString())
+                params.set('banosMax', banosMax.toString())
+                params.set('tipoBano', tipoBano)
+                router.push(`/busqueda_mapa?${params.toString()}`)
                 setIsCapacidadOpen(false)
                 setActiveSidebarView('results')
               }}
-          /> 
-        ) :
+            />
+          ) :
             isSidebarOpen && activeSidebarView === 'results' ? (
               <div className="flex flex-col h-full min-h-0">
                 <div className="p-4 bg-white shrink-0">
@@ -1123,8 +1129,8 @@ function BusquedaMapaContent() {
                     ) : (
                       <div
                         className={`gap-4 flex flex-col ${viewMode === 'list'
-                            ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-                            : ''
+                          ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
+                          : ''
                           }`}
                       >
                         {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
@@ -1140,8 +1146,8 @@ function BusquedaMapaContent() {
                               abrirDetallePropiedad(property.id)
                             }}
                             className={`cursor-pointer transition-all duration-200 rounded-xl relative ${viewMode === 'grid'
-                                ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
-                                : 'w-full py-1 hover:bg-stone-100'
+                              ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
+                              : 'w-full py-1 hover:bg-stone-100'
                               } ${selectedPropertyId === property.id
                                 ? 'ring-2 ring-orange-400 ring-offset-1 z-10'
                                 : ''
