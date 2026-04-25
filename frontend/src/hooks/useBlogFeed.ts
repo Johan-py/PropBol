@@ -1,8 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { BLOG_FILTERS } from '@/lib/mock/publicBlogs.mock'
-import { getPublishedBlogs } from '@/services/blogs.service'
+import { getPublishedBlogs, getBlogCategories } from '@/services/blogs.service'
 import { BlogCategory, PublicBlogCard } from '@/types/publicBlog'
 
 const INITIAL_VISIBLE_CARDS = 3
@@ -19,23 +18,28 @@ const orderBlogs = (blogs: PublicBlogCard[]) => {
 
 export const useBlogFeed = () => {
   const [blogs, setBlogs] = useState<PublicBlogCard[]>([])
+  const [categories, setCategories] = useState<string[]>([])
   const [activeCategory, setActiveCategory] = useState<BlogCategory | null>(null)
   const [visibleCards, setVisibleCards] = useState(INITIAL_VISIBLE_CARDS)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const fetchBlogs = async () => {
+    const fetchData = async () => {
       setIsLoading(true)
       try {
-        const data = await getPublishedBlogs(50) // Ajustar limite según necesidad
-        setBlogs(orderBlogs(data))
+        const [blogsData, categoriesData] = await Promise.all([
+          getPublishedBlogs(50),
+          getBlogCategories()
+        ])
+        setBlogs(orderBlogs(blogsData))
+        setCategories(categoriesData.map((c) => c.nombre))
       } catch (error) {
-        console.error('Error fetching blogs for feed:', error)
+        console.error('Error fetching data for blog feed:', error)
       } finally {
         setIsLoading(false)
       }
     }
-    fetchBlogs()
+    fetchData()
   }, [])
 
   const filteredBlogs = blogs.filter((blog) =>
@@ -50,13 +54,17 @@ export const useBlogFeed = () => {
     setVisibleCards(INITIAL_VISIBLE_CARDS)
   }, [activeCategory])
 
-  const toggleCategory = (category: BlogCategory) => {
+  const toggleCategory = (category: BlogCategory | null) => {
+    if (category === null) {
+      setActiveCategory(null)
+      return
+    }
     setActiveCategory((currentCategory) => (currentCategory === category ? null : category))
   }
 
   return {
     activeCategory,
-    categories: BLOG_FILTERS,
+    categories,
     featuredBlog,
     secondaryBlogs,
     canLoadMore,
