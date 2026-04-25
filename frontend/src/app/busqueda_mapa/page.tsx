@@ -839,6 +839,7 @@ function BusquedaMapaContent() {
                 }
               }}
               onClusterClick={handleClusterClick}
+              onClusterDissolve={() => { setIsClusterView(false); setActiveClusterIds([]); setClusterProperties([]) }}
               activeClusterIds={activeClusterIds}
             />
           </div>
@@ -1336,6 +1337,7 @@ function BusquedaMapaContent() {
               selectedId={selectedPropertyId}
               onSelect={handleMapSelect}
               onClusterClick={handleClusterClick}
+              onClusterDissolve={() => { setIsClusterView(false); setActiveClusterIds([]); setClusterProperties([]) }}
               activeClusterIds={activeClusterIds}
               isLoading={isLoading}
               error={error}
