@@ -30,11 +30,12 @@ export default function MapaListadoPaginacion({
   const showPaginationControls = !disabled && totalPages > 1;
 
   const visiblePages = useMemo(() => {
-  if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
+    if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
 
     if (safePage <= 4) return [1, 2, 3, 4, 5, "...", totalPages];
-    if (safePage >= totalPages - 3) return [1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
-    
+    if (safePage >= totalPages - 3)
+      return [1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+
     return [1, "...", safePage - 1, safePage, safePage + 1, "...", totalPages];
   }, [safePage, totalPages]);
 
@@ -51,9 +52,12 @@ export default function MapaListadoPaginacion({
 
             value={pageSize}
             disabled={disabled}
-            onChange={(e) =>
-              onPageSizeChange(Number(e.target.value) as (typeof PAGE_SIZE_OPTIONS)[number])
-            }
+            onChange={(e) => {
+              const v = Number(e.target.value);
+              if ((PAGE_SIZE_OPTIONS as readonly number[]).includes(v)) {
+                onPageSizeChange(v as PageSize);
+              }
+            }}
           >
             {PAGE_SIZE_OPTIONS.map((n) => (
               <option key={n} value={n}>
@@ -65,15 +69,16 @@ export default function MapaListadoPaginacion({
         </label>
         {showPaginationControls ? (
           <div className="flex items-center gap-1 shrink-0" aria-label="Paginación">
-            <button
-              type="button"
-              disabled={safePage <= 1}
-              onClick={() => onPageChange(safePage - 1)}
-              className="p-1.5 rounded-md border border-stone-200 bg-white disabled:opacity-40"
-              aria-label="Página anterior"
-            >
-              <ChevronLeft size={16} />
-            </button>
+            {safePage > 1 ? (
+              <button
+                type="button"
+                onClick={() => onPageChange(safePage - 1)}
+                className="p-1.5 rounded-md border border-stone-200 bg-white"
+                aria-label="Página anterior"
+              >
+                <ChevronLeft size={16} />
+              </button>
+            ) : null}
             <div className="flex items-center gap-1 justify-center no-scrollbar">
               {visiblePages.map((n, idx) => (
                 n === "..." ? (
@@ -94,15 +99,16 @@ export default function MapaListadoPaginacion({
                 )
               ))}
             </div>
-            <button
-              type="button"
-              disabled={safePage >= totalPages}
-              onClick={() => onPageChange(safePage + 1)}
-              className="p-1.5 rounded-md border border-stone-200 bg-white disabled:opacity-40"
-              aria-label="Página siguiente"
-            >
-              <ChevronRight size={16} />
-            </button>
+            {safePage < totalPages ? (
+              <button
+                type="button"
+                onClick={() => onPageChange(safePage + 1)}
+                className="p-1.5 rounded-md border border-stone-200 bg-white"
+                aria-label="Página siguiente"
+              >
+                <ChevronRight size={16} />
+              </button>
+            ) : null}
           </div>
         ) : null}
       </div>
