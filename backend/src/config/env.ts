@@ -23,11 +23,22 @@ export const env = {
   DISCORD_CALLBACK_URL:
     process.env.DISCORD_CALLBACK_URL ??
     "http://localhost:5000/api/auth/discord/callback",
+
+  FACEBOOK_CLIENT_ID: requireEnv("FACEBOOK_CLIENT_ID"),
+  FACEBOOK_CLIENT_SECRET: requireEnv("FACEBOOK_CLIENT_SECRET"),
+  FACEBOOK_CALLBACK_URL:
+    process.env.FACEBOOK_CALLBACK_URL ??
+    "http://localhost:5000/api/auth/facebook/callback",
+
   FRONTEND_URL: process.env.FRONTEND_URL ?? "http://localhost:3000",
   EMAIL_USER: requireEnv("EMAIL_USER"),
   EMAIL_PASSWORD:
     process.env.EMAIL_PASSWORD ??
     process.env.BREVO_API_KEY ??
     requireEnv("EMAIL_PASSWORD"),
+    
   ADMIN_EMAIL: process.env.ADMIN_EMAIL ?? requireEnv("ADMIN_EMAIL"),
+  EVOLUTION_API_URL: process.env.EVOLUTION_API_URL ?? "http://localhost:8080",
+  EVOLUTION_API_KEY: process.env.EVOLUTION_API_KEY ?? "",
+  EVOLUTION_INSTANCE: process.env.EVOLUTION_INSTANCE ?? "propbol",
 };

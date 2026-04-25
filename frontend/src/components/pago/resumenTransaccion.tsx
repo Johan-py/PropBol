@@ -1,5 +1,5 @@
 interface Props {
-  transaccion: any;
+  transaccion: any
 }
 
 export default function ResumenTransaccion({ transaccion }: Props) {

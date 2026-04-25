@@ -33,6 +33,11 @@ export class RecomendacionesService {
     const ultimasBusquedas = await this.repository.getUltimasBusquedas(usuarioId)
     const favoritos = await this.repository.getFavoritos(usuarioId)
 
+    console.log('usuarioId:', usuarioId)
+    console.log('historialVistas.length:', historialVistas.length)
+    console.log('favoritos.length:', favoritos.length)
+    console.log('zonaConexion:', zonaConexion)
+
     if (historialVistas.length === 0 && favoritos.length === 0) {
       const zonaAEvaluar = zonaForzada || zonaConexion
       if (zonaAEvaluar) {
@@ -122,4 +127,58 @@ export class RecomendacionesService {
     inmueblesConScore.sort((a, b) => b.score - a.score)
     return inmueblesConScore.slice(0, limit)
   }
+
+  async ordenarPorAfinidad(inmuebleIds: number[], usuarioId: number): Promise<InmuebleConScore[]> {
+  const historialVistas = await this.repository.getHistorialVistas(usuarioId)
+  const ultimasBusquedas = await this.repository.getUltimasBusquedas(usuarioId)
+  const favoritos = await this.repository.getFavoritos(usuarioId)
+
+  const inmuebles = await this.repository.getInmueblesPorIds(inmuebleIds)
+
+  if (historialVistas.length === 0 && favoritos.length === 0) {
+    return inmuebles.map(p => ({
+      id: p.id,
+      titulo: p.titulo,
+      precio: Number(p.precio),
+      superficieM2: p.superficieM2 ? Number(p.superficieM2) : null,
+      categoria: p.categoria ?? null,
+      ubicacion: p.ubicacion,
+      score: 0,
+      razones: ['Sin historial']
+    }))
+  }
+
+  const preferencias = this.scoreCalculator.extraerPreferencias(
+    historialVistas,
+    ultimasBusquedas,
+    favoritos
+  )
+
+  const resultado: InmuebleConScore[] = inmuebles.map(inmueble => {
+    const esSimilarAFavorito = favoritos.some(f =>
+      f.categoria === inmueble.categoria ||
+      f.ubicacion?.zona === inmueble.ubicacion?.zona
+    )
+
+    const { score, razones } = this.scoreCalculator.calcularScore(
+      inmueble,
+      preferencias,
+      esSimilarAFavorito
+    )
+
+    return {
+      id: inmueble.id,
+      titulo: inmueble.titulo,
+      precio: Number(inmueble.precio),
+      superficieM2: inmueble.superficieM2 ? Number(inmueble.superficieM2) : null,
+      categoria: inmueble.categoria ?? null,
+      ubicacion: inmueble.ubicacion,
+      score,
+      razones
+    }
+  })
+
+  resultado.sort((a, b) => b.score - a.score)
+  return resultado
+}
 }

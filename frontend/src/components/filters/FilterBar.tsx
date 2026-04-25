@@ -36,7 +36,8 @@ interface FilterBarProps {
   onOpenSuperficieFilter?: () => void
   isCapacidadActive?: boolean
   onToggleCapacidad?: () => void
-
+  isPriceFilterActive?: boolean   
+  isSuperficieFilterActive?: boolean
 }
 type LocationValue =
   | string
@@ -93,7 +94,7 @@ const trackSearchTelemetria = async (filtros: {
   }
 }
 
-export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad }: FilterBarProps) {
+export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad, isPriceFilterActive = false, isSuperficieFilterActive = false }: FilterBarProps) {
 
   const router = useRouter()
 
@@ -244,7 +245,19 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
         {variant === 'map' && (
           <div className="flex items-center gap-3 flex-1 overflow-visible pb-1">
             <div className="shrink-0">
-              <MockFilterBtn icon={DollarSign} text="Precio" onClick={onOpenPriceFilter} />
+              <button
+                type="button"
+                onClick={(e) => { e.preventDefault(); onOpenPriceFilter?.() }}
+                className={`h-[36px] flex items-center gap-2 px-3 rounded-xl shadow-sm transition-all text-sm whitespace-nowrap focus:outline-none border shrink-0 ${
+                  isPriceFilterActive
+                    ? 'bg-[#d97706] text-white border-[#d97706]'
+                    : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+                }`}
+              >
+                <DollarSign className={`w-4 h-4 ${isPriceFilterActive ? 'text-white' : 'text-stone-500'}`} />
+                <span>Precio</span>
+                <ChevronDown className={`w-4 h-4 ${isPriceFilterActive ? 'text-white' : 'text-stone-400'}`} />
+              </button>
             </div>
             <div className="shrink-0">
               <CapacidadButton
@@ -257,19 +270,48 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
               <button
                 type="button"
                 onClick={() => onOpenSuperficieFilter?.()}
-                className="h-[36px] flex items-center gap-2 px-3 rounded-xl shadow-sm transition-all text-sm whitespace-nowrap focus:outline-none border bg-white text-stone-600 border-stone-200 hover:border-stone-300"
+                className={`h-[36px] flex items-center gap-2 px-3 rounded-xl shadow-sm transition-all text-sm whitespace-nowrap focus:outline-none border shrink-0 ${
+                  isSuperficieFilterActive
+                    ? 'bg-[#d97706] text-white border-[#d97706]'
+                    : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+                }`}
               >
-                <Maximize className="w-4 h-4 text-stone-500" />
+                <Maximize className={`w-4 h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-500'}`} />
                 <span>Metros</span>
-                <ChevronDown className="w-4 h-4 text-stone-400" />
+                <ChevronDown className={`w-4 h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-400'}`} />
               </button>
             </div>
             <div className="shrink-0">
               <MockFilterBtn icon={SlidersHorizontal} text="Más Filtros" hasChevron={false} />
             </div>
             <div className="shrink-0">
-              <MockFilterBtn icon={Award} text="Recomendados" hasChevron={false} />
-            </div>
+  <button
+    type="button"
+    onClick={async () => {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+      const params = new URLSearchParams({ orden: 'recomendados' })
+      if (token) {
+        const res = await fetch(`/api/inmuebles/recomendados?${params}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        const data = await res.json()
+        console.log('Recomendados:', data)
+        if (data.success && data.data.length > 0) {
+  // Guardar recomendaciones en sessionStorage para que ResultadosBusqueda las lea
+           sessionStorage.setItem('recomendaciones_resultado', JSON.stringify(data.data))
+            router.push('/busqueda_mapa?orden=recomendados')
+}
+      } else {
+        // Usuario no logueado — redirigir a búsqueda general
+        router.push('/busqueda_mapa?orden=recomendados')
+      }
+    }}
+    className="h-[36px] flex items-center justify-between bg-white border border-stone-200 text-stone-600 px-3 rounded-xl shadow-sm hover:border-orange-400 hover:text-orange-500 transition-all font-inter text-sm whitespace-nowrap gap-2 shrink-0 focus:outline-none"
+  >
+    <Award className="w-4 h-4 text-stone-500" />
+    <span>Recomendados</span>
+  </button>
+</div>
           </div>
         )}
 

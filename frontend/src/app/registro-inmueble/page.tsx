@@ -1,8 +1,17 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 //import PlanModal from '../../components/ui/PlanModal'
+import dynamic from 'next/dynamic'
+import { ErrorValidacion, EstadoPublicacion } from "../../types/publicacion";
+import ErrorPanel from "../../components/publicacion/ErrorPanel";
+import PublicarModal from "../../components/publicacion/PublicarModal";
+
+const MapaPinSelector = dynamic(
+  () => import('../../components/MapaPinSelector'),
+  { ssr: false }
+)
 
 type CampoError =
   | 'titulo'
@@ -16,11 +25,10 @@ type CampoError =
   | 'operacion'
   | null
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL //?? "http://localhost:5000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export default function MiRegistroPage() {
   const router = useRouter()
-  //const [mostrarPlanModal, setMostrarPlanModal] = useState(false)
 
   const [datos, setDatos] = useState({
     titulo: '',
@@ -39,13 +47,46 @@ export default function MiRegistroPage() {
   const [estado, setEstado] = useState<'ninguno' | 'exito' | 'error'>('ninguno')
   const [mensajeError, setMensajeError] = useState('')
   const [campoError, setCampoError] = useState<CampoError>(null)
+  const [pinCoords, setPinCoords] = useState<{ lat: number; lng: number } | null>(null)
+  const [vertices, setVertices] = useState<[number, number][]>([])
+  const [modoPinActivo, setModoPinActivo] = useState(false)
+  const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
+
+  const [estadoPublicacion, setEstadoPublicacion] = useState<EstadoPublicacion>("idle")
+  const [progreso, setProgreso] = useState(0)
+  const [payloadPendiente, setPayloadPendiente] = useState<any>(null)
+
+  const refs: Record<string, React.RefObject<any>> = {
+    titulo: useRef<HTMLInputElement>(null),
+    operacion: useRef<HTMLSelectElement>(null),
+    tipoInmueble: useRef<HTMLSelectElement>(null),
+    precio: useRef<HTMLInputElement>(null),
+    area: useRef<HTMLInputElement>(null),
+    habitaciones: useRef<HTMLInputElement>(null),
+    banos: useRef<HTMLInputElement>(null),
+    direccion: useRef<HTMLInputElement>(null),
+    zona: useRef<HTMLInputElement>(null),
+    descripcion: useRef<HTMLTextAreaElement>(null),
+  }
+
+  const erroresHU5: ErrorValidacion[] = campoError && estado === 'error' && mensajeError
+    ? [{ campo: campoError as any, seccion: "Información Básica", mensaje: mensajeError }]
+    : [];
+
+  const handleClickError = (campo: string) => {
+    const ref = refs[campo];
+    if (ref?.current) {
+      ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      ref.current.focus();
+    }
+  }
 
   useEffect(() => {
     const validarFlujo = async () => {
       const token = localStorage.getItem('token')
 
       if (!token) {
-        router.push('/sign-in') //entra al formulario solo si inicio sesion
+        router.push('/sign-in')
         return
       }
       
@@ -63,13 +104,12 @@ export default function MiRegistroPage() {
           router.push('/Cobros-Limite')
         }
       } catch (error) {
-        //console.error('Error validando flujo de publicación:', error)
         console.error(error)
       }
     }
 
     validarFlujo()
-  }, []) //router
+  }, [router]) 
 
   const limpiarError = () => {
     setMensajeError('')
@@ -500,13 +540,29 @@ export default function MiRegistroPage() {
 
     console.log('📤 Payload enviado al backend:', payload)
 
+    setPayloadPendiente(payload);
+    setEstadoPublicacion("confirmando");
+    setProgreso(0);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  const ejecutarPublicacion = async () => {
+    setEstadoPublicacion("publicando");
+    setProgreso(0);
+
+    const intervaloBarra = setInterval(() => {
+      setProgreso(p => p >= 90 ? 90 : p + 10);
+    }, 300);
+
     try {
       const token = localStorage.getItem('token')
 
       if (!token) {
+        clearInterval(intervaloBarra);
         setMensajeError('DEBES INICIAR SESIÓN PARA REGISTRAR UNA PROPIEDAD')
         setCampoError(null)
         setEstado('error')
+        setEstadoPublicacion("idle");
         return
       }
 
@@ -516,15 +572,15 @@ export default function MiRegistroPage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payloadPendiente)
       })
 
       const result = await response.json()
-
-      console.log('📥 Respuesta backend:', result)
+      clearInterval(intervaloBarra);
 
       if (!response.ok) {
         if (result.message === 'LIMIT_REACHED') {
+          setEstadoPublicacion("idle");
           router.push('/Cobros-Limite')
           return
         }
@@ -535,10 +591,10 @@ export default function MiRegistroPage() {
           result.message ||
           'ERROR AL GUARDAR LA PROPIEDAD'
 
-        console.error('❌ Error backend:', erroresBackend)
         setMensajeError(erroresBackend)
         setCampoError(null)
         setEstado('error')
+        setEstadoPublicacion("error_publicacion");
         return
       }
 
@@ -547,20 +603,25 @@ export default function MiRegistroPage() {
       if (!publicacionId) {
         setMensajeError('No se recibió el ID de la publicación creada')
         setEstado('error')
+        setEstadoPublicacion("error_publicacion");
         return
       }
 
-      console.log('✅ Propiedad guardada correctamente')
+      setProgreso(100);
+      setEstadoPublicacion("exito");
       setEstado('exito')
       setMensajeError('')
       setCampoError(null)
 
-      router.push(`/contenido-multimedia?publicacionId=${publicacionId}`)
+      setTimeout(() => {
+        router.push(`/contenido-multimedia?publicacionId=${publicacionId}`)
+      }, 2000);
     } catch (error) {
-      console.error('🔥 Error fetch:', error)
+      clearInterval(intervaloBarra);
       setMensajeError('NO SE PUDO CONECTAR CON EL BACKEND')
       setCampoError(null)
       setEstado('error')
+      setEstadoPublicacion("error_publicacion");
     }
   }
 
@@ -578,6 +639,8 @@ export default function MiRegistroPage() {
     <div className="min-h-screen bg-white text-gray-900">
       <main className="max-w-6xl mx-auto p-8 md:p-12">
         <h1 className="text-2xl font-bold mb-6 text-gray-950">Registro Inmueble</h1>
+
+        <ErrorPanel errores={erroresHU5} onClickError={handleClickError} />
 
         <div className="bg-[#FAF4ED] rounded-3xl p-8 md:p-10 shadow-sm border border-gray-100">
           <div className="flex items-center gap-3 mb-6">
@@ -605,6 +668,7 @@ export default function MiRegistroPage() {
                       Título del anuncio *
                     </label>
                     <input
+                      ref={refs.titulo}
                       name="titulo"
                       value={datos.titulo}
                       onChange={manejarCambio}
@@ -623,6 +687,7 @@ export default function MiRegistroPage() {
                         Tipo de operación *
                       </label>
                       <select
+                        ref={refs.operacion}
                         name="operacion"
                         value={datos.operacion}
                         onChange={manejarCambio}
@@ -645,6 +710,7 @@ export default function MiRegistroPage() {
                         Tipo de Inmueble *
                       </label>
                       <select
+                        ref={refs.tipoInmueble}
                         name="tipoInmueble"
                         value={datos.tipoInmueble}
                         onChange={manejarCambio}
@@ -664,6 +730,7 @@ export default function MiRegistroPage() {
                       Precio USD$ *
                     </label>
                     <input
+                      ref={refs.precio}
                       name="precio"
                       type="text"
                       inputMode="numeric"
@@ -689,6 +756,7 @@ export default function MiRegistroPage() {
                   <div>
                     <label className="block text-[15px] font-bold mb-2">Área total (m²)</label>
                     <input
+                      ref={refs.area}
                       name="area"
                       type="text"
                       inputMode="numeric"
@@ -706,6 +774,7 @@ export default function MiRegistroPage() {
                   <div>
                     <label className="block text-[15px] font-bold mb-2">Habitaciones</label>
                     <input
+                      ref={refs.habitaciones}
                       name="habitaciones"
                       type="text"
                       inputMode="numeric"
@@ -736,6 +805,7 @@ export default function MiRegistroPage() {
                   <div>
                     <label className="block text-[15px] font-bold mb-2">Baños</label>
                     <input
+                      ref={refs.banos}
                       name="banos"
                       type="text"
                       inputMode="numeric"
@@ -762,6 +832,7 @@ export default function MiRegistroPage() {
                   <div>
                     <label className="block text-[15px] font-bold mb-2">Dirección *</label>
                     <input
+                      ref={refs.direccion}
                       name="direccion"
                       value={datos.direccion}
                       onChange={manejarCambio}
@@ -777,9 +848,10 @@ export default function MiRegistroPage() {
                   </div>
                 </div>
 
-                <div className="mt-6">
+                <div className="mt-4 w-full">
                   <label className="block text-[15px] font-bold mb-2">Zona</label>
                   <input
+                    ref={refs.zona}
                     name="zona"
                     value={datos.zona}
                     onChange={manejarCambio}
@@ -794,17 +866,18 @@ export default function MiRegistroPage() {
               </section>
             </div>
 
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full min-w-0">
               <div className="flex-grow">
                 <label className="block text-[15px] font-bold text-gray-900 mb-2">
                   DESCRIPCION DETALLADA *
                 </label>
                 <textarea
+                  ref={refs.descripcion}
                   name="descripcion"
                   value={datos.descripcion}
                   onChange={manejarCambio}
                   maxLength={300}
-                  className={`w-full p-4 rounded-2xl border h-72 bg-white ${
+                  className={`w-full p-4 rounded-2xl border h-72 bg-white resize-none ${
                     errorDescripcion ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Casa de dos plantas, amplia y moderna ubicada en una zona tranquila..."
@@ -815,6 +888,67 @@ export default function MiRegistroPage() {
                 <p className="text-xs text-gray-500 mt-1">
                   {datos.descripcion.length}/300 caracteres
                 </p>
+              </div>
+
+              <div className="mt-6">
+                <div className="flex items-center justify-between mb-4 gap-4">
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setModoPinActivo(true)
+                        setModoDifuminadoActivo(false)
+                      }}
+                      className={`px-4 py-2 rounded-full text-sm ${
+                        modoPinActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
+                      }`}
+                    >
+                      Pin
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setModoDifuminadoActivo(true)
+                        setModoPinActivo(false)
+                      }}
+                      className={`px-4 py-2 rounded-full text-sm ${
+                        modoDifuminadoActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
+                      }`}
+                    >
+                      Difuminado
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    disabled={!pinCoords && vertices.length === 0}
+                    onClick={() => {
+                      setPinCoords(null)
+                      setVertices([])
+                      setModoPinActivo(false)
+                      setModoDifuminadoActivo(false)
+                    }}
+                    className={`px-4 py-2 rounded-full text-sm transition ${
+                      !pinCoords && vertices.length === 0
+                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        : 'bg-orange-500 text-white hover:bg-orange-600'
+                    }`}
+                  >
+                    Eliminar selección
+                  </button>
+                </div>
+
+                <div className="relative z-0 rounded-2xl overflow-hidden border border-gray-200 max-w-full h-[320px]">
+                  <MapaPinSelector
+                    pinCoords={pinCoords}
+                    setPinCoords={setPinCoords}
+                    vertices={vertices}
+                    setVertices={setVertices}
+                    modoPinActivo={modoPinActivo}
+                    modoDifuminadoActivo={modoDifuminadoActivo}
+                  />
+                </div>
               </div>
 
               <div className="mt-12 space-y-6">
@@ -829,9 +963,9 @@ export default function MiRegistroPage() {
 
                   <button
                     onClick={guardarPropiedad}
-                    className="px-12 py-3 rounded-full border-2 border-orange-400 bg-[#D9D9D9]"
+                    className="px-12 py-3 rounded-full border-2 border-orange-400 bg-[#D9D9D9] hover:bg-orange-100 transition"
                   >
-                    Continuar
+                    Continuar a Publicar
                   </button>
                 </div>
 
@@ -843,7 +977,7 @@ export default function MiRegistroPage() {
 
                 {estado === 'exito' && (
                   <div className="bg-white border-2 border-green-400 rounded-2xl p-4 shadow-md max-w-md ml-auto">
-                    Publicación registrada correctamente ✅
+    
                   </div>
                 )}
               </div>
@@ -851,6 +985,16 @@ export default function MiRegistroPage() {
           </div>
         </div>
       </main>
+
+      {(estadoPublicacion !== "idle") && (
+        <PublicarModal
+          estado={estadoPublicacion as any}
+          progreso={progreso}
+          onConfirmar={ejecutarPublicacion}
+          onCancelar={() => setEstadoPublicacion("idle")}
+          onReintentar={() => setEstadoPublicacion("confirmando")}
+        />
+      )}
     </div>
   )
 }

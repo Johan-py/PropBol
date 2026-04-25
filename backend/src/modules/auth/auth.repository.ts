@@ -1,56 +1,53 @@
-import { RolNombre } from "@prisma/client";
-import { prisma } from "../../lib/prisma.client.js";
+import { RolNombre } from '@prisma/client'
+import { prisma } from '../../lib/prisma.client.js'
 
 interface CreateUserInput {
-  nombre: string;
-  apellido: string;
-  correo: string;
-  password: string;
-  telefono?: string;
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  telefono?: string
 }
 
 type PrismaLikeKnownError = {
-  code?: string;
+  code?: string
   meta?: {
-    target?: unknown;
-  };
-  message?: string;
-};
+    target?: unknown
+  }
+  message?: string
+}
 
 const ensureVisitorRole = async () => {
   return await prisma.rol.upsert({
     where: { nombre: RolNombre.VISITANTE },
     update: {},
-    create: { nombre: RolNombre.VISITANTE },
-  });
-};
+    create: { nombre: RolNombre.VISITANTE }
+  })
+}
 
-const isUniqueConstraintError = (
-  error: unknown,
-): error is PrismaLikeKnownError => {
+const isUniqueConstraintError = (error: unknown): error is PrismaLikeKnownError => {
   return (
-    typeof error === "object" &&
+    typeof error === 'object' &&
     error !== null &&
-    "code" in error &&
-    (error as PrismaLikeKnownError).code === "P2002"
-  );
-};
+    'code' in error &&
+    (error as PrismaLikeKnownError).code === 'P2002'
+  )
+}
 
 const getUniqueConstraintMessage = (error: PrismaLikeKnownError) => {
-  const rawTarget = error.meta?.target;
-  const targets = Array.isArray(rawTarget) ? rawTarget.map(String) : [];
-  const searchableText =
-    `${targets.join(" ")} ${error.message ?? ""}`.toLowerCase();
+  const rawTarget = error.meta?.target
+  const targets = Array.isArray(rawTarget) ? rawTarget.map(String) : []
+  const searchableText = `${targets.join(' ')} ${error.message ?? ''}`.toLowerCase()
 
-  if (searchableText.includes("correo")) {
-    return "El correo ya está registrado";
+  if (searchableText.includes('correo')) {
+    return 'El correo ya está registrado'
   }
 
-  return "Ya existe un registro con esos datos";
-};
+  return 'Ya existe un registro con esos datos'
+}
 
 export const createUser = async (data: CreateUserInput) => {
-  const rol = await ensureVisitorRole();
+  const rol = await ensureVisitorRole()
 
   try {
     return await prisma.usuario.create({
@@ -63,25 +60,25 @@ export const createUser = async (data: CreateUserInput) => {
         telefonos: data.telefono
           ? {
               create: {
-                codigoPais: "+591",
+                codigoPais: '+591',
                 numero: data.telefono,
-                principal: true,
-              },
+                principal: true
+              }
             }
-          : undefined,
+          : undefined
       },
       include: {
-        telefonos: true,
-      },
-    });
+        telefonos: true
+      }
+    })
   } catch (error) {
     if (isUniqueConstraintError(error)) {
-      throw new Error(getUniqueConstraintMessage(error));
+      throw new Error(getUniqueConstraintMessage(error))
     }
 
-    throw error;
+    throw error
   }
-};
+}
 
 // Incluye el campo `activo` para que loginService pueda verificar si la cuenta está desactivada
 export const findUser = async (correo: string) => {
@@ -95,42 +92,46 @@ export const findUser = async (correo: string) => {
       apellido: true,
       activo: true,
       two_factor_activo: true,
-    },
-  });
-};
+      rol: true
+    }
+  })
+}
 export const findUserByCorreo = async (correo: string) => {
   return await prisma.usuario.findUnique({
     where: { correo },
-  });
-};
+    include: {
+      rol: true
+    }
+  })
+}
 
 export const findUserById = async (id: number) => {
   return await prisma.usuario.findUnique({
     where: { id },
     include: {
-      rol: true,
-    },
-  });
-};
+      rol: true
+    }
+  })
+}
 
 export const createSession = async ({
   token,
   usuarioId,
-  fechaExpiracion,
+  fechaExpiracion
 }: {
-  token: string;
-  usuarioId: number;
-  fechaExpiracion: Date;
+  token: string
+  usuarioId: number
+  fechaExpiracion: Date
 }) => {
   return await prisma.sesion.create({
     data: {
       token,
       usuarioId,
       fechaExpiracion,
-      estado: true,
-    },
-  });
-};
+      estado: true
+    }
+  })
+}
 
 export const findActiveSessionByToken = async (token: string) => {
   return await prisma.sesion.findFirst({
@@ -138,24 +139,24 @@ export const findActiveSessionByToken = async (token: string) => {
       token,
       estado: true,
       fechaExpiracion: {
-        gt: new Date(),
-      },
+        gt: new Date()
+      }
     },
     include: {
       usuario: {
         include: {
-          rol: true,
-        },
-      },
-    },
-  });
-};
+          rol: true
+        }
+      }
+    }
+  })
+}
 
 export const desactiveSessionByToken = async (token: string) => {
   return await prisma.sesion.updateMany({
     where: {
       token,
-      estado: true,
+      estado: true
     },
     data: {
       estado: false
@@ -302,7 +303,137 @@ export const deactivate2FAByUserId = async (userId: number) => {
   })
 }
 
-export const updateUserPassword = async (usuarioId: number, password: string) => {
+export const findUserByActiveSessionTokenForSocialLink = async (
+  token: string,
+) => {
+  return await prisma.sesion.findFirst({
+    where: {
+      token,
+      estado: true,
+      fechaExpiracion: {
+        gt: new Date(),
+      },
+    },
+    include: {
+      usuario: {
+        select: {
+          id: true,
+          correo: true,
+          nombre: true,
+          apellido: true,
+        },
+      },
+    },
+  });
+};
+
+export const findSocialLinkByProviderAndExternalId = async (
+  proveedor: string,
+  idExterno: string,
+) => {
+  return await prisma.autenticacion_social.findFirst({
+    where: {
+      proveedor,
+      idExterno,
+      activo: true,
+    },
+  });
+};
+
+export const findSocialLinkByUserAndProvider = async (
+  usuarioId: number,
+  proveedor: string,
+) => {
+  return await prisma.autenticacion_social.findFirst({
+    where: {
+      usuarioId,
+      proveedor,
+      activo: true,
+    },
+  });
+};
+
+export const createSocialLink = async ({
+  usuarioId,
+  proveedor,
+  idExterno,
+  correoProveedor,
+}: {
+  usuarioId: number;
+  proveedor: string;
+  idExterno: string;
+  correoProveedor?: string | null;
+}) => {
+
+  const existingLink = await prisma.autenticacion_social.findFirst({
+    where: {
+      proveedor,
+      idExterno,
+    },
+  });
+
+  if (existingLink) {
+    return await prisma.autenticacion_social.update({
+      where: {
+        id: existingLink.id,
+      },
+      data: {
+        usuarioId,
+        correoProveedor: correoProveedor ?? null,
+        activo: true,
+      },
+    });
+  }
+
+  return await prisma.autenticacion_social.create({
+    data: {
+      usuarioId,
+      proveedor,
+      idExterno,
+      correoProveedor: correoProveedor ?? null,
+      activo: true,
+    },
+  });
+};
+
+export const deactivateSocialLinkByUserAndProvider = async (
+  usuarioId: number,
+  proveedor: string,
+) => {
+  return await prisma.autenticacion_social.updateMany({
+    where: {
+      usuarioId,
+      proveedor,
+      activo: true,
+    },
+    data: {
+      activo: false,
+    },
+  });
+};
+
+export const listSocialLinksByUser = async (usuarioId: number) => {
+  return await prisma.autenticacion_social.findMany({
+    where: {
+      usuarioId,
+      activo: true,
+      proveedor: {
+        in: ["facebook", "discord"],
+      },
+    },
+    select: {
+      proveedor: true,
+      correoProveedor: true,
+      idExterno: true,
+      vinculadoEn: true,
+    },
+  });
+};
+
+export const updateUserPassword = async (
+  usuarioId: number,
+  password: string,
+) => {
   return prisma.usuario.update({
     where: { id: usuarioId },
     data: { password }
@@ -326,3 +457,14 @@ export const invalidateOtherUserSessions = async (usuarioId: number, currentToke
     data: { estado: false }
   })
 }
+export const countActiveSocialLinksByUser = async (usuarioId: number) => {
+  return await prisma.autenticacion_social.count({
+    where: {
+      usuarioId,
+      activo: true,
+      proveedor: {
+        in: ["facebook", "discord"],
+      },
+    },
+  });
+};
