@@ -2,6 +2,8 @@ import { $Enums } from "@prisma/client";
 import { prisma } from "../../lib/prisma.client.js";
 
 export class FiltersHomepageRepository {
+  // backend/src/modules/filtershomepage/filtershomepage.repository.ts
+
   async getCountsByCity(tipoAccion: $Enums.TipoAccion) {
     const ubicaciones = await prisma.ubicacionInmueble.findMany({
       where: {
@@ -12,33 +14,26 @@ export class FiltersHomepageRepository {
       },
       select: {
         inmuebleId: true,
-        ubicacion_maestra: {
+        ubicacion_maestra: { select: { departamento: true } },
+        inmueble: {
           select: {
-            departamento: true,
+            id: true,
+            titulo: true,
+            // Volvemos a tu estructura original que es la correcta para tu base de datos
+            publicaciones: {
+              take: 1,
+              select: {
+                multimedia: {
+                  where: { tipo: $Enums.TipoMultimedia.IMAGEN },
+                  select: { url: true },
+                  take: 1,
+                },
+              },
+            },
           },
-        },
-      inmueble: {
-  select: {
-    id: true,
-    titulo: true,
-    publicaciones: {        
-      select: {
-        multimedia: {     
-          where: {
-            tipo: $Enums.TipoMultimedia.IMAGEN,
-          },
-          select: {
-            url: true,
-          },
-          take: 1,
         },
       },
-      take: 1,
-    },
-  },
-},
-},
-});
+    });
 
     const deptMap = new Map<string, { ids: Set<number>; previews: Array<{ imagen: string; titulo: string }> }>();
 
@@ -54,25 +49,25 @@ export class FiltersHomepageRepository {
 
       const entry = deptMap.get(dept)!;
       entry.ids.add(u.inmuebleId);
-        
-        const primeraPublicacion = u.inmueble?.publicaciones?.[0];
-      const primeraImagen = primeraPublicacion?.multimedia?.[0]?.url;
+      
+      const inmueble = u.inmueble;
 
-      if (entry.previews.length < 6 && primeraImagen) {
-         entry.previews.push({
-        imagen: primeraImagen,
-          titulo: u.inmueble.titulo ?? "Sin título",
+      // Aquí está el truco: Navegamos de forma segura por Inmueble -> Publicaciones -> Multimedia
+      const primeraImagen = inmueble?.publicaciones?.[0]?.multimedia?.[0]?.url ?? null;
+
+      if (entry.previews.length < 6 && primeraImagen && inmueble) {
+        entry.previews.push({
+          imagen: primeraImagen,
+          titulo: inmueble.titulo ?? "Sin título",
         });
       }
     }
 
-    const counts = Array.from(deptMap.entries()).map(([dept, data]) => ({
+    return Array.from(deptMap.entries()).map(([dept, data]) => ({
       departamento: dept,
       count: data.ids.size,
       previews: data.previews,
-    }));
-
-    return counts.sort((a, b) => b.count - a.count);
+    })).sort((a, b) => b.count - a.count);
   }
 
   async getCountsByCategoria() {
