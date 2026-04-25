@@ -26,25 +26,26 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
   const [showAll, setShowAll] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({})
-
+  const [isAuth, setIsAuth] = useState(false)
   const { updateFilters } = useSearchFilters()
   const { registrarConsulta } = usePopularidad()
 
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+
   const recalcDropdown = () => {
     if (!containerRef.current) return
-    const rect = containerRef.current.getBoundingClientRect()
     setDropdownStyle({
-      position: 'fixed',
-      top: rect.bottom + 8,
-      left: rect.left,
-      width: rect.width,
-      zIndex: 9999
+      position: 'absolute',
+      top: 'calc(100% + 8px)',
+      left: 0,
+      width: '100%',
+      zIndex: 50
     })
   }
 
+  // Sincronización de dimensiones y eventos de cierre
   useEffect(() => {
     if (!isOpen) return
-    // CORRECCIÓN: Se usa const porque frame1 y frame2 no se reasignan
     const frame1 = requestAnimationFrame(() => {
       requestAnimationFrame(recalcDropdown)
     })
@@ -61,9 +62,116 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     }
   }, [isOpen])
 
-  // ── Selección de ubicación ─────────────────────────────────────────────────
+  // --- PERSISTENCIA: Carga Inicial Sincronizada ---
+  useEffect(() => {
+    const initHistory = async () => {
+      // 1. Cargar local primero para rapidez visual
+      const saved = localStorage.getItem('searchHistory')
+      if (saved) setHistory(JSON.parse(saved))
+
+      // 2. Si el usuario está autenticado, sincronizar con el servidor
+      const token = localStorage.getItem("token")
+      if (token) {
+        try {
+          const res = await fetch(`${API_BASE}/api/perfil/historial-busqueda`, {
+            headers: { 
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          })
+          if (res.ok) {
+            const data = await res.json()
+            // Asumiendo que el backend devuelve un array de strings o de objetos {termino: string}
+            const remoteHistory = data.map((h: any) => typeof h === 'string' ? h : h.termino)
+            
+            // SINCRONIZACIÓN: Guardar en el backend las búsquedas locales que no estén en el remoto
+            const localHistory = saved ? JSON.parse(saved) : [];
+            const missingInRemote = localHistory.filter((item: string) => !remoteHistory.includes(item));
+            
+            if (missingInRemote.length > 0) {
+              // Enviamos al backend desde la más antigua a la más nueva para mantener el orden
+              for (const item of [...missingInRemote].reverse()) {
+                try {
+                  await fetch(`${API_BASE}/api/perfil/historial-busqueda`, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ termino: item })
+                  });
+                } catch (e) {
+                  console.error("Error sincronizando historial local:", e);
+                }
+              }
+              // Unimos la historia local que no estaba y la remota, y guardamos hasta 20 items
+              const newHistory = [...missingInRemote, ...remoteHistory].slice(0, 20);
+              setHistory(newHistory);
+              localStorage.setItem('searchHistory', JSON.stringify(newHistory));
+            } else {
+              setHistory(remoteHistory)
+              localStorage.setItem('searchHistory', JSON.stringify(remoteHistory))
+            }
+          } else if (res.status === 401) {
+            console.warn("Sesión expirada o token inválido para historial")
+            setIsAuth(false)
+          }
+        } catch (error) {
+          console.error("Error cargando historial remoto:", error)
+        }
+      }
+    }
+    initHistory()
+  }, [isAuth]) // Depende de isAuth para recargar cuando el usuario inicia sesión
+
+  // --- PERSISTENCIA: Guardar ---
+  const saveToHistory = async (item: string) => {
+    if (!item.trim()) return
+
+    const updatedHistory = [item, ...history.filter((i) => i !== item)].slice(0, 20)
+    setHistory(updatedHistory)
+    localStorage.setItem('searchHistory', JSON.stringify(updatedHistory))
+
+    const token = localStorage.getItem("token")
+    if (token) {
+      try {
+        await fetch(`${API_BASE}/api/perfil/historial-busqueda`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ termino: item })
+        })
+      } catch (error) {
+        console.error("Error guardando en BD:", error)
+      }
+    }
+  }
+
+  // --- PERSISTENCIA: Eliminar ---
+  const handleDeleteItem = async (e: React.MouseEvent, term: string) => {
+    e.stopPropagation()
+    
+    // UI Primero (Optimista)
+    const updated = history.filter((h) => h !== term)
+    setHistory(updated)
+    localStorage.setItem('searchHistory', JSON.stringify(updated))
+
+    const token = localStorage.getItem("token")
+    if (token) {
+      try {
+        await fetch(`${API_BASE}/api/perfil/historial-busqueda/${encodeURIComponent(term)}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` }
+        })
+      } catch (error) {
+        console.error("Error eliminando en BD:", error)
+      }
+    }
+  }
+
   const handleSelectLocation = (loc: Location) => {
-    // Mostramos el nombre limpio en el input
     const displayValue = loc.nombre
     updateFilters({
       locationId: loc.id,
@@ -74,31 +182,9 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     setIsOpen(false)
     registrarConsulta(loc.id, displayValue)
 
-    // Auto-submit tras elegir sugerencia
     setTimeout(() => {
       containerRef.current?.closest('form')?.requestSubmit()
     }, 100)
-  }
-
-  useEffect(() => {
-    const savedHistory = localStorage.getItem('searchHistory')
-    if (savedHistory) {
-      setHistory(JSON.parse(savedHistory))
-    }
-  }, [])
-
-  const saveToHistory = (item: string) => {
-    if (!item.trim()) return 
-    const updatedHistory = [item, ...history.filter((i) => i !== item)].slice(0, 20)
-    setHistory(updatedHistory)
-    localStorage.setItem('searchHistory', JSON.stringify(updatedHistory))
-  }
-  
-  const handleDeleteItem = (e: React.MouseEvent, term: string) => {
-    e.stopPropagation()
-    const updated = history.filter((h) => h !== term)
-    setHistory(updated)
-    localStorage.setItem('searchHistory', JSON.stringify(updated))
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,7 +213,6 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
       }
       setIsLoading(true)
       try {
-        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
         const res = await fetch(`${API_BASE}/api/locations/search?q=${encodeURIComponent(value)}`)
         if (res.ok) {
           const data = await res.json()
@@ -143,6 +228,25 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     const timer = setTimeout(fetchLocations, 300)
     return () => clearTimeout(timer)
   }, [value, isSelected])
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem("token")
+      if (!token) {
+        setIsAuth(false)
+        return
+      }
+      try {
+        const res = await fetch(`${API_BASE}/api/auth/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        setIsAuth(res.ok)
+      } catch (error) {
+        setIsAuth(false)
+      }
+    }
+    checkAuth()
+  }, [])
 
   return (
     <div className="w-full relative" ref={containerRef}>
@@ -187,6 +291,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                       onChange(item)
                       setIsOpen(false)
                       updateFilters({ query: item })
+                      saveToHistory(item) 
                       setTimeout(() => containerRef.current?.closest('form')?.requestSubmit(), 100)
                     }}
                     className="flex-1 px-4 py-3 flex items-center gap-3 text-left"
@@ -203,14 +308,18 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                   </button>
                 </div>
               ))}
-              {history.length > 5 && !showAll && (
-                <button
-                  type="button"
-                  onClick={() => setShowAll(true)}
-                  className="w-full py-2 text-xs text-amber-600 font-bold hover:bg-amber-100 border-t border-stone-50"
-                >
-                  Ver más
-                </button>
+              {history.length > 5 && (
+                <div className="flex justify-end border-t border-stone-50">
+                  <button
+                    type="button"
+                    onClick={() => setShowAll(!showAll)}
+                    className={`px-4 py-2 text-xs font-bold transition-colors ${
+                      showAll ? "text-stone-500 hover:text-stone-700" : "text-amber-600 hover:text-amber-700"
+                    }`}
+                  >
+                    {showAll ? "Ver menos" : "Ver más"}
+                  </button>
+                </div>
               )}
             </div>
           )}
@@ -234,24 +343,14 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                       <div className="flex items-center gap-3">
                         <Search className="w-3.5 h-3.5 text-stone-500" />
                         <div className="flex flex-col">
-                          <span className="text-sm font-bold text-stone-600">
-                            {loc.nombre}
-                          </span>
-                          <span className="text-xs text-stone-400">
-                            {loc.contexto}
-                          </span>
+                          <span className="text-sm font-bold text-stone-600">{loc.nombre}</span>
+                          <span className="text-xs text-stone-400">{loc.contexto}</span>
                         </div>
                       </div>
                       <div className="text-[10px] font-bold px-2 py-1 bg-stone-100 text-stone-500 rounded-md uppercase">
                         {loc.nivel}
                       </div>
-                      <Image
-                        src="https://flagcdn.com/w20/bo.png"
-                        alt="BO"
-                        width={20}
-                        height={14}
-                        className="rounded-sm"
-                      />
+                      <Image src="https://flagcdn.com/w20/bo.png" alt="BO" width={20} height={14} className="rounded-sm" />
                     </button>
                   ))}
                 </div>

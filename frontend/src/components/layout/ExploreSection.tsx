@@ -83,8 +83,8 @@ export default function ExploreSection() {
   }
 
   return (
-    <section className="bg-white py-10 md:py-16 w-full">
-      <div className="max-w-8xl mx-auto px-14">
+  <section className="bg-white py-4 md:py-6 w-full">
+      <div className="max-w-[1400px] mx-auto px-6 md:px-10">
         {/* MOBILE con un Selector combobox */}
         <div className="md:hidden">
           <div className="rounded-2xl bg-white p-4 shadow-xl border border-stone-100 flex flex-col gap-4">
@@ -129,7 +129,7 @@ export default function ExploreSection() {
 
         {/*  DESKTOP  */}
         <div className="hidden md:block">
-          <div className="rounded-2xl bg-white p-6 shadow-xl border border-stone-100 flex flex-col gap-6">
+          <div id="tour-buscador" className="rounded-2xl bg-white p-6 shadow-xl border border-stone-100 flex flex-col gap-6">
             <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
               {searchOptions.map((option) => {
                 const isSelected = selectedOption.includes(option.id)

@@ -11,10 +11,10 @@ import {
   Award,
   SlidersHorizontal,
   ChevronDown,
-  Building, 
-  Bed,      
-  Trees,    
-  Flower2   
+  Building,
+  Bed,
+  Trees,
+  Flower2
 } from 'lucide-react'
 import { useSearchFilters } from '@/hooks/useSearchFilters'
 import { LocationSearch } from '../layout/LocationSearch'
@@ -33,17 +33,20 @@ interface FilterBarProps {
   }) => void
   variant?: 'home' | 'map'
   onOpenPriceFilter?: () => void
-   onOpenSuperficieFilter?: () => void 
+  onOpenSuperficieFilter?: () => void
+  isCapacidadActive?: boolean
+  onToggleCapacidad?: () => void
+  isPriceFilterActive?: boolean   
+  isSuperficieFilterActive?: boolean
 }
-
 type LocationValue =
   | string
   | {
-      nombre?: string
-      target?: {
-        value?: string
-      }
+    nombre?: string
+    target?: {
+      value?: string
     }
+  }
 
 // Botón Mock
 const MockFilterBtn = ({
@@ -60,8 +63,8 @@ const MockFilterBtn = ({
   <button
     type="button"
     className="h-[36px] flex items-center justify-between bg-white border border-stone-200 text-stone-600 px-3 rounded-xl shadow-sm hover:border-stone-300 transition-all font-inter text-sm whitespace-nowrap gap-2 shrink-0 focus:outline-none cursor-default"
-     onClick={(e) => { e.preventDefault(); if (onClick) onClick() }}
-   
+    onClick={(e) => { e.preventDefault(); if (onClick) onClick() }}
+
   >
     <div className="flex items-center gap-2">
       {Icon && <Icon className="w-4 h-4 text-stone-500" />}
@@ -90,7 +93,9 @@ const trackSearchTelemetria = async (filtros: {
     console.error('Error tracking search:', error)
   }
 }
-export default function FilterBar({ onSearch, variant = 'home',  onOpenPriceFilter, onOpenSuperficieFilter  }: FilterBarProps) {
+
+export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad, isPriceFilterActive = false, isSuperficieFilterActive = false }: FilterBarProps) {
+
   const router = useRouter()
 
   const { updateFilters } = useSearchFilters()
@@ -205,9 +210,8 @@ export default function FilterBar({ onSearch, variant = 'home',  onOpenPriceFilt
           FILA INFERIOR: Todo lo demás
           ========================================= */}
       <div
-        className={`flex items-center w-full gap-3 relative z-[90] !overflow-visible ${
-          variant === 'map' ? 'flex-nowrap' : 'flex-col md:flex-row flex-wrap'
-        }`}
+        className={`flex items-center w-full gap-3 relative z-[90] !overflow-visible ${variant === 'map' ? 'flex-nowrap' : 'flex-col md:flex-row flex-wrap'
+          }`}
       >
         {/* 🔸 Tipo (Aislado con z-[100] para que salte por encima de todo) */}
         <div
@@ -241,28 +245,73 @@ export default function FilterBar({ onSearch, variant = 'home',  onOpenPriceFilt
         {variant === 'map' && (
           <div className="flex items-center gap-3 flex-1 overflow-visible pb-1">
             <div className="shrink-0">
-              <MockFilterBtn icon={DollarSign} text="Precio" onClick={onOpenPriceFilter} />
+              <button
+                type="button"
+                onClick={(e) => { e.preventDefault(); onOpenPriceFilter?.() }}
+                className={`h-[36px] flex items-center gap-2 px-3 rounded-xl shadow-sm transition-all text-sm whitespace-nowrap focus:outline-none border shrink-0 ${
+                  isPriceFilterActive
+                    ? 'bg-[#d97706] text-white border-[#d97706]'
+                    : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+                }`}
+              >
+                <DollarSign className={`w-4 h-4 ${isPriceFilterActive ? 'text-white' : 'text-stone-500'}`} />
+                <span>Precio</span>
+                <ChevronDown className={`w-4 h-4 ${isPriceFilterActive ? 'text-white' : 'text-stone-400'}`} />
+              </button>
             </div>
             <div className="shrink-0">
-              <CapacidadButton variant={variant} />
+              <CapacidadButton
+                variant={variant}
+                isActive={isCapacidadActive}
+                onClick={onToggleCapacidad}
+              />
             </div>
             <div className="shrink-0">
-  <button
-    type="button"
-    onClick={() => onOpenSuperficieFilter?.()}
-    className="h-[36px] flex items-center gap-2 px-3 rounded-xl shadow-sm transition-all text-sm whitespace-nowrap focus:outline-none border bg-white text-stone-600 border-stone-200 hover:border-stone-300"
-  >
-    <Maximize className="w-4 h-4 text-stone-500" />
-    <span>Metros</span>
-    <ChevronDown className="w-4 h-4 text-stone-400" />
-  </button>
-</div>
+              <button
+                type="button"
+                onClick={() => onOpenSuperficieFilter?.()}
+                className={`h-[36px] flex items-center gap-2 px-3 rounded-xl shadow-sm transition-all text-sm whitespace-nowrap focus:outline-none border shrink-0 ${
+                  isSuperficieFilterActive
+                    ? 'bg-[#d97706] text-white border-[#d97706]'
+                    : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+                }`}
+              >
+                <Maximize className={`w-4 h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-500'}`} />
+                <span>Metros</span>
+                <ChevronDown className={`w-4 h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-400'}`} />
+              </button>
+            </div>
             <div className="shrink-0">
               <MockFilterBtn icon={SlidersHorizontal} text="Más Filtros" hasChevron={false} />
             </div>
             <div className="shrink-0">
-              <MockFilterBtn icon={Award} text="Recomendados" hasChevron={false} />
-            </div>
+  <button
+    type="button"
+    onClick={async () => {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+      const params = new URLSearchParams({ orden: 'recomendados' })
+      if (token) {
+        const res = await fetch(`/api/inmuebles/recomendados?${params}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        const data = await res.json()
+        console.log('Recomendados:', data)
+        if (data.success && data.data.length > 0) {
+  // Guardar recomendaciones en sessionStorage para que ResultadosBusqueda las lea
+           sessionStorage.setItem('recomendaciones_resultado', JSON.stringify(data.data))
+            router.push('/busqueda_mapa?orden=recomendados')
+}
+      } else {
+        // Usuario no logueado — redirigir a búsqueda general
+        router.push('/busqueda_mapa?orden=recomendados')
+      }
+    }}
+    className="h-[36px] flex items-center justify-between bg-white border border-stone-200 text-stone-600 px-3 rounded-xl shadow-sm hover:border-orange-400 hover:text-orange-500 transition-all font-inter text-sm whitespace-nowrap gap-2 shrink-0 focus:outline-none"
+  >
+    <Award className="w-4 h-4 text-stone-500" />
+    <span>Recomendados</span>
+  </button>
+</div>
           </div>
         )}
 
@@ -276,9 +325,8 @@ export default function FilterBar({ onSearch, variant = 'home',  onOpenPriceFilt
         >
           <button
             type="submit"
-            className={`${
-              variant === 'map' ? 'h-[36px] px-6 shadow-md' : 'w-full md:w-auto h-[46px] px-10'
-            } bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95`}
+            className={`${variant === 'map' ? 'h-[36px] px-6 shadow-md' : 'w-full md:w-auto h-[46px] px-10'
+              } bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95`}
           >
             <SearchIcon size={18} />
             {variant === 'home' && 'BUSCAR'}
