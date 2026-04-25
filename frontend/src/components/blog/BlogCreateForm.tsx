@@ -20,6 +20,8 @@ import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
 import BlogLinkModal from "./BlogLinkModal";
 
+import BlogFormHeader from "./form/BlogFormHeader";
+
 import {
   createBlog,
   getBlogCategories,
@@ -436,21 +438,7 @@ export default function BlogCreateForm({
       <div className="grid gap-12 lg:grid-cols-[1fr_320px]">
         {/* Main Content Area */}
         <div className="space-y-8">
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#B45309]">
-              {mode === "edit" ? "Editar blog" : "Nuevo aporte al blog"}
-            </p>
-            <h1 className="font-heading mt-4 text-5xl font-extrabold leading-[1.1] tracking-tight text-[#1C1917]">
-              {mode === "edit" ? (
-                "Ajusta tu artículo antes de volver a enviarlo."
-              ) : (
-                <>
-                  Comparte tu conocimiento <br />
-                  <span className="italic text-[#B45309]">con la comunidad.</span>
-                </>
-              )}
-            </h1>
-          </div>
+          <BlogFormHeader mode={mode} />
 
           <form
             id="blog-form"
