@@ -58,10 +58,22 @@ export default function PropertyTypeGrid({ items }: PropertyTypeGridProps) {
            oficinas: "OFICINA",
             terrenos: "TERRENO",
       };
+      const tipo = tipoMap[item.key] ?? item.key.toUpperCase();
+      const modo = "VENTA";
       const params = new URLSearchParams({
-         tipoInmueble: tipoMap[item.key] ?? item.key.toUpperCase(),
-        modoInmueble: "VENTA", 
+         tipoInmueble: tipo,
+        modoInmueble: modo, 
         });
+
+      const currentFilters = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}');
+      sessionStorage.setItem('propbol_global_filters', JSON.stringify({
+        ...currentFilters,
+        tipoInmueble: [tipo],
+        modoInmueble: [modo],
+        query: "",
+        updatedAt: new Date().toISOString()
+      }));
+
         router.push(`/busqueda_mapa?${params.toString()}`);
           }}            
               className="
