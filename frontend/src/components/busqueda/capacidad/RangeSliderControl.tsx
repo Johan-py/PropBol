@@ -11,6 +11,7 @@ interface RangeSliderControlProps {
   onMinChange: (value: number) => void
   onMaxChange: (value: number) => void
   unit?: string
+  hideTitle?: boolean
 }
 
 export function RangeSliderControl({
@@ -21,19 +22,22 @@ export function RangeSliderControl({
   absoluteMax,
   onMinChange,
   onMaxChange,
-  unit = '+'
+  unit = '+',
+  hideTitle = false
 }: RangeSliderControlProps) {
   const Icon = label === 'dormitorios' ? Bed : Bath
   const title = label === 'dormitorios' ? 'DORMITORIOS' : 'BAÑOS'
   
   return (
     <div className="space-y-3">
-      <div className="flex justify-between items-center">
-        <span className="font-bold text-xs text-black uppercase tracking-wide flex items-center gap-2">
-          {title}
-          <Icon className="w-6 h-6 text-stone-400" />
-        </span>
-      </div>
+      {!hideTitle && (
+        <div className="flex justify-between items-center">
+          <span className="font-bold text-xs text-black uppercase tracking-wide flex items-center gap-2">
+            {title}
+            <Icon className="w-4 h-4 text-stone-500" />
+          </span>
+        </div>
+      )}
 
       {/* Slider Mínimo */}
       <div className="flex items-center gap-2">
@@ -48,7 +52,7 @@ export function RangeSliderControl({
           className="flex-1 accent-[#d97706] h-2 rounded-lg"
         />
         <span className="text-xs text-stone-600 w-16 text-right">
-          {minValue} {unit}
+          {minValue} {unit} 
         </span>
       </div>
 

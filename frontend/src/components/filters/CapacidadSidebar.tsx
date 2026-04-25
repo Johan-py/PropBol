@@ -1,7 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+
 import { X, Bath } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { RangeSliderControl } from '../busqueda/capacidad/RangeSliderControl'
 
 type TipoBano = 'cualquiera' | 'privado' | 'compartido'
@@ -24,6 +26,7 @@ interface CapacidadSidebarProps {
 }
 
 export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarProps) {
+  const searchParams = useSearchParams()
   const [dormitoriosMin, setDormitoriosMin] = useState(DEFAULT_DORM_MIN)
   const [dormitoriosMax, setDormitoriosMax] = useState(DEFAULT_DORM_MAX)
   const [banosMin, setBanosMin] = useState(DEFAULT_BANOS_MIN)
@@ -31,6 +34,23 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
   const [tipoBano, setTipoBano] = useState<TipoBano>('cualquiera')
   const [dormitoriosError, setDormitoriosError] = useState('')
   const [banosError, setBanosError] = useState('')
+
+  // Cargar valores desde la URL al abrir el panel
+  useEffect(() => {
+    if (isOpen) {
+      const dormMin = searchParams.get('dormitoriosMin')
+      const dormMax = searchParams.get('dormitoriosMax')
+      const banMin = searchParams.get('banosMin')
+      const banMax = searchParams.get('banosMax')
+      const tipo = searchParams.get('tipoBano') as TipoBano
+
+      if (dormMin) setDormitoriosMin(parseInt(dormMin))
+      if (dormMax) setDormitoriosMax(parseInt(dormMax))
+      if (banMin) setBanosMin(parseInt(banMin))
+      if (banMax) setBanosMax(parseInt(banMax))
+      if (tipo && ['cualquiera', 'privado', 'compartido'].includes(tipo)) setTipoBano(tipo)
+    }
+  }, [isOpen, searchParams])
 
   // Validación: min no puede superar a max
   const handleDormitoriosMinChange = (val: number) => {
@@ -113,6 +133,23 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
 
       {/* DORMITORIOS */}
       <div className="px-6 pt-5 space-y-6 mb-8">
+        <div className="flex justify-between items-center">
+          <span className="font-bold text-xs text-black uppercase tracking-wide">
+            DORMITORIOS
+          </span>
+          <button
+            onClick={() => {
+              setDormitoriosMin(DEFAULT_DORM_MIN)
+              setDormitoriosMax(DEFAULT_DORM_MAX)
+              setDormitoriosError('')
+            }}
+            className="text-[#d97706]  hover:text-gray-600 text-xs font-bold"
+            title="Restablecer filtros de dormitorios"
+          >
+              Reset
+          </button>
+        </div>
+
         <RangeSliderControl
           label="dormitorios"
           minValue={dormitoriosMin}
@@ -122,6 +159,7 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
           onMinChange={handleDormitoriosMinChange}
           onMaxChange={handleDormitoriosMaxChange}
           unit="+"
+          hideTitle={true} 
         />
 
         {dormitoriosError && <p className="text-xs text-red-500 mt-1">{dormitoriosError}</p>}
@@ -133,6 +171,19 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
               BAÑOS
               <Bath className="w-6 h-6 text-stone-500" />
             </span>
+            <button
+              onClick={() => {
+                setBanosMin(DEFAULT_BANOS_MIN)
+                setBanosMax(DEFAULT_BANOS_MAX)
+                setTipoBano('cualquiera')
+                setBanosError('')
+              }}
+              className="text-[#d97706] hover:text-gray-600 text-xs font-bold"
+              title="Restablecer filtros de baños"
+            >
+              Reset
+            </button>
+
           </div>
 
           {/* Selector de tipo de baño */}
