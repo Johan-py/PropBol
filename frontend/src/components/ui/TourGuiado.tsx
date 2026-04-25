@@ -98,35 +98,74 @@ const TOUR_STEPS = [
   },
 ];
 
-const FOOTER_STEP_INDEX = 11;
+const FOOTER_STEP_INDEX = 8;
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
-// ✅ Helpers para saber si el usuario está logueado
-const isLoggedIn = () => {
-  if (typeof window === "undefined") return false;
-  return !!localStorage.getItem("token");
+const getToken = (): string | null => {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("token");
 };
 
-// ✅ Flag para saber si el tour fue activado manualmente por el botón Ayuda
-const MANUAL_TOUR_FLAG = "propbol_tour_manual";
+// ✅ Lee de localStorage — sin llamada de red, instantáneo
+const checkControladorYMostrar = (
+  setShowTour: (v: boolean) => void,
+  isManualRef: React.MutableRefObject<boolean>
+) => {
+  const token = getToken();
+  if (!token) return;
+  const controlador = localStorage.getItem("controlador");
+  console.log("[Tour] controlador desde localStorage:", controlador);
+  if (controlador === "false" || controlador === null) {
+    console.log("[Tour] mostrando tour...");
+    isManualRef.current = false;
+    setShowTour(true);
+  } else {
+    console.log("[Tour] controlador es true, no se muestra el tour");
+  }
+};
+
+const marcarControlador = async () => {
+  const token = getToken();
+  if (!token) return;
+  try {
+    await fetch("http://localhost:5000/api/auth/marcar-controlador",  {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    // ✅ Actualizar localStorage también para que no vuelva a aparecer
+    localStorage.setItem("controlador", "true");
+  } catch {
+    // silencioso
+  }
+};
 
 export default function TourGuiado() {
-  const [showTour, setShowTour] = useState(false); // ← empieza en false, se decide en useEffect
+  const [showTour, setShowTour] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [highlight, setHighlight] = useState<DOMRect | null>(null);
+  const isManualRef = useRef(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const retryRef = useRef<NodeJS.Timeout | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [tooltipH, setTooltipH] = useState(180);
 
-  // ✅ Decidir si mostrar el tour al montar
+  // Al montar: chequeo instantáneo desde localStorage
   useEffect(() => {
-    if (isLoggedIn()) {
-      setShowTour(true);
-    }
-    // Si no está logueado, no se muestra — salvo que lo active el botón Ayuda
+    checkControladorYMostrar(setShowTour, isManualRef);
   }, []);
 
-  // 🔒 Bloquear scroll + ir al inicio
+  // Escucha cuando el token se guarda (login/registro exitoso)
+  useEffect(() => {
+    const handleTokenGuardado = () => {
+      console.log("[Tour] evento propbol:token-guardado recibido");
+      checkControladorYMostrar(setShowTour, isManualRef);
+    };
+    window.addEventListener("propbol:token-guardado", handleTokenGuardado);
+    return () =>
+      window.removeEventListener("propbol:token-guardado", handleTokenGuardado);
+  }, []);
+
+  // Bloquear scroll al abrir
   useEffect(() => {
     if (showTour) {
       document.body.style.overflow = "hidden";
@@ -137,7 +176,7 @@ export default function TourGuiado() {
     }
   }, [showTour]);
 
-  // ⌨️ Navegación por teclado
+  // Navegación por teclado
   useEffect(() => {
     if (!showTour) return;
     const handleKey = (e: KeyboardEvent) => {
@@ -148,34 +187,33 @@ export default function TourGuiado() {
       if (e.key === "ArrowRight") {
         if (currentStep < TOUR_STEPS.length - 1)
           setCurrentStep((prev) => prev + 1);
-        else setShowTour(false);
+        else handleFinish();
       }
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [showTour, currentStep]);
 
-  // 🔁 Reactivación manual desde el botón Ayuda
-  // ✅ Funciona para usuarios logueados Y no logueados
+  // Activación manual desde el botón Ayuda
   useEffect(() => {
     const handleIniciarTour = () => {
+      console.log("[Tour] activado manualmente desde botón Ayuda");
+      isManualRef.current = true;
       setHighlight(null);
       setCurrentStep(0);
-      setShowTour(true); // ← siempre se abre cuando viene del botón Ayuda
+      setShowTour(true);
     };
     window.addEventListener("propbol:iniciar-tour", handleIniciarTour);
     return () =>
       window.removeEventListener("propbol:iniciar-tour", handleIniciarTour);
   }, []);
 
-  // 📐 Medir altura del tooltip
+  // Medir altura del tooltip
   useEffect(() => {
     if (!showTour) return;
 
     const measure = () => {
-      if (tooltipRef.current) {
-        setTooltipH(tooltipRef.current.offsetHeight);
-      }
+      if (tooltipRef.current) setTooltipH(tooltipRef.current.offsetHeight);
       const step = TOUR_STEPS[currentStep];
       const el = document.getElementById(step.id);
       if (el) setHighlight(el.getBoundingClientRect());
@@ -200,11 +238,7 @@ export default function TourGuiado() {
 
   const applyHighlight = (el: HTMLElement) => {
     const isFooter = currentStep >= FOOTER_STEP_INDEX;
-
-    el.scrollIntoView({
-      behavior: "auto",
-      block: isFooter ? "start" : "center",
-    });
+    el.scrollIntoView({ behavior: "auto", block: isFooter ? "start" : "center" });
 
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
@@ -216,13 +250,12 @@ export default function TourGuiado() {
     }, 50);
   };
 
-  // 🔍 Búsqueda del elemento con reintentos
+  // Búsqueda del elemento con reintentos
   useEffect(() => {
     if (!showTour) return;
 
     const step = TOUR_STEPS[currentStep];
     const id = step.id;
-
     let attempts = 0;
     const maxAttempts = 10;
 
@@ -239,7 +272,7 @@ export default function TourGuiado() {
           if (step.required === false) {
             setCurrentStep((prev) => prev + 1);
           } else {
-            console.warn(`Elemento ${id} no encontrado`);
+            console.warn(`[Tour] Elemento ${id} no encontrado`);
           }
           setHighlight(null);
         }
@@ -253,15 +286,24 @@ export default function TourGuiado() {
     };
   }, [currentStep, showTour]);
 
+  const closeTour = async () => {
+    setShowTour(false);
+    if (!isManualRef.current) {
+      console.log("[Tour] marcando controlador como visto en BD...");
+      await marcarControlador();
+    }
+  };
+
+  const handleFinish = () => closeTour();
+  const handleSkip = () => closeTour();
+
   const handleNext = () => {
     if (currentStep < TOUR_STEPS.length - 1) {
       setCurrentStep((prev) => prev + 1);
     } else {
-      setShowTour(false);
+      handleFinish();
     }
   };
-
-  const handleSkip = () => setShowTour(false);
 
   if (!showTour) return null;
 
@@ -273,7 +315,6 @@ export default function TourGuiado() {
   const vOffsetTop = window.visualViewport?.offsetTop ?? 0;
   const vOffsetLeft = window.visualViewport?.offsetLeft ?? 0;
 
-  // Posición centrada por defecto mientras no hay highlight
   let top = vOffsetTop + vh / 2 - tooltipH / 2;
   let left = vOffsetLeft + vw / 2 - 150;
 
@@ -291,32 +332,14 @@ export default function TourGuiado() {
     top = Math.max(vOffsetTop + 10, Math.min(top, vOffsetTop + vh - H - 10));
     left = Math.max(
       vOffsetLeft + 12,
-      Math.min(
-        highlight.left + highlight.width / 2 - 150,
-        vOffsetLeft + vw - 312,
-      ),
+      Math.min(highlight.left + highlight.width / 2 - 150, vOffsetLeft + vw - 312)
     );
   }
 
   return (
     <>
-      {/* Overlay oscuro con recorte */}
-      <div
-        style={{
-          position: "fixed",
-          inset: 0,
-          zIndex: 9998,
-          pointerEvents: "all",
-        }}
-      >
-        <svg
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-          }}
-        >
+      <div style={{ position: "fixed", inset: 0, zIndex: 9998, pointerEvents: "all" }}>
+        <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
           <defs>
             <mask id="tm">
               <rect width="100%" height="100%" fill="white" />
@@ -332,16 +355,10 @@ export default function TourGuiado() {
               )}
             </mask>
           </defs>
-          <rect
-            width="100%"
-            height="100%"
-            fill="rgba(0,0,0,0.75)"
-            mask="url(#tm)"
-          />
+          <rect width="100%" height="100%" fill="rgba(0,0,0,0.75)" mask="url(#tm)" />
         </svg>
       </div>
 
-      {/* Tooltip siempre renderizado — solo se oculta con opacity */}
       <div
         ref={tooltipRef}
         style={{
@@ -361,7 +378,6 @@ export default function TourGuiado() {
           overflowY: "auto",
         }}
       >
-        {/* Barras de progreso */}
         <div style={{ display: "flex", gap: 4, marginBottom: 10 }}>
           {TOUR_STEPS.map((_, i) => (
             <span
@@ -379,27 +395,14 @@ export default function TourGuiado() {
         <p style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }}>
           {TOUR_STEPS[currentStep].title}
         </p>
-
         <p style={{ fontSize: 13, marginBottom: 14 }}>
           {TOUR_STEPS[currentStep].description}
         </p>
 
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <button
             onClick={handleSkip}
-            style={{
-              fontSize: 12,
-              color: "#9ca3af",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-            }}
+            style={{ fontSize: 12, color: "#9ca3af", background: "none", border: "none", cursor: "pointer" }}
           >
             Saltar tour
           </button>
@@ -422,7 +425,6 @@ export default function TourGuiado() {
                 ← Anterior
               </button>
             )}
-
             <button
               onClick={handleNext}
               style={{
