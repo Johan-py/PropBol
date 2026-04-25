@@ -47,6 +47,13 @@ const TOUR_STEPS = [
     required: true,
   },
   {
+    id: "tour-publicar-home",
+    title: "Publica tu inmueble",
+    description:
+      "¿Tienes una propiedad para vender o alquilar? Haz clic aquí para registrar tu inmueble y llegar a miles de compradores e inquilinos.",
+    required: true,
+  },
+  {
     id: "tour-notificaciones",
     title: "Notificaciones",
     description: "Aquí aparecerán tus alertas y novedades importantes.",
@@ -84,7 +91,7 @@ const TOUR_STEPS = [
   },
 ];
 
-const FOOTER_STEP_INDEX = 9;
+const FOOTER_STEP_INDEX = 10;
 
 // ✅ Helpers para saber si el usuario está logueado
 const isLoggedIn = () => {
