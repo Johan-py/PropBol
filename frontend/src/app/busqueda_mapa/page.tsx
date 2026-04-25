@@ -4,7 +4,15 @@ import { CapacidadSidebar } from '@/components/filters/CapacidadSidebar'
 import MisZonasSidebar from '@/components/map/MisZonasSidebar'
 import { point, polygon } from '@turf/helpers'
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon'
-import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from 'react'
+import {
+  useState,
+  useEffect,
+  useRef,
+  Suspense,
+  useCallback,
+  useMemo,
+  type Ref,
+} from 'react'
 import { useSearchParams, useRouter } from "next/navigation";
 import nextDynamic from 'next/dynamic'
 import {
@@ -484,6 +492,12 @@ function BusquedaMapaContent() {
     if (listPage > listTotalPages) setListPage(listTotalPages);
   }, [listPage, listTotalPages]);
 
+  const listScrollRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    listScrollRef.current?.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [listSafePage, listPageSize, filterResetKey, isPolygonClosed]);
+
   // === 5. ESTADOS VISUALES Y DE CLUSTERS (develop + HU8) ===
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
@@ -593,8 +607,14 @@ function BusquedaMapaContent() {
     </div>
   )
 
-  const PropertyListMobile = ({ onClickItem }: { onClickItem?: (p: any) => void }) => (
-    <div className="flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar">
+  const PropertyListMobile = ({
+    onClickItem,
+    listScrollRef,
+  }: {
+    onClickItem?: (p: any) => void;
+    listScrollRef: Ref<HTMLDivElement>;
+  }) => (
+    <div ref={listScrollRef} className="flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar">
       {isLoading ? (
         <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2">
           <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />{' '}
@@ -682,7 +702,7 @@ function BusquedaMapaContent() {
           setListPageSize(s);
           setListPage(1);
         }}
-        hint={listTotal === 0 && error ? `Error al cargar: ${error}` : null}
+        hint={error ? `Error al cargar: ${error}` : null}
       />
     ) : null;
   };
@@ -752,7 +772,7 @@ function BusquedaMapaContent() {
                 {MenuToggleComponent}
               </div>
               <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
-                <PropertyListMobile onClickItem={(p) => setPinnedProperty(p)} />
+                <PropertyListMobile listScrollRef={listScrollRef} onClickItem={(p) => setPinnedProperty(p)} />
                 {renderListPaginationFooter()}
               </div>
             </div>
@@ -950,6 +970,7 @@ function BusquedaMapaContent() {
                 </div>
                 <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
                   <PropertyListMobile
+                    listScrollRef={listScrollRef}
                     onClickItem={(p) => {
                       setPinnedProperty(p)
                       setSheetState('peek')
@@ -1111,6 +1132,7 @@ function BusquedaMapaContent() {
                 {/* Lista de propiedades */}
                 <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
                   <div
+                    ref={listScrollRef as Ref<HTMLDivElement>}
                     className="flex-1 min-h-0 overflow-y-auto p-4 bg-stone-50 no-scrollbar"
                     onMouseEnter={() => setIsHoveringList(true)}
                     onMouseLeave={() => {
