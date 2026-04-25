@@ -145,6 +145,46 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [isFormDirty])
 
+  // Aplicar formato al texto seleccionado
+  const applyFormatting = (prefix: string, suffix: string = prefix) => {
+    const textarea = textareaRef.current
+    if (!textarea) return
+
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
+    const text = textarea.value
+    const selectedText = text.substring(start, end)
+
+    const newText = text.substring(0, start) + prefix + selectedText + suffix + text.substring(end)
+
+    setContenido(newText)
+
+    setTimeout(() => {
+      textarea.focus()
+      textarea.setSelectionRange(start + prefix.length, end + prefix.length)
+    }, 0)
+  }
+
+  const insertLink = () => {
+    const textarea = textareaRef.current
+    if (!textarea) return
+
+    const selected = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd)
+
+    // insertar link
+    const url = prompt('Ingresa la URL')
+    if (!url) return
+
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
+    const text = textarea.value
+
+    const newText =
+      text.substring(0, start) + `[${selected || 'texto'}](${url})` + text.substring(end)
+
+    setContenido(newText)
+  }
+
   // retorno mínimo para no romper nada
   return {
     titulo,
@@ -161,6 +201,8 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     router,
     autosaveKey,
     imagePreviewUrl,
-    isFormDirty
+    isFormDirty,
+    applyFormatting,
+    insertLink
   }
 }
