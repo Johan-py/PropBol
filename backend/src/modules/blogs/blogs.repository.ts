@@ -250,7 +250,7 @@ export const comentariosRepository = {
     blog_id: number;
     comentario_padre_id?: number;
   }) {
-    return prisma.comentario.create({
+    const comentario = await prisma.comentario.create({
       data,
       include: {
         usuario: {
@@ -259,18 +259,52 @@ export const comentariosRepository = {
         _count: { select: { comentario_like: true } },
       },
     });
+
+    const { _count, ...rest } = comentario as any;
+    return {
+      ...rest,
+      likes: _count?.comentario_like || 0,
+      likedByCurrentUser: false,
+    };
   },
 
-  async findByBlogId(blog_id: number) {
-    return prisma.comentario.findMany({
-      where: { blog_id },
-      orderBy: { fecha_creacion: "asc" },
-      include: {
-        usuario: {
-          select: { id: true, nombre: true, apellido: true, avatar: true },
+  async findByBlogId(params: { blog_id: number; usuario_id?: number; page: number; limit: number; }) {
+    const { blog_id, usuario_id, page, limit } = params;
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await prisma.$transaction([
+      prisma.comentario.findMany({
+        where: { blog_id },
+        skip,
+        take: limit,
+        orderBy: { fecha_creacion: "asc" },
+        include: {
+          usuario: {
+            select: { id: true, nombre: true, apellido: true, avatar: true },
+          },
+          _count: { select: { comentario_like: true } },
+          ...(usuario_id ? { comentario_like: { where: { usuario_id } } } : {}),
         },
-        _count: { select: { comentario_like: true } },
-      },
+      }),
+      prisma.comentario.count({ where: { blog_id } }),
+    ]);
+
+    const mappedData = data.map((comentario) => {
+      const { _count, comentario_like, ...rest } = comentario as any;
+      return {
+        ...rest,
+        likes: _count?.comentario_like || 0,
+        likedByCurrentUser: comentario_like && comentario_like.length > 0,
+      };
+    });
+
+    return { data: mappedData, total, page, limit, totalPages: Math.ceil(total / limit) };
+  },
+
+  async update(id: number, data: { contenido: string }) {
+    return prisma.comentario.update({
+      where: { id },
+      data,
     });
   },
 
