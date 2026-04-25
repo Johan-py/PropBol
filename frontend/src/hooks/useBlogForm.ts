@@ -7,6 +7,7 @@ import {
   getBlogCategories,
   createBlog,
   updateBlog,
+  uploadBlogImage,
   BlogCreationAction
 } from '@/services/blogs.service'
 
@@ -47,9 +48,14 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
 
   const [categories, setCategories] = useState<BlogCategoryOption[]>([])
   const [isLoadingCategories, setIsLoadingCategories] = useState(true)
+  const [loadError, setLoadError] = useState('')
+  const [autosaveMessage, setAutosaveMessage] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null)
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
+  const [selectionForLink, setSelectionForLink] = useState('')
 
   const autosaveKey = useMemo(
     () =>
@@ -72,6 +78,7 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
       setImagen(draft.imagen ?? initialValues?.imagen ?? '')
       setCategoriaId(draft.categoriaId ?? initialValues?.categoriaId ?? '')
       setContenido(draft.contenido ?? initialValues?.contenido ?? '')
+      setAutosaveMessage('Borrador local recuperado.')
     } catch {
       window.localStorage.removeItem(autosaveKey)
     }
@@ -85,8 +92,9 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
       try {
         const rows = await getBlogCategories()
         if (isMounted) setCategories(rows)
-      } catch {
-        // luego manejamos error pe
+      } catch (err) {
+        if (isMounted)
+          setLoadError(err instanceof Error ? err.message : 'Error al cargar categorías')
       } finally {
         if (isMounted) setIsLoadingCategories(false)
       }
@@ -118,15 +126,28 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
           contenido
         })
       )
+      setAutosaveMessage('Cambios guardados localmente.')
+      setTimeout(() => setAutosaveMessage(''), 3000)
     }, 500)
 
     return () => window.clearTimeout(timeoutId)
   }, [autosaveKey, titulo, imagen, categoriaId, contenido])
 
-  //url para previsualizar imagen
-  const imagePreviewUrl = useMemo(() => {
-    return imagen.trim() || ''
-  }, [imagen])
+  // url para previsualizar imagen con limpieza de memoria
+  const [imagePreviewUrl, setImagePreviewUrl] = useState('')
+
+  useEffect(() => {
+    if (!selectedImageFile) {
+      setImagePreviewUrl(imagen.trim() || '')
+      return
+    }
+
+    const objectUrl = URL.createObjectURL(selectedImageFile)
+    setImagePreviewUrl(objectUrl)
+
+    // Cleanup para evitar memory leaks
+    return () => URL.revokeObjectURL(objectUrl)
+  }, [selectedImageFile, imagen])
 
   // Detectar cambios en el formulario (si no está “sucio”)
   const isFormDirty = useMemo(() => {
@@ -178,21 +199,26 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
   const insertLink = () => {
     const textarea = textareaRef.current
     if (!textarea) return
+    setSelectionForLink(textarea.value.substring(textarea.selectionStart, textarea.selectionEnd))
+    setIsLinkModalOpen(true)
+  }
 
-    const selected = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd)
-
-    // insertar link
-    const url = prompt('Ingresa la URL')
-    if (!url) return
+  const handleLinkConfirm = (url: string, linkText: string = selectionForLink) => {
+    const textarea = textareaRef.current
+    if (!textarea) return
 
     const start = textarea.selectionStart
     const end = textarea.selectionEnd
     const text = textarea.value
 
-    const newText =
-      text.substring(0, start) + `[${selected || 'texto'}](${url})` + text.substring(end)
-
+    const newText = text.substring(0, start) + `[${linkText}](${url})` + text.substring(end)
     setContenido(newText)
+
+    setTimeout(() => {
+      textarea.focus()
+      const newCursorPos = start + linkText.length + url.length + 4
+      textarea.setSelectionRange(newCursorPos, newCursorPos)
+    }, 0)
   }
   // Validar formulario
   const validate = () => {
@@ -202,7 +228,7 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
       nextErrors.titulo = 'El título es obligatorio.'
     }
 
-    if (!imagen.trim()) {
+    if (!selectedImageFile && !imagen.trim()) {
       nextErrors.imagen = 'La imagen es obligatoria.'
     }
 
@@ -229,9 +255,16 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     setSuccessMessage('')
 
     try {
+      // Subir imagen si hay un archivo seleccionado
+      let finalImageUrl = imagen.trim()
+      if (selectedImageFile) {
+        const uploadRes = await uploadBlogImage(selectedImageFile)
+        finalImageUrl = uploadRes.url
+      }
+
       const payload = {
         titulo: titulo.trim(),
-        imagen: imagen.trim(),
+        imagen: finalImageUrl,
         categoria_id: Number(categoriaId),
         contenido: contenido.trim(),
         accion
@@ -272,6 +305,8 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     // estado general
     categories,
     isLoadingCategories,
+    loadError,
+    autosaveMessage,
     isSubmitting,
     submitError,
     successMessage,
@@ -291,6 +326,12 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     validate,
     applyFormatting,
     insertLink,
+    handleLinkConfirm,
+    setIsLinkModalOpen,
+    isLinkModalOpen,
+    selectionForLink,
+    setSelectedImageFile,
+    selectedImageFile,
     submitBlog
   }
 }
