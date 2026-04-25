@@ -3,17 +3,6 @@
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import {
-  Link,
-  List,
-  Quote,
-  Bold,
-  Italic,
-  Eye,
-} from "lucide-react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import remarkBreaks from "remark-breaks";
 import BlogLinkModal from "./BlogLinkModal";
 
 import BlogFormHeader from "./form/BlogFormHeader";
@@ -84,7 +73,6 @@ export default function BlogCreateForm({
   const [imagen, setImagen] = useState(initialValues?.imagen ?? "");
   const [categoriaId, setCategoriaId] = useState(initialValues?.categoriaId ?? "");
   const [contenido, setContenido] = useState(initialValues?.contenido ?? "");
-  const [showPreview, setShowPreview] = useState(true);
   const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
   const [selectionForLink, setSelectionForLink] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
