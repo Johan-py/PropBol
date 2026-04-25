@@ -119,22 +119,35 @@ function createPinIcon(type: PropertyMapPin['type']): L.DivIcon {
   })
 }
 
-function MapClickHandler({ onMapClick }: { onMapClick: (latlng: L.LatLng) => void }) {
+function MapClickHandler({ onMapClick, isDrawingMode }: {
+  onMapClick: (latlng: L.LatLng) => void
+  isDrawingMode: boolean
+}) {
   const map = useMap()
 
+  // AÑADIDO: Control nativo del cursor y bloqueo de arrastre (Criterios 2 y 20)
   useEffect(() => {
-    const handleClick = (e: L.LeafletMouseEvent) => {
-      onMapClick(e.latlng)
+    if (isDrawingMode) {
+      map.dragging.disable() // Bloquea el movimiento del mapa
+      map.getContainer().style.cursor = 'crosshair' // Fuerza la cruz
+    } else {
+      map.dragging.enable() // Restaura el movimiento
+      map.getContainer().style.cursor = '' // Restaura la manito
     }
+  }, [isDrawingMode, map])
 
-    map.on('click', handleClick)
+useEffect(() => {
+  const handleClick = (e: L.LeafletMouseEvent) => {
+    onMapClick(e.latlng)
+  }
+  map.on('click', handleClick)
 
-    return () => {
-      map.off('click', handleClick)
-    }
-  }, [map, onMapClick])
+  return () => {
+    map.off('click', handleClick)
+  }
+}, [map, onMapClick])
 
-  return null
+return null
 }
 
 function MapMouseHandler({ onMouseLeave }: { onMouseLeave: () => void }) {
@@ -317,7 +330,7 @@ export default function MapView({
         touchZoom={true}
         dragging={true}
         style={{ height: '100%', width: '100%' }}
-        className="z-0"
+        className={`z-0 ${isDrawingMode && !isPolygonClosed ? '[&.leaflet-container]:cursor-crosshair [&_.leaflet-interactive]:cursor-crosshair' : ''}`}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -335,6 +348,7 @@ export default function MapView({
               onZoneSelect?.(null) // criterio 10: clic neutral desactiva zona
             }
           }}
+          isDrawingMode={isDrawingMode}
         />
 
         <ZonasOverlay

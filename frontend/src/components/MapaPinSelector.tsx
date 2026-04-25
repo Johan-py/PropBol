@@ -100,6 +100,35 @@ export default function MapaPinSelector({
   <Marker
     position={[pinCoords.lat, pinCoords.lng]}
     icon={pinIcon}
+    draggable={true}
+     eventHandlers={{
+      drag: (e) => {
+        const map = e.target._map
+        const bounds = map.getBounds()
+        const pos = e.target.getLatLng()
+
+        const lat = Math.min(
+          Math.max(pos.lat, bounds.getSouth()),
+          bounds.getNorth()
+        )
+
+        const lng = Math.min(
+          Math.max(pos.lng, bounds.getWest()),
+          bounds.getEast()
+        )
+        e.target.setLatLng([lat, lng])
+      },
+
+      dragend: (e) => {
+        const pos = e.target.getLatLng()
+
+        setPinCoords({
+          lat: pos.lat,
+          lng: pos.lng
+        })
+      }
+    }}
+    
   />
 )}
 

@@ -4,7 +4,15 @@ import { CapacidadSidebar } from '@/components/filters/CapacidadSidebar'
 import MisZonasSidebar from '@/components/map/MisZonasSidebar'
 import { point, polygon } from '@turf/helpers'
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon'
-import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from 'react'
+import {
+  useState,
+  useEffect,
+  useRef,
+  Suspense,
+  useCallback,
+  useMemo,
+  type Ref,
+} from 'react'
 import { useSearchParams, useRouter } from "next/navigation";
 import nextDynamic from 'next/dynamic'
 import {
@@ -484,6 +492,12 @@ function BusquedaMapaContent() {
     if (listPage > listTotalPages) setListPage(listTotalPages);
   }, [listPage, listTotalPages]);
 
+  const listScrollRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    listScrollRef.current?.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [listSafePage, listPageSize, filterResetKey, isPolygonClosed]);
+
   // === 5. ESTADOS VISUALES Y DE CLUSTERS (develop + HU8) ===
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
@@ -593,8 +607,14 @@ function BusquedaMapaContent() {
     </div>
   )
 
-  const PropertyListMobile = ({ onClickItem }: { onClickItem?: (p: any) => void }) => (
-    <div className="flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar">
+  const PropertyListMobile = ({
+    onClickItem,
+    listScrollRef,
+  }: {
+    onClickItem?: (p: any) => void;
+    listScrollRef: Ref<HTMLDivElement>;
+  }) => (
+    <div ref={listScrollRef} className="flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar">
       {isLoading ? (
         <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2">
           <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />{' '}
@@ -605,8 +625,8 @@ function BusquedaMapaContent() {
       ) : (
         <div
           className={`gap-3 flex flex-col ${viewMode === 'list'
-              ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-              : ''
+            ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
+            : ''
             }`}
         >
           {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
@@ -621,7 +641,7 @@ function BusquedaMapaContent() {
 
                 // HU4 - Abre el detalle en una nueva pestaña
                 abrirDetallePropiedad(property.id)
-            }}
+              }}
               className={`cursor-pointer transition-all duration-200 rounded-xl ${selectedPropertyId === property.id ? 'ring-2 ring-orange-400 ring-offset-1' : ''
                 }`}
             >
@@ -659,19 +679,33 @@ function BusquedaMapaContent() {
     </div>
   )
 
-  const renderListPaginationFooter = () => (
-    <MapaListadoPaginacion
-      total={listTotal}
-      page={listSafePage}
-      pageSize={listPageSize}
-      onPageChange={setListPage}
-      onPageSizeChange={(s) => {
-        setListPageSize(s);
-        setListPage(1);
-      }}
-      hint={listTotal === 0 && error ? `Error al cargar: ${error}` : null}
-    />
-  );
+
+  const renderListPaginationFooter = () => {
+    if (isClusterView) {
+      return clusterProperties.length > 0 ? (
+        <div className="shrink-0 border-t border-stone-100 bg-stone-50 px-3 py-2">
+          <p className="text-[11px] text-stone-500 text-center sm:text-left">
+            Mostrando {clusterProperties.length}{" "}
+            {clusterProperties.length === 1 ? "propiedad del clúster" : "propiedades del clúster"}.
+          </p>
+        </div>
+      ) : null;
+    }
+
+    return listTotal > 0 ? (
+      <MapaListadoPaginacion
+        total={listTotal}
+        page={listSafePage}
+        pageSize={listPageSize}
+        onPageChange={setListPage}
+        onPageSizeChange={(s) => {
+          setListPageSize(s);
+          setListPage(1);
+        }}
+        hint={error ? `Error al cargar: ${error}` : null}
+      />
+    ) : null;
+  };
 
   // ────────────────────────────────────────────────────────────────────────────
   // RENDER LANDSCAPE MÓVIL
@@ -738,7 +772,7 @@ function BusquedaMapaContent() {
                 {MenuToggleComponent}
               </div>
               <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
-                <PropertyListMobile onClickItem={(p) => setPinnedProperty(p)} />
+                <PropertyListMobile listScrollRef={listScrollRef} onClickItem={(p) => setPinnedProperty(p)} />
                 {renderListPaginationFooter()}
               </div>
             </div>
@@ -936,6 +970,7 @@ function BusquedaMapaContent() {
                 </div>
                 <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
                   <PropertyListMobile
+                    listScrollRef={listScrollRef}
                     onClickItem={(p) => {
                       setPinnedProperty(p)
                       setSheetState('peek')
@@ -955,7 +990,7 @@ function BusquedaMapaContent() {
   // RENDER DESKTOP
   // ────────────────────────────────────────────────────────────────────────────
   return (
-    <div className="flex flex-col bg-white w-full h-[calc(100dvh-54px)] overflow-hidden">
+    <div className="relative z-10 flex flex-col bg-white w-full h-[calc(100dvh-54px)] overflow-hidden">
       <FilterBar
         variant="map"
         onSearch={(nuevosFiltros) => {
@@ -1002,13 +1037,19 @@ function BusquedaMapaContent() {
                 setIsCapacidadOpen(false)
                 setActiveSidebarView('results')
               }}
-              onApply={(dormitoriosMin, dormitoriosMax, banosMin, banosMax) => {
-                console.log('Filtros capacidad:', { dormitoriosMin, dormitoriosMax, banosMin, banosMax })
+              onApply={(dormitoriosMin, dormitoriosMax, banosMin, banosMax, tipoBano) => {
+                const params = new URLSearchParams(searchParams.toString())
+                params.set('dormitoriosMin', dormitoriosMin.toString())
+                params.set('dormitoriosMax', dormitoriosMax.toString())
+                params.set('banosMin', banosMin.toString())
+                params.set('banosMax', banosMax.toString())
+                params.set('tipoBano', tipoBano)
+                router.push(`/busqueda_mapa?${params.toString()}`)
                 setIsCapacidadOpen(false)
                 setActiveSidebarView('results')
               }}
-          /> 
-        ) :
+            />
+          ) :
             isSidebarOpen && activeSidebarView === 'results' ? (
               <div className="flex flex-col h-full min-h-0">
                 <div className="p-4 bg-white shrink-0">
@@ -1091,6 +1132,7 @@ function BusquedaMapaContent() {
                 {/* Lista de propiedades */}
                 <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
                   <div
+                    ref={listScrollRef as Ref<HTMLDivElement>}
                     className="flex-1 min-h-0 overflow-y-auto p-4 bg-stone-50 no-scrollbar"
                     onMouseEnter={() => setIsHoveringList(true)}
                     onMouseLeave={() => {
@@ -1109,8 +1151,8 @@ function BusquedaMapaContent() {
                     ) : (
                       <div
                         className={`gap-4 flex flex-col ${viewMode === 'list'
-                            ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-                            : ''
+                          ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
+                          : ''
                           }`}
                       >
                         {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
@@ -1126,8 +1168,8 @@ function BusquedaMapaContent() {
                               abrirDetallePropiedad(property.id)
                             }}
                             className={`cursor-pointer transition-all duration-200 rounded-xl relative ${viewMode === 'grid'
-                                ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
-                                : 'w-full py-1 hover:bg-stone-100'
+                              ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
+                              : 'w-full py-1 hover:bg-stone-100'
                               } ${selectedPropertyId === property.id
                                 ? 'ring-2 ring-orange-400 ring-offset-1 z-10'
                                 : ''
