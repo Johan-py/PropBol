@@ -34,7 +34,11 @@ export default function NavLinks() {
   return (
     <div className="hidden md:flex items-center gap-6 text-[15px] font-medium text-gray-700">
 
+<<<<<<< HEAD
       {/* Propiedades con dropdown */}
+=======
+      {/* Propiedades con dropdown corregido */}
+>>>>>>> 28602f7d842dadbb72fdccc597527b1b2b032f5d
       <div id="tour-propiedades" className="relative" ref={dropdownRef}>
         <button
           onClick={() => setOpen(!open)}
