@@ -21,6 +21,7 @@ import BlogLinkModal from "./BlogLinkModal";
 
 import BlogFormHeader from "./form/BlogFormHeader";
 import BlogImageSection from "./form/BlogImageSection";
+import BlogInfoFields from "./form/BlogInfoFields";
 
 import {
   createBlog,
@@ -457,54 +458,16 @@ export default function BlogCreateForm({
               error={fieldErrors.imagen}
             />
 
-            {/* Title Section */}
-            <div className="space-y-3">
-              <span className="px-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[#A8A29E]">
-                Titulo del post
-              </span>
-              <input
-                type="text"
-                value={titulo}
-                onChange={(event) => setTitulo(event.target.value)}
-                placeholder="Escribe un título"
-                className="w-full rounded-[20px] bg-[#F5F5F4] px-6 py-5 text-xl font-bold text-[#1C1917] placeholder:text-[#D6D3D1] outline-none transition focus:bg-white focus:ring-2 focus:ring-[#F59E0B]/20"
-              />
-              {fieldErrors.titulo && (
-                <p className="px-2 text-sm font-medium text-red-500">{fieldErrors.titulo}</p>
-              )}
-            </div>
-
-            {/* Category Section */}
-            <div className="space-y-3">
-              <span className="px-1 text-[10px] font-bold uppercase tracking-[0.15em] text-[#A8A29E]">
-                Categoría
-              </span>
-              <div className="relative">
-                <select
-                  value={categoriaId}
-                  onChange={(event) => setCategoriaId(event.target.value)}
-                  disabled={isLoadingCategories}
-                  className="w-full appearance-none rounded-2xl bg-[#F5F5F4] px-6 py-4 text-sm font-semibold text-[#44403C] outline-none transition focus:bg-white focus:ring-2 focus:ring-[#F59E0B]/20 disabled:opacity-50"
-                >
-                  <option value="">
-                    {isLoadingCategories ? "Cargando..." : "Selecciona una categoría"}
-                  </option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={String(category.id)}>
-                      {category.nombre}
-                    </option>
-                  ))}
-                </select>
-                <div className="pointer-events-none absolute right-6 top-1/2 -translate-y-1/2">
-                  <svg className="h-4 w-4 text-[#A8A29E]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
-              {fieldErrors.categoria_id && (
-                <p className="px-2 text-sm font-medium text-red-500">{fieldErrors.categoria_id}</p>
-              )}
-            </div>
+            {/* Info Fields (Title & Category) */}
+            <BlogInfoFields
+              titulo={titulo}
+              setTitulo={setTitulo}
+              categoriaId={categoriaId}
+              setCategoriaId={setCategoriaId}
+              categories={categories}
+              isLoadingCategories={isLoadingCategories}
+              errors={fieldErrors}
+            />
 
             {/* Content Section */}
             <div className="space-y-3">
