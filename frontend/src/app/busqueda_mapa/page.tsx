@@ -990,7 +990,7 @@ function BusquedaMapaContent() {
   // RENDER DESKTOP
   // ────────────────────────────────────────────────────────────────────────────
   return (
-    <div className="flex flex-col bg-white w-full h-[calc(100dvh-54px)] overflow-hidden">
+    <div className="relative z-10 flex flex-col bg-white w-full h-[calc(100dvh-54px)] overflow-hidden">
       <FilterBar
         variant="map"
         onSearch={(nuevosFiltros) => {
