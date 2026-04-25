@@ -173,7 +173,7 @@ const registerFailedAttempt = (correo: string) => {
     retryAfterSeconds: 0
   }
 }
-//prueba
+
 const clearFailedAttempts = (correo: string) => {
   loginAttempts.delete(correo)
 }
@@ -763,6 +763,7 @@ export const loginWithGoogleCodeService = async (code: string) => {
     token
   }
 }
+
 type ForgotPasswordDTO = {
   correo: string
 }

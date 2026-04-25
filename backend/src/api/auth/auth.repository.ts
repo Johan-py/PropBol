@@ -3,15 +3,24 @@ import { prisma } from '../../lib/prisma.client.js'
 
 // ─── USUARIO ───────────────────────────────────────────
 export const findUser = async (correo: string) => {
-  return prisma.usuario.findFirst({ where: { correo } })
+  return prisma.usuario.findFirst({
+    where: { correo },
+    include: { rol: true }
+  })
 }
 
 export const findUserById = async (id: number) => {
-  return prisma.usuario.findUnique({ where: { id } })
+  return prisma.usuario.findUnique({
+    where: { id },
+    include: { rol: true }
+  })
 }
 
 export const findUserByCorreo = async (correo: string) => {
-  return prisma.usuario.findUnique({ where: { correo } })
+  return prisma.usuario.findUnique({
+    where: { correo },
+    include: { rol: true }
+  })
 }
 
 export const createUser = async (data: {
@@ -28,10 +37,12 @@ export const createUser = async (data: {
       correo: data.correo,
       password: data.password,
       ...(data.telefono && {
-        telefonos: { create: { numero: data.telefono } }
+        telefonos: {
+          create: [{ numero: data.telefono, codigoPais: '' }]
+        }
       })
     },
-    include: { telefonos: true }
+    include: { telefonos: true, rol: true }
   })
 }
 
@@ -47,7 +58,7 @@ export const createSession = async (data: {
 export const findActiveSessionByToken = async (token: string) => {
   return prisma.sesion.findFirst({
     where: { token, estado: true },
-    include: { usuario: true }
+    include: { usuario: { include: { rol: true } } }
   })
 }
 
@@ -96,22 +107,22 @@ export const create2FACode = async (data: {
 
 export const findActive2FACodeByUserId = async (usuarioId: number) => {
   return prisma.codigo_2fa.findFirst({
-    where: { usuarioId, usado: false },
+    where: { usuarioId, usadoEn: null },
     orderBy: { creadoEn: 'desc' }
   })
 }
 
 export const invalidateActive2FACodesByUserId = async (usuarioId: number) => {
   return prisma.codigo_2fa.updateMany({
-    where: { usuarioId, usado: false },
-    data: { usado: true }
+    where: { usuarioId, usadoEn: null },
+    data: { usadoEn: new Date() }
   })
 }
 
 export const expire2FACode = async (id: number) => {
   return prisma.codigo_2fa.update({
     where: { id },
-    data: { usado: true }
+    data: { usadoEn: new Date() }
   })
 }
 
@@ -125,7 +136,7 @@ export const increment2FACodeAttempts = async (id: number, intentosActuales: num
 export const mark2FACodeAsUsed = async (id: number) => {
   return prisma.codigo_2fa.update({
     where: { id },
-    data: { usado: true }
+    data: { usadoEn: new Date() }
   })
 }
 
