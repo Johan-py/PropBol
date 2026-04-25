@@ -87,10 +87,14 @@ export default function PropertyCard({
           <>
             {/* Imagen con fade transition */}
             <img
-              key={currentIndex}
-              src={currentSlide.imagen}
-              alt={currentSlide.titulo}
-              className="w-full h-full object-cover animate-fade"
+  key={currentIndex}
+  src={currentSlide.imagen}
+  alt={currentSlide.titulo}
+  // Añade esto para manejar si una imagen falla
+  onError={(e) => {
+    (e.target as HTMLImageElement).src = "/placeholder-house.jpg";
+  }}
+  className="w-full h-full object-cover transition-opacity duration-500"
             />
 
             {/* Título del inmueble rotando */}
