@@ -41,6 +41,7 @@ import MapaListadoPaginacion, { PageSize } from "@/components/galeria/MapaListad
 import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenamiento'
 import { ErrorState } from '@/components/ClusterSidebar'
 import SuperficieFilterSidebar from '@/components/filters/SuperficieFilterSidebar'
+import { UbicacionEspecificaPanel } from '@/components/filters/UbicacionEspecificaPanel';
 
 // Carga dinámica del mapa (sin SSR)
 const MapView = nextDynamic(() => import('./MapView'), {
@@ -161,7 +162,18 @@ function BusquedaMapaContent() {
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
   const [isMounted, setIsMounted] = useState(false)
   const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false)
-  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad'>('results')
+  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad'| 'ubicacion'>('results')
+  
+  useEffect(() => {
+    const handleAbrirUbicacion = () => {
+      setIsPriceFilterOpen(false); // Cierra precio si estaba abierto
+      setIsSidebarOpen(true);      // Asegura que el panel izquierdo esté visible
+      setActiveSidebarView('ubicacion'); // Cambia el contenido al panel de zonas
+    };
+    
+    window.addEventListener('abrirPanelUbicacion', handleAbrirUbicacion);
+    return () => window.removeEventListener('abrirPanelUbicacion', handleAbrirUbicacion);
+  }, []);
 
   // --- INICIO ESTADOS HU8 ---
   const [isDrawingMode, setIsDrawingMode] = useState(false)
@@ -1056,6 +1068,14 @@ function BusquedaMapaContent() {
               }}
             />
           ) :
+           isSidebarOpen && activeSidebarView === 'ubicacion' ? (
+            
+            <div className="flex flex-col h-full w-full bg-white relative">
+              <UbicacionEspecificaPanel 
+                onClose={() => setActiveSidebarView('results')} 
+              />
+            </div>
+            ) :
             isSidebarOpen && activeSidebarView === 'results' ? (
               <div className="flex flex-col h-full min-h-0">
                 <div className="p-4 bg-white shrink-0">
