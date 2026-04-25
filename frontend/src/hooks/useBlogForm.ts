@@ -281,7 +281,7 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
 
       setTimeout(() => {
         router.push('/blogs')
-      }, 1200)
+      }, 2500)
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'Error al guardar')
     } finally {

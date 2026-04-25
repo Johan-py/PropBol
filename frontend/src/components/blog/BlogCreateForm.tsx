@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import BlogLinkModal from "./BlogLinkModal";
 import BlogPublishModal from "./BlogPublishModal";
+import SuccessToast from "./SuccessToast";
 
 import BlogFormHeader from "./form/BlogFormHeader";
 import BlogImageSection from "./form/BlogImageSection";
@@ -152,8 +153,11 @@ export default function BlogCreateForm({
             {/* Feedback Messages */}
             {loadError && <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600 font-medium">{loadError}</p>}
             {autosaveMessage && <p className="rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-700 font-medium">{autosaveMessage}</p>}
-            {submitError && <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600 font-medium">{submitError}</p>}
-            {successMessage && <p className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm text-emerald-700 font-medium">{successMessage}</p>}
+            {submitError && (
+              <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
+                {submitError}
+              </p>
+            )}
           </form>
         </div>
 
@@ -177,6 +181,12 @@ export default function BlogCreateForm({
         isSubmitting={isSubmitting}
         onClose={() => setIsPublishModalOpen(false)}
         onConfirm={handleConfirmPublish}
+      />
+
+      <SuccessToast
+        message={successMessage}
+        isOpen={!!successMessage}
+        onClose={() => {}} // El hook redirige rápido, así que no es crítico el reset manual aquí
       />
     </div>
   );
