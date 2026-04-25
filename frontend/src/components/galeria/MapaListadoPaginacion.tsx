@@ -94,15 +94,16 @@ export default function MapaListadoPaginacion({
                 )
               ))}
             </div>
-            <button
-              type="button"
-              disabled={safePage >= totalPages}
-              onClick={() => onPageChange(safePage + 1)}
-              className="p-1.5 rounded-md border border-stone-200 bg-white disabled:opacity-40"
-              aria-label="Página siguiente"
-            >
-              <ChevronRight size={16} />
-            </button>
+            {safePage < totalPages ? (
+              <button
+                type="button"
+                onClick={() => onPageChange(safePage + 1)}
+                className="p-1.5 rounded-md border border-stone-200 bg-white"
+                aria-label="Página siguiente"
+              >
+                <ChevronRight size={16} />
+              </button>
+            ) : null}
           </div>
         ) : null}
       </div>
