@@ -256,31 +256,41 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     }
   }
 
-  // retorno mínimo para no romper nada
   return {
+    // valores
     titulo,
-    setTitulo,
     imagen,
-    setImagen,
     categoriaId,
-    setCategoriaId,
     contenido,
+
+    // setters
+    setTitulo,
+    setImagen,
+    setCategoriaId,
     setContenido,
+
+    // estado general
     categories,
     isLoadingCategories,
+    isSubmitting,
+    submitError,
+    successMessage,
+    fieldErrors,
+
+    // refs / utils
     textareaRef,
     router,
     autosaveKey,
+
+    // derivados
     imagePreviewUrl,
     isFormDirty,
-    applyFormatting,
-    insertLink,
-    fieldErrors,
+
+    // acciones
     setFieldErrors,
     validate,
-    submitBlog,
-    isSubmitting,
-    submitError,
-    successMessage
+    applyFormatting,
+    insertLink,
+    submitBlog
   }
 }
