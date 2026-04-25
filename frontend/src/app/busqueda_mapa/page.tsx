@@ -639,9 +639,7 @@ function BusquedaMapaContent() {
 
                 // HU4 - Conserva el comportamiento existente del listado móvil
                 onClickItem?.(property)
-
                 // HU4 - Abre el detalle en una nueva pestaña
-                abrirDetallePropiedad(property.id)
               }}
               className={`cursor-pointer transition-all duration-200 rounded-xl ${selectedPropertyId === property.id ? 'ring-2 ring-orange-400 ring-offset-1' : ''
                 }`}
@@ -1166,7 +1164,6 @@ function BusquedaMapaContent() {
                               setSelectedPropertyId(property.id)
 
                               // HU4 - Abre el detalle de la propiedad en una nueva pestaña
-                              abrirDetallePropiedad(property.id)
                             }}
                             className={`cursor-pointer transition-all duration-200 rounded-xl relative ${viewMode === 'grid'
                               ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
