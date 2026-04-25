@@ -356,7 +356,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
+      <nav className="sticky top-0 z-[999] w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
         <div className="mx-auto max-w-[1440px] px-4 py-1.5 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
@@ -462,8 +462,8 @@ export default function Navbar() {
                               aria-selected={filter === item}
                               onClick={() => setFilter(item)}
                               className={`rounded-full px-3 py-1 text-xs font-medium transition ${filter === item
-                                  ? "bg-amber-600 text-white"
-                                  : "bg-stone-100 text-stone-700 hover:bg-stone-200"
+                                ? "bg-amber-600 text-white"
+                                : "bg-stone-100 text-stone-700 hover:bg-stone-200"
                                 }`}
                             >
                               {item === "todas"
@@ -537,8 +537,8 @@ export default function Navbar() {
                                     );
                                   }}
                                   className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${notification.status === "no leida"
-                                      ? "cursor-pointer bg-amber-50"
-                                      : "bg-white"
+                                    ? "cursor-pointer bg-amber-50"
+                                    : "bg-white"
                                     }`}
                                 >
                                   <div className="flex items-start justify-between gap-3">
