@@ -560,6 +560,12 @@ function BusquedaMapaContent() {
     },
     [inmueblesOrdenados]
   )
+  const handleZoneSelect = (id: number | null) => {
+    setSelectedZoneId(id)
+    setIsClusterView(false)
+    setActiveClusterIds([])
+    setClusterProperties([])
+  }
 
   // HU4 - Abre el detalle de la propiedad en una nueva pestaña.
   // Se usa property.id porque en filtros corresponde al inmuebleId.
@@ -727,7 +733,7 @@ function BusquedaMapaContent() {
                   selectedId={selectedPropertyId}
                   zonas={zonasCombinadas}
                   selectedZoneId={selectedZoneId}
-                  onZoneSelect={setSelectedZoneId}
+                  onZoneSelect={handleZoneSelect}
                   onSelect={handleMapSelect}
                   isLoading={isLoading}
                   error={error}
@@ -802,7 +808,7 @@ function BusquedaMapaContent() {
               selectedId={selectedPropertyId}
               zonas={zonasCombinadas}
               selectedZoneId={selectedZoneId}
-              onZoneSelect={setSelectedZoneId}
+              onZoneSelect={handleZoneSelect}
               onSelect={handleMapSelect}
               isLoading={isLoading}
               error={error}
@@ -1335,7 +1341,7 @@ function BusquedaMapaContent() {
               error={error}
               zonas={zonasCombinadas}
               selectedZoneId={selectedZoneId}
-              onZoneSelect={setSelectedZoneId}
+              onZoneSelect={handleZoneSelect}
               isDrawingMode={isDrawingMode}
               polygonPoints={polygonPoints}
               isPolygonClosed={isPolygonClosed}
