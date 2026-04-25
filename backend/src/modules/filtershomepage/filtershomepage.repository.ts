@@ -1,6 +1,31 @@
 import { $Enums } from "@prisma/client";
 import { prisma } from "../../lib/prisma.client.js";
 
+const CIUDAD_A_DEPTO: Record<string, string> = {
+  "SANTA CRUZ DE LA SIERRA": "SANTA CRUZ",
+  "SANTA CRUZ": "SANTA CRUZ",
+  "LA PAZ": "LA PAZ",
+  "EL ALTO": "LA PAZ",
+  COCHABAMBA: "COCHABAMBA",
+  QUILLACOLLO: "COCHABAMBA",
+  SACABA: "COCHABAMBA",
+  ORURO: "ORURO",
+  POTOSI: "POTOSÍ",
+  POTOSÍ: "POTOSÍ",
+  SUCRE: "SUCRE",
+  CHUQUISACA: "SUCRE",
+  TARIJA: "TARIJA",
+  TRINIDAD: "BENI",
+  BENI: "BENI",
+  COBIJA: "PANDO",
+  PANDO: "PANDO",
+};
+
+function resolverDepartamento(raw: string): string {
+  const upper = raw.trim().toUpperCase();
+  return CIUDAD_A_DEPTO[upper] ?? upper;
+}
+
 export class FiltersHomepageRepository {
   // backend/src/modules/filtershomepage/filtershomepage.repository.ts
 
@@ -14,6 +39,7 @@ export class FiltersHomepageRepository {
       },
       select: {
         inmuebleId: true,
+        ciudad: true,
         ubicacion_maestra: { select: { departamento: true } },
         inmueble: {
           select: {
@@ -35,13 +61,16 @@ export class FiltersHomepageRepository {
       },
     });
 
-    const deptMap = new Map<string, { ids: Set<number>; previews: Array<{ imagen: string; titulo: string }> }>();
+    const deptMap = new Map<
+      string,
+      { ids: Set<number>; previews: Array<{ imagen: string; titulo: string }> }
+    >();
 
     for (const u of ubicaciones) {
-      const rawDept = u.ubicacion_maestra?.departamento;
+      const rawDept = u.ubicacion_maestra?.departamento ?? u.ciudad ?? null;
       if (!rawDept || !u.inmuebleId) continue;
 
-      const dept = rawDept.trim().toUpperCase();
+      const dept = resolverDepartamento(rawDept);
 
       if (!deptMap.has(dept)) {
         deptMap.set(dept, { ids: new Set(), previews: [] });

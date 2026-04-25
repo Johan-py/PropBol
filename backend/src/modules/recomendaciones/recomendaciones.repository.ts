@@ -10,10 +10,18 @@ export class RecomendacionesRepository {
         usuarioId,
         vistaEn: { gte: fechaLimite }
       },
-      include: {
+      select: {
+        inmuebleId: true,
+        vistaEn: true,
         inmueble: {
-          include: {
-            ubicacion: true
+          select: {
+            id: true,
+            categoria: true,
+            precio: true,
+            superficieM2: true,
+            ubicacion: {
+              select: { zona: true, ciudad: true }
+            }
           }
         }
       },
@@ -168,14 +176,14 @@ export class RecomendacionesRepository {
   }
 
   async getInmueblesPorIds(ids: number[]) {
-  return await prisma.inmueble.findMany({
-    where: {
-      id: { in: ids },
-      estado: 'ACTIVO'
-    },
-    include: {
-      ubicacion: true
-    }
-  })
-}
+    return await prisma.inmueble.findMany({
+      where: {
+        id: { in: ids },
+        estado: 'ACTIVO'
+      },
+      include: {
+        ubicacion: true
+      }
+    })
+  }
 }

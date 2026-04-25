@@ -11,4 +11,5 @@ export interface PaymentData {
   subtotal?: number
   iva_monto?: number
   planId?: string
+  tipoFacturacion?: string
 }

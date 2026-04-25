@@ -1023,9 +1023,7 @@ function BusquedaMapaContent() {
                 params.set('banosMin', banosMin.toString())
                 params.set('banosMax', banosMax.toString())
                 params.set('tipoBano', tipoBano)
-
                 router.push(`/busqueda_mapa?${params.toString()}`)
-
                 setIsCapacidadOpen(false)
                 setActiveSidebarView('results')
               }}

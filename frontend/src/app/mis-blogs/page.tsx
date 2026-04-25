@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+
 type Blog = {
   id: number;
   titulo: string;
@@ -28,11 +30,11 @@ export default function MisBlogsPage() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      router.push("/auth/login");
+      router.push("/sign-in");
       return;
     }
 
-    fetch("http://localhost:5000/api/blogs/mis-blogs", {
+    fetch(`${API_URL}/api/blogs/mis-blogs`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -40,7 +42,7 @@ export default function MisBlogsPage() {
       .then((res) => res.json())
       .then((data) => setBlogs(data))
       .finally(() => setLoading(false));
-  }, []);
+  }, [router]);
 
   const filtrados =
     filtro === "TODOS" ? blogs : blogs.filter((b) => b.estado === filtro);

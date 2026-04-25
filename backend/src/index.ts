@@ -4,6 +4,7 @@ import express from 'express'
 import cors from 'cors'
 import { env } from './config/env.js'
 import type { Request, Response } from 'express'
+import { prisma } from './lib/prisma.client.js'
 import zonaRoutes from './modules/perfil/zonaUsario.routes.js'
 import telemetriaRouter from './modules/perfil/telemetria.routes.js'
 // --------------------
@@ -309,9 +310,28 @@ app.post('/api/publicaciones', (req, res) => {
 // --------------------
 const PORT = Number(process.env.PORT) || 5000
 
+async function seedPlanes() {
+  const count = await prisma.plan_suscripcion.count()
+  if (count > 0) return
+  await prisma.plan_suscripcion.createMany({
+    data: [
+      { nombre_plan: 'Básico',    precio_plan: 0,   nro_publicaciones_plan: 3,   duracion_plan_dias: 30, imagen_gr_url: '/qrs/basico.png'   },
+      { nombre_plan: 'Estándar',  precio_plan: 99,  nro_publicaciones_plan: 10,  duracion_plan_dias: 30, imagen_gr_url: '/qrs/estandar.png' },
+      { nombre_plan: 'Pro',       precio_plan: 199, nro_publicaciones_plan: 100, duracion_plan_dias: 30, imagen_gr_url: '/qrs/pro.png'      },
+    ],
+  })
+  console.log('✅ Planes de suscripción inicializados en DB')
+}
+
 app.listen(PORT, async () => {
   console.log(`🚀 Server running on port ${PORT}`)
   console.log(`Health check: http://localhost:${PORT}/health`)
+
+  try {
+    await seedPlanes()
+  } catch (error) {
+    console.error('❌ Error al inicializar planes:', error)
+  }
 
   try {
     await verifyEmailTransport()
