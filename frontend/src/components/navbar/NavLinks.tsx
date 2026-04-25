@@ -3,8 +3,11 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
+import { useRouter } from "next/navigation";
+
 
 export default function NavLinks() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -23,10 +26,6 @@ export default function NavLinks() {
   return (
     <div className="hidden md:flex items-center gap-6 text-[15px] font-medium text-gray-700">
 
-      {/* HU-05: Inicio */}
-      <Link id="tour-inicio" href="/" className={linkStyle}>
-        Inicio
-      </Link>
 
       {/* HU-05: Propiedades con dropdown */}
       <div id="tour-propiedades" className="relative" ref={dropdownRef}>
@@ -64,23 +63,18 @@ export default function NavLinks() {
         Planes de membresía
       </Link>
 
-      {/* HU-05: Contáctanos */}
-      <Link id="tour-contacto" href="#contacto" className={linkStyle}>
-        Contáctanos
-      </Link>
-
-      {/* HU-05: Sobre Nosotros */}
-      <Link id="tour-nosotros" href="#nosotros" className={linkStyle}>
-        Sobre Nosotros
-      </Link>
-
-      {/* HU-05: Botón de ayuda que reactiva el tour guiado */}
       <button
         id="tour-ayuda"
-        onClick={() => window.dispatchEvent(new Event("propbol:iniciar-tour"))}
+        onClick={() => {
+          router.push("/"); // ir al inicio
+
+          setTimeout(() => {
+            window.dispatchEvent(new Event("propbol:iniciar-tour"));
+          }, 300);
+        }}
         className={linkStyle}
-      >
-        Ayuda
+        >
+         Ayuda
       </button>
 
     </div>
