@@ -58,23 +58,23 @@ function BlogRow({ blog }: { blog: AdminModerationBlog }) {
   const actionLabel = blog.status === 'PENDIENTE' ? 'Revisar' : 'Ver detalle'
 
   return (
-    <article className="grid gap-4 border-t border-stone-200 px-5 py-5 first:border-t-0 md:grid-cols-[minmax(0,2.6fr)_1.1fr_0.9fr_0.9fr_0.8fr] md:items-center md:px-6">
-      <div className="grid items-start gap-4 md:grid-cols-[4rem_minmax(0,1fr)]">
-        <div className="flex h-16 w-16 shrink-0 items-start justify-start overflow-hidden rounded-2xl shadow-sm">
+    <article className="grid gap-4 border-t border-stone-200 px-4 py-4 first:border-t-0 md:grid-cols-[minmax(0,2.5fr)_1fr_0.85fr_0.9fr_0.7fr] md:items-center md:px-6">
+      <div className="grid items-start gap-3 md:grid-cols-[3.5rem_minmax(0,1fr)]">
+        <div className="flex h-14 w-14 shrink-0 items-start justify-start overflow-hidden rounded-xl shadow-sm">
           <Image
             src={blog.coverImage}
             alt={blog.title}
-            width={64}
-            height={64}
-            className="h-16 w-16 object-cover"
+            width={56}
+            height={56}
+            className="h-14 w-14 object-cover"
           />
         </div>
 
         <div className="min-w-0 pt-0.5">
-          <h2 className="text-xl font-bold leading-tight text-stone-900 font-montserrat">
+          <h2 className="text-base font-bold leading-tight text-stone-900 font-montserrat md:text-lg">
             {blog.title}
           </h2>
-          <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.22em] text-amber-600 font-inter opacity-80">
+          <p className="mt-1.5 text-[9px] font-bold uppercase tracking-[0.22em] text-amber-600 font-inter opacity-80">
             {blog.category}
           </p>
         </div>
@@ -103,7 +103,7 @@ function BlogRow({ blog }: { blog: AdminModerationBlog }) {
       <div className="flex items-center md:justify-end">
         <Link
           href={`/admin/blogs/${blog.id}`}
-          className="inline-flex min-h-[46px] items-center justify-center rounded-full bg-stone-200 px-5 text-sm font-semibold uppercase tracking-[0.18em] text-stone-700 transition-colors hover:bg-stone-900 hover:text-white"
+          className="inline-flex min-h-[40px] items-center justify-center rounded-full bg-stone-200 px-4 text-xs font-semibold uppercase tracking-[0.16em] text-stone-700 transition-colors hover:bg-stone-900 hover:text-white"
         >
           {actionLabel}
         </Link>
@@ -155,19 +155,17 @@ export default function AdminBlogsModeration() {
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#f8f4ed_0%,#ffffff_50%,#fff8f0_100%)]">
-      <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
         <section className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-          <div className="max-w-3xl">
+          <div className="max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-amber-600 font-inter">
               Panel del administrador
             </p>
             <h1 className="mt-4 text-4xl font-bold tracking-tight text-stone-900 sm:text-5xl font-montserrat">
               Gestión de Blogs
             </h1>
-            <p className="mt-5 text-lg leading-8 text-stone-600 font-inter">
-              Revisa, aprueba o rechaza las últimas publicaciones de la comunidad inmobiliaria. El
-              estado queda guardado localmente para esta demo mientras no exista integración con
-              backend.
+            <p className="mt-4 max-w-xl text-base leading-7 text-stone-600 font-inter">
+              Revisa, aprueba o rechaza las últimas publicaciones de la comunidad inmobiliaria.
             </p>
             {/* TODO: validar permisos de acceso desde backend cuando exista autenticacion de roles. */}
           </div>
@@ -179,7 +177,7 @@ export default function AdminBlogsModeration() {
                   key={filter.value}
                   type="button"
                   onClick={() => setActiveFilter(filter.value)}
-                  className={`inline-flex min-h-[52px] items-center justify-center rounded-full px-5 text-sm font-semibold uppercase tracking-[0.18em] transition-colors font-inter ${activeFilter === filter.value
+                  className={`inline-flex min-h-[46px] items-center justify-center rounded-full px-4 text-xs font-semibold uppercase tracking-[0.16em] transition-colors font-inter ${activeFilter === filter.value
                       ? 'bg-amber-600 text-white'
                       : 'text-stone-500 hover:bg-stone-100 hover:text-stone-800'
                     }`}
@@ -196,7 +194,7 @@ export default function AdminBlogsModeration() {
 
         {filteredBlogs.length > 0 ? (
           <section className="overflow-hidden rounded-[32px] border border-stone-200 bg-white shadow-[0_20px_70px_rgba(28,25,23,0.08)]">
-            <div className="hidden grid-cols-[minmax(0,2.6fr)_1.1fr_0.9fr_0.9fr_0.8fr] gap-4 bg-stone-100 px-6 py-5 text-xs font-semibold uppercase tracking-[0.24em] text-stone-500 md:grid">
+            <div className="hidden grid-cols-[minmax(0,2.5fr)_1fr_0.85fr_0.9fr_0.7fr] gap-4 bg-stone-100 px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.22em] text-stone-500 md:grid">
               <span>Titulo del post</span>
               <span>Autor</span>
               <span>Fecha</span>
