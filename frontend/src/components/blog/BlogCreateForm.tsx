@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { Editor } from "@tiptap/react";
 import BlogLinkModal from "./BlogLinkModal";
 import BlogPublishModal from "./BlogPublishModal";
 import SuccessToast from "./SuccessToast";
@@ -31,6 +32,7 @@ export default function BlogCreateForm({
   statusLabel,
 }: BlogCreateFormProps) {
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+  const [editor, setEditor] = useState<Editor | null>(null);
 
   const {
     titulo,
@@ -49,21 +51,14 @@ export default function BlogCreateForm({
     fieldErrors,
     setFieldErrors,
     imagePreviewUrl,
-    isFormDirty,
     insertLink,
     setIsLinkModalOpen,
     isLinkModalOpen,
     selectionForLink,
     setSelectedImageFile,
     submitBlog,
-    router,
-    autosaveKey,
     validate,
   } = useBlogForm({ blogId, initialValues, mode });
-
-  const [editor, setEditor] = useState<any>(null);
-
-  // Los atajos de teclado (B, I, K) ahora los maneja TipTap automáticamente
 
   const handleAction = (accion: "borrador" | "pendiente") => {
     if (accion === "borrador") {

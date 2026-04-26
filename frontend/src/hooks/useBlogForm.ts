@@ -42,7 +42,7 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
   const [titulo, setTitulo] = useState(initialValues?.titulo ?? '')
   const [imagen, setImagen] = useState(initialValues?.imagen ?? '')
   const [categoriaId, setCategoriaId] = useState(initialValues?.categoriaId ?? '')
-  const [contenido, setContenido] = useState(initialValues?.contenido ?? '')
+  const [contenido, setContenidoState] = useState(initialValues?.contenido ?? '')
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>(INITIAL_ERRORS)
 
   const [categories, setCategories] = useState<BlogCategoryOption[]>([])
@@ -63,6 +63,11 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
         : `${AUTOSAVE_STORAGE_PREFIX}:create`,
     [blogId, mode]
   )
+
+  const setContenido = (nextContent: string) => {
+    setContenidoState(nextContent)
+  }
+
   // Hidratación de borrador
   useEffect(() => {
     if (_hasHydratedDraft.current) return
@@ -76,7 +81,7 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
       setTitulo(draft.titulo ?? initialValues?.titulo ?? '')
       setImagen(draft.imagen ?? initialValues?.imagen ?? '')
       setCategoriaId(draft.categoriaId ?? initialValues?.categoriaId ?? '')
-      setContenido(draft.contenido ?? initialValues?.contenido ?? '')
+      setContenidoState(draft.contenido ?? initialValues?.contenido ?? '')
       setAutosaveMessage('Borrador local recuperado.')
     } catch {
       window.localStorage.removeItem(autosaveKey)
@@ -106,7 +111,6 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     }
   }, [])
 
-  // Autoguardado
   useEffect(() => {
     const hasContent = Boolean(titulo.trim() || imagen.trim() || categoriaId || contenido.trim())
 
@@ -283,7 +287,6 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     // acciones
     setFieldErrors,
     validate,
-    applyFormatting: () => {},
     insertLink,
     setIsLinkModalOpen,
     isLinkModalOpen,

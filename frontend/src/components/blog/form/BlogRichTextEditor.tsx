@@ -1,6 +1,7 @@
 "use client";
 
 import { useEditor, EditorContent } from "@tiptap/react";
+import type { Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -11,7 +12,7 @@ import { useEffect, useState } from "react";
 interface BlogRichTextEditorProps {
   contenido: string;
   setContenido: (val: string) => void;
-  onEditorReady?: (editor: any) => void;
+  onEditorReady?: (editor: Editor) => void;
   onLink?: (selectedText: string) => void;
 }
 

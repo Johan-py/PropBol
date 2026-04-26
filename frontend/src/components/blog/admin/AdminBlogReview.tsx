@@ -171,9 +171,6 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
           </div>
 
           <div className="mx-auto mt-10 max-w-4xl space-y-9 text-lg leading-9 text-stone-700 font-inter">
-            <MarkdownRenderer content={blog.excerpt} className="text-2xl leading-10 text-stone-800 font-montserrat font-bold" />
-            <MarkdownRenderer content={blog.lead} className="text-xl leading-9 text-stone-600" />
-
             {blog.sections.map((section, index) => (
               <section key={`${blog.id}-${index}`} className="space-y-4">
                 {section.heading && (
