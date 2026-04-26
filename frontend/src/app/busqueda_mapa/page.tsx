@@ -1029,6 +1029,8 @@ function BusquedaMapaContent() {
 
         isPriceFilterActive={isPriceFilterOpen}
         isSuperficieFilterActive={activeSidebarView === 'superficie' && isSidebarOpen}
+
+        isZonaFilterActive={activeSidebarView === 'ubicacion' && isSidebarOpen}
       />
 
       <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200">

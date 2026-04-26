@@ -40,6 +40,7 @@ interface FilterBarProps {
   onToggleCapacidad?: () => void
   isPriceFilterActive?: boolean   
   isSuperficieFilterActive?: boolean
+  isZonaFilterActive?: boolean
 }
 type LocationValue =
   | string
@@ -92,7 +93,7 @@ const trackSearchTelemetria = async (filtros: {
   }
 }
 
-export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad, isPriceFilterActive = false, isSuperficieFilterActive = false }: FilterBarProps) {
+export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad, isPriceFilterActive = false, isSuperficieFilterActive = false, isZonaFilterActive = false }: FilterBarProps) {
 
   const router = useRouter()
 
@@ -247,9 +248,13 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                 e.preventDefault();
                 window.dispatchEvent(new CustomEvent('abrirPanelUbicacion'));
               }}
-              className="h-[40px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 bg-[#d97706] text-white border-[#d97706]"
+              className={`h-[40px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${
+                isZonaFilterActive
+                  ? 'bg-[#d97706] text-white border-[#d97706]'
+                  : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+              }`}
             >
-              <MapPin className="w-4 h-4 text-white" />
+              <MapPin className={`w-4 h-4 ${isZonaFilterActive ? 'text-white' : 'text-stone-500'}`} />
               <span>Zona</span>
             </button>
 
