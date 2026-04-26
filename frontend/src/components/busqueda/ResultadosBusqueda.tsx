@@ -63,6 +63,7 @@ export const ResultadosBusqueda = () => {
     inmuebles: inmueblesRaw as unknown as any[]
   })
  useEffect(() => {
+  console.log('🔄 searchParams:', searchParams.toString()) // temporal
   const fetchInmuebles = async () => {
     setCargando(true)
     setError(false)
@@ -105,7 +106,7 @@ export const ResultadosBusqueda = () => {
     }
   }
   fetchInmuebles()
-}, [searchParams])
+}, [searchParams.toString()])
   // ── Render ──────────────────────────────────────────────────────────────────
 
   if (cargando) return <p className="p-8 text-gray-500">Cargando propiedades...</p>

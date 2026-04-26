@@ -18,33 +18,26 @@ export function useProperties(): UsePropertiesResult {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  const searchParamsStr = searchParams.toString()
+
   useEffect(() => {
     let cancelled = false
+    console.log('🔄 useProperties disparado:', searchParamsStr) // temporal
 
     async function fetchProperties() {
       setIsLoading(true)
       setError(null)
-
       try {
-        //Convertimos los parámetros de la URL en una query string
-        const queryString = searchParams.toString()
-
-        //Llamamos al endpoint de inmuebles con los filtros dinámicos
-        const res = await fetch(`${API_URL}/api/properties/inmuebles?${queryString}`)
-
+        const res = await fetch(`${API_URL}/api/properties/inmuebles?${searchParamsStr}`)
         if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`)
-
         const json = await res.json()
 
-        // Actualizamos el estado con los datos reales de la BD.
-        // Soportamos llaves legacy (snake_case) y actuales (camelCase).
         if (!cancelled) {
           const mappedData: PropertyMapPin[] = (json.data || [])
             .filter((item: any) => {
               const ubicacion = item.ubicacion ?? item.ubicacion_inmueble
               const lat = Number(ubicacion?.latitud)
               const lng = Number(ubicacion?.longitud)
-
               return ubicacion && !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0
             })
             .map((item: any) => {
@@ -79,7 +72,7 @@ export function useProperties(): UsePropertiesResult {
     return () => {
       cancelled = true
     }
-  }, [searchParams])
+  }, [searchParamsStr]) // string primitivo — React detecta el cambio por valor
 
   return { properties, isLoading, error }
 }
