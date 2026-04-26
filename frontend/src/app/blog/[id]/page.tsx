@@ -1,28 +1,11 @@
+import Image from "next/image"
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import BlogCommentsSection from '@/components/blog/BlogCommentsSection'
+import MarkdownContent from '@/components/blog/MarkdownContent'
 import { MOCK_USER_BLOGS } from '@/lib/mock/blogs.mock'
 import { getPublishedBlogById } from '@/services/blogs.service'
-
-const buildArticleSections = (title: string, excerpt: string, content?: string) => [
-  {
-    heading: 'Panorama actual',
-    paragraphs: [
-      excerpt,
-      ...(content ? [content] : []),
-      `Este articulo sobre "${title}" abre una conversacion relevante para quienes siguen de cerca la evolucion del sector inmobiliario. La propuesta combina contexto, tendencias y decisiones practicas que ayudan a interpretar mejor el momento del mercado.`,
-      'A lo largo del texto se desarrollan ideas que no solo inspiran, sino que tambien sirven como punto de partida para que la comunidad comparta experiencias, dudas y distintas perspectivas.'
-    ]
-  },
-  {
-    heading: 'Por que importa en PropBol',
-    paragraphs: [
-      'Desde la experiencia de usuario, este tipo de contenido fortalece la toma de decisiones porque conecta informacion especializada con escenarios reales de compra, inversion y estilo de vida.',
-      'La seccion de comentarios permite ampliar esa lectura inicial con observaciones de otras personas, preguntas concretas y respuestas que enriquecen la conversacion del post.'
-    ]
-  }
-]
 
 const formatPublishedDate = (value: string) =>
   new Date(value).toLocaleDateString('es-BO', {
@@ -49,7 +32,7 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
     publicBlog?.excerpt ??
     userBlog?.resumen ??
     'Este articulo presenta una mirada clara y actual sobre el ecosistema inmobiliario y las oportunidades que aparecen cuando observamos el mercado con criterio.'
-  const articleSections = buildArticleSections(title, summary, publicBlog?.content)
+  const articleContent = publicBlog?.content?.trim() || userBlog?.resumen?.trim() || summary
 
   return (
     <article className="min-h-screen bg-[linear-gradient(180deg,#fbf6ef_0%,#f8f3eb_38%,#ffffff_100%)] pb-20">
@@ -78,9 +61,11 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
         </div>
 
         <div className="mt-10 overflow-hidden rounded-[32px] bg-stone-100 shadow-[0_24px_80px_-32px_rgba(41,37,36,0.35)]">
-          <img
+          <Image
             src={imageUrl}
             alt={title}
+            width={1600}
+            height={900}
             className="h-full min-h-[240px] w-full object-cover sm:min-h-[360px]"
           />
         </div>
@@ -90,20 +75,11 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
         <div className="rounded-[36px] bg-white/90 p-6 shadow-[0_24px_80px_-50px_rgba(41,37,36,0.45)] sm:p-8 lg:p-10">
           <p className="text-lg font-medium leading-8 text-stone-700 sm:text-xl">{summary}</p>
 
-          <div className="mt-8 space-y-10">
-            {articleSections.map((section) => (
-              <section key={section.heading} className="space-y-5">
-                <h2 className="font-heading text-2xl font-bold text-stone-900 sm:text-3xl">
-                  {section.heading}
-                </h2>
-
-                <div className="space-y-5 text-base leading-8 text-stone-600 sm:text-lg">
-                  {section.paragraphs.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
-                  ))}
-                </div>
-              </section>
-            ))}
+          <div className="mt-8">
+            <MarkdownContent
+              content={articleContent}
+              className="prose prose-stone max-w-none prose-headings:font-heading prose-headings:text-stone-900 prose-p:text-stone-600 prose-p:leading-8 prose-p:text-lg prose-strong:text-stone-900 prose-a:text-[#a56400] prose-a:no-underline hover:prose-a:text-amber-800 prose-blockquote:border-[#a56400] prose-blockquote:text-stone-600 prose-code:text-stone-800 prose-pre:bg-stone-900 prose-pre:text-stone-100"
+            />
           </div>
         </div>
 
