@@ -12,7 +12,7 @@ export default function ConsumoPage() {
   useEffect(() => {
     const token = localStorage.getItem('token')
 
-    // ❌ NO LOGUEADO
+    // NO LOGUEADO
     if (!token) {
       setIsLogged(false)
       setData({
@@ -24,7 +24,7 @@ export default function ConsumoPage() {
       return
     }
 
-    // ✅ LOGUEADO
+    // LOGUEADO
     setIsLogged(true)
 
     const fetchData = async () => {
@@ -101,19 +101,19 @@ export default function ConsumoPage() {
         </Link>
       </div>
 
-      {/* 🔵 MENSAJE SI NO ESTÁ LOGUEADO */}
+      {/*  MENSAJE SI NO ESTÁ LOGUEADO */}
       {!isLogged && (
         <div className="bg-blue-100 text-blue-800 p-4 rounded-lg mb-6 flex justify-between items-center">
           <span>Primero inicia sesión para ver tu consumo</span>
-          <Link href="/login">
-            <button className="bg-black text-white px-4 py-2 rounded-lg">
-              Iniciar sesión
-            </button>
-          </Link>
+          <Link href="/sign-in">
+  <button className="bg-black text-white px-4 py-2 rounded-lg">
+    Iniciar sesión
+  </button>
+</Link>
         </div>
       )}
 
-      {/* 🟡 SOLO SI ESTÁ LOGUEADO */}
+      {/*  SOLO SI ESTÁ LOGUEADO */}
       {isLogged && (
         <div className="bg-yellow-100 text-yellow-800 p-4 rounded-lg mb-6">
           Tienes publicaciones restantes este mes. Te queda {disponibles}.
