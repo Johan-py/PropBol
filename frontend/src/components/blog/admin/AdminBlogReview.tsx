@@ -171,9 +171,6 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
           </div>
 
           <div className="mx-auto mt-10 max-w-4xl space-y-9 text-lg leading-9 text-stone-700 font-inter">
-            <p className="text-2xl leading-10 text-stone-800 font-montserrat font-bold">{blog.excerpt}</p>
-            <p className="text-xl leading-9 text-stone-600">{blog.lead}</p>
-
             {blog.sections.map((section, index) => (
               <section key={`${blog.id}-${index}`} className="space-y-4">
                 {section.heading && (
