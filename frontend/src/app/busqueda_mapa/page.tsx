@@ -166,14 +166,21 @@ function BusquedaMapaContent() {
   
   useEffect(() => {
     const handleAbrirUbicacion = () => {
-      setIsPriceFilterOpen(false); // Cierra precio si estaba abierto
-      setIsSidebarOpen(true);      // Asegura que el panel izquierdo esté visible
-      setActiveSidebarView('ubicacion'); // Cambia el contenido al panel de zonas
+      setIsPriceFilterOpen(false); // Cierra el de precio si estaba abierto
+      
+      // Si el panel de ubicación ya está abierto en el sidebar, lo cerramos volviendo a results
+      if (activeSidebarView === 'ubicacion' && isSidebarOpen) {
+        setActiveSidebarView('results');
+      } else {
+        // De lo contrario, nos aseguramos de que el sidebar esté abierto y mostramos ubicación
+        setIsSidebarOpen(true);
+        setActiveSidebarView('ubicacion');
+      }
     };
-    
+   
     window.addEventListener('abrirPanelUbicacion', handleAbrirUbicacion);
     return () => window.removeEventListener('abrirPanelUbicacion', handleAbrirUbicacion);
-  }, []);
+  }, [activeSidebarView, isSidebarOpen]);
 
   // --- INICIO ESTADOS HU8 ---
   const [isDrawingMode, setIsDrawingMode] = useState(false)
