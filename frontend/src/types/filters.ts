@@ -5,4 +5,10 @@ export type GlobalFilters = {
   modoInmueble?: string[]
   query?: string
   updatedAt: string
+  // NUEVOS FILTROS GEOGRÁFICOS EN CASCADA
+  departamentoId?: number
+  provinciaId?: number
+  municipioId?: number
+  zonaId?: number
+  barrioId?: number
 }

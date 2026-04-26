@@ -113,6 +113,7 @@ const buildGoogleSessionResponse = async (
     correo: string;
     nombre: string;
     apellido: string;
+    avatar?: string | null;
   },
   message: string,
 ): Promise<GoogleLoginSuccess> => {
@@ -138,6 +139,7 @@ const buildGoogleSessionResponse = async (
       correo: user.correo,
       nombre: user.nombre,
       apellido: user.apellido,
+      avatar: user.avatar,
     },
   };
 };
