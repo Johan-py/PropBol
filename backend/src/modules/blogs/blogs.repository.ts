@@ -127,7 +127,17 @@ export const blogsRepository = {
       estado?: estado_blog
     }
   ) {
-    return prisma.blog.update({ where: { id }, data })
+    const nextData = {
+      ...data,
+      ...(data.estado
+        ? {
+            fecha_publicacion:
+              data.estado === 'PUBLICADO' ? new Date() : null
+          }
+        : {})
+    }
+
+    return prisma.blog.update({ where: { id }, data: nextData })
   },
 
   async uploadImage(file: Express.Multer.File, _usuario_id: number) {
