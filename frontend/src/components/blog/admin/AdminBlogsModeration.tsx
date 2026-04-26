@@ -11,10 +11,10 @@ const FILTERS: Array<{
   label: string
   value: AdminModerationStatus
 }> = [
-  { label: 'Pendientes', value: 'PENDIENTE' },
-  { label: 'Aprobados', value: 'APROBADO' },
-  { label: 'Rechazados', value: 'RECHAZADO' }
-]
+    { label: 'Pendientes', value: 'PENDIENTE' },
+    { label: 'Aprobados', value: 'APROBADO' },
+    { label: 'Rechazados', value: 'RECHAZADO' }
+  ]
 
 function formatDate(date: string) {
   return new Intl.DateTimeFormat('es-BO', {
@@ -71,29 +71,28 @@ function BlogRow({ blog }: { blog: AdminModerationBlog }) {
         </div>
 
         <div className="min-w-0 pt-0.5">
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-600 font-inter">
-            {blog.category}
-          </p>
-          <h2 className="mt-2 text-xl font-bold leading-tight text-stone-900 font-montserrat">
+          <h2 className="text-xl font-bold leading-tight text-stone-900 font-montserrat">
             {blog.title}
           </h2>
-          <p className="mt-2 text-sm text-stone-600 font-inter">{blog.excerpt}</p>
+          <p className="mt-2 text-[10px] font-bold uppercase tracking-[0.22em] text-amber-600 font-inter opacity-80">
+            {blog.category}
+          </p>
         </div>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-stone-400">Autor</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-stone-400 md:hidden">Autor</p>
         <p className="mt-2 text-base font-medium text-stone-700">{blog.authorName}</p>
         <p className="text-sm text-stone-500">{blog.authorRole}</p>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-stone-400">Fecha</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-stone-400 md:hidden">Fecha</p>
         <p className="mt-2 text-base font-medium text-stone-700">{formatDate(blog.submittedAt)}</p>
       </div>
 
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-stone-400">Estado</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-stone-400 md:hidden">Estado</p>
         <span
           className={`mt-2 inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] ${getStatusStyles(blog.status)}`}
         >
@@ -180,11 +179,10 @@ export default function AdminBlogsModeration() {
                   key={filter.value}
                   type="button"
                   onClick={() => setActiveFilter(filter.value)}
-                  className={`inline-flex min-h-[52px] items-center justify-center rounded-full px-5 text-sm font-semibold uppercase tracking-[0.18em] transition-colors font-inter ${
-                    activeFilter === filter.value
+                  className={`inline-flex min-h-[52px] items-center justify-center rounded-full px-5 text-sm font-semibold uppercase tracking-[0.18em] transition-colors font-inter ${activeFilter === filter.value
                       ? 'bg-amber-600 text-white'
                       : 'text-stone-500 hover:bg-stone-100 hover:text-stone-800'
-                  }`}
+                    }`}
                 >
                   {filter.label}
                   <span className="ml-2 rounded-full bg-black/10 px-2 py-0.5 text-[11px]">
