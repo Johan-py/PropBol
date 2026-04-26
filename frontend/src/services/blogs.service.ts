@@ -28,7 +28,7 @@ export type EditableBlog = {
   contenido: string
   imagen: string
   categoria_id: number
-  estado: 'BORRADOR' | 'RECHAZADO'
+  estado: 'BORRADOR' | 'PENDIENTE' | 'PUBLICADO' | 'RECHAZADO'
 }
 
 type CreatedBlogResponse = {
@@ -234,10 +234,6 @@ export async function getEditableBlog(id: number): Promise<EditableBlog> {
 
   if (!blog) {
     throw new Error('No se encontró el blog solicitado.')
-  }
-
-  if (blog.estado !== 'BORRADOR' && blog.estado !== 'RECHAZADO') {
-    throw new Error('Solo puedes editar blogs en estado BORRADOR o RECHAZADO.')
   }
 
   return {
