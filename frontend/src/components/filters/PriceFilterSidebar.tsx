@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSearchFilters } from '@/hooks/useSearchFilters'
 import { useRouter, useSearchParams } from 'next/navigation'
 interface PriceFilterSidebarProps {
   isOpen: boolean;  
@@ -11,13 +10,36 @@ interface PriceFilterSidebarProps {
 export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = -1 }: PriceFilterSidebarProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { updateFilters } = useSearchFilters()
 
   const [moneda, setMoneda] = useState<'BOB' | 'USD'>((searchParams.get('currency') as 'BOB' | 'USD') || 'USD')
   const [minPrice, setMinPrice] = useState<string>(searchParams.get('minPrice') || '')
   const [maxPrice, setMaxPrice] = useState<string>(searchParams.get('maxPrice') || '')
+  const [displayMin, setDisplayMin] = useState<string>('')
+  const [displayMax, setDisplayMax] = useState<string>('')
   const [error, setError] = useState<string>('')
   const [filtroAplicado, setFiltroAplicado] = useState(!!searchParams.get('minPrice') || !!searchParams.get('maxPrice'))  
+
+  const formatCurrency = (val: string): string => {
+    if (!val) return ''
+    const num = Number(val)
+    if (isNaN(num)) return ''
+    return new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2 }).format(num)
+  }
+
+  // Convierte "10.000,50" o "10.10.10" a "10000.50" (Número real limpio)
+  const parseCurrency = (val: string): string => {
+    if (!val) return ''
+    let cleaned = val.replace(/[^\d.,]/g, '')
+    cleaned = cleaned.replace(/\./g, '')
+    const parts = cleaned.split(',')
+    if (parts.length > 1) {
+      cleaned = parts[0] + '.' + parts.slice(1).join('')
+    }
+    return cleaned
+  }
+
+  useEffect(() => { setDisplayMin(minPrice ? formatCurrency(minPrice) : '') }, [minPrice])
+  useEffect(() => { setDisplayMax(maxPrice ? formatCurrency(maxPrice) : '') }, [maxPrice])
 
   // Cargar valores iniciales desde la URL al abrir
   useEffect(() => {
@@ -58,10 +80,6 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
 
   const LIMITE_MAX = moneda === 'USD' ? 500000 : 3500000
 
-  const formatearMiles = (valor: string): string => {
-    if (!valor) return ''
-    return Number(valor).toLocaleString('es-BO')
-  }
   const handleMonedaChange = (nuevaMoneda: 'BOB' | 'USD') => {
     setMoneda(nuevaMoneda)
     setMinPrice('')
@@ -105,20 +123,19 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
           <div className="flex items-center gap-3">
             <span className="text-sm text-stone-600 w-12">Desde:</span>
             <input
-              type="number"
+              type="text"
+              inputMode="decimal"
               placeholder="Min"
-              min="0"
-              value={minPrice}
+              value={displayMin}
               onChange={(e) => {
-                const val = e.target.value
-                if (Number(val) < 0) { setError('Solo se permiten números positivos'); return }
+                const val = e.target.value.replace(/[^\d.,]/g, '')
+                setDisplayMin(val)
                 setError('')
-                setMinPrice(val)
               }}
-              onKeyDown={(e) => { if (e.key === '-') e.preventDefault() }}
-              onPaste={(e) => {
-                const texto = e.clipboardData.getData('text')
-                if (!/^\d*\.?\d*$/.test(texto)) { e.preventDefault(); setError('Formato no válido') }
+              onBlur={() => {
+                const parsed = parseCurrency(displayMin)
+                setMinPrice(parsed)
+                setDisplayMin(formatCurrency(parsed))
               }}
               className="border border-stone-300 rounded-lg px-3 py-2 text-sm w-full outline-none focus:border-[#d97706] focus:ring-1 focus:ring-[#d97706] transition-all"
             />
@@ -126,20 +143,19 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
           <div className="flex items-center gap-3">
             <span className="text-sm text-stone-600 w-12">Hasta:</span>
             <input
-              type="number"
+              type="text"
+              inputMode="decimal"
               placeholder="Máx"
-              min="0"
-              value={maxPrice}
+              value={displayMax}
               onChange={(e) => {
-                const val = e.target.value
-                if (Number(val) < 0) { setError('Solo se permiten números positivos'); return }
+                const val = e.target.value.replace(/[^\d.,]/g, '')
+                setDisplayMax(val)
                 setError('')
-                setMaxPrice(val)
               }}
-              onKeyDown={(e) => { if (e.key === '-') e.preventDefault() }}
-              onPaste={(e) => {
-                const texto = e.clipboardData.getData('text')
-                if (!/^\d*\.?\d*$/.test(texto)) { e.preventDefault(); setError('Formato no válido') }
+              onBlur={() => {
+                const parsed = parseCurrency(displayMax)
+                setMaxPrice(parsed)
+                setDisplayMax(formatCurrency(parsed))
               }}
               className="border border-stone-300 rounded-lg px-3 py-2 text-sm w-full outline-none focus:border-[#d97706] focus:ring-1 focus:ring-[#d97706] transition-all"
             />
@@ -155,7 +171,7 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
         )}
       </div>
 
-      {/* Día 3 - sliders bidireccionales sincronizados con inputs */}
+      {/* Sliders bidireccionales sincronizados con inputs */}
       <div className="flex flex-col gap-3 mt-2">
         <label className="font-bold text-xs text-stone-400 uppercase tracking-wide">
           Rango de Precio
@@ -169,7 +185,7 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
             className="flex-1 accent-[#d97706]"
           />
           <span className="text-xs text-stone-600 w-20 text-right">
-            {formatearMiles(minPrice) || '0'} {moneda}
+            {formatCurrency(minPrice) || '0'} {moneda}
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -181,12 +197,12 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
             className="flex-1 accent-[#d97706]"
           />
           <span className="text-xs text-stone-600 w-20 text-right">
-            {maxPrice ? formatearMiles(maxPrice) : `${(LIMITE_MAX/1000).toLocaleString('es-BO')}K`} {moneda}
+            {maxPrice ? formatCurrency(maxPrice) : `${(LIMITE_MAX/1000).toLocaleString('de-DE')}K`} {moneda}
           </span>
         </div>
       </div>
 
-      {/* Día 7 - Empty state cuando no hay resultados */}
+      {/* Empty state cuando no hay resultados */}
       {filtroAplicado && totalResultados === 0 && (
         <div className="flex flex-col items-center gap-2 py-3 text-center">
           <span className="text-xl">🔍</span>
