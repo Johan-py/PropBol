@@ -1,6 +1,6 @@
 "use client";
 
-import { RefObject } from "react";
+import type { Editor } from "@tiptap/react";
 import BlogRichTextEditor from "./BlogRichTextEditor";
 
 interface BlogEditorSectionProps {
@@ -8,7 +8,7 @@ interface BlogEditorSectionProps {
   setContenido: (val: string) => void;
   insertLink: (text: string) => void;
   error?: string;
-  editorRef?: (editor: any) => void;
+  editorRef?: (editor: Editor) => void;
 }
 
 export default function BlogEditorSection({
