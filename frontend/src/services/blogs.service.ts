@@ -1,6 +1,6 @@
-import { MOCK_PUBLIC_BLOGS } from '@/lib/mock/publicBlogs.mock'
-import { PublicBlogCard, BlogCategory } from '@/types/publicBlog'
-import { stripMarkdown } from '@/lib/blog-utils'
+import { MOCK_PUBLIC_BLOGS } from "@/lib/mock/publicBlogs.mock";
+import { createPlainTextExcerpt } from "@/lib/blogMarkdown";
+import { PublicBlogCard, BlogCategory } from "@/types/publicBlog";
 
 export type BlogCreationAction = 'borrador' | 'pendiente'
 
@@ -98,12 +98,14 @@ export const getPublishedBlogs = async (limit: number = 10): Promise<PublicBlogC
     return rows.map((row: BlogApiRow) => ({
       id: String(row.id),
       title: row.titulo,
-      excerpt: row.resumen || stripMarkdown(row.contenido).substring(0, 150) + '...',
-      imageUrl: row.imagen || '/placeholder-blog.jpg',
-      category: (row.categoria_blog?.nombre || 'General') as BlogCategory,
-      authorName: `${row.usuario?.nombre || ''} ${row.usuario?.apellido || ''}`.trim() || 'Anónimo',
-      publishedAt: row.fecha_publicacion || row.fecha_creacion
-    }))
+      excerpt: row.resumen || createPlainTextExcerpt(row.contenido),
+      imageUrl: row.imagen || "/placeholder-blog.jpg",
+      category: (row.categoria_blog?.nombre || "General") as BlogCategory,
+      authorName:
+        `${row.usuario?.nombre || ""} ${row.usuario?.apellido || ""}`.trim() ||
+        "Anónimo",
+      publishedAt: row.fecha_publicacion || row.fecha_creacion,
+    }));
   } catch (error) {
     console.error('Error al obtener los blogs publicados:', error)
     if (error instanceof TypeError) {
@@ -134,10 +136,12 @@ export const getPublishedBlogById = async (id: string): Promise<PublicBlogDetail
     return {
       id: String(row.id),
       title: row.titulo,
-      excerpt: row.resumen || stripMarkdown(row.contenido).substring(0, 150) + '...',
-      imageUrl: row.imagen || '/placeholder-blog.jpg',
-      category: (row.categoria_blog?.nombre || 'General') as BlogCategory,
-      authorName: `${row.usuario?.nombre || ''} ${row.usuario?.apellido || ''}`.trim() || 'Anónimo',
+      excerpt: row.resumen || createPlainTextExcerpt(row.contenido),
+      imageUrl: row.imagen || "/placeholder-blog.jpg",
+      category: (row.categoria_blog?.nombre || "General") as BlogCategory,
+      authorName:
+        `${row.usuario?.nombre || ""} ${row.usuario?.apellido || ""}`.trim() ||
+        "Anónimo",
       publishedAt: row.fecha_publicacion || row.fecha_creacion,
       content: row.contenido
     }
