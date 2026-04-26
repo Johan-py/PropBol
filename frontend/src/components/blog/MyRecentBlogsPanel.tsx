@@ -39,6 +39,14 @@ interface MyRecentBlogsPanelProps {
   blogs?: Blog[];
 }
 
+type UserBlogResponse = {
+  id: number;
+  titulo: string;
+  estado: Blog["estado"];
+  imagen?: string | null;
+  fecha_creacion?: string;
+};
+
 const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({ blogs: propBlogs }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [internalBlogs, setInternalBlogs] = useState<Blog[]>([]);
@@ -57,8 +65,8 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({ blogs: propBlog
 
           if (!res.ok) throw new Error('Error al obtener blogs');
 
-          const data = await res.json();
-          const mapped: Blog[] = data.map((b: any) => ({
+          const data = (await res.json()) as UserBlogResponse[];
+          const mapped: Blog[] = data.map((b) => ({
             id: b.id,
             titulo: b.titulo,
             imagenUrl: b.imagen || '/placeholder-house.jpg',
@@ -117,15 +125,15 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({ blogs: propBlog
       </div>
 
       {/* Cards */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {visible.map((blog) => (
           <Link
             key={blog.id}
-            href={`/blogs/${blog.id}`}
-            className="flex items-center gap-3 rounded-xl border border-stone-100 bg-stone-50 p-3 transition-shadow hover:shadow-md cursor-pointer"
+            href={`/blog/${blog.id}`}
+            className="flex w-full items-center gap-3 rounded-2xl border border-stone-100 bg-stone-50 p-3 transition-all hover:-translate-y-0.5 hover:shadow-md cursor-pointer"
           >
             {/* Thumbnail */}
-            <div className="relative h-16 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-stone-200">
+            <div className="relative h-16 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-stone-200">
               <Image
                 src={blog.imagenUrl || "/placeholder-house.jpg"}
                 alt={blog.titulo}
@@ -137,11 +145,11 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({ blogs: propBlog
 
             {/* Info */}
             <div className="min-w-0 flex-1">
-              <p className="mb-1.5 line-clamp-2 text-xs font-semibold leading-snug text-stone-800">
+              <p className="mb-2 line-clamp-2 text-sm font-semibold leading-snug text-stone-800">
                 {blog.titulo}
               </p>
               <span
-                className={`inline-block rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${getStatusClass(blog.estado)}`}
+                className={`inline-block rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${getStatusClass(blog.estado)}`}
               >
                 {getEstadoLabel(blog.estado)}
               </span>
