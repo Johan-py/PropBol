@@ -22,7 +22,7 @@ type BlogCreateFormProps = {
     titulo: string;
   };
   mode?: "create" | "edit";
-  statusLabel?: "BORRADOR" | "RECHAZADO";
+  statusLabel?: "BORRADOR" | "PENDIENTE" | "PUBLICADO" | "RECHAZADO";
 };
 
 export default function BlogCreateForm({
