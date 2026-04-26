@@ -20,7 +20,9 @@ export const propertiesController = {
         dormitoriosMax,
         banosMin,
         banosMax,
-        tipoBano
+        tipoBano,
+        minSuperficie,
+        maxSuperficie
       } = req.query
 
       let banoCompartido: boolean | undefined = undefined
@@ -46,6 +48,8 @@ export const propertiesController = {
         banosMin: banosMin ? parseInt(banosMin as string) : undefined,
         banosMax: banosMax ? parseInt(banosMax as string) : undefined,
         banoCompartido
+        minSuperficie: minSuperficie ? Number(minSuperficie) : null,
+        maxSuperficie: maxSuperficie ? Number(maxSuperficie) : null,
       }
 
       const orden = {
