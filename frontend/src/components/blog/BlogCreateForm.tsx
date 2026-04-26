@@ -23,6 +23,7 @@ type BlogCreateFormProps = {
   };
   mode?: "create" | "edit";
   statusLabel?: "BORRADOR" | "RECHAZADO";
+  rejectionReason?: string;
 };
 
 export default function BlogCreateForm({
@@ -30,6 +31,7 @@ export default function BlogCreateForm({
   initialValues,
   mode = "create",
   statusLabel,
+  rejectionReason,
 }: BlogCreateFormProps) {
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
   const [editor, setEditor] = useState<Editor | null>(null);
@@ -96,6 +98,14 @@ export default function BlogCreateForm({
         {/* Main Content Area */}
         <div className="space-y-8">
           <BlogFormHeader mode={mode} />
+
+          {statusLabel === "RECHAZADO" && rejectionReason && (
+            <div className="rounded-[24px] bg-[#FDECEC] border border-[#F3BABA] p-6 shadow-sm">
+              <h3 className="text-sm font-bold text-[#D94848] uppercase tracking-wider mb-2">Motivo de rechazo</h3>
+              <p className="text-[#D94848] leading-relaxed">{rejectionReason}</p>
+              <p className="text-xs text-[#D94848]/80 mt-3 italic">Corrige los puntos mencionados y vuelve a enviarlo para revisión.</p>
+            </div>
+          )}
 
           <form
             id="blog-form"
