@@ -38,12 +38,11 @@ export const INITIAL_ERRORS: FieldErrors = {}
 export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
   const router = useRouter()
   const _hasHydratedDraft = useRef(false)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const [titulo, setTitulo] = useState(initialValues?.titulo ?? '')
   const [imagen, setImagen] = useState(initialValues?.imagen ?? '')
   const [categoriaId, setCategoriaId] = useState(initialValues?.categoriaId ?? '')
-  const [contenido, setContenido] = useState(initialValues?.contenido ?? '')
+  const [contenido, setContenidoState] = useState(initialValues?.contenido ?? '')
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>(INITIAL_ERRORS)
 
   const [categories, setCategories] = useState<BlogCategoryOption[]>([])
@@ -64,6 +63,11 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
         : `${AUTOSAVE_STORAGE_PREFIX}:create`,
     [blogId, mode]
   )
+
+  const setContenido = (nextContent: string) => {
+    setContenidoState(nextContent)
+  }
+
   // Hidratación de borrador
   useEffect(() => {
     if (_hasHydratedDraft.current) return
@@ -77,7 +81,7 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
       setTitulo(draft.titulo ?? initialValues?.titulo ?? '')
       setImagen(draft.imagen ?? initialValues?.imagen ?? '')
       setCategoriaId(draft.categoriaId ?? initialValues?.categoriaId ?? '')
-      setContenido(draft.contenido ?? initialValues?.contenido ?? '')
+      setContenidoState(draft.contenido ?? initialValues?.contenido ?? '')
       setAutosaveMessage('Borrador local recuperado.')
     } catch {
       window.localStorage.removeItem(autosaveKey)
@@ -107,7 +111,6 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     }
   }, [])
 
-  // Autoguardado
   useEffect(() => {
     const hasContent = Boolean(titulo.trim() || imagen.trim() || categoriaId || contenido.trim())
 
@@ -176,50 +179,11 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [isFormDirty])
 
-  // Aplicar formato al texto seleccionado
-  const applyFormatting = (prefix: string, suffix: string = prefix) => {
-    const textarea = textareaRef.current
-    if (!textarea) return
-
-    const start = textarea.selectionStart
-    const end = textarea.selectionEnd
-    const text = textarea.value
-    const selectedText = text.substring(start, end)
-
-    const newText = text.substring(0, start) + prefix + selectedText + suffix + text.substring(end)
-
-    setContenido(newText)
-
-    setTimeout(() => {
-      textarea.focus()
-      textarea.setSelectionRange(start + prefix.length, end + prefix.length)
-    }, 0)
-  }
-
-  const insertLink = () => {
-    const textarea = textareaRef.current
-    if (!textarea) return
-    setSelectionForLink(textarea.value.substring(textarea.selectionStart, textarea.selectionEnd))
+  const insertLink = (text: string = '') => {
+    setSelectionForLink(text)
     setIsLinkModalOpen(true)
   }
 
-  const handleLinkConfirm = (url: string, linkText: string = selectionForLink) => {
-    const textarea = textareaRef.current
-    if (!textarea) return
-
-    const start = textarea.selectionStart
-    const end = textarea.selectionEnd
-    const text = textarea.value
-
-    const newText = text.substring(0, start) + `[${linkText}](${url})` + text.substring(end)
-    setContenido(newText)
-
-    setTimeout(() => {
-      textarea.focus()
-      const newCursorPos = start + linkText.length + url.length + 4
-      textarea.setSelectionRange(newCursorPos, newCursorPos)
-    }, 0)
-  }
   // Validar formulario
   const validate = () => {
     const nextErrors: FieldErrors = {}
@@ -313,7 +277,6 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     fieldErrors,
 
     // refs / utils
-    textareaRef,
     router,
     autosaveKey,
 
@@ -324,9 +287,7 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     // acciones
     setFieldErrors,
     validate,
-    applyFormatting,
     insertLink,
-    handleLinkConfirm,
     setIsLinkModalOpen,
     isLinkModalOpen,
     selectionForLink,
