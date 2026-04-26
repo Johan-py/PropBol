@@ -39,11 +39,14 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
   const router = useRouter()
   const _hasHydratedDraft = useRef(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const undoStackRef = useRef<string[]>([])
+  const redoStackRef = useRef<string[]>([])
+  const contenidoRef = useRef(initialValues?.contenido ?? '')
 
   const [titulo, setTitulo] = useState(initialValues?.titulo ?? '')
   const [imagen, setImagen] = useState(initialValues?.imagen ?? '')
   const [categoriaId, setCategoriaId] = useState(initialValues?.categoriaId ?? '')
-  const [contenido, setContenido] = useState(initialValues?.contenido ?? '')
+  const [contenido, setContenidoState] = useState(initialValues?.contenido ?? '')
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>(INITIAL_ERRORS)
 
   const [categories, setCategories] = useState<BlogCategoryOption[]>([])
@@ -64,6 +67,55 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
         : `${AUTOSAVE_STORAGE_PREFIX}:create`,
     [blogId, mode]
   )
+
+  const resetContentHistory = (nextContent: string) => {
+    undoStackRef.current = []
+    redoStackRef.current = []
+    contenidoRef.current = nextContent
+  }
+
+  const setContenido = (nextContent: string) => {
+    if (nextContent === contenidoRef.current) {
+      return
+    }
+
+    undoStackRef.current.push(contenidoRef.current)
+
+    if (undoStackRef.current.length > 100) {
+      undoStackRef.current.shift()
+    }
+
+    redoStackRef.current = []
+    contenidoRef.current = nextContent
+    setContenidoState(nextContent)
+  }
+
+  const applyContentSnapshot = (nextContent: string) => {
+    contenidoRef.current = nextContent
+    setContenidoState(nextContent)
+  }
+
+  const undoContenido = () => {
+    const previousContent = undoStackRef.current.pop()
+
+    if (previousContent === undefined) {
+      return
+    }
+
+    redoStackRef.current.push(contenidoRef.current)
+    applyContentSnapshot(previousContent)
+  }
+
+  const redoContenido = () => {
+    const nextContent = redoStackRef.current.pop()
+
+    if (nextContent === undefined) {
+      return
+    }
+
+    undoStackRef.current.push(contenidoRef.current)
+    applyContentSnapshot(nextContent)
+  }
   // Hidratación de borrador
   useEffect(() => {
     if (_hasHydratedDraft.current) return
@@ -77,7 +129,9 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
       setTitulo(draft.titulo ?? initialValues?.titulo ?? '')
       setImagen(draft.imagen ?? initialValues?.imagen ?? '')
       setCategoriaId(draft.categoriaId ?? initialValues?.categoriaId ?? '')
-      setContenido(draft.contenido ?? initialValues?.contenido ?? '')
+      const hydratedContent = draft.contenido ?? initialValues?.contenido ?? ''
+      applyContentSnapshot(hydratedContent)
+      resetContentHistory(hydratedContent)
       setAutosaveMessage('Borrador local recuperado.')
     } catch {
       window.localStorage.removeItem(autosaveKey)
@@ -108,6 +162,12 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
   }, [])
 
   // Autoguardado
+  useEffect(() => {
+    const nextContent = initialValues?.contenido ?? ''
+    applyContentSnapshot(nextContent)
+    resetContentHistory(nextContent)
+  }, [initialValues?.contenido])
+
   useEffect(() => {
     const hasContent = Boolean(titulo.trim() || imagen.trim() || categoriaId || contenido.trim())
 
@@ -332,6 +392,8 @@ export function useBlogForm({ blogId, initialValues, mode }: UseBlogFormProps) {
     selectionForLink,
     setSelectedImageFile,
     selectedImageFile,
-    submitBlog
+    submitBlog,
+    undoContenido,
+    redoContenido
   }
 }
