@@ -175,7 +175,8 @@ export const actualizarBlog = async (req: AuthRequest, res: Response) => {
           .json({ message: "No tienes permiso para editar este blog" });
       if (error.message === "BLOG_NOT_EDITABLE")
         return res.status(409).json({
-          message: "Solo puedes editar blogs en estado BORRADOR o RECHAZADO",
+          message:
+            "Solo puedes editar blogs en estado BORRADOR, PENDIENTE, PUBLICADO o RECHAZADO",
         });
     }
     return handleError(res, error);
