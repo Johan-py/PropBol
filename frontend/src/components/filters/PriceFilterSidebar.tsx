@@ -86,6 +86,16 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
     setMaxPrice('')
     setError('')
   }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.currentTarget.blur() 
+      setTimeout(() => {
+        document.getElementById('btn-aplicar-precio')?.click()
+      }, 100) // Breve pausa para asegurar que React actualizó los estados antes de aplicar
+    }
+  }
+
   return (
     <div className="flex flex-col gap-8 p-6 w-full bg-white h-full overflow-y-auto">
       <div>
@@ -137,6 +147,7 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
                 setMinPrice(parsed)
                 setDisplayMin(formatCurrency(parsed))
               }}
+              onKeyDown={handleKeyDown}
               className="border border-stone-300 rounded-lg px-3 py-2 text-sm w-full outline-none focus:border-[#d97706] focus:ring-1 focus:ring-[#d97706] transition-all"
             />
           </div>
@@ -157,6 +168,7 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
                 setMaxPrice(parsed)
                 setDisplayMax(formatCurrency(parsed))
               }}
+              onKeyDown={handleKeyDown}
               className="border border-stone-300 rounded-lg px-3 py-2 text-sm w-full outline-none focus:border-[#d97706] focus:ring-1 focus:ring-[#d97706] transition-all"
             />
           </div>
@@ -230,6 +242,7 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
 
       {/* Botón Aplicar */}
       <button
+        id="btn-aplicar-precio"
         onClick={handleApply}
         className="mt-6 bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold py-3 px-4 w-full transition-all active:scale-95 shadow-md"
       >
