@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { CheckCircle2, ChevronLeft, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import MarkdownContent from "@/components/blog/MarkdownContent";
 import { useAdminBlogModeration } from "@/hooks/useAdminBlogModeration";
 
 function formatDate(date: string) {
@@ -182,7 +183,11 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
                 )}
 
                 {section.paragraphs.map((paragraph, paragraphIndex) => (
-                  <p key={`${blog.id}-${index}-${paragraphIndex}`}>{paragraph}</p>
+                  <MarkdownContent
+                    key={`${blog.id}-${index}-${paragraphIndex}`}
+                    content={paragraph}
+                    className="prose prose-stone max-w-none prose-headings:font-montserrat prose-headings:text-stone-900 prose-p:text-stone-700 prose-p:leading-9 prose-strong:text-stone-900 prose-a:text-amber-700 prose-a:no-underline hover:prose-a:text-amber-800 prose-blockquote:border-amber-500 prose-blockquote:text-stone-600 prose-code:text-stone-800 prose-pre:bg-stone-900 prose-pre:text-stone-100"
+                  />
                 ))}
               </section>
             ))}
