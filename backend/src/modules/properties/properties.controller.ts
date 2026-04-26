@@ -27,7 +27,6 @@ export const propertiesController = {
       if (tipoBano === 'privado') banoCompartido = false
       if (tipoBano === 'compartido') banoCompartido = true
 
-
       const filtros: FiltrosBusqueda = {
         tipoInmueble: tipoInmueble as string | string[],
         modoInmueble: modoInmueble as string | string[],
@@ -53,7 +52,7 @@ export const propertiesController = {
         precio: precio as 'menor-a-mayor' | 'mayor-a-menor' | undefined,
         superficie: superficie as 'menor-a-mayor' | 'mayor-a-menor' | undefined
       }
-
+      console.log('📥 Controller recibió filtros:', filtros)
       const inmuebles = await propertiesService.getAll(filtros)
       res.json({ ok: true, data: inmuebles })
     } catch (error) {
