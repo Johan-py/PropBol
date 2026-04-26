@@ -27,24 +27,43 @@ export const obtenerConsumo = async (userId: number) => {
   })
 
   if (!usuario) {
-    throw new Error('Usuario no encontrado')
+    return {
+      usadas: 0,
+      limite: 0,
+      plan: 'Usuario no encontrado'
+    }
   }
 
-  const suscripcion = usuario.suscripciones_activas[0]
+  const suscripcion = usuario.suscripciones_activas?.[0]
 
   if (!suscripcion) {
-    throw new Error('No tiene suscripción activa')
+    return {
+      usadas: 0,
+      limite: 0,
+      plan: 'Sin suscripción'
+    }
   }
 
   const plan = suscripcion.plan_suscripcion
 
   if (!plan) {
-    throw new Error('La suscripción no tiene plan asignado')
+    return {
+      usadas: 0,
+      limite: 0,
+      plan: 'Plan no definido'
+    }
   }
 
+  // 🔥 CONTAR PUBLICACIONES
+  const publicacionesMes = await prisma.publicacion.count({
+    where: {
+      usuarioId: userId
+    }
+  })
+
   return {
-    usadas: 0,
-    limite: plan.nro_publicaciones_plan,
-    plan: plan.nombre_plan
+    usadas: publicacionesMes,
+    limite: plan.nro_publicaciones_plan ?? 0,
+    plan: plan.nombre_plan ?? 'Plan sin nombre'
   }
 }
