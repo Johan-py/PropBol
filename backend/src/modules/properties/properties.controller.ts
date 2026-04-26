@@ -48,7 +48,7 @@ export const propertiesController = {
         banosMax: banosMax ? parseInt(banosMax as string) : undefined,
         banoCompartido,
         minSuperficie: minSuperficie ? Number(minSuperficie) : null,
-        maxSuperficie: maxSuperficie ? Number(maxSuperficie) : null,
+        maxSuperficie: maxSuperficie ? Number(maxSuperficie) : null
       }
 
       const orden = {
