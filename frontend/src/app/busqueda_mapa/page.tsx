@@ -201,4 +201,4 @@ export default function BusquedaMapaPage() {
             <BusquedaMapaContent />
         </Suspense>
     )
-}
+}   
