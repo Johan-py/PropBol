@@ -1,4 +1,5 @@
 import { MOCK_PUBLIC_BLOGS } from "@/lib/mock/publicBlogs.mock";
+import { createPlainTextExcerpt } from "@/lib/blogMarkdown";
 import { PublicBlogCard, BlogCategory } from "@/types/publicBlog";
 
 export type BlogCreationAction = "borrador" | "pendiente";
@@ -102,7 +103,7 @@ export const getPublishedBlogs = async (
     return rows.map((row: BlogApiRow) => ({
       id: String(row.id),
       title: row.titulo,
-      excerpt: row.resumen || row.contenido.substring(0, 150) + "...",
+      excerpt: row.resumen || createPlainTextExcerpt(row.contenido),
       imageUrl: row.imagen || "/placeholder-blog.jpg",
       category: (row.categoria_blog?.nombre || "General") as BlogCategory,
       authorName:
@@ -142,7 +143,7 @@ export const getPublishedBlogById = async (
     return {
       id: String(row.id),
       title: row.titulo,
-      excerpt: row.resumen || row.contenido.substring(0, 150) + "...",
+      excerpt: row.resumen || createPlainTextExcerpt(row.contenido),
       imageUrl: row.imagen || "/placeholder-blog.jpg",
       category: (row.categoria_blog?.nombre || "General") as BlogCategory,
       authorName:
