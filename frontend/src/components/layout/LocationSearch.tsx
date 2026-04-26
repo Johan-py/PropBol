@@ -250,8 +250,9 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
 
   return (
     <div className="w-full relative" ref={containerRef}>
-      <div className={`h-[46px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${isOpen ? 'border-amber-600 ring-2 ring-amber-100' : 'border-stone-300'}`}>
-        <MapPin className={`w-5 h-5 flex-shrink-0 ${value ? 'text-amber-600' : 'text-stone-400'}`} />
+      {/* FIX: Se cambió h-[46px] a h-[40px] para alinearlo con el ComboBox */}
+      <div className={`h-[40px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${isOpen ? 'border-orange-500 ring-1 ring-orange-500' : 'border-stone-200 hover:border-orange-500'}`}>
+        <MapPin className={`w-5 h-5 flex-shrink-0 transition-colors ${value ? 'text-orange-500' : 'text-stone-400'}`} />
         <div className="relative flex-1 flex items-center w-full h-full min-w-0">
           <input
             type="text"
@@ -263,11 +264,11 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             }}
             onKeyDown={(e) => e.key === 'Enter' && setIsOpen(false)}
             placeholder="Cochabamba, La Paz..."
-            className="w-full bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 font-inter pr-[70px]"
+            className="w-full bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 font-inter pr-[70px] h-full"
           />
           <div className="absolute right-0 flex items-center gap-2 bg-white pl-2 h-full">
             {isSelected && <Image src="https://flagcdn.com/w20/bo.png" alt="BO" width={20} height={14} className="rounded-sm flex-shrink-0" />}
-            {isLoading ? <Loader2 className="w-4 h-4 animate-spin text-amber-600" /> : value && (
+            {isLoading ? <Loader2 className="w-4 h-4 animate-spin text-orange-500" /> : value && (
               <button onClick={() => onChange('')} type="button" className="p-1 hover:bg-stone-100 rounded-full transition-colors flex-shrink-0">
                 <X className="w-4 h-4 text-stone-400 hover:text-red-500" />
               </button>
@@ -279,24 +280,24 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
       {isOpen && (
         <div style={dropdownStyle} className="bg-white border border-stone-200 rounded-xl shadow-xl overflow-hidden">
           {value === '' && history.length > 0 && (
-            <div className="max-h-60 overflow-y-auto overscroll-contain"> 
+            <div className="max-h-60 overflow-y-auto overscroll-contain">
               <div className="px-4 py-2 bg-stone-50 border-b border-stone-100">
                 <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">Búsquedas recientes</span>
               </div>
               {(showAll ? history : history.slice(0, 5)).map((item, idx) => (
-                <div key={`hist-${idx}`} className="group flex items-center justify-between hover:bg-amber-50 border-b border-stone-50 last:border-0">
+                <div key={`hist-${idx}`} className="group flex items-center justify-between hover:bg-orange-50 border-b border-stone-50 last:border-0">
                   <button
                     type="button"
                     onClick={() => {
                       onChange(item)
                       setIsOpen(false)
                       updateFilters({ query: item })
-                      saveToHistory(item) 
+                      saveToHistory(item)
                       setTimeout(() => containerRef.current?.closest('form')?.requestSubmit(), 100)
                     }}
                     className="flex-1 px-4 py-3 flex items-center gap-3 text-left"
                   >
-                    <History className="w-3.5 h-3.5 text-stone-300" />
+                    <History className="w-3.5 h-3.5 text-stone-400" />
                     <span className="text-sm text-stone-600">{item}</span>
                   </button>
                   <button
@@ -314,7 +315,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                     type="button"
                     onClick={() => setShowAll(!showAll)}
                     className={`px-4 py-2 text-xs font-bold transition-colors ${
-                      showAll ? "text-stone-500 hover:text-stone-700" : "text-amber-600 hover:text-amber-700"
+                      showAll ? "text-stone-500 hover:text-stone-700" : "text-orange-500 hover:text-orange-600"
                     }`}
                   >
                     {showAll ? "Ver menos" : "Ver más"}
@@ -328,7 +329,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             <div className="max-h-[300px] overflow-y-auto">
               {isLoading ? (
                 <div className="px-4 py-6 text-center flex flex-col items-center gap-2">
-                  <Loader2 className="w-5 h-5 animate-spin text-amber-600" />
+                  <Loader2 className="w-5 h-5 animate-spin text-orange-500" />
                   <span className="text-sm text-stone-500 italic">Buscando zonas...</span>
                 </div>
               ) : suggestions.length > 0 ? (
@@ -338,10 +339,10 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
                       key={loc.id}
                       type="button"
                       onClick={() => handleSelectLocation(loc)}
-                      className="w-full px-4 py-3 flex items-center justify-between hover:bg-amber-50 transition-colors text-left border-b border-stone-50 last:border-0"
+                      className="w-full px-4 py-3 flex items-center justify-between hover:bg-orange-50 transition-colors text-left border-b border-stone-50 last:border-0"
                     >
                       <div className="flex items-center gap-3">
-                        <Search className="w-3.5 h-3.5 text-stone-500" />
+                        <Search className="w-3.5 h-3.5 text-stone-400" />
                         <div className="flex flex-col">
                           <span className="text-sm font-bold text-stone-600">{loc.nombre}</span>
                           <span className="text-xs text-stone-400">{loc.contexto}</span>
