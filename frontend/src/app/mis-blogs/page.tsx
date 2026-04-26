@@ -211,7 +211,10 @@ export default function MisBlogsPage() {
                   </h2>
 
                   <div className="flex justify-between items-center border-t border-[#EEE6DC] pt-4">
-                    {blog.estado === "BORRADOR" || blog.estado === "RECHAZADO" ? (
+                    {blog.estado === "BORRADOR" ||
+                    blog.estado === "RECHAZADO" ||
+                    blog.estado === "PENDIENTE" ||
+                    blog.estado === "PUBLICADO" ? (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
