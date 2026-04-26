@@ -17,6 +17,8 @@ export interface FiltrosBusqueda {
   minPrice?: number | null
   maxPrice?: number | null
   currency?: string | null
+  minSuperficie?: number | null
+  maxSuperficie?: number | null
 
   dormitoriosMin?: number
   dormitoriosMax?: number
@@ -184,6 +186,16 @@ export const propertiesRepository = {
 
     if (filtros.banoCompartido !== undefined) {
       where.banoCompartido = filtros.banoCompartido
+    }
+    // ── FILTRO DE SUPERFICIE ──────────────────────────────────────────────
+    if (filtros.minSuperficie != null || filtros.maxSuperficie != null) {
+      where.superficieM2 = {}
+      if (filtros.minSuperficie != null) {
+        where.superficieM2.gte = filtros.minSuperficie
+      }
+      if (filtros.maxSuperficie != null) {
+        where.superficieM2.lte = filtros.maxSuperficie
+      }
     }
 
     // ── ORDER BY ───────────────────────────────────────────────────────────

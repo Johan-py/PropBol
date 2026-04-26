@@ -127,6 +127,9 @@ function BusquedaMapaContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const filterResetKey = searchParams.toString();
+  const minSuperficie = searchParams.get('minSuperficie')
+  const maxSuperficie = searchParams.get('maxSuperficie')
+  const tieneFiltrSuperficie = minSuperficie || maxSuperficie
 
   //estado para controlar la autenticación
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -166,14 +169,21 @@ function BusquedaMapaContent() {
   
   useEffect(() => {
     const handleAbrirUbicacion = () => {
-      setIsPriceFilterOpen(false); // Cierra precio si estaba abierto
-      setIsSidebarOpen(true);      // Asegura que el panel izquierdo esté visible
-      setActiveSidebarView('ubicacion'); // Cambia el contenido al panel de zonas
+      setIsPriceFilterOpen(false); // Cierra el de precio si estaba abierto
+      
+      // Si el panel de ubicación ya está abierto en el sidebar, lo cerramos volviendo a results
+      if (activeSidebarView === 'ubicacion' && isSidebarOpen) {
+        setActiveSidebarView('results');
+      } else {
+        // De lo contrario, nos aseguramos de que el sidebar esté abierto y mostramos ubicación
+        setIsSidebarOpen(true);
+        setActiveSidebarView('ubicacion');
+      }
     };
-    
+   
     window.addEventListener('abrirPanelUbicacion', handleAbrirUbicacion);
     return () => window.removeEventListener('abrirPanelUbicacion', handleAbrirUbicacion);
-  }, []);
+  }, [activeSidebarView, isSidebarOpen]);
 
   // --- INICIO ESTADOS HU8 ---
   const [isDrawingMode, setIsDrawingMode] = useState(false)
@@ -640,7 +650,18 @@ function BusquedaMapaContent() {
           Actualizando...
         </div>
       ) : displayedProperties.length === 0 ? (
-        <EmptyState />
+        <EmptyState
+  titulo={
+    tieneFiltrSuperficie
+      ? 'Sin resultados por superficie'
+      : 'No hay propiedades existentes'
+  }
+  mensaje={
+    tieneFiltrSuperficie
+      ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
+      : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
+  }
+/>
       ) : (
         <div
           className={`gap-3 flex flex-col ${viewMode === 'list'
@@ -1175,7 +1196,18 @@ function BusquedaMapaContent() {
                         Actualizando resultados...
                       </div>
                     ) : displayedProperties.length === 0 ? (
-                      <EmptyState />
+                     <EmptyState
+  titulo={
+    tieneFiltrSuperficie
+      ? 'Sin resultados por superficie'
+      : 'No hay propiedades existentes'
+  }
+  mensaje={
+    tieneFiltrSuperficie
+      ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
+      : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
+  }
+/>
                     ) : (
                       <div
                         className={`gap-4 flex flex-col ${viewMode === 'list'
