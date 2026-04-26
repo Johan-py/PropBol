@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import BlogLinkModal from "./BlogLinkModal";
 import BlogPublishModal from "./BlogPublishModal";
 import SuccessToast from "./SuccessToast";
@@ -50,7 +50,6 @@ export default function BlogCreateForm({
     setFieldErrors,
     textareaRef,
     imagePreviewUrl,
-    isFormDirty,
     applyFormatting,
     insertLink,
     handleLinkConfirm,
@@ -59,29 +58,55 @@ export default function BlogCreateForm({
     selectionForLink,
     setSelectedImageFile,
     submitBlog,
-    router,
-    autosaveKey,
+    undoContenido,
+    redoContenido,
     validate,
   } = useBlogForm({ blogId, initialValues, mode });
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if ((e.ctrlKey || e.metaKey) && !e.shiftKey) {
-      switch (e.key.toLowerCase()) {
-        case "b":
-          e.preventDefault();
-          applyFormatting("**");
-          break;
-        case "i":
-          e.preventDefault();
-          applyFormatting("*");
-          break;
-        case "k":
-          e.preventDefault();
-          insertLink();
-          break;
-      }
+    if (!(e.ctrlKey || e.metaKey)) {
+      return
     }
-  };
+
+    const key = e.key.toLowerCase()
+
+    if (key === "z") {
+      e.preventDefault()
+
+      if (e.shiftKey) {
+        redoContenido()
+      } else {
+        undoContenido()
+      }
+
+      return
+    }
+
+    if (key === "y") {
+      e.preventDefault()
+      redoContenido()
+      return
+    }
+
+    if (e.shiftKey) {
+      return
+    }
+
+    switch (key) {
+      case "b":
+        e.preventDefault();
+        applyFormatting("**");
+        break;
+      case "i":
+        e.preventDefault();
+        applyFormatting("*");
+        break;
+      case "k":
+        e.preventDefault();
+        insertLink();
+        break;
+    }
+  }
 
   const handleAction = (accion: "borrador" | "pendiente") => {
     if (accion === "borrador") {
