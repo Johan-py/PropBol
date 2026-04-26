@@ -22,7 +22,7 @@ export default function BlogEditorSection({
     <div className="space-y-3">
       <div className="flex items-center justify-between px-1">
         <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-[#A8A29E]">
-          Contenido del artículo (Editor Visual)
+          Contenido del artículo(Editor Visual)
         </span>
       </div>
 
@@ -34,6 +34,7 @@ export default function BlogEditorSection({
           onLink={insertLink}
         />
       </div>
+
       {error && <p className="px-2 text-sm font-medium text-red-500">{error}</p>}
     </div>
   );
