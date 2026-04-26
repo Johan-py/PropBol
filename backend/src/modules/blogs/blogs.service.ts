@@ -57,16 +57,26 @@ export const blogsService = {
     const blog = await blogsRepository.findById(id);
     if (!blog) throw new Error("BLOG_NOT_FOUND");
     if (blog.usuario_id !== usuario_id) throw new Error("FORBIDDEN");
-    if (blog.estado !== "BORRADOR" && blog.estado !== "RECHAZADO") {
+    if (
+      blog.estado !== "BORRADOR" &&
+      blog.estado !== "PENDIENTE" &&
+      blog.estado !== "PUBLICADO" &&
+      blog.estado !== "RECHAZADO"
+    ) {
       throw new Error("BLOG_NOT_EDITABLE");
     }
 
-    const estado: estado_blog | undefined =
-      data.accion === "pendiente"
-        ? "PENDIENTE"
-        : data.accion === "borrador"
-          ? "BORRADOR"
-          : undefined;
+    let estado: estado_blog | undefined;
+
+    if (blog.estado === "PENDIENTE") {
+      estado = "PENDIENTE";
+    } else if (blog.estado === "PUBLICADO" || blog.estado === "RECHAZADO") {
+      estado = "PENDIENTE";
+    } else if (data.accion === "pendiente") {
+      estado = "PENDIENTE";
+    } else if (data.accion === "borrador") {
+      estado = "BORRADOR";
+    }
 
     return blogsRepository.update(id, {
       titulo: data.titulo,
