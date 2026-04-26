@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import type { AdminModerationBlog, AdminModerationStatus } from '@/types/adminModerationBlog'
+import { stripMarkdown } from '@/lib/blog-utils'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 
@@ -36,8 +37,8 @@ function mapBackendToFrontend(blog: BackendBlog): AdminModerationBlog {
     submittedAt: blog.fecha_creacion,
     readingTime: '5 min',
     coverImage: blog.imagen || 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d',
-    excerpt: blog.contenido.substring(0, 150) + '...',
-    lead: blog.contenido.substring(0, 300) + '...',
+    excerpt: stripMarkdown(blog.contenido).substring(0, 150) + '...',
+    lead: stripMarkdown(blog.contenido).substring(0, 300) + '...',
     sections: [
       {
         paragraphs: [blog.contenido]

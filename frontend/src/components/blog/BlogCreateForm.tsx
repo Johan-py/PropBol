@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import BlogLinkModal from "./BlogLinkModal";
 import BlogPublishModal from "./BlogPublishModal";
 import SuccessToast from "./SuccessToast";
@@ -48,12 +48,9 @@ export default function BlogCreateForm({
     successMessage,
     fieldErrors,
     setFieldErrors,
-    textareaRef,
     imagePreviewUrl,
     isFormDirty,
-    applyFormatting,
     insertLink,
-    handleLinkConfirm,
     setIsLinkModalOpen,
     isLinkModalOpen,
     selectionForLink,
@@ -64,24 +61,9 @@ export default function BlogCreateForm({
     validate,
   } = useBlogForm({ blogId, initialValues, mode });
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if ((e.ctrlKey || e.metaKey) && !e.shiftKey) {
-      switch (e.key.toLowerCase()) {
-        case "b":
-          e.preventDefault();
-          applyFormatting("**");
-          break;
-        case "i":
-          e.preventDefault();
-          applyFormatting("*");
-          break;
-        case "k":
-          e.preventDefault();
-          insertLink();
-          break;
-      }
-    }
-  };
+  const [editor, setEditor] = useState<any>(null);
+
+  // Los atajos de teclado (B, I, K) ahora los maneja TipTap automáticamente
 
   const handleAction = (accion: "borrador" | "pendiente") => {
     if (accion === "borrador") {
@@ -101,6 +83,16 @@ export default function BlogCreateForm({
   const handleConfirmPublish = () => {
     setIsPublishModalOpen(false);
     void submitBlog("pendiente");
+  };
+
+  const handleEditorLinkConfirm = (url: string, text?: string) => {
+    if (editor) {
+      editor.chain()
+        .focus()
+        .insertContent(`<a href="${url}">${text || url}</a> `)
+        .run();
+    }
+    setIsLinkModalOpen(false);
   };
 
   return (
@@ -143,10 +135,8 @@ export default function BlogCreateForm({
             <BlogEditorSection
               contenido={contenido}
               setContenido={setContenido}
-              textareaRef={textareaRef}
-              applyFormatting={applyFormatting}
               insertLink={insertLink}
-              onKeyDown={handleKeyDown}
+              editorRef={setEditor}
               error={fieldErrors.contenido}
             />
 
@@ -173,7 +163,7 @@ export default function BlogCreateForm({
         isOpen={isLinkModalOpen}
         initialText={selectionForLink}
         onClose={() => setIsLinkModalOpen(false)}
-        onConfirm={handleLinkConfirm}
+        onConfirm={handleEditorLinkConfirm}
       />
 
       <BlogPublishModal
@@ -186,7 +176,7 @@ export default function BlogCreateForm({
       <SuccessToast
         message={successMessage}
         isOpen={!!successMessage}
-        onClose={() => {}} // El hook redirige rápido, así que no es crítico el reset manual aquí
+        onClose={() => { }} // El hook redirige rápido, así que no es crítico el reset manual aquí
       />
     </div>
   );
