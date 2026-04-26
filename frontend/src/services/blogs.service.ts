@@ -33,7 +33,7 @@ export type EditableBlog = {
   contenido: string
   imagen: string
   categoria_id: number
-  estado: 'BORRADOR' | 'RECHAZADO'
+  estado: 'BORRADOR' | 'PENDIENTE' | 'PUBLICADO' | 'RECHAZADO'
   blog_rechazo?: BlogRechazo[]
 }
 
@@ -105,7 +105,7 @@ export const getPublishedBlogs = async (limit: number = 10): Promise<PublicBlogC
     return rows.map((row: BlogApiRow) => ({
       id: String(row.id),
       title: row.titulo,
-      excerpt: row.resumen || row.contenido.substring(0, 150) + '...',
+      excerpt: row.resumen || createPlainTextExcerpt(row.contenido),
       imageUrl: row.imagen || '/placeholder-blog.jpg',
       category: (row.categoria_blog?.nombre || 'General') as BlogCategory,
       authorName: `${row.usuario?.nombre || ''} ${row.usuario?.apellido || ''}`.trim() || 'Anónimo',
@@ -141,7 +141,7 @@ export const getPublishedBlogById = async (id: string): Promise<PublicBlogDetail
     return {
       id: String(row.id),
       title: row.titulo,
-      excerpt: row.resumen || row.contenido.substring(0, 150) + '...',
+      excerpt: row.resumen || createPlainTextExcerpt(row.contenido),
       imageUrl: row.imagen || '/placeholder-blog.jpg',
       category: (row.categoria_blog?.nombre || 'General') as BlogCategory,
       authorName: `${row.usuario?.nombre || ''} ${row.usuario?.apellido || ''}`.trim() || 'Anónimo',
@@ -237,10 +237,6 @@ export async function getEditableBlog(id: number): Promise<EditableBlog> {
 
   if (!blog) {
     throw new Error('No se encontró el blog solicitado.')
-  }
-
-  if (blog.estado !== 'BORRADOR' && blog.estado !== 'RECHAZADO') {
-    throw new Error('Solo puedes editar blogs en estado BORRADOR o RECHAZADO.')
   }
 
   return {
