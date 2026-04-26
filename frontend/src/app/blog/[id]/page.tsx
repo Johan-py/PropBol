@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import BlogCommentsSection from '@/components/blog/BlogCommentsSection'
+import MarkdownRenderer from '@/components/blog/MarkdownRenderer'
 import { MOCK_USER_BLOGS } from '@/lib/mock/blogs.mock'
 import { getPublishedBlogById } from '@/services/blogs.service'
 
@@ -10,7 +11,6 @@ const buildArticleSections = (title: string, excerpt: string, content?: string) 
     heading: 'Panorama actual',
     paragraphs: [
       excerpt,
-      ...(content ? [content] : []),
       `Este articulo sobre "${title}" abre una conversacion relevante para quienes siguen de cerca la evolucion del sector inmobiliario. La propuesta combina contexto, tendencias y decisiones practicas que ayudan a interpretar mejor el momento del mercado.`,
       'A lo largo del texto se desarrollan ideas que no solo inspiran, sino que tambien sirven como punto de partida para que la comunidad comparta experiencias, dudas y distintas perspectivas.'
     ]
@@ -98,9 +98,13 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
                 </h2>
 
                 <div className="space-y-5 text-base leading-8 text-stone-600 sm:text-lg">
-                  {section.paragraphs.map((paragraph) => (
-                    <p key={paragraph}>{paragraph}</p>
-                  ))}
+                  {section.heading === 'Panorama actual' && publicBlog?.content ? (
+                    <MarkdownRenderer content={publicBlog.content} />
+                  ) : (
+                    section.paragraphs.map((paragraph) => (
+                      <p key={paragraph}>{paragraph}</p>
+                    ))
+                  )}
                 </div>
               </section>
             ))}
