@@ -1,5 +1,6 @@
-import { MOCK_PUBLIC_BLOGS } from '@/lib/mock/publicBlogs.mock'
-import { PublicBlogCard, BlogCategory } from '@/types/publicBlog'
+import { MOCK_PUBLIC_BLOGS } from "@/lib/mock/publicBlogs.mock";
+import { createPlainTextExcerpt } from "@/lib/blogMarkdown";
+import { PublicBlogCard, BlogCategory } from "@/types/publicBlog";
 
 export type BlogCreationAction = 'borrador' | 'pendiente'
 

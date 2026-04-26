@@ -17,7 +17,7 @@ export interface FiltrosBusqueda {
   minPrice?: number | null
   maxPrice?: number | null
   currency?: string | null
-  
+
   dormitoriosMin?: number
   dormitoriosMax?: number
   banosMin?: number
@@ -172,7 +172,7 @@ export const propertiesRepository = {
       }
     }
 
-     if (filtros.banosMin !== undefined || filtros.banosMax !== undefined) {
+    if (filtros.banosMin !== undefined || filtros.banosMax !== undefined) {
       where.nroBanos = {}
       if (filtros.banosMin !== undefined) {
         where.nroBanos.gte = filtros.banosMin
@@ -202,12 +202,14 @@ export const propertiesRepository = {
       orderBy.push({ fechaPublicacion: 'desc' })
     } else if (filtros.fecha === 'mas-antiguos') {
       orderBy.push({ fechaPublicacion: 'asc' })
+    } else if (filtros.fecha === 'mas-populares') {
+      orderBy.push({ fechaPublicacion: 'desc' }) // fallback mientras se ordena en memoria
     }
 
     orderBy.push({ id: 'asc' }) // Desempate default
 
     // ── EJECUCIÓN PRISMA ───────────────────────────────────────────────────
-    return prisma.inmueble.findMany({
+    const inmuebles = await prisma.inmueble.findMany({
       where,
       orderBy,
       include: {
@@ -237,5 +239,18 @@ export const propertiesRepository = {
         }
       }
     })
+
+    if (filtros.fecha === 'mas-populares') {
+      console.log('🔥 Entrando al bloque mas-populares')
+      const vistas = await prisma.propiedad_vista.groupBy({
+        by: ['inmuebleId'],
+        _count: { usuarioId: true }, // usuarios únicos por inmueble
+        orderBy: { _count: { usuarioId: 'desc' } }
+      })
+      const vistaMap = new Map(vistas.map((v) => [v.inmuebleId, v._count.usuarioId ?? 0]))
+      return inmuebles.sort((a, b) => (vistaMap.get(b.id) ?? 0) - (vistaMap.get(a.id) ?? 0))
+    }
+
+    return inmuebles
   }
 }
