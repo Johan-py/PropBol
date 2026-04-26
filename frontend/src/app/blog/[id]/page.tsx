@@ -73,9 +73,7 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
 
       <main className="mx-auto mt-12 max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-[36px] bg-white/90 p-6 shadow-[0_24px_80px_-50px_rgba(41,37,36,0.45)] sm:p-8 lg:p-10">
-          <p className="text-lg font-medium leading-8 text-stone-700 sm:text-xl">{summary}</p>
-
-          <div className="mt-8">
+          <div>
             <MarkdownContent
               content={articleContent}
               className="prose prose-stone max-w-none prose-headings:font-heading prose-headings:text-stone-900 prose-p:text-stone-600 prose-p:leading-8 prose-p:text-lg prose-strong:text-stone-900 prose-a:text-[#a56400] prose-a:no-underline hover:prose-a:text-amber-800 prose-blockquote:border-[#a56400] prose-blockquote:text-stone-600 prose-code:text-stone-800 prose-pre:bg-stone-900 prose-pre:text-stone-100"
