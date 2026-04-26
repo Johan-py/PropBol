@@ -41,6 +41,7 @@ import MapaListadoPaginacion, { PageSize } from "@/components/galeria/MapaListad
 import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenamiento'
 import { ErrorState } from '@/components/ClusterSidebar'
 import SuperficieFilterSidebar from '@/components/filters/SuperficieFilterSidebar'
+import { UbicacionEspecificaPanel } from '@/components/filters/UbicacionEspecificaPanel';
 
 // Carga dinámica del mapa (sin SSR)
 const MapView = nextDynamic(() => import('./MapView'), {
@@ -161,7 +162,18 @@ function BusquedaMapaContent() {
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
   const [isMounted, setIsMounted] = useState(false)
   const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false)
-  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad'>('results')
+  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad'| 'ubicacion'>('results')
+  
+  useEffect(() => {
+    const handleAbrirUbicacion = () => {
+      setIsPriceFilterOpen(false); // Cierra precio si estaba abierto
+      setIsSidebarOpen(true);      // Asegura que el panel izquierdo esté visible
+      setActiveSidebarView('ubicacion'); // Cambia el contenido al panel de zonas
+    };
+    
+    window.addEventListener('abrirPanelUbicacion', handleAbrirUbicacion);
+    return () => window.removeEventListener('abrirPanelUbicacion', handleAbrirUbicacion);
+  }, []);
 
   // --- INICIO ESTADOS HU8 ---
   const [isDrawingMode, setIsDrawingMode] = useState(false)
@@ -538,6 +550,7 @@ function BusquedaMapaContent() {
     setClusterProperties(props)
     setIsClusterView(true)
     setActiveClusterIds(props.map((p: any) => p.id))
+    setSheetState('peek')
   }
 
   const handleMapSelect = useCallback(
@@ -559,6 +572,12 @@ function BusquedaMapaContent() {
     },
     [inmueblesOrdenados]
   )
+  const handleZoneSelect = (id: number | null) => {
+    setSelectedZoneId(id)
+    setIsClusterView(false)
+    setActiveClusterIds([])
+    setClusterProperties([])
+  }
 
   // HU4 - Abre el detalle de la propiedad en una nueva pestaña.
   // Se usa property.id porque en filtros corresponde al inmuebleId.
@@ -638,9 +657,7 @@ function BusquedaMapaContent() {
 
                 // HU4 - Conserva el comportamiento existente del listado móvil
                 onClickItem?.(property)
-
                 // HU4 - Abre el detalle en una nueva pestaña
-                abrirDetallePropiedad(property.id)
               }}
               className={`cursor-pointer transition-all duration-200 rounded-xl ${selectedPropertyId === property.id ? 'ring-2 ring-orange-400 ring-offset-1' : ''
                 }`}
@@ -728,7 +745,7 @@ function BusquedaMapaContent() {
                   selectedId={selectedPropertyId}
                   zonas={zonasCombinadas}
                   selectedZoneId={selectedZoneId}
-                  onZoneSelect={setSelectedZoneId}
+                  onZoneSelect={handleZoneSelect}
                   onSelect={handleMapSelect}
                   isLoading={isLoading}
                   error={error}
@@ -803,7 +820,7 @@ function BusquedaMapaContent() {
               selectedId={selectedPropertyId}
               zonas={zonasCombinadas}
               selectedZoneId={selectedZoneId}
-              onZoneSelect={setSelectedZoneId}
+              onZoneSelect={handleZoneSelect}
               onSelect={handleMapSelect}
               isLoading={isLoading}
               error={error}
@@ -834,6 +851,7 @@ function BusquedaMapaContent() {
                 }
               }}
               onClusterClick={handleClusterClick}
+              onClusterDissolve={() => { setIsClusterView(false); setActiveClusterIds([]); setClusterProperties([]) }}
               activeClusterIds={activeClusterIds}
             />
           </div>
@@ -1050,6 +1068,14 @@ function BusquedaMapaContent() {
               }}
             />
           ) :
+           isSidebarOpen && activeSidebarView === 'ubicacion' ? (
+            
+            <div className="flex flex-col h-full w-full bg-white relative">
+              <UbicacionEspecificaPanel 
+                onClose={() => setActiveSidebarView('results')} 
+              />
+            </div>
+            ) :
             isSidebarOpen && activeSidebarView === 'results' ? (
               <div className="flex flex-col h-full min-h-0">
                 <div className="p-4 bg-white shrink-0">
@@ -1165,7 +1191,6 @@ function BusquedaMapaContent() {
                               setSelectedPropertyId(property.id)
 
                               // HU4 - Abre el detalle de la propiedad en una nueva pestaña
-                              abrirDetallePropiedad(property.id)
                             }}
                             className={`cursor-pointer transition-all duration-200 rounded-xl relative ${viewMode === 'grid'
                               ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
@@ -1332,12 +1357,13 @@ function BusquedaMapaContent() {
               selectedId={selectedPropertyId}
               onSelect={handleMapSelect}
               onClusterClick={handleClusterClick}
+              onClusterDissolve={() => { setIsClusterView(false); setActiveClusterIds([]); setClusterProperties([]) }}
               activeClusterIds={activeClusterIds}
               isLoading={isLoading}
               error={error}
               zonas={zonasCombinadas}
               selectedZoneId={selectedZoneId}
-              onZoneSelect={setSelectedZoneId}
+              onZoneSelect={handleZoneSelect}
               isDrawingMode={isDrawingMode}
               polygonPoints={polygonPoints}
               isPolygonClosed={isPolygonClosed}

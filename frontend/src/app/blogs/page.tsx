@@ -94,13 +94,6 @@ export default function BlogsPage() {
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <AddPostButton />
 
-              {/* TODO: restringir este acceso por rol cuando se integre backend. */}
-              <Link
-                href="/admin/blogs"
-                className="inline-flex min-h-[54px] items-center justify-center border border-stone-300 px-8 text-sm font-semibold uppercase tracking-[0.22em] text-stone-700 transition-colors hover:border-[#a56400] hover:text-[#a56400]"
-              >
-                Moderar Posts
-              </Link>
             </div>
           </div>
         </section>

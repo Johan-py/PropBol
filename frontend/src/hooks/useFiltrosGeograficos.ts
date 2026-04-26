@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSearchFilters } from './useSearchFilters'
 
 export interface GeoOption {
@@ -11,22 +11,32 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
 export const useFiltrosGeograficos = () => {
   const { updateFilters } = useSearchFilters()
+  const updateFiltersRef = useRef(updateFilters)
+  useEffect(() => {
+    updateFiltersRef.current = updateFilters
+  }, [updateFilters])
 
-  // Estados de selección (Tarea 3)
+  // Estados de selección 
   const [departamento, setDepartamento] = useState<number | 'todos'>('todos')
   const [provincia, setProvincia] = useState<number | 'todos'>('todos')
   const [municipio, setMunicipio] = useState<number | 'todos'>('todos')
   const [zona, setZona] = useState<number | 'todos'>('todos')
   const [barrio, setBarrio] = useState<number | 'todos'>('todos')
 
-  // Listas de datos (Tarea 5: Limpieza de arrays)
+  // Listas de datos 
   const [listaDepartamentos, setListaDepartamentos] = useState<GeoOption[]>([OPCION_TODOS])
   const [listaProvincias, setListaProvincias] = useState<GeoOption[]>([OPCION_TODOS])
   const [listaMunicipios, setListaMunicipios] = useState<GeoOption[]>([OPCION_TODOS])
   const [listaZonas, setListaZonas] = useState<GeoOption[]>([OPCION_TODOS])
   const [listaBarrios, setListaBarrios] = useState<GeoOption[]>([OPCION_TODOS])
 
-  const inyectarTodos = (data: any[]): GeoOption[] => [OPCION_TODOS, ...data]
+  const inyectarTodos = (data: any): GeoOption[] => {
+    const arreglo = Array.isArray(data) ? data : (Array.isArray(data?.data) ? data.data : []);
+    return [
+      OPCION_TODOS, 
+      ...arreglo.map((item: any) => ({ id: item.id, nombre: item.nombre }))
+    ]
+  }
 
   // --- TAREA 5: FETCH Y CARGA EN CASCADA ---
 
