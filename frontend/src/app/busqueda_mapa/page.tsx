@@ -127,6 +127,9 @@ function BusquedaMapaContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const filterResetKey = searchParams.toString();
+  const minSuperficie = searchParams.get('minSuperficie')
+  const maxSuperficie = searchParams.get('maxSuperficie')
+  const tieneFiltrSuperficie = minSuperficie || maxSuperficie
 
   //estado para controlar la autenticación
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -647,7 +650,18 @@ function BusquedaMapaContent() {
           Actualizando...
         </div>
       ) : displayedProperties.length === 0 ? (
-        <EmptyState />
+        <EmptyState
+  titulo={
+    tieneFiltrSuperficie
+      ? 'Sin resultados por superficie'
+      : 'No hay propiedades existentes'
+  }
+  mensaje={
+    tieneFiltrSuperficie
+      ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
+      : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
+  }
+/>
       ) : (
         <div
           className={`gap-3 flex flex-col ${viewMode === 'list'
@@ -1182,7 +1196,18 @@ function BusquedaMapaContent() {
                         Actualizando resultados...
                       </div>
                     ) : displayedProperties.length === 0 ? (
-                      <EmptyState />
+                     <EmptyState
+  titulo={
+    tieneFiltrSuperficie
+      ? 'Sin resultados por superficie'
+      : 'No hay propiedades existentes'
+  }
+  mensaje={
+    tieneFiltrSuperficie
+      ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
+      : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
+  }
+/>
                     ) : (
                       <div
                         className={`gap-4 flex flex-col ${viewMode === 'list'
