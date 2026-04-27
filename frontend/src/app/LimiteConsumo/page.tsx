@@ -93,7 +93,8 @@ export default function ConsumoPage() {
     <div className="min-h-screen bg-gray-100 p-6">
       {/* HEADER */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Panel de consumo</h1>
+        <h1 className="text-5xl md:text-6xl font-extrabold text-stone-900 tracking-tighter">Panel de consumo</h1>
+        <p className="text-xl md:text-2xl font-bold text-stone-500 mt-2">Monitorea tus publicaciones activas y el límite de tu plan</p>
         <Link href="/cobros-suscripciones">
           <button className="bg-gradient-to-r from-black to-orange-400 text-white px-4 py-2 rounded-lg hover:bg-orange-900 transition">
             Ver planes de ampliación
