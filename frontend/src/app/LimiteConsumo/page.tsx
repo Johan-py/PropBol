@@ -129,7 +129,7 @@ export default function ConsumoPage() {
               Tienes publicaciones restantes este mes
             </h3>
             <p className="text-yellow-700 text-xl md:text-base font-extrabold">
-              Tu plan pro incluye 10 publicaciones. Has utilizado {10-disponibles} y te queda <span className="underline font-extrabold">{disponibles} disponible</span>. ¡Úsala antes de que venza el periodo mensual!
+              Tu Plan Pro incluye 10 publicaciones. Has utilizado {10-disponibles} y te queda <span className="underline font-extrabold">{disponibles} disponible</span>. ¡Úsala antes de que venza el periodo mensual!
             </p>
           </div>
           {/* 3. NÚMERO GRANDE A LA DERECHA */}
