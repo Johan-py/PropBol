@@ -269,4 +269,4 @@ function PreferenceCard({ icon, title, description, checked, onToggle }: Prefere
       </button>
     </div>
   )
-}
+} 
