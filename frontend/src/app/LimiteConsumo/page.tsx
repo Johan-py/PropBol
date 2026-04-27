@@ -91,14 +91,17 @@ export default function ConsumoPage() {
 
   return (
       <div className="min-h-screen bg-gray-100 p-6">
+        
         {/* HEADER */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-6 gap-4">
+
           {/*Texto: Título y Subtítulo */}
           <div className="flex flex-col">
             <h1 className="text-5xl md:text-6xl font-extrabold text-stone-900 tracking-tighter">Panel de consumo</h1>
             <p className="text-xl md:text-2xl font-extrabold text-stone-500 mt-2">Monitorea tus publicaciones activas y el límite de tu plan</p>
           </div>
           <Link href="/cobros-suscripciones">
+
               {/*Botón para redirigir a Planes de Suscripción */}
               <button className="mt-6 group flex items-center gap-3 bg-gradient-to-r from-black from-20% via-orange-950 to-orange-400 text-white px-10 py-5 text-xl font-extrabold rounded-lg hover:bg-orange-800 transition">
               Ver planes de ampliación
@@ -121,8 +124,10 @@ export default function ConsumoPage() {
       {/*Muestra el contador de publicaciones dinámicamente */}
       {isLogged && (
         <div className="bg-[#FFFBEB] border border-yellow-200 p-5 rounded-2xl mb-6 flex items-center gap-4 shadow-sm">
+
           {/* Icono de Campana */}
           <div className="text-5xl">🔔</div>
+
           {/* Titulo:Publicaciones */}
           <div className="flex-1">
             <h3 className="text-yellow-900 text-[1.75rem] font-extrabold  leading-tight">
@@ -132,6 +137,7 @@ export default function ConsumoPage() {
               Tu Plan Pro incluye 10 publicaciones. Has utilizado {10-disponibles} y te queda <span className="underline font-extrabold">{disponibles} disponible</span>. ¡Úsala antes de que venza el periodo mensual!
             </p>
           </div>
+
           {/* Numero de la derecha*/}
           <div className="text-6xl md:text-8xl font-black text-yellow-900">
             {disponibles}
@@ -156,7 +162,7 @@ export default function ConsumoPage() {
             <p className="text-xl opacity-50 mt-1 font-medium">Plan Pro • Límite mensual</p>
           </div>
 
-          {/* DERECHA: LA BARRA Y SUS METOS */}
+          {/* Emcabezado de la Barra */}
           <div className="flex-1 pb-2">
             <div className="flex justify-between text-[10px] font-black mb-2 tracking-widest">
               <span className="text-xl opacity-70">0 USADAS</span>
