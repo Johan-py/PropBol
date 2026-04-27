@@ -21,7 +21,7 @@ import { useSearchFilters } from '@/hooks/useSearchFilters'
 import { LocationSearch } from '../layout/LocationSearch'
 import { ComboBox } from '../ui/ComboBox'
 import TransactionModeFilter from './TransactionModeFilter'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { UbicacionEspecificaPanel } from './UbicacionEspecificaPanel';
 import SuperficieFilter from './SuperficieFilter'
 
@@ -105,7 +105,7 @@ const trackSearchTelemetria = async (filtros: {
 export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad, isPriceFilterActive = false, isSuperficieFilterActive = false, isZonaFilterActive = false }: FilterBarProps) {
 
   const router = useRouter()
-
+  const searchParams = useSearchParams()
   const { updateFilters } = useSearchFilters()
   const [modosSeleccionados, setModosSeleccionados] = useState<string[]>(['VENTA'])
   const [tipoInmueble, setTipoInmueble] = useState<string>('Cualquier tipo')
@@ -195,7 +195,11 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     })
     updateFilters(nuevosFiltros)
 
-    const params = new URLSearchParams()
+    const params = new URLSearchParams(searchParams.toString())
+    // Limpiamos solo los filtros que maneja esta barra superior para evitar duplicados
+    params.delete('modoInmueble')
+    params.delete('tipoInmueble')
+    params.delete('query')
     try {
       const merged = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}') as {
         locationId?: string | number
