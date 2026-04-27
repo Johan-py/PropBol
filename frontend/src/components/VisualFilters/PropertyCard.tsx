@@ -56,7 +56,7 @@ export default function PropertyCard({
   }, [slides.length]);
 
   const currentSlide = slides[currentIndex];
-  const showImage = !isEmpty && currentSlide.imagen;
+  const showImage = !!currentSlide.imagen;
 
 
   return (
@@ -101,7 +101,13 @@ export default function PropertyCard({
   alt={currentSlide.titulo}
   // Añade esto para manejar si una imagen falla
   onError={(e) => {
-    (e.target as HTMLImageElement).src = "/placeholder-house.jpg";
+    const img = e.target as HTMLImageElement;
+    const cityFallback = getImageUrl(image);
+    if (cityFallback && img.src !== cityFallback) {
+      img.src = cityFallback;
+    } else {
+      img.src = "/placeholder-house.jpg";
+    }
   }}
   className="w-full h-full object-cover transition-opacity duration-500"
             />
