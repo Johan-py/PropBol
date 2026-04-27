@@ -5,6 +5,7 @@ import {
   actualizarPublicacionRepository,
   eliminarLogicamentePublicacionRepository,
   buscarDetallePublicacionPorIdRepository,
+  confirmarPublicacionRepository,
   buscarDetallePublicacionPorInmuebleIdRepository
 } from './publicacion.repository.js'
 
@@ -475,5 +476,44 @@ export const obtenerDetallePublicacionPorInmuebleService = async (inmuebleId: nu
         ? `${telefonoPrincipal.codigoPais} ${telefonoPrincipal.numero}`
         : null
     }
+  }
+}
+export const confirmarPublicacionService = async (
+  publicacionId: number,
+  usuarioSolicitanteId: number
+) => {
+  if (Number.isNaN(publicacionId) || publicacionId <= 0) {
+    throw new Error('ID_INVALIDO')
+  }
+
+  if (Number.isNaN(usuarioSolicitanteId) || usuarioSolicitanteId <= 0) {
+    throw new Error('USUARIO_INVALIDO')
+  }
+
+  const publicacion = await buscarPublicacionPorIdRepository(publicacionId)
+
+  if (!publicacion) {
+    throw new Error('PUBLICACION_NO_EXISTE')
+  }
+
+  if (publicacion.usuarioId !== usuarioSolicitanteId) {
+    throw new Error('NO_AUTORIZADO')
+  }
+
+  if (publicacion.estado === ESTADO_PUBLICACION_ELIMINADA) {
+    throw new Error('PUBLICACION_YA_ELIMINADA')
+  }
+
+  if (!publicacion.multimedia || publicacion.multimedia.length === 0) {
+    throw new Error('MULTIMEDIA_REQUERIDA')
+  }
+
+  const publicacionConfirmada = await confirmarPublicacionRepository(publicacion.id)
+
+  return {
+    id: publicacionConfirmada.id,
+    estado: publicacionConfirmada.estado,
+    fechaPublicacion: publicacionConfirmada.fechaPublicacion,
+    multimediaTotal: publicacionConfirmada.multimedia.length
   }
 }

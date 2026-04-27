@@ -7,8 +7,26 @@ export default function ConsumoPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
   const [data, setData] = useState<any>(null)
+  const [isLogged, setIsLogged] = useState(false)
 
   useEffect(() => {
+    const token = localStorage.getItem('token')
+
+    // NO LOGUEADO
+    if (!token) {
+      setIsLogged(false)
+      setData({
+        usadas: 0,
+        limite: 0,
+        plan: ''
+      })
+      setLoading(false)
+      return
+    }
+
+    // LOGUEADO
+    setIsLogged(true)
+
     const fetchData = async () => {
       try {
         const res = await fetch('http://localhost:5000/api/consumo/1')
@@ -18,7 +36,6 @@ export default function ConsumoPage() {
         }
 
         const json = await res.json()
-
         setData(json)
       } catch (err) {
         setError(true)
@@ -45,7 +62,6 @@ export default function ConsumoPage() {
           No pudimos cargar tu información, intenta de nuevo
         </div>
 
-        {/* Este es para que salga un boton de reintentar */}
         <button
           onClick={() => window.location.reload()}
           className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition"
@@ -56,14 +72,14 @@ export default function ConsumoPage() {
     )
   }
 
-  const porcentaje = (data.usadas / data.limite) * 100
+  const porcentaje = data.limite > 0 ? (data.usadas / data.limite) * 100 : 0
   const disponibles = data.limite - data.usadas
 
   let colorBarra = 'bg-green-500'
   let colorTexto = 'text-green-600'
   let mensaje = 'Consumo normal'
 
-  if (data.usadas >= 9) {
+  if (data.usadas >= data.limite && data.limite > 0) {
     colorBarra = 'bg-red-500'
     colorTexto = 'text-red-600'
     mensaje = 'Límite alcanzado'
@@ -75,7 +91,7 @@ export default function ConsumoPage() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
-      {/* esto es para la parte de arriba  */}
+      {/* HEADER */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Panel de consumo</h1>
         <Link href="/cobros-suscripciones">
@@ -85,20 +101,36 @@ export default function ConsumoPage() {
         </Link>
       </div>
 
-      {/* Esto es para el mensaje que dice cuando le queda por usar */}
-      <div className="bg-yellow-100 text-yellow-800 p-4 rounded-lg mb-6">
-        Tienes publicaciones restantes este mes. Te queda {disponibles}.
-      </div>
+      {/*  MENSAJE SI NO ESTÁ LOGUEADO */}
+      {!isLogged && (
+        <div className="bg-blue-100 text-blue-800 p-4 rounded-lg mb-6 flex justify-between items-center">
+          <span>Primero inicia sesión para ver tu consumo</span>
+          <Link href="/sign-in">
+  <button className="bg-black text-white px-4 py-2 rounded-lg">
+    Iniciar sesión
+  </button>
+</Link>
+        </div>
+      )}
 
-      {/* Esto es para la tarjeta del medio que cambia de color */}
+      {/*  SOLO SI ESTÁ LOGUEADO */}
+      {isLogged && (
+        <div className="bg-yellow-100 text-yellow-800 p-4 rounded-lg mb-6">
+          Tienes publicaciones restantes este mes. Te queda {disponibles}.
+        </div>
+      )}
+
+      {/* TARJETA PRINCIPAL */}
       <div className="bg-gradient-to-r from-black to-orange-500 text-white p-6 rounded-xl shadow mb-6">
-        <p className="text-sm opacity-80 mb-2">PUBLICACIONES USADAS ESTE MES</p>
+        <p className="text-sm opacity-80 mb-2">
+          PUBLICACIONES USADAS ESTE MES
+        </p>
 
         <h2 className="text-4xl font-bold mb-4">
           {data.usadas} / {data.limite}
         </h2>
 
-        {/* Esto es para la barra del medio que cambia por cuanto uso */}
+        {/* BARRA */}
         <div className="w-full bg-gray-300 rounded-full h-3 mb-4">
           <div
             className={`h-3 rounded-full transition-all duration-700 ${colorBarra}`}
@@ -106,29 +138,37 @@ export default function ConsumoPage() {
           />
         </div>
 
-        <p className={`text-sm font-semibold ${colorTexto}`}>{mensaje}</p>
+        <p className={`text-sm font-semibold ${colorTexto}`}>
+          {isLogged ? mensaje : 'Inicia sesión para ver tu consumo'}
+        </p>
       </div>
 
-      {/* Esto es para lo que esta abajo de la tarjeta que cambia de color */}
+      {/* CARDS */}
       <div className="grid grid-cols-3 gap-4 mb-6">
         <div className="bg-white p-4 rounded-xl shadow text-center">
-          <h3 className="text-green-600 text-xl font-bold">{disponibles}</h3>
+          <h3 className="text-green-600 text-xl font-bold">
+            {isLogged ? disponibles : 0}
+          </h3>
           <p>Disponibles</p>
         </div>
 
         <div className="bg-white p-4 rounded-xl shadow text-center">
-          <h3 className="text-orange-600 text-xl font-bold">{data.usadas}</h3>
+          <h3 className="text-orange-600 text-xl font-bold">
+            {data.usadas}
+          </h3>
           <p>Usadas</p>
         </div>
 
         <div className="bg-white p-4 rounded-xl shadow text-center">
-          <h3 className="text-blue-600 text-xl font-bold">{data.limite}</h3>
+          <h3 className="text-blue-600 text-xl font-bold">
+            {data.limite}
+          </h3>
           <p>Límite</p>
         </div>
       </div>
 
-      {/* Esto sale cuando esta de 10/10 en uso */}
-      {data.usadas >= data.limite && (
+      {/* ALERTA SI LLEGÓ AL LÍMITE */}
+      {isLogged && data.usadas >= data.limite && data.limite > 0 && (
         <div className="bg-red-100 text-red-700 p-4 rounded-lg flex justify-between items-center">
           <span>Sin cupo restante</span>
           <Link href="/cobros-suscripciones">

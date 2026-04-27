@@ -1,5 +1,5 @@
 "use client";
-
+ 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -30,7 +30,7 @@ export type User = {
   avatar?: string | null;
   role?: string | null;
 };
-
+ 
 type MeResponse = {
   message?: string;
   user?: {
@@ -75,7 +75,7 @@ export default function Navbar() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isPropiedadesOpen, setIsPropiedadesOpen] = useState(false);
-
+ 
   const {
     open,
     filter,
@@ -99,7 +99,7 @@ export default function Navbar() {
     isLoggedIn,
     setIsLoggedIn,
   } = useNotifications();
-
+ 
   const clearSession = useCallback(
     (emitEvent = true) => {
       localStorage.removeItem(USER_STORAGE_KEY);
@@ -108,11 +108,12 @@ export default function Navbar() {
       localStorage.removeItem("nombre");
       localStorage.removeItem("correo");
       localStorage.removeItem("avatar");
+      localStorage.removeItem("searchHistory");
       setUser(null);
       setIsPanelOpen(false);
       setShowLogoutModal(false);
       setIsLoggedIn(false);
-
+ 
       if (emitEvent) {
         window.dispatchEvent(new Event("propbol:session-changed"));
         window.dispatchEvent(new Event("auth-state-changed"));
@@ -120,7 +121,7 @@ export default function Navbar() {
     },
     [setIsLoggedIn],
   );
-
+ 
   const isSessionExpired = () => {
     const expiresAt = localStorage.getItem(SESSION_EXPIRES_KEY);
     if (!expiresAt) return true;
@@ -146,7 +147,7 @@ export default function Navbar() {
  
     return data.user;
   };
-
+ 
   const restoreSession = useCallback(async () => {
     const savedUser = localStorage.getItem(USER_STORAGE_KEY);
     const expiresAt = localStorage.getItem(SESSION_EXPIRES_KEY);
@@ -179,9 +180,8 @@ export default function Navbar() {
  
     try {
       const validatedUser = await fetchCurrentUser(token);
-
       const finalUser: User = buildSessionUser(validatedUser);
-
+ 
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(finalUser));
       localStorage.setItem("nombre", finalUser.name);
       localStorage.setItem("correo", finalUser.email);
@@ -202,7 +202,7 @@ export default function Navbar() {
       setIsLoggedIn(true);
     }
   }, [clearSession, setIsLoggedIn]);
-
+ 
   const formatRelativeTime = (fecha: string | null): string => {
     if (!fecha) return "";
     const diff = Date.now() - new Date(fecha).getTime();
@@ -223,20 +223,19 @@ export default function Navbar() {
     });
   };
  
+  // Tick para forzar re-render cada minuto (timestamps relativos)
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTick((t) => t + 1);
-    }, 60000);
- 
+    const interval = setInterval(() => setTick((t) => t + 1), 60000);
     return () => clearInterval(interval);
   }, []);
  
+  // Restaurar sesión y escuchar cambios
   useEffect(() => {
     void restoreSession();
-
+ 
     const handleSessionChange = () => void restoreSession();
     const handleOnline = () => void restoreSession();
-
+ 
     window.addEventListener("storage", handleSessionChange);
     window.addEventListener("propbol:login", handleSessionChange);
     window.addEventListener("propbol:session-changed", handleSessionChange);
@@ -249,7 +248,8 @@ export default function Navbar() {
       window.removeEventListener("online", handleOnline);
     };
   }, [restoreSession]);
-
+ 
+  // Cerrar paneles al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -271,6 +271,7 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open, toggleNotifications]);
  
+  // Verificar expiración de sesión cada 10 segundos (una sola instancia)
   useEffect(() => {
     const interval = setInterval(() => {
       if (user && isSessionExpired()) {
@@ -282,17 +283,7 @@ export default function Navbar() {
     return () => clearInterval(interval);
   }, [user, router, clearSession]);
  
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (user && isSessionExpired()) {
-        clearSession();
-        router.push("/");
-      }
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, [user, router, clearSession]);
-
+  // Cerrar panel de notificaciones con Escape
   useEffect(() => {
     if (!open) return;
  
@@ -303,7 +294,8 @@ export default function Navbar() {
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [open, toggleNotifications]);
-
+ 
+  // Escuchar eventos para abrir/cerrar menú móvil desde el tour
   useEffect(() => {
     const abrir = () => setIsMobileMenuOpen(true);
     const cerrar = () => setIsMobileMenuOpen(false);
@@ -314,7 +306,7 @@ export default function Navbar() {
       window.removeEventListener("propbol:cerrar-menu-movil", cerrar);
     };
   }, []);
-
+ 
   const togglePanel = () => {
     if (user && isSessionExpired()) {
       clearSession();
@@ -354,10 +346,24 @@ export default function Navbar() {
     router.push("/");
   };
  
+  // Lanzar el tour: si ya estamos en "/", disparar evento directo;
+  // si no, navegar primero y esperar a que el componente monte.
+  const handleIniciarTour = () => {
+    setIsMobileMenuOpen(false);
+    if (window.location.pathname === "/") {
+      window.dispatchEvent(new Event("propbol:iniciar-tour"));
+    } else {
+      router.push("/");
+      setTimeout(() => {
+        window.dispatchEvent(new Event("propbol:iniciar-tour"));
+      }, 600);
+    }
+  };
+ 
   return (
     <>
-      <nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
-        <div className="container mx-auto px-4 py-1.5">
+      <nav className="sticky top-0 z-[999] w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
+        <div className="mx-auto max-w-[1440px] px-4 py-1.5 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
               <Logo />
@@ -366,12 +372,13 @@ export default function Navbar() {
  
             <div className="flex items-center gap-4">
               <Link
+                id="tour-publicar-home"
                 href="/registro-inmueble"
                 className="hidden md:block rounded-md bg-[#E68B25] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-amber-700"
               >
                 Publica tu inmueble
               </Link>
-
+ 
               <div className="relative" ref={notificationPanelRef}>
                 <button
                   id="tour-notificaciones"
@@ -484,14 +491,12 @@ export default function Navbar() {
                           aria-live="polite"
                           className="max-h-[60vh] overflow-y-auto sm:max-h-80"
                           onScroll={(e) => {
-                            const target = e.currentTarget
-                            saveScrollPosition(target.scrollTop)
-
+                            const target = e.currentTarget;
+                            saveScrollPosition(target.scrollTop);
                             const reachedBottom =
-                              target.scrollTop + target.clientHeight >= target.scrollHeight - 20
-
+                              target.scrollTop + target.clientHeight >= target.scrollHeight - 20;
                             if (reachedBottom && hasMore && !isLoadingMore) {
-                              void loadMoreNotifications()
+                              void loadMoreNotifications();
                             }
                           }}
                         >
@@ -680,16 +685,20 @@ export default function Navbar() {
                 <X className="h-6 w-6 text-stone-600" />
               </button>
             </div>
-
+ 
             <nav className="mt-10 flex flex-col gap-2">
+              {/* FIX: agregado id="tour-publicar-home-mobile" que faltaba.
+                  Sin este id, el tour no podía encontrar el elemento al
+                  retroceder desde "tour-notificaciones" al paso anterior. */}
               <Link
+                id="tour-publicar-home-mobile"
                 href="/registro-inmueble"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"
               >
                 Publica tu inmueble
               </Link>
-
+ 
               <div id="tour-propiedades-mobile" className="flex flex-col">
                 <button
                   onClick={() => setIsPropiedadesOpen(!isPropiedadesOpen)}
@@ -710,18 +719,45 @@ export default function Navbar() {
                     "Terrenos",
                     "Espacios de cementerios",
                   ].map((item) => (
-                    <Link
+                    <button
                       key={item}
-                      href="/propiedades"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="pl-8 py-2 text-base text-gray-600 hover:text-[#E68B25]"
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        const tipoMap: Record<string, string> = {
+                          "Casas": "CASA",
+                          "Departamentos": "DEPARTAMENTO",
+                          "Cuartos": "CUARTO",
+                          "Terrenos": "TERRENO",
+                          "Espacios de cementerios": "TERRENO_MORTUORIO",
+                        };
+                        const tipoFinal = tipoMap[item];
+                        const modosFinales = ["VENTA"];
+                        const nuevosFiltros = {
+                          tipoInmueble: [tipoFinal],
+                          modoInmueble: modosFinales,
+                          query: "",
+                          updatedAt: new Date().toISOString(),
+                        };
+                        const currentFilters = JSON.parse(
+                          sessionStorage.getItem("propbol_global_filters") || "{}"
+                        );
+                        sessionStorage.setItem(
+                          "propbol_global_filters",
+                          JSON.stringify({ ...currentFilters, ...nuevosFiltros })
+                        );
+                        const params = new URLSearchParams();
+                        modosFinales.forEach((m) => params.append("modoInmueble", m));
+                        if (tipoFinal) params.set("tipoInmueble", tipoFinal);
+                        router.push(`/busqueda_mapa?${params.toString()}`);
+                      }}
+                      className="pl-8 py-2 text-base text-gray-600 hover:text-[#E68B25] text-left w-full"
                     >
                       {item}
-                    </Link>
+                    </button>
                   ))}
                 </div>
               </div>
-
+ 
               <Link
                 id="tour-blogs-mobile"
                 href="/blogs"
@@ -730,7 +766,7 @@ export default function Navbar() {
               >
                 Blogs
               </Link>
-
+ 
               <Link
                 id="tour-planes-mobile"
                 href="/cobros-suscripciones"
@@ -739,15 +775,15 @@ export default function Navbar() {
               >
                 Planes de membresía
               </Link>
-
-              <Link
+ 
+              <button
                 id="tour-ayuda-mobile"
-                href="/ayuda"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+                type="button"
+                onClick={handleIniciarTour}
+                className="w-full text-left rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
                 Ayuda
-              </Link>
+              </button>
             </nav>
           </div>
         </div>

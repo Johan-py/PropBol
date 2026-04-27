@@ -119,22 +119,35 @@ function createPinIcon(type: PropertyMapPin['type']): L.DivIcon {
   })
 }
 
-function MapClickHandler({ onMapClick }: { onMapClick: (latlng: L.LatLng) => void }) {
+function MapClickHandler({ onMapClick, isDrawingMode }: {
+  onMapClick: (latlng: L.LatLng) => void
+  isDrawingMode: boolean
+}) {
   const map = useMap()
 
+  // AÑADIDO: Control nativo del cursor y bloqueo de arrastre (Criterios 2 y 20)
   useEffect(() => {
-    const handleClick = (e: L.LeafletMouseEvent) => {
-      onMapClick(e.latlng)
+    if (isDrawingMode) {
+      map.dragging.disable() // Bloquea el movimiento del mapa
+      map.getContainer().style.cursor = 'crosshair' // Fuerza la cruz
+    } else {
+      map.dragging.enable() // Restaura el movimiento
+      map.getContainer().style.cursor = '' // Restaura la manito
     }
+  }, [isDrawingMode, map])
 
-    map.on('click', handleClick)
+useEffect(() => {
+  const handleClick = (e: L.LeafletMouseEvent) => {
+    onMapClick(e.latlng)
+  }
+  map.on('click', handleClick)
 
-    return () => {
-      map.off('click', handleClick)
-    }
-  }, [map, onMapClick])
+  return () => {
+    map.off('click', handleClick)
+  }
+}, [map, onMapClick])
 
-  return null
+return null
 }
 
 function MapMouseHandler({ onMouseLeave }: { onMouseLeave: () => void }) {
@@ -212,6 +225,7 @@ interface MapViewProps {
   zonas?: ZonaPredefinida[]
   selectedZoneId?: number | null
   onZoneSelect?: (id: number | null) => void
+  onZoneCycle?: (direction: 1 | -1) => void
   center?: [number, number]
   zoom?: number
   selectedId?: string | null
@@ -228,6 +242,7 @@ interface MapViewProps {
   onPointClick?: (index: number) => void
   isLoading?: boolean
   error?: string | null
+  onClusterDissolve?: () => void
 }
 
 const vertexHandleIcon = L.divIcon({
@@ -245,6 +260,15 @@ const vertexHandleIcon = L.divIcon({
   iconSize: [12, 12],
   iconAnchor: [6, 6]
 })
+function ZoomHandler({ onClusterDissolve }: { onClusterDissolve?: () => void }) {
+  const map = useMap()
+  useEffect(() => {
+    const handler = () => onClusterDissolve?.()
+    map.on('zoomend', handler)
+    return () => { map.off('zoomend', handler) }
+  }, [map, onClusterDissolve])
+  return null
+}
 
 export default function MapView({
   properties = [],
@@ -266,7 +290,9 @@ export default function MapView({
   onPointClick,
   zonas = [],
   selectedZoneId = null,
-  onZoneSelect
+  onClusterDissolve,
+  onZoneSelect,
+  onZoneCycle
 }: MapViewProps) {
   const [isMounted, setIsMounted] = useState(false)
   const [hoveredPinId, setHoveredPinId] = useState<string | null>(null)
@@ -317,7 +343,7 @@ export default function MapView({
         touchZoom={true}
         dragging={true}
         style={{ height: '100%', width: '100%' }}
-        className="z-0"
+        className={`z-0 ${isDrawingMode && !isPolygonClosed ? '[&.leaflet-container]:cursor-crosshair [&_.leaflet-interactive]:cursor-crosshair' : ''}`}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -325,6 +351,7 @@ export default function MapView({
         />
 
         <ZoomControls />
+        <ZoomHandler onClusterDissolve={onClusterDissolve} />
         <MapMouseHandler onMouseLeave={() => setHoveredPinId(null)} />
         <MapClickHandler
           onMapClick={(latlng) => {
@@ -335,12 +362,14 @@ export default function MapView({
               onZoneSelect?.(null) // criterio 10: clic neutral desactiva zona
             }
           }}
+          isDrawingMode={isDrawingMode}
         />
 
         <ZonasOverlay
           zonas={zonas}
           selectedZoneId={selectedZoneId}
           onZoneSelect={onZoneSelect ?? (() => {})}
+          onZoneCycle={onZoneCycle}
         />
 
         {/* --- INICIO CÓDIGO HU8 --- */}
@@ -425,6 +454,7 @@ export default function MapView({
         </Marker>
 
         <MarkerClusterGroup
+          key={activeClusterIds.join(',')}
           iconCreateFunction={(cluster: any) => {
             const markers = cluster.getAllChildMarkers()
             const ids = markers.map((m: any) => String(m.options.alt ?? '')).filter(Boolean)

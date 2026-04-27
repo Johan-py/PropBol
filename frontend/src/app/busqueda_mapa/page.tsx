@@ -4,7 +4,15 @@ import { CapacidadSidebar } from '@/components/filters/CapacidadSidebar'
 import MisZonasSidebar from '@/components/map/MisZonasSidebar'
 import { point, polygon } from '@turf/helpers'
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon'
-import { useState, useEffect, useRef, Suspense, useCallback, useMemo } from 'react'
+import {
+  useState,
+  useEffect,
+  useRef,
+  Suspense,
+  useCallback,
+  useMemo,
+  type Ref,
+} from 'react'
 import { useSearchParams, useRouter } from "next/navigation";
 import nextDynamic from 'next/dynamic'
 import {
@@ -33,6 +41,7 @@ import MapaListadoPaginacion, { PageSize } from "@/components/galeria/MapaListad
 import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenamiento'
 import { ErrorState } from '@/components/ClusterSidebar'
 import SuperficieFilterSidebar from '@/components/filters/SuperficieFilterSidebar'
+import { UbicacionEspecificaPanel } from '@/components/filters/UbicacionEspecificaPanel';
 
 // Carga dinámica del mapa (sin SSR)
 const MapView = nextDynamic(() => import('./MapView'), {
@@ -113,11 +122,27 @@ function extraerCoordenadasDeGeometria(geometria: ZonaUsuario['geometria'] | nul
   return puntos
 }
 
+function esZonaNavegable(coords: [number, number][]): boolean {
+  if (!Array.isArray(coords) || coords.length < 3) return false
+
+  return coords.every(([lat, lng]) => (
+    Number.isFinite(lat) &&
+    Number.isFinite(lng) &&
+    lat >= -90 &&
+    lat <= 90 &&
+    lng >= -180 &&
+    lng <= 180
+  ))
+}
+
 function BusquedaMapaContent() {
   const [isMisZonasOpen, setIsMisZonasOpen] = useState(false)
   const router = useRouter();
   const searchParams = useSearchParams();
   const filterResetKey = searchParams.toString();
+  const minSuperficie = searchParams.get('minSuperficie')
+  const maxSuperficie = searchParams.get('maxSuperficie')
+  const tieneFiltrSuperficie = minSuperficie || maxSuperficie
 
   //estado para controlar la autenticación
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -141,10 +166,29 @@ function BusquedaMapaContent() {
   const [editingPolygonPoints, setEditingPolygonPoints] = useState<[number, number][]>([])
   const [isSavingEditedZone, setIsSavingEditedZone] = useState(false)
 
+  
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsAuthenticated(!!token);
-  }, []);
+    const syncAuthFromStorage = () => {
+      const token = localStorage.getItem('token')
+      setIsAuthenticated(Boolean(token))
+    }
+
+    syncAuthFromStorage()
+
+    const handleSessionChange = () => {
+      syncAuthFromStorage()
+    }
+
+    window.addEventListener('storage', handleSessionChange)
+    window.addEventListener('propbol:login', handleSessionChange as EventListener)
+    window.addEventListener('propbol:logout', handleSessionChange as EventListener)
+
+    return () => {
+      window.removeEventListener('storage', handleSessionChange)
+      window.removeEventListener('propbol:login', handleSessionChange as EventListener)
+      window.removeEventListener('propbol:logout', handleSessionChange as EventListener)
+    }
+  }, [])
 
   // === 1. ESTADOS COMPARTIDOS ===
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
@@ -153,7 +197,25 @@ function BusquedaMapaContent() {
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
   const [isMounted, setIsMounted] = useState(false)
   const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false)
-  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad'>('results')
+  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad'| 'ubicacion'>('results')
+  
+  useEffect(() => {
+    const handleAbrirUbicacion = () => {
+      setIsPriceFilterOpen(false); // Cierra el de precio si estaba abierto
+      
+      // Si el panel de ubicación ya está abierto en el sidebar, lo cerramos volviendo a results
+      if (activeSidebarView === 'ubicacion' && isSidebarOpen) {
+        setActiveSidebarView('results');
+      } else {
+        // De lo contrario, nos aseguramos de que el sidebar esté abierto y mostramos ubicación
+        setIsSidebarOpen(true);
+        setActiveSidebarView('ubicacion');
+      }
+    };
+   
+    window.addEventListener('abrirPanelUbicacion', handleAbrirUbicacion);
+    return () => window.removeEventListener('abrirPanelUbicacion', handleAbrirUbicacion);
+  }, [activeSidebarView, isSidebarOpen]);
 
   // --- INICIO ESTADOS HU8 ---
   const [isDrawingMode, setIsDrawingMode] = useState(false)
@@ -484,6 +546,12 @@ function BusquedaMapaContent() {
     if (listPage > listTotalPages) setListPage(listTotalPages);
   }, [listPage, listTotalPages]);
 
+  const listScrollRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    listScrollRef.current?.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [listSafePage, listPageSize, filterResetKey, isPolygonClosed]);
+
   // === 5. ESTADOS VISUALES Y DE CLUSTERS (develop + HU8) ===
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
@@ -524,6 +592,7 @@ function BusquedaMapaContent() {
     setClusterProperties(props)
     setIsClusterView(true)
     setActiveClusterIds(props.map((p: any) => p.id))
+    setSheetState('peek')
   }
 
   const handleMapSelect = useCallback(
@@ -545,6 +614,31 @@ function BusquedaMapaContent() {
     },
     [inmueblesOrdenados]
   )
+
+  const handleZoneCycle = useCallback((direction: 1 | -1) => {
+    const zoneIds = zonasCombinadas
+      .filter((zona) => esZonaNavegable(zona.coordenadas))
+      .map((zona) => zona.id)
+
+    if (selectedZoneId === null || zoneIds.length === 0) return
+
+    const currentIndex = zoneIds.findIndex((id) => id === selectedZoneId)
+    const nextIndex = currentIndex === -1
+      ? (direction === -1 ? zoneIds.length - 1 : 0)
+      : (currentIndex + direction + zoneIds.length) % zoneIds.length
+
+    setSelectedZoneId(zoneIds[nextIndex])
+    setIsClusterView(false)
+    setActiveClusterIds([])
+    setClusterProperties([])
+  }, [selectedZoneId, zonasCombinadas])
+
+  const handleZoneSelect = (id: number | null) => {
+    setSelectedZoneId(id)
+    setIsClusterView(false)
+    setActiveClusterIds([])
+    setClusterProperties([])
+  }
 
   // HU4 - Abre el detalle de la propiedad en una nueva pestaña.
   // Se usa property.id porque en filtros corresponde al inmuebleId.
@@ -593,20 +687,37 @@ function BusquedaMapaContent() {
     </div>
   )
 
-  const PropertyListMobile = ({ onClickItem }: { onClickItem?: (p: any) => void }) => (
-    <div className="flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar">
+  const PropertyListMobile = ({
+    onClickItem,
+    listScrollRef,
+  }: {
+    onClickItem?: (p: any) => void;
+    listScrollRef: Ref<HTMLDivElement>;
+  }) => (
+    <div ref={listScrollRef} className="flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar">
       {isLoading ? (
         <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2">
           <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />{' '}
           Actualizando...
         </div>
       ) : displayedProperties.length === 0 ? (
-        <EmptyState />
+        <EmptyState
+  titulo={
+    tieneFiltrSuperficie
+      ? 'Sin resultados por superficie'
+      : 'No hay propiedades existentes'
+  }
+  mensaje={
+    tieneFiltrSuperficie
+      ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
+      : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
+  }
+/>
       ) : (
         <div
           className={`gap-3 flex flex-col ${viewMode === 'list'
-              ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-              : ''
+            ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
+            : ''
             }`}
         >
           {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
@@ -618,22 +729,15 @@ function BusquedaMapaContent() {
 
                 // HU4 - Conserva el comportamiento existente del listado móvil
                 onClickItem?.(property)
-
                 // HU4 - Abre el detalle en una nueva pestaña
-                abrirDetallePropiedad(property.id)
-            }}
-              className={`cursor-pointer transition-all duration-200 rounded-xl ${selectedPropertyId === property.id ? 'ring-2 ring-orange-400 ring-offset-1' : ''
-                }`}
+              }}
+              className="cursor-pointer transition-all duration-200 rounded-xl focus:outline-none focus:ring-0 focus:ring-offset-0"
             >
               {viewMode === 'grid' ? (
                 <PropertyCard
                   imagen=""
                   estado={property.type}
-                  precio={
-                    property.currency === 'USD'
-                      ? `$${property.price.toLocaleString('es-BO')} USD`
-                      : `Bs ${property.price.toLocaleString('es-BO')}`
-                  }
+                  precioFormateado={property.precioFormateado || 'Consultar precio'}
                   descripcion={property.descripcion || property.title}
                   camas={property.nroCuartos ?? 0}
                   banos={property.nroBanos ?? 0}
@@ -642,11 +746,7 @@ function BusquedaMapaContent() {
               ) : (
                 <PropertyRow
                   title={property.title}
-                  price={
-                    property.currency === 'USD'
-                      ? `$${property.price.toLocaleString('es-BO')} USD`
-                      : `Bs ${property.price.toLocaleString('es-BO')}`
-                  }
+                  precioFormateado={property.precioFormateado || 'Consultar precio'}
                   size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
                   contactType="whatsapp"
                   image=""
@@ -682,7 +782,7 @@ function BusquedaMapaContent() {
           setListPageSize(s);
           setListPage(1);
         }}
-        hint={listTotal === 0 && error ? `Error al cargar: ${error}` : null}
+        hint={error ? `Error al cargar: ${error}` : null}
       />
     ) : null;
   };
@@ -708,7 +808,8 @@ function BusquedaMapaContent() {
                   selectedId={selectedPropertyId}
                   zonas={zonasCombinadas}
                   selectedZoneId={selectedZoneId}
-                  onZoneSelect={setSelectedZoneId}
+                  onZoneSelect={handleZoneSelect}
+                  onZoneCycle={handleZoneCycle}
                   onSelect={handleMapSelect}
                   isLoading={isLoading}
                   error={error}
@@ -752,7 +853,7 @@ function BusquedaMapaContent() {
                 {MenuToggleComponent}
               </div>
               <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
-                <PropertyListMobile onClickItem={(p) => setPinnedProperty(p)} />
+                <PropertyListMobile listScrollRef={listScrollRef} onClickItem={(p) => setPinnedProperty(p)} />
                 {renderListPaginationFooter()}
               </div>
             </div>
@@ -783,7 +884,8 @@ function BusquedaMapaContent() {
               selectedId={selectedPropertyId}
               zonas={zonasCombinadas}
               selectedZoneId={selectedZoneId}
-              onZoneSelect={setSelectedZoneId}
+              onZoneSelect={handleZoneSelect}
+              onZoneCycle={handleZoneCycle}
               onSelect={handleMapSelect}
               isLoading={isLoading}
               error={error}
@@ -814,6 +916,7 @@ function BusquedaMapaContent() {
                 }
               }}
               onClusterClick={handleClusterClick}
+              onClusterDissolve={() => { setIsClusterView(false); setActiveClusterIds([]); setClusterProperties([]) }}
               activeClusterIds={activeClusterIds}
             />
           </div>
@@ -925,11 +1028,7 @@ function BusquedaMapaContent() {
                       <PropertyCard
                         imagen=""
                         estado={pinnedProperty.type}
-                        precio={
-                          pinnedProperty.currency === 'USD'
-                            ? `$${pinnedProperty.price.toLocaleString('es-BO')} USD`
-                            : `Bs ${pinnedProperty.price.toLocaleString('es-BO')}`
-                        }
+                        precioFormateado={pinnedProperty.precioFormateado || 'Consultar precio'}
                         descripcion={pinnedProperty.descripcion || pinnedProperty.title}
                         camas={pinnedProperty.nroCuartos ?? 0}
                         banos={pinnedProperty.nroBanos ?? 0}
@@ -950,6 +1049,7 @@ function BusquedaMapaContent() {
                 </div>
                 <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
                   <PropertyListMobile
+                    listScrollRef={listScrollRef}
                     onClickItem={(p) => {
                       setPinnedProperty(p)
                       setSheetState('peek')
@@ -969,7 +1069,7 @@ function BusquedaMapaContent() {
   // RENDER DESKTOP
   // ────────────────────────────────────────────────────────────────────────────
   return (
-    <div className="flex flex-col bg-white w-full h-[calc(100dvh-54px)] overflow-hidden">
+    <div className="relative z-10 flex flex-col bg-white w-full h-[calc(100dvh-54px)] overflow-hidden">
       <FilterBar
         variant="map"
         onSearch={(nuevosFiltros) => {
@@ -990,6 +1090,8 @@ function BusquedaMapaContent() {
 
         isPriceFilterActive={isPriceFilterOpen}
         isSuperficieFilterActive={activeSidebarView === 'superficie' && isSidebarOpen}
+
+        isZonaFilterActive={activeSidebarView === 'ubicacion' && isSidebarOpen}
       />
 
       <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200">
@@ -1016,13 +1118,47 @@ function BusquedaMapaContent() {
                 setIsCapacidadOpen(false)
                 setActiveSidebarView('results')
               }}
-              onApply={(dormitoriosMin, dormitoriosMax, banosMin, banosMax) => {
-                console.log('Filtros capacidad:', { dormitoriosMin, dormitoriosMax, banosMin, banosMax })
+              onApply={(dormitoriosMin, dormitoriosMax, banosMin, banosMax, tipoBano) => {
+                const params = new URLSearchParams(searchParams.toString())
+                params.set('dormitoriosMin', dormitoriosMin.toString())
+                params.set('dormitoriosMax', dormitoriosMax.toString())
+                params.set('banosMin', banosMin.toString())
+                params.set('banosMax', banosMax.toString())
+                params.set('tipoBano', tipoBano)
+                router.push(`/busqueda_mapa?${params.toString()}`)
                 setIsCapacidadOpen(false)
                 setActiveSidebarView('results')
               }}
-          /> 
-        ) :
+            />
+          ) : isSidebarOpen && activeSidebarView === 'ubicacion' ? (
+            <div className="flex flex-col h-full w-full bg-white relative">
+              <UbicacionEspecificaPanel
+                onClose={() => setActiveSidebarView('results')}
+                onApply={(selecciones) => {
+                  // 1. Rescatamos los filtros actuales de la URL (precio, cuartos, tipo, etc)
+                  const params = new URLSearchParams(searchParams.toString());
+                  
+                  // 2. Limpiamos ubicaciones previas para evitar duplicados
+                  params.delete('departamentoId');
+                  params.delete('provinciaId');
+                  params.delete('municipioId');
+                  params.delete('zonaId');
+                  params.delete('barrioId');
+                  
+                  // 3. Añadimos las nuevas selecciones de este panel
+                  if (selecciones.departamento !== 'todos') params.set('departamentoId', selecciones.departamento.toString());
+                  if (selecciones.provincia !== 'todos') params.set('provinciaId', selecciones.provincia.toString());
+                  if (selecciones.municipio !== 'todos') params.set('municipioId', selecciones.municipio.toString());
+                  if (selecciones.zona !== 'todos') params.set('zonaId', selecciones.zona.toString());
+                  if (selecciones.barrio !== 'todos') params.set('barrioId', selecciones.barrio.toString());
+                  
+                  // 4. Empujamos a la URL combinada y cerramos el panel para ver resultados
+                  router.push(`/busqueda_mapa?${params.toString()}`);
+                  setActiveSidebarView('results');
+                }}
+              />
+            </div>
+          ) :
             isSidebarOpen && activeSidebarView === 'results' ? (
               <div className="flex flex-col h-full min-h-0">
                 <div className="p-4 bg-white shrink-0">
@@ -1105,6 +1241,7 @@ function BusquedaMapaContent() {
                 {/* Lista de propiedades */}
                 <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
                   <div
+                    ref={listScrollRef as Ref<HTMLDivElement>}
                     className="flex-1 min-h-0 overflow-y-auto p-4 bg-stone-50 no-scrollbar"
                     onMouseEnter={() => setIsHoveringList(true)}
                     onMouseLeave={() => {
@@ -1119,12 +1256,23 @@ function BusquedaMapaContent() {
                         Actualizando resultados...
                       </div>
                     ) : displayedProperties.length === 0 ? (
-                      <EmptyState />
+                     <EmptyState
+  titulo={
+    tieneFiltrSuperficie
+      ? 'Sin resultados por superficie'
+      : 'No hay propiedades existentes'
+  }
+  mensaje={
+    tieneFiltrSuperficie
+      ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
+      : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
+  }
+/>
                     ) : (
                       <div
                         className={`gap-4 flex flex-col ${viewMode === 'list'
-                            ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-                            : ''
+                          ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
+                          : ''
                           }`}
                       >
                         {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
@@ -1137,14 +1285,10 @@ function BusquedaMapaContent() {
                               setSelectedPropertyId(property.id)
 
                               // HU4 - Abre el detalle de la propiedad en una nueva pestaña
-                              abrirDetallePropiedad(property.id)
                             }}
-                            className={`cursor-pointer transition-all duration-200 rounded-xl relative ${viewMode === 'grid'
-                                ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
-                                : 'w-full py-1 hover:bg-stone-100'
-                              } ${selectedPropertyId === property.id
-                                ? 'ring-2 ring-orange-400 ring-offset-1 z-10'
-                                : ''
+                            className={`cursor-pointer transition-all duration-200 rounded-xl relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${viewMode === 'grid'
+                              ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
+                              : 'w-full py-1 hover:bg-stone-100'
                               }`}
                           >
                             {viewMode === 'grid' ? (
@@ -1155,11 +1299,7 @@ function BusquedaMapaContent() {
                                   'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
                                 }
                                 estado={property.type}
-                                precio={
-                                  property.currency === 'USD'
-                                    ? `$${property.price.toLocaleString('es-BO')} USD`
-                                    : `Bs ${property.price.toLocaleString('es-BO')}`
-                                }
+                                precioFormateado={property.precioFormateado || 'Consultar precio'}
                                 descripcion={property.descripcion || property.title}
                                 camas={property.nroCuartos ?? 0}
                                 banos={property.nroBanos ?? 0}
@@ -1168,11 +1308,7 @@ function BusquedaMapaContent() {
                             ) : (
                               <PropertyRow
                                 title={property.title}
-                                price={
-                                  property.currency === 'USD'
-                                    ? `$${property.price.toLocaleString('es-BO')} USD`
-                                    : `Bs ${property.price.toLocaleString('es-BO')}`
-                                }
+                                precioFormateado={property.precioFormateado || 'Consultar precio'}
                                 size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
                                 contactType="whatsapp"
                                 image={
@@ -1304,12 +1440,14 @@ function BusquedaMapaContent() {
               selectedId={selectedPropertyId}
               onSelect={handleMapSelect}
               onClusterClick={handleClusterClick}
+              onClusterDissolve={() => { setIsClusterView(false); setActiveClusterIds([]); setClusterProperties([]) }}
               activeClusterIds={activeClusterIds}
               isLoading={isLoading}
               error={error}
               zonas={zonasCombinadas}
               selectedZoneId={selectedZoneId}
-              onZoneSelect={setSelectedZoneId}
+              onZoneSelect={handleZoneSelect}
+              onZoneCycle={handleZoneCycle}
               isDrawingMode={isDrawingMode}
               polygonPoints={polygonPoints}
               isPolygonClosed={isPolygonClosed}

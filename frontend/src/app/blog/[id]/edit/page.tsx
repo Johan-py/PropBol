@@ -89,6 +89,7 @@ export default function EditBlogPage({ params }: { params: { id: string } }) {
           titulo: blog.titulo,
         }}
         statusLabel={blog.estado}
+        rejectionReason={blog.blog_rechazo?.[0]?.comentario}
       />
     </div>
   );

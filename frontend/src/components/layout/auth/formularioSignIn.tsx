@@ -124,6 +124,7 @@ const clearClientSession = () => {
   localStorage.removeItem("nombre");
   localStorage.removeItem("correo");
   localStorage.removeItem("avatar");
+  localStorage.removeItem("searchHistory");
 
   window.dispatchEvent(new Event("propbol:session-changed"));
   window.dispatchEvent(new Event("auth-state-changed"));
