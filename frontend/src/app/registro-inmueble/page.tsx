@@ -1,9 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import PlanModal from '../../components/ui/PlanModal'
+//import PlanModal from '../../components/ui/PlanModal'
 import dynamic from 'next/dynamic'
+import { ErrorValidacion, EstadoPublicacion } from "../../types/publicacion";
+import ErrorPanel from "../../components/publicacion/ErrorPanel";
+import PublicarModal from "../../components/publicacion/PublicarModal";
 
 const MapaPinSelector = dynamic(
   () => import('../../components/MapaPinSelector'),
@@ -20,13 +23,13 @@ type CampoError =
   | 'precio'
   | 'area'
   | 'operacion'
+  | 'mapa'
   | null
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL //?? "http://localhost:5000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export default function MiRegistroPage() {
   const router = useRouter()
-  //const [mostrarPlanModal, setMostrarPlanModal] = useState(false)
 
   const [datos, setDatos] = useState({
     titulo: '',
@@ -46,19 +49,45 @@ export default function MiRegistroPage() {
   const [mensajeError, setMensajeError] = useState('')
   const [campoError, setCampoError] = useState<CampoError>(null)
   const [pinCoords, setPinCoords] = useState<{ lat: number; lng: number } | null>(null)
+  const [vertices, setVertices] = useState<[number, number][]>([])
+  const [modoPinActivo, setModoPinActivo] = useState(false)
+  const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
 
-const [vertices, setVertices] = useState<[number, number][]>([])
+  const [estadoPublicacion, setEstadoPublicacion] = useState<EstadoPublicacion>("idle")
+  const [progreso, setProgreso] = useState(0)
+  const [payloadPendiente, setPayloadPendiente] = useState<any>(null)
 
-const [modoPinActivo, setModoPinActivo] = useState(false)
+  const refs: Record<string, React.RefObject<any>> = {
+    titulo: useRef<HTMLInputElement>(null),
+    operacion: useRef<HTMLSelectElement>(null),
+    tipoInmueble: useRef<HTMLSelectElement>(null),
+    precio: useRef<HTMLInputElement>(null),
+    area: useRef<HTMLInputElement>(null),
+    habitaciones: useRef<HTMLInputElement>(null),
+    banos: useRef<HTMLInputElement>(null),
+    direccion: useRef<HTMLInputElement>(null),
+    zona: useRef<HTMLInputElement>(null),
+    descripcion: useRef<HTMLTextAreaElement>(null),
+  }
 
-const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
+  const erroresHU5: ErrorValidacion[] = campoError && estado === 'error' && mensajeError
+    ? [{ campo: campoError as any, seccion: "Información Básica", mensaje: mensajeError }]
+    : [];
+
+  const handleClickError = (campo: string) => {
+    const ref = refs[campo];
+    if (ref?.current) {
+      ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      ref.current.focus();
+    }
+  }
 
   useEffect(() => {
     const validarFlujo = async () => {
       const token = localStorage.getItem('token')
 
       if (!token) {
-        router.push('/sign-in') //entra al formulario solo si inicio sesion
+        router.push('/sign-in')
         return
       }
       
@@ -76,13 +105,12 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
           router.push('/Cobros-Limite')
         }
       } catch (error) {
-        //console.error('Error validando flujo de publicación:', error)
         console.error(error)
       }
     }
 
     validarFlujo()
-  }, []) //router
+  }, [router]) 
 
   const limpiarError = () => {
     setMensajeError('')
@@ -497,6 +525,23 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
       return
     }
 
+    const tienePin = pinCoords !== null
+    const tieneDifuminado = vertices.length >= 3
+
+    if (!tienePin && !tieneDifuminado) {
+      setMensajeError('DEBE MARCAR UNA UBICACIÓN EN EL MAPA (PIN O ZONA DIFUMINADA)')
+      setCampoError('mapa')
+      setEstado('error')
+      return
+    }
+
+    const centroide = tieneDifuminado && !tienePin
+      ? {
+          lat: vertices.reduce((s, p) => s + p[0], 0) / vertices.length,
+          lng: vertices.reduce((s, p) => s + p[1], 0) / vertices.length
+        }
+      : null
+
     const payload = {
       titulo: tituloLimpio,
       tipoAccion: datos.operacion,
@@ -508,18 +553,37 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
       descripcion: descripcionLimpia,
       direccion: direccionLimpia,
       zona: zonaLimpia,
-      ciudad: datos.ciudad
+      ciudad: datos.ciudad,
+      latitud: tienePin ? pinCoords!.lat : centroide!.lat,
+      longitud: tienePin ? pinCoords!.lng : centroide!.lng,
+      verticesDifuminado: tieneDifuminado ? vertices : undefined
     }
 
     console.log('📤 Payload enviado al backend:', payload)
+
+    setPayloadPendiente(payload);
+    setEstadoPublicacion("confirmando");
+    setProgreso(0);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  const ejecutarPublicacion = async () => {
+    setEstadoPublicacion("publicando");
+    setProgreso(0);
+
+    const intervaloBarra = setInterval(() => {
+      setProgreso(p => p >= 90 ? 90 : p + 10);
+    }, 300);
 
     try {
       const token = localStorage.getItem('token')
 
       if (!token) {
+        clearInterval(intervaloBarra);
         setMensajeError('DEBES INICIAR SESIÓN PARA REGISTRAR UNA PROPIEDAD')
         setCampoError(null)
         setEstado('error')
+        setEstadoPublicacion("idle");
         return
       }
 
@@ -529,15 +593,15 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payloadPendiente)
       })
 
       const result = await response.json()
-
-      console.log('📥 Respuesta backend:', result)
+      clearInterval(intervaloBarra);
 
       if (!response.ok) {
         if (result.message === 'LIMIT_REACHED') {
+          setEstadoPublicacion("idle");
           router.push('/Cobros-Limite')
           return
         }
@@ -548,10 +612,10 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
           result.message ||
           'ERROR AL GUARDAR LA PROPIEDAD'
 
-        console.error('❌ Error backend:', erroresBackend)
         setMensajeError(erroresBackend)
         setCampoError(null)
         setEstado('error')
+        setEstadoPublicacion("error_publicacion");
         return
       }
 
@@ -560,20 +624,25 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
       if (!publicacionId) {
         setMensajeError('No se recibió el ID de la publicación creada')
         setEstado('error')
+        setEstadoPublicacion("error_publicacion");
         return
       }
 
-      console.log('✅ Propiedad guardada correctamente')
+      setProgreso(100);
+      setEstadoPublicacion("exito");
       setEstado('exito')
       setMensajeError('')
       setCampoError(null)
 
-      router.push(`/contenido-multimedia?publicacionId=${publicacionId}`)
+      setTimeout(() => {
+        router.push(`/contenido-multimedia?publicacionId=${publicacionId}`)
+      }, 2000);
     } catch (error) {
-      console.error('🔥 Error fetch:', error)
+      clearInterval(intervaloBarra);
       setMensajeError('NO SE PUDO CONECTAR CON EL BACKEND')
       setCampoError(null)
       setEstado('error')
+      setEstadoPublicacion("error_publicacion");
     }
   }
 
@@ -586,11 +655,14 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
   const errorPrecio = campoError === 'precio'
   const errorArea = campoError === 'area'
   const errorOperacion = campoError === 'operacion'
+  const errorMapa = campoError === 'mapa'
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
       <main className="max-w-6xl mx-auto p-8 md:p-12">
         <h1 className="text-2xl font-bold mb-6 text-gray-950">Registro Inmueble</h1>
+
+        <ErrorPanel errores={erroresHU5} onClickError={handleClickError} />
 
         <div className="bg-[#FAF4ED] rounded-3xl p-8 md:p-10 shadow-sm border border-gray-100">
           <div className="flex items-center gap-3 mb-6">
@@ -618,6 +690,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
                       Título del anuncio *
                     </label>
                     <input
+                      ref={refs.titulo}
                       name="titulo"
                       value={datos.titulo}
                       onChange={manejarCambio}
@@ -636,6 +709,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
                         Tipo de operación *
                       </label>
                       <select
+                        ref={refs.operacion}
                         name="operacion"
                         value={datos.operacion}
                         onChange={manejarCambio}
@@ -658,6 +732,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
                         Tipo de Inmueble *
                       </label>
                       <select
+                        ref={refs.tipoInmueble}
                         name="tipoInmueble"
                         value={datos.tipoInmueble}
                         onChange={manejarCambio}
@@ -677,6 +752,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
                       Precio USD$ *
                     </label>
                     <input
+                      ref={refs.precio}
                       name="precio"
                       type="text"
                       inputMode="numeric"
@@ -702,6 +778,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
                   <div>
                     <label className="block text-[15px] font-bold mb-2">Área total (m²)</label>
                     <input
+                      ref={refs.area}
                       name="area"
                       type="text"
                       inputMode="numeric"
@@ -719,6 +796,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
                   <div>
                     <label className="block text-[15px] font-bold mb-2">Habitaciones</label>
                     <input
+                      ref={refs.habitaciones}
                       name="habitaciones"
                       type="text"
                       inputMode="numeric"
@@ -749,6 +827,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
                   <div>
                     <label className="block text-[15px] font-bold mb-2">Baños</label>
                     <input
+                      ref={refs.banos}
                       name="banos"
                       type="text"
                       inputMode="numeric"
@@ -775,6 +854,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
                   <div>
                     <label className="block text-[15px] font-bold mb-2">Dirección *</label>
                     <input
+                      ref={refs.direccion}
                       name="direccion"
                       value={datos.direccion}
                       onChange={manejarCambio}
@@ -793,6 +873,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
                 <div className="mt-4 w-full">
                   <label className="block text-[15px] font-bold mb-2">Zona</label>
                   <input
+                    ref={refs.zona}
                     name="zona"
                     value={datos.zona}
                     onChange={manejarCambio}
@@ -813,11 +894,12 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
                   DESCRIPCION DETALLADA *
                 </label>
                 <textarea
+                  ref={refs.descripcion}
                   name="descripcion"
                   value={datos.descripcion}
                   onChange={manejarCambio}
                   maxLength={300}
-                  className={`w-full p-4 rounded-2xl border h-72 bg-white ${
+                  className={`w-full p-4 rounded-2xl border h-72 bg-white resize-none ${
                     errorDescripcion ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Casa de dos plantas, amplia y moderna ubicada en una zona tranquila..."
@@ -885,7 +967,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
 
          </div>
 
-           <div className="relative z-0 rounded-2xl overflow-hidden border border-gray-200 max-w-full h-[320px]">
+           <div className={`relative z-0 rounded-2xl overflow-hidden border max-w-full h-[320px] ${errorMapa ? 'border-red-500' : 'border-gray-200'}`}>
             <MapaPinSelector
                pinCoords={pinCoords}
                setPinCoords={setPinCoords}
@@ -895,7 +977,11 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
                modoDifuminadoActivo={modoDifuminadoActivo}
                  />
               </div>
+              {errorMapa && (
+                <p className="text-red-500 text-sm mt-2">{mensajeError}</p>
+              )}
              </div>
+
               <div className="mt-12 space-y-6">
                 <div className="flex justify-center md:justify-end gap-6">
                   <button
@@ -908,9 +994,9 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
 
                   <button
                     onClick={guardarPropiedad}
-                    className="px-12 py-3 rounded-full border-2 border-orange-400 bg-[#D9D9D9]"
+                    className="px-12 py-3 rounded-full border-2 border-orange-400 bg-[#D9D9D9] hover:bg-orange-100 transition"
                   >
-                    Continuar
+                    Continuar a Publicar
                   </button>
                 </div>
 
@@ -922,7 +1008,7 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
 
                 {estado === 'exito' && (
                   <div className="bg-white border-2 border-green-400 rounded-2xl p-4 shadow-md max-w-md ml-auto">
-                    Publicación registrada correctamente ✅
+    
                   </div>
                 )}
               </div>
@@ -930,6 +1016,16 @@ const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
           </div>
         </div>
       </main>
+
+      {(estadoPublicacion !== "idle") && (
+        <PublicarModal
+          estado={estadoPublicacion as any}
+          progreso={progreso}
+          onConfirmar={ejecutarPublicacion}
+          onCancelar={() => setEstadoPublicacion("idle")}
+          onReintentar={() => setEstadoPublicacion("confirmando")}
+        />
+      )}
     </div>
   )
 }

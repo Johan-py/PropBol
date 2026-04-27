@@ -4,6 +4,9 @@ import AppShell from "@/components/layout/AppShell";
 import TelemetryTrigger from "@/components/profile/TelemetryTrigger"; // Importamos el activador de la HU-11
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+  ),
   title: {
     default: "PropBol",
     template: "%s | PropBol",
