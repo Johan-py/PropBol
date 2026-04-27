@@ -101,15 +101,10 @@ export default function PropertyCarousel({
         >
           {/* ... dentro del ref={scrollRef} ... */}
 {items.map((item, i) => {
-  // Obtenemos la primera imagen de las previews para mostrarla de entrada
-  const mainImage = item.previews && item.previews.length > 0 
-    ? item.previews[0].imagen 
-    : item.image;
-
   return (
     <PropertyCard
       key={i}
-      image={mainImage} 
+      image={item.image}
       title={item.title}
       location={item.location}
       count={item.count}
