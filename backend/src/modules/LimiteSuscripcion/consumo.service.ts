@@ -6,7 +6,7 @@ export const obtenerConsumo = async (userId: number) => {
   // 🟡MODO MOCK (datos simulados)
   if (USE_MOCK) {
     return {
-      usadas: 7,
+      usadas: 3,
       limite: 10,
       plan: 'Plan básico (mock)'
     }
