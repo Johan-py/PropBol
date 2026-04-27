@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { MOCK_BLOG_COMMENTS_BY_BLOG_ID } from '@/lib/mock/blogComments.mock'
+import { useEffect, useState, useCallback } from 'react'
 import {
   BLOG_COMMENT_MAX_LENGTH,
   BlogComment,
@@ -10,89 +9,62 @@ import {
 } from '@/types/blogComment'
 import { USER_STORAGE_KEY } from '@/lib/session'
 
-const COMMENTS_STORAGE_PREFIX = 'propbol_blog_comments'
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 const DRAFT_STORAGE_PREFIX = 'propbol_blog_comment_draft'
-
 const createStorageKey = (prefix: string, blogId: string) => `${prefix}:${blogId}`
 
 const getDescendantIds = (comments: BlogComment[], parentId: string): string[] => {
   const directChildren = comments.filter((comment) => comment.parentId === parentId)
-
   return directChildren.flatMap((comment) => [comment.id, ...getDescendantIds(comments, comment.id)])
 }
 
-const readStoredComments = (blogId: string) => {
-  const fallbackComments = MOCK_BLOG_COMMENTS_BY_BLOG_ID[blogId] ?? []
-
-  if (typeof window === 'undefined') {
-    return fallbackComments
-  }
-
-  const rawComments = window.localStorage.getItem(createStorageKey(COMMENTS_STORAGE_PREFIX, blogId))
-
-  if (!rawComments) {
-    return fallbackComments
-  }
-
-  try {
-    const parsedComments = JSON.parse(rawComments) as BlogComment[]
-    return Array.isArray(parsedComments) ? parsedComments : fallbackComments
-  } catch {
-    return fallbackComments
-  }
-}
-
 const readStoredDraft = (blogId: string) => {
-  if (typeof window === 'undefined') {
-    return ''
-  }
-
+  if (typeof window === 'undefined') return ''
   return window.localStorage.getItem(createStorageKey(DRAFT_STORAGE_PREFIX, blogId)) ?? ''
 }
 
 const buildFallbackUserName = () => {
-  if (typeof window === 'undefined') {
-    return 'Usuario PropBol'
-  }
-
-  return (
-    window.localStorage.getItem('nombre') ||
-    window.localStorage.getItem('correo') ||
-    'Usuario PropBol'
-  )
+  if (typeof window === 'undefined') return 'Usuario PropBol'
+  return window.localStorage.getItem('nombre') || window.localStorage.getItem('correo') || 'Usuario PropBol'
 }
 
 const readCurrentUser = (): BlogCommentAuthor => {
   if (typeof window === 'undefined') {
-    return {
-      id: 'guest-user',
-      name: 'Usuario PropBol',
-      avatar: null
-    }
+    return { id: 'guest-user', name: 'Usuario PropBol', avatar: null }
   }
 
   const storedAvatar = window.localStorage.getItem('avatar')
   const storedUser = window.localStorage.getItem(USER_STORAGE_KEY)
+  const token = window.localStorage.getItem('token')
+
+  let numericId: string | null = null
+  if (token) {
+    try {
+      const base64Url = token.split('.')[1]
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
+      const jsonPayload = decodeURIComponent(window.atob(base64).split('').map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''))
+      const decoded = JSON.parse(jsonPayload)
+      if (decoded && decoded.id) {
+        numericId = String(decoded.id)
+      }
+    } catch {
+      // Ignore token decode errors
+    }
+  }
 
   if (!storedUser) {
     const fallbackName = buildFallbackUserName()
-
     return {
-      id: fallbackName.toLowerCase().replace(/\s+/g, '-'),
+      id: numericId || fallbackName.toLowerCase().replace(/\s+/g, '-'),
       name: fallbackName,
       avatar: storedAvatar
     }
   }
 
   try {
-    const parsedUser = JSON.parse(storedUser) as {
-      name?: string
-      email?: string
-      avatar?: string | null
-    }
-
+    const parsedUser = JSON.parse(storedUser) as { name?: string; email?: string; avatar?: string | null; id?: number }
     const name = parsedUser.name || parsedUser.email || buildFallbackUserName()
-    const id = parsedUser.email || name.toLowerCase().replace(/\s+/g, '-')
+    const id = numericId || String(parsedUser.id || parsedUser.email || name.toLowerCase().replace(/\s+/g, '-'))
 
     return {
       id,
@@ -102,94 +74,88 @@ const readCurrentUser = (): BlogCommentAuthor => {
     }
   } catch {
     const fallbackName = buildFallbackUserName()
-
     return {
-      id: fallbackName.toLowerCase().replace(/\s+/g, '-'),
+      id: numericId || fallbackName.toLowerCase().replace(/\s+/g, '-'),
       name: fallbackName,
       avatar: storedAvatar
     }
   }
 }
 
-const createCommentId = () =>
-  `comment-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
-
-const waitForUiPersistence = () =>
-  new Promise((resolve) => {
-    window.setTimeout(resolve, 350)
-  })
+function mapBackendComment(backendComment: any): BlogComment {
+  return {
+    id: String(backendComment.id),
+    blogId: String(backendComment.blog_id),
+    parentId: backendComment.comentario_padre_id ? String(backendComment.comentario_padre_id) : null,
+    author: {
+      id: String(backendComment.usuario?.id || ''),
+      name: `${backendComment.usuario?.nombre || ''} ${backendComment.usuario?.apellido || ''}`.trim() || 'Usuario PropBol',
+      avatar: backendComment.usuario?.avatar || null
+    },
+    content: backendComment.contenido,
+    createdAt: backendComment.fecha_creacion,
+    updatedAt: null, // tracked locally for now as there is no updatedAt in DB
+    likes: backendComment.likes || 0,
+    likedByCurrentUser: !!backendComment.likedByCurrentUser
+  }
+}
 
 export const useBlogComments = (blogId: string) => {
-  const [comments, setComments] = useState<BlogComment[]>(() => readStoredComments(blogId))
-  const [draft, setDraft] = useState(() => readStoredDraft(blogId))
+  const [comments, setComments] = useState<BlogComment[]>([])
+  const [draft, setDraft] = useState('')
   const [replyingToId, setReplyingToId] = useState<string | null>(null)
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null)
   const [menuOpenForId, setMenuOpenForId] = useState<string | null>(null)
-  const [visibleTopLevelComments, setVisibleTopLevelComments] = useState(
-    INITIAL_VISIBLE_TOP_LEVEL_COMMENTS
-  )
+  const [visibleTopLevelComments, setVisibleTopLevelComments] = useState(INITIAL_VISIBLE_TOP_LEVEL_COMMENTS)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [currentUser, setCurrentUser] = useState<BlogCommentAuthor>(() => readCurrentUser())
+  const [isLoading, setIsLoading] = useState(true)
+  const [currentUser, setCurrentUser] = useState<BlogCommentAuthor>({ id: 'guest-user', name: 'Usuario PropBol', avatar: null })
+
+  const fetchComments = useCallback(async () => {
+    try {
+      setIsLoading(true)
+      const token = localStorage.getItem('token')
+      const headers: HeadersInit = {}
+      if (token) headers['Authorization'] = `Bearer ${token}`
+
+      // Request enough limit to load the thread in frontend easily.
+      // In a real infinite scroll app, we might paginate, but the frontend needs all parents to render threads.
+      const res = await fetch(`${API_URL}/api/blogs/${blogId}/comentarios?limit=100&t=${Date.now()}`, { headers, cache: 'no-store' })
+      if (res.ok) {
+        const json = await res.json()
+        if (json.data) {
+          setComments(json.data.map(mapBackendComment))
+        }
+      }
+    } catch (err) {
+      console.error('Failed to fetch comments:', err)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [blogId])
 
   useEffect(() => {
-    setComments(readStoredComments(blogId))
     setDraft(readStoredDraft(blogId))
     setReplyingToId(null)
     setEditingCommentId(null)
     setMenuOpenForId(null)
     setVisibleTopLevelComments(INITIAL_VISIBLE_TOP_LEVEL_COMMENTS)
     setCurrentUser(readCurrentUser())
-  }, [blogId])
+    fetchComments()
+  }, [blogId, fetchComments])
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
-      return
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(createStorageKey(DRAFT_STORAGE_PREFIX, blogId), draft)
     }
-
-    window.localStorage.setItem(
-      createStorageKey(COMMENTS_STORAGE_PREFIX, blogId),
-      JSON.stringify(comments)
-    )
-  }, [blogId, comments])
-
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return
-    }
-
-    window.localStorage.setItem(createStorageKey(DRAFT_STORAGE_PREFIX, blogId), draft)
   }, [blogId, draft])
 
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return
-    }
 
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (!draft.trim()) {
-        return
-      }
-
-      event.preventDefault()
-      event.returnValue = ''
-    }
-
-    window.addEventListener('beforeunload', handleBeforeUnload)
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload)
-    }
-  }, [draft])
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
-      return
-    }
+    if (typeof window === 'undefined') return
 
-    const syncCurrentUser = () => {
-      setCurrentUser(readCurrentUser())
-    }
-
+    const syncCurrentUser = () => setCurrentUser(readCurrentUser())
     window.addEventListener('storage', syncCurrentUser)
     window.addEventListener('propbol:session-changed', syncCurrentUser)
     window.addEventListener('profileUpdated', syncCurrentUser)
@@ -201,20 +167,18 @@ export const useBlogComments = (blogId: string) => {
     }
   }, [])
 
-  const topLevelComments = comments.filter((comment) => comment.parentId === null)
+  const topLevelComments = comments
+    .filter((comment) => comment.parentId === null)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
   const visibleComments = topLevelComments.slice(0, visibleTopLevelComments)
   const totalComments = comments.length
   const isDraftEmpty = draft.trim().length === 0
   const isAtCharacterLimit = draft.length >= BLOG_COMMENT_MAX_LENGTH
-  const activeParent = replyingToId
-    ? comments.find((comment) => comment.id === replyingToId) ?? null
-    : null
-  const activeEdition = editingCommentId
-    ? comments.find((comment) => comment.id === editingCommentId) ?? null
-    : null
 
-  const getReplies = (commentId: string) =>
-    comments.filter((comment) => comment.parentId === commentId)
+  const activeParent = replyingToId ? comments.find((c) => c.id === replyingToId) ?? null : null
+  const activeEdition = editingCommentId ? comments.find((c) => c.id === editingCommentId) ?? null : null
+
+  const getReplies = (commentId: string) => comments.filter((comment) => comment.parentId === commentId)
 
   const startReply = (commentId: string) => {
     setReplyingToId(commentId)
@@ -223,12 +187,8 @@ export const useBlogComments = (blogId: string) => {
   }
 
   const startEdit = (commentId: string) => {
-    const commentToEdit = comments.find((comment) => comment.id === commentId)
-
-    if (!commentToEdit) {
-      return
-    }
-
+    const commentToEdit = comments.find((c) => c.id === commentId)
+    if (!commentToEdit) return
     setDraft(commentToEdit.content)
     setEditingCommentId(commentId)
     setReplyingToId(null)
@@ -246,15 +206,15 @@ export const useBlogComments = (blogId: string) => {
     setDraft(value.slice(0, BLOG_COMMENT_MAX_LENGTH))
   }
 
-  const toggleLike = (commentId: string) => {
+  const toggleLike = async (commentId: string) => {
+    const token = localStorage.getItem('token')
+    if (!token) return
+
+    // Optimistic UI update
     setComments((currentComments) =>
       currentComments.map((comment) => {
-        if (comment.id !== commentId) {
-          return comment
-        }
-
+        if (comment.id !== commentId) return comment
         const nextLikedState = !comment.likedByCurrentUser
-
         return {
           ...comment,
           likedByCurrentUser: nextLikedState,
@@ -262,87 +222,122 @@ export const useBlogComments = (blogId: string) => {
         }
       })
     )
+
+    try {
+      const res = await fetch(`${API_URL}/api/blogs/comentarios/${commentId}/like`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      if (!res.ok) {
+        // Revert on error
+        fetchComments()
+      }
+    } catch {
+      fetchComments()
+    }
   }
 
-  const deleteComment = (commentId: string) => {
-    const idsToDelete = [commentId, ...getDescendantIds(comments, commentId)]
+  const deleteComment = async (commentId: string) => {
+    const token = localStorage.getItem('token')
+    if (!token) return
 
-    setComments((currentComments) =>
-      currentComments.filter((comment) => !idsToDelete.includes(comment.id))
-    )
+    try {
+      const res = await fetch(`${API_URL}/api/blogs/comentarios/${commentId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      })
 
-    if (replyingToId && idsToDelete.includes(replyingToId)) {
-      setReplyingToId(null)
+      if (res.ok || res.status === 204) {
+        const idsToDelete = [commentId, ...getDescendantIds(comments, commentId)]
+        setComments((currentComments) => currentComments.filter((c) => !idsToDelete.includes(c.id)))
+
+        if (replyingToId && idsToDelete.includes(replyingToId)) setReplyingToId(null)
+        if (editingCommentId && idsToDelete.includes(editingCommentId)) {
+          setEditingCommentId(null)
+          setDraft('')
+        }
+        setMenuOpenForId(null)
+      } else {
+        alert('Error al eliminar el comentario')
+      }
+    } catch (err) {
+      console.error('Delete failed:', err)
+      alert('Error de conexión')
     }
-
-    if (editingCommentId && idsToDelete.includes(editingCommentId)) {
-      setEditingCommentId(null)
-      setDraft('')
-    }
-
-    setMenuOpenForId(null)
   }
 
   const requestDelete = (commentId: string) => {
-    if (typeof window === 'undefined') {
-      return
-    }
-
-    const confirmed = window.confirm('Estas seguro de eliminar este comentario?')
-
-    if (!confirmed) {
-      return
-    }
-
     deleteComment(commentId)
   }
 
   const submitComment = async () => {
     const normalizedDraft = draft.trim()
+    if (!normalizedDraft || isSubmitting) return
 
-    if (!normalizedDraft || isSubmitting) {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      alert('Debes iniciar sesión para comentar')
       return
     }
 
     setIsSubmitting(true)
 
-    await waitForUiPersistence()
+    try {
+      if (editingCommentId) {
+        // Edit
+        const res = await fetch(`${API_URL}/api/blogs/comentarios/${editingCommentId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ contenido: normalizedDraft })
+        })
 
-    if (editingCommentId) {
-      setComments((currentComments) =>
-        currentComments.map((comment) =>
-          comment.id === editingCommentId
-            ? {
-                ...comment,
-                content: normalizedDraft,
-                updatedAt: new Date().toISOString()
-              }
-            : comment
-        )
-      )
-    } else {
-      const newComment: BlogComment = {
-        id: createCommentId(),
-        blogId,
-        parentId: replyingToId,
-        author: currentUser,
-        content: normalizedDraft,
-        createdAt: new Date().toISOString(),
-        updatedAt: null,
-        likes: 0,
-        likedByCurrentUser: false
+        if (res.ok) {
+          const data = await res.json()
+          setComments((currentComments) =>
+            currentComments.map((comment) => (comment.id === editingCommentId ? { ...comment, content: data.contenido, updatedAt: new Date().toISOString() } : comment))
+          )
+          setDraft('')
+          setEditingCommentId(null)
+        } else {
+          const err = await res.json()
+          alert(err.message || 'Error al editar el comentario')
+        }
+      } else {
+        // Create
+        const res = await fetch(`${API_URL}/api/blogs/comentarios`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            contenido: normalizedDraft,
+            blog_id: Number(blogId),
+            comentario_padre_id: replyingToId ? Number(replyingToId) : undefined
+          })
+        })
+
+        if (res.ok) {
+          const data = await res.json()
+          const newComment = mapBackendComment(data)
+          setComments((currentComments) => [...currentComments, newComment])
+          setVisibleTopLevelComments((currentVisibleCount) => (replyingToId ? currentVisibleCount : currentVisibleCount + 1))
+          setDraft('')
+          setReplyingToId(null)
+        } else {
+          const err = await res.json()
+          alert(err.message || 'Error al crear el comentario')
+        }
       }
-
-      setComments((currentComments) => [...currentComments, newComment])
-      setVisibleTopLevelComments((currentVisibleCount) =>
-        replyingToId ? currentVisibleCount : currentVisibleCount + 1
-      )
+    } catch (err) {
+      console.error('Submit failed:', err)
+      alert('Error de conexión')
+    } finally {
+      setIsSubmitting(false)
     }
-
-    setDraft('')
-    setReplyingToId(null)
-    setEditingCommentId(null)
-    setIsSubmitting(false)
   }
 
   return {
@@ -358,6 +353,7 @@ export const useBlogComments = (blogId: string) => {
     isAtCharacterLimit,
     isDraftEmpty,
     isSubmitting,
+    isLoading,
     maxLength: BLOG_COMMENT_MAX_LENGTH,
     menuOpenForId,
     requestDelete,
@@ -368,7 +364,6 @@ export const useBlogComments = (blogId: string) => {
     toggleLike,
     totalComments,
     visibleComments,
-    loadMore: () =>
-      setVisibleTopLevelComments((currentVisibleCount) => currentVisibleCount + 3)
+    loadMore: () => setVisibleTopLevelComments((currentVisibleCount) => currentVisibleCount + 3)
   }
 }

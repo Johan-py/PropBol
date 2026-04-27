@@ -7,6 +7,8 @@ import type { Request, Response } from 'express'
 import { prisma } from './lib/prisma.client.js'
 import zonaRoutes from './modules/perfil/zonaUsario.routes.js'
 import telemetriaRouter from './modules/perfil/telemetria.routes.js'
+import locationRoutes from './modules/locations/locations.routes.js'
+import consumoRoutes from './modules/LimiteSuscripcion/consumo.routes.js'
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -74,13 +76,13 @@ import {
   facebookCallbackController,
   getFacebookLinkUrlController,
   startFacebookLoginController,
-  startFacebookRegisterController,
-} from "./modules/auth/facebook/facebook.controller.js";
+  startFacebookRegisterController
+} from './modules/auth/facebook/facebook.controller.js'
 
 import {
   getSocialLinksController,
-  unlinkSocialProviderController,
-} from "./modules/auth/social-links/social-links.controller.js";
+  unlinkSocialProviderController
+} from './modules/auth/social-links/social-links.controller.js'
 
 import securityRoutes from './routes/security.routes.js'
 // --------------------
@@ -167,6 +169,7 @@ app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
 app.use('/api/perfil/zonas', zonaRoutes)
 app.use('/api', router)
+app.use('/api', consumoRoutes)
 app.use('/api', parametrosRoutes)
 app.use('/api/security', securityRoutes)
 app.use('/api/favorites', favoritesRoutes)
@@ -191,6 +194,7 @@ app.use('/api/telemetria', telemetriaRouter)
 app.use('/api/transacciones', transaccionesRoutes)
 app.use('/api/planes', plansRoutes)
 app.use('/api/whatsapp', whatsappRoutes)
+app.use('/api/locations', locationRoutes)
 
 // --------------------
 // MOCK / TEST
@@ -226,21 +230,13 @@ app.get('/api/auth/google/callback', googleCallbackController)
 app.get('/api/auth/discord/login', startDiscordLoginController)
 app.get('/api/auth/discord/register', startDiscordRegisterController)
 app.get('/api/auth/discord/callback', discordCallbackController)
-app.get("/api/auth/facebook/login", startFacebookLoginController);
-app.get("/api/auth/facebook/register", startFacebookRegisterController);
-app.get("/api/auth/facebook/callback", facebookCallbackController);
-app.get("/api/auth/social-links", requireAuth, getSocialLinksController);
-app.delete(
-  "/api/auth/social-links/:provider",
-  requireAuth,
-  unlinkSocialProviderController,
-);
-app.get(
-  "/api/auth/facebook/link-url",
-  requireAuth,
-  getFacebookLinkUrlController,
-);
-app.get("/api/auth/discord/link-url", requireAuth, getDiscordLinkUrlController);
+app.get('/api/auth/facebook/login', startFacebookLoginController)
+app.get('/api/auth/facebook/register', startFacebookRegisterController)
+app.get('/api/auth/facebook/callback', facebookCallbackController)
+app.get('/api/auth/social-links', requireAuth, getSocialLinksController)
+app.delete('/api/auth/social-links/:provider', requireAuth, unlinkSocialProviderController)
+app.get('/api/auth/facebook/link-url', requireAuth, getFacebookLinkUrlController)
+app.get('/api/auth/discord/link-url', requireAuth, getDiscordLinkUrlController)
 //comentario
 
 // --------------------
@@ -315,10 +311,28 @@ async function seedPlanes() {
   if (count > 0) return
   await prisma.plan_suscripcion.createMany({
     data: [
-      { nombre_plan: 'Básico',    precio_plan: 0,   nro_publicaciones_plan: 3,   duracion_plan_dias: 30, imagen_gr_url: '/qrs/basico.png'   },
-      { nombre_plan: 'Estándar',  precio_plan: 99,  nro_publicaciones_plan: 10,  duracion_plan_dias: 30, imagen_gr_url: '/qrs/estandar.png' },
-      { nombre_plan: 'Pro',       precio_plan: 199, nro_publicaciones_plan: 100, duracion_plan_dias: 30, imagen_gr_url: '/qrs/pro.png'      },
-    ],
+      {
+        nombre_plan: 'Básico',
+        precio_plan: 0,
+        nro_publicaciones_plan: 3,
+        duracion_plan_dias: 30,
+        imagen_gr_url: '/qrs/basico.png'
+      },
+      {
+        nombre_plan: 'Estándar',
+        precio_plan: 99,
+        nro_publicaciones_plan: 10,
+        duracion_plan_dias: 30,
+        imagen_gr_url: '/qrs/estandar.png'
+      },
+      {
+        nombre_plan: 'Pro',
+        precio_plan: 199,
+        nro_publicaciones_plan: 100,
+        duracion_plan_dias: 30,
+        imagen_gr_url: '/qrs/pro.png'
+      }
+    ]
   })
   console.log('✅ Planes de suscripción inicializados en DB')
 }

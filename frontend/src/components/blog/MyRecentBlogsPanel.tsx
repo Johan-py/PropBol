@@ -5,8 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Blog } from "@/types/blog";
 
-const MAX_VISIBLE = 3;
+const MAX_VISIBLE = 5;
 const USER_STORAGE_KEY = "propbol_user";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 const STATUS_STYLES: Record<string, string> = {
   PUBLICADO: "bg-green-50 text-green-700 border-green-200",
@@ -38,28 +39,61 @@ interface MyRecentBlogsPanelProps {
   blogs?: Blog[];
 }
 
-const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({
-  blogs = [],
-}) => {
-  const visible = blogs.slice(0, MAX_VISIBLE);
+type UserBlogResponse = {
+  id: number;
+  titulo: string;
+  estado: Blog["estado"];
+  imagen?: string | null;
+  fecha_creacion?: string;
+};
+
+const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({ blogs: propBlogs }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [internalBlogs, setInternalBlogs] = useState<Blog[]>([]);
 
   useEffect(() => {
-    const syncAuthState = () => {
-      setIsAuthenticated(Boolean(localStorage.getItem(USER_STORAGE_KEY)));
+    const syncAuthState = async () => {
+      const token = localStorage.getItem('token');
+      const isAuth = Boolean(localStorage.getItem(USER_STORAGE_KEY));
+      setIsAuthenticated(isAuth);
+
+      if (token) {
+        try {
+          const res = await fetch(`${API_URL}/api/blogs/mis-blogs`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+
+          if (!res.ok) throw new Error('Error al obtener blogs');
+
+          const data = (await res.json()) as UserBlogResponse[];
+          const mapped: Blog[] = data.map((b) => ({
+            id: b.id,
+            titulo: b.titulo,
+            imagenUrl: b.imagen || '/placeholder-house.jpg',
+            estado: b.estado,
+            fecha: b.fecha_creacion
+              ? new Date(b.fecha_creacion).toLocaleDateString('es-BO')
+              : ''
+          }));
+          setInternalBlogs(mapped);
+        } catch { }
+      }
     };
 
     syncAuthState();
-    window.addEventListener("storage", syncAuthState);
-    window.addEventListener("propbol:session-changed", syncAuthState);
+    window.addEventListener('storage', syncAuthState);
+    window.addEventListener('propbol:session-changed', syncAuthState);
 
     return () => {
-      window.removeEventListener("storage", syncAuthState);
-      window.removeEventListener("propbol:session-changed", syncAuthState);
+      window.removeEventListener('storage', syncAuthState);
+      window.removeEventListener('propbol:session-changed', syncAuthState);
     };
   }, []);
 
   if (!isAuthenticated) return null;
+
+  const blogs = propBlogs || internalBlogs;
+  const visible = blogs.slice(0, MAX_VISIBLE);
 
   if (blogs.length === 0) {
     return (
@@ -91,14 +125,15 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({
       </div>
 
       {/* Cards */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {visible.map((blog) => (
-          <div
+          <Link
             key={blog.id}
-            className="flex items-center gap-3 rounded-xl border border-stone-100 bg-stone-50 p-3 transition-shadow hover:shadow-md"
+            href={`/blog/${blog.id}`}
+            className="flex w-full items-center gap-3 rounded-2xl border border-stone-100 bg-stone-50 p-3 transition-all hover:-translate-y-0.5 hover:shadow-md cursor-pointer"
           >
             {/* Thumbnail */}
-            <div className="relative h-16 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-stone-200">
+            <div className="relative h-16 w-20 flex-shrink-0 overflow-hidden rounded-xl bg-stone-200">
               <Image
                 src={blog.imagenUrl || "/placeholder-house.jpg"}
                 alt={blog.titulo}
@@ -110,16 +145,16 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({
 
             {/* Info */}
             <div className="min-w-0 flex-1">
-              <p className="mb-1.5 line-clamp-2 text-xs font-semibold leading-snug text-stone-800">
+              <p className="mb-2 line-clamp-2 text-sm font-semibold leading-snug text-stone-800">
                 {blog.titulo}
               </p>
               <span
-                className={`inline-block rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${getStatusClass(blog.estado)}`}
+                className={`inline-block rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${getStatusClass(blog.estado)}`}
               >
                 {getEstadoLabel(blog.estado)}
               </span>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

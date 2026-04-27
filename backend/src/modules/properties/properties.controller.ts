@@ -20,13 +20,14 @@ export const propertiesController = {
         dormitoriosMax,
         banosMin,
         banosMax,
-        tipoBano
+        tipoBano,
+        minSuperficie,
+        maxSuperficie
       } = req.query
 
       let banoCompartido: boolean | undefined = undefined
       if (tipoBano === 'privado') banoCompartido = false
       if (tipoBano === 'compartido') banoCompartido = true
-
 
       const filtros: FiltrosBusqueda = {
         tipoInmueble: tipoInmueble as string | string[],
@@ -45,7 +46,9 @@ export const propertiesController = {
         dormitoriosMax: dormitoriosMax ? parseInt(dormitoriosMax as string) : undefined,
         banosMin: banosMin ? parseInt(banosMin as string) : undefined,
         banosMax: banosMax ? parseInt(banosMax as string) : undefined,
-        banoCompartido
+        banoCompartido,
+        minSuperficie: minSuperficie ? Number(minSuperficie) : null,
+        maxSuperficie: maxSuperficie ? Number(maxSuperficie) : null
       }
 
       const orden = {
@@ -53,7 +56,7 @@ export const propertiesController = {
         precio: precio as 'menor-a-mayor' | 'mayor-a-menor' | undefined,
         superficie: superficie as 'menor-a-mayor' | 'mayor-a-menor' | undefined
       }
-
+      console.log('📥 Controller recibió filtros:', filtros)
       const inmuebles = await propertiesService.getAll(filtros)
       res.json({ ok: true, data: inmuebles })
     } catch (error) {
