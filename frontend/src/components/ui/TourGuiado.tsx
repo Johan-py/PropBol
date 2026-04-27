@@ -76,12 +76,6 @@ const TOUR_STEPS = [
     description: "Accede a tu perfil, publicaciones y configuración.",
     required: true,
   },
-  //{
-  //  id: "tour-publicar",
-  //title: "Publica tu inmueble",
-  //description: "Anuncia tu propiedad de forma rápida y sencilla. Llega a miles de compradores.",
-  //required: true,
-  //},
   {
     id: "tour-footer-logo",
     title: "PropBol",
@@ -256,7 +250,7 @@ export default function TourGuiado() {
     }
   };
 
-  // Búsqueda del elemento con reintentos
+  // Búsqueda del elemento con reintentos y manejo de menú móvil
   useEffect(() => {
     if (!showTour) return;
 
@@ -512,9 +506,10 @@ export default function TourGuiado() {
                 border: "none",
                 borderRadius: 8,
                 padding: "8px 18px",
-                fontSize: 13,
+                fontSize: fontBtn,
                 fontWeight: 600,
                 cursor: "pointer",
+                minHeight: 44,
               }}
             >
               {currentStep < TOUR_STEPS.length - 1 ? "Siguiente →" : "Finalizar"}

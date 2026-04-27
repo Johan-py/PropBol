@@ -29,6 +29,7 @@ type MeResponse = {
     nombre?: string;
     apellido?: string;
     avatar?: string | null;
+    controlador?: boolean;
   };
 };
 
@@ -158,11 +159,13 @@ const saveSession = (
     apellido?: string;
     avatar?: string | null;
   },
+  controlador?: boolean
 ) => {
   localStorage.setItem("token", token);
   const sessionUser = buildSessionUser(user);
 
   localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(sessionUser));
+   localStorage.setItem("controlador", String(controlador ?? false));
 
   localStorage.setItem("nombre", sessionUser.name);
   localStorage.setItem("correo", sessionUser.email);
@@ -175,6 +178,7 @@ const saveSession = (
   window.dispatchEvent(new Event("propbol:login"));
   window.dispatchEvent(new Event("propbol:session-changed"));
   window.dispatchEvent(new Event("auth-state-changed"));
+  window.dispatchEvent(new Event("propbol:token-guardado"));
 };
 
 const getRedirectAfterLogin = () => {
@@ -320,7 +324,8 @@ export default function LoginForm() {
       nombre: validatedUser.nombre ?? fallbackUser?.nombre,
       apellido: validatedUser.apellido ?? fallbackUser?.apellido,
       avatar: validatedUser.avatar ?? fallbackUser?.avatar ?? null,
-    });
+      
+    },validatedUser.controlador);
   };
 
   const handleGoogleLogin = () => {
