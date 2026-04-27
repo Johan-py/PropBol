@@ -5,7 +5,29 @@ import type { FiltrosBusqueda } from './properties.repository.js'
 export const propertiesController = {
   async getAll(req: Request, res: Response) {
     try {
-      const { tipoInmueble, modoInmueble, query, locationId, fecha, precio, superficie } = req.query
+      const {
+        tipoInmueble,
+        modoInmueble,
+        query,
+        locationId,
+        fecha,
+        precio,
+        superficie,
+        minPrice,
+        maxPrice,
+        currency,
+        dormitoriosMin,
+        dormitoriosMax,
+        banosMin,
+        banosMax,
+        tipoBano,
+        minSuperficie,
+        maxSuperficie
+      } = req.query
+
+      let banoCompartido: boolean | undefined = undefined
+      if (tipoBano === 'privado') banoCompartido = false
+      if (tipoBano === 'compartido') banoCompartido = true
 
       const filtros: FiltrosBusqueda = {
         tipoInmueble: tipoInmueble as string | string[],
@@ -14,7 +36,19 @@ export const propertiesController = {
         locationId: locationId ? Number(locationId) : undefined,
         fecha: fecha as any,
         precio: precio as any,
-        superficie: superficie as any
+        superficie: superficie as any,
+
+        minPrice: minPrice ? Number(minPrice) : null,
+        maxPrice: maxPrice ? Number(maxPrice) : null,
+        currency: (currency as string) ?? null,
+
+        dormitoriosMin: dormitoriosMin ? parseInt(dormitoriosMin as string) : undefined,
+        dormitoriosMax: dormitoriosMax ? parseInt(dormitoriosMax as string) : undefined,
+        banosMin: banosMin ? parseInt(banosMin as string) : undefined,
+        banosMax: banosMax ? parseInt(banosMax as string) : undefined,
+        banoCompartido,
+        minSuperficie: minSuperficie ? Number(minSuperficie) : null,
+        maxSuperficie: maxSuperficie ? Number(maxSuperficie) : null
       }
 
       const orden = {
@@ -22,7 +56,7 @@ export const propertiesController = {
         precio: precio as 'menor-a-mayor' | 'mayor-a-menor' | undefined,
         superficie: superficie as 'menor-a-mayor' | 'mayor-a-menor' | undefined
       }
-
+      console.log('📥 Controller recibió filtros:', filtros)
       const inmuebles = await propertiesService.getAll(filtros)
       res.json({ ok: true, data: inmuebles })
     } catch (error) {
