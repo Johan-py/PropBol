@@ -141,7 +141,7 @@ export default function ConsumoPage() {
 
       {/* Tarjeta Principal */}
       <div className="bg-gradient-to-r from-black via-stone-900 to-orange-600 text-white p-8 rounded-[2rem] shadow-2xl mb-8 font-sans">
-        {/* LABEL SUPERIOR */}
+        {/* Titulo:Publicaciones */}
         <p className="text-[20px] tracking-[0.2em] opacity-60 font-black mb-6 uppercase">
           Publicaciones usadas este mes
         </p>
