@@ -122,6 +122,19 @@ function extraerCoordenadasDeGeometria(geometria: ZonaUsuario['geometria'] | nul
   return puntos
 }
 
+function esZonaNavegable(coords: [number, number][]): boolean {
+  if (!Array.isArray(coords) || coords.length < 3) return false
+
+  return coords.every(([lat, lng]) => (
+    Number.isFinite(lat) &&
+    Number.isFinite(lng) &&
+    lat >= -90 &&
+    lat <= 90 &&
+    lng >= -180 &&
+    lng <= 180
+  ))
+}
+
 function BusquedaMapaContent() {
   const [isMisZonasOpen, setIsMisZonasOpen] = useState(false)
   const router = useRouter();
@@ -153,10 +166,29 @@ function BusquedaMapaContent() {
   const [editingPolygonPoints, setEditingPolygonPoints] = useState<[number, number][]>([])
   const [isSavingEditedZone, setIsSavingEditedZone] = useState(false)
 
+  
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsAuthenticated(!!token);
-  }, []);
+    const syncAuthFromStorage = () => {
+      const token = localStorage.getItem('token')
+      setIsAuthenticated(Boolean(token))
+    }
+
+    syncAuthFromStorage()
+
+    const handleSessionChange = () => {
+      syncAuthFromStorage()
+    }
+
+    window.addEventListener('storage', handleSessionChange)
+    window.addEventListener('propbol:login', handleSessionChange as EventListener)
+    window.addEventListener('propbol:logout', handleSessionChange as EventListener)
+
+    return () => {
+      window.removeEventListener('storage', handleSessionChange)
+      window.removeEventListener('propbol:login', handleSessionChange as EventListener)
+      window.removeEventListener('propbol:logout', handleSessionChange as EventListener)
+    }
+  }, [])
 
   // === 1. ESTADOS COMPARTIDOS ===
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
@@ -582,6 +614,25 @@ function BusquedaMapaContent() {
     },
     [inmueblesOrdenados]
   )
+
+  const handleZoneCycle = useCallback((direction: 1 | -1) => {
+    const zoneIds = zonasCombinadas
+      .filter((zona) => esZonaNavegable(zona.coordenadas))
+      .map((zona) => zona.id)
+
+    if (selectedZoneId === null || zoneIds.length === 0) return
+
+    const currentIndex = zoneIds.findIndex((id) => id === selectedZoneId)
+    const nextIndex = currentIndex === -1
+      ? (direction === -1 ? zoneIds.length - 1 : 0)
+      : (currentIndex + direction + zoneIds.length) % zoneIds.length
+
+    setSelectedZoneId(zoneIds[nextIndex])
+    setIsClusterView(false)
+    setActiveClusterIds([])
+    setClusterProperties([])
+  }, [selectedZoneId, zonasCombinadas])
+
   const handleZoneSelect = (id: number | null) => {
     setSelectedZoneId(id)
     setIsClusterView(false)
@@ -680,8 +731,7 @@ function BusquedaMapaContent() {
                 onClickItem?.(property)
                 // HU4 - Abre el detalle en una nueva pestaña
               }}
-              className={`cursor-pointer transition-all duration-200 rounded-xl ${selectedPropertyId === property.id ? 'ring-2 ring-orange-400 ring-offset-1' : ''
-                }`}
+              className="cursor-pointer transition-all duration-200 rounded-xl focus:outline-none focus:ring-0 focus:ring-offset-0"
             >
               {viewMode === 'grid' ? (
                 <PropertyCard
@@ -759,6 +809,7 @@ function BusquedaMapaContent() {
                   zonas={zonasCombinadas}
                   selectedZoneId={selectedZoneId}
                   onZoneSelect={handleZoneSelect}
+                  onZoneCycle={handleZoneCycle}
                   onSelect={handleMapSelect}
                   isLoading={isLoading}
                   error={error}
@@ -834,6 +885,7 @@ function BusquedaMapaContent() {
               zonas={zonasCombinadas}
               selectedZoneId={selectedZoneId}
               onZoneSelect={handleZoneSelect}
+              onZoneCycle={handleZoneCycle}
               onSelect={handleMapSelect}
               isLoading={isLoading}
               error={error}
@@ -1214,12 +1266,9 @@ function BusquedaMapaContent() {
 
                               // HU4 - Abre el detalle de la propiedad en una nueva pestaña
                             }}
-                            className={`cursor-pointer transition-all duration-200 rounded-xl relative ${viewMode === 'grid'
+                            className={`cursor-pointer transition-all duration-200 rounded-xl relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${viewMode === 'grid'
                               ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
                               : 'w-full py-1 hover:bg-stone-100'
-                              } ${selectedPropertyId === property.id
-                                ? 'ring-2 ring-orange-400 ring-offset-1 z-10'
-                                : ''
                               }`}
                           >
                             {viewMode === 'grid' ? (
@@ -1378,6 +1427,7 @@ function BusquedaMapaContent() {
               zonas={zonasCombinadas}
               selectedZoneId={selectedZoneId}
               onZoneSelect={handleZoneSelect}
+              onZoneCycle={handleZoneCycle}
               isDrawingMode={isDrawingMode}
               polygonPoints={polygonPoints}
               isPolygonClosed={isPolygonClosed}
