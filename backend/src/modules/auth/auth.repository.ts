@@ -90,6 +90,7 @@ export const findUser = async (correo: string) => {
       password: true,
       nombre: true,
       apellido: true,
+      avatar: true,
       activo: true,
       two_factor_activo: true,
       rol: true

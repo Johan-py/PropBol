@@ -3,8 +3,11 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
+import { useRouter } from "next/navigation";
+
 
 export default function NavLinks() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -23,10 +26,6 @@ export default function NavLinks() {
   return (
     <div className="hidden md:flex items-center gap-6 text-[15px] font-medium text-gray-700">
 
-      {/* HU-05: Inicio */}
-      <Link id="tour-inicio" href="/" className={linkStyle}>
-        Inicio
-      </Link>
 
       {/* HU-05: Propiedades con dropdown */}
       <div id="tour-propiedades" className="relative" ref={dropdownRef}>
@@ -41,14 +40,36 @@ export default function NavLinks() {
         {open && (
           <div className="absolute top-full left-0 mt-2 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 z-50 py-2">
             {["Casas", "Departamentos", "Cuartos", "Terrenos", "Espacios de cementerios"].map((item) => (
-              <Link
+              <button
                 key={item}
-                href="/propiedades"
-                onClick={() => setOpen(false)}
-                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#E68B25]"
+                onClick={() => {
+                  setOpen(false);
+                  const tipoMap: Record<string, string> = {
+                    "Casas": "CASA",
+                    "Departamentos": "DEPARTAMENTO",
+                    "Cuartos": "CUARTO",
+                    "Terrenos": "TERRENO",
+                    "Espacios de cementerios": "TERRENO_MORTUORIO"
+                  };
+                  const tipoFinal = tipoMap[item];
+                  const modosFinales = (tipoFinal === 'TERRENO' || tipoFinal === 'TERRENO_MORTUORIO') ? ['VENTA'] : ['VENTA'];
+                  const nuevosFiltros = {
+                    tipoInmueble: [tipoFinal],
+                    modoInmueble: modosFinales,
+                    query: '',
+                    updatedAt: new Date().toISOString()
+                  };
+                  const currentFilters = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}');
+                  sessionStorage.setItem('propbol_global_filters', JSON.stringify({ ...currentFilters, ...nuevosFiltros }));
+                  const params = new URLSearchParams();
+                  modosFinales.forEach(m => params.append('modoInmueble', m));
+                  if (tipoFinal) params.set('tipoInmueble', tipoFinal);
+                  router.push(`/busqueda_mapa?${params.toString()}`);
+                }}
+                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#E68B25]"
               >
                 {item}
-              </Link>
+              </button>
             ))}
           </div>
         )}
@@ -64,20 +85,15 @@ export default function NavLinks() {
         Planes de membresía
       </Link>
 
-      {/* HU-05: Contáctanos */}
-      <Link id="tour-contacto" href="#contacto" className={linkStyle}>
-        Contáctanos
-      </Link>
-
-      {/* HU-05: Sobre Nosotros */}
-      <Link id="tour-nosotros" href="#nosotros" className={linkStyle}>
-        Sobre Nosotros
-      </Link>
-
-      {/* HU-05: Botón de ayuda que reactiva el tour guiado */}
       <button
         id="tour-ayuda"
-        onClick={() => window.dispatchEvent(new Event("propbol:iniciar-tour"))}
+        onClick={() => {
+          router.push("/"); // ir al inicio
+
+          setTimeout(() => {
+            window.dispatchEvent(new Event("propbol:iniciar-tour"));
+          }, 300);
+        }}
         className={linkStyle}
       >
         Ayuda
