@@ -144,6 +144,14 @@ function BusquedaMapaContent() {
   const maxSuperficie = searchParams.get('maxSuperficie')
   const tieneFiltrSuperficie = minSuperficie || maxSuperficie
 
+  const latParam = searchParams.get('lat')
+  const lngParam = searchParams.get('lng')
+  const searchOrigin = useMemo<[number, number] | null>(() => {
+    return (latParam && lngParam) 
+      ? [parseFloat(latParam), parseFloat(lngParam)] 
+      : null
+  }, [latParam, lngParam])
+
   //estado para controlar la autenticación
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCapacidadOpen, setIsCapacidadOpen] = useState(false)
@@ -219,9 +227,8 @@ function BusquedaMapaContent() {
 
   // --- INICIO ESTADOS HU8 ---
   const [isDrawingMode, setIsDrawingMode] = useState(false)
-  const [polygonPoints, setPolygonPoints] = useState<[number, number][]>([])
-  const [isPolygonClosed, setIsPolygonClosed] = useState(false)
-  // -- Función para reiniciar el modo dibujo y limpiar el polígono --
+  const [currentPolygonPoints, setCurrentPolygonPoints] = useState<[number, number][]>([])
+  const [drawnPolygons, setDrawnPolygons] = useState<[number, number][][]>([])
   const [drawingError, setDrawingError] = useState(false)
 
   const resetEditingZone = useCallback(() => {
@@ -233,8 +240,9 @@ function BusquedaMapaContent() {
 
   const resetDrawing = () => {
     setIsDrawingMode(false)
-    setIsPolygonClosed(false)
-    setPolygonPoints([])
+    setCurrentPolygonPoints([])
+    setDrawnPolygons([])
+    setDrawingError(false)
     setIsCreatingCustomZone(false)
   }
   // --- FIN ESTADOS HU8 ---
@@ -312,14 +320,14 @@ function BusquedaMapaContent() {
 
   const saveDraftZone = useCallback(async () => {
     if (!isAuthenticated || isSavingNewZone || !isCreatingCustomZone) return
-    if (polygonPoints.length < 3) return
+    if (currentPolygonPoints.length < 3) return
 
     const token = localStorage.getItem('token')
     if (!token) return
 
     setIsSavingNewZone(true)
     try {
-      const ring = [...polygonPoints, polygonPoints[0]].map(([lat, lng]) => [lng, lat])
+      const ring = [...currentPolygonPoints, currentPolygonPoints[0]].map(([lat, lng]) => [lng, lat])
       const nombreFinal = newZoneName.trim() || 'Nueva zona'
 
       const response = await fetch(`${API_URL}/api/perfil/zonas`, {
@@ -348,8 +356,8 @@ function BusquedaMapaContent() {
         setSelectedZoneId(-Number(zonaCreada.id))
       }
 
-      setIsPolygonClosed(false)
-      setPolygonPoints([])
+      setCurrentPolygonPoints([])
+      setDrawnPolygons([])
       setIsDrawingMode(false)
       setIsCreatingCustomZone(false)
       setNewZoneName('Nueva zona')
@@ -362,7 +370,7 @@ function BusquedaMapaContent() {
     isAuthenticated,
     isSavingNewZone,
     isCreatingCustomZone,
-    polygonPoints,
+    currentPolygonPoints,
     newZoneName,
     cargarMisZonas
   ])
@@ -389,8 +397,8 @@ function BusquedaMapaContent() {
       setEditingPolygonPoints(points)
       setIsCreatingCustomZone(false)
       setIsDrawingMode(false)
-      setIsPolygonClosed(false)
-      setPolygonPoints([])
+      setCurrentPolygonPoints([])
+      setDrawnPolygons([])
       setSelectedZoneId(-zoneId)
       setIsMisZonasOpen(true)
       setIsSidebarOpen(false)
@@ -490,18 +498,17 @@ function BusquedaMapaContent() {
   // === 3. LÓGICA MATEMÁTICA HU8 (Filtro por polígono) ===
   const displayedProperties = useMemo(() => {
     if (!properties) return []
-    if (isPolygonClosed && polygonPoints.length >= 3) {
-      console.log('📐 [Turf.js] Polígono cerrado. Calculando intersecciones...')
+    if (drawnPolygons.length > 0) {
       try {
-        const turfCoords = [...polygonPoints, polygonPoints[0]].map((p) => [p[1], p[0]])
-        const drawPoly = polygon([turfCoords])
-
         return properties.filter((p: any) => {
           if (p.lat == null || p.lng == null) return false
           const pt = point([p.lng, p.lat])
-          const isInside = booleanPointInPolygon(pt, drawPoly)
-          if (isInside) console.log(`✅ Adentro: ${p.title}`)
-          return isInside
+          return drawnPolygons.some((polyPoints) => {
+            if (polyPoints.length < 3) return false
+            const turfCoords = [...polyPoints, polyPoints[0]].map((p) => [p[1], p[0]])
+            const drawPoly = polygon([turfCoords])
+            return booleanPointInPolygon(pt, drawPoly)
+          })
         })
       } catch (err) {
         console.error('Error en validación geométrica:', err)
@@ -517,7 +524,7 @@ function BusquedaMapaContent() {
       }
     }
     return properties
-  }, [properties, isPolygonClosed, polygonPoints, selectedZoneId, zonasCombinadas])
+  }, [properties, drawnPolygons, selectedZoneId, zonasCombinadas])
 
   // === 4. ORDENAMIENTO (Usando resultados filtrados) ===
   const { ordenActual, cambiarOrden, inmueblesOrdenados } = useOrdenamiento({
@@ -540,7 +547,7 @@ function BusquedaMapaContent() {
 
   useEffect(() => {
     setListPage(1);
-  }, [filterResetKey, isPolygonClosed]);
+  }, [filterResetKey, drawnPolygons]);
 
   useEffect(() => {
     if (listPage > listTotalPages) setListPage(listTotalPages);
@@ -550,7 +557,7 @@ function BusquedaMapaContent() {
 
   useEffect(() => {
     listScrollRef.current?.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, [listSafePage, listPageSize, filterResetKey, isPolygonClosed]);
+  }, [listSafePage, listPageSize, filterResetKey, drawnPolygons]);
 
   // === 5. ESTADOS VISUALES Y DE CLUSTERS (develop + HU8) ===
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null)
@@ -806,6 +813,7 @@ function BusquedaMapaContent() {
                 <MapView
                   properties={inmueblesOrdenados}
                   selectedId={selectedPropertyId}
+                  searchOrigin={searchOrigin}
                   zonas={zonasCombinadas}
                   selectedZoneId={selectedZoneId}
                   onZoneSelect={handleZoneSelect}
@@ -814,8 +822,9 @@ function BusquedaMapaContent() {
                   isLoading={isLoading}
                   error={error}
                   isDrawingMode={isDrawingMode}
-                  polygonPoints={polygonPoints}
-                  isPolygonClosed={isPolygonClosed}
+                  polygonPoints={currentPolygonPoints}
+                  isPolygonClosed={false}
+                  drawnPolygons={drawnPolygons}
                   isZoneEditingMode={Boolean(editingZoneId)}
                   editablePolygonPoints={editingPolygonPoints}
                   onEditablePointDrag={(index, lat, lng) => {
@@ -826,17 +835,17 @@ function BusquedaMapaContent() {
                     )
                   }}
                   onMapClick={(latlng) => {
-                    if (isDrawingMode && !isPolygonClosed) {
-                      setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
+                    if (isDrawingMode) {
+                      setCurrentPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
                     }
                   }}
                   onPointClick={(index) => {
-                    if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
-                      setIsPolygonClosed(true)
+                    if (isDrawingMode && index === 0 && currentPolygonPoints.length >= 3) {
+                      setDrawnPolygons((prev) => [...prev, currentPolygonPoints])
+                      setCurrentPolygonPoints([])
+                      setDrawingError(false)
                       setIsDrawingMode(false)
-                      if (isCreatingCustomZone) {
-                        setIsMisZonasOpen(true)
-                      }
+                      setTimeout(() => setIsDrawingMode(true), 0)
                     }
                   }}
                 />
@@ -882,6 +891,7 @@ function BusquedaMapaContent() {
             <MapView
               properties={inmueblesOrdenados}
               selectedId={selectedPropertyId}
+              searchOrigin={searchOrigin}
               zonas={zonasCombinadas}
               selectedZoneId={selectedZoneId}
               onZoneSelect={handleZoneSelect}
@@ -890,8 +900,9 @@ function BusquedaMapaContent() {
               isLoading={isLoading}
               error={error}
               isDrawingMode={isDrawingMode}
-              polygonPoints={polygonPoints}
-              isPolygonClosed={isPolygonClosed}
+              polygonPoints={currentPolygonPoints}
+              isPolygonClosed={false}
+              drawnPolygons={drawnPolygons}
               isZoneEditingMode={Boolean(editingZoneId)}
               editablePolygonPoints={editingPolygonPoints}
               onEditablePointDrag={(index, lat, lng) => {
@@ -902,17 +913,17 @@ function BusquedaMapaContent() {
                 )
               }}
               onMapClick={(latlng) => {
-                if (isDrawingMode && !isPolygonClosed) {
-                  setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
+                if (isDrawingMode) {
+                  setCurrentPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
                 }
               }}
               onPointClick={(index) => {
-                if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
-                  setIsPolygonClosed(true)
+                if (isDrawingMode && index === 0 && currentPolygonPoints.length >= 3) {
+                  setDrawnPolygons((prev) => [...prev, currentPolygonPoints])
+                  setCurrentPolygonPoints([])
+                  setDrawingError(false)
                   setIsDrawingMode(false)
-                  if (isCreatingCustomZone) {
-                    setIsMisZonasOpen(true)
-                  }
+                  setTimeout(() => setIsDrawingMode(true), 0)
                 }
               }}
               onClusterClick={handleClusterClick}
@@ -1381,17 +1392,20 @@ function BusquedaMapaContent() {
               </div>
             )}
 
-            {isDrawingMode && !isPolygonClosed && (
+             {isDrawingMode && (
               <div className="flex flex-col items-end gap-2 pointer-events-auto">
                 <div className="flex flex-row gap-2">
                   <button
                     onClick={() => {
-                      if (polygonPoints.length < 3) {
+                      if (currentPolygonPoints.length < 3) {
                         setDrawingError(true)
                         setTimeout(() => setDrawingError(false), 3000)
                       } else {
-                        setIsPolygonClosed(true)
+                        setDrawnPolygons((prev) => [...prev, currentPolygonPoints])
+                        setCurrentPolygonPoints([])
+                        setDrawingError(false)
                         setIsDrawingMode(false)
+                        setTimeout(() => setIsDrawingMode(true), 0)
                       }
                     }}
                     className="bg-[#ea580c] text-white px-4 py-2 rounded-lg shadow-md border border-orange-600 hover:bg-[#c2410c] transition-all text-sm font-semibold"
@@ -1423,7 +1437,7 @@ function BusquedaMapaContent() {
           </div>
 
           {/* CAMBIO: Se removió isCreatingCustomZone para que aparezca siempre que haya un polígono cerrado */}
-          {isPolygonClosed && !editingZoneId && (
+          {drawnPolygons.length > 0 && !editingZoneId && (
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000]">
               <button
                 onClick={resetDrawing}
@@ -1438,6 +1452,7 @@ function BusquedaMapaContent() {
             <MapView
               properties={inmueblesOrdenados}
               selectedId={selectedPropertyId}
+              searchOrigin={searchOrigin}
               onSelect={handleMapSelect}
               onClusterClick={handleClusterClick}
               onClusterDissolve={() => { setIsClusterView(false); setActiveClusterIds([]); setClusterProperties([]) }}
@@ -1449,8 +1464,9 @@ function BusquedaMapaContent() {
               onZoneSelect={handleZoneSelect}
               onZoneCycle={handleZoneCycle}
               isDrawingMode={isDrawingMode}
-              polygonPoints={polygonPoints}
-              isPolygonClosed={isPolygonClosed}
+              polygonPoints={currentPolygonPoints}
+              isPolygonClosed={false}
+              drawnPolygons={drawnPolygons}
               isZoneEditingMode={Boolean(editingZoneId)}
               editablePolygonPoints={editingPolygonPoints}
               onEditablePointDrag={(index, lat, lng) => {
@@ -1461,17 +1477,17 @@ function BusquedaMapaContent() {
                 )
               }}
               onMapClick={(latlng) => {
-                if (isDrawingMode && !isPolygonClosed) {
-                  setPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
+                if (isDrawingMode) {
+                  setCurrentPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
                 }
               }}
               onPointClick={(index) => {
-                if (isDrawingMode && index === 0 && polygonPoints.length >= 3) {
-                  setIsPolygonClosed(true)
+                if (isDrawingMode && index === 0 && currentPolygonPoints.length >= 3) {
+                  setDrawnPolygons((prev) => [...prev, currentPolygonPoints])
+                  setCurrentPolygonPoints([])
+                  setDrawingError(false)
                   setIsDrawingMode(false)
-                  if (isCreatingCustomZone) {
-                    setIsMisZonasOpen(true)
-                  }
+                  setTimeout(() => setIsDrawingMode(true), 0)
                 }
               }}
             />
@@ -1488,7 +1504,7 @@ function BusquedaMapaContent() {
           onEditingZoneNameChange={setEditingZoneName}
           onConfirmEditZone={saveEditedZone}
           onCancelEditZone={cancelEditZone}
-          isDraftZoneVisible={isAuthenticated && isCreatingCustomZone && isPolygonClosed && polygonPoints.length >= 3}
+          isDraftZoneVisible={isAuthenticated && isCreatingCustomZone && currentPolygonPoints.length >= 3}
           draftZoneName={newZoneName}
           isSavingDraftZone={isSavingNewZone}
           onDraftZoneNameChange={setNewZoneName}
@@ -1500,8 +1516,8 @@ function BusquedaMapaContent() {
             setNewZoneName('Nueva zona');
             setIsCreatingCustomZone(true);
             setIsDrawingMode(true);
-            setIsPolygonClosed(false);
-            setPolygonPoints([]);
+            setCurrentPolygonPoints([]);
+            setDrawnPolygons([]);
             setIsSidebarOpen(false);
           }}
           onEditZone={startEditZone}
