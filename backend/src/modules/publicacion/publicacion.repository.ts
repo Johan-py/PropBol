@@ -377,3 +377,19 @@ export const buscarDetallePublicacionPorInmuebleIdRepository = async (inmuebleId
     }
   })
 }
+export const confirmarPublicacionRepository = async (publicacionId: number) => {
+  return prisma.publicacion.update({
+    where: { id: publicacionId },
+    data: {
+      estado: 'ACTIVA'
+    },
+    include: {
+      multimedia: true,
+      inmueble: {
+        include: {
+          ubicacion: true
+        }
+      }
+    }
+  })
+}
