@@ -16,6 +16,7 @@ export interface PropertyMapPin {
   lng: number
   price: number
   currency: 'USD' | 'BOB'
+  precioFormateado?: string
   type: PropertyType
   title: string
   descripcion?: string | null
