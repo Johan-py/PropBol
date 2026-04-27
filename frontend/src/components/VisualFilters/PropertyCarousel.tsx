@@ -56,10 +56,19 @@ export default function PropertyCarousel({
     venta: "VENTA",
   };
 
+  const modo = modoMap[category];
   const params = new URLSearchParams({
-    modoInmueble: modoMap[category],
-    query: filterParam,
+    modoInmueble: modo,
+    query: filterParam, 
   });
+
+  const currentFilters = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}');
+  sessionStorage.setItem('propbol_global_filters', JSON.stringify({
+    ...currentFilters,
+    modoInmueble: [modo],
+    query: filterParam,
+    updatedAt: new Date().toISOString()
+  }));
 
   router.push(`/busqueda_mapa?${params.toString()}`);
 };
@@ -90,19 +99,27 @@ export default function PropertyCarousel({
           className=" flex gap-3 overflow-x-auto scroll-smooth px-9 py-2"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none", overscrollBehaviorX: "contain", touchAction: "pan-x"}}
         >
-          {items.map((item, i) => (
-            <PropertyCard
-              key={i}
-              image={item.image}
-              title={item.title}
-              location={item.location}
-              count={item.count}
-              variant={category}
-              isEmpty={item.count === 0}
-              previews={item.previews ?? []}
-              onClick={() => handleCardClick(item.filterParam)}
-            />
-          ))}
+          {/* ... dentro del ref={scrollRef} ... */}
+{items.map((item, i) => {
+  // Obtenemos la primera imagen de las previews para mostrarla de entrada
+  const mainImage = item.previews && item.previews.length > 0 
+    ? item.previews[0].imagen 
+    : item.image;
+
+  return (
+    <PropertyCard
+      key={i}
+      image={mainImage} 
+      title={item.title}
+      location={item.location}
+      count={item.count}
+      variant={category}
+      isEmpty={item.count === 0}
+      previews={item.previews ?? []}
+      onClick={() => handleCardClick(item.filterParam)}
+    />
+  );
+})}
         </div>
 
         {/* Botón derecha */}
