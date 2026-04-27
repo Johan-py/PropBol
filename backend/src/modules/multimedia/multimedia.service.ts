@@ -43,20 +43,6 @@ const normalizeHttpUrl = (rawUrl: string, fieldName: string): string => {
   return parsedUrl.toString()
 }
 
-const normalizeImageUrl = (rawUrl: string, fieldName: string): string => {
-  const trimmedUrl = rawUrl.trim()
-
-  if (!trimmedUrl) {
-    throw new Error(`${fieldName} es obligatoria`)
-  }
-
-  if (trimmedUrl.startsWith('/uploads/')) {
-    return trimmedUrl
-  }
-
-  return normalizeHttpUrl(trimmedUrl, fieldName)
-}
-
 const extractYoutubeVideoId = (videoUrl: string): string | null => {
   try {
     const parsedUrl = new URL(videoUrl.trim())
@@ -66,12 +52,12 @@ const extractYoutubeVideoId = (videoUrl: string): string | null => {
       return null
     }
 
-    if (host === 'youtu.be' || host === 'www.youtu.be') {
+    if (host === 'youtu.be') {
       const shortId = parsedUrl.pathname.replace('/', '').trim()
       return /^[a-zA-Z0-9_-]{11}$/.test(shortId) ? shortId : null
     }
 
-    if (host === 'youtube.com' || host === 'www.youtube.com' || host === 'm.youtube.com') {
+    if (host === 'youtube.com' || host === 'www.youtube.com') {
       const videoId = parsedUrl.searchParams.get('v')
       if (videoId && /^[a-zA-Z0-9_-]{11}$/.test(videoId)) {
         return videoId
@@ -80,11 +66,6 @@ const extractYoutubeVideoId = (videoUrl: string): string | null => {
       const shortsMatch = parsedUrl.pathname.match(/^\/shorts\/([a-zA-Z0-9_-]{11})$/)
       if (shortsMatch) {
         return shortsMatch[1]
-      }
-
-      const embedMatch = parsedUrl.pathname.match(/^\/embed\/([a-zA-Z0-9_-]{11})$/)
-      if (embedMatch) {
-        return embedMatch[1]
       }
     }
 
@@ -159,7 +140,7 @@ const validateImagesInput = (images: RegisterImagesInput['images']) => {
       throw new Error('La imagen supera el tamaño máximo permitido de 5 MB')
     }
 
-    const normalizedUrl = normalizeImageUrl(image.url, `La URL de la imagen ${imageIndex}`)
+    const normalizedUrl = normalizeHttpUrl(image.url, `La URL de la imagen ${imageIndex}`)
 
     return {
       url: normalizedUrl,
@@ -174,7 +155,6 @@ export const getPublicationMultimediaService = async ({
   usuarioId
 }: GetPublicationMultimediaInput) => {
   const publication = await validatePublicationOwnership(publicacionId, usuarioId)
-
   const multimedia = await getMultimediaByPublicationIdRepository(publicacionId)
 
   return {
