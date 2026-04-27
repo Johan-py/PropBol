@@ -122,9 +122,7 @@ export default function ConsumoPage() {
       {isLogged && (
         <div className="bg-[#FFFBEB] border border-yellow-200 p-5 rounded-2xl mb-6 flex items-center gap-4 shadow-sm">
           {/* Icono de Campana */}
-          <div className="bg-white p-3 rounded-xl shadow-inner">
-            <span className="text-4xl">🔔</span> 
-          </div>
+          <div className="text-5xl">🔔</div>
           {/* 2. TEXTO INFORMATIVO */}
           <div className="flex-1">
             <h3 className="text-yellow-900 text-2xl font-extrabold  leading-tight">
