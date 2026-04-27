@@ -101,7 +101,7 @@ export default function ConsumoPage() {
         </Link>
       </div>
 
-      {/*  MENSAJE SI NO ESTÁ LOGUEADO */}
+      {/*  MENSAJE SI NO SE INICIO SESION */}
       {!isLogged && (
         <div className="bg-blue-100 text-blue-800 p-4 rounded-lg mb-6 flex justify-between items-center">
           <span>Primero inicia sesión para ver tu consumo</span>
