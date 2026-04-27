@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { verificarToken } from '../../middleware/auth.js'
-import { getPlanes } from './plans.controller.js'
+import { getPlanes, getPlanById } from './plans.controller.js'
 import { calcularPrecio } from './priceCalculator.controller.js'
 import {
   crearOrdenCobro,
@@ -13,6 +13,7 @@ const router = Router()
 
 // HU-01
 router.get('/membership-plans', verificarToken, getPlanes)
+router.get('/:id', verificarToken, getPlanById)
 
 // HU-07
 router.post('/calcular-precio', verificarToken, calcularPrecio)
