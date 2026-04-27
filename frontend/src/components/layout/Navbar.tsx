@@ -108,6 +108,7 @@ export default function Navbar() {
       localStorage.removeItem("nombre");
       localStorage.removeItem("correo");
       localStorage.removeItem("avatar");
+      localStorage.removeItem("searchHistory");
       setUser(null);
       setIsPanelOpen(false);
       setShowLogoutModal(false);
@@ -686,7 +687,11 @@ export default function Navbar() {
             </div>
  
             <nav className="mt-10 flex flex-col gap-2">
+              {/* FIX: agregado id="tour-publicar-home-mobile" que faltaba.
+                  Sin este id, el tour no podía encontrar el elemento al
+                  retroceder desde "tour-notificaciones" al paso anterior. */}
               <Link
+                id="tour-publicar-home-mobile"
                 href="/registro-inmueble"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"

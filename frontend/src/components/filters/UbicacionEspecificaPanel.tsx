@@ -1,22 +1,26 @@
 import React from 'react';
-import { ChevronLeft } from 'lucide-react'; 
+import { ChevronLeft } from 'lucide-react';
 import { useFiltrosGeograficos } from '@/hooks/useFiltrosGeograficos';
 
 interface UbicacionEspecificaPanelProps {
   onClose: () => void;
+  onApply: (selecciones: any) => void;
 }
 
-export function UbicacionEspecificaPanel({ onClose }: UbicacionEspecificaPanelProps) {
+export function UbicacionEspecificaPanel({ onClose, onApply }: UbicacionEspecificaPanelProps) {
   const { selecciones, listas, handlers, bloqueos } = useFiltrosGeograficos();
+
+  // Clase unificada para todos los selects
+  const selectClasses = "w-full p-2.5 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg outline-none focus:border-[#d97706] focus:ring-1 focus:ring-[#d97706] disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors cursor-pointer";
 
   return (
     <div className="w-full h-full bg-white flex flex-col animate-in slide-in-from-right-4 duration-300">
       
       {/* ── HEADER ── */}
       <div className="flex items-center gap-3 p-4 border-b border-gray-100">
-        <button 
-          onClick={onClose} 
-          className="p-1 text-gray-400 hover:text-orange-500 hover:bg-orange-50 rounded-lg transition-colors"
+        <button
+          onClick={onClose}
+          className="p-1 text-gray-400 hover:text-[#d97706] hover:bg-orange-50 rounded-lg transition-colors"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -34,7 +38,7 @@ export function UbicacionEspecificaPanel({ onClose }: UbicacionEspecificaPanelPr
           <select
             value={selecciones.departamento}
             onChange={(e) => handlers.onDepartamentoChange(e.target.value === 'todos' ? 'todos' : Number(e.target.value))}
-            className="w-full p-2.5 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 cursor-pointer"
+            className={selectClasses}
           >
             {listas.departamentos.map((opt) => (
               <option key={opt.id} value={opt.id}>{opt.nombre}</option>
@@ -49,7 +53,7 @@ export function UbicacionEspecificaPanel({ onClose }: UbicacionEspecificaPanelPr
             value={selecciones.provincia}
             onChange={(e) => handlers.onProvinciaChange(e.target.value === 'todos' ? 'todos' : Number(e.target.value))}
             disabled={bloqueos.provinciaDisabled}
-            className="w-full p-2.5 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed"
+            className={selectClasses}
           >
             {listas.provincias.map((opt) => (
               <option key={opt.id} value={opt.id}>{opt.nombre}</option>
@@ -64,7 +68,7 @@ export function UbicacionEspecificaPanel({ onClose }: UbicacionEspecificaPanelPr
             value={selecciones.municipio}
             onChange={(e) => handlers.onMunicipioChange(e.target.value === 'todos' ? 'todos' : Number(e.target.value))}
             disabled={bloqueos.municipioDisabled}
-            className="w-full p-2.5 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed"
+            className={selectClasses}
           >
             {listas.municipios.map((opt) => (
               <option key={opt.id} value={opt.id}>{opt.nombre}</option>
@@ -79,7 +83,7 @@ export function UbicacionEspecificaPanel({ onClose }: UbicacionEspecificaPanelPr
             value={selecciones.zona}
             onChange={(e) => handlers.onZonaChange(e.target.value === 'todos' ? 'todos' : Number(e.target.value))}
             disabled={bloqueos.zonaDisabled}
-            className="w-full p-2.5 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed"
+            className={selectClasses}
           >
             {listas.zonas.map((opt) => (
               <option key={opt.id} value={opt.id}>{opt.nombre}</option>
@@ -94,7 +98,7 @@ export function UbicacionEspecificaPanel({ onClose }: UbicacionEspecificaPanelPr
             value={selecciones.barrio}
             onChange={(e) => handlers.onBarrioChange(e.target.value === 'todos' ? 'todos' : Number(e.target.value))}
             disabled={bloqueos.barrioDisabled}
-            className="w-full p-2.5 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed"
+            className={selectClasses}
           >
             {listas.barrios.map((opt) => (
               <option key={opt.id} value={opt.id}>{opt.nombre}</option>
@@ -106,15 +110,15 @@ export function UbicacionEspecificaPanel({ onClose }: UbicacionEspecificaPanelPr
 
       {/* ── FOOTER / BOTONES ── */}
       <div className="p-4 border-t border-gray-100 flex gap-3 bg-gray-50 mt-auto">
-        <button 
+        <button
           onClick={() => handlers.onDepartamentoChange('todos')}
-          className="px-4 py-2.5 text-xs font-bold text-gray-500 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 transition-all"
+          className="px-4 py-2.5 text-xs font-bold text-gray-500 bg-white border border-gray-200 rounded-lg hover:bg-gray-100 hover:text-stone-700 transition-all focus:outline-none"
         >
           Limpiar
         </button>
-        <button 
-          onClick={onClose} 
-          className="flex-1 py-2.5 text-sm font-bold text-white bg-orange-500 rounded-lg hover:bg-orange-600 active:scale-95 transition-all shadow-md shadow-orange-500/20"
+        <button
+          onClick={() => onApply(selecciones)}
+          className="flex-1 py-2.5 text-sm font-bold text-white bg-[#d97706] rounded-lg hover:bg-[#b95e00] active:scale-95 transition-all shadow-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#d97706]"
         >
           Aplicar
         </button>

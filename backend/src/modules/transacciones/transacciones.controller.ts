@@ -2,6 +2,7 @@ import type { Request, Response } from 'express'
 import { prisma } from '../../lib/prisma.client.js'
 import { crearTransaccion } from './servicios/transaccion.service.js'
 import { emitirComprobante } from './servicios/comprobanteService.js'
+import { suscripcionesService } from '../suscripciones/suscripciones.service.js'
 
 interface AuthRequest extends Request {
   user?: { id: number }
@@ -173,6 +174,17 @@ export const confirmarPago = async (req: Request, res: Response) => {
 
     if (transaccion.estado === 'COMPLETADO') {
       return res.status(409).json({ error: 'La transacción ya fue confirmada' })
+    }
+
+    const suscripcionVigente = await suscripcionesService.obtenerSuscripcionActiva(
+      transaccion.id_usuario
+    )
+    if (suscripcionVigente) {
+      const planVigente = suscripcionVigente.plan_suscripcion?.nombre_plan ?? 'activa'
+      const fechaFin = suscripcionVigente.fecha_fin.toISOString().slice(0, 10)
+      return res.status(409).json({
+        error: `El usuario ya tiene una suscripción ${planVigente} vigente hasta ${fechaFin}`,
+      })
     }
 
     const ahora = new Date()
