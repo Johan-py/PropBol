@@ -171,7 +171,20 @@ function esValido(coords: unknown): coords is [number, number][] {
 }
 
 // criterio 20: word-wrap; criterio 8: cursor pointer; criterio 23: tabindex + keydown→click
-function labelIcon(nombre: string, isSelected: boolean): L.DivIcon {
+function labelIcon(nombre: string, isSelected: boolean, zoom: number): L.DivIcon {
+  const maxChars = isSelected ? MAX_LABEL_CHARS_SELECTED : MAX_LABEL_CHARS
+  const nombreVisible = truncarNombreEtiqueta(nombre, maxChars)
+  const {
+    width,
+    height,
+    fontSize,
+    lineHeight,
+    paddingX,
+    paddingY,
+    maxCharsPorLinea
+  } = dimensionarEtiqueta(nombreVisible, zoom, isSelected)
+  const textoHtml = htmlEtiquetaConWrap(nombreVisible, maxCharsPorLinea)
+  const nombreCompletoEscapado = escaparHtml(nombre)
   const color = isSelected ? '#ea580c' : '#1a1a1a'
   const shadow = isSelected
     ? '0 0 4px rgba(255,255,255,0.9), 0 0 8px rgba(255,255,255,0.6)'
@@ -180,46 +193,189 @@ function labelIcon(nombre: string, isSelected: boolean): L.DivIcon {
   return L.divIcon({
     className: '',
     html: `<div
-      tabindex="0"
-      role="button"
-      aria-label="Zona ${nombre}"
-      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"
+      aria-hidden="true"
       style="
         background: transparent;
-        padding: 2px 4px;
-        font-size: 11.5px;
+        padding: ${paddingY}px ${paddingX}px;
+        font-size: ${fontSize}px;
+        line-height: ${lineHeight}px;
         font-weight: 700;
         font-family: 'Nunito', 'Quicksand', 'Inter', system-ui, sans-serif;
         color: ${color};
         letter-spacing: 0.04em;
-        max-width: 140px;
+        width: ${width}px;
+        max-width: ${width}px;
+        min-height: ${height}px;
         text-align: center;
+        overflow: hidden;
+        overflow-wrap: anywhere;
         word-break: break-word;
+        hyphens: auto;
         white-space: normal;
         cursor: pointer;
         text-shadow: ${shadow};
         outline: 2px solid transparent;
         outline-offset: 2px;
         user-select: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       ">
-      ${nombre}
+      <span title="${nombreCompletoEscapado}" aria-label="${nombreCompletoEscapado}" style="display:block;max-width:100%;white-space:normal;overflow-wrap:anywhere;word-break:break-word;">
+        ${textoHtml}
+      </span>
     </div>`,
-    iconSize: [140, 28],
-    iconAnchor: [70, 14]
+    iconSize: [width, height],
+    iconAnchor: [Math.round(width / 2), Math.round(height / 2)]
   })
+}
+
+function ZonaInteractiva({
+  zona,
+  selected,
+  zoom,
+  onZoneSelect,
+  onZoneCycle,
+}: {
+  zona: ZonaPredefinida
+  selected: boolean
+  zoom: number
+  onZoneSelect: (id: number | null) => void
+  onZoneCycle?: (direction: 1 | -1) => void
+}) {
+  const polygonRef = useRef<L.Polygon | null>(null)
+  const center = centroide(zona.coordenadas)
+
+  useEffect(() => {
+    const element = polygonRef.current?.getElement() as SVGPathElement | null
+    if (!element) return
+
+    element.setAttribute('tabindex', '0')
+    element.setAttribute('role', 'button')
+    element.setAttribute('aria-label', `Zona ${zona.nombre}`)
+    element.setAttribute('aria-pressed', String(selected))
+    element.style.cursor = 'pointer'
+    element.style.outline = 'none'
+    element.style.boxShadow = 'none'
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Tab') {
+        if (!onZoneCycle) return
+        event.preventDefault()
+        onZoneCycle(event.shiftKey ? -1 : 1)
+        return
+      }
+
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault()
+        onZoneSelect(selected ? null : zona.id)
+      }
+    }
+
+    element.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      element.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [selected, zona.nombre])
+
+  useEffect(() => {
+    if (!selected) return
+
+    const element = polygonRef.current?.getElement() as SVGPathElement | null
+    if (!element) return
+
+    requestAnimationFrame(() => {
+      element.focus({ preventScroll: true })
+    })
+  }, [selected])
+
+  return (
+    <Fragment>
+      <Polygon
+        ref={polygonRef}
+        positions={zona.coordenadas}
+        pathOptions={{
+          color: selected ? '#ea580c' : '#64748b',
+          weight: selected ? 2 : 1.8,
+          dashArray: selected ? '6,6' : undefined,
+          fillColor: selected ? '#ea580c' : '#94a3b8',
+          fillOpacity: selected ? 0.25 : 0.10,
+          lineJoin: 'round',
+          lineCap: 'round'
+        }}
+        bubblingMouseEvents={false as any}
+        eventHandlers={{
+          add: () => {
+            const element = polygonRef.current?.getElement() as SVGPathElement | null
+            if (!element) return
+
+            element.setAttribute('tabindex', '0')
+            element.setAttribute('role', 'button')
+            element.setAttribute('aria-label', `Zona ${zona.nombre}`)
+            element.setAttribute('aria-pressed', String(selected))
+          },
+          click: (e) => {
+            L.DomEvent.stopPropagation(e)
+            const element = polygonRef.current?.getElement() as SVGPathElement | null
+            element?.focus({ preventScroll: true })
+            onZoneSelect(selected ? null : zona.id)
+          },
+          mouseover: (e) => {
+            const layer = e.target as L.Path
+            const el = layer.getElement()
+
+            if (el) (el as HTMLElement).style.cursor = 'pointer'
+
+            if (!selected) {
+              layer.setStyle({
+                weight: 3,
+                fillOpacity: 0.13
+              })
+            }
+          },
+          mouseout: (e) => {
+            const layer = e.target as L.Path
+
+            if (!selected) {
+              layer.setStyle({
+                weight: 1.8,
+                fillOpacity: 0.10
+              })
+            }
+          }
+        }}
+      />
+
+      {(zoom >= MIN_ZOOM_LABELS || selected) && (
+        <Marker
+          position={center}
+          icon={labelIcon(zona.nombre, selected, zoom)}
+          interactive
+          keyboard={false}
+          zIndexOffset={-100}
+          eventHandlers={{
+            click: (e) => {
+              L.DomEvent.stopPropagation(e)
+              onZoneSelect(selected ? null : zona.id)
+            }
+          }}
+        />
+      )}
+    </Fragment>
+  )
 }
 
 interface Props {
   zonas: ZonaPredefinida[]
   selectedZoneId: number | null
   onZoneSelect: (id: number | null) => void
+  onZoneCycle?: (direction: 1 | -1) => void
 }
 
-export default function ZonasOverlay({ zonas, selectedZoneId, onZoneSelect }: Props) {
+export default function ZonasOverlay({ zonas, selectedZoneId, onZoneSelect, onZoneCycle }: Props) {
   const map = useMap()
   const [zoom, setZoom] = useState(() => map.getZoom())
-
-  // criterio 15: escuchar cambios de zoom
   useEffect(() => {
     const handler = () => setZoom(map.getZoom())
     map.on('zoomend', handler)
