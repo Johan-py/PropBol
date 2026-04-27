@@ -121,7 +121,7 @@ export default function ConsumoPage() {
       {/*Muestra el contador de publicaciones dinámicamente */}
       {isLogged && (
         <div className="bg-[#FFFBEB] border border-yellow-200 p-5 rounded-2xl mb-6 flex items-center gap-4 shadow-sm">
-          {/* 1. ICONO DE CAMPANA */}
+          {/* Icono de Campana */}
           <div className="bg-white p-3 rounded-xl shadow-inner">
             <span className="text-4xl">🔔</span> 
           </div>
