@@ -23,6 +23,9 @@ export default function NotificationSettingsPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [showMessage, setShowMessage] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [tieneCorreo, setTieneCorreo] = useState(true)
+  const [tieneTelefono, setTieneTelefono] = useState(false)
+  const [warning, setWarning] = useState<'email' | 'whatsapp' | null>(null)
 
   // Carga inicial desde la BD
   useEffect(() => {
@@ -32,18 +35,49 @@ export default function NotificationSettingsPage() {
       return
     }
 
-    fetch(`${API_URL}/api/perfil/usuario/preferencias-notificacion`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.ok && data.preferencias) {
-          setPreferences(data.preferencias)
-          setSavedPreferences(data.preferencias)
+    let mounted = true
+
+    // Hacer ambos fetch en paralelo
+    Promise.all([
+      fetch(`${API_URL}/api/perfil/usuario/preferencias-notificacion`, {
+        headers: { Authorization: `Bearer ${token}` }
+      }).then(res => res.json()),
+      fetch(`${API_URL}/api/perfil/usuario`, {
+        headers: { Authorization: `Bearer ${token}` }
+      }).then(res => res.json())
+    ])
+      .then(([dataPreferencias, dataPerfil]) => {
+        if (!mounted) return
+
+        // Teléfono viene del perfil directamente
+        const tieneTelefonoReal = dataPerfil?.perfil?.telefonos?.length > 0
+
+        setTieneCorreo(true) // correo siempre existe
+        setTieneTelefono(tieneTelefonoReal)
+
+        if (dataPreferencias.ok && dataPreferencias.preferencias) {
+          const whatsappFinal = dataPreferencias.preferencias.whatsapp && tieneTelefonoReal
+
+          setPreferences({
+            email: dataPreferencias.preferencias.email,
+            whatsapp: whatsappFinal
+          })
+          setSavedPreferences({
+            email: dataPreferencias.preferencias.email,
+            whatsapp: whatsappFinal
+          })
+
+          if (dataPreferencias.preferencias.whatsapp && !tieneTelefonoReal) {
+            setWarning('whatsapp')
+          }
         }
       })
       .catch(() => setErrorMessage('No se pudieron cargar tus preferencias.'))
-      .finally(() => setIsLoading(false))
+      .finally(() => {
+        if (mounted) setIsLoading(false)
+      })
+
+    return () => { mounted = false }
   }, [])
 
   const hasChanges = useMemo(
@@ -54,6 +88,12 @@ export default function NotificationSettingsPage() {
   )
 
   const togglePreference = (key: keyof NotificationPreferences) => {
+    setWarning(null)
+
+    if (key === 'whatsapp' && !preferences.whatsapp && !tieneTelefono) {
+      setWarning('whatsapp')
+      return
+    }
     setPreferences((prev) => ({ ...prev, [key]: !prev[key] }))
     setShowMessage(false)
     setErrorMessage(null)
@@ -140,6 +180,24 @@ export default function NotificationSettingsPage() {
           </div>
 
           <div className="mt-16 border-t border-stone-200 pt-6">
+            {warning === 'whatsapp' && (
+              <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                ⚠️ No tienes un número de teléfono registrado.{' '}
+                <a href="/profile" className="font-semibold underline">
+                  Regístralo en tu perfil
+                </a>{' '}
+                para activar notificaciones por WhatsApp.
+              </div>
+            )}
+            {warning === 'email' && (
+              <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                ⚠️ No tienes un correo válido registrado.{' '}
+                <a href="/profile" className="font-semibold underline">
+                  Actualízalo en tu perfil
+                </a>{' '}
+                para activar notificaciones por Email.
+              </div>
+            )}
             {showMessage && (
               <div className="mb-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
                 Preferencias guardadas correctamente.
