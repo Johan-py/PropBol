@@ -225,6 +225,7 @@ interface MapViewProps {
   zonas?: ZonaPredefinida[]
   selectedZoneId?: number | null
   onZoneSelect?: (id: number | null) => void
+  onZoneCycle?: (direction: 1 | -1) => void
   center?: [number, number]
   zoom?: number
   selectedId?: string | null
@@ -290,7 +291,8 @@ export default function MapView({
   zonas = [],
   selectedZoneId = null,
   onClusterDissolve,
-  onZoneSelect
+  onZoneSelect,
+  onZoneCycle
 }: MapViewProps) {
   const [isMounted, setIsMounted] = useState(false)
   const [hoveredPinId, setHoveredPinId] = useState<string | null>(null)
@@ -367,6 +369,7 @@ export default function MapView({
           zonas={zonas}
           selectedZoneId={selectedZoneId}
           onZoneSelect={onZoneSelect ?? (() => {})}
+          onZoneCycle={onZoneCycle}
         />
 
         {/* --- INICIO CÓDIGO HU8 --- */}
