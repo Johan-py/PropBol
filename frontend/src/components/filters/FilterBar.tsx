@@ -45,10 +45,9 @@ interface FilterBarProps {
 type LocationValue =
   | string
   | {
-    nombre?: string
-    target?: {
-      value?: string
-    }
+    nombre: string
+    lat?: number
+    lng?: number
   }
 
 // Botón Mock
@@ -111,6 +110,9 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
   const [tipoInmueble, setTipoInmueble] = useState<string>('Cualquier tipo')
   const [ubicacionTexto, setUbicacionTexto] = useState('')
   const [isZonaOpen, setIsZonaOpen] = useState(false)
+
+  //Estado para almacenar las coordenadas temporalmente
+  const [coords, setCoords] = useState<{ lat?: number, lng?: number }>({})
 
   useEffect(() => {
     const saved = sessionStorage.getItem('propbol_global_filters')
@@ -195,11 +197,14 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     })
     updateFilters(nuevosFiltros)
 
-    const params = new URLSearchParams(searchParams.toString())
+    const params = new URLSearchParams(searchParams?.toString() || '')
     // Limpiamos solo los filtros que maneja esta barra superior para evitar duplicados
     params.delete('modoInmueble')
     params.delete('tipoInmueble')
     params.delete('query')
+    params.delete('lat')
+    params.delete('lng')
+    params.delete('radius')
     try {
       const merged = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}') as {
         locationId?: string | number
@@ -214,12 +219,27 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     modosSeleccionados.forEach((modo) => params.append('modoInmueble', modo))
     if (tipoFinal) params.set('tipoInmueble', tipoFinal)
     if (ubicacionTexto.trim() !== '') params.set('query', ubicacionTexto.trim())
+    if (coords.lat && coords.lng) {
+      params.set('lat', coords.lat.toString())
+      params.set('lng', coords.lng.toString())
+      params.set('radius', '1') // Radio de 1km por defecto
+    }
 
     const queryString = params.toString()
     const targetUrl = `/busqueda_mapa${queryString ? `?${queryString}` : ''}`
 
     router.push(targetUrl)
     if (onSearch) onSearch(nuevosFiltros)
+  }
+  // Helper para manejar el cambio de location de forma uniforme
+  const handleLocationChange = (val: LocationValue) => {
+    if (typeof val === 'object' && val !== null) {
+      setUbicacionTexto(val.nombre)
+      setCoords({ lat: val.lat, lng: val.lng })
+    } else {
+      setUbicacionTexto(val as string)
+      setCoords({}) // Si es solo texto del historial, borramos las coordenadas
+    }
   }
 
   // 🚀 FIX Z-INDEX MASIVO: Agregamos z-[99999] y !overflow-visible para aplastar al mapa
@@ -257,10 +277,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
             <div className="flex-1 min-w-0 relative z-[90] !overflow-visible">
               <LocationSearch
                 value={ubicacionTexto}
-                onChange={(val: LocationValue) => {
-                  const text = typeof val === 'string' ? val : val?.nombre || val?.target?.value || ''
-                  setUbicacionTexto(text)
-                }}
+                onChange={handleLocationChange}
               />
             </div>
 
@@ -402,10 +419,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
           <div className="relative z-[90] !overflow-visible w-full flex-1">
             <LocationSearch
               value={ubicacionTexto}
-              onChange={(val: LocationValue) => {
-                const text = typeof val === 'string' ? val : val?.nombre || val?.target?.value || ''
-                setUbicacionTexto(text)
-              }}
+              onChange={handleLocationChange}
             />
           </div>
           <div className="w-full md:w-auto flex justify-end relative z-10">
