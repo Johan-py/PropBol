@@ -39,7 +39,7 @@ export const propertiesRepository = {
     const where: any = { estado: 'ACTIVO' }
 
     // 1. Filtro de Categoría / Tipo Inmueble (Soporta múltiples selecciones)
-    const CATEGORIAS_VALIDAS = ['CASA', 'DEPARTAMENTO', 'TERRENO', 'OFICINA']
+    const CATEGORIAS_VALIDAS = ['CASA', 'DEPARTAMENTO', 'TERRENO', 'OFICINA', 'CUARTO', 'TERRENO_MORTUORIO']
     const rawTipo = filtros.tipoInmueble || filtros.categoria
     if (rawTipo) {
       const rawArr = (Array.isArray(rawTipo) ? rawTipo : [rawTipo])
