@@ -112,10 +112,13 @@ export default function VistasRecientesPage() {
 
                     <div className="flex gap-3 items-center">
                         <div className="relative">
+                            {/* BUG FIX: Atributos min y max añadidos para habilitar navegación libre de años */}
                             <input
                                 type="date"
                                 ref={dateInputRef}
                                 onChange={handleDateFilter}
+                                min="2000-01-01"
+                                max="2100-12-31"
                                 className="absolute opacity-0 pointer-events-none"
                             />
                             <button
@@ -136,7 +139,6 @@ export default function VistasRecientesPage() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {/* BUG FIX: Lógica de mensajes diferenciados */}
                     {properties.length === 0 ? (
                         <div className="col-span-full text-center py-20 text-gray-400 font-medium">
                             Aún no has visto ninguna propiedad
