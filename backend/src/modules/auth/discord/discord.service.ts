@@ -15,6 +15,13 @@ import {
   type DiscordUserInfo,
 } from "./discord.types.js";
 
+import {
+  createDiscordLinkForUser,
+  findDiscordLinkByExternalId,
+  findDiscordLinkByUserId,
+  findUserByDiscordSessionToken,
+} from "./discord.repository.js";
+
 const DISCORD_TOKEN_URL = "https://discord.com/api/oauth2/token";
 const DISCORD_USERINFO_URL = "https://discord.com/api/users/@me";
 const SESSION_DURATION_MS = 60 * 60 * 1000;
@@ -86,6 +93,7 @@ const buildDiscordSessionResponse = async (
     correo: string;
     nombre: string;
     apellido: string;
+    avatar?: string | null;
   },
   message: string,
 ): Promise<DiscordLoginSuccess> => {
@@ -111,6 +119,7 @@ const buildDiscordSessionResponse = async (
       correo: user.correo,
       nombre: user.nombre,
       apellido: user.apellido,
+      avatar: user.avatar,
     },
   };
 };
@@ -226,4 +235,100 @@ export const registerWithDiscordCodeService = async (
   code: string,
 ): Promise<DiscordLoginSuccess> => {
   return await authenticateWithDiscord(code, "register");
+};
+
+export type DiscordLinkSuccess = {
+  message: string;
+  provider: "discord";
+  linkedEmail: string | null;
+};
+
+export const linkDiscordToCurrentUserByCodeService = async (
+  sessionToken: string,
+  code: string,
+): Promise<DiscordLinkSuccess> => {
+  if (!sessionToken?.trim()) {
+    throw new DiscordAuthError(
+      "No se encontró la sesión activa para vincular Discord.",
+      "DISCORD_AUTH_FAILED",
+      401,
+    );
+  }
+
+  if (!code?.trim()) {
+    throw new DiscordAuthError(
+      "Discord no devolvió un código válido.",
+      "DISCORD_AUTH_FAILED",
+      400,
+    );
+  }
+
+  const session = await findUserByDiscordSessionToken(sessionToken);
+
+  if (!session?.usuario) {
+    throw new DiscordAuthError(
+      "Tu sesión ya no es válida. Vuelve a iniciar sesión en PropBol.",
+      "DISCORD_AUTH_FAILED",
+      401,
+    );
+  }
+
+  const tokenData = await exchangeCodeForTokens(code);
+  const discordUser = await getDiscordUserInfo(
+    tokenData.access_token as string,
+  );
+
+  const discordId = discordUser.id?.trim();
+  const correoProveedor = discordUser.email?.trim().toLowerCase() ?? null;
+
+  if (!discordId) {
+    throw new DiscordAuthError(
+      "No se pudo obtener el identificador de Discord.",
+      "DISCORD_AUTH_FAILED",
+      401,
+    );
+  }
+
+  const existingLinkByExternalId = await findDiscordLinkByExternalId(discordId);
+
+  if (
+    existingLinkByExternalId &&
+    existingLinkByExternalId.usuarioId !== session.usuario.id
+  ) {
+    throw new DiscordAuthError(
+      "Esta cuenta de Discord ya está vinculada a otro usuario.",
+      "DISCORD_AUTH_FAILED",
+      409,
+    );
+  }
+
+  const existingLinkByUser = await findDiscordLinkByUserId(session.usuario.id);
+
+  if (existingLinkByUser) {
+    if (existingLinkByUser.idExterno === discordId) {
+      return {
+        message: "Tu cuenta de Discord ya estaba vinculada.",
+        provider: "discord",
+        linkedEmail: existingLinkByUser.correoProveedor ?? correoProveedor,
+      };
+    }
+
+    throw new DiscordAuthError(
+      "Tu cuenta ya tiene otra cuenta de Discord vinculada.",
+      "DISCORD_AUTH_FAILED",
+      409,
+    );
+  }
+
+  await createDiscordLinkForUser({
+    usuarioId: session.usuario.id,
+    discordId,
+    correoProveedor,
+  });
+
+  return {
+    message: "Discord fue vinculado correctamente.",
+    provider: "discord",
+    linkedEmail: correoProveedor,
+  };
 };

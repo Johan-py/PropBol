@@ -3,6 +3,10 @@ import {
   createSession,
   createUser,
   findUserByCorreo,
+  createSocialLink,
+  findSocialLinkByProviderAndExternalId,
+  findSocialLinkByUserAndProvider,
+  findUserByActiveSessionTokenForSocialLink,
 } from "../auth.repository.js";
 
 type CreateDiscordUserInput = {
@@ -46,14 +50,11 @@ export const createDiscordUser = async (
     password: data.password,
   });
 
-  await prisma.autenticacion_social.create({
-    data: {
-      usuarioId: user.id,
-      proveedor: "discord",
-      idExterno: discordId,
-      correoProveedor,
-      activo: true,
-    },
+  await createSocialLink({
+    usuarioId: user.id,
+    proveedor: "discord",
+    idExterno: discordId,
+    correoProveedor,
   });
 
   return user;
@@ -65,14 +66,11 @@ export const linkDiscordToUser = async (
   discordId: string,
   correoProveedor: string,
 ) => {
-  return await prisma.autenticacion_social.create({
-    data: {
-      usuarioId,
-      proveedor: "discord",
-      idExterno: discordId,
-      correoProveedor,
-      activo: true,
-    },
+  return await createSocialLink({
+    usuarioId,
+    proveedor: "discord",
+    idExterno: discordId,
+    correoProveedor,
   });
 };
 
@@ -90,4 +88,33 @@ export const createDiscordSession = async ({
     usuarioId,
     fechaExpiracion,
   });
+};
+
+export const findDiscordLinkByExternalId = async (discordId: string) => {
+  return await findSocialLinkByProviderAndExternalId("discord", discordId);
+};
+
+export const findDiscordLinkByUserId = async (usuarioId: number) => {
+  return await findSocialLinkByUserAndProvider(usuarioId, "discord");
+};
+
+export const createDiscordLinkForUser = async ({
+  usuarioId,
+  discordId,
+  correoProveedor,
+}: {
+  usuarioId: number;
+  discordId: string;
+  correoProveedor?: string | null;
+}) => {
+  return await createSocialLink({
+    usuarioId,
+    proveedor: "discord",
+    idExterno: discordId,
+    correoProveedor,
+  });
+};
+
+export const findUserByDiscordSessionToken = async (sessionToken: string) => {
+  return await findUserByActiveSessionTokenForSocialLink(sessionToken);
 };

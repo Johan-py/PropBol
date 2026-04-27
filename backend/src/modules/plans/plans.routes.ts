@@ -1,9 +1,24 @@
-import { Router } from "express";
-import { verificarToken } from "../../middleware/auth.js";
-import { getPlanes } from "./plans.controller.js";
+import { Router } from 'express'
+import { verificarToken } from '../../middleware/auth.js'
+import { getPlanes } from './plans.controller.js'
+import { calcularPrecio } from './priceCalculator.controller.js'
+import {
+  crearOrdenCobro,
+  listarOrdenes,
+  cancelarOrden,
+  cambiarPlan
+} from './ordenCobro.controller.js'
 
-const router = Router();
+const router = Router()
 
-router.get("/membership-plans", verificarToken, getPlanes);
+// HU-01
+router.get('/membership-plans', verificarToken, getPlanes)
 
-export default router;
+// HU-07
+router.post('/calcular-precio', verificarToken, calcularPrecio)
+router.post('/crear-orden', verificarToken, crearOrdenCobro)
+router.get('/mis-ordenes', verificarToken, listarOrdenes)
+router.delete('/cancelar-orden/:id', verificarToken, cancelarOrden)
+router.put('/cambiar-plan', verificarToken, cambiarPlan)
+
+export default router
