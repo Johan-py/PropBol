@@ -72,7 +72,7 @@ export function useProperties(): UsePropertiesResult {
               );
             })
             .map((item: RawPropertyItem) => {
-              const ubicacion = item.ubicacion ?? item.ubicacion_inmueble;
+              const ubicacion = (item.ubicacion ?? item.ubicacion_inmueble)!;
               const publicaciones =
                 item.publicaciones ?? item.publicacion ?? [];
               const basePrice = Number(item.precio);
