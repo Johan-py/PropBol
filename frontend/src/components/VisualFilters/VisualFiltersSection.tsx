@@ -52,7 +52,7 @@ interface BackendResponse {
 interface FilterData {
   nombre: string;
   total: number;
-    previews?: Array<{ imagen: string; titulo: string }>;
+  previews?: Array<{ imagen: string; titulo: string }>;
 
 }
 
@@ -64,7 +64,7 @@ function mergeDepartamentos(
   base: string[],
   datos: BackendItem[]
 ): FilterData[] {
-  return base.map((dept) => {
+  const result = base.map((dept) => {
     const found = datos.find(
       (d) => normalizeName(d.name) === normalizeName(dept)
     );
@@ -74,6 +74,9 @@ function mergeDepartamentos(
       previews: found?.previews ?? [],
     };
   });
+
+  // Ordenar de mayor a menor para mostrar primero las ciudades con más inmuebles
+  return result.sort((a, b) => b.total - a.total);
 }
 
 export default function VisualFiltersSection() {
@@ -111,7 +114,7 @@ export default function VisualFiltersSection() {
             total: found?.count ?? 0,
           };
         });
-        setTipos(tiposMapped);
+        setTipos(tiposMapped.sort((a, b) => b.total - a.total));
 
       } catch (err) {
         console.warn("VisualFiltersSection: backend no disponible.", err);
@@ -162,7 +165,7 @@ export default function VisualFiltersSection() {
     count: item.total,
     filterParam: item.nombre,
     previews: item.previews ?? [],
-  }));
+  })).sort((a, b) => b.count - a.count);
 
   const ventaItems = ventas.map((item) => ({
     image: getCityImage(item.nombre),
@@ -172,17 +175,17 @@ export default function VisualFiltersSection() {
       : "Sin propiedades",
     count: item.total,
     filterParam: item.nombre,
-    previews: item.previews ?? [], 
-  }));
+    previews: item.previews ?? [],
+  })).sort((a, b) => b.count - a.count);
 
   const tipoItems = tipos.map((item) => ({
     key: item.nombre.toLowerCase().replace(/\s+/g, ""),
     label: item.nombre,
     count: item.total,
-  }));
+  })).sort((a, b) => b.count - a.count);
 
   return (
-    <section className="w-full px-4 md:px-8 py-8 flex justify-center">
+    <section id="tour-filtros-visuales" className="w-full px-4 md:px-8 py-8 flex justify-center">
       <div className="w-full max-w-[1100px]">
         <PropertyCarousel title="Alquileres" items={alquilerItems} category="alquiler" />
         <PropertyCarousel title="En Venta" items={ventaItems} category="venta" />
