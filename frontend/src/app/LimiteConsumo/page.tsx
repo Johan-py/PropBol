@@ -159,9 +159,9 @@ export default function ConsumoPage() {
           {/* DERECHA: LA BARRA Y SUS METOS */}
           <div className="flex-1 pb-2">
             <div className="flex justify-between text-[10px] font-black mb-2 tracking-widest">
-              <span className="opacity-40">0 USADAS</span>
-              <span className="text-orange-400">{porcentaje}% UTILIZADO</span>
-              <span className="opacity-40">LÍMITE: {data.limite}</span>
+              <span className="text-xl opacity-70">0 USADAS</span>
+              <span className="text-xl text-orange-400">{porcentaje}% UTILIZADO</span>
+              <span className="text-xl">LÍMITE: {data.limite}</span>
             </div>
             
             {/* BARRA DE PROGRESO */}
