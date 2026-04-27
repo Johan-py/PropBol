@@ -25,6 +25,10 @@ export interface FiltrosBusqueda {
   banosMin?: number
   banosMax?: number
   banoCompartido?: boolean
+
+  lat?: number
+  lng?: number
+  radius?: number
 }
 
 // Helper para limpiar las variaciones de Anticrético
