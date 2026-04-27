@@ -91,7 +91,7 @@ export default function ConsumoPage() {
 
   return (
       <div className="min-h-screen bg-gray-100 p-6">
-        
+
         {/* HEADER */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-6 gap-4">
 
@@ -170,7 +170,7 @@ export default function ConsumoPage() {
               <span className="text-xl">LÍMITE: {data.limite}</span>
             </div>
             
-            {/* BARRA DE PROGRESO */}
+            {/* Barra de Progreso */}
             <div className="w-full bg-white/40 rounded-full h-6 overflow-hidden backdrop-blur-sm">
               <div
                 className={`h-full rounded-full transition-all duration-1000 ${colorBarra}`}
