@@ -141,13 +141,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       tipoMap[tipoInmueble] ||
       (tipoInmueble !== 'Cualquier tipo' ? tipoInmueble.toUpperCase() : null)
 
-    const esTerreno = tipoFinal === 'TERRENO' || tipoFinal === 'TERRENO_MORTUORIO';
-
-    if (esTerreno) {
-      setModosSeleccionados(['VENTA']);
-    }
-
-    const modosFinales = esTerreno ? ['VENTA'] : modosSeleccionados;
+    const modosFinales = modosSeleccionados;
 
     const nuevosFiltros = {
       tipoInmueble: tipoFinal ? [tipoFinal] : [],
