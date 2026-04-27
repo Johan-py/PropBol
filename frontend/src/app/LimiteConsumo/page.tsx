@@ -99,6 +99,7 @@ export default function ConsumoPage() {
           <p className="text-xl md:text-3xl font-extrabold text-stone-500 mt-2">Monitorea tus publicaciones activas y el límite de tu plan</p>
         </div>
         <Link href="/cobros-suscripciones">
+              {/*Botón para redirigir a Planes de Suscripción */}
               <button className="mt-6 group flex items-center gap-3 bg-gradient-to-r from-black to-orange-400 text-white px-10 py-5 text-2xl font-extrabold rounded-lg hover:bg-orange-900 transition">
             Ver planes de ampliación
             <span className="text-4x1 transition-transform group-hover:translate-x-2">→</span>
