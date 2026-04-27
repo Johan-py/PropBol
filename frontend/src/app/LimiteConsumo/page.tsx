@@ -155,7 +155,7 @@ export default function ConsumoPage() {
               <span className="text-8xl font-black">{data.usadas}</span>
               <span className="text-5xl opacity-30 font-light">/ {data.limite}</span>
             </div>
-            <p className="text-sm opacity-40 mt-1 font-medium">Plan Pro • Límite mensual</p>
+            <p className="text-xl opacity-50 mt-1 font-medium">Plan Pro • Límite mensual</p>
           </div>
 
           {/* DERECHA: LA BARRA Y SUS METOS */}
