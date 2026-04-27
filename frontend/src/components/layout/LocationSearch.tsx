@@ -62,67 +62,58 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     }
   }, [isOpen])
 
-  // --- PERSISTENCIA: Carga Inicial Sincronizada ---
+  // --- PERSISTENCIA: Carga y sincronización con sesión ---
   useEffect(() => {
-    const initHistory = async () => {
-      // 1. Cargar local primero para rapidez visual
-      const saved = localStorage.getItem('searchHistory')
-      if (saved) setHistory(JSON.parse(saved))
-
-      // 2. Si el usuario está autenticado, sincronizar con el servidor
+    const syncHistory = async () => {
       const token = localStorage.getItem("token")
-      if (token) {
-        try {
-          const res = await fetch(`${API_BASE}/api/perfil/historial-busqueda`, {
-            headers: { 
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
-          })
-          if (res.ok) {
-            const data = await res.json()
-            // Asumiendo que el backend devuelve un array de strings o de objetos {termino: string}
-            const remoteHistory = data.map((h: any) => typeof h === 'string' ? h : h.termino)
-            
-            // SINCRONIZACIÓN: Guardar en el backend las búsquedas locales que no estén en el remoto
-            const localHistory = saved ? JSON.parse(saved) : [];
-            const missingInRemote = localHistory.filter((item: string) => !remoteHistory.includes(item));
-            
-            if (missingInRemote.length > 0) {
-              // Enviamos al backend desde la más antigua a la más nueva para mantener el orden
-              for (const item of [...missingInRemote].reverse()) {
-                try {
-                  await fetch(`${API_BASE}/api/perfil/historial-busqueda`, {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                      Authorization: `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ termino: item })
-                  });
-                } catch (e) {
-                  console.error("Error sincronizando historial local:", e);
-                }
-              }
-              // Unimos la historia local que no estaba y la remota, y guardamos hasta 20 items
-              const newHistory = [...missingInRemote, ...remoteHistory].slice(0, 20);
-              setHistory(newHistory);
-              localStorage.setItem('searchHistory', JSON.stringify(newHistory));
-            } else {
-              setHistory(remoteHistory)
-              localStorage.setItem('searchHistory', JSON.stringify(remoteHistory))
-            }
-          } else if (res.status === 401) {
-            console.warn("Sesión expirada o token inválido para historial")
-            setIsAuth(false)
+
+      // Si no hay token (visitor o cierre de sesión), limpiar historial
+      if (!token) {
+        setHistory([])
+        localStorage.removeItem('searchHistory')
+        setIsAuth(false)
+        return
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/perfil/historial-busqueda`, {
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
           }
-        } catch (error) {
-          console.error("Error cargando historial remoto:", error)
+        })
+        if (res.ok) {
+          const data = await res.json()
+          const remoteHistory = data
+            .map((h: any) => typeof h === 'string' ? h : h.termino)
+            .filter((item: string, index: number, self: string[]) => self.indexOf(item) === index)
+          
+          setHistory(remoteHistory)
+          localStorage.setItem('searchHistory', JSON.stringify(remoteHistory))
+          setIsAuth(true)
+        } else if (res.status === 401 || res.status === 403) {
+          // Token inválido: limpiar todo
+          setHistory([])
+          localStorage.removeItem('searchHistory')
+          setIsAuth(false)
         }
+      } catch (error) {
+        console.error("Error cargando historial remoto:", error)
       }
     }
-    initHistory()
-  }, [isAuth]) // Depende de isAuth para recargar cuando el usuario inicia sesión
+
+    // Ejecutar al montar y cada vez que cambie la sesión
+    syncHistory()
+
+    const handleSessionChange = () => void syncHistory()
+    window.addEventListener('propbol:session-changed', handleSessionChange)
+    window.addEventListener('propbol:login', handleSessionChange)
+
+    return () => {
+      window.removeEventListener('propbol:session-changed', handleSessionChange)
+      window.removeEventListener('propbol:login', handleSessionChange)
+    }
+  }, []) // Solo se monta una vez; los eventos manejan re-sincronización
 
   // --- PERSISTENCIA: Guardar ---
   const saveToHistory = async (item: string) => {
@@ -229,24 +220,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     return () => clearTimeout(timer)
   }, [value, isSelected])
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem("token")
-      if (!token) {
-        setIsAuth(false)
-        return
-      }
-      try {
-        const res = await fetch(`${API_BASE}/api/auth/me`, {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-        setIsAuth(res.ok)
-      } catch (error) {
-        setIsAuth(false)
-      }
-    }
-    checkAuth()
-  }, [])
+  // isAuth se gestiona directamente en syncHistory arriba
 
   return (
     <div className="w-full relative" ref={containerRef}>
