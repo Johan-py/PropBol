@@ -8,7 +8,7 @@ import { useState } from 'react'
 type PropsTarjeta = {
   imagen?: string
   estado: string
-  precio: string
+  precioFormateado: string
   descripcion: string
   camas: number
   banos: number
@@ -21,7 +21,7 @@ const COLOR_GRIS_PLACEHOLDER = 'bg-gray-200'
 export default function PropertyCard({
   imagen,
   estado,
-  precio,
+  precioFormateado,
   descripcion,
   camas,
   banos,
@@ -70,7 +70,7 @@ export default function PropertyCard({
             isHovered ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl'
           }`}
         >
-          {precio}
+          {precioFormateado}
         </h2>
 
         <p className="text-sm text-gray-900 line-clamp-2 font-medium leading-snug">{descripcion}</p>

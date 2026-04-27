@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import InfoPropiedad from "./InfoPropiedad";
 import GaleriaResumen from "./GaleriaResumen";
 import AceptacionPublicacion from "./AceptacionPublicacion";
@@ -66,6 +67,17 @@ interface ResumenFinalApiResponse {
   message?: string;
 }
 
+interface ConfirmarPublicacionApiResponse {
+  ok: boolean;
+  message?: string;
+  data?: {
+    id: number;
+    estado: string | null;
+    fechaPublicacion: string | null;
+    multimediaTotal: number;
+  };
+}
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
 
 function getAuthToken(): string | null {
@@ -124,11 +136,54 @@ async function obtenerResumenFinal(
   return payload.data;
 }
 
+async function confirmarPublicacion(
+  publicacionId: number
+): Promise<ConfirmarPublicacionApiResponse> {
+  const token = getAuthToken();
+
+  if (!publicacionId || Number.isNaN(publicacionId)) {
+    throw new Error("No se recibió un id válido de publicación");
+  }
+
+  if (!token) {
+    throw new Error("No se encontró el token de autenticación");
+  }
+
+  if (!API_BASE_URL) {
+    throw new Error(
+      "La variable NEXT_PUBLIC_API_URL no está configurada en el frontend"
+    );
+  }
+
+  const response = await fetch(
+    `${API_BASE_URL}/api/publicaciones/${publicacionId}/confirmar`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const payload: ConfirmarPublicacionApiResponse = await response.json();
+
+  if (!response.ok || !payload.ok) {
+    throw new Error(payload.message ?? "No se pudo confirmar la publicación");
+  }
+
+  return payload;
+}
+
 export default function ResumenPanel({ publicacionId }: Props) {
+  const router = useRouter();
+
   const [aceptado, setAceptado] = useState(false);
   const [data, setData] = useState<ResumenFinalData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [mostrarModalExito, setMostrarModalExito] = useState(false);
+  const [confirmando, setConfirmando] = useState(false);
 
   useEffect(() => {
     if (!publicacionId) {
@@ -144,7 +199,9 @@ export default function ResumenPanel({ publicacionId }: Props) {
         const resumen = await obtenerResumenFinal(publicacionId);
         setData(resumen);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Error al cargar resumen");
+        setError(
+          err instanceof Error ? err.message : "Error al cargar resumen"
+        );
       } finally {
         setLoading(false);
       }
@@ -152,6 +209,32 @@ export default function ResumenPanel({ publicacionId }: Props) {
 
     cargarResumen();
   }, [publicacionId]);
+
+  const abrirModalExito = async () => {
+    if (!aceptado || !publicacionId || confirmando) return;
+
+    try {
+      setConfirmando(true);
+      setError("");
+      await confirmarPublicacion(publicacionId);
+      setMostrarModalExito(true);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Error al confirmar publicación"
+      );
+    } finally {
+      setConfirmando(false);
+    }
+  };
+
+  const cerrarModalExito = () => {
+    setMostrarModalExito(false);
+  };
+
+  const irAlHome = () => {
+    setMostrarModalExito(false);
+    router.push("/");
+  };
 
   if (loading) {
     return (
@@ -177,66 +260,109 @@ export default function ResumenPanel({ publicacionId }: Props) {
   if (!data) return null;
 
   return (
-    <section className="mx-auto max-w-7xl rounded-[28px] bg-white p-5 shadow-sm md:p-8">
-      <div className="mb-4 text-sm text-gray-500">
-        Home <span className="mx-2">{">"}</span> Publicar propiedades{" "}
-        <span className="mx-2">{">"}</span>
-        <span className="font-medium text-gray-700">
+    <>
+      <section className="mx-auto max-w-7xl rounded-[28px] bg-white p-5 shadow-sm md:p-8">
+        <div className="mb-4 text-sm text-gray-500">
+          Home <span className="mx-2">{">"}</span> Publicar propiedades{" "}
+          <span className="mx-2">{">"}</span>
+          <span className="font-medium text-gray-700">
+            Ver resumen final de la propiedad antes de confirmar
+          </span>
+        </div>
+
+        <h1 className="mb-5 text-2xl font-bold text-[#0f172a] md:text-5xl">
           Ver resumen final de la propiedad antes de confirmar
-        </span>
-      </div>
+        </h1>
 
-      <h1 className="mb-5 text-2xl font-bold text-[#0f172a] md:text-5xl">
-        Ver resumen final de la propiedad antes de confirmar
-      </h1>
+        <div className="mb-8 h-1 w-full rounded-full bg-orange-500" />
 
-      <div className="mb-8 h-1 w-full rounded-full bg-orange-500" />
+        <div className="rounded-[24px] border border-gray-200 bg-white p-4 md:p-6">
+          <h2 className="mb-6 text-2xl font-bold text-[#0f172a]">
+            Resumen de la Propiedad
+          </h2>
 
-      <div className="rounded-[24px] border border-gray-200 bg-white p-4 md:p-6">
-        <h2 className="mb-6 text-2xl font-bold text-[#0f172a]">
-          Resumen de la Propiedad
-        </h2>
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-stretch">
+            <div className="flex flex-col gap-6">
+              <InfoPropiedad data={data} />
+              <ParametrosPersonalizados
+                parametros={data.parametrosPersonalizados}
+              />
+            </div>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-stretch">
-          <div className="flex flex-col gap-6">
-            <InfoPropiedad data={data} />
-            <ParametrosPersonalizados
-              parametros={data.parametrosPersonalizados}
-            />
+            <GaleriaResumen multimedia={data.multimedia} />
           </div>
 
-          <GaleriaResumen multimedia={data.multimedia} />
-        </div>
+          <div className="mt-6 flex justify-center">
+            <div className="w-full max-w-[560px]">
+              <AceptacionPublicacion
+                aceptado={aceptado}
+                setAceptado={setAceptado}
+              />
+            </div>
+          </div>
 
-        <div className="mt-6 flex justify-center">
-          <div className="w-full max-w-[560px]">
-            <AceptacionPublicacion
-              aceptado={aceptado}
-              setAceptado={setAceptado}
-            />
+          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
+            <button
+              type="button"
+              onClick={() => window.history.back()}
+              disabled={confirmando}
+              className="rounded-xl border border-gray-400 bg-white px-6 py-4 text-lg font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              Volver
+            </button>
+
+            <button
+              type="button"
+              onClick={abrirModalExito}
+              disabled={!aceptado || confirmando}
+              className={`rounded-xl px-6 py-4 text-lg font-semibold text-white transition ${
+                aceptado && !confirmando
+                  ? "bg-orange-500 hover:bg-orange-600"
+                  : "cursor-not-allowed bg-orange-300"
+              }`}
+            >
+              {confirmando ? "Publicando..." : "Confirmar y Publicar"}
+            </button>
           </div>
         </div>
+      </section>
 
-        <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
-          <button
-            onClick={() => window.history.back()}
-            className="rounded-xl border border-gray-400 bg-white px-6 py-4 text-lg font-medium text-gray-700 transition hover:bg-gray-50"
-          >
-            Volver
-          </button>
+      {mostrarModalExito && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 px-4">
+          <div className="relative w-full max-w-[700px] rounded-[28px] bg-white px-6 py-10 shadow-2xl md:px-10 md:py-12">
+            <button
+              type="button"
+              onClick={cerrarModalExito}
+              className="absolute right-6 top-5 text-[40px] leading-none text-gray-400 transition hover:text-gray-600"
+              aria-label="Cerrar modal"
+            >
+              ×
+            </button>
 
-          <button
-            disabled={!aceptado}
-            className={`rounded-xl px-6 py-4 text-lg font-semibold text-white transition ${
-              aceptado
-                ? "bg-orange-500 hover:bg-orange-600"
-                : "cursor-not-allowed bg-orange-300"
-            }`}
-          >
-            Confirmar y Publicar
-          </button>
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-7 flex h-[108px] w-[108px] items-center justify-center rounded-full bg-[#f58600] text-[64px] font-bold text-white">
+                ✓
+              </div>
+
+              <h3 className="mb-5 text-3xl font-bold text-[#4a3b39] md:text-[34px]">
+                ¡Inmueble publicado con éxito!
+              </h3>
+
+              <p className="mb-9 text-xl text-gray-500 md:text-[22px]">
+                Tu inmueble se ha publicado correctamente.
+              </p>
+
+              <button
+                type="button"
+                onClick={irAlHome}
+                className="min-w-[220px] rounded-2xl bg-[#f58600] px-10 py-4 text-2xl font-semibold text-white transition hover:bg-[#de7800]"
+              >
+                Aceptar
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      )}
+    </>
   );
 }
