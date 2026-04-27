@@ -223,6 +223,12 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       params.set('lat', coords.lat.toString())
       params.set('lng', coords.lng.toString())
       params.set('radius', '1') // Radio de 1km por defecto
+      params.delete('departamentoId')
+      params.delete('provinciaId')
+      params.delete('municipioId')
+      params.delete('zonaId')
+      params.delete('barrioId')
+      params.delete('locationId')
     }
 
     const queryString = params.toString()
