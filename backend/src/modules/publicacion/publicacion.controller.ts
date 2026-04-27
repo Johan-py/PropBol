@@ -4,7 +4,9 @@ import {
   listarMisPublicacionesService,
   editarPublicacionService,
   obtenerResumenFinalService,
-  obtenerDetallePublicacionService
+  obtenerDetallePublicacionService,
+  obtenerDetallePublicacionPorInmuebleService,
+  confirmarPublicacionService
 } from './publicacion.service.js'
 
 interface AuthRequest extends Request {
@@ -16,10 +18,7 @@ interface AuthRequest extends Request {
   }
 }
 
-export const listarMisPublicacionesController = async (
-  req: AuthRequest,
-  res: Response
-) => {
+export const listarMisPublicacionesController = async (req: AuthRequest, res: Response) => {
   const usuarioId = req.user?.id
 
   try {
@@ -46,18 +45,12 @@ export const listarMisPublicacionesController = async (
   }
 }
 
-export const obtenerResumenFinalController = async (
-  req: AuthRequest,
-  res: Response
-) => {
+export const obtenerResumenFinalController = async (req: AuthRequest, res: Response) => {
   const publicacionId = Number(req.params.id)
   const usuarioSolicitanteId = req.user?.id
 
   try {
-    const resumen = await obtenerResumenFinalService(
-      publicacionId,
-      Number(usuarioSolicitanteId)
-    )
+    const resumen = await obtenerResumenFinalService(publicacionId, Number(usuarioSolicitanteId))
 
     return res.status(200).json({
       ok: true,
@@ -107,10 +100,7 @@ export const obtenerResumenFinalController = async (
   }
 }
 
-export const editarPublicacionController = async (
-  req: AuthRequest,
-  res: Response
-) => {
+export const editarPublicacionController = async (req: AuthRequest, res: Response) => {
   const publicacionId = Number(req.params.id)
   const usuarioSolicitanteId = req.user?.id
 
@@ -200,18 +190,12 @@ export const editarPublicacionController = async (
   }
 }
 
-export const eliminarPublicacionController = async (
-  req: AuthRequest,
-  res: Response
-) => {
+export const eliminarPublicacionController = async (req: AuthRequest, res: Response) => {
   const publicacionId = Number(req.params.id)
   const usuarioSolicitanteId = req.user?.id
 
   try {
-    const resultado = await eliminarPublicacionService(
-      publicacionId,
-      Number(usuarioSolicitanteId)
-    )
+    const resultado = await eliminarPublicacionService(publicacionId, Number(usuarioSolicitanteId))
 
     return res.status(200).json({
       ok: true,
@@ -262,10 +246,7 @@ export const eliminarPublicacionController = async (
   }
 }
 
-export const obtenerDetallePublicacionController = async (
-  req: Request,
-  res: Response
-) => {
+export const obtenerDetallePublicacionController = async (req: Request, res: Response) => {
   const publicacionId = Number(req.params.id)
 
   try {
@@ -297,6 +278,108 @@ export const obtenerDetallePublicacionController = async (
     return res.status(500).json({
       ok: false,
       message: 'No se pudo obtener el detalle de la publicación'
+    })
+  }
+}
+export const obtenerDetallePublicacionPorInmuebleController = async (
+  req: Request,
+  res: Response
+) => {
+  const inmuebleId = Number(req.params.inmuebleId)
+
+  try {
+    const detalle = await obtenerDetallePublicacionPorInmuebleService(inmuebleId)
+
+    return res.status(200).json({
+      ok: true,
+      data: detalle
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      switch (error.message) {
+        case 'ID_INVALIDO':
+          return res.status(400).json({
+            ok: false,
+            message: 'El id del inmueble es inválido'
+          })
+
+        case 'PUBLICACION_NO_EXISTE':
+          return res.status(404).json({
+            ok: false,
+            message: 'No existe una publicación asociada a este inmueble'
+          })
+      }
+    }
+
+    console.error('Error al obtener detalle de publicación por inmueble:', error)
+
+    return res.status(500).json({
+      ok: false,
+      message: 'No se pudo obtener el detalle de la publicación por inmueble'
+    })
+  }
+}
+export const confirmarPublicacionController = async (req: AuthRequest, res: Response) => {
+  const publicacionId = Number(req.params.id)
+  const usuarioSolicitanteId = req.user?.id
+
+  try {
+    const resultado = await confirmarPublicacionService(
+      publicacionId,
+      Number(usuarioSolicitanteId)
+    )
+
+    return res.status(200).json({
+      ok: true,
+      message: 'Publicación confirmada correctamente',
+      data: resultado
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      switch (error.message) {
+        case 'ID_INVALIDO':
+          return res.status(400).json({
+            ok: false,
+            message: 'El id de la publicación es inválido'
+          })
+
+        case 'USUARIO_INVALIDO':
+          return res.status(401).json({
+            ok: false,
+            message: 'Usuario no autenticado'
+          })
+
+        case 'PUBLICACION_NO_EXISTE':
+          return res.status(404).json({
+            ok: false,
+            message: 'La publicación no existe'
+          })
+
+        case 'NO_AUTORIZADO':
+          return res.status(403).json({
+            ok: false,
+            message: 'No puede confirmar publicaciones de otros usuarios'
+          })
+
+        case 'PUBLICACION_YA_ELIMINADA':
+          return res.status(409).json({
+            ok: false,
+            message: 'La publicación ya fue eliminada'
+          })
+
+        case 'MULTIMEDIA_REQUERIDA':
+          return res.status(400).json({
+            ok: false,
+            message: 'Debe agregar al menos una imagen o video antes de publicar'
+          })
+      }
+    }
+
+    console.error('Error al confirmar publicación:', error)
+
+    return res.status(500).json({
+      ok: false,
+      message: 'No se pudo confirmar la publicación'
     })
   }
 }

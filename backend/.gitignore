@@ -36,3 +36,4 @@ seed-datos_ub_maestra.ts
 .env*.local
 
 /src/generated/prisma
+frontend/
