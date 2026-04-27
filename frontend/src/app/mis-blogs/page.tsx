@@ -7,6 +7,11 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 
 type EstadoBlog = "BORRADOR" | "PENDIENTE" | "PUBLICADO" | "RECHAZADO";
 
+type BlogRechazo = {
+  comentario: string;
+  fecha: string;
+};
+
 type Blog = {
   id: number;
   titulo: string;
@@ -14,6 +19,7 @@ type Blog = {
   estado: EstadoBlog;
   fecha_creacion: string | null;
   fecha_publicacion: string | null;
+  blog_rechazo?: BlogRechazo[];
 };
 
 const estados = [
@@ -210,8 +216,18 @@ export default function MisBlogsPage() {
                     {blog.titulo}
                   </h2>
 
+                  {blog.estado === "RECHAZADO" && blog.blog_rechazo && blog.blog_rechazo.length > 0 && (
+                    <div className="mb-4 p-3 bg-[#FDECEC] border border-[#F3BABA] rounded-lg">
+                      <p className="text-xs font-bold text-[#D94848] uppercase tracking-wider mb-1">Motivo de rechazo:</p>
+                      <p className="text-sm text-[#D94848]">{blog.blog_rechazo[0].comentario}</p>
+                    </div>
+                  )}
+
                   <div className="flex justify-between items-center border-t border-[#EEE6DC] pt-4">
-                    {blog.estado === "BORRADOR" || blog.estado === "RECHAZADO" ? (
+                    {blog.estado === "BORRADOR" ||
+                    blog.estado === "RECHAZADO" ||
+                    blog.estado === "PENDIENTE" ||
+                    blog.estado === "PUBLICADO" ? (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();

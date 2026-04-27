@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
+import type { Editor } from "@tiptap/react";
 import BlogLinkModal from "./BlogLinkModal";
 import BlogPublishModal from "./BlogPublishModal";
 import SuccessToast from "./SuccessToast";
@@ -21,7 +22,8 @@ type BlogCreateFormProps = {
     titulo: string;
   };
   mode?: "create" | "edit";
-  statusLabel?: "BORRADOR" | "RECHAZADO";
+  statusLabel?: "BORRADOR" | "PENDIENTE" | "PUBLICADO" | "RECHAZADO";
+  rejectionReason?: string;
 };
 
 export default function BlogCreateForm({
@@ -29,8 +31,10 @@ export default function BlogCreateForm({
   initialValues,
   mode = "create",
   statusLabel,
+  rejectionReason,
 }: BlogCreateFormProps) {
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+  const [editor, setEditor] = useState<Editor | null>(null);
 
   const {
     titulo,
@@ -48,40 +52,15 @@ export default function BlogCreateForm({
     successMessage,
     fieldErrors,
     setFieldErrors,
-    textareaRef,
     imagePreviewUrl,
-    isFormDirty,
-    applyFormatting,
     insertLink,
-    handleLinkConfirm,
     setIsLinkModalOpen,
     isLinkModalOpen,
     selectionForLink,
     setSelectedImageFile,
     submitBlog,
-    router,
-    autosaveKey,
     validate,
   } = useBlogForm({ blogId, initialValues, mode });
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if ((e.ctrlKey || e.metaKey) && !e.shiftKey) {
-      switch (e.key.toLowerCase()) {
-        case "b":
-          e.preventDefault();
-          applyFormatting("**");
-          break;
-        case "i":
-          e.preventDefault();
-          applyFormatting("*");
-          break;
-        case "k":
-          e.preventDefault();
-          insertLink();
-          break;
-      }
-    }
-  };
 
   const handleAction = (accion: "borrador" | "pendiente") => {
     if (accion === "borrador") {
@@ -103,12 +82,30 @@ export default function BlogCreateForm({
     void submitBlog("pendiente");
   };
 
+  const handleEditorLinkConfirm = (url: string, text?: string) => {
+    if (editor) {
+      editor.chain()
+        .focus()
+        .insertContent(`<a href="${url}">${text || url}</a> `)
+        .run();
+    }
+    setIsLinkModalOpen(false);
+  };
+
   return (
     <div className="mx-auto max-w-6xl">
       <div className="grid gap-12 lg:grid-cols-[1fr_320px]">
         {/* Main Content Area */}
         <div className="space-y-8">
           <BlogFormHeader mode={mode} />
+
+          {statusLabel === "RECHAZADO" && rejectionReason && (
+            <div className="rounded-[24px] bg-[#FDECEC] border border-[#F3BABA] p-6 shadow-sm">
+              <h3 className="text-sm font-bold text-[#D94848] uppercase tracking-wider mb-2">Motivo de rechazo</h3>
+              <p className="text-[#D94848] leading-relaxed">{rejectionReason}</p>
+              <p className="text-xs text-[#D94848]/80 mt-3 italic">Corrige los puntos mencionados y vuelve a enviarlo para revisión.</p>
+            </div>
+          )}
 
           <form
             id="blog-form"
@@ -143,10 +140,8 @@ export default function BlogCreateForm({
             <BlogEditorSection
               contenido={contenido}
               setContenido={setContenido}
-              textareaRef={textareaRef}
-              applyFormatting={applyFormatting}
               insertLink={insertLink}
-              onKeyDown={handleKeyDown}
+              editorRef={setEditor}
               error={fieldErrors.contenido}
             />
 
@@ -173,7 +168,7 @@ export default function BlogCreateForm({
         isOpen={isLinkModalOpen}
         initialText={selectionForLink}
         onClose={() => setIsLinkModalOpen(false)}
-        onConfirm={handleLinkConfirm}
+        onConfirm={handleEditorLinkConfirm}
       />
 
       <BlogPublishModal
@@ -186,7 +181,7 @@ export default function BlogCreateForm({
       <SuccessToast
         message={successMessage}
         isOpen={!!successMessage}
-        onClose={() => {}} // El hook redirige rápido, así que no es crítico el reset manual aquí
+        onClose={() => { }} // El hook redirige rápido, así que no es crítico el reset manual aquí
       />
     </div>
   );
