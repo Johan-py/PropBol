@@ -90,32 +90,31 @@ export default function ConsumoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      {/* HEADER */}
-      <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-6 gap-4">
-        {/*Texto: Título y Subtítulo */}
-        <div className="flex flex-col">
-          <h1 className="text-5xl md:text-7xl font-extrabold text-stone-900 tracking-tighter">Panel de consumo</h1>
-          <p className="text-xl md:text-3xl font-extrabold text-stone-500 mt-2">Monitorea tus publicaciones activas y el límite de tu plan</p>
-        </div>
-        <Link href="/cobros-suscripciones">
+      <div className="min-h-screen bg-gray-100 p-6">
+        {/* HEADER */}
+        <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-6 gap-4">
+          {/*Texto: Título y Subtítulo */}
+          <div className="flex flex-col">
+            <h1 className="text-5xl md:text-7xl font-extrabold text-stone-900 tracking-tighter">Panel de consumo</h1>
+            <p className="text-xl md:text-3xl font-extrabold text-stone-500 mt-2">Monitorea tus publicaciones activas y el límite de tu plan</p>
+          </div>
+          <Link href="/cobros-suscripciones">
               {/*Botón para redirigir a Planes de Suscripción */}
               <button className="mt-6 group flex items-center gap-3 bg-gradient-to-r from-black from-20% via-orange-950 to-orange-400 text-white px-10 py-5 text-2xl font-extrabold rounded-lg hover:bg-orange-800 transition">
-            Ver planes de ampliación
-            <span className="text-4x1 transition-transform group-hover:translate-x-2">→</span>
-          </button>
-        </Link>
-      </div>
+              Ver planes de ampliación
+              <span className="text-4x1 transition-transform group-hover:translate-x-2">→</span>
+              </button>
+          </Link>
+        </div>
 
       {/*  MENSAJE SI NO SE INICIO SESION */}
-      {!isLogged && (
-        <div className="bg-blue-100 text-blue-600 p-4 rounded-lg mb-6 flex justify-between items-center">
-          <span>Primero inicia sesión para ver tu consumo</span>
+      {!isLogged && ( 
+        <div className="mt-6 group flex items-center gap-3 bg-gradient-to-r from-black to-orange-400 text-white p-4 rounded-lg mb-6  justify-between ">
+          <span className="text-xl font-extrabold">Primero inicia sesión para ver tu consumo</span>
           <Link href="/sign-in">
-  <button className="bg-black text-white px-4 py-2 rounded-lg">
-    Iniciar sesión
-  </button>
-</Link>
+            <button className="bg-black text-white px-4 py-2 rounded-lg">Iniciar sesión
+</button>
+          </Link>
         </div>
       )}
 
