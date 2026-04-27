@@ -182,7 +182,7 @@ export default function ConsumoPage() {
       </div>
 
       {/* CARDS */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-28 mb-10">
         <div className="bg-white p-4 rounded-xl shadow text-center">
           <h3 className="text-green-600 text-xl font-bold">
             {isLogged ? disponibles : 0}
