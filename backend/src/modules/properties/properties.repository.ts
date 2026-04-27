@@ -1,4 +1,3 @@
-import { Prisma } from "@prisma/client";
 import { prisma } from "../../lib/prisma.client.js";
 
 export interface FiltrosBusqueda {
@@ -37,7 +36,8 @@ function normalizarModoAccion(m: string): string {
 export const propertiesRepository = {
   async getAll(filtros: FiltrosBusqueda = {}) {
     // ── WHERE ──────────────────────────────────────────────────────────────
-    const where: Prisma.InmuebleWhereInput = { estado: "ACTIVO" };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const where: any = { estado: "ACTIVO" };
 
     // 1. Filtro de Categoría / Tipo Inmueble (Soporta múltiples selecciones)
     const CATEGORIAS_VALIDAS = [
@@ -263,7 +263,8 @@ export const propertiesRepository = {
     }
 
     // ── ORDER BY ───────────────────────────────────────────────────────────
-    const orderBy: Prisma.InmuebleOrderByWithRelationInput[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const orderBy: any[] = [];
 
     if (filtros.precio === "menor-a-mayor") {
       orderBy.push({ precio: "asc" });
