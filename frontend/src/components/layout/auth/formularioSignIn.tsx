@@ -3,15 +3,10 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 
 type LoginResponse = {
   message?: string;
   token?: string;
-  requires2FA?: boolean;
-  userId?: number;
-  email?: string;
-  expiresInMinutes?: number;
   user?: {
     id: number;
     correo: string;
@@ -52,57 +47,12 @@ type GooglePopupErrorMessage = {
 
 type GooglePopupMessage = GooglePopupSuccessMessage | GooglePopupErrorMessage;
 
-type DiscordPopupSuccessMessage = {
-  type: "propbol:discord-login-success";
-  message: string;
-  token: string;
-  user: {
-    id: number;
-    correo: string;
-    nombre?: string;
-    apellido?: string;
-  };
-};
-
-type DiscordPopupErrorMessage = {
-  type: "propbol:discord-login-error";
-  code: "DISCORD_AUTH_FAILED" | "ACCOUNT_NOT_REGISTERED" | string;
-  message: string;
-};
-
-type DiscordPopupMessage =
-  | DiscordPopupSuccessMessage
-  | DiscordPopupErrorMessage;
-
-type FacebookPopupSuccessMessage = {
-  type: "propbol:facebook-login-success";
-  message: string;
-  token: string;
-  user: {
-    id: number;
-    correo: string;
-    nombre?: string;
-    apellido?: string;
-  };
-};
-
-type FacebookPopupErrorMessage = {
-  type: "propbol:facebook-login-error";
-  code: "FACEBOOK_AUTH_FAILED" | "ACCOUNT_NOT_REGISTERED" | string;
-  message: string;
-};
-
-type FacebookPopupMessage =
-  | FacebookPopupSuccessMessage
-  | FacebookPopupErrorMessage;
-
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const LOGIN_TIMEOUT_MS = 10000;
 const GOOGLE_LOGIN_TIMEOUT_MS = 2 * 60 * 1000;
 const DEFAULT_POST_LOGIN_REDIRECT = "/";
 const REDIRECT_AFTER_LOGIN_KEY = "redirectAfterLogin";
-const SESSION_DURATION_MS = 60 * 60 * 1000;
-const PENDING_2FA_KEY = "pending2FA";
+const SESSION_DURATION_MS = 3 * 60 * 1000;
 
 const NO_CONNECTION_MESSAGE =
   "Sin conexión a internet. Verifica tu red e intenta nuevamente.";
@@ -112,14 +62,10 @@ const LOGIN_TIMEOUT_MESSAGE =
   "La solicitud tardó demasiado. Por favor intenta nuevamente.";
 const GOOGLE_TIMEOUT_MESSAGE =
   "La autenticación con Google tardó demasiado. Por favor intenta nuevamente.";
-const FACEBOOK_TIMEOUT_MESSAGE =
-  "La autenticación con Facebook tardó demasiado. Por favor intenta nuevamente.";
-
-const DEACTIVATED_ACCOUNT_MESSAGE = "Esta cuenta está desactivada";
 
 const clearClientSession = () => {
   localStorage.removeItem("token");
-  localStorage.removeItem(USER_STORAGE_KEY);
+  localStorage.removeItem("propbol_user");
   localStorage.removeItem("propbol_session_expires");
   localStorage.removeItem("nombre");
   localStorage.removeItem("correo");
@@ -127,26 +73,6 @@ const clearClientSession = () => {
 
   window.dispatchEvent(new Event("propbol:session-changed"));
   window.dispatchEvent(new Event("auth-state-changed"));
-};
-
-const savePending2FA = (data: {
-  userId: number;
-  email?: string;
-  expiresInMinutes?: number;
-}) => {
-  localStorage.setItem(
-    PENDING_2FA_KEY,
-    JSON.stringify({
-      userId: data.userId,
-      email: data.email ?? "",
-      expiresInMinutes: data.expiresInMinutes ?? 5,
-      createdAt: Date.now(),
-    }),
-  );
-};
-
-const clearPending2FA = () => {
-  localStorage.removeItem(PENDING_2FA_KEY);
 };
 
 const saveSession = (
@@ -160,13 +86,24 @@ const saveSession = (
   },
 ) => {
   localStorage.setItem("token", token);
-  const sessionUser = buildSessionUser(user);
 
-  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(sessionUser));
+  const userName =
+    user?.nombre && user?.apellido
+      ? `${user.nombre} ${user.apellido}`
+      : user?.nombre || user?.correo || "Usuario";
 
-  localStorage.setItem("nombre", sessionUser.name);
-  localStorage.setItem("correo", sessionUser.email);
-  localStorage.setItem("avatar", sessionUser.avatar ?? "");
+  localStorage.setItem(
+    "propbol_user",
+    JSON.stringify({
+      name: userName,
+      email: user?.correo ?? "",
+      avatar: user?.avatar ?? null,
+    }),
+  );
+
+  localStorage.setItem("nombre", userName);
+  localStorage.setItem("correo", user?.correo ?? "");
+  localStorage.setItem("avatar", user?.avatar ?? "");
   localStorage.setItem(
     "propbol_session_expires",
     String(Date.now() + SESSION_DURATION_MS),
@@ -192,16 +129,6 @@ const clearRedirectAfterLogin = () => {
 };
 
 const isGooglePopupMessage = (value: unknown): value is GooglePopupMessage => {
-  if (!value || typeof value !== "object") {
-    return false;
-  }
-
-  return "type" in value;
-};
-
-const isFacebookPopupMessage = (
-  value: unknown,
-): value is FacebookPopupMessage => {
   if (!value || typeof value !== "object") {
     return false;
   }
@@ -252,7 +179,6 @@ export default function LoginForm() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
-  const [isLoadingDiscord, setIsLoadingDiscord] = useState(false);
   const passwordContainerRef = useRef<HTMLDivElement>(null);
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
@@ -263,7 +189,6 @@ export default function LoginForm() {
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [googleError, setGoogleError] = useState("");
-  const [isLoadingFacebook, setIsLoadingFacebook] = useState(false);
 
   const redirectAfterSuccessfulLogin = () => {
     const redirect = getRedirectAfterLogin();
@@ -499,7 +424,6 @@ export default function LoginForm() {
 
     setIsLoading(true);
     clearClientSession();
-    clearPending2FA();
 
     const controller = new AbortController();
     const timeoutId = window.setTimeout(() => {
@@ -522,11 +446,6 @@ export default function LoginForm() {
       if (!response.ok) {
         setPassword("");
 
-        if (response.status === 403) {
-          setErrorMessage(DEACTIVATED_ACCOUNT_MESSAGE);
-          return;
-        }
-
         if (response.status === 404) {
           setErrorMessage(
             "Esta cuenta no está registrada. Puedes registrarte para crear una cuenta.",
@@ -535,31 +454,6 @@ export default function LoginForm() {
         }
 
         setErrorMessage(data.message || "Error al iniciar sesión");
-        return;
-      }
-
-      if (data.requires2FA) {
-        if (!data.userId) {
-          clearClientSession();
-          setErrorMessage("No se pudo iniciar la verificación en dos pasos");
-          return;
-        }
-
-        savePending2FA({
-          userId: data.userId,
-          email: data.email,
-          expiresInMinutes: data.expiresInMinutes,
-        });
-
-        setSuccessMessage(
-          data.message || "Te enviamos un código de verificación",
-        );
-        setPassword("");
-
-        window.setTimeout(() => {
-          router.push("/sign-in/verify-2fa");
-        }, 800);
-
         return;
       }
 
@@ -584,290 +478,6 @@ export default function LoginForm() {
       window.clearTimeout(timeoutId);
       setIsLoading(false);
     }
-  };
-
-  const handleFacebookLogin = () => {
-    clearClientSession();
-    setGoogleError("");
-    setErrorMessage("");
-    setSuccessMessage("");
-
-    if (hasNoInternetConnection()) {
-      setGoogleError(NO_CONNECTION_MESSAGE);
-      return;
-    }
-
-    setIsLoadingFacebook(true);
-
-    const popupWidth = 500;
-    const popupHeight = 600;
-    const left = window.screenX + (window.outerWidth - popupWidth) / 2;
-    const top = window.screenY + (window.outerHeight - popupHeight) / 2;
-
-    const popupWindow = window.open(
-      `${API_URL}/api/auth/facebook/login`,
-      "facebook-login",
-      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`,
-    );
-
-    if (
-      !popupWindow ||
-      popupWindow.closed ||
-      typeof popupWindow.closed === "undefined"
-    ) {
-      setGoogleError(
-        "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.",
-      );
-      setIsLoadingFacebook(false);
-      return;
-    }
-
-    const popup = popupWindow;
-    popup.focus();
-
-    const expectedOrigin = new URL(API_URL).origin;
-    let authWasResolved = false;
-    let checkPopupIntervalId = 0;
-    let facebookTimeoutId = 0;
-
-    function cleanup(shouldStopLoading = true) {
-      window.removeEventListener("message", handleMessage);
-      window.clearInterval(checkPopupIntervalId);
-      window.clearTimeout(facebookTimeoutId);
-
-      if (shouldStopLoading) {
-        setIsLoadingFacebook(false);
-      }
-    }
-
-    async function handleMessage(event: MessageEvent<FacebookPopupMessage>) {
-      if (event.origin !== expectedOrigin) {
-        return;
-      }
-      if (!isFacebookPopupMessage(event.data)) {
-        return;
-      }
-
-      authWasResolved = true;
-      cleanup(false);
-
-      if (event.data.type === "propbol:facebook-login-success") {
-        try {
-          await finalizeValidatedSession(event.data.token, event.data.user);
-
-          setSuccessMessage(
-            event.data.message || "Inicio de sesión con Facebook exitoso",
-          );
-          setGoogleError("");
-          setIsLoadingFacebook(false);
-          popup.close();
-
-          window.setTimeout(() => {
-            redirectAfterSuccessfulLogin();
-          }, 1000);
-        } catch (error) {
-          clearClientSession();
-          setGoogleError(
-            error instanceof Error
-              ? error.message
-              : "No se pudo consolidar la sesión con Facebook.",
-          );
-          setIsLoadingFacebook(false);
-          popup.close();
-        }
-
-        return;
-      }
-
-      clearClientSession();
-      setGoogleError(
-        event.data.message || "No se pudo iniciar sesión con Facebook.",
-      );
-      setIsLoadingFacebook(false);
-      popup.close();
-    }
-
-    checkPopupIntervalId = window.setInterval(() => {
-      if (!popup.closed) {
-        return;
-      }
-
-      cleanup();
-
-      if (!authWasResolved) {
-        if (hasNoInternetConnection()) {
-          setGoogleError(NO_CONNECTION_MESSAGE);
-          return;
-        }
-
-        setGoogleError(
-          "Cancelaste el inicio de sesión con Facebook. Puedes intentarlo nuevamente.",
-        );
-      }
-    }, 500);
-
-    facebookTimeoutId = window.setTimeout(
-      () => {
-        cleanup();
-
-        if (!popup.closed) {
-          popup.close();
-        }
-
-        if (!authWasResolved) {
-          setGoogleError(FACEBOOK_TIMEOUT_MESSAGE);
-        }
-      },
-      2 * 60 * 1000,
-    );
-
-    window.addEventListener("message", handleMessage);
-  };
-
-  const handleDiscordLogin = () => {
-    clearClientSession();
-    setGoogleError("");
-    setErrorMessage("");
-    setSuccessMessage("");
-
-    if (hasNoInternetConnection()) {
-      setGoogleError(NO_CONNECTION_MESSAGE);
-      return;
-    }
-
-    setIsLoadingDiscord(true);
-
-    const popupWidth = 500;
-    const popupHeight = 600;
-    const left = window.screenX + (window.outerWidth - popupWidth) / 2;
-    const top = window.screenY + (window.outerHeight - popupHeight) / 2;
-
-    const popupWindow = window.open(
-      `${API_URL}/api/auth/discord/login`,
-      "discord-login",
-      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`,
-    );
-
-    if (
-      !popupWindow ||
-      popupWindow.closed ||
-      typeof popupWindow.closed === "undefined"
-    ) {
-      setGoogleError(
-        "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.",
-      );
-      setIsLoadingDiscord(false);
-      return;
-    }
-
-    const popup = popupWindow;
-    popup.focus();
-
-    const expectedOrigin = new URL(API_URL).origin;
-    let authWasResolved = false;
-    let checkPopupIntervalId = 0;
-    let discordTimeoutId = 0;
-
-    function cleanup(shouldStopLoading = true) {
-      window.removeEventListener("message", handleMessage);
-      window.clearInterval(checkPopupIntervalId);
-      window.clearTimeout(discordTimeoutId);
-
-      if (shouldStopLoading) {
-        setIsLoadingDiscord(false);
-      }
-    }
-
-    async function handleMessage(event: MessageEvent<DiscordPopupMessage>) {
-      if (event.origin !== expectedOrigin) {
-        return;
-      }
-
-      const data = event.data;
-      if (
-        !data ||
-        typeof data !== "object" ||
-        !("type" in data) ||
-        (data.type !== "propbol:discord-login-success" &&
-          data.type !== "propbol:discord-login-error")
-      ) {
-        return;
-      }
-
-      authWasResolved = true;
-      cleanup(false);
-
-      if (data.type === "propbol:discord-login-success") {
-        try {
-          await finalizeValidatedSession(data.token, data.user);
-
-          setSuccessMessage(
-            data.message || "Inicio de sesión con Discord exitoso",
-          );
-          setGoogleError("");
-          setIsLoadingDiscord(false);
-          popup.close();
-
-          window.setTimeout(() => {
-            redirectAfterSuccessfulLogin();
-          }, 1000);
-        } catch (error) {
-          clearClientSession();
-          setGoogleError(
-            error instanceof Error
-              ? error.message
-              : "No se pudo consolidar la sesión con Discord.",
-          );
-          setIsLoadingDiscord(false);
-          popup.close();
-        }
-
-        return;
-      }
-
-      clearClientSession();
-      setGoogleError(data.message || "No se pudo iniciar sesión con Discord.");
-      setIsLoadingDiscord(false);
-      popup.close();
-    }
-
-    checkPopupIntervalId = window.setInterval(() => {
-      if (!popup.closed) {
-        return;
-      }
-
-      cleanup();
-
-      if (!authWasResolved) {
-        clearClientSession();
-
-        if (hasNoInternetConnection()) {
-          setGoogleError(NO_CONNECTION_MESSAGE);
-          return;
-        }
-
-        setGoogleError(
-          "Cancelaste el inicio de sesión con Discord. Puedes intentarlo nuevamente.",
-        );
-      }
-    }, 500);
-
-    discordTimeoutId = window.setTimeout(() => {
-      cleanup();
-      clearClientSession();
-
-      if (!popup.closed) {
-        popup.close();
-      }
-
-      setGoogleError(
-        hasNoInternetConnection()
-          ? NO_CONNECTION_MESSAGE
-          : "La autenticación con Discord tardó demasiado. Por favor intenta nuevamente.",
-      );
-    }, GOOGLE_LOGIN_TIMEOUT_MS);
-
-    window.addEventListener("message", handleMessage);
   };
 
   return (
@@ -907,9 +517,7 @@ export default function LoginForm() {
             className="relative"
             ref={passwordContainerRef}
             onBlur={(e) => {
-              if (
-                !passwordContainerRef.current?.contains(e.relatedTarget as Node)
-              ) {
+              if (!passwordContainerRef.current?.contains(e.relatedTarget as Node)) {
                 setShowPassword(false);
               }
             }}
@@ -939,15 +547,6 @@ export default function LoginForm() {
           {errors.password && (
             <p className="mt-1 text-xs text-red-500">{errors.password}</p>
           )}
-        </div>
-
-        <div className="-mt-2 text-left">
-          <Link
-            href="/forgot-password"
-            className="text-sm font-medium text-orange-500 hover:underline"
-          >
-            ¿Olvidaste tu contraseña?
-          </Link>
         </div>
 
         {errorMessage && (
@@ -990,35 +589,6 @@ export default function LoginForm() {
           </p>
         )}
 
-        <div className="space-y-3">
-          <button
-            type="button"
-            onClick={handleFacebookLogin}
-            disabled={isLoadingFacebook}
-            className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#1877F2] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/15 text-base font-bold text-white">
-              f
-            </span>
-            {isLoadingFacebook ? "Autenticando..." : "Continuar con Facebook"}
-          </button>
-
-          <button
-            type="button"
-            onClick={handleDiscordLogin}
-            className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#5865F2] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:brightness-95"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              className="h-5 w-5 fill-white"
-              aria-hidden="true"
-            >
-              <path d="M20.317 4.369A19.79 19.79 0 0 0 15.885 3c-.191.328-.403.769-.552 1.117a18.27 18.27 0 0 0-5.333 0A11.64 11.64 0 0 0 9.448 3a19.736 19.736 0 0 0-4.433 1.369C2.211 8.58 1.443 12.686 1.826 16.735A19.923 19.923 0 0 0 7.239 19.5c.438-.6.828-1.235 1.164-1.904-.634-.24-1.239-.541-1.813-.896.152-.111.301-.227.445-.347 3.495 1.643 7.285 1.643 10.739 0 .146.12.294.236.446.347-.575.355-1.182.656-1.817.896.336.669.726 1.304 1.164 1.904a19.874 19.874 0 0 0 5.416-2.765c.451-4.695-.769-8.763-3.666-12.366ZM9.349 14.546c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.84 2.154-1.909 2.154Zm5.303 0c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.831 2.154-1.909 2.154Z" />
-            </svg>
-            Continuar con Discord
-          </button>
-        </div>
-
         <button
           type="button"
           onClick={() => router.push("/")}
@@ -1038,5 +608,5 @@ export default function LoginForm() {
         </Link>
       </p>
     </div>
-  );
+  )
 }

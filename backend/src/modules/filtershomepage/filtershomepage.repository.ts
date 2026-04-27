@@ -1,30 +1,5 @@
-import { $Enums } from "@prisma/client";
-import { prisma } from "../../lib/prisma.client.js";
-
-const CIUDAD_A_DEPTO: Record<string, string> = {
-  "SANTA CRUZ DE LA SIERRA": "SANTA CRUZ",
-  "SANTA CRUZ": "SANTA CRUZ",
-  "LA PAZ": "LA PAZ",
-  "EL ALTO": "LA PAZ",
-  COCHABAMBA: "COCHABAMBA",
-  QUILLACOLLO: "COCHABAMBA",
-  SACABA: "COCHABAMBA",
-  ORURO: "ORURO",
-  POTOSI: "POTOSÍ",
-  POTOSÍ: "POTOSÍ",
-  SUCRE: "SUCRE",
-  CHUQUISACA: "SUCRE",
-  TARIJA: "TARIJA",
-  TRINIDAD: "BENI",
-  BENI: "BENI",
-  COBIJA: "PANDO",
-  PANDO: "PANDO",
-};
-
-function resolverDepartamento(raw: string): string {
-  const upper = raw.trim().toUpperCase();
-  return CIUDAD_A_DEPTO[upper] ?? upper;
-}
+import { $Enums } from '@prisma/client'
+import { prisma } from '../../lib/prisma.config.js'
 
 export class FiltersHomepageRepository {
   async getCountsByCity(tipoAccion: $Enums.TipoAccion) {
@@ -36,69 +11,33 @@ export class FiltersHomepageRepository {
         },
       },
       select: {
-        inmuebleId: true,
-        ciudad: true,
+        inmuebleId: true, 
         ubicacion_maestra: {
           select: {
             departamento: true,
           },
         },
-        inmueble: {
-          select: {
-            id: true,
-            titulo: true,
-            publicaciones: {
-              select: {
-                multimedia: {
-                  where: {
-                    tipo: $Enums.TipoMultimedia.IMAGEN,
-                  },
-                  select: {
-                    url: true,
-                  },
-                  take: 1,
-                },
-              },
-              take: 1,
-            },
-          },
-        },
       },
     });
 
-    const deptMap = new Map<
-      string,
-      { ids: Set<number>; previews: Array<{ imagen: string; titulo: string }> }
-    >();
+    const deptCounts = new Map<string, Set<number>>();
 
     for (const u of ubicaciones) {
-      const rawDept = u.ubicacion_maestra?.departamento ?? u.ciudad ?? null;
+      const rawDept = u.ubicacion_maestra?.departamento;
       if (!rawDept || !u.inmuebleId) continue;
 
-      const dept = resolverDepartamento(rawDept);
+      const normalizedDept = rawDept.trim().toUpperCase();
 
-      if (!deptMap.has(dept)) {
-        deptMap.set(dept, { ids: new Set(), previews: [] });
+      if (!deptCounts.has(normalizedDept)) {
+        deptCounts.set(normalizedDept, new Set());
       }
-
-      const entry = deptMap.get(dept)!;
-      entry.ids.add(u.inmuebleId);
-
-      const primeraPublicacion = u.inmueble?.publicaciones?.[0];
-      const primeraImagen = primeraPublicacion?.multimedia?.[0]?.url;
-
-      if (entry.previews.length < 6 && primeraImagen) {
-        entry.previews.push({
-          imagen: primeraImagen,
-          titulo: u.inmueble.titulo ?? "Sin título",
-        });
-      }
+      
+      deptCounts.get(normalizedDept)!.add(u.inmuebleId);
     }
 
-    const counts = Array.from(deptMap.entries()).map(([dept, data]) => ({
-      departamento: dept,
-      count: data.ids.size,
-      previews: data.previews,
+    const counts = Array.from(deptCounts.entries()).map(([dept, ids]) => ({
+      departamento: dept, 
+      count: ids.size,
     }));
 
     return counts.sort((a, b) => b.count - a.count);

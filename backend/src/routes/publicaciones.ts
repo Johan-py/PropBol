@@ -1,31 +1,20 @@
-import { Router } from "express";
+import { Router } from 'express'
 import {
   crearPublicacion,
   listarPublicaciones,
-  validarPublicacionesFree,
-} from "../controllers/publicacionesController.js";
-import { authMiddleware } from "../middleware/authMiddleware.js";
-import { reglasValidacionHU5, manejarErroresPublicacion } from "../middleware/erroresPublicacion.js";
+  validarPublicacionesFree
+} from '../controllers/publicacionesController.js'
+import { authMiddleware } from '../middleware/authMiddleware.js'
 
-const router = Router();
+const router = Router()
 
-// HU‑1 + HU‑5 v2: Crear publicación con validación previa
-router.post(
-  "/publicaciones",
-  authMiddleware,
-  reglasValidacionHU5,       // validaciones HU‑5 v2
-  manejarErroresPublicacion, // agrupación de errores HU‑5 v2
-  crearPublicacion           // flujo HU‑1 original
-);
+// Crear publicación
+router.post('/publicaciones', authMiddleware, crearPublicacion)
 
-// HU‑1: Listar publicaciones
-router.get("/publicaciones", listarPublicaciones);
+// Listar publicaciones
+router.get('/publicaciones', listarPublicaciones)
 
-// HU‑1: Validar publicaciones gratuitas (consulta simple)
-router.get(
-  "/users/:id/publicaciones/free",
-  authMiddleware,
-  validarPublicacionesFree,
-);
+// Validar publicaciones gratuitas
+router.get('/users/:id/publicaciones/free', authMiddleware, validarPublicacionesFree)
 
-export default router;
+export default router
