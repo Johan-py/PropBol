@@ -8,7 +8,8 @@ import {
   Popup,
   Polyline,
   Polygon,
-  CircleMarker
+  CircleMarker,
+  Circle
 } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import L from 'leaflet'
@@ -16,7 +17,7 @@ import { useMap } from 'react-leaflet'
 import { useEffect, useState, useRef } from 'react'
 
 import ZoomControls from '@/components/ZoomControls'
-import { createGpsIcon } from '@/components/GpsPin'
+import { createGpsIcon, createSearchOriginIcon } from '@/components/GpsPin'
 import { createClusterIcon, CLUSTER_CONFIG } from '@/lib/clusterIcon'
 import ZonasOverlay from '@/components/map/ZonasOverlay'
 
@@ -222,6 +223,7 @@ function formatPrice(price: number, currency: 'USD' | 'BOB'): string {
 
 interface MapViewProps {
   properties: PropertyMapPin[]
+  searchOrigin?: [number, number] | null
   zonas?: ZonaPredefinida[]
   selectedZoneId?: number | null
   onZoneSelect?: (id: number | null) => void
@@ -273,6 +275,7 @@ function ZoomHandler({ onClusterDissolve }: { onClusterDissolve?: () => void }) 
 
 export default function MapView({
   properties = [],
+  searchOrigin = null,
   center = [-17.392418841841394, -66.1461583463333],
   zoom = 12,
   selectedId,
@@ -353,6 +356,7 @@ export default function MapView({
         />
 
         <ZoomControls />
+        <FlyToOrigin origin={searchOrigin} />
         <ZoomHandler onClusterDissolve={onClusterDissolve} />
         <MapMouseHandler onMouseLeave={() => setHoveredPinId(null)} />
         <MapClickHandler
@@ -470,6 +474,25 @@ export default function MapView({
           <Popup>Tu ubicación actual</Popup>
         </Marker>
 
+        {/* NUEVO: Marcador de Origen y Círculo de Radio */}
+        {searchOrigin && (
+          <>
+            <Circle 
+              center={searchOrigin} 
+              radius={1000} // 1000 metros = 1km
+              pathOptions={{ color: '#2563EB', fillColor: '#3B82F6', fillOpacity: 0.12, weight: 2, dashArray: '5, 5' }} 
+            />
+            <Marker position={searchOrigin} icon={createSearchOriginIcon()} zIndexOffset={1000}>
+              <Popup>
+                <div className="text-center min-w-[120px]">
+                  <p className="font-bold text-blue-600 mb-1">Centro de búsqueda</p>
+                  <p className="text-xs text-stone-500">Mostrando radio de 1km</p>
+                </div>
+              </Popup>
+            </Marker>
+          </>
+        )}
+
         <MarkerClusterGroup
           key={activeClusterIds.join(',')}
           iconCreateFunction={(cluster: any) => {
@@ -571,6 +594,23 @@ function FlyToSelected({ lat, lng, id }: { lat: number; lng: number; id: string 
 
     setLastId(id)
   }, [lat, lng, id, map, lastId])
+
+  return null
+}
+// NUEVO: Componente para volar al punto de búsqueda
+function FlyToOrigin({ origin }: { origin: [number, number] | null }) {
+  const map = useMap()
+  
+  // Extraemos las coordenadas como números primitivos para el array de dependencias
+  const lat = origin?.[0]
+  const lng = origin?.[1]
+
+  useEffect(() => {
+    if (lat !== undefined && lng !== undefined) {
+      // Solo volamos si la latitud o longitud REALMENTE cambian en la URL
+      map.flyTo([lat, lng], 15, { duration: 1.2, easeLinearity: 0.25 })
+    }
+  }, [lat, lng, map]) 
 
   return null
 }
