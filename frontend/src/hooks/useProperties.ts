@@ -21,7 +21,7 @@ export function useProperties(): UsePropertiesResult {
 
   const searchParamsStr = searchParams.toString()
 
- useEffect(() => {
+  useEffect(() => {
     let cancelled = false
     console.log('🔄 useProperties disparado:', searchParamsStr)
 
@@ -48,11 +48,14 @@ export function useProperties(): UsePropertiesResult {
               const publicaciones = item.publicaciones ?? item.publicacion ?? []
               const basePrice = Number(item.precio)
               const sourceCurrency = String(item.currency || item.moneda || 'USD').toUpperCase()
-              const priceInUsd = sourceCurrency === 'BOB' ? basePrice / BOB_EXCHANGE_RATE : basePrice
-              const displayPrice = selectedCurrency === 'BOB' ? priceInUsd * BOB_EXCHANGE_RATE : priceInUsd
-              const formattedText = selectedCurrency === 'BOB'
-                ? `Bs ${displayPrice.toLocaleString('es-BO')}`
-                : `$${displayPrice.toLocaleString('en-US')} USD`
+              const priceInUsd =
+                sourceCurrency === 'BOB' ? basePrice / BOB_EXCHANGE_RATE : basePrice
+              const displayPrice =
+                selectedCurrency === 'BOB' ? priceInUsd * BOB_EXCHANGE_RATE : priceInUsd
+              const formattedText =
+                selectedCurrency === 'BOB'
+                  ? `Bs ${displayPrice.toLocaleString('es-BO')}`
+                  : `$${displayPrice.toLocaleString('en-US')} USD`
 
               return {
                 id: item.id.toString(),
@@ -87,14 +90,15 @@ export function useProperties(): UsePropertiesResult {
       // ✅ Verificar si estamos en modo recomendados
       const modoRecomendados = sessionStorage.getItem('propbol_modo_recomendados')
       const resultadosRecomendados = sessionStorage.getItem('propbol_recomendados')
-      
+
       if (modoRecomendados === 'true' && resultadosRecomendados) {
         console.log('🎯 Usando resultados de recomendados desde sessionStorage')
-        
+
         try {
           const data = JSON.parse(resultadosRecomendados)
-          const selectedCurrency = (searchParams.get('currency') || 'USD').toUpperCase() === 'BOB' ? 'BOB' : 'USD'
-          
+          const selectedCurrency =
+            (searchParams.get('currency') || 'USD').toUpperCase() === 'BOB' ? 'BOB' : 'USD'
+
           const mappedData: PropertyMapPin[] = data
             .filter((item: any) => {
               const ubicacion = item.ubicacion ?? item.ubicacion_inmueble
@@ -107,11 +111,14 @@ export function useProperties(): UsePropertiesResult {
               const publicaciones = item.publicaciones ?? item.publicacion ?? []
               const basePrice = Number(item.precio)
               const sourceCurrency = String(item.currency || item.moneda || 'USD').toUpperCase()
-              const priceInUsd = sourceCurrency === 'BOB' ? basePrice / BOB_EXCHANGE_RATE : basePrice
-              const displayPrice = selectedCurrency === 'BOB' ? priceInUsd * BOB_EXCHANGE_RATE : priceInUsd
-              const formattedText = selectedCurrency === 'BOB'
-                ? `Bs ${displayPrice.toLocaleString('es-BO')}`
-                : `$${displayPrice.toLocaleString('en-US')} USD`
+              const priceInUsd =
+                sourceCurrency === 'BOB' ? basePrice / BOB_EXCHANGE_RATE : basePrice
+              const displayPrice =
+                selectedCurrency === 'BOB' ? priceInUsd * BOB_EXCHANGE_RATE : priceInUsd
+              const formattedText =
+                selectedCurrency === 'BOB'
+                  ? `Bs ${displayPrice.toLocaleString('es-BO')}`
+                  : `$${displayPrice.toLocaleString('en-US')} USD`
 
               return {
                 id: item.id.toString(),
@@ -131,7 +138,7 @@ export function useProperties(): UsePropertiesResult {
                 razones: item.razones
               }
             })
-          
+
           if (!cancelled) {
             setProperties(mappedData)
             // Limpiar sessionStorage después de usar
@@ -147,7 +154,7 @@ export function useProperties(): UsePropertiesResult {
         }
         return
       }
-      
+
       // Si no es modo recomendados, búsqueda normal
       await fetchNormalSearch()
     }
