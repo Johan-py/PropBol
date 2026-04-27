@@ -1078,15 +1078,35 @@ function BusquedaMapaContent() {
                 setActiveSidebarView('results')
               }}
             />
-          ) :
-           isSidebarOpen && activeSidebarView === 'ubicacion' ? (
-            
+          ) : isSidebarOpen && activeSidebarView === 'ubicacion' ? (
             <div className="flex flex-col h-full w-full bg-white relative">
-              <UbicacionEspecificaPanel 
-                onClose={() => setActiveSidebarView('results')} 
+              <UbicacionEspecificaPanel
+                onClose={() => setActiveSidebarView('results')}
+                onApply={(selecciones) => {
+                  // 1. Rescatamos los filtros actuales de la URL (precio, cuartos, tipo, etc)
+                  const params = new URLSearchParams(searchParams.toString());
+                  
+                  // 2. Limpiamos ubicaciones previas para evitar duplicados
+                  params.delete('departamentoId');
+                  params.delete('provinciaId');
+                  params.delete('municipioId');
+                  params.delete('zonaId');
+                  params.delete('barrioId');
+                  
+                  // 3. Añadimos las nuevas selecciones de este panel
+                  if (selecciones.departamento !== 'todos') params.set('departamentoId', selecciones.departamento.toString());
+                  if (selecciones.provincia !== 'todos') params.set('provinciaId', selecciones.provincia.toString());
+                  if (selecciones.municipio !== 'todos') params.set('municipioId', selecciones.municipio.toString());
+                  if (selecciones.zona !== 'todos') params.set('zonaId', selecciones.zona.toString());
+                  if (selecciones.barrio !== 'todos') params.set('barrioId', selecciones.barrio.toString());
+                  
+                  // 4. Empujamos a la URL combinada y cerramos el panel para ver resultados
+                  router.push(`/busqueda_mapa?${params.toString()}`);
+                  setActiveSidebarView('results');
+                }}
               />
             </div>
-            ) :
+          ) :
             isSidebarOpen && activeSidebarView === 'results' ? (
               <div className="flex flex-col h-full min-h-0">
                 <div className="p-4 bg-white shrink-0">
