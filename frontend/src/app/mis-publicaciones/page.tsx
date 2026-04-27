@@ -7,7 +7,18 @@ import type { MisPublicacionesItem } from '@/types/publicacion'
 
 export default function MisPublicacionesList() {
   const [publicaciones, setPublicaciones] = useState<MisPublicacionesItem[]>([])
-  const [estadisticas, setEstadisticas] = useState({
+  const [estadisticas, setEstadisticas] = useState<{
+    totalPublicaciones: number
+    limite: number
+    disponibles: number
+    tieneSuscripcion: boolean
+    suscripcion: {
+      id: number
+      planNombre: string
+      fechaInicio: string
+      fechaFin: string
+    } | null
+  }>({
     totalPublicaciones: 0,
     limite: 2,
     disponibles: 0,
@@ -112,7 +123,9 @@ export default function MisPublicacionesList() {
       {/* Tarjeta de estadísticas */}
       <div className="bg-blue-50 p-4 rounded-xl">
         <h3 className="font-semibold text-gray-800">
-          Mi Plan actual: {estadisticas.tieneSuscripcion ? 'Premium ⭐' : 'Básico (Gratis)'}
+          Mi Plan actual: {estadisticas.suscripcion?.planNombre
+            ? `${estadisticas.suscripcion.planNombre} ⭐`
+            : 'Básico (Gratis)'}
         </h3>
         <p className="text-sm text-gray-600">
           Publicaciones Activas: {publicacionesActivas.length} / {estadisticas.limite}

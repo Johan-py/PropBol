@@ -27,17 +27,16 @@ export default function MapaListadoPaginacion({
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const safePage = Math.min(Math.max(1, page), totalPages);
   const disabled = total === 0;
+  const showPaginationControls = !disabled && totalPages > 1;
 
   const visiblePages = useMemo(() => {
-    const w = 9;
-    if (totalPages <= w) return Array.from({ length: totalPages }, (_, i) => i + 1);
-    let lo = Math.max(1, safePage - Math.floor(w / 2));
-    let hi = lo + w - 1;
-    if (hi > totalPages) {
-      hi = totalPages;
-      lo = hi - w + 1;
-    }
-    return Array.from({ length: hi - lo + 1 }, (_, i) => lo + i);
+    if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
+
+    if (safePage <= 4) return [1, 2, 3, 4, 5, "...", totalPages];
+    if (safePage >= totalPages - 3)
+      return [1, "...", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+
+    return [1, "...", safePage - 1, safePage, safePage + 1, "...", totalPages];
   }, [safePage, totalPages]);
 
   const from = disabled ? 0 : (safePage - 1) * pageSize + 1;
@@ -53,9 +52,12 @@ export default function MapaListadoPaginacion({
 
             value={pageSize}
             disabled={disabled}
-            onChange={(e) =>
-              onPageSizeChange(Number(e.target.value) as (typeof PAGE_SIZE_OPTIONS)[number])
-            }
+            onChange={(e) => {
+              const v = Number(e.target.value);
+              if ((PAGE_SIZE_OPTIONS as readonly number[]).includes(v)) {
+                onPageSizeChange(v as PageSize);
+              }
+            }}
           >
             {PAGE_SIZE_OPTIONS.map((n) => (
               <option key={n} value={n}>
@@ -65,43 +67,50 @@ export default function MapaListadoPaginacion({
 
           </select>
         </label>
-        <div className="flex items-center gap-1 shrink-0" aria-label="Paginación">
-          <button
-            type="button"
-            disabled={disabled || safePage <= 1}
-            onClick={() => onPageChange(safePage - 1)}
-            className="p-1.5 rounded-md border border-stone-200 bg-white disabled:opacity-40"
-            aria-label="Página anterior"
-          >
-            <ChevronLeft size={16} />
-          </button>
-          <div className="flex flex-wrap gap-1 justify-center max-w-[min(100%,14rem)] overflow-x-auto no-scrollbar">
-            {visiblePages.map((n) => (
+        {showPaginationControls ? (
+          <div className="flex items-center gap-1 shrink-0" aria-label="Paginación">
+            {safePage > 1 ? (
               <button
-                key={n}
                 type="button"
-                disabled={disabled}
-                onClick={() => onPageChange(n)}
-                className={`min-w-[1.75rem] h-7 text-xs rounded-md border transition-colors ${
-                  n === safePage
-                    ? "bg-orange-500 text-white border-orange-500 font-semibold shadow-sm"
-                    : "bg-white border-stone-200 text-stone-600 hover:border-orange-300"
-                }`}
+                onClick={() => onPageChange(safePage - 1)}
+                className="p-1.5 rounded-md border border-stone-200 bg-white"
+                aria-label="Página anterior"
               >
-                {n}
+                <ChevronLeft size={16} />
               </button>
-            ))}
+            ) : null}
+            <div className="flex items-center gap-1 justify-center no-scrollbar">
+              {visiblePages.map((n, idx) => (
+                n === "..." ? (
+                  <span key={`dots-${idx}`} className="px-1 text-stone-400 text-xs">...</span>
+                ) : (
+                  <button
+                    key={n}
+                    type="button"
+                    onClick={() => onPageChange(n as number)}
+                    className={`min-w-[1.75rem] h-7 text-xs rounded-md border transition-colors ${
+                      n === safePage
+                        ? "bg-orange-500 text-white border-orange-500 font-semibold shadow-sm"
+                        : "bg-white border-stone-200 text-stone-600 hover:border-orange-300"
+                    }`}
+                  >
+                    {n}
+                  </button>
+                )
+              ))}
+            </div>
+            {safePage < totalPages ? (
+              <button
+                type="button"
+                onClick={() => onPageChange(safePage + 1)}
+                className="p-1.5 rounded-md border border-stone-200 bg-white"
+                aria-label="Página siguiente"
+              >
+                <ChevronRight size={16} />
+              </button>
+            ) : null}
           </div>
-          <button
-            type="button"
-            disabled={disabled || safePage >= totalPages}
-            onClick={() => onPageChange(safePage + 1)}
-            className="p-1.5 rounded-md border border-stone-200 bg-white disabled:opacity-40"
-            aria-label="Página siguiente"
-          >
-            <ChevronRight size={16} />
-          </button>
-        </div>
+        ) : null}
       </div>
       <p className="text-[11px] text-stone-500 text-center sm:text-left">
         {disabled
