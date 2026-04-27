@@ -233,8 +233,9 @@ interface MapViewProps {
   onClusterClick?: (properties: PropertyMapPin[]) => void
   activeClusterIds?: string[]
   isDrawingMode?: boolean
-  polygonPoints?: [number, number][]
+   polygonPoints?: [number, number][]
   isPolygonClosed?: boolean
+  drawnPolygons?: [number, number][][]
   isZoneEditingMode?: boolean
   editablePolygonPoints?: [number, number][]
   onEditablePointDrag?: (index: number, lat: number, lng: number) => void
@@ -283,6 +284,7 @@ export default function MapView({
   isDrawingMode = false,
   polygonPoints = [],
   isPolygonClosed = false,
+  drawnPolygons = [],
   isZoneEditingMode = false,
   editablePolygonPoints = [],
   onEditablePointDrag,
@@ -441,6 +443,21 @@ export default function MapView({
           </>
         )}
         {/* --- FIN CÓDIGO HU8 --- */}
+        {/* --- POLÍGONOS CERRADOS ACUMULADOS --- */}
+        {drawnPolygons.map((poly, i) => (
+          <Polygon
+            key={`drawn-${i}`}
+            positions={poly}
+            pathOptions={{
+              color: '#ea580c',
+              fillColor: '#ea580c',
+              fillOpacity: 0.15,
+              weight: 2
+            }}
+          />
+        ))}
+        {/* --- FIN CÓDIGO HU8 --- */}
+        
         {selectedProperty && (
           <FlyToSelected
             id={selectedProperty.id}
