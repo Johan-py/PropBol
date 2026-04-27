@@ -196,29 +196,52 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     updateFilters(nuevosFiltros)
 
     const params = new URLSearchParams(searchParams.toString())
-    // Limpiamos solo los filtros que maneja esta barra superior para evitar duplicados
-    params.delete('modoInmueble')
-    params.delete('tipoInmueble')
-    params.delete('query')
-    try {
-      const merged = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}') as {
-        locationId?: string | number
-      }
-      if (merged.locationId != null && merged.locationId !== '') {
-        params.set('locationId', String(merged.locationId))
-      }
-    } catch {
-      /* ignore */
-    }
+// Limpiamos solo los filtros que maneja esta barra superior para evitar duplicados
+params.delete('modoInmueble')
+params.delete('tipoInmueble')
+params.delete('query')
 
-    modosSeleccionados.forEach((modo) => params.append('modoInmueble', modo))
-    if (tipoFinal) params.set('tipoInmueble', tipoFinal)
-    if (ubicacionTexto.trim() !== '') params.set('query', ubicacionTexto.trim())
+try {
+  const merged = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}') as {
+    locationId?: string | number
+  }
+  if (merged.locationId != null && merged.locationId !== '') {
+    params.set('locationId', String(merged.locationId))
+  }
+} catch {
+  /* ignore */
+}
 
-    const queryString = params.toString()
-    const targetUrl = `/busqueda_mapa${queryString ? `?${queryString}` : ''}`
+modosSeleccionados.forEach((modo) => params.append('modoInmueble', modo))
+if (tipoFinal) params.set('tipoInmueble', tipoFinal)
+if (ubicacionTexto.trim() !== '') params.set('query', ubicacionTexto.trim())
 
-    router.push(targetUrl)
+// 👇 AGREGAR ESTO: Filtros de superficie
+if (minSuperficie) params.set('minSuperficie', minSuperficie)
+else params.delete('minSuperficie')
+if (maxSuperficie) params.set('maxSuperficie', maxSuperficie)
+else params.delete('maxSuperficie')
+
+// 👇 AGREGAR ESTO: Filtros de precio
+if (minPrice) params.set('minPrice', minPrice)
+else params.delete('minPrice')
+if (maxPrice) params.set('maxPrice', maxPrice)
+else params.delete('maxPrice')
+
+// 👇 AGREGAR ESTO: Filtros de capacidad
+if (minDorm) params.set('dormitoriosMin', minDorm)
+else params.delete('dormitoriosMin')
+if (maxDorm) params.set('dormitoriosMax', maxDorm)
+else params.delete('dormitoriosMax')
+if (minBanos) params.set('banosMin', minBanos)
+else params.delete('banosMin')
+if (maxBanos) params.set('banosMax', maxBanos)
+else params.delete('banosMax')
+
+const queryString = params.toString()
+const targetUrl = `/busqueda_mapa${queryString ? `?${queryString}` : ''}`
+
+router.push(targetUrl)
     if (onSearch) onSearch(nuevosFiltros)
   }
 
