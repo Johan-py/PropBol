@@ -117,10 +117,27 @@ export default function ConsumoPage() {
         </div>
       )}
 
-      {/*  SOLO SI ESTÁ LOGUEADO */}
+      {/* SOLO SI ESTÁ LOGUEADO */}
+      {/*Muestra el contador de publicaciones dinámicamente */}
       {isLogged && (
-        <div className="bg-yellow-100 text-yellow-800 p-4 rounded-lg mb-6">
-          Tienes publicaciones restantes este mes. Te queda {disponibles}.
+        <div className="bg-[#FFFBEB] border border-yellow-200 p-5 rounded-2xl mb-6 flex items-center gap-4 shadow-sm">
+          {/* 1. ICONO DE CAMPANA */}
+          <div className="bg-white p-3 rounded-xl shadow-inner">
+            <span className="text-4xl">🔔</span> 
+          </div>
+          {/* 2. TEXTO INFORMATIVO */}
+          <div className="flex-1">
+            <h3 className="text-yellow-900 text-2xl font-extrabold  leading-tight">
+              Tienes publicaciones restantes este mes
+            </h3>
+            <p className="text-yellow-700 text-xl md:text-base font-extrabold">
+              Tu plan pro incluye 10 publicaciones. Has utilizado {10-disponibles} y te queda <span className="underline font-extrabold">{disponibles} disponible</span>. ¡Úsala antes de que venza el periodo mensual!
+            </p>
+          </div>
+          {/* 3. NÚMERO GRANDE A LA DERECHA */}
+          <div className="text-6xl md:text-8xl font-black text-yellow-400 opacity-80">
+            {disponibles}
+          </div>
         </div>
       )}
 
