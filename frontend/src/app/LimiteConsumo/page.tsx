@@ -101,7 +101,7 @@ export default function ConsumoPage() {
         <Link href="/cobros-suscripciones">
           <button className="group flex items-center gap-3 bg-gradient-to-r from-black to-orange-400 text-white px-10 py-5 text-2xl rounded-lg hover:bg-orange-900 transition">
             Ver planes de ampliación
-          <span className="text-5x1 transition-transform group-hover:translate-x-1">→</span>
+          <span className="text-7x1 transition-transform group-hover:translate-x-2">→</span>
           </button>
         </Link>
       </div>
