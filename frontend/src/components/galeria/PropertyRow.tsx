@@ -6,13 +6,13 @@ import { MapPin } from 'lucide-react'
 
 export default function PropertyRow({
   title,
-  price,
+  precioFormateado,
   size,
   contactType,
   image
 }: {
   title: string
-  price: string
+  precioFormateado: string
   size: string
   contactType: string
   image: string
@@ -46,7 +46,7 @@ export default function PropertyRow({
           isHovered ? 'text-sm text-[#ea580c]' : 'text-[11px] text-gray-700'
         }`}
       >
-        {price}
+        {precioFormateado}
       </span>
 
       {/* DETALLE */}
