@@ -132,7 +132,7 @@ export default function ConsumoPage() {
               Tu Plan Pro incluye 10 publicaciones. Has utilizado {10-disponibles} y te queda <span className="underline font-extrabold">{disponibles} disponible</span>. ¡Úsala antes de que venza el periodo mensual!
             </p>
           </div>
-          {/* 3. NÚMERO GRANDE A LA DERECHA */}
+          {/* Numero de la derecha*/}
           <div className="text-6xl md:text-8xl font-black text-yellow-400 opacity-80">
             {disponibles}
           </div>
