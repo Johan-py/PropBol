@@ -3,33 +3,35 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-const USER_STORAGE_KEY = "propbol_user";
+import BlogCreateForm from "@/components/blog/BlogCreateForm";
+
+const REDIRECT_AFTER_LOGIN_KEY = "redirectAfterLogin";
+const TOKEN_STORAGE_KEY = "token";
 
 export default function CreatePostPage() {
   const router = useRouter();
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
-    // Verificamos si existe la sesión en el cliente
-    const user = localStorage.getItem(USER_STORAGE_KEY);
-    if (!user) {
-      // Redirigimos a la página de blogs si no hay sesión
-      router.push("/blogs");
-    } else {
-      setIsChecking(false);
+    const token = localStorage.getItem(TOKEN_STORAGE_KEY);
+
+    if (!token) {
+      localStorage.setItem(REDIRECT_AFTER_LOGIN_KEY, "/blog/create");
+      router.replace("/sign-in");
+      return;
     }
+
+    setIsChecking(false);
   }, [router]);
 
   if (isChecking) {
-    return null; // O un spinner de carga
+    return null;
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-6">
-      <h1 className="text-3xl font-bold mb-8 text-stone-900">Crear Nuevo Post</h1>
-      <div className="bg-white p-8 rounded-[32px] border border-stone-200 shadow-sm">
-        {/* AQUÍ IRÁ TU FORMULARIO DE LA HU6 */}
-        <p className="text-stone-500 italic">El formulario de la HU6 se renderizará aquí.</p>
+    <div className="min-h-screen bg-[#FAFAFA]/50 py-12 sm:py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <BlogCreateForm />
       </div>
     </div>
   );
