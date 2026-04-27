@@ -146,10 +146,8 @@ export default function ConsumoPage() {
           Publicaciones usadas este mes
         </p>
 
-        {/* CONTENEDOR FLEX: Divide en Izquierda (Números) y Derecha (Barra) */}
+        {/* Contador de Publicaciones */}
         <div className="flex flex-col md:flex-row md:items-end gap-8 mb-8">
-          
-          {/* IZQUIERDA: EL CONTADOR GIGANTE */}
           <div className="flex-shrink-0">
             <div className="flex items-baseline gap-1">
               <span className="text-8xl font-black">{data.usadas}</span>
