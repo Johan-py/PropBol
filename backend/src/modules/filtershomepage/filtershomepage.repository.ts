@@ -27,6 +27,8 @@ function resolverDepartamento(raw: string): string {
 }
 
 export class FiltersHomepageRepository {
+  // backend/src/modules/filtershomepage/filtershomepage.repository.ts
+
   async getCountsByCity(tipoAccion: $Enums.TipoAccion) {
     const ubicaciones = await prisma.ubicacionInmueble.findMany({
       where: {
@@ -34,32 +36,27 @@ export class FiltersHomepageRepository {
           tipoAccion: tipoAccion,
           estado: $Enums.EstadoInmueble.ACTIVO,
         },
+        latitud: { not: 0 },
+        longitud: { not: 0 },
       },
       select: {
         inmuebleId: true,
         ciudad: true,
-        ubicacion_maestra: {
-          select: {
-            departamento: true,
-          },
-        },
+        ubicacion_maestra: { select: { departamento: true } },
         inmueble: {
           select: {
             id: true,
             titulo: true,
+            // Volvemos a tu estructura original que es la correcta para tu base de datos
             publicaciones: {
+              take: 1,
               select: {
                 multimedia: {
-                  where: {
-                    tipo: $Enums.TipoMultimedia.IMAGEN,
-                  },
-                  select: {
-                    url: true,
-                  },
+                  where: { tipo: $Enums.TipoMultimedia.IMAGEN },
+                  select: { url: true },
                   take: 1,
                 },
               },
-              take: 1,
             },
           },
         },
@@ -83,25 +80,25 @@ export class FiltersHomepageRepository {
 
       const entry = deptMap.get(dept)!;
       entry.ids.add(u.inmuebleId);
+      
+      const inmueble = u.inmueble;
 
-      const primeraPublicacion = u.inmueble?.publicaciones?.[0];
-      const primeraImagen = primeraPublicacion?.multimedia?.[0]?.url;
+      // Aquí está el truco: Navegamos de forma segura por Inmueble -> Publicaciones -> Multimedia
+      const primeraImagen = inmueble?.publicaciones?.[0]?.multimedia?.[0]?.url ?? null;
 
-      if (entry.previews.length < 6 && primeraImagen) {
+      if (entry.previews.length < 6 && primeraImagen && inmueble) {
         entry.previews.push({
           imagen: primeraImagen,
-          titulo: u.inmueble.titulo ?? "Sin título",
+          titulo: inmueble.titulo ?? "Sin título",
         });
       }
     }
 
-    const counts = Array.from(deptMap.entries()).map(([dept, data]) => ({
+    return Array.from(deptMap.entries()).map(([dept, data]) => ({
       departamento: dept,
       count: data.ids.size,
       previews: data.previews,
-    }));
-
-    return counts.sort((a, b) => b.count - a.count);
+    })).sort((a, b) => b.count - a.count);
   }
 
   async getCountsByCategoria() {
@@ -110,6 +107,10 @@ export class FiltersHomepageRepository {
       where: {
         estado: $Enums.EstadoInmueble.ACTIVO,
         categoria: { not: null },
+        ubicacion: {
+          latitud: { not: 0 },
+          longitud: { not: 0 }
+        }
       },
       _count: {
         id: true,
