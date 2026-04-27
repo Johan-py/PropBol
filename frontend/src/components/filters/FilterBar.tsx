@@ -77,6 +77,15 @@ const trackSearchTelemetria = async (filtros: {
   modoInmueble: string[]
   query: string
   zona?: string
+  precioMin?: string | null
+  precioMax?: string | null
+  superficieMin?: string | null
+  superficieMax?: string | null
+  dormitoriosMin?: string | null
+  dormitoriosMax?: string | null
+  banosMin?: string | null
+  banosMax?: string | null
+  banoCompartido?: boolean | null
 }) => {
   try {
     await fetch('/api/telemetria/search', {
@@ -128,7 +137,18 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
   ]
 
   const handleSearch = async (e?: React.FormEvent) => {
+    
     if (e) e.preventDefault()
+     const urlParams = new URLSearchParams(window.location.search)
+    const minPrice = urlParams.get('minPrice')
+    const maxPrice = urlParams.get('maxPrice')
+    const minSuperficie = urlParams.get('minSuperficie')
+    const maxSuperficie = urlParams.get('maxSuperficie')
+    const minDorm = urlParams.get('dormitoriosMin')
+    const maxDorm = urlParams.get('dormitoriosMax')
+    const minBanos = urlParams.get('banosMin')
+    const maxBanos = urlParams.get('banosMax')
+    const banoCompartido = urlParams.get('banoCompartido')
     const tipoMap: Record<string, string> = {
       Casas: 'CASA',
       Departamentos: 'DEPARTAMENTO',
@@ -147,13 +167,31 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       tipoInmueble: tipoFinal ? [tipoFinal] : [],
       modoInmueble: modosFinales,
       query: ubicacionTexto,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      precioMin: minPrice || undefined,
+      precioMax: maxPrice || undefined,
+      superficieMin: minSuperficie || undefined,
+      superficieMax: maxSuperficie || undefined,
+      dormitoriosMin: minDorm || undefined,
+      dormitoriosMax: maxDorm || undefined,
+      banosMin: minBanos || undefined,
+      banosMax: maxBanos || undefined,
+      banoCompartido: banoCompartido === 'true' ? true : banoCompartido === 'false' ? false : undefined
     }
     await trackSearchTelemetria({
       tipoInmueble: nuevosFiltros.tipoInmueble,
       modoInmueble: nuevosFiltros.modoInmueble,
       query: nuevosFiltros.query,
-      zona: ubicacionTexto
+      zona: ubicacionTexto, 
+      precioMin: minPrice,
+      precioMax: maxPrice,
+      superficieMin: minSuperficie,
+      superficieMax: maxSuperficie,
+      dormitoriosMin: minDorm,
+      dormitoriosMax: maxDorm,
+      banosMin: minBanos,
+      banosMax: maxBanos,
+      banoCompartido: banoCompartido === 'true' ? true : banoCompartido === 'false' ? false : null
     })
     updateFilters(nuevosFiltros)
 
@@ -298,7 +336,29 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
               type="button"
               onClick={async () => {
                 const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
-                const params = new URLSearchParams({ orden: 'recomendados' })
+                const params = new URLSearchParams()
+                params.set('orden', 'recomendados')
+                const urlParams = new URLSearchParams(window.location.search)
+                const minPrice = urlParams.get('minPrice')
+                const maxPrice = urlParams.get('maxPrice')
+                const minSuperficie = urlParams.get('minSuperficie')
+                const maxSuperficie = urlParams.get('maxSuperficie')
+                const minDorm = urlParams.get('dormitoriosMin')
+                const maxDorm = urlParams.get('dormitoriosMax')
+                const tipoInmueble = urlParams.get('tipoInmueble')
+                const modoInmueble = urlParams.getAll('modoInmueble')
+                const query = urlParams.get('query')
+    
+                if (minPrice) params.set('minPrice', minPrice)
+                if (maxPrice) params.set('maxPrice', maxPrice)
+                if (minSuperficie) params.set('minSuperficie', minSuperficie)
+                if (maxSuperficie) params.set('maxSuperficie', maxSuperficie)
+                if (minDorm) params.set('dormitoriosMin', minDorm)
+                if (maxDorm) params.set('dormitoriosMax', maxDorm)
+                if (tipoInmueble) params.set('tipoInmueble', tipoInmueble)
+                if (query) params.set('query', query)
+                modoInmueble.forEach(m => params.append('modoInmueble', m))
+
                 if (token) {
                   const res = await fetch(`/api/inmuebles/recomendados?${params}`, {
                     headers: { Authorization: `Bearer ${token}` }
@@ -306,10 +366,11 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                   const data = await res.json()
                   if (data.success && data.data.length > 0) {
                     sessionStorage.setItem('recomendaciones_resultado', JSON.stringify(data.data))
-                    router.push('/busqueda_mapa?orden=recomendados')
+                    sessionStorage.setItem('propbol_modo_recomendados', 'true')
+                    router.push(`/busqueda_mapa?${params.toString()}`)
                   }
                 } else {
-                  router.push('/busqueda_mapa?orden=recomendados')
+                  router.push(`/busqueda_mapa?${params.toString()}`)
                 }
               }}
               className="h-[40px] flex items-center gap-2 px-4 rounded-full bg-white border border-stone-200 text-stone-600 text-sm font-medium hover:border-[#d97706] shadow-sm transition-all focus:outline-none shrink-0"
