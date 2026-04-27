@@ -139,27 +139,43 @@ export default function ConsumoPage() {
         </div>
       )}
 
-      {/* TARJETA PRINCIPAL */}
-      <div className="bg-gradient-to-r from-black to-orange-500 text-white p-6 rounded-xl shadow mb-6">
-        <p className="text-sm opacity-80 mb-2">
-          PUBLICACIONES USADAS ESTE MES
+      {/* Tarjeta Principal */}
+      <div className="bg-gradient-to-r from-black via-stone-900 to-orange-600 text-white p-8 rounded-[2rem] shadow-2xl mb-8 font-sans">
+        
+        {/* LABEL SUPERIOR */}
+        <p className="text-[10px] tracking-[0.2em] opacity-60 font-black mb-6 uppercase">
+          Publicaciones usadas este mes
         </p>
 
-        <h2 className="text-4xl font-bold mb-4">
-          {data.usadas} / {data.limite}
-        </h2>
+        {/* CONTENEDOR FLEX: Divide en Izquierda (Números) y Derecha (Barra) */}
+        <div className="flex flex-col md:flex-row md:items-end gap-8 mb-8">
+          
+          {/* IZQUIERDA: EL CONTADOR GIGANTE */}
+          <div className="flex-shrink-0">
+            <div className="flex items-baseline gap-1">
+              <span className="text-7xl font-black">{data.usadas}</span>
+              <span className="text-4xl opacity-30 font-light">/ {data.limite}</span>
+            </div>
+            <p className="text-sm opacity-40 mt-1 font-medium">Plan Pro • Límite mensual</p>
+          </div>
 
-        {/* BARRA */}
-        <div className="w-full bg-gray-300 rounded-full h-3 mb-4">
-          <div
-            className={`h-3 rounded-full transition-all duration-700 ${colorBarra}`}
-            style={{ width: `${porcentaje}%` }}
-          />
+          {/* DERECHA: LA BARRA Y SUS METOS */}
+          <div className="flex-1 pb-2">
+            <div className="flex justify-between text-[10px] font-black mb-2 tracking-widest">
+              <span className="opacity-40">0 USADAS</span>
+              <span className="text-orange-400">{porcentaje}% UTILIZADO</span>
+              <span className="opacity-40">LÍMITE: {data.limite}</span>
+            </div>
+            
+            {/* BARRA DE PROGRESO */}
+            <div className="w-full bg-white/10 rounded-full h-4 overflow-hidden backdrop-blur-sm">
+              <div
+                className={`h-full rounded-full transition-all duration-1000 ${colorBarra}`}
+                style={{ width: `${porcentaje}%` }}
+              />
+            </div>
+          </div>
         </div>
-
-        <p className={`text-sm font-semibold ${colorTexto}`}>
-          {isLogged ? mensaje : 'Inicia sesión para ver tu consumo'}
-        </p>
       </div>
 
       {/* CARDS */}
