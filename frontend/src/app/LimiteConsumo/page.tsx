@@ -133,7 +133,7 @@ export default function ConsumoPage() {
             </p>
           </div>
           {/* Numero de la derecha*/}
-          <div className="text-6xl md:text-8xl font-black text-yellow-400 opacity-80">
+          <div className="text-6xl md:text-8xl font-black text-yellow-900">
             {disponibles}
           </div>
         </div>
