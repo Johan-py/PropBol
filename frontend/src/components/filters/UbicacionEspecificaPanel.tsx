@@ -4,9 +4,10 @@ import { useFiltrosGeograficos } from '@/hooks/useFiltrosGeograficos';
 
 interface UbicacionEspecificaPanelProps {
   onClose: () => void;
+  onApply: (selecciones: any) => void;
 }
 
-export function UbicacionEspecificaPanel({ onClose }: UbicacionEspecificaPanelProps) {
+export function UbicacionEspecificaPanel({ onClose, onApply }: UbicacionEspecificaPanelProps) {
   const { selecciones, listas, handlers, bloqueos } = useFiltrosGeograficos();
 
   // Clase unificada para todos los selects
@@ -116,7 +117,7 @@ export function UbicacionEspecificaPanel({ onClose }: UbicacionEspecificaPanelPr
           Limpiar
         </button>
         <button
-          onClick={onClose}
+          onClick={() => onApply(selecciones)}
           className="flex-1 py-2.5 text-sm font-bold text-white bg-[#d97706] rounded-lg hover:bg-[#b95e00] active:scale-95 transition-all shadow-md focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#d97706]"
         >
           Aplicar
