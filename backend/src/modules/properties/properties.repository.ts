@@ -174,19 +174,23 @@ export const propertiesRepository = {
       }
     }
 
-    if (filtros.banosMin !== undefined || filtros.banosMax !== undefined) {
-      where.nroBanos = {}
-      if (filtros.banosMin !== undefined) {
-        where.nroBanos.gte = filtros.banosMin
-      }
-      if (filtros.banosMax !== undefined) {
-        where.nroBanos.lte = filtros.banosMax
+    // Compartido
+    if (filtros.banoCompartido !== undefined) {
+      if (filtros.banoCompartido === true) {
+        // Baño COMPARTIDO: solo CUARTOS
+        where.categoria = 'CUARTO'
+        where.banoCompartido = true
+      } else {
+        // Baño PRIVADO: aplicar filtro OR
+        where.OR = [
+          { categoria: { not: 'CUARTO' } },
+          { categoria: 'CUARTO', banoCompartido: false }
+        ]
       }
     }
 
-    if (filtros.banoCompartido !== undefined) {
-      where.banoCompartido = filtros.banoCompartido
-    }
+
+
     // ── FILTRO DE SUPERFICIE ──────────────────────────────────────────────
     if (filtros.minSuperficie != null || filtros.maxSuperficie != null) {
       where.superficieM2 = {}
