@@ -171,7 +171,7 @@ export default function ConsumoPage() {
             </div>
             
             {/* BARRA DE PROGRESO */}
-            <div className="w-full bg-white/10 rounded-full h-4 overflow-hidden backdrop-blur-sm">
+            <div className="w-full bg-white/40 rounded-full h-6 overflow-hidden backdrop-blur-sm">
               <div
                 className={`h-full rounded-full transition-all duration-1000 ${colorBarra}`}
                 style={{ width: `${porcentaje}%` }}
