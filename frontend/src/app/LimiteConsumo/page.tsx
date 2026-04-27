@@ -152,8 +152,8 @@ export default function ConsumoPage() {
           {/* IZQUIERDA: EL CONTADOR GIGANTE */}
           <div className="flex-shrink-0">
             <div className="flex items-baseline gap-1">
-              <span className="text-7xl font-black">{data.usadas}</span>
-              <span className="text-4xl opacity-30 font-light">/ {data.limite}</span>
+              <span className="text-8xl font-black">{data.usadas}</span>
+              <span className="text-5xl opacity-30 font-light">/ {data.limite}</span>
             </div>
             <p className="text-sm opacity-40 mt-1 font-medium">Plan Pro • Límite mensual</p>
           </div>
