@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-//import PlanModal from '../../components/ui/PlanModal'
 import dynamic from 'next/dynamic'
 import { ErrorValidacion, EstadoPublicacion } from "../../types/publicacion";
 import ErrorPanel from "../../components/publicacion/ErrorPanel";
@@ -996,7 +995,7 @@ export default function MiRegistroPage() {
                     onClick={guardarPropiedad}
                     className="px-12 py-3 rounded-full border-2 border-orange-400 bg-[#D9D9D9] hover:bg-orange-100 transition"
                   >
-                    Continuar a Publicar
+                    Continuar
                   </button>
                 </div>
 
