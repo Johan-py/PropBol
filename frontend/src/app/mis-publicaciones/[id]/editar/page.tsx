@@ -137,6 +137,7 @@ export default function EditarPublicacionPage() {
       : false
   }
 
+<<<<<<< HEAD
   useEffect(() => {
     const protegerSalidaMisPublicaciones = (event: MouseEvent) => {
       const target = event.target as HTMLElement

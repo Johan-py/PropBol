@@ -1,15 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+type ParametroBackend = {
+  id: number;
+  nombre: string;
+  descripcion?: string | null;
+};
 
 type Props = {
   valoresIniciales?: string[];
+  catalogoParametros?: ParametroBackend[];
   onGuardar?: (parametros: string[]) => void;
   onCancelar?: () => void;
 };
 
+const MIN_CARACTERES = 3;
+const MAX_CARACTERES = 60;
+
 export default function ExtrasPropiedad({
   valoresIniciales = [],
+  catalogoParametros = [],
   onGuardar,
   onCancelar,
 }: Props) {
@@ -22,6 +33,24 @@ export default function ExtrasPropiedad({
   useEffect(() => {
     setParametros(valoresIniciales);
   }, [valoresIniciales]);
+
+  const sugerencias = useMemo(() => {
+    const busqueda = nuevoParametro.trim().toLowerCase();
+
+    if (!busqueda) return [];
+
+    return catalogoParametros
+      .filter((item) => item.nombre?.toLowerCase().includes(busqueda))
+      .filter(
+        (item) =>
+          !parametros.some(
+            (parametro, index) =>
+              parametro.toLowerCase() === item.nombre.toLowerCase() &&
+              index !== indiceEdicion
+          )
+      )
+      .slice(0, 6);
+  }, [catalogoParametros, nuevoParametro, parametros, indiceEdicion]);
 
   const limpiarFormulario = () => {
     setNuevoParametro("");
@@ -40,6 +69,16 @@ export default function ExtrasPropiedad({
 
     if (!valor) {
       setError("Debe ingresar un parámetro.");
+      return;
+    }
+
+    if (valor.length < MIN_CARACTERES) {
+      setError(`El parámetro debe tener al menos ${MIN_CARACTERES} caracteres.`);
+      return;
+    }
+
+    if (valor.length > MAX_CARACTERES) {
+      setError(`El parámetro no puede superar los ${MAX_CARACTERES} caracteres.`);
       return;
     }
 
@@ -62,6 +101,11 @@ export default function ExtrasPropiedad({
     }
 
     limpiarFormulario();
+  };
+
+  const seleccionarSugerencia = (nombre: string) => {
+    setNuevoParametro(nombre);
+    setError("");
   };
 
   const editarParametro = (index: number) => {
@@ -96,17 +140,50 @@ export default function ExtrasPropiedad({
         Nuevo parámetro:
       </label>
 
-      <div className="mb-3 flex flex-col gap-3 md:flex-row">
-        <input
-          type="text"
-          value={nuevoParametro}
-          onChange={(e) => {
-            setNuevoParametro(e.target.value);
-            if (error) setError("");
-          }}
-          placeholder="Ej: balcón, terraza, vista panorámica..."
-          className="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 outline-none focus:border-orange-400"
-        />
+      <div className="relative mb-3 flex flex-col gap-3 md:flex-row">
+        <div className="relative w-full">
+          <input
+            type="text"
+            value={nuevoParametro}
+            maxLength={MAX_CARACTERES}
+            onChange={(e) => {
+              setNuevoParametro(e.target.value);
+              if (error) setError("");
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                agregarOActualizarParametro();
+              }
+            }}
+            placeholder="Ej: balcón, terraza, vista panorámica..."
+            className="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 outline-none focus:border-orange-400"
+          />
+
+          <p className="mt-1 text-xs text-neutral-500">
+            {nuevoParametro.length}/{MAX_CARACTERES} caracteres
+          </p>
+
+          {sugerencias.length > 0 && (
+            <div className="absolute left-0 right-0 top-[52px] z-20 max-h-56 overflow-y-auto rounded-xl border border-neutral-200 bg-white shadow-lg">
+              {sugerencias.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => seleccionarSugerencia(item.nombre)}
+                  className="block w-full px-4 py-3 text-left text-sm text-neutral-800 hover:bg-orange-50"
+                >
+                  <span className="font-semibold">{item.nombre}</span>
+                  {item.descripcion && (
+                    <span className="block text-xs text-neutral-500">
+                      {item.descripcion}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
 
         <button
           type="button"
