@@ -204,10 +204,11 @@ export default function ConsumoPage() {
           {/* Icono libro ambar */}
           <div className="bg-amber-50 p-4 rounded-2xl text-5xl">📙</div>
 
+          {/* Linea de color ambar inferior y texto del Cards2 */}
           <div className="flex flex-col text-left">
             <h3 className="text-6xl font-black text-amber-600 leading-none">
-            {data.usadas}
-          </h3>
+              {data.usadas}
+            </h3>
             <p className="text-xl font-bold text-gray-500 uppercase tracking-widest mt-2">
               Publicaciones Utilizadas
             </p>
