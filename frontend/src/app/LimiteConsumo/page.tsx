@@ -226,7 +226,7 @@ export default function ConsumoPage() {
               {data.limite}
             </h3>
             <p className="text-xl font-bold text-gray-500 uppercase tracking-widest mt-2">
-              Límite Total del Pla
+              Límite Total del Plan
             </p>
           </div>
       </div>
