@@ -72,8 +72,9 @@ export const createUser = async (data: CreateUserInput) => {
       },
       include: {
         telefonos: true,
-      },
-    });
+        rol: true
+      }
+    })
   } catch (error) {
     if (isUniqueConstraintError(error)) {
       throw new Error(getUniqueConstraintMessage(error));
@@ -96,10 +97,11 @@ export const findUser = async (correo: string) => {
       avatar: true,
       activo: true,
       two_factor_activo: true,
-      rol: true,
-    },
-  });
-};
+      controlador: true,
+      rol: true
+    }
+  })
+}
 export const findUserByCorreo = async (correo: string) => {
   return await prisma.usuario.findUnique({
     where: { correo },
@@ -465,9 +467,16 @@ export const invalidateOtherUserSessions = async (
       token: { not: currentToken },
       estado: true,
     },
-    data: { estado: false },
-  });
-};
+    data: { estado: false }
+  })
+}
+export const completeTourByUserId = async (id: number) => {
+  return await prisma.usuario.update({
+    where: { id },
+    data: { controlador: true }
+  })
+}
+
 export const countActiveSocialLinksByUser = async (usuarioId: number) => {
   return await prisma.autenticacion_social.count({
     where: {
