@@ -368,6 +368,7 @@ export const loginService = async (payload: LoginDTO) => {
       correo: user.correo,
       nombre: user.nombre,
       apellido: user.apellido,
+      avatar: user.avatar,
       rol: user.rol
     },
     token
@@ -435,6 +436,7 @@ export const verify2FAService = async ({ userId, codigo }: Verify2FADTO) => {
       correo: user.correo,
       nombre: user.nombre,
       apellido: user.apellido,
+      avatar: user.avatar,
       rol: user.rol
     },
     token
@@ -572,6 +574,7 @@ export const getMeService = async (token: string) => {
       id: session.usuario.id,
       nombre: session.usuario.nombre,
       apellido: session.usuario.apellido,
+      avatar: session.usuario.avatar,
       correo: session.usuario.correo,
       rol: session.usuario.rol
     }
@@ -758,6 +761,7 @@ export const loginWithGoogleCodeService = async (code: string) => {
       correo: user.correo,
       nombre: user.nombre,
       apellido: user.apellido,
+      avatar: user.avatar,
       rol: user.rol
     },
     token

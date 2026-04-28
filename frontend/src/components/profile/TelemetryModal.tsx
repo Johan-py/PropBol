@@ -5,7 +5,7 @@ import React from 'react';
 interface TelemetryModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAccept?: () => void; 
+  onAccept?: () => void;
 }
 
 // 2. Recibimos onAccept en los parámetros
@@ -28,7 +28,7 @@ const TelemetryModal: React.FC<TelemetryModalProps> = ({ isOpen, onClose, onAcce
           <p>
             En <strong>PropBol</strong>, queremos que tu búsqueda sea lo más fluida posible. Para lograrlo, utilizamos herramientas de análisis que nos permiten entender mejor las tendencias del mercado inmobiliario.
           </p>
-          
+
           {/* Caja informativa - Piedra 100 */}
           <ul className="space-y-3 bg-[#f5f5f4] p-5 rounded-lg border border-stone-200">
             <li className="flex gap-3">
@@ -48,15 +48,15 @@ const TelemetryModal: React.FC<TelemetryModalProps> = ({ isOpen, onClose, onAcce
 
         {/* Botones - Ámbar y Piedra */}
         <div className="flex justify-end gap-3 font-semibold">
-          <button 
+          <button
             onClick={onClose}
             className="px-5 py-2 border border-stone-300 text-stone-500 rounded-md hover:bg-[#f5f5f4] transition-colors"
           >
             Entendido
           </button>
-          
+
           {/* 3. CAMBIO AQUÍ: Nuevo texto y usamos onAccept */}
-          <button 
+          <button
             className="px-5 py-2 bg-[#D97706] text-white rounded-md hover:bg-[#b45309] transition-all shadow-md active:scale-95"
             onClick={onAccept}
           >
