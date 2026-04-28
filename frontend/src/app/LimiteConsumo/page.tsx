@@ -183,11 +183,20 @@ export default function ConsumoPage() {
 
       {/* Creacion de Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-28 mb-10">
-        <div className="bg-white p-4 rounded-xl shadow text-center">
-          <h3 className="text-green-600 text-xl font-bold">
-            {isLogged ? disponibles : 0}
-          </h3>
-          <p>Disponibles</p>
+        <div className="bg-white p-10 rounded-3xl shadow-sm border-b-4 border-emerald-500 flex items-center justify-center gap-6 transition-transform hover:scale-105">
+          
+          {/* ICONO (A la izquierda) */}
+          <div className="bg-emerald-50 p-4 rounded-2xl text-4xl">📗</div>
+          
+          {/* CONTENEDOR DE TEXTO (Agrupa número y etiqueta para que se apilen) */}
+          <div className="flex flex-col text-left">
+            <h3 className="text-5xl font-black text-emerald-600 leading-none">
+              {isLogged ? disponibles : 0}
+            </h3>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2">
+              Disponibles
+            </p>
+          </div>
         </div>
 
         <div className="bg-white p-4 rounded-xl shadow text-center">
