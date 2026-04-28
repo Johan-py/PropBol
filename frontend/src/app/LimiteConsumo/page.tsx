@@ -215,7 +215,7 @@ export default function ConsumoPage() {
           </div>    
         </div>
 
-        <div className="bg-white p-4 rounded-xl shadow text-center">
+        <div className="bg-white p-10 rounded-3xl shadow-sm border-b-8 border-blue-500 flex items-center justify-center gap-6 transition-transform hover:scale-105">
           <h3 className="text-blue-600 text-xl font-bold">
             {data.limite}
           </h3>
