@@ -219,11 +219,17 @@ export default function ConsumoPage() {
           
           {/* Icono libro azul */}
           <div className="bg-blue-50 p-4 rounded-2xl text-5xl">📘</div>
-          <h3 className="text-blue-600 text-xl font-bold">
-            {data.limite}
-          </h3>
-          <p>Límite</p>
-        </div>
+
+          {/* Bloque de texto informativo */}
+          <div className="flex flex-col text-left">
+            <h3 className="text-6xl font-black text-blue-600 leading-none">
+              {data.limite}
+            </h3>
+            <p className="text-xl font-bold text-gray-500 uppercase tracking-widest mt-2">
+              Límite Total del Plan
+            </p>
+          </div>
+      </div>
       </div>
 
       {/* ALERTA SI LLEGÓ AL LÍMITE */}
