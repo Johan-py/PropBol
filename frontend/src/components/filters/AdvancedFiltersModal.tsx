@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { X, Check, Plus } from 'lucide-react'
+import { createPortal } from 'react-dom'
 
 interface AdvancedFiltersModalProps {
   isOpen: boolean
@@ -32,9 +33,14 @@ const LABELS_DATA = [
 
 export default function AdvancedFiltersModal({ isOpen, onClose, onApply }: AdvancedFiltersModalProps) {
   // Estados para selección múltiple
+  const [mounted, setMounted] = useState(false)
   const [selectedAmenities, setSelectedAmenities] = useState<number[]>([])
   const [selectedLabels, setSelectedLabels] = useState<number[]>([])
   const [showAllAmenities, setShowAllAmenities] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   // Bloquear scroll del body cuando el modal está abierto
   useEffect(() => {
@@ -46,7 +52,7 @@ export default function AdvancedFiltersModal({ isOpen, onClose, onApply }: Advan
     return () => { document.body.style.overflow = 'unset' }
   }, [isOpen])
 
-  if (!isOpen) return null
+  if (!isOpen || !mounted) return null
 
   // Lógica de Toggle para Amenidades
   const toggleAmenity = (id: number) => {
@@ -72,7 +78,7 @@ export default function AdvancedFiltersModal({ isOpen, onClose, onApply }: Advan
     onClose()
   }
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[100000] flex items-center justify-center p-4">
       {/* Backdrop (Fondo oscuro difuminado) */}
       <div 
@@ -177,6 +183,7 @@ export default function AdvancedFiltersModal({ isOpen, onClose, onApply }: Advan
         </div>
 
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }
