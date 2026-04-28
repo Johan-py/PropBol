@@ -109,6 +109,7 @@ export default function Navbar() {
       localStorage.removeItem("nombre");
       localStorage.removeItem("correo");
       localStorage.removeItem("avatar");
+      localStorage.removeItem("searchHistory");
       setUser(null);
       setIsPanelOpen(false);
       setShowLogoutModal(false);
