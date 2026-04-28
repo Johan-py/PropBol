@@ -10,18 +10,28 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
   const [genero, setGenero] = useState('');
   const [edad, setEdad] = useState('');
   const [zona, setZona] = useState('');
+  const [error, setError] = useState(false); // ✅ Estado para el bug de validación
 
   if (!isOpen) return null;
 
   const handleSave = async () => {
+    // 🛡️ CORRECCIÓN BUG 2: Validar que el género no esté vacío
+    if (!genero) {
+      setError(true);
+      return; // Detiene la ejecución antes de llamar al backend
+    }
+
     const payload = {
-      genero: genero || undefined,
-      rango_edad: edad || undefined,  // ✅ Cambiado: enviar rango_edad
+      genero: genero, // Ya no es undefined porque es obligatorio
+      rango_edad: edad || undefined,
       zona_interes: zona || undefined
     };
 
     try {
-      const response = await fetch('http://localhost:5000/api/telemetria/visitante', {
+      // ✅ SE MANTIENE LA INTEGRACIÓN DE TU COMPAÑERO
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
+      const response = await fetch(`${API_URL}/api/telemetria/visitante`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,7 +42,6 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
       const data = await response.json();
 
       if (data.success) {
-        // Guardar en localStorage
         localStorage.setItem('guest_preferences', JSON.stringify({
           genero,
           rango_edad: edad,
@@ -41,6 +50,8 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
 
         alert('¡Preferencias guardadas! Te mostraremos mejores resultados.');
         onClose();
+      } else {
+        alert(data.message || 'Error al guardar preferencias');
       }
     } catch (error) {
       console.error("Error guardando preferencias:", error);
@@ -60,11 +71,20 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
 
         <div className="flex flex-col gap-4 mb-8">
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-stone-700">Género:</label>
+            <label className="text-sm font-medium text-stone-700">
+              Género: <span className="text-red-500">*</span>
+            </label>
             <select
               value={genero}
-              onChange={(e) => setGenero(e.target.value)}
-              className="px-3 py-2 rounded text-sm bg-white border border-stone-300 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500"
+              onChange={(e) => {
+                setGenero(e.target.value);
+                setError(false); // Limpia el error cuando el usuario selecciona algo
+              }}
+              className={`px-3 py-2 rounded text-sm bg-white border transition-all focus:outline-none focus:ring-1 ${
+                error 
+                  ? 'border-red-500 ring-red-500' 
+                  : 'border-stone-300 focus:border-amber-500 focus:ring-amber-500'
+              }`}
             >
               <option value="">Seleccione...</option>
               <option value="MASCULINO">MASCULINO</option>
@@ -72,6 +92,11 @@ const GuestPreferencesModal: React.FC<GuestPreferencesModalProps> = ({ isOpen, o
               <option value="OTRO">OTRO</option>
               <option value="PREFIERO_NO_DECIR">PREFIERO_NO_DECIR</option>
             </select>
+            {error && (
+              <span className="text-[10px] text-red-500 font-bold ml-1 animate-pulse">
+                Este campo es obligatorio
+              </span>
+            )}
           </div>
 
           <div className="flex flex-col gap-1">

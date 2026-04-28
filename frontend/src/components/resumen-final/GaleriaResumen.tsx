@@ -1,5 +1,19 @@
 import type { ResumenFinalData } from "./ResumenPanel";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "";
 
+function resolverUrlMultimedia(url: string) {
+  if (!url) return "";
+
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+
+  if (url.startsWith("/uploads")) {
+    return `${API_BASE_URL}${url}`;
+  }
+
+  return url;
+}
 interface Props {
   multimedia: ResumenFinalData["multimedia"];
 }

@@ -7,6 +7,9 @@ import GaleriaResumen from "./GaleriaResumen";
 import AceptacionPublicacion from "./AceptacionPublicacion";
 import ParametrosPersonalizados from "./ParametrosPersonalizados";
 
+import PublicarModal from "../publicacion/PublicarModal";
+import { EstadoPublicacion } from "../../types/publicacion";
+
 interface Props {
   publicacionId: number | null;
 }
@@ -488,6 +491,7 @@ export default function ResumenPanel({ publicacionId }: Props) {
             </div>
           </div>
         </div>
+      </section>
 
         <div className="rounded-[24px] border border-gray-200 bg-[#fcfcfc] p-4 md:p-6">
           <h2 className="mb-6 text-2xl font-bold text-[#0f172a]">

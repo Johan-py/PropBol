@@ -1,4 +1,5 @@
 import { MOCK_PUBLIC_BLOGS } from '@/lib/mock/publicBlogs.mock'
+import { createPlainTextExcerpt } from '@/lib/blogMarkdown'
 import { PublicBlogCard, BlogCategory } from '@/types/publicBlog'
 
 export type BlogCreationAction = 'borrador' | 'pendiente'
@@ -6,6 +7,11 @@ export type BlogCreationAction = 'borrador' | 'pendiente'
 export type BlogCategoryOption = {
   id: number
   nombre: string
+}
+
+type UploadedBlogImageResponse = {
+  path: string
+  url: string
 }
 
 export type CreateBlogPayload = {
@@ -16,14 +22,21 @@ export type CreateBlogPayload = {
   accion: BlogCreationAction
 }
 
+export type BlogRechazo = {
+  comentario: string
+  fecha: string
+}
+
 export type EditableBlog = {
   id: number
   titulo: string
   contenido: string
   imagen: string
   categoria_id: number
-  estado: 'BORRADOR' | 'RECHAZADO'
+  estado: 'BORRADOR' | 'PENDIENTE' | 'PUBLICADO' | 'RECHAZADO'
+  blog_rechazo?: BlogRechazo[]
 }
+
 type CreatedBlogResponse = {
   id: number
   titulo: string
@@ -37,7 +50,9 @@ type UserBlogRow = {
   imagen: string | null
   categoria_id: number
   estado: 'BORRADOR' | 'PENDIENTE' | 'PUBLICADO' | 'RECHAZADO'
+  blog_rechazo?: BlogRechazo[]
 }
+
 const getApiUrl = () =>
   (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
 
@@ -68,6 +83,17 @@ interface BlogApiRow {
   }
 }
 
+export type PublicBlogDetail = PublicBlogCard & {
+  content: string
+}
+
+const formatImageUrl = (imagen: string | null | undefined, apiUrl: string) => {
+  if (!imagen) return '/placeholder-blog.jpg'
+  if (imagen.startsWith('http://') || imagen.startsWith('https://')) return imagen
+  if (imagen.startsWith('/')) return imagen
+  return `${apiUrl}/${imagen}`
+}
+
 export const getPublishedBlogs = async (limit: number = 10): Promise<PublicBlogCard[]> => {
   const apiUrl = getApiUrl()
 
@@ -86,15 +112,62 @@ export const getPublishedBlogs = async (limit: number = 10): Promise<PublicBlogC
     return rows.map((row: BlogApiRow) => ({
       id: String(row.id),
       title: row.titulo,
-      excerpt: row.resumen || row.contenido.substring(0, 150) + '...',
-      imageUrl: row.imagen || '/placeholder-blog.jpg',
+      excerpt: row.resumen || createPlainTextExcerpt(row.contenido),
+      imageUrl: formatImageUrl(row.imagen, apiUrl),
       category: (row.categoria_blog?.nombre || 'General') as BlogCategory,
       authorName: `${row.usuario?.nombre || ''} ${row.usuario?.apellido || ''}`.trim() || 'Anónimo',
       publishedAt: row.fecha_publicacion || row.fecha_creacion
     }))
   } catch (error) {
     console.error('Error al obtener los blogs publicados:', error)
-    return MOCK_PUBLIC_BLOGS.slice(0, limit)
+    if (error instanceof TypeError) {
+      return MOCK_PUBLIC_BLOGS.slice(0, limit)
+    }
+    return []
+  }
+}
+
+export const getPublishedBlogById = async (id: string): Promise<PublicBlogDetail | null> => {
+  const apiUrl = getApiUrl()
+
+  try {
+    const response = await fetch(`${apiUrl}/api/blogs/${id}`, {
+      cache: 'no-store'
+    })
+
+    if (response.status === 404) {
+      return null
+    }
+
+    if (!response.ok) {
+      throw new Error(`Error HTTP: ${response.status}`)
+    }
+
+    const row = (await response.json()) as BlogApiRow
+
+    return {
+      id: String(row.id),
+      title: row.titulo,
+      excerpt: row.resumen || createPlainTextExcerpt(row.contenido),
+      imageUrl: formatImageUrl(row.imagen, apiUrl),
+      category: (row.categoria_blog?.nombre || 'General') as BlogCategory,
+      authorName: `${row.usuario?.nombre || ''} ${row.usuario?.apellido || ''}`.trim() || 'Anónimo',
+      publishedAt: row.fecha_publicacion || row.fecha_creacion,
+      content: row.contenido
+    }
+  } catch (error) {
+    console.error('Error al obtener el detalle del blog:', error)
+
+    const fallbackBlog = MOCK_PUBLIC_BLOGS.find((blog) => blog.id === id)
+
+    if (!fallbackBlog) {
+      return null
+    }
+
+    return {
+      ...fallbackBlog,
+      content: fallbackBlog.excerpt
+    }
   }
 }
 
@@ -173,16 +246,34 @@ export async function getEditableBlog(id: number): Promise<EditableBlog> {
     throw new Error('No se encontró el blog solicitado.')
   }
 
-  if (blog.estado !== 'BORRADOR' && blog.estado !== 'RECHAZADO') {
-    throw new Error('Solo puedes editar blogs en estado BORRADOR o RECHAZADO.')
-  }
-
   return {
     id: blog.id,
     titulo: blog.titulo,
     contenido: blog.contenido,
     imagen: blog.imagen ?? '',
     categoria_id: blog.categoria_id,
-    estado: blog.estado
+    estado: blog.estado,
+    blog_rechazo: blog.blog_rechazo
   }
+}
+
+export async function uploadBlogImage(file: File): Promise<UploadedBlogImageResponse> {
+  const formData = new FormData()
+  formData.append('imagen', file)
+
+  const response = await fetch(`${getApiUrl()}/api/blogs/upload-image`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${getToken()}`
+    },
+    body: formData
+  })
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(data.message || 'No se pudo subir la imagen del blog')
+  }
+
+  return data
 }

@@ -382,7 +382,13 @@ function ContenidoMultimediaPageContent() {
 
           <button
             type="button"
+<<<<<<< HEAD
             onClick={() => router.push(`/propiedades/parametros?publicacionId=${publicacionId || ""}`)}
+=======
+            onClick={() => router.push(`/propiedades/parametros?publicacionId=${publicacionId || ""}&origen
+              =multimedia`)
+            }
+>>>>>>> bfc9a58f1aca8f2d35fe3a34596e11c94df2e41b
             style={{
               background: 'transparent',
               border: 'none',
