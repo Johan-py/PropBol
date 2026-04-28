@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
-import { Star, Calendar, Trash2 } from "lucide-react";
+import { Calendar, Trash2 } from "lucide-react";
 
 const PropertyCard = ({ prop }: { prop: any }) => {
-    const [favorito, setFavorito] = useState(false);
+
     const fecha = new Date(prop.viewedDate).toLocaleDateString('es-ES', {
         day: '2-digit', month: '2-digit'
     });
@@ -31,13 +31,8 @@ const PropertyCard = ({ prop }: { prop: any }) => {
                     <span>3 hab</span><span>•</span><span>2 baños</span><span>•</span><span>1 garaje</span>
                 </div>
                 <div className="mt-4 flex gap-2">
-                    <button
-                        onClick={() => setFavorito(!favorito)}
-                        className="flex items-center justify-center px-3 bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 transition-colors"
-                    >
-                        <Star size={16} fill={favorito ? "black" : "none"} color="black" />
-                    </button>
-                    <button className="w-full bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm text-center">
+                    
+                    <button className="w-full bg-[#E87B00] text-white py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm text-center">
                         Ver Detalle
                     </button>
                 </div>
