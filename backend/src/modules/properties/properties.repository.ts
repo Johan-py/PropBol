@@ -46,7 +46,7 @@ export const propertiesRepository = {
     // Si llegan coordenadas, le pedimos a Postgres que mida las distancias primero.
     if (filtros.lat !== undefined && filtros.lng !== undefined) {
       const radio = filtros.radius || 1; // 1km por defecto
-      
+
       console.log(`🌍 Filtrando inmuebles a ${radio}km del punto [${filtros.lat}, ${filtros.lng}]`);
 
       try {
@@ -229,9 +229,22 @@ export const propertiesRepository = {
       }
     }
 
+
+    // ── FILTRO DE BAÑO COMPARTIDO 
     if (filtros.banoCompartido !== undefined) {
-      where.banoCompartido = filtros.banoCompartido
+      if (filtros.banoCompartido === true) {
+        // Baño COMPARTIDO: solo CUARTOS
+        where.categoria = 'CUARTO'
+        where.banoCompartido = true
+      } else {
+        // Baño PRIVADO: todo excepto cuartos con baño compartido
+        where.OR = [
+          { categoria: { not: 'CUARTO' } },
+          { categoria: 'CUARTO', banoCompartido: false }
+        ]
+      }
     }
+
     // ── FILTRO DE SUPERFICIE ──────────────────────────────────────────────
     if (filtros.minSuperficie != null || filtros.maxSuperficie != null) {
       where.superficieM2 = {}

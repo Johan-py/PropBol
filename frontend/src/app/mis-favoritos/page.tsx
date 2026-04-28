@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Star, Heart, Eye } from "lucide-react";
+import { Star, Heart } from "lucide-react";
 
 type Inmueble = {
   id: number;
@@ -159,15 +159,14 @@ export default function MisFavoritos() {
         {/* HEADER */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <Heart className="w-7 h-7 text-[#E87B00]" fill="#E87B00" />
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-              Mis Favoritos
+              Gestión de Favoritos
             </h1>
           </div>
           <p className="text-gray-500 text-sm">
             {total === 0
               ? "Aún no tienes propiedades favoritas"
-              : `${total} propiedad${total !== 1 ? "es" : ""} guardada${total !== 1 ? "s" : ""}`}
+              : `${total} propiedad${total !== 1 ? "es" : ""} encontrada${total !== 1 ? "s" : ""}`}
           </p>
         </div>
 
@@ -179,7 +178,7 @@ export default function MisFavoritos() {
               No tienes favoritos aún
             </h3>
             <p className="text-gray-400 text-sm">
-              Explora nuestras propiedades y marca las que más te gusten con el botón ⭐
+              Explora nuestras propiedades favoritas...
             </p>
           </div>
         ) : (
@@ -268,7 +267,6 @@ export default function MisFavoritos() {
                           onClick={() => window.location.href = `/propiedad/${inmueble.id}`}
                           className="flex-1 bg-[#E87B00] text-white py-2.5 rounded-lg text-sm font-bold hover:bg-orange-600 transition-colors flex items-center justify-center gap-2"
                         >
-                          <Eye size={16} />
                           Ver Detalle
                         </button>
                       </div>
@@ -279,7 +277,7 @@ export default function MisFavoritos() {
             </div>
 
             {/* PAGINACIÓN */}
-            {totalPages > 1 && (
+            {totalPages >= 1 && (
               <div className="mt-10 flex justify-center gap-2 pb-10">
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
