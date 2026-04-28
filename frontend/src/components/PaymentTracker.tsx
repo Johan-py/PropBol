@@ -66,14 +66,10 @@ export const PaymentTracker = () => {
             >
               <div>
                 <p className="font-semibold">${p.amount}</p>
-                <p className="text-sm text-gray-500">
-                  Vence: {p.dueDate}
-                </p>
+                <p className="text-sm text-gray-500">Vence: {p.dueDate}</p>
               </div>
 
-              <span
-                className={`px-2 py-1 text-sm rounded ${colors[status]}`}
-              >
+              <span className={`px-2 py-1 text-sm rounded ${colors[status]}`}>
                 {status}
               </span>
             </div>

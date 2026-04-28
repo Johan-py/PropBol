@@ -25,9 +25,7 @@ export default function Page() {
         Simular carga
       </button>
 
-      <div className="mt-5">
-        {loading && <Loader />}
-      </div>
+      <div className="mt-5">{loading && <Loader />}</div>
     </div>
   );
 }
