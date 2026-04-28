@@ -32,7 +32,7 @@ const PropertyCard = ({ prop }: { prop: any }) => {
                 </div>
                 <div className="mt-4 flex gap-2">
                     
-                    <button className="w-full bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm text-center">
+                    <button className="w-full bg-[#E87B00] text-white py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm text-center">
                         Ver Detalle
                     </button>
                 </div>
