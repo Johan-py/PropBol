@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
@@ -105,9 +105,44 @@ export default function TwoFactorVerificationForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [isResending, setIsResending] = useState(false)
   const [resendCooldown, setResendCooldown] = useState(0)
+  const cooldownIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
 
-  const pending2FA = typeof window !== 'undefined' ? getPending2FA() : null
+  const [pending2FA, setPending2FA] = useState<Pending2FAData | null>(null)
+
+  useEffect(() => {
+  setPending2FA(getPending2FA())
+}, [])
+
+useEffect(() => {
+  const savedAt = sessionStorage.getItem('resend2FA_sentAt')
+  if (!savedAt) return
+
+  const elapsed = Math.floor((Date.now() - Number(savedAt)) / 1000)
+  const remaining = RESEND_COOLDOWN_SECONDS - elapsed
+
+  if (remaining <= 0) {
+    sessionStorage.removeItem('resend2FA_sentAt')
+    return
+  }
+
+  setResendCooldown(remaining)
+
+  cooldownIntervalRef.current = setInterval(() => {
+    setResendCooldown((prev) => {
+      if (prev <= 1) {
+        clearInterval(cooldownIntervalRef.current!)
+        sessionStorage.removeItem('resend2FA_sentAt')
+        return 0
+      }
+      return prev - 1
+    })
+  }, 1000)
+
+  return () => {
+    if (cooldownIntervalRef.current) clearInterval(cooldownIntervalRef.current)
+  }
+}, [])
 
   const handleCodeChange = (value: string) => {
     const onlyNumbers = value.replace(/\D/g, '').slice(0, 6)
@@ -209,11 +244,15 @@ export default function TwoFactorVerificationForm() {
     setCode('')
 
     
+    sessionStorage.setItem('resend2FA_sentAt', String(Date.now()))
+    
     setResendCooldown(RESEND_COOLDOWN_SECONDS)
-    const interval = window.setInterval(() => {
+
+    cooldownIntervalRef.current = window.setInterval(() => {
       setResendCooldown((prev) => {
         if (prev <= 1) {
-          clearInterval(interval)
+          clearInterval(cooldownIntervalRef.current!)
+          sessionStorage.removeItem('resend2FA_sentAt')
           return 0
         }
         return prev - 1
