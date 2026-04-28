@@ -1,5 +1,3 @@
-
-
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
@@ -52,17 +50,18 @@ export default function MiRegistroPage() {
   const [vertices, setVertices] = useState<[number, number][]>([])
   const [modoPinActivo, setModoPinActivo] = useState(false)
   const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
+
   useEffect(() => {
-  const obtenerDireccion = async () => {
-    if (!pinCoords) return
+    const obtenerDireccion = async () => {
+      if (!pinCoords) return
 
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pinCoords.lat}&lon=${pinCoords.lng}`
-    )
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pinCoords.lat}&lon=${pinCoords.lng}`
+      )
 
-    const data = await response.json()
+      const data = await response.json()
 
-   // MINIMAL FIX: Recortar la dirección para no exceder los 80 caracteres
+      // MINIMAL FIX: Recortar la dirección para no exceder los 80 caracteres
       let dirLimpia = data.display_name ? data.display_name.split(',').slice(0, 3).join(',') : ''
       if (dirLimpia.length >= 80) dirLimpia = dirLimpia.substring(0, 79)
 
@@ -72,8 +71,9 @@ export default function MiRegistroPage() {
       }))
     }
 
-  obtenerDireccion()
-}, [pinCoords])
+    obtenerDireccion()
+  }, [pinCoords])
+
   const refs: Record<string, React.RefObject<any>> = {
     titulo: useRef<HTMLInputElement>(null),
     operacion: useRef<HTMLSelectElement>(null),
@@ -107,7 +107,7 @@ export default function MiRegistroPage() {
         router.push('/sign-in')
         return
       }
-      
+
       try {
         const response = await fetch(`${API_URL}/api/publicaciones/flujo`, {
           method: 'GET',
@@ -127,7 +127,7 @@ export default function MiRegistroPage() {
     }
 
     validarFlujo()
-  }, [router]) 
+  }, [router])
 
   const limpiarError = () => {
     setMensajeError('')
@@ -608,7 +608,7 @@ export default function MiRegistroPage() {
       setEstado('ninguno')
       setMensajeError('')
       setCampoError(null)
-      
+
       router.push(`/contenido-multimedia?publicacionId=${publicacionId}`)
     } catch (error) {
       setMensajeError('NO SE PUDO CONECTAR CON EL BACKEND')
@@ -782,6 +782,7 @@ export default function MiRegistroPage() {
                           }
                         } as React.ChangeEvent<HTMLInputElement>)
                       }}
+                      placeholder="Ej: 3"
                       className={`w-full p-3 rounded-xl border ${
                         errorHabitaciones ? 'border-red-500' : 'border-gray-200'
                       }`}
@@ -813,6 +814,7 @@ export default function MiRegistroPage() {
                           }
                         } as React.ChangeEvent<HTMLInputElement>)
                       }}
+                      placeholder="Ej: 2"
                       className={`w-full p-3 rounded-xl border ${
                         errorBanos ? 'border-red-500' : 'border-gray-200'
                       }`}
@@ -829,6 +831,7 @@ export default function MiRegistroPage() {
                       value={datos.direccion}
                       onChange={manejarCambio}
                       maxLength={80}
+                      placeholder="Ej: Av. América #123"
                       className={`w-full p-3 rounded-xl border ${
                         errorDireccion ? 'border-red-500' : 'border-gray-200'
                       }`}
@@ -841,13 +844,14 @@ export default function MiRegistroPage() {
                 </div>
 
                 <div className="mt-4 w-full">
-                  <label className="block text-[15px] font-bold mb-2">Zona</label>
+                  <label className="block text-[15px] font-bold mb-2">Zona *</label>
                   <input
                     ref={refs.zona}
                     name="zona"
                     value={datos.zona}
                     onChange={manejarCambio}
                     maxLength={80}
+                    placeholder="Ej: Cala Cala"
                     className={`w-full p-3 rounded-xl border ${
                       errorZona ? 'border-red-500' : 'border-gray-200'
                     }`}
@@ -957,7 +961,7 @@ export default function MiRegistroPage() {
                     onClick={guardarPropiedad}
                     className="px-12 py-3 rounded-full border-2 border-orange-400 bg-[#D9D9D9] hover:bg-orange-100 transition"
                   >
-                    Continuar 
+                    Continuar
                   </button>
                 </div>
 
