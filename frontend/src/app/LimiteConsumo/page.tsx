@@ -188,7 +188,7 @@ export default function ConsumoPage() {
           {/* Icono libro verde */}
           <div className="bg-emerald-50 p-4 rounded-2xl text-5xl">📗</div>
           
-          {/* CONTENEDOR DE TEXTO (Agrupa número y etiqueta para que se apilen) */}
+          {/* Linea de color verde inferior y texto del Cards1 */}
           <div className="flex flex-col text-left">
             <h3 className="text-6xl font-black text-emerald-600 leading-none">
               {isLogged ? disponibles : 0}
