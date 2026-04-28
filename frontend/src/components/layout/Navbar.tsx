@@ -40,6 +40,7 @@ type MeResponse = {
     correo: string;
     avatar?: string | null;
     rol?: string;
+    controlador?: boolean | null;
   };
 };
  
@@ -775,14 +776,14 @@ export default function Navbar() {
                 Planes de membresía
               </Link>
  
-              <button
+              <Link
                 id="tour-ayuda-mobile"
-                type="button"
-                onClick={handleIniciarTour}
-                className="w-full text-left rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+                href="/ayuda"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
                 Ayuda
-              </button>
+              </Link>
             </nav>
           </div>
         </div>

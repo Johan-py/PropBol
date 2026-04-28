@@ -29,6 +29,7 @@ type MeResponse = {
     nombre?: string;
     apellido?: string;
     avatar?: string | null;
+    controlador?: boolean | null;
   };
 };
 
