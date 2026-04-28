@@ -98,7 +98,7 @@ export default function ConsumoPage() {
           {/*Texto: Título y Subtítulo */}
           <div className="flex flex-col">
             <h1 className="text-5xl md:text-6xl font-extrabold text-stone-900 tracking-tighter">Panel de consumo</h1>
-            <p className="text-xl md:text-2xl font-extrabold text-stone-500 mt-2">Monitorea tus publicaciones activas y el límite de tu plan</p>
+            <p className="text-xl md:text-2xl font-extrabold text-stone-500 mt-5">Monitorea tus publicaciones activas y el límite de tu plan</p>
           </div>
           <Link href="/cobros-suscripciones">
 
