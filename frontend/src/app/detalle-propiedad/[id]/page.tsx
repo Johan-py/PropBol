@@ -71,10 +71,10 @@ export default function DetallePropiedadPage() {
             onClick={toggleFavorite}
             disabled={isLoadingStatus || isSubmitting}
             className={`flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold transition ${
-              isFavorite ? 'bg-[#fff0f6] text-[#ff0a78]' : 'text-[#d67a00] hover:bg-[#f3ece2]'
+              isFavorite ? 'bg-[#fff0f6] text-[#E68B25]' : 'text-[#d67a00] hover:bg-[#f3ece2]'
             } ${isLoadingStatus || isSubmitting ? 'cursor-not-allowed opacity-70' : ''}`}
           >
-            <Heart className={`h-4 w-4 ${isFavorite ? 'fill-[#ff0a78] text-[#ff0a78]' : ''}`} />
+            <Heart className={`h-4 w-4 ${isFavorite ? 'fill-[#E68B25] text-[#E68B25]' : ''}`} />
             {isLoadingStatus || isSubmitting
               ? 'Procesando...'
               : isFavorite
