@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-//import PlanModal from '../../components/ui/PlanModal'
 import dynamic from 'next/dynamic'
 import { ErrorValidacion, EstadoPublicacion } from "../../types/publicacion";
 import ErrorPanel from "../../components/publicacion/ErrorPanel";
@@ -23,6 +22,7 @@ type CampoError =
   | 'precio'
   | 'area'
   | 'operacion'
+  | 'mapa'
   | null
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
@@ -524,6 +524,23 @@ export default function MiRegistroPage() {
       return
     }
 
+    const tienePin = pinCoords !== null
+    const tieneDifuminado = vertices.length >= 3
+
+    if (!tienePin && !tieneDifuminado) {
+      setMensajeError('DEBE MARCAR UNA UBICACIÓN EN EL MAPA (PIN O ZONA DIFUMINADA)')
+      setCampoError('mapa')
+      setEstado('error')
+      return
+    }
+
+    const centroide = tieneDifuminado && !tienePin
+      ? {
+          lat: vertices.reduce((s, p) => s + p[0], 0) / vertices.length,
+          lng: vertices.reduce((s, p) => s + p[1], 0) / vertices.length
+        }
+      : null
+
     const payload = {
       titulo: tituloLimpio,
       tipoAccion: datos.operacion,
@@ -535,7 +552,10 @@ export default function MiRegistroPage() {
       descripcion: descripcionLimpia,
       direccion: direccionLimpia,
       zona: zonaLimpia,
-      ciudad: datos.ciudad
+      ciudad: datos.ciudad,
+      latitud: tienePin ? pinCoords!.lat : centroide!.lat,
+      longitud: tienePin ? pinCoords!.lng : centroide!.lng,
+      verticesDifuminado: tieneDifuminado ? vertices : undefined
     }
 
     console.log('📤 Payload enviado al backend:', payload)
@@ -634,6 +654,7 @@ export default function MiRegistroPage() {
   const errorPrecio = campoError === 'precio'
   const errorArea = campoError === 'area'
   const errorOperacion = campoError === 'operacion'
+  const errorMapa = campoError === 'mapa'
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -889,67 +910,76 @@ export default function MiRegistroPage() {
                   {datos.descripcion.length}/300 caracteres
                 </p>
               </div>
+             <div className="mt-6">
+               
+              <div className="flex items-center justify-between mb-4 gap-4">
 
-              <div className="mt-6">
-                <div className="flex items-center justify-between mb-4 gap-4">
-                  <div className="flex gap-3">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setModoPinActivo(true)
-                        setModoDifuminadoActivo(false)
-                      }}
-                      className={`px-4 py-2 rounded-full text-sm ${
-                        modoPinActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
-                      }`}
-                    >
-                      Pin
-                    </button>
+            <div className="flex gap-3">
 
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setModoDifuminadoActivo(true)
-                        setModoPinActivo(false)
-                      }}
-                      className={`px-4 py-2 rounded-full text-sm ${
-                        modoDifuminadoActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
-                      }`}
-                    >
-                      Difuminado
-                    </button>
-                  </div>
+             <button
+                type="button"
+               onClick={() => {
+             setModoPinActivo(true)
+             setModoDifuminadoActivo(false)
+             setVertices([])
+               }}
+             className={`px-4 py-2 rounded-full text-sm ${
+                 modoPinActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
+             }`}
+             >
+                Pin
+              </button>
 
-                  <button
-                    type="button"
-                    disabled={!pinCoords && vertices.length === 0}
-                    onClick={() => {
-                      setPinCoords(null)
-                      setVertices([])
-                      setModoPinActivo(false)
-                      setModoDifuminadoActivo(false)
-                    }}
-                    className={`px-4 py-2 rounded-full text-sm transition ${
-                      !pinCoords && vertices.length === 0
-                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        : 'bg-orange-500 text-white hover:bg-orange-600'
-                    }`}
-                  >
-                    Eliminar selección
-                  </button>
-                </div>
+                <button
+                 type="button"
+                 onClick={() => {
+                 setModoDifuminadoActivo(true)
+                 setModoPinActivo(false)
+                 setPinCoords(null)
+                }}
+                className={`px-4 py-2 rounded-full text-sm ${
+                 modoDifuminadoActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
+             }`}
+                >
+                Difuminado
+             </button>
 
-                <div className="relative z-0 rounded-2xl overflow-hidden border border-gray-200 max-w-full h-[320px]">
-                  <MapaPinSelector
-                    pinCoords={pinCoords}
-                    setPinCoords={setPinCoords}
-                    vertices={vertices}
-                    setVertices={setVertices}
-                    modoPinActivo={modoPinActivo}
-                    modoDifuminadoActivo={modoDifuminadoActivo}
-                  />
-                </div>
+         </div>
+
+             <button
+             type="button"
+             disabled={!pinCoords && vertices.length === 0}
+             onClick={() => {
+                setPinCoords(null)
+                setVertices([])
+                setModoPinActivo(false)
+                setModoDifuminadoActivo(false)
+            }}
+             className={`px-4 py-2 rounded-full text-sm transition ${
+            !pinCoords && vertices.length === 0
+          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          : 'bg-orange-500 text-white hover:bg-orange-600'
+         }`}
+        >
+             Eliminar selección
+        </button>
+
+         </div>
+
+           <div className={`relative z-0 rounded-2xl overflow-hidden border max-w-full h-[320px] ${errorMapa ? 'border-red-500' : 'border-gray-200'}`}>
+            <MapaPinSelector
+               pinCoords={pinCoords}
+               setPinCoords={setPinCoords}
+               vertices={vertices}
+               setVertices={setVertices}
+               modoPinActivo={modoPinActivo}
+               modoDifuminadoActivo={modoDifuminadoActivo}
+                 />
               </div>
+              {errorMapa && (
+                <p className="text-red-500 text-sm mt-2">{mensajeError}</p>
+              )}
+             </div>
 
               <div className="mt-12 space-y-6">
                 <div className="flex justify-center md:justify-end gap-6">
@@ -965,7 +995,7 @@ export default function MiRegistroPage() {
                     onClick={guardarPropiedad}
                     className="px-12 py-3 rounded-full border-2 border-orange-400 bg-[#D9D9D9] hover:bg-orange-100 transition"
                   >
-                    Continuar a Publicar
+                    Continuar
                   </button>
                 </div>
 
