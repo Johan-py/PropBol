@@ -147,24 +147,20 @@ function BusquedaMapaContent() {
   const latParam = searchParams.get('lat')
   const lngParam = searchParams.get('lng')
   const searchOrigin = useMemo<[number, number] | null>(() => {
-    return (latParam && lngParam) 
-      ? [parseFloat(latParam), parseFloat(lngParam)] 
+    return (latParam && lngParam)
+      ? [parseFloat(latParam), parseFloat(lngParam)]
       : null
   }, [latParam, lngParam])
 
   //estado para controlar la autenticación
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isCapacidadOpen, setIsCapacidadOpen] = useState(false)
 
   const toggleCapacidad = () => {
-    setIsCapacidadOpen(!isCapacidadOpen)
-    if (!isCapacidadOpen) {
-      setActiveSidebarView('capacidad')
-      setIsSidebarOpen(true)
-    } else {
-      setActiveSidebarView('results')
-    }
+    setIsPriceFilterOpen(false)
+    setIsSidebarOpen(true)
+    setActiveSidebarView(prev => prev === 'capacidad' ? 'results' : 'capacidad')
   }
+
   const [misZonas, setMisZonas] = useState<ZonaUsuario[]>([])
   const [newZoneName, setNewZoneName] = useState('Nueva zona')
   const [isCreatingCustomZone, setIsCreatingCustomZone] = useState(false)
@@ -174,7 +170,7 @@ function BusquedaMapaContent() {
   const [editingPolygonPoints, setEditingPolygonPoints] = useState<[number, number][]>([])
   const [isSavingEditedZone, setIsSavingEditedZone] = useState(false)
 
-  
+
   useEffect(() => {
     const syncAuthFromStorage = () => {
       const token = localStorage.getItem('token')
@@ -205,12 +201,12 @@ function BusquedaMapaContent() {
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
   const [isMounted, setIsMounted] = useState(false)
   const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false)
-  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad'| 'ubicacion'>('results')
-  
+  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad' | 'ubicacion'>('results')
+
   useEffect(() => {
     const handleAbrirUbicacion = () => {
       setIsPriceFilterOpen(false); // Cierra el de precio si estaba abierto
-      
+
       // Si el panel de ubicación ya está abierto en el sidebar, lo cerramos volviendo a results
       if (activeSidebarView === 'ubicacion' && isSidebarOpen) {
         setActiveSidebarView('results');
@@ -220,7 +216,7 @@ function BusquedaMapaContent() {
         setActiveSidebarView('ubicacion');
       }
     };
-   
+
     window.addEventListener('abrirPanelUbicacion', handleAbrirUbicacion);
     return () => window.removeEventListener('abrirPanelUbicacion', handleAbrirUbicacion);
   }, [activeSidebarView, isSidebarOpen]);
@@ -320,7 +316,7 @@ function BusquedaMapaContent() {
 
   const saveDraftZone = useCallback(async () => {
     if (!isAuthenticated || isSavingNewZone || !isCreatingCustomZone) return
-    
+
     // ✅ FIX: Leemos del polígono cerrado en caso de que ya lo haya finalizado
     const puntosBase = currentPolygonPoints.length >= 3 ? currentPolygonPoints : drawnPolygons[0]
     if (!puntosBase || puntosBase.length < 3) return
@@ -712,17 +708,17 @@ function BusquedaMapaContent() {
         </div>
       ) : displayedProperties.length === 0 ? (
         <EmptyState
-  titulo={
-    tieneFiltrSuperficie
-      ? 'Sin resultados por superficie'
-      : 'No hay propiedades existentes'
-  }
-  mensaje={
-    tieneFiltrSuperficie
-      ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
-      : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
-  }
-/>
+          titulo={
+            tieneFiltrSuperficie
+              ? 'Sin resultados por superficie'
+              : 'No hay propiedades existentes'
+          }
+          mensaje={
+            tieneFiltrSuperficie
+              ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
+              : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
+          }
+        />
       ) : (
         <div
           className={`gap-3 flex flex-col ${viewMode === 'list'
@@ -1099,7 +1095,7 @@ function BusquedaMapaContent() {
           setIsSidebarOpen(true)
           setActiveSidebarView(prev => prev === 'superficie' ? 'results' : 'superficie')
         }}
-        isCapacidadActive={isCapacidadOpen}
+        isCapacidadActive={activeSidebarView === 'capacidad' && isSidebarOpen}
         onToggleCapacidad={toggleCapacidad}
 
         isPriceFilterActive={isPriceFilterOpen}
@@ -1129,7 +1125,6 @@ function BusquedaMapaContent() {
             <CapacidadSidebar
               isOpen={true}
               onClose={() => {
-                setIsCapacidadOpen(false)
                 setActiveSidebarView('results')
               }}
               onApply={(dormitoriosMin, dormitoriosMax, banosMin, banosMax, tipoBano) => {
@@ -1140,7 +1135,6 @@ function BusquedaMapaContent() {
                 params.set('banosMax', banosMax.toString())
                 params.set('tipoBano', tipoBano)
                 router.push(`/busqueda_mapa?${params.toString()}`)
-                setIsCapacidadOpen(false)
                 setActiveSidebarView('results')
               }}
             />
@@ -1151,21 +1145,21 @@ function BusquedaMapaContent() {
                 onApply={(selecciones) => {
                   // 1. Rescatamos los filtros actuales de la URL (precio, cuartos, tipo, etc)
                   const params = new URLSearchParams(searchParams.toString());
-                  
+
                   // 2. Limpiamos ubicaciones previas para evitar duplicados
                   params.delete('departamentoId');
                   params.delete('provinciaId');
                   params.delete('municipioId');
                   params.delete('zonaId');
                   params.delete('barrioId');
-                  
+
                   // 3. Añadimos las nuevas selecciones de este panel
                   if (selecciones.departamento !== 'todos') params.set('departamentoId', selecciones.departamento.toString());
                   if (selecciones.provincia !== 'todos') params.set('provinciaId', selecciones.provincia.toString());
                   if (selecciones.municipio !== 'todos') params.set('municipioId', selecciones.municipio.toString());
                   if (selecciones.zona !== 'todos') params.set('zonaId', selecciones.zona.toString());
                   if (selecciones.barrio !== 'todos') params.set('barrioId', selecciones.barrio.toString());
-                  
+
                   // 4. Empujamos a la URL combinada y cerramos el panel para ver resultados
                   router.push(`/busqueda_mapa?${params.toString()}`);
                   setActiveSidebarView('results');
@@ -1270,18 +1264,18 @@ function BusquedaMapaContent() {
                         Actualizando resultados...
                       </div>
                     ) : displayedProperties.length === 0 ? (
-                     <EmptyState
-  titulo={
-    tieneFiltrSuperficie
-      ? 'Sin resultados por superficie'
-      : 'No hay propiedades existentes'
-  }
-  mensaje={
-    tieneFiltrSuperficie
-      ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
-      : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
-  }
-/>
+                      <EmptyState
+                        titulo={
+                          tieneFiltrSuperficie
+                            ? 'Sin resultados por superficie'
+                            : 'No hay propiedades existentes'
+                        }
+                        mensaje={
+                          tieneFiltrSuperficie
+                            ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
+                            : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
+                        }
+                      />
                     ) : (
                       <div
                         className={`gap-4 flex flex-col ${viewMode === 'list'
@@ -1395,7 +1389,7 @@ function BusquedaMapaContent() {
               </div>
             )}
 
-             {isDrawingMode && (
+            {isDrawingMode && (
               <div className="flex flex-col items-end gap-2 pointer-events-auto">
                 <div className="flex flex-row gap-2">
                   <button
