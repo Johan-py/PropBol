@@ -43,8 +43,8 @@ export default function BlogsPage() {
             Perspectivas para el Bien Raiz Moderno.
           </h1>
 
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="overflow-x-auto pb-1">
+          <div className="flex flex-row items-center justify-between gap-4">
+            <div className="flex-1 overflow-x-auto pb-1">
               <BlogFilterChips
                 categories={categories}
                 activeCategory={activeCategory}
@@ -52,9 +52,8 @@ export default function BlogsPage() {
               />
             </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <div className="flex-shrink-0">
               <AddPostButton />
-
             </div>
           </div>
         </section>
