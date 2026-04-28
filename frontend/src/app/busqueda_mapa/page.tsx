@@ -735,7 +735,6 @@ function BusquedaMapaContent() {
 
                 // HU4 - Conserva el comportamiento existente del listado móvil
                 onClickItem?.(property)
-                // HU4 - Abre el detalle en una nueva pestaña
               }}
               className="cursor-pointer transition-all duration-200 rounded-xl focus:outline-none focus:ring-0 focus:ring-offset-0"
             >
@@ -748,6 +747,8 @@ function BusquedaMapaContent() {
                   camas={property.nroCuartos ?? 0}
                   banos={property.nroBanos ?? 0}
                   metros={property.superficieM2 ?? 0}
+                  // HU4 - Pasa la acción de abrir detalle al botón "Ver detalles" en vista grilla
+                  onViewDetails={() => abrirDetallePropiedad(property.id)}
                 />
               ) : (
                 <PropertyRow
@@ -756,6 +757,8 @@ function BusquedaMapaContent() {
                   size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
                   contactType="whatsapp"
                   image=""
+                  // HU4 - Pasa la acción de abrir detalle al botón "Ver detalles" en vista tabla
+                  onViewDetails={() => abrirDetallePropiedad(property.id)}
                 />
               )}
             </div>
@@ -1291,8 +1294,6 @@ function BusquedaMapaContent() {
                             onClick={() => {
                               // HU4 - Mantiene la selección visual en resultados
                               setSelectedPropertyId(property.id)
-
-                              // HU4 - Abre el detalle de la propiedad en una nueva pestaña
                             }}
                             className={`cursor-pointer transition-all duration-200 rounded-xl relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${viewMode === 'grid'
                               ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
@@ -1312,6 +1313,8 @@ function BusquedaMapaContent() {
                                 camas={property.nroCuartos ?? 0}
                                 banos={property.nroBanos ?? 0}
                                 metros={property.superficieM2 ?? 0}
+                                // HU4 - Se pasa la función para abrir el detalle en una nueva pestaña
+                                onViewDetails={() => abrirDetallePropiedad(property.id)}
                               />
                             ) : (
                               <PropertyRow
@@ -1324,6 +1327,8 @@ function BusquedaMapaContent() {
                                   property.imagen ||
                                   'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
                                 }
+                                // HU4 - Muestra el botón "Ver detalles" al hacer hover en vista tabla
+                                onViewDetails={() => abrirDetallePropiedad(property.id)}
                               />
                             )}
                           </div>
