@@ -108,6 +108,7 @@ import favoritesRoutes from './modules/favorites/favorites.routes.js'
 import telemetriaRoutes from './modules/telemetria/telemetria.routes.js'
 import recomendacionesRoutes from './modules/recomendaciones/recomendaciones.routes.js'
 import transaccionesRoutes from './modules/transacciones/transacciones.routes.js'
+import suscripcionesRoutes from './modules/suscripciones/suscripciones.routes.js'
 import plansRoutes from './modules/plans/plans.routes.js'
 import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js'
 import whatsappRoutes from './modules/whatsapp/whatsapp.routes.js'
@@ -192,6 +193,7 @@ app.use('/api/blogs', blogsRoutes)
 app.use('/api/telemetria', telemetriaRouter)
 
 app.use('/api/transacciones', transaccionesRoutes)
+app.use('/api/suscripciones', suscripcionesRoutes)
 app.use('/api/planes', plansRoutes)
 app.use('/api/whatsapp', whatsappRoutes)
 app.use('/api/locations', locationRoutes)

@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
-import { Star, Calendar, Trash2 } from "lucide-react";
+import { Calendar, Trash2 } from "lucide-react";
 
 const PropertyCard = ({ prop }: { prop: any }) => {
-    const [favorito, setFavorito] = useState(false);
+
     const fecha = new Date(prop.viewedDate).toLocaleDateString('es-ES', {
         day: '2-digit', month: '2-digit'
     });
@@ -31,12 +31,7 @@ const PropertyCard = ({ prop }: { prop: any }) => {
                     <span>3 hab</span><span>•</span><span>2 baños</span><span>•</span><span>1 garaje</span>
                 </div>
                 <div className="mt-4 flex gap-2">
-                    <button
-                        onClick={() => setFavorito(!favorito)}
-                        className="flex items-center justify-center px-3 bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 transition-colors"
-                    >
-                        <Star size={16} fill={favorito ? "black" : "none"} color="black" />
-                    </button>
+                    
                     <button className="w-full bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm text-center">
                         Ver Detalle
                     </button>
@@ -88,7 +83,6 @@ export default function VistasRecientesPage() {
         if (!confirm("¿Deseas borrar todo tu historial de vistas?")) return;
         const token = localStorage.getItem('token');
         try {
-            // Nota: Este endpoint debe existir en tu historial.routes.ts
             await fetch('http://localhost:5000/api/perfil/historial/vistas', {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -112,12 +106,14 @@ export default function VistasRecientesPage() {
                     </div>
 
                     <div className="flex gap-3 items-center">
-                        {/* Input de fecha oculto pero activable */}
                         <div className="relative">
+                            {/* BUG FIX: Atributos min y max añadidos para habilitar navegación libre de años */}
                             <input
                                 type="date"
                                 ref={dateInputRef}
                                 onChange={handleDateFilter}
+                                min="2000-01-01"
+                                max="2100-12-31"
                                 className="absolute opacity-0 pointer-events-none"
                             />
                             <button
@@ -138,12 +134,16 @@ export default function VistasRecientesPage() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {filteredProperties.length > 0 ? (
+                    {properties.length === 0 ? (
+                        <div className="col-span-full text-center py-20 text-gray-400 font-medium">
+                            Aún no has visto ninguna propiedad
+                        </div>
+                    ) : filteredProperties.length > 0 ? (
                         filteredProperties.map((prop: any) => (
                             <PropertyCard key={prop.id} prop={prop} />
                         ))
                     ) : (
-                        <div className="col-span-full text-center py-20 text-gray-400">
+                        <div className="col-span-full text-center py-20 text-gray-400 font-medium">
                             No se encontraron propiedades para esta selección.
                         </div>
                     )}
