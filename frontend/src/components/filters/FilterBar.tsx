@@ -392,13 +392,21 @@ router.push(targetUrl)
                   })
                   const data = await res.json()
                   if (data.success && data.data.length > 0) {
-                    sessionStorage.setItem('recomendaciones_resultado', JSON.stringify(data.data))
+                    sessionStorage.setItem('propbol_recomendados', JSON.stringify(data.data))
                     sessionStorage.setItem('propbol_modo_recomendados', 'true')
                     router.push(`/busqueda_mapa?${params.toString()}`)
                   }
                 } else {
+                    // Sin token → guardar los más populares como fallback
+                  const res = await fetch(`/api/properties/inmuebles?fecha=mas-populares&${params}`)
+                  const data = await res.json()
+                  if (data.ok && data.data?.length > 0) {
+                     sessionStorage.setItem('propbol_recomendados', JSON.stringify(data.data))
+                     sessionStorage.setItem('propbol_modo_recomendados', 'true')
+                }
                   router.push(`/busqueda_mapa?${params.toString()}`)
                 }
+                
               }}
               className="h-[40px] flex items-center gap-2 px-4 rounded-full bg-white border border-stone-200 text-stone-600 text-sm font-medium hover:border-[#d97706] shadow-sm transition-all focus:outline-none shrink-0"
             >
