@@ -139,7 +139,7 @@ const waitForMenuClose = (onClosed: () => void): (() => void) => {
   // Si el menú ya no está en el DOM, ejecutar inmediatamente
   if (!isMobileMenuInDOM()) {
     onClosed();
-    return () => {};
+    return () => { };
   }
 
   let done = false;
@@ -174,7 +174,7 @@ const waitForMenuClose = (onClosed: () => void): (() => void) => {
 const waitForMenuOpen = (onOpened: () => void): (() => void) => {
   if (isMobileMenuInDOM()) {
     onOpened();
-    return () => {};
+    return () => { };
   }
 
   let done = false;
@@ -273,7 +273,7 @@ export default function TourGuiado() {
           setShowTour(true);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   useEffect(() => {
@@ -555,7 +555,7 @@ export default function TourGuiado() {
     fetch(`${apiUrl}/api/auth/tour`, {
       method: "PATCH",
       headers: { Authorization: `Bearer ${token}` },
-    }).catch(() => {});
+    }).catch(() => { });
   };
 
   const handleNext = () => {
@@ -767,9 +767,10 @@ export default function TourGuiado() {
                 border: "none",
                 borderRadius: 8,
                 padding: "8px 18px",
-                fontSize: 13,
+                fontSize: fontBtn,
                 fontWeight: 600,
                 cursor: "pointer",
+                minHeight: 44,
               }}
             >
               {currentStep < TOUR_STEPS.length - 1 ? "Siguiente →" : "Finalizar"}

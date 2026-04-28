@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Calendar, ArrowRight } from 'lucide-react'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
@@ -168,6 +169,28 @@ export default function CobrosSuscripciones() {
               </button>
             </div>
           ))}
+        </div>
+
+        {/* Banner de Suscripciones Anuales */}
+        <div className="mt-12 p-6 rounded-3xl bg-amber-50/50 border border-amber-100 flex items-center justify-between gap-6 shadow-sm">
+          <div className="flex items-center gap-5">
+            <div className="p-4 bg-white rounded-2xl shadow-sm border border-amber-100">
+              <Calendar className="w-8 h-8 text-amber-600" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-stone-900">¿Prefieres pagar menos?</h3>
+              <p className="text-stone-600 text-sm max-w-md">
+                Ahorra hasta un 15% con nuestras suscripciones anuales. Mismos beneficios, mejor precio.
+              </p>
+            </div>
+          </div>
+          <button 
+            onClick={() => router.push('/LimiteConsumo')}
+            className="whitespace-nowrap px-8 py-3 bg-white border-2 border-amber-600/20 text-amber-700 rounded-2xl hover:bg-amber-100 hover:border-amber-600/40 transition-all font-bold flex items-center gap-2 shadow-sm active:scale-95"
+          >
+            Ver suscripciones anuales
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </div>
