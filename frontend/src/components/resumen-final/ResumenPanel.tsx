@@ -1,11 +1,20 @@
+
+
+
+
+
+
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import InfoPropiedad from "./InfoPropiedad";
 import GaleriaResumen from "./GaleriaResumen";
 import AceptacionPublicacion from "./AceptacionPublicacion";
 import ParametrosPersonalizados from "./ParametrosPersonalizados";
+
+import PublicarModal from "../publicacion/PublicarModal";
+import { EstadoPublicacion } from "../../types/publicacion";
 
 interface Props {
   publicacionId: number | null;
@@ -67,17 +76,6 @@ interface ResumenFinalApiResponse {
   message?: string;
 }
 
-interface ConfirmarPublicacionApiResponse {
-  ok: boolean;
-  message?: string;
-  data?: {
-    id: number;
-    estado: string | null;
-    fechaPublicacion: string | null;
-    multimediaTotal: number;
-  };
-}
-
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
 
 function getAuthToken(): string | null {
@@ -136,54 +134,18 @@ async function obtenerResumenFinal(
   return payload.data;
 }
 
-async function confirmarPublicacion(
-  publicacionId: number
-): Promise<ConfirmarPublicacionApiResponse> {
-  const token = getAuthToken();
-
-  if (!publicacionId || Number.isNaN(publicacionId)) {
-    throw new Error("No se recibió un id válido de publicación");
-  }
-
-  if (!token) {
-    throw new Error("No se encontró el token de autenticación");
-  }
-
-  if (!API_BASE_URL) {
-    throw new Error(
-      "La variable NEXT_PUBLIC_API_URL no está configurada en el frontend"
-    );
-  }
-
-  const response = await fetch(
-    `${API_BASE_URL}/api/publicaciones/${publicacionId}/confirmar`,
-    {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  const payload: ConfirmarPublicacionApiResponse = await response.json();
-
-  if (!response.ok || !payload.ok) {
-    throw new Error(payload.message ?? "No se pudo confirmar la publicación");
-  }
-
-  return payload;
-}
-
 export default function ResumenPanel({ publicacionId }: Props) {
   const router = useRouter();
-
   const [aceptado, setAceptado] = useState(false);
   const [data, setData] = useState<ResumenFinalData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [mostrarModalExito, setMostrarModalExito] = useState(false);
-  const [confirmando, setConfirmando] = useState(false);
+  
+  const [estadoPublicacion, setEstadoPublicacion] = useState<EstadoPublicacion>("idle");
+  const [progreso, setProgreso] = useState(0);
+
+  const isCancelled = useRef(false);
+  const isPaused = useRef(false);
 
   useEffect(() => {
     if (!publicacionId) {
@@ -199,9 +161,7 @@ export default function ResumenPanel({ publicacionId }: Props) {
         const resumen = await obtenerResumenFinal(publicacionId);
         setData(resumen);
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Error al cargar resumen"
-        );
+        setError(err instanceof Error ? err.message : "Error al cargar resumen");
       } finally {
         setLoading(false);
       }
@@ -210,30 +170,127 @@ export default function ResumenPanel({ publicacionId }: Props) {
     cargarResumen();
   }, [publicacionId]);
 
-  const abrirModalExito = async () => {
-    if (!aceptado || !publicacionId || confirmando) return;
+  useEffect(() => {
+    if (estadoPublicacion !== "publicando") return;
+
+    const handleUnload = () => {
+      const token = getAuthToken();
+      if (token && publicacionId) {
+        fetch(`${API_BASE_URL}/api/publicaciones/${publicacionId}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          keepalive: true, 
+        }).catch(() => {});
+      }
+    };
+
+    window.addEventListener("unload", handleUnload);
+    return () => {
+      window.removeEventListener("unload", handleUnload);
+    };
+  }, [estadoPublicacion, publicacionId]);
+
+  const confirmarPublicacion = () => {
+    if (!aceptado) return;
+    setEstadoPublicacion("confirmando");
+  };
+
+  const ejecutarPublicacion = async () => {
+    isCancelled.current = false;
+    isPaused.current = false;
+    setEstadoPublicacion("publicando");
+    setProgreso(0);
 
     try {
-      setConfirmando(true);
-      setError("");
-      await confirmarPublicacion(publicacionId);
-      setMostrarModalExito(true);
+      const cantidadImagenes = data?.multimedia?.imagenes?.length || 0;
+      const cantidadVideos = data?.multimedia?.videos?.length || 0;
+      
+      let progresoActual = 0;
+
+      const checkEstado = async () => {
+        while (isPaused.current && !isCancelled.current) {
+          await new Promise((r) => setTimeout(r, 200)); 
+        }
+        if (isCancelled.current) throw new Error("CANCELADO"); 
+      };
+
+      await checkEstado();
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      await checkEstado();
+      progresoActual += 40;
+      setProgreso(progresoActual);
+
+      if (cantidadImagenes > 0) {
+        for (let i = 0; i < cantidadImagenes; i++) {
+          await checkEstado();
+          await new Promise((resolve) => setTimeout(resolve, 400));
+          await checkEstado();
+          progresoActual += 8;
+          setProgreso(progresoActual);
+        }
+      }
+
+      if (cantidadVideos > 0) {
+        for (let i = 0; i < cantidadVideos; i++) {
+          await checkEstado();
+          await new Promise((resolve) => setTimeout(resolve, 600));
+          await checkEstado();
+          progresoActual += 10;
+          setProgreso(progresoActual);
+        }
+      }
+
+      await checkEstado();
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      await checkEstado();
+      setProgreso(100);
+      setEstadoPublicacion("exito");
+
+      setTimeout(() => {
+        if (!isCancelled.current) router.push("/");
+      }, 2000);
+
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Error al confirmar publicación"
-      );
-    } finally {
-      setConfirmando(false);
+      if (err instanceof Error && err.message === "CANCELADO") {
+        setProgreso(0);
+        setEstadoPublicacion("idle");
+      } else {
+        setEstadoPublicacion("error_publicacion");
+      }
     }
   };
 
-  const cerrarModalExito = () => {
-    setMostrarModalExito(false);
+  const handleCancelar = async () => {
+    isCancelled.current = true;
+    setProgreso(0);
+
+    if (estadoPublicacion === "publicando") {
+      try {
+        const token = getAuthToken();
+        if (token && publicacionId) {
+          await fetch(`${API_BASE_URL}/api/publicaciones/${publicacionId}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        }
+      } catch (error) {
+        console.error("Error al eliminar la publicación abortada:", error);
+      }
+      
+      setEstadoPublicacion("idle");
+      router.push("/");
+      return;
+    }
+
+    setEstadoPublicacion("idle");
   };
 
-  const irAlHome = () => {
-    setMostrarModalExito(false);
-    router.push("/");
+  const handlePausar = (pausado: boolean) => {
+    isPaused.current = pausado;
   };
 
   if (loading) {
@@ -303,65 +360,36 @@ export default function ResumenPanel({ publicacionId }: Props) {
 
           <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
             <button
-              type="button"
               onClick={() => window.history.back()}
-              disabled={confirmando}
-              className="rounded-xl border border-gray-400 bg-white px-6 py-4 text-lg font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+              className="rounded-xl border border-gray-400 bg-white px-6 py-4 text-lg font-medium text-gray-700 transition hover:bg-gray-50"
             >
               Volver
             </button>
 
             <button
-              type="button"
-              onClick={abrirModalExito}
-              disabled={!aceptado || confirmando}
+              onClick={confirmarPublicacion}
+              disabled={!aceptado}
               className={`rounded-xl px-6 py-4 text-lg font-semibold text-white transition ${
-                aceptado && !confirmando
+                aceptado
                   ? "bg-orange-500 hover:bg-orange-600"
                   : "cursor-not-allowed bg-orange-300"
               }`}
             >
-              {confirmando ? "Publicando..." : "Confirmar y Publicar"}
+              Confirmar y Publicar
             </button>
           </div>
         </div>
       </section>
 
-      {mostrarModalExito && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 px-4">
-          <div className="relative w-full max-w-[700px] rounded-[28px] bg-white px-6 py-10 shadow-2xl md:px-10 md:py-12">
-            <button
-              type="button"
-              onClick={cerrarModalExito}
-              className="absolute right-6 top-5 text-[40px] leading-none text-gray-400 transition hover:text-gray-600"
-              aria-label="Cerrar modal"
-            >
-              ×
-            </button>
-
-            <div className="flex flex-col items-center text-center">
-              <div className="mb-7 flex h-[108px] w-[108px] items-center justify-center rounded-full bg-[#f58600] text-[64px] font-bold text-white">
-                ✓
-              </div>
-
-              <h3 className="mb-5 text-3xl font-bold text-[#4a3b39] md:text-[34px]">
-                ¡Inmueble publicado con éxito!
-              </h3>
-
-              <p className="mb-9 text-xl text-gray-500 md:text-[22px]">
-                Tu inmueble se ha publicado correctamente.
-              </p>
-
-              <button
-                type="button"
-                onClick={irAlHome}
-                className="min-w-[220px] rounded-2xl bg-[#f58600] px-10 py-4 text-2xl font-semibold text-white transition hover:bg-[#de7800]"
-              >
-                Aceptar
-              </button>
-            </div>
-          </div>
-        </div>
+      {estadoPublicacion !== "idle" && (
+        <PublicarModal
+          estado={estadoPublicacion as any}
+          progreso={progreso}
+          onConfirmar={ejecutarPublicacion}
+          onCancelar={handleCancelar}
+          onReintentar={() => setEstadoPublicacion("confirmando")}
+          onPausar={handlePausar}
+        />
       )}
     </>
   );
