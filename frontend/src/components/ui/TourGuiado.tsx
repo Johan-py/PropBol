@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 const TOUR_STEPS = [
   {
@@ -139,7 +139,7 @@ const waitForMenuClose = (onClosed: () => void): (() => void) => {
   // Si el menú ya no está en el DOM, ejecutar inmediatamente
   if (!isMobileMenuInDOM()) {
     onClosed();
-    return () => {};
+    return () => { };
   }
 
   let done = false;
@@ -174,7 +174,7 @@ const waitForMenuClose = (onClosed: () => void): (() => void) => {
 const waitForMenuOpen = (onOpened: () => void): (() => void) => {
   if (isMobileMenuInDOM()) {
     onOpened();
-    return () => {};
+    return () => { };
   }
 
   let done = false;
@@ -219,10 +219,80 @@ export default function TourGuiado() {
   // (funciona igual en navegación hacia adelante y hacia atrás)
   const prevStepRef = useRef<number>(-1);
 
-  useEffect(() => {
-    if (isLoggedIn()) {
-      setShowTour(true);
+  const checkAndShowTour = useCallback(() => {
+    if (!isLoggedIn()) return;
+
+    // Intentar leer controlador desde localStorage para evitar HTTP
+    try {
+      const raw = localStorage.getItem("propbol_user");
+      if (raw) {
+        const sessionUser = JSON.parse(raw) as { controlador?: boolean | null };
+        if (sessionUser.controlador === true) return; // tour completado — no mostrar
+        if (sessionUser.controlador === false) {
+          // tour pendiente — mostrar sin HTTP
+          prevStepRef.current = -1;
+          setCurrentStep(0);
+          setHighlight(null);
+          setShowTour(true);
+          return;
+        }
+        // controlador ausente (sesión antigua sin el campo) → caer al fetch
+      }
+    } catch {
+      // propbol_user malformado → caer al fetch
     }
+
+    // Fallback: controlador no conocido en localStorage → preguntar al backend
+    const token = localStorage.getItem("token");
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+    fetch(`${apiUrl}/api/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const controlador = data?.user?.controlador;
+
+        // Cachear el valor en localStorage para que futuras recargas no caigan aquí
+        try {
+          const raw = localStorage.getItem("propbol_user");
+          if (raw && typeof controlador === "boolean") {
+            const sessionUser = JSON.parse(raw);
+            localStorage.setItem(
+              "propbol_user",
+              JSON.stringify({ ...sessionUser, controlador })
+            );
+          }
+        } catch { /* ignorar */ }
+
+        // Solo mostrar si el backend confirma explícitamente false o null
+        // (undefined = error de red / respuesta inválida → no mostrar)
+        if (controlador === false || controlador === null) {
+          prevStepRef.current = -1;
+          setCurrentStep(0);
+          setHighlight(null);
+          setShowTour(true);
+        }
+      })
+      .catch(() => { });
+  }, []);
+
+  useEffect(() => {
+    checkAndShowTour();
+    window.addEventListener("propbol:login", checkAndShowTour);
+    return () => window.removeEventListener("propbol:login", checkAndShowTour);
+  }, [checkAndShowTour]);
+
+  useEffect(() => {
+    const handleSessionChanged = () => {
+      if (!isLoggedIn()) {
+        setShowTour(false);
+        setCurrentStep(0);
+        prevStepRef.current = -1;
+        setHighlight(null);
+      }
+    };
+    window.addEventListener("propbol:session-changed", handleSessionChanged);
+    return () => window.removeEventListener("propbol:session-changed", handleSessionChanged);
   }, []);
 
   useEffect(() => {
@@ -462,17 +532,45 @@ export default function TourGuiado() {
     };
   }, [currentStep, showTour]);
 
+  const completeTour = () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    // Marcar controlador: true en localStorage de forma inmediata para que
+    // checkAndShowTour no vuelva a mostrar el tour en la próxima visita
+    try {
+      const raw = localStorage.getItem("propbol_user");
+      if (raw) {
+        const sessionUser = JSON.parse(raw);
+        localStorage.setItem(
+          "propbol_user",
+          JSON.stringify({ ...sessionUser, controlador: true })
+        );
+      }
+    } catch {
+      // ignorar — el backend es la fuente de verdad
+    }
+
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+    fetch(`${apiUrl}/api/auth/tour`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${token}` },
+    }).catch(() => { });
+  };
+
   const handleNext = () => {
     if (currentStep < TOUR_STEPS.length - 1) {
       setCurrentStep((prev) => prev + 1);
     } else {
       window.dispatchEvent(new Event("propbol:cerrar-menu-movil"));
+      completeTour();
       setShowTour(false);
     }
   };
 
   const handleSkip = () => {
     window.dispatchEvent(new Event("propbol:cerrar-menu-movil"));
+    completeTour();
     setShowTour(false);
   };
 
@@ -669,9 +767,10 @@ export default function TourGuiado() {
                 border: "none",
                 borderRadius: 8,
                 padding: "8px 18px",
-                fontSize: 13,
+                fontSize: fontBtn,
                 fontWeight: 600,
                 cursor: "pointer",
+                minHeight: 44,
               }}
             >
               {currentStep < TOUR_STEPS.length - 1 ? "Siguiente →" : "Finalizar"}
