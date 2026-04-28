@@ -186,15 +186,15 @@ export default function ConsumoPage() {
         <div className="bg-white p-10 rounded-3xl shadow-sm border-b-4 border-emerald-500 flex items-center justify-center gap-6 transition-transform hover:scale-105">
           
           {/* Icono libro verde */}
-          <div className="bg-emerald-50 p-4 rounded-2xl text-4xl">📗</div>
+          <div className="bg-emerald-50 p-4 rounded-2xl text-5xl">📗</div>
           
           {/* CONTENEDOR DE TEXTO (Agrupa número y etiqueta para que se apilen) */}
           <div className="flex flex-col text-left">
-            <h3 className="text-5xl font-black text-emerald-600 leading-none">
+            <h3 className="text-6xl font-black text-emerald-600 leading-none">
               {isLogged ? disponibles : 0}
             </h3>
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-2">
-              Disponibles
+            <p className="text-xl font-bold text-gray-500 uppercase tracking-widest mt-2">
+              Publicaciones Disponibles
             </p>
           </div>
         </div>
