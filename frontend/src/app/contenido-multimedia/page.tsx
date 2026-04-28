@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import FotosSection from '@/components/contenido-multimedia/FotosSection'
 import VideosSection from '@/components/contenido-multimedia/VideosSection'
 import PublicarSection from '@/components/contenido-multimedia/PublicarSection'
-import SuccessModal from '@/components/contenido-multimedia/SuccessModal'
 import PlanModal from '@/components/contenido-multimedia/PlanModal'
 
 type ImageItem = {
@@ -61,7 +60,6 @@ function ContenidoMultimediaPageContent() {
   const [isUploadingVideos, setIsUploadingVideos] = useState(false)
   const [isPublishing, setIsPublishing] = useState(false)
 
-  const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [showPlanModal, setShowPlanModal] = useState(false)
 
   const imageInputRef = useRef<HTMLInputElement | null>(null)
@@ -122,9 +120,9 @@ function ContenidoMultimediaPageContent() {
 
   const handleRemoveImage = (id: string) => {
     setImages((prev) => {
-      const target = prev.find((img) => img.id === id)
-      if (target) URL.revokeObjectURL(target.previewUrl)
-      return prev.filter((img) => img.id !== id)
+      const target = prev.find((image) => image.id === id)
+      if (target?.previewUrl) URL.revokeObjectURL(target.previewUrl)
+      return prev.filter((image) => image.id !== id)
     })
   }
 
@@ -148,7 +146,7 @@ function ContenidoMultimediaPageContent() {
     const validVideos: VideoItem[] = []
 
     for (const file of files) {
-      const extension = file.name.toLowerCase().split('.').pop()
+      const extension = file.name.split('.').pop()
       const extensionAllowed = ['mp4', 'mkv', 'avi'].includes(extension || '')
 
       if (!allowedTypes.includes(file.type) && !extensionAllowed) {
@@ -261,16 +259,13 @@ function ContenidoMultimediaPageContent() {
       formData.append('images', image.file)
     })
 
-    const response = await fetch(
-      `${getApiUrl()}/api/publicaciones/${publicacionId}/multimedia/images`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        body: formData
-      }
-    )
+    const response = await fetch(`${getApiUrl()}/api/publicaciones/${publicacionId}/multimedia/images`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      body: formData
+    })
 
     const data = await response.json().catch(() => null)
 
@@ -285,27 +280,27 @@ function ContenidoMultimediaPageContent() {
         video.type === 'youtube' && typeof video.sourceUrl === 'string' && video.sourceUrl.length > 0
     )
 
-  for (const video of youtubeVideos) {
-    const response = await fetch(
-    `${getApiUrl()}/api/publicaciones/${publicacionId}/multimedia/video-link`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        videoUrl: video.sourceUrl
-      })
+    for (const video of youtubeVideos) {
+      const response = await fetch(
+        `${getApiUrl()}/api/publicaciones/${publicacionId}/multimedia/video-link`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            videoUrl: video.sourceUrl
+          })
+        }
+      )
+
+      const data = await response.json().catch(() => null)
+
+      if (!response.ok) {
+        throw new Error(data?.message || 'No se pudo registrar el enlace del video.')
+      }
     }
-  )
-
-  const data = await response.json().catch(() => null)
-
-  if (!response.ok) {
-    throw new Error(data?.message || 'No se pudo registrar el enlace del video.')
-  }
-}
   }
 
   const handlePublish = async () => {
@@ -348,7 +343,7 @@ function ContenidoMultimediaPageContent() {
       await uploadImages(token)
       await uploadYoutubeLinks(token)
 
-      setShowSuccessModal(true)
+      router.push(`/resumen-final?id=${publicacionId}`)
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Ocurrió un error al registrar el contenido multimedia.'
@@ -373,9 +368,35 @@ function ContenidoMultimediaPageContent() {
           Agrega hasta 5 fotos y 2 videos para mostrar mejor tu inmueble
         </p>
 
-        <p style={{ fontSize: '14px', color: '#888', marginBottom: '18px' }}>
-          Publicación actual: #{publicacionId || 'sin id'}
-        </p>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '18px'
+          }}
+        >
+          <p style={{ fontSize: '14px', color: '#888', margin: 0 }}>
+            Publicación actual: #{publicacionId || 'sin id'}
+          </p>
+
+          <button
+            type="button"
+            onClick={() => router.push(`/propiedades/parametros?publicacionId=${publicacionId || ""}&origen
+              =multimedia`)
+            }
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#f57c00',
+              fontSize: '16px',
+              fontWeight: 700,
+              cursor: 'pointer'
+            }}
+          >
+            + Añadir otros parámetros
+          </button>
+        </div>
 
         <input
           ref={imageInputRef}
@@ -420,14 +441,6 @@ function ContenidoMultimediaPageContent() {
           onPublish={handlePublish}
           publishError={isPublishing ? 'Publicando contenido multimedia...' : publishError}
           canPublish={hasMultimedia && !isPublishing}
-        />
-
-        <SuccessModal
-          open={showSuccessModal}
-          onClose={() => {
-            setShowSuccessModal(false)
-            router.push('/')
-          }}
         />
 
         <PlanModal
