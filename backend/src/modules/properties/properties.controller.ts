@@ -79,14 +79,17 @@ export const propertiesController = {
   search: async (req: Request, res: Response) => {
     try {
       // Capturamos lo que envía el usePropertySearch del frontend
-      const { locationId, categoria, tipoAccion, search } = req.query
+      const { locationId, categoria, tipoAccion, search, lat, lng, radius } = req.query
 
       const filtros: FiltrosBusqueda = {
         // Mapeamos los nombres del frontend a los que espera el service/repository
         locationId: locationId ? Number(locationId) : undefined,
         tipoInmueble: categoria as string,
         modoInmueble: tipoAccion as string,
-        query: search as string
+        query: search as string,
+        lat: lat ? Number(lat) : undefined,
+        lng: lng ? Number(lng) : undefined,
+        radius: radius ? Number(radius) : 1
       }
 
       const inmuebles = await propertiesService.getAll(filtros)
