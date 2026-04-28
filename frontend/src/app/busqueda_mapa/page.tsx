@@ -144,6 +144,14 @@ function BusquedaMapaContent() {
   const maxSuperficie = searchParams.get('maxSuperficie')
   const tieneFiltrSuperficie = minSuperficie || maxSuperficie
 
+  const latParam = searchParams.get('lat')
+  const lngParam = searchParams.get('lng')
+  const searchOrigin = useMemo<[number, number] | null>(() => {
+    return (latParam && lngParam) 
+      ? [parseFloat(latParam), parseFloat(lngParam)] 
+      : null
+  }, [latParam, lngParam])
+
   //estado para controlar la autenticación
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCapacidadOpen, setIsCapacidadOpen] = useState(false)
@@ -808,6 +816,7 @@ function BusquedaMapaContent() {
                 <MapView
                   properties={inmueblesOrdenados}
                   selectedId={selectedPropertyId}
+                  searchOrigin={searchOrigin}
                   zonas={zonasCombinadas}
                   selectedZoneId={selectedZoneId}
                   onZoneSelect={handleZoneSelect}
@@ -885,6 +894,7 @@ function BusquedaMapaContent() {
             <MapView
               properties={inmueblesOrdenados}
               selectedId={selectedPropertyId}
+              searchOrigin={searchOrigin}
               zonas={zonasCombinadas}
               selectedZoneId={selectedZoneId}
               onZoneSelect={handleZoneSelect}
@@ -1453,6 +1463,7 @@ function BusquedaMapaContent() {
             <MapView
               properties={inmueblesOrdenados}
               selectedId={selectedPropertyId}
+              searchOrigin={searchOrigin}
               onSelect={handleMapSelect}
               onClusterClick={handleClusterClick}
               onClusterDissolve={() => { setIsClusterView(false); setActiveClusterIds([]); setClusterProperties([]) }}
