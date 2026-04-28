@@ -27,7 +27,6 @@ export default function NotificationSettingsPage() {
   const [tieneTelefono, setTieneTelefono] = useState(false)
   const [warning, setWarning] = useState<'email' | 'whatsapp' | null>(null)
 
-  // Carga inicial desde la BD
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (!token) {
@@ -37,7 +36,6 @@ export default function NotificationSettingsPage() {
 
     let mounted = true
 
-    // Hacer ambos fetch en paralelo
     Promise.all([
       fetch(`${API_URL}/api/perfil/usuario/preferencias-notificacion`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -49,10 +47,9 @@ export default function NotificationSettingsPage() {
       .then(([dataPreferencias, dataPerfil]) => {
         if (!mounted) return
 
-        // Teléfono viene del perfil directamente
         const tieneTelefonoReal = dataPerfil?.perfil?.telefonos?.length > 0
 
-        setTieneCorreo(true) // correo siempre existe
+        setTieneCorreo(true)
         setTieneTelefono(tieneTelefonoReal)
 
         if (dataPreferencias.ok && dataPreferencias.preferencias) {
@@ -182,7 +179,7 @@ export default function NotificationSettingsPage() {
           <div className="mt-16 border-t border-stone-200 pt-6">
             {warning === 'whatsapp' && (
               <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                ⚠️ No tienes un número de teléfono registrado.{' '}
+                No tienes un número de teléfono registrado.{' '}
                 <a href="/profile" className="font-semibold underline">
                   Regístralo en tu perfil
                 </a>{' '}
@@ -191,7 +188,7 @@ export default function NotificationSettingsPage() {
             )}
             {warning === 'email' && (
               <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                ⚠️ No tienes un correo válido registrado.{' '}
+                No tienes un correo válido registrado.{' '}
                 <a href="/profile" className="font-semibold underline">
                   Actualízalo en tu perfil
                 </a>{' '}
