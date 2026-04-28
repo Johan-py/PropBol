@@ -52,7 +52,28 @@ export default function MiRegistroPage() {
   const [vertices, setVertices] = useState<[number, number][]>([])
   const [modoPinActivo, setModoPinActivo] = useState(false)
   const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
+  useEffect(() => {
+  const obtenerDireccion = async () => {
+    if (!pinCoords) return
 
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pinCoords.lat}&lon=${pinCoords.lng}`
+    )
+
+    const data = await response.json()
+
+   // MINIMAL FIX: Recortar la dirección para no exceder los 80 caracteres
+      let dirLimpia = data.display_name ? data.display_name.split(',').slice(0, 3).join(',') : ''
+      if (dirLimpia.length >= 80) dirLimpia = dirLimpia.substring(0, 79)
+
+      setDatos((prev) => ({
+        ...prev,
+        direccion: dirLimpia
+      }))
+    }
+
+  obtenerDireccion()
+}, [pinCoords])
   const refs: Record<string, React.RefObject<any>> = {
     titulo: useRef<HTMLInputElement>(null),
     operacion: useRef<HTMLSelectElement>(null),
