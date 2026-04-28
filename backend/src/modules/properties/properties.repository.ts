@@ -28,6 +28,8 @@ export interface FiltrosBusqueda {
   lat?: number;
   lng?: number;
   radius?: number;
+  amenities?: number[];
+  labels?: number[];
 }
 
 // Helper para limpiar las variaciones de Anticrético
@@ -263,6 +265,26 @@ export const propertiesRepository = {
       if (filtros.maxSuperficie != null) {
         where.superficieM2.lte = filtros.maxSuperficie;
       }
+    }
+    //HU6 
+    // Filtros por Amenidades (Lógica AND: debe tener TODAS las seleccionadas)
+    if (filtros.amenities && filtros.amenities.length > 0) {
+      where.AND = [
+        ...(where.AND || []),
+        ...filtros.amenities.map(id => ({
+          inmueble_amenidad: { some: { amenidad_id: id } }
+        }))
+      ];
+    }
+
+    // Filtros por Etiquetas (Lógica AND)
+    if (filtros.labels && filtros.labels.length > 0) {
+      where.AND = [
+        ...(where.AND || []),
+        ...filtros.labels.map(id => ({
+          inmueble_etiqueta: { some: { etiqueta_id: id } }
+        }))
+      ];
     }
 
     // ── ORDER BY ───────────────────────────────────────────────────────────
