@@ -10,7 +10,7 @@ export default function DetallesPropiedad({ detalle }: Props) {
   return (
     
     <section className="rounded-2xl border border-[#beb4a8] bg-[#ede7dc] px-7 py-6">
-      <h2 className="mb-6 text-[20px] font-bold text-[#1f1f1f]">
+      <h2 className="mb-6 text-[18px] font-bold text-[#1f1f1f]  md:text-[20px]">
         Detalles de la propiedad
       </h2>
 
