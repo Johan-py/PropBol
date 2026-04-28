@@ -137,6 +137,34 @@ export default function EditarPublicacionPage() {
       : false
   }
 
+  useEffect(() => {
+    const protegerSalidaMisPublicaciones = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+      const link = target.closest('a') as HTMLAnchorElement | null
+
+      if (!link) return
+
+      const href = link.getAttribute('href')
+
+      if (href === '/mis-publicaciones') {
+        const confirmar = window.confirm(
+          '¿Estás seguro que quieres salirte sin editar nada?'
+        )
+
+        if (!confirmar) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+      }
+    }
+
+    document.addEventListener('click', protegerSalidaMisPublicaciones, true)
+
+    return () => {
+      document.removeEventListener('click', protegerSalidaMisPublicaciones, true)
+    }
+  }, [])
+
   const handleCancelar = () => {
     if (hayCambiosPendientes()) {
       const confirmar = window.confirm(
