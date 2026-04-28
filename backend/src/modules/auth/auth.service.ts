@@ -28,7 +28,8 @@ import {
   expire2FACode,
   findActive2FACodeByUserId,
   increment2FACodeAttempts,
-  mark2FACodeAsUsed
+  mark2FACodeAsUsed,
+  completeTourByUserId
 } from './auth.repository.js'
 
 type LoginDTO = {
@@ -369,7 +370,8 @@ export const loginService = async (payload: LoginDTO) => {
       nombre: user.nombre,
       apellido: user.apellido,
       avatar: user.avatar,
-      rol: user.rol
+      rol: user.rol,
+      controlador: user.controlador
     },
     token
   }
@@ -437,7 +439,8 @@ export const verify2FAService = async ({ userId, codigo }: Verify2FADTO) => {
       nombre: user.nombre,
       apellido: user.apellido,
       avatar: user.avatar,
-      rol: user.rol
+      rol: user.rol,
+      controlador: user.controlador
     },
     token
   }
@@ -552,6 +555,9 @@ export const verifyRegisterCodeService = async (payload: VerifyRegisterCodeDTO) 
       nombre: newUser.nombre,
       apellido: newUser.apellido,
       correo: newUser.correo,
+      avatar: newUser.avatar,
+      rol: newUser.rol,
+      controlador: newUser.controlador,
       telefonos: newUser.telefonos
     },
     token
@@ -576,9 +582,22 @@ export const getMeService = async (token: string) => {
       apellido: session.usuario.apellido,
       avatar: session.usuario.avatar,
       correo: session.usuario.correo,
-      rol: session.usuario.rol
+      rol: session.usuario.rol,
+      controlador: session.usuario.controlador
     }
   }
+}
+
+export const completeTourService = async (userId: number) => {
+  const user = await findUserById(userId)
+
+  if (!user) {
+    throw new AuthError('Usuario no encontrado', 404)
+  }
+
+  await completeTourByUserId(userId)
+
+  return { message: 'Tour completado correctamente', controlador: true }
 }
 
 export const logoutService = async (token: string) => {
@@ -762,7 +781,8 @@ export const loginWithGoogleCodeService = async (code: string) => {
       nombre: user.nombre,
       apellido: user.apellido,
       avatar: user.avatar,
-      rol: user.rol
+      rol: user.rol,
+      controlador: user.controlador
     },
     token
   }
