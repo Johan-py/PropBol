@@ -201,7 +201,7 @@ export default function ConsumoPage() {
 
         <div className="bg-white p-5 rounded-2xl shadow-sm border-b-4 border-amber-500 flex items-center justify-center gap-6 transition-transform hover:scale-105">
           
-
+          {/* Icono libro ambar */}
           <div className="bg-amber-50 p-4 rounded-2xl text-5xl">📙</div>
 
           <h3 className="text-orange-600 text-xl font-bold">
