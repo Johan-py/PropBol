@@ -30,12 +30,17 @@ export const propertiesController = {
         maxSuperficie,
         lat,
         lng,
-        radius
+        radius,
+        amenities, 
+        labels
       } = req.query
 
       let banoCompartido: boolean | undefined = undefined
       if (tipoBano === 'privado') banoCompartido = false
       if (tipoBano === 'compartido') banoCompartido = true
+      //HU6
+      const parsedAmenities = amenities ? String(amenities).split(',').map(Number).filter(n => !isNaN(n)) : undefined;
+      const parsedLabels = labels ? String(labels).split(',').map(Number).filter(n => !isNaN(n)) : undefined;
 
       const filtros: FiltrosBusqueda = {
         tipoInmueble: tipoInmueble as string | string[],
@@ -67,7 +72,10 @@ export const propertiesController = {
 
         lat: lat ? Number(lat) : undefined,
         lng: lng ? Number(lng) : undefined,
-        radius: radius ? Number(radius) : 1
+        radius: radius ? Number(radius) : 1,
+        //HU6
+        amenities: parsedAmenities,
+        labels: parsedLabels,
       }
 
       const orden = {
