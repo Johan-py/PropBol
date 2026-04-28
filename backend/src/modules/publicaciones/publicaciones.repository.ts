@@ -1,5 +1,5 @@
 import { Publicacion } from "@prisma/client";
-// ¡Ruta corregida! Apuntando al archivo db.ts de tu equipo
+// ✅ Ruta corregida: apunta al prisma.client.ts de tu equipo
 import { prisma } from "../../lib/prisma.client.js";
 
 export const publicacionesRepository = {
@@ -81,10 +81,12 @@ export const publicacionesRepository = {
     });
   },
 
-  // 👉 Nueva función HU‑5 v2
-  async validarPublicacionHU5(userId: number, data: Partial<Publicacion>) {
+  // Nueva función HU‑5 v2 reforzada (solo límite)
+  async validarPublicacionHU5(userId: number) {
     const count = await publicacionesRepository.countByUser(userId);
-    if (count >= 2) {
+    const limiteGratis = 2;
+
+    if (count >= limiteGratis) {
       throw new Error("LIMIT_REACHED");
     }
 
