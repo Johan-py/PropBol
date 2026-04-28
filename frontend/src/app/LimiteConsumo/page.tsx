@@ -183,7 +183,7 @@ export default function ConsumoPage() {
 
       {/* Creacion de Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-28 mb-10">
-        <div className="bg-white p-10 rounded-3xl shadow-sm border-b-4 border-emerald-500 flex items-center justify-center gap-6 transition-transform hover:scale-105">
+        <div className="bg-white p-10 rounded-3xl shadow-sm border-b-8 border-emerald-500 flex items-center justify-center gap-6 transition-transform hover:scale-105">
           
           {/* Icono libro verde */}
           <div className="bg-emerald-50 p-4 rounded-2xl text-5xl">📗</div>
