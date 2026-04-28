@@ -43,7 +43,7 @@ export default function PropertyTypeGrid({ items }: PropertyTypeGridProps) {
                 espacioscementerios: "TERRENO_MORTUORIO",
               };
               const tipo = tipoMap[item.key] ?? item.key.toUpperCase();
-              
+
               const modos = ["VENTA", "ALQUILER", "ANTICRETO"];
 
               const params = new URLSearchParams();
@@ -60,18 +60,21 @@ export default function PropertyTypeGrid({ items }: PropertyTypeGridProps) {
               }));
 
               router.push(`/busqueda_mapa?${params.toString()}`);
-            }}            
-            className="flex flex-col items-start w-full cursor-pointer transition-all duration-200 group"
+            }}
+            className="flex flex-col items-center w-full cursor-pointer transition-all duration-300 group hover:scale-105"
           >
-            <div className="bg-white rounded-[24px] shadow-sm flex items-center justify-center p-6 mb-3 w-full border border-gray-100 group-hover:shadow-md group-hover:border-[#965a1e] transition-all duration-300">
+            {/* Contenedor del Icono con diseño mejorado */}
+            <div className="bg-white rounded-[24px] shadow-sm flex items-center justify-center p-6 mb-3 w-full border border-gray-100 group-hover:shadow-md group-hover:border-orange-300 transition-all duration-300">
               <div className="text-[#965a1e] transform group-hover:scale-110 transition-transform duration-300">
                 {icons[item.key] ?? icons.casas}
               </div>
             </div>
-            <span className="text-[13px] font-bold text-gray-900 uppercase tracking-wider mb-0.5">
+
+            {/* Etiquetas de texto centradas */}
+            <span className="text-[13px] font-bold text-gray-900 uppercase tracking-wider mb-0.5 text-center">
               {item.label}
             </span>
-            <span className="text-[10px] font-medium text-gray-500 uppercase tracking-wide">
+            <span className="text-[10px] font-medium text-gray-500 uppercase tracking-wide text-center">
               {item.count.toLocaleString()} disponibles
             </span>
           </div>

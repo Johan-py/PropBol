@@ -5,8 +5,8 @@ export const createParametroPersonalizadoRules = [
     .trim()
     .notEmpty()
     .withMessage('El nombre es obligatorio')
-    .isLength({ min: 5, max: 200 })
-    .withMessage('El nombre debe tener entre 2 y 200 caracteres'),
+    .isLength({ min: 3, max: 60 })
+    .withMessage('El nombre debe tener entre 3 y 60 caracteres'),
 
   body('descripcion')
     .optional({ nullable: true })

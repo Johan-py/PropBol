@@ -13,12 +13,18 @@ const searchOptions = [
   { id: 'anticreto', name: 'Anticrético' }
 ]
 
+// 🚀 1. Definimos el tipo para saber qué nos manda el autocompletado
+type LocationValue = string | { nombre: string; lat?: number; lng?: number }
+
 export default function ExploreSection() {
   const router = useRouter()
   const [selectedOption, setSelectedOption] = useState<string[]>([])
   const [location, setLocation] = useState('')
   const [propertyType, setPropertyType] = useState('Cualquier tipo')
   const [errorMessage, setErrorMessage] = useState('')
+
+  // 🚀 2. Estado para guardar las coordenadas temporalmente
+  const [coords, setCoords] = useState<{ lat?: number, lng?: number }>({})
 
   const propertyTypes = [
     { label: 'Casas', icon: Home },
@@ -30,7 +36,20 @@ export default function ExploreSection() {
 
   const { updateFilters } = useSearchFilters()
 
+  // 🚀 3. El Helper Estricto (Igual que en FilterBar)
+  const handleLocationChange = (val: LocationValue) => {
+    if (typeof val === 'object' && val !== null) {
+      setLocation(val.nombre) // Guardamos solo el String en el input
+      setCoords({ lat: val.lat, lng: val.lng }) // Guardamos las coordenadas en secreto
+    } else {
+      setLocation(val as string)
+      setCoords({})
+    }
+    if (errorMessage) setErrorMessage('')
+  }
+
   const handleSearch = () => {
+    // 🚀 4. location ahora siempre será un string seguro, ya no explotará el .trim()
     const hasOperationFilter = selectedOption.length > 0
     const hasLocationFilter = location.trim().length > 0
 
@@ -77,6 +96,13 @@ export default function ExploreSection() {
     if (tipoFinal) params.set('tipoInmueble', tipoFinal)
     if (location.trim() !== '') params.set('query', location.trim())
 
+    // 🚀 5. Inyectamos la magia de Mapbox a la URL si existen las coordenadas
+    if (coords.lat && coords.lng) {
+      params.set('lat', coords.lat.toString())
+      params.set('lng', coords.lng.toString())
+      params.set('radius', '1') // Radio de 1km por defecto
+    }
+
     const finalUrl = `/busqueda_mapa?${params.toString()}`
     console.log('🚀 Navegando desde Home a:', finalUrl)
     router.push(finalUrl)
@@ -85,9 +111,8 @@ export default function ExploreSection() {
   return (
     <section className="bg-white py-4 md:py-6 w-full">
       <div className="max-w-[1400px] mx-auto px-6 md:px-10">
-        {/* MOBILE con un Selector combobox */}
+        {/* MOBILE */}
         <div className="md:hidden">
-          {/* FIX: agregado id="tour-buscador-mobile" para que el tour pueda iluminar este elemento */}
           <div id="tour-buscador-mobile" className="rounded-2xl bg-white p-4 shadow-xl border border-stone-100 flex flex-col gap-4">
             <ComboBox
               label="Operación"
@@ -108,12 +133,10 @@ export default function ExploreSection() {
               onChange={(val) => setPropertyType(val)}
             />
 
+            {/* 🚀 6. Aplicamos el helper al Mobile */}
             <LocationSearch
               value={location}
-              onChange={(value) => {
-                setLocation(value)
-                if (errorMessage) setErrorMessage('')
-              }}
+              onChange={handleLocationChange}
             />
 
             <button
@@ -147,16 +170,14 @@ export default function ExploreSection() {
                     className="flex items-center gap-2.5 transition-colors duration-200 group focus:outline-none"
                   >
                     <div
-                      className={`w-7 h-7 rounded-md border shadow-sm flex items-center justify-center transition-all ${
-                        isSelected ? 'bg-amber-500 border-amber-500' : 'bg-white border-stone-300'
-                      }`}
+                      className={`w-7 h-7 rounded-md border shadow-sm flex items-center justify-center transition-all ${isSelected ? 'bg-amber-500 border-amber-500' : 'bg-white border-stone-300'
+                        }`}
                     >
                       {isSelected && <span className="text-white text-sm font-bold">✓</span>}
                     </div>
                     <span
-                      className={`font-semibold font-montserrat text-lg transition-colors ${
-                        isSelected ? 'text-amber-700' : 'text-stone-900 group-hover:text-amber-600'
-                      }`}
+                      className={`font-semibold font-montserrat text-lg transition-colors ${isSelected ? 'text-amber-700' : 'text-stone-900 group-hover:text-amber-600'
+                        }`}
                     >
                       {option.name}
                     </span>
@@ -177,12 +198,10 @@ export default function ExploreSection() {
               </div>
 
               <div className="w-full">
+                {/* 🚀 7. Aplicamos el helper al Desktop */}
                 <LocationSearch
                   value={location}
-                  onChange={(value) => {
-                    setLocation(value)
-                    if (errorMessage) setErrorMessage('')
-                  }}
+                  onChange={handleLocationChange}
                 />
               </div>
 

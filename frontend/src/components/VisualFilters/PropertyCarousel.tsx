@@ -99,7 +99,9 @@ export default function PropertyCarousel({
           className=" flex gap-3 overflow-x-auto scroll-smooth px-9 py-2"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none", overscrollBehaviorX: "contain", touchAction: "pan-x" }}
         >
+          {/* ... dentro del ref={scrollRef} ... */}
           {items.map((item, i) => {
+            // Obtenemos la primera imagen de las previews para mostrarla de entrada
             const mainImage = item.previews && item.previews.length > 0
               ? item.previews[0].imagen
               : item.image;

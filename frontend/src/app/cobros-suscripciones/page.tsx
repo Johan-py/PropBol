@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+
 type Plan = {
   id: number
   name: string
@@ -48,6 +50,7 @@ const plansData: Plan[] = [
 export default function CobrosSuscripciones() {
   const [plans] = useState(plansData)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [currentPlanId, setCurrentPlanId] = useState<number>(1)
   const router = useRouter()
 
   useEffect(() => {
@@ -55,13 +58,22 @@ export default function CobrosSuscripciones() {
 
     if (token && token !== 'undefined' && token !== 'null') {
       setIsLoggedIn(true)
+
+      fetch(`${API_URL}/api/suscripciones/mi-suscripcion`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data?.activa && typeof data.idSuscripcion === 'number') {
+            setCurrentPlanId(data.idSuscripcion)
+          }
+        })
+        .catch(() => {})
     }
   }, [])
 
   const maxSubscribers = Math.max(...plans.map((p) => p.subscribers))
   const mostPopularId = plans.find((p) => p.subscribers === maxSubscribers)?.id
-
-  const currentPlanId = 1
 
   const handleSubscription = (plan: Plan) => {
     const token = localStorage.getItem('token')
