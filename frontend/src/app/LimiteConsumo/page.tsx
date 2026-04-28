@@ -165,7 +165,7 @@ export default function ConsumoPage() {
           {/* Emcabezado de la Barra */}
           <div className="flex-1 pb-2">
             <div className="flex justify-between text-[10px] font-black mb-2 tracking-widest">
-              <span className="text-xl opacity-70">0 USADAS</span>
+              <span className="text-xl opacity-70">{data.usadas} USADAS</span>
               <span className="text-xl text-orange-400">{porcentaje}% UTILIZADO</span>
               <span className="text-xl">LÍMITE: {data.limite}</span>
             </div>
