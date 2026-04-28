@@ -24,6 +24,7 @@ import TransactionModeFilter from './TransactionModeFilter'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { UbicacionEspecificaPanel } from './UbicacionEspecificaPanel';
 import SuperficieFilter from './SuperficieFilter'
+import AdvancedFiltersModal from './AdvancedFiltersModal'
 
 
 interface FilterBarProps {
@@ -113,6 +114,8 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
 
   //Estado para almacenar las coordenadas temporalmente
   const [coords, setCoords] = useState<{ lat?: number, lng?: number }>({})
+  //HU6
+  const [isAdvancedFiltersOpen, setIsAdvancedFiltersOpen] = useState(false)
 
   useEffect(() => {
     const saved = sessionStorage.getItem('propbol_global_filters')
@@ -357,7 +360,14 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
             </button>
 
             {/* Chips Adicionales */}
-            <MockFilterChip icon={SlidersHorizontal} text="Más Filtros" hasChevron={false} />
+            <button
+              type="button"
+              onClick={() => setIsAdvancedFiltersOpen(true)}
+              className="h-[40px] flex items-center gap-2 px-4 rounded-full bg-white border border-stone-200 text-stone-600 text-sm font-medium hover:border-[#d97706] shadow-sm transition-all focus:outline-none shrink-0"
+            >
+              <SlidersHorizontal className="w-4 h-4 text-stone-500" />
+              <span>Más Filtros</span>
+            </button>
             
             <button
               type="button"
@@ -438,6 +448,48 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
           </div>
         </div>
       )}
+      {/*//HU6*/}
+      <AdvancedFiltersModal 
+        isOpen={isAdvancedFiltersOpen}
+        onClose={() => setIsAdvancedFiltersOpen(false)}
+        onApply={(amenities, labels) => {
+          // 1. Reconstruimos los filtros base con el estado actual
+          const tipoMap: Record<string, string> = {
+            Casas: 'CASA',
+            Departamentos: 'DEPARTAMENTO',
+            Terrenos: 'TERRENO',
+            Cuartos: 'CUARTO',
+            "Espacios Cementerio": 'TERRENO_MORTUORIO'
+          }
+          const tipoFinal = tipoMap[tipoInmueble] || (tipoInmueble !== 'Cualquier tipo' ? tipoInmueble.toUpperCase() : null)
+
+          const filtrosActualizados = {
+            tipoInmueble: tipoFinal ? [tipoFinal] : [],
+            modoInmueble: modosSeleccionados,
+            query: ubicacionTexto,
+            updatedAt: new Date().toISOString(),
+            amenities,
+            labels
+          }
+
+          // 2. Actualizamos el storage global (Hook)
+          updateFilters(filtrosActualizados)
+          
+          // 3. Sincronizamos la URL
+          const params = new URLSearchParams(searchParams?.toString() || '')
+          if (amenities.length > 0) params.set('amenities', amenities.join(','))
+          else params.delete('amenities')
+          
+          if (labels.length > 0) params.set('labels', labels.join(','))
+          else params.delete('labels')
+
+          router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
+          setIsAdvancedFiltersOpen(false)
+          
+          // 4. Disparamos la función externa si existe
+          if (onSearch) onSearch(filtrosActualizados as any)
+        }}
+      />
     </form>
   )
 }

@@ -35,6 +35,12 @@ export function usePropertySearch() {
     if (filters.labels && filters.labels.length > 0) {
       params.append('labels', filters.labels.join(','));
     }
+    if (filters.amenities && filters.amenities.length > 0) {
+      params.append('amenities', filters.amenities.join(','))
+    }
+    if (filters.labels && filters.labels.length > 0) {
+      params.append('labels', filters.labels.join(','))
+    }
 
     try {
       setLoading(true)
