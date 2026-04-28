@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Star, Heart, Eye } from "lucide-react";
+import { Star, Heart } from "lucide-react";
 
 type Inmueble = {
   id: number;
