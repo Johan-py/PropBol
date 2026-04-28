@@ -16,6 +16,15 @@ interface PropertyCardProps {
   isEmpty?: boolean;
   previews?: Preview[];
 }
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+const getImageUrl = (url?: string) => {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+  return `${API_URL}/${url.replace(/^\/+/, "")}`;
+};
 
 export default function PropertyCard({
   image,
@@ -31,8 +40,8 @@ export default function PropertyCard({
 
   const slides: Preview[] =
     previews.length > 0
-      ? previews
-      : [{ imagen: image, titulo: title }];
+      ? previews.map(p => ({ ...p, imagen: getImageUrl(p.imagen) }))
+      : [{ imagen: getImageUrl(image), titulo: title }];
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -87,10 +96,14 @@ export default function PropertyCard({
           <>
             {/* Imagen con fade transition */}
             <img
-              key={currentIndex}
-              src={currentSlide.imagen}
-              alt={currentSlide.titulo}
-              className="w-full h-full object-cover animate-fade"
+  key={currentIndex}
+  src={currentSlide.imagen}
+  alt={currentSlide.titulo}
+  // Añade esto para manejar si una imagen falla
+  onError={(e) => {
+    (e.target as HTMLImageElement).src = "/placeholder-house.jpg";
+  }}
+  className="w-full h-full object-cover transition-opacity duration-500"
             />
 
             {/* Título del inmueble rotando */}
