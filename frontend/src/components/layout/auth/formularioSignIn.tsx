@@ -326,7 +326,7 @@ export default function LoginForm() {
       apellido: validatedUser.apellido ?? fallbackUser?.apellido,
       avatar: validatedUser.avatar ?? fallbackUser?.avatar ?? null,
       
-    },validatedUser.controlador);
+    }, validatedUser.controlador ?? undefined);
   };
 
   const handleGoogleLogin = () => {
