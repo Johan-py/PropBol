@@ -42,7 +42,8 @@ const createProperty = async (data: any, userId: number) => {
         latitud: new Prisma.Decimal(data.latitud ?? 0),
         longitud: new Prisma.Decimal(data.longitud ?? 0),
         ciudad: data.ciudad ?? 'Cochabamba',
-        zona: data.zona ?? null
+        zona: data.zona ?? null,
+        verticesDifuminado: data.verticesDifuminado ?? null
       }
     })
 

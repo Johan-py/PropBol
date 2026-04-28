@@ -1,44 +1,40 @@
-
 // frontend/src/components/busqueda/capacidad/CapacidadButton.tsx
 'use client'
 
-import { useState } from 'react'
 import { Users, ChevronDown } from 'lucide-react'
-import { CapacidadFilter } from './CapacidadFilter'
 
 interface CapacidadButtonProps {
   variant?: 'home' | 'map'
+  isActive?: boolean
+  onClick?: () => void
 }
 
-export function CapacidadButton({ variant = 'map' }: CapacidadButtonProps) {
-  const [showCapacidad, setShowCapacidad] = useState(false)
-
+export function CapacidadButton({ variant = 'map', isActive = false, onClick }: CapacidadButtonProps) {
+  // Para que se vea como "Píldora"
+  const buttonStyles = variant === 'map' 
+    ? `h-[40px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${
+        isActive 
+          ? 'bg-[#d97706] text-white border-[#d97706]' 
+          : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+      }`
+    : `h-[46px] w-full flex items-center justify-between border px-4 rounded-xl shadow-sm transition-all font-inter text-sm whitespace-nowrap gap-2 focus:outline-none ${
+        isActive
+          ? 'border-[#d97706] bg-[#d97706] text-white'
+          : 'border-stone-300 text-stone-600 hover:border-[#d97706]'
+      }`;
   return (
-    <div className="shrink-0 relative" style={{ zIndex: 99999 }}>
+    <div className="shrink-0 relative">
       <button
         type="button"
-        onClick={() => setShowCapacidad(!showCapacidad)}
-        className={`h-[36px] flex items-center justify-between border px-3 rounded-xl shadow-sm transition-all font-inter text-sm whitespace-nowrap gap-2 shrink-0 focus:outline-none
-          ${showCapacidad 
-             ? 'border-[#d97706] bg-[#d97706] text-white' 
-             : 'border-stone-200 text-stone-600 hover:border-[#d97706]'
-          }
-        `}
+        onClick={onClick}
+        className={buttonStyles}
       >
         <div className="flex items-center gap-2">
-          <Users className={`w-4 h-4 ${showCapacidad ? 'text-white' : 'text-stone-500'}`} />
+          <Users className={`w-4 h-4 ${isActive ? 'text-white' : 'text-stone-500'}`} />
           <span>Capacidad</span>
         </div>
-        <ChevronDown className={`w-4 h-4 transition-transform ${showCapacidad ? 'rotate-180 text-white' : 'text-stone-400'}`} />
+        <ChevronDown className={`w-4 h-4 transition-transform ${isActive ? 'rotate-180 text-white' : 'text-stone-400 opacity-70'}`} />
       </button>
-
-      {/* Cuadrito que aparece DEBAJO del botón */}
-      {showCapacidad && (
-        <div className="absolute top-full left-0 mt-2" style={{ zIndex: 99999 }}>
-          <CapacidadFilter onClose={() => setShowCapacidad(false)} />
-        </div>
-      )}
     </div>
   )
 }
-

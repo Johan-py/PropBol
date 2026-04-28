@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+
+type ProviderId = "facebook" | "discord";
 type AccountStatus = "vinculado" | "no-vinculado";
 
 type LinkedAccount = {
-  id: string;
+  id: ProviderId;
   platform: string;
   description: string;
   status: AccountStatus;
@@ -14,6 +17,33 @@ type LinkedAccount = {
   icon?: ReactNode;
   letter?: string;
 };
+
+type SocialLinksResponse = {
+  facebook: {
+    linked: boolean;
+    linkedEmail: string | null;
+  };
+  discord: {
+    linked: boolean;
+    linkedEmail: string | null;
+  };
+};
+
+type SocialLinkPopupSuccess = {
+  type: "propbol:social-link-success";
+  provider: ProviderId;
+  message: string;
+  linkedEmail: string | null;
+};
+
+type SocialLinkPopupError = {
+  type: "propbol:social-link-error";
+  provider: ProviderId;
+  code: string;
+  message: string;
+};
+
+type SocialLinkPopupMessage = SocialLinkPopupSuccess | SocialLinkPopupError;
 
 const initialAccounts: LinkedAccount[] = [
   {
@@ -41,8 +71,9 @@ const initialAccounts: LinkedAccount[] = [
 type SocialCardProps = {
   account: LinkedAccount;
   actionLoadingId: string | null;
-  onLink: (id: string) => void;
-  onOpenUnlinkModal: (id: string) => void;
+  onLink: (id: ProviderId) => void;
+  onOpenUnlinkModal: (id: ProviderId) => void;
+  disableUnlink: boolean;
 };
 
 function SocialCard({
@@ -50,7 +81,11 @@ function SocialCard({
   actionLoadingId,
   onLink,
   onOpenUnlinkModal,
+  disableUnlink,
 }: SocialCardProps) {
+  const isProcessing = actionLoadingId === account.id;
+  const isLinked = account.status === "vinculado";
+
   return (
     <article className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -73,44 +108,48 @@ function SocialCard({
               <span className="font-medium text-neutral-700">Estado:</span>{" "}
               <span
                 className={
-                  account.status === "vinculado"
+                  isLinked
                     ? "font-semibold text-green-600"
                     : "font-semibold text-neutral-500"
                 }
               >
-                {account.status === "vinculado" ? "Vinculado" : "No vinculado"}
+                {isLinked ? "Vinculado" : "No vinculado"}
               </span>
             </p>
-
-            {account.linkedEmail && (
+            {isLinked && (
               <p className="mt-1 text-sm text-neutral-500">
-                Cuenta asociada: {account.linkedEmail}
+                {account.linkedEmail
+                  ? `Cuenta asociada: ${account.linkedEmail}`
+                  : "Cuenta vinculada correctamente."}
+              </p>
+            )}
+
+            {isLinked && disableUnlink && (
+              <p className="mt-2 text-sm font-medium text-amber-600">
+                Debes mantener al menos una red vinculada activa.
               </p>
             )}
           </div>
         </div>
 
         <button
-          type="button"
           onClick={() =>
-            account.status === "vinculado"
-              ? onOpenUnlinkModal(account.id)
-              : onLink(account.id)
+            isLinked ? onOpenUnlinkModal(account.id) : onLink(account.id)
           }
-          disabled={actionLoadingId === account.id}
-         className={`inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition disabled:cursor-not-allowed disabled:opacity-70 ${
-         account.status === "vinculado"
-         ? "bg-red-500 hover:bg-red-600"
-         : account.id === "facebook"
-         ? "bg-[#1877F2] hover:brightness-95"
-         : "bg-[#5865F2] hover:brightness-95"
-         }`}
+          disabled={isProcessing || (isLinked && disableUnlink)}
+          className={`inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition disabled:cursor-not-allowed disabled:opacity-50 ${
+            isLinked
+              ? "bg-red-500 hover:bg-red-600"
+              : account.id === "facebook"
+                ? "bg-[#1877F2] hover:brightness-95"
+                : "bg-[#5865F2] hover:brightness-95"
+          }`}
         >
-          {actionLoadingId === account.id
+          {isProcessing
             ? "Procesando..."
-            : account.status === "vinculado"
-            ? "Desvincular"
-            : "Vincular"}
+            : isLinked
+              ? "Desvincular"
+              : "Vincular"}
         </button>
       </div>
     </article>
@@ -119,15 +158,18 @@ function SocialCard({
 
 function DiscordIcon() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-6 w-6 fill-white"
-      aria-hidden="true"
-    >
+    <svg viewBox="0 0 24 24" className="h-6 w-6 fill-white" aria-hidden="true">
       <path d="M20.317 4.369A19.79 19.79 0 0 0 15.885 3c-.191.328-.403.769-.552 1.117a18.27 18.27 0 0 0-5.333 0A11.64 11.64 0 0 0 9.448 3a19.736 19.736 0 0 0-4.433 1.369C2.211 8.58 1.443 12.686 1.826 16.735A19.923 19.923 0 0 0 7.239 19.5c.438-.6.828-1.235 1.164-1.904-.634-.24-1.239-.541-1.813-.896.152-.111.301-.227.445-.347 3.495 1.643 7.285 1.643 10.739 0 .146.12.294.236.446.347-.575.355-1.182.656-1.817.896.336.669.726 1.304 1.164 1.904a19.874 19.874 0 0 0 5.416-2.765c.451-4.695-.769-8.763-3.666-12.366ZM9.349 14.546c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.84 2.154-1.909 2.154Zm5.303 0c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.831 2.154-1.909 2.154Z" />
     </svg>
   );
 }
+
+const isSocialLinkPopupMessage = (
+  value: unknown,
+): value is SocialLinkPopupMessage => {
+  if (!value || typeof value !== "object") return false;
+  return "type" in value;
+};
 
 export default function LinkedAccountsSection() {
   const [accounts, setAccounts] = useState<LinkedAccount[]>(initialAccounts);
@@ -135,17 +177,81 @@ export default function LinkedAccountsSection() {
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [accountToUnlink, setAccountToUnlink] = useState<string | null>(null);
+  const [accountToUnlink, setAccountToUnlink] = useState<ProviderId | null>(
+    null,
+  );
+
+  const linkedAccountsCount = useMemo(() => {
+    return accounts.filter((account) => account.status === "vinculado").length;
+  }, [accounts]);
+
+  const isLastLinkedAccount = (id: ProviderId) => {
+    const account = accounts.find((item) => item.id === id);
+
+    return (
+      account?.status === "vinculado" &&
+      linkedAccountsCount <= 1
+    );
+  };
+
+  const fetchLinks = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setErrorMessage("No se encontró una sesión activa.");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setErrorMessage("");
+
+      const response = await fetch(`${API_URL}/api/auth/social-links`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as { message?: string };
+        throw new Error(
+          errorData.message ||
+            "No se pudo cargar el estado de las redes vinculadas.",
+        );
+      }
+
+      const data = (await response.json()) as SocialLinksResponse;
+
+      setAccounts((prev) =>
+        prev.map((account) => {
+          const providerData = data[account.id];
+
+          if (!providerData) return account;
+
+          return {
+            ...account,
+            status: providerData.linked ? "vinculado" : "no-vinculado",
+            linkedEmail: providerData.linkedEmail ?? "",
+          };
+        }),
+      );
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "No se pudo cargar el estado de las redes vinculadas.",
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 900);
-
-    return () => clearTimeout(timer);
+    void fetchLinks();
   }, []);
 
-  const handleLink = (id: string) => {
+  const handleLink = async (id: ProviderId) => {
     setErrorMessage("");
     setSuccessMessage("");
 
@@ -155,6 +261,7 @@ export default function LinkedAccountsSection() {
     }
 
     const current = accounts.find((account) => account.id === id);
+
     if (!current) return;
 
     if (current.status === "vinculado") {
@@ -164,30 +271,138 @@ export default function LinkedAccountsSection() {
 
     setActionLoadingId(id);
 
-    setTimeout(() => {
-      setAccounts((prev) =>
-        prev.map((account) =>
-          account.id === id
-            ? {
-                ...account,
-                status: "vinculado",
-                linkedEmail:
-                  id === "facebook"
-                    ? "usuario.facebook@mock.com"
-                    : "usuario.discord@mock.com",
-              }
-            : account
-        )
+    try {
+      const response = await fetch(`${API_URL}/api/auth/${id}/link-url`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token") ?? ""}`,
+        },
+      });
+
+      const data = (await response.json()) as {
+        url?: string;
+        message?: string;
+      };
+
+      if (!response.ok || !data.url) {
+        throw new Error(
+          data.message ||
+            `No se pudo iniciar la vinculación con ${current.platform}.`,
+        );
+      }
+
+      const popupWidth = 500;
+      const popupHeight = 700;
+      const left = window.screenX + (window.outerWidth - popupWidth) / 2;
+      const top = window.screenY + (window.outerHeight - popupHeight) / 2;
+
+      const popupWindow = window.open(
+        data.url,
+        `${id}-link`,
+        `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`,
       );
 
+      if (
+        !popupWindow ||
+        popupWindow.closed ||
+        typeof popupWindow.closed === "undefined"
+      ) {
+        throw new Error(
+          "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.",
+        );
+      }
+
+      const popup = popupWindow;
+      popup.focus();
+
+      const expectedOrigin = new URL(API_URL).origin;
+      let flowResolved = false;
+      let intervalId = 0;
+      let timeoutId = 0;
+
+      const cleanup = () => {
+        window.removeEventListener("message", handleMessage);
+        window.clearInterval(intervalId);
+        window.clearTimeout(timeoutId);
+        setActionLoadingId(null);
+      };
+
+      const handleMessage = async (
+        event: MessageEvent<SocialLinkPopupMessage>,
+      ) => {
+        if (event.origin !== expectedOrigin) return;
+        if (!isSocialLinkPopupMessage(event.data)) return;
+        if (
+          event.data.type !== "propbol:social-link-success" &&
+          event.data.type !== "propbol:social-link-error"
+        ) {
+          return;
+        }
+
+        if (event.data.provider !== id) return;
+
+        flowResolved = true;
+        cleanup();
+
+        if (event.data.type === "propbol:social-link-success") {
+          setSuccessMessage(event.data.message);
+          popup.close();
+          await fetchLinks();
+          return;
+        }
+
+        setErrorMessage(
+          event.data.message || `No se pudo vincular ${current.platform}.`,
+        );
+        popup.close();
+      };
+
+      intervalId = window.setInterval(() => {
+        if (!popup.closed) return;
+
+        cleanup();
+
+        if (!flowResolved) {
+          setErrorMessage(`Cancelaste la vinculación con ${current.platform}.`);
+        }
+      }, 500);
+
+      timeoutId = window.setTimeout(
+        () => {
+          cleanup();
+
+          if (!popup.closed) popup.close();
+
+          if (!flowResolved) {
+            setErrorMessage(
+              `La vinculación con ${current.platform} tardó demasiado. Intenta nuevamente.`,
+            );
+          }
+        },
+        2 * 60 * 1000,
+      );
+
+      window.addEventListener("message", handleMessage);
+    } catch (error) {
       setActionLoadingId(null);
-      setSuccessMessage(`${current.platform} fue vinculada correctamente.`);
-    }, 1000);
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : `No se pudo vincular ${current.platform}.`,
+      );
+    }
   };
 
-  const openUnlinkModal = (id: string) => {
+  const openUnlinkModal = (id: ProviderId) => {
     setErrorMessage("");
     setSuccessMessage("");
+
+    if (isLastLinkedAccount(id)) {
+      setErrorMessage(
+        "No puedes desvincular esta red porque es tu único método de acceso activo.",
+      );
+      return;
+    }
+
     setAccountToUnlink(id);
   };
 
@@ -195,40 +410,67 @@ export default function LinkedAccountsSection() {
     setAccountToUnlink(null);
   };
 
-  const confirmUnlink = () => {
+  const confirmUnlink = async () => {
     if (!accountToUnlink) return;
 
-    const linkedAccountsCount = accounts.filter(
-      (account) => account.status === "vinculado"
-    ).length;
+    if (!navigator.onLine) {
+      setErrorMessage("No tienes conexión a internet.");
+      setAccountToUnlink(null);
+      return;
+    }
 
-    if (linkedAccountsCount <= 1) {
+    const current = accounts.find((account) => account.id === accountToUnlink);
+
+    if (!current) {
+      setAccountToUnlink(null);
+      return;
+    }
+
+    if (isLastLinkedAccount(accountToUnlink)) {
       setErrorMessage(
-        "No puedes desvincular el único método de acceso disponible."
+        "No puedes desvincular esta red porque es tu único método de acceso activo.",
       );
       setAccountToUnlink(null);
       return;
     }
 
     setActionLoadingId(accountToUnlink);
+    setErrorMessage("");
+    setSuccessMessage("");
 
-    setTimeout(() => {
-      setAccounts((prev) =>
-        prev.map((account) =>
-          account.id === accountToUnlink
-            ? {
-                ...account,
-                status: "no-vinculado",
-                linkedEmail: "",
-              }
-            : account
-        )
+    try {
+      const response = await fetch(
+        `${API_URL}/api/auth/social-links/${accountToUnlink}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token") ?? ""}`,
+          },
+        },
       );
 
-      setActionLoadingId(null);
+      const data = (await response.json()) as { message?: string };
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "No se pudo desvincular la red social.",
+        );
+      }
+
+      setSuccessMessage(
+        data.message || "La red social fue desvinculada correctamente.",
+      );
       setAccountToUnlink(null);
-      setSuccessMessage("La red social fue desvinculada correctamente.");
-    }, 900);
+      await fetchLinks();
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : `No se pudo desvincular ${current.platform}.`,
+      );
+    } finally {
+      setActionLoadingId(null);
+    }
   };
 
   return (
@@ -257,8 +499,26 @@ export default function LinkedAccountsSection() {
 
       {isLoading ? (
         <div className="space-y-4">
-          <div className="h-28 animate-pulse rounded-xl bg-stone-100" />
-          <div className="h-28 animate-pulse rounded-xl bg-stone-100" />
+          <p className="text-sm text-neutral-500">Cargando redes...</p>
+
+          {[1, 2].map((item) => (
+            <div
+              key={item}
+              className="flex items-center justify-between rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm"
+            >
+              <div className="flex items-center gap-4">
+                <div className="h-12 w-12 animate-pulse rounded-full bg-neutral-200" />
+
+                <div className="space-y-2">
+                  <div className="h-4 w-32 animate-pulse rounded bg-neutral-200" />
+                  <div className="h-3 w-48 animate-pulse rounded bg-neutral-200" />
+                  <div className="h-3 w-24 animate-pulse rounded bg-neutral-200" />
+                </div>
+              </div>
+
+              <div className="h-10 w-28 animate-pulse rounded-lg bg-neutral-200" />
+            </div>
+          ))}
         </div>
       ) : (
         <div className="space-y-4">
@@ -269,6 +529,7 @@ export default function LinkedAccountsSection() {
               actionLoadingId={actionLoadingId}
               onLink={handleLink}
               onOpenUnlinkModal={openUnlinkModal}
+              disableUnlink={isLastLinkedAccount(account.id)}
             />
           ))}
         </div>
@@ -295,9 +556,12 @@ export default function LinkedAccountsSection() {
               <button
                 type="button"
                 onClick={confirmUnlink}
-                className="rounded-md bg-red-500 px-4 py-2 text-sm font-medium text-white"
+                disabled={actionLoadingId === accountToUnlink}
+                className="rounded-md bg-red-500 px-4 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Desvincular
+                {actionLoadingId === accountToUnlink
+                  ? "Procesando..."
+                  : "Desvincular"}
               </button>
             </div>
           </div>
