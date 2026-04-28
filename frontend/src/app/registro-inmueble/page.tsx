@@ -1,12 +1,11 @@
+
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-//import PlanModal from '../../components/ui/PlanModal'
 import dynamic from 'next/dynamic'
-import { ErrorValidacion, EstadoPublicacion } from "../../types/publicacion";
+import { ErrorValidacion } from "../../types/publicacion";
 import ErrorPanel from "../../components/publicacion/ErrorPanel";
-import PublicarModal from "../../components/publicacion/PublicarModal";
 
 const MapaPinSelector = dynamic(
   () => import('../../components/MapaPinSelector'),
@@ -51,10 +50,6 @@ export default function MiRegistroPage() {
   const [vertices, setVertices] = useState<[number, number][]>([])
   const [modoPinActivo, setModoPinActivo] = useState(false)
   const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
-
-  const [estadoPublicacion, setEstadoPublicacion] = useState<EstadoPublicacion>("idle")
-  const [progreso, setProgreso] = useState(0)
-  const [payloadPendiente, setPayloadPendiente] = useState<any>(null)
 
   const refs: Record<string, React.RefObject<any>> = {
     titulo: useRef<HTMLInputElement>(null),
@@ -540,29 +535,13 @@ export default function MiRegistroPage() {
 
     console.log('📤 Payload enviado al backend:', payload)
 
-    setPayloadPendiente(payload);
-    setEstadoPublicacion("confirmando");
-    setProgreso(0);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  const ejecutarPublicacion = async () => {
-    setEstadoPublicacion("publicando");
-    setProgreso(0);
-
-    const intervaloBarra = setInterval(() => {
-      setProgreso(p => p >= 90 ? 90 : p + 10);
-    }, 300);
-
     try {
       const token = localStorage.getItem('token')
 
       if (!token) {
-        clearInterval(intervaloBarra);
         setMensajeError('DEBES INICIAR SESIÓN PARA REGISTRAR UNA PROPIEDAD')
         setCampoError(null)
         setEstado('error')
-        setEstadoPublicacion("idle");
         return
       }
 
@@ -572,15 +551,13 @@ export default function MiRegistroPage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(payloadPendiente)
+        body: JSON.stringify(payload)
       })
 
       const result = await response.json()
-      clearInterval(intervaloBarra);
 
       if (!response.ok) {
         if (result.message === 'LIMIT_REACHED') {
-          setEstadoPublicacion("idle");
           router.push('/Cobros-Limite')
           return
         }
@@ -594,7 +571,6 @@ export default function MiRegistroPage() {
         setMensajeError(erroresBackend)
         setCampoError(null)
         setEstado('error')
-        setEstadoPublicacion("error_publicacion");
         return
       }
 
@@ -603,25 +579,18 @@ export default function MiRegistroPage() {
       if (!publicacionId) {
         setMensajeError('No se recibió el ID de la publicación creada')
         setEstado('error')
-        setEstadoPublicacion("error_publicacion");
         return
       }
 
-      setProgreso(100);
-      setEstadoPublicacion("exito");
-      setEstado('exito')
+      setEstado('ninguno')
       setMensajeError('')
       setCampoError(null)
-
-      setTimeout(() => {
-        router.push(`/contenido-multimedia?publicacionId=${publicacionId}`)
-      }, 2000);
+      
+      router.push(`/contenido-multimedia?publicacionId=${publicacionId}`)
     } catch (error) {
-      clearInterval(intervaloBarra);
       setMensajeError('NO SE PUDO CONECTAR CON EL BACKEND')
       setCampoError(null)
       setEstado('error')
-      setEstadoPublicacion("error_publicacion");
     }
   }
 
@@ -974,27 +943,12 @@ export default function MiRegistroPage() {
                     {mensajeError}
                   </div>
                 )}
-
-                {estado === 'exito' && (
-                  <div className="bg-white border-2 border-green-400 rounded-2xl p-4 shadow-md max-w-md ml-auto">
-    
-                  </div>
-                )}
               </div>
             </div>
           </div>
         </div>
       </main>
-
-      {(estadoPublicacion !== "idle") && (
-        <PublicarModal
-          estado={estadoPublicacion as any}
-          progreso={progreso}
-          onConfirmar={ejecutarPublicacion}
-          onCancelar={() => setEstadoPublicacion("idle")}
-          onReintentar={() => setEstadoPublicacion("confirmando")}
-        />
-      )}
     </div>
   )
 }
+
