@@ -161,6 +161,7 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({ blogs: propBlog
                 fill
                 className="object-cover"
                 sizes="80px"
+                unoptimized
               />
             </div>
 
