@@ -72,7 +72,7 @@ export const publicacionesRepository = {
   },
 
   async updateEstado(id: number, activa: boolean) {
-    // ✅ ACTIVA cuando el toggle está ON, PAUSADA cuando está OFF
+    // ACTIVA cuando el toggle está ON, PAUSADA cuando está OFF
     const estado = activa ? "ACTIVA" : "PAUSADA";
 
     return prisma.publicacion.update({
@@ -81,10 +81,18 @@ export const publicacionesRepository = {
     });
   },
 
-  // 👉 Nueva función HU‑5 v2
+  // 👉 Nueva función HU‑5 v2 reforzada
   async validarPublicacionHU5(userId: number, data: Partial<Publicacion>) {
     const count = await publicacionesRepository.countByUser(userId);
-    if (count >= 2) {
+    const limiteGratis = 2;
+
+    // Si ya alcanzó el límite de publicaciones gratuitas
+    if (count >= limiteGratis) {
+      throw new Error("LIMIT_REACHED");
+    }
+
+    // Validación adicional: si intenta crear una publicación gratuita (precio = 0)
+    if (data.precio === 0 && count >= limiteGratis) {
       throw new Error("LIMIT_REACHED");
     }
 

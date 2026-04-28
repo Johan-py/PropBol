@@ -14,7 +14,8 @@ router.post(
   "/publicaciones",
   authMiddleware,
   reglasValidacionHU5,       // validaciones HU‑5 v2
-  manejarErroresPublicacion, // agrupación de errores HU‑5 v2
+  manejarErroresPublicacion,   // agrupación de errores HU‑5 v2
+   validarEtapaFinal,        
   crearPublicacion           // flujo HU‑1 original
 );
 

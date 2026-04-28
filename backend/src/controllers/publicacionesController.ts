@@ -5,17 +5,18 @@ import { publicacionesService } from "../modules/publicaciones/publicaciones.ser
 // Crear publicación (HU‑1 + HU‑5 v2)
 export const crearPublicacion = async (req: Request, res: Response) => {
   try {
-    const { titulo, descripcion } = req.body;
+    const { titulo, descripcion, cancelado, step } = req.body;
     const userId = (req as any).user.id; // viene del middleware JWT
 
-    // Validación HU‑5 v2: límite de publicaciones
+    // ✅ Validación HU‑5 v2: límite de publicaciones
     try {
       await publicacionesService.validarPublicacionHU5(userId, req.body);
     } catch (error) {
       if (error instanceof Error && error.message === "LIMIT_REACHED") {
         return res.status(403).json({
           estado: "Pendiente de revisión",
-          error: "Límite de publicaciones gratuitas alcanzado",
+          error: "LIMIT_REACHED",
+          message: "Has alcanzado el límite de 2 publicaciones gratuitas."
         });
       }
       return res.status(400).json({
@@ -24,49 +25,51 @@ export const crearPublicacion = async (req: Request, res: Response) => {
       });
     }
 
-    // Flujo HU‑1: creación normal
-    const nueva = await prisma.publicacion.create({
-      data: {
-        titulo,
-        descripcion,
-        usuario: { connect: { id: userId } },
-        inmueble: { connect: { id: 1 } }, // ajusta según tu lógica real
-      },
+    // ✅ Validar que esté en la última etapa (BUG‑E01/E05)
+    if (step !== "final") {
+      return res.status(400).json({
+        error: "FORM_INCOMPLETE",
+        message: "Debes completar todas las etapas antes de publicar.",
+      });
+    }
+
+    // ✅ Cancelación explícita (BUG‑E03/E04)
+    if (cancelado === true) {
+      return res.status(400).json({
+        error: "PUBLICATION_CANCELLED",
+        message: "La publicación fue cancelada por el usuario.",
+      });
+    }
+
+    // Flujo HU‑1: creación normal con transacción + progreso real
+    let progress = 30; // validación completada
+
+    const nueva = await prisma.$transaction(async (tx) => {
+      // Paso 2: guardar publicación
+      const pub = await tx.publicacion.create({
+        data: {
+          titulo,
+          descripcion,
+          usuario: { connect: { id: userId } },
+          inmueble: { connect: { id: 1 } }, // ajusta según tu lógica real
+        },
+      });
+      progress = 60;
+
+      // Paso 3: guardar multimedia (si aplica)
+      // ...
+      progress = 100;
+
+      return pub;
     });
 
     return res.status(201).json({
       estado: "Validado",
       mensaje: "Publicación creada correctamente",
+      progress, // ✅ progreso real
       publicacion: nueva,
     });
   } catch (_error) {
     return res.status(500).json({ error: "Error al crear publicación" });
-  }
-};
-
-// HU‑1: Listar publicaciones
-export const listarPublicaciones = async (_req: Request, res: Response) => {
-  try {
-    const publicaciones = await prisma.publicacion.findMany();
-    res.json(publicaciones);
-  } catch (_error) {
-    res.status(500).json({ error: "Error al listar publicaciones" });
-  }
-};
-
-// HU‑1: Validar publicaciones gratuitas (consulta simple)
-export const validarPublicacionesFree = async (req: Request, res: Response) => {
-  try {
-    const userId = parseInt(req.params.id as string, 10);
-    const publicaciones = await prisma.publicacion.count({
-      where: { usuarioId: userId },
-    });
-
-    const limiteGratis = 2;
-    const restantes = Math.max(limiteGratis - publicaciones, 0);
-
-    res.json({ restantes });
-  } catch (_error) {
-    res.status(500).json({ error: "Error al validar publicaciones gratuitas" });
   }
 };

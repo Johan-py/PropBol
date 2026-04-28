@@ -1,7 +1,7 @@
-// erroresPublicacion.ts
 import { body, validationResult } from "express-validator";
 import { Request, Response, NextFunction } from "express";
 
+// Reglas HU‑5 v2
 export const reglasValidacionHU5 = [
   body("titulo")
     .isLength({ min: 20, max: 80 })
@@ -17,6 +17,7 @@ export const reglasValidacionHU5 = [
     .withMessage("El precio debe ser un número válido"),
 ];
 
+// Middleware para agrupar errores HU‑5 v2
 export const manejarErroresPublicacion = (
   req: Request,
   res: Response,
@@ -49,5 +50,31 @@ export const manejarErroresPublicacion = (
       errores: agrupados,
     });
   }
+  next();
+};
+
+export const validarEtapaFinal = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { step, cancelado } = req.body;
+
+  // Validar que el formulario esté en la última etapa
+  if (step !== "final") {
+    return res.status(400).json({
+      error: "FORM_INCOMPLETE",
+      message: "Debes completar todas las etapas antes de publicar."
+    });
+  }
+
+  // Validar cancelación (BUG‑E03/E04)
+  if (cancelado === true) {
+    return res.status(400).json({
+      error: "PUBLICATION_CANCELLED",
+      message: "La publicación fue cancelada por el usuario."
+    });
+  }
+
   next();
 };
