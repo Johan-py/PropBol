@@ -147,24 +147,20 @@ function BusquedaMapaContent() {
   const latParam = searchParams.get('lat')
   const lngParam = searchParams.get('lng')
   const searchOrigin = useMemo<[number, number] | null>(() => {
-    return (latParam && lngParam) 
-      ? [parseFloat(latParam), parseFloat(lngParam)] 
+    return (latParam && lngParam)
+      ? [parseFloat(latParam), parseFloat(lngParam)]
       : null
   }, [latParam, lngParam])
 
   //estado para controlar la autenticación
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isCapacidadOpen, setIsCapacidadOpen] = useState(false)
 
   const toggleCapacidad = () => {
-    setIsCapacidadOpen(!isCapacidadOpen)
-    if (!isCapacidadOpen) {
-      setActiveSidebarView('capacidad')
-      setIsSidebarOpen(true)
-    } else {
-      setActiveSidebarView('results')
-    }
+    setIsPriceFilterOpen(false)
+    setIsSidebarOpen(true)
+    setActiveSidebarView(prev => prev === 'capacidad' ? 'results' : 'capacidad')
   }
+
   const [misZonas, setMisZonas] = useState<ZonaUsuario[]>([])
   const [newZoneName, setNewZoneName] = useState('Nueva zona')
   const [isCreatingCustomZone, setIsCreatingCustomZone] = useState(false)
@@ -174,7 +170,7 @@ function BusquedaMapaContent() {
   const [editingPolygonPoints, setEditingPolygonPoints] = useState<[number, number][]>([])
   const [isSavingEditedZone, setIsSavingEditedZone] = useState(false)
 
-  
+
   useEffect(() => {
     const syncAuthFromStorage = () => {
       const token = localStorage.getItem('token')
@@ -205,12 +201,12 @@ function BusquedaMapaContent() {
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
   const [isMounted, setIsMounted] = useState(false)
   const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false)
-  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad'| 'ubicacion'>('results')
-  
+  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad' | 'ubicacion'>('results')
+
   useEffect(() => {
     const handleAbrirUbicacion = () => {
       setIsPriceFilterOpen(false); // Cierra el de precio si estaba abierto
-      
+
       // Si el panel de ubicación ya está abierto en el sidebar, lo cerramos volviendo a results
       if (activeSidebarView === 'ubicacion' && isSidebarOpen) {
         setActiveSidebarView('results');
@@ -220,7 +216,7 @@ function BusquedaMapaContent() {
         setActiveSidebarView('ubicacion');
       }
     };
-   
+
     window.addEventListener('abrirPanelUbicacion', handleAbrirUbicacion);
     return () => window.removeEventListener('abrirPanelUbicacion', handleAbrirUbicacion);
   }, [activeSidebarView, isSidebarOpen]);
@@ -320,14 +316,17 @@ function BusquedaMapaContent() {
 
   const saveDraftZone = useCallback(async () => {
     if (!isAuthenticated || isSavingNewZone || !isCreatingCustomZone) return
-    if (currentPolygonPoints.length < 3) return
+
+    // ✅ FIX: Leemos del polígono cerrado en caso de que ya lo haya finalizado
+    const puntosBase = currentPolygonPoints.length >= 3 ? currentPolygonPoints : drawnPolygons[0]
+    if (!puntosBase || puntosBase.length < 3) return
 
     const token = localStorage.getItem('token')
     if (!token) return
 
     setIsSavingNewZone(true)
     try {
-      const ring = [...currentPolygonPoints, currentPolygonPoints[0]].map(([lat, lng]) => [lng, lat])
+      const ring = [...puntosBase, puntosBase[0]].map(([lat, lng]) => [lng, lat])
       const nombreFinal = newZoneName.trim() || 'Nueva zona'
 
       const response = await fetch(`${API_URL}/api/perfil/zonas`, {
@@ -709,17 +708,17 @@ function BusquedaMapaContent() {
         </div>
       ) : displayedProperties.length === 0 ? (
         <EmptyState
-  titulo={
-    tieneFiltrSuperficie
-      ? 'Sin resultados por superficie'
-      : 'No hay propiedades existentes'
-  }
-  mensaje={
-    tieneFiltrSuperficie
-      ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
-      : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
-  }
-/>
+          titulo={
+            tieneFiltrSuperficie
+              ? 'Sin resultados por superficie'
+              : 'No hay propiedades existentes'
+          }
+          mensaje={
+            tieneFiltrSuperficie
+              ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
+              : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
+          }
+        />
       ) : (
         <div
           className={`gap-3 flex flex-col ${viewMode === 'list'
@@ -736,7 +735,6 @@ function BusquedaMapaContent() {
 
                 // HU4 - Conserva el comportamiento existente del listado móvil
                 onClickItem?.(property)
-                // HU4 - Abre el detalle en una nueva pestaña
               }}
               className="cursor-pointer transition-all duration-200 rounded-xl focus:outline-none focus:ring-0 focus:ring-offset-0"
             >
@@ -749,6 +747,8 @@ function BusquedaMapaContent() {
                   camas={property.nroCuartos ?? 0}
                   banos={property.nroBanos ?? 0}
                   metros={property.superficieM2 ?? 0}
+                  // HU4 - Pasa la acción de abrir detalle al botón "Ver detalles" en vista grilla
+                  onViewDetails={() => abrirDetallePropiedad(property.id)}
                 />
               ) : (
                 <PropertyRow
@@ -757,6 +757,8 @@ function BusquedaMapaContent() {
                   size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
                   contactType="whatsapp"
                   image=""
+                  // HU4 - Pasa la acción de abrir detalle al botón "Ver detalles" en vista tabla
+                  onViewDetails={() => abrirDetallePropiedad(property.id)}
                 />
               )}
             </div>
@@ -1096,7 +1098,7 @@ function BusquedaMapaContent() {
           setIsSidebarOpen(true)
           setActiveSidebarView(prev => prev === 'superficie' ? 'results' : 'superficie')
         }}
-        isCapacidadActive={isCapacidadOpen}
+        isCapacidadActive={activeSidebarView === 'capacidad' && isSidebarOpen}
         onToggleCapacidad={toggleCapacidad}
 
         isPriceFilterActive={isPriceFilterOpen}
@@ -1126,7 +1128,6 @@ function BusquedaMapaContent() {
             <CapacidadSidebar
               isOpen={true}
               onClose={() => {
-                setIsCapacidadOpen(false)
                 setActiveSidebarView('results')
               }}
               onApply={(dormitoriosMin, dormitoriosMax, banosMin, banosMax, tipoBano) => {
@@ -1137,7 +1138,6 @@ function BusquedaMapaContent() {
                 params.set('banosMax', banosMax.toString())
                 params.set('tipoBano', tipoBano)
                 router.push(`/busqueda_mapa?${params.toString()}`)
-                setIsCapacidadOpen(false)
                 setActiveSidebarView('results')
               }}
             />
@@ -1148,21 +1148,21 @@ function BusquedaMapaContent() {
                 onApply={(selecciones) => {
                   // 1. Rescatamos los filtros actuales de la URL (precio, cuartos, tipo, etc)
                   const params = new URLSearchParams(searchParams.toString());
-                  
+
                   // 2. Limpiamos ubicaciones previas para evitar duplicados
                   params.delete('departamentoId');
                   params.delete('provinciaId');
                   params.delete('municipioId');
                   params.delete('zonaId');
                   params.delete('barrioId');
-                  
+
                   // 3. Añadimos las nuevas selecciones de este panel
                   if (selecciones.departamento !== 'todos') params.set('departamentoId', selecciones.departamento.toString());
                   if (selecciones.provincia !== 'todos') params.set('provinciaId', selecciones.provincia.toString());
                   if (selecciones.municipio !== 'todos') params.set('municipioId', selecciones.municipio.toString());
                   if (selecciones.zona !== 'todos') params.set('zonaId', selecciones.zona.toString());
                   if (selecciones.barrio !== 'todos') params.set('barrioId', selecciones.barrio.toString());
-                  
+
                   // 4. Empujamos a la URL combinada y cerramos el panel para ver resultados
                   router.push(`/busqueda_mapa?${params.toString()}`);
                   setActiveSidebarView('results');
@@ -1267,18 +1267,18 @@ function BusquedaMapaContent() {
                         Actualizando resultados...
                       </div>
                     ) : displayedProperties.length === 0 ? (
-                     <EmptyState
-  titulo={
-    tieneFiltrSuperficie
-      ? 'Sin resultados por superficie'
-      : 'No hay propiedades existentes'
-  }
-  mensaje={
-    tieneFiltrSuperficie
-      ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
-      : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
-  }
-/>
+                      <EmptyState
+                        titulo={
+                          tieneFiltrSuperficie
+                            ? 'Sin resultados por superficie'
+                            : 'No hay propiedades existentes'
+                        }
+                        mensaje={
+                          tieneFiltrSuperficie
+                            ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
+                            : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
+                        }
+                      />
                     ) : (
                       <div
                         className={`gap-4 flex flex-col ${viewMode === 'list'
@@ -1294,8 +1294,6 @@ function BusquedaMapaContent() {
                             onClick={() => {
                               // HU4 - Mantiene la selección visual en resultados
                               setSelectedPropertyId(property.id)
-
-                              // HU4 - Abre el detalle de la propiedad en una nueva pestaña
                             }}
                             className={`cursor-pointer transition-all duration-200 rounded-xl relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${viewMode === 'grid'
                               ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
@@ -1315,6 +1313,8 @@ function BusquedaMapaContent() {
                                 camas={property.nroCuartos ?? 0}
                                 banos={property.nroBanos ?? 0}
                                 metros={property.superficieM2 ?? 0}
+                                // HU4 - Se pasa la función para abrir el detalle en una nueva pestaña
+                                onViewDetails={() => abrirDetallePropiedad(property.id)}
                               />
                             ) : (
                               <PropertyRow
@@ -1327,6 +1327,8 @@ function BusquedaMapaContent() {
                                   property.imagen ||
                                   'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
                                 }
+                                // HU4 - Muestra el botón "Ver detalles" al hacer hover en vista tabla
+                                onViewDetails={() => abrirDetallePropiedad(property.id)}
                               />
                             )}
                           </div>
@@ -1392,7 +1394,7 @@ function BusquedaMapaContent() {
               </div>
             )}
 
-             {isDrawingMode && (
+            {isDrawingMode && (
               <div className="flex flex-col items-end gap-2 pointer-events-auto">
                 <div className="flex flex-row gap-2">
                   <button
@@ -1404,8 +1406,7 @@ function BusquedaMapaContent() {
                         setDrawnPolygons((prev) => [...prev, currentPolygonPoints])
                         setCurrentPolygonPoints([])
                         setDrawingError(false)
-                        setIsDrawingMode(false)
-                        setTimeout(() => setIsDrawingMode(true), 0)
+                        setIsDrawingMode(false) // ✅ FIX: Detenemos el lápiz
                       }
                     }}
                     className="bg-[#ea580c] text-white px-4 py-2 rounded-lg shadow-md border border-orange-600 hover:bg-[#c2410c] transition-all text-sm font-semibold"
@@ -1438,13 +1439,22 @@ function BusquedaMapaContent() {
 
           {/* CAMBIO: Se removió isCreatingCustomZone para que aparezca siempre que haya un polígono cerrado */}
           {drawnPolygons.length > 0 && !editingZoneId && (
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000]">
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000] flex flex-row gap-3 pointer-events-auto">
               <button
                 onClick={resetDrawing}
-                className="bg-[#ea580c] text-white px-6 py-2.5 rounded-full shadow-[0_4px_14px_rgba(234,88,12,0.4)] hover:bg-[#c2410c] active:scale-95 transition-transform text-sm font-bold tracking-wide pointer-events-auto"
+                className="bg-white text-stone-700 px-6 py-2.5 rounded-full shadow-lg border border-stone-200 hover:bg-stone-50 active:scale-95 transition-all text-sm font-bold tracking-wide"
               >
-                Borrar Dibujo
+                Borrar dibujo
               </button>
+              {/* ✅ AÑADIDO: Botón para reactivar el lápiz conscientemente */}
+              {!isDrawingMode && (
+                <button
+                  onClick={() => setIsDrawingMode(true)}
+                  className="bg-[#ea580c] text-white px-6 py-2.5 rounded-full shadow-[0_4px_14px_rgba(234,88,12,0.4)] hover:bg-[#c2410c] active:scale-95 transition-all text-sm font-bold tracking-wide"
+                >
+                  Añadir dibujo
+                </button>
+              )}
             </div>
           )}
           {/* --- FIN BOTONES FLOTANTES HU8 --- */}
@@ -1486,8 +1496,7 @@ function BusquedaMapaContent() {
                   setDrawnPolygons((prev) => [...prev, currentPolygonPoints])
                   setCurrentPolygonPoints([])
                   setDrawingError(false)
-                  setIsDrawingMode(false)
-                  setTimeout(() => setIsDrawingMode(true), 0)
+                  setIsDrawingMode(false) // ✅ FIX: Detenemos el lápiz
                 }
               }}
             />
@@ -1504,7 +1513,7 @@ function BusquedaMapaContent() {
           onEditingZoneNameChange={setEditingZoneName}
           onConfirmEditZone={saveEditedZone}
           onCancelEditZone={cancelEditZone}
-          isDraftZoneVisible={isAuthenticated && isCreatingCustomZone && currentPolygonPoints.length >= 3}
+          isDraftZoneVisible={isAuthenticated && isCreatingCustomZone && (currentPolygonPoints.length >= 3 || drawnPolygons.length > 0)}
           draftZoneName={newZoneName}
           isSavingDraftZone={isSavingNewZone}
           onDraftZoneNameChange={setNewZoneName}

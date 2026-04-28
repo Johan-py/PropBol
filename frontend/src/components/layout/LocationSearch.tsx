@@ -154,9 +154,9 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     }
   }
 
-  // 🚀 BÚSQUEDA EN MAPBOX
+ // 🚀 BÚSQUEDA HÍBRIDA: MAPBOX + INTERSECCIONES CON OVERPASS API (V2 MEJORADA)
   useEffect(() => {
-    const searchMapbox = async () => {
+    const searchLocation = async () => {
       if (!debouncedValue || debouncedValue.length < 3) {
         setSuggestions([])
         return
@@ -164,22 +164,86 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
 
       setIsSearchingMapbox(true)
       try {
-        const endpoint = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(debouncedValue)}.json?access_token=${MAPBOX_TOKEN}&country=bo&bbox=-66.368,-17.519,-65.986,-17.288&types=address,poi,neighborhood,locality&language=es`
+        // 1. 🕵️‍♂️ Detectamos si hay una intersección (Ej: "Heroinas y Ayacucho")
+        const matchInterseccion = debouncedValue.match(/(.+?)\s+y\s+(.+)/i);
+
+        if (matchInterseccion) {
+          const calle1 = matchInterseccion[1].trim();
+          const calle2 = matchInterseccion[2].trim();
+          
+          console.log(`🛣️ Buscando intersección: [${calle1}] con [${calle2}]`);
+
+          // Truco Tech Lead: Ignoramos si el usuario puso tilde o no
+          const ignorarTildes = (str: string) => {
+            return str
+              .replace(/[aAáÁ]/g, '[aAáÁ]')
+              .replace(/[eEéÉ]/g, '[eEéÉ]')
+              .replace(/[iIíÍ]/g, '[iIíÍ]')
+              .replace(/[oOóÓ]/g, '[oOóÓ]')
+              .replace(/[uUúÚüÜ]/g, '[uUúÚüÜ]');
+          };
+
+          const r1 = ignorarTildes(calle1);
+          const r2 = ignorarTildes(calle2);
+
+          // Bounding Box estricto de la ciudad de Cochabamba (Sur, Oeste, Norte, Este)
+          const bbox = "-17.519,-66.368,-17.288,-65.986";
+
+          // Consulta optimizada para encontrar el vértice ("node") que comparten
+          const overpassQuery = `
+            [out:json][timeout:5];
+            way["name"~"${r1}", i](${bbox})->.w1;
+            way["name"~"${r2}", i](${bbox})->.w2;
+            node(w.w1)(w.w2);
+            out center;
+          `;
+
+          // Hacemos un POST en lugar de GET para que la URL no se rompa
+          const response = await fetch("https://overpass-api.de/api/interpreter", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: "data=" + encodeURIComponent(overpassQuery)
+          });
+          
+          const data = await response.json();
+
+          if (data.elements && data.elements.length > 0) {
+            console.log("✅ ¡Cruce encontrado en OSM!");
+            
+            // Disfrazamos el resultado como si fuera Mapbox
+            const intersecciones = data.elements.map((el: any, index: number) => ({
+              id: `osm-${el.id || index}`,
+              text: `${calle1.toUpperCase()} Y ${calle2.toUpperCase()}`,
+              place_name: `Intersección (Cruce de calles), Cochabamba`,
+              center: [el.lon, el.lat] // Mapbox usa longitud primero [lng, lat]
+            }));
+            
+            setSuggestions(intersecciones);
+            setIsSearchingMapbox(false);
+            return; // 🛑 CORTAMOS AQUÍ para que Mapbox no sobreescriba esto
+          } else {
+            console.log("⚠️ OSM no encontró el cruce exacto, cayendo a Mapbox...");
+          }
+        }
+
+        // 2. 🗺️ Si no buscó intersección (o si OSM no la encontró), usamos Mapbox
+        const proximity = "-66.1568,-17.3937";
+        const endpoint = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(debouncedValue)}.json?access_token=${MAPBOX_TOKEN}&country=bo&bbox=-66.368,-17.519,-65.986,-17.288&types=address,poi,neighborhood,locality&proximity=${proximity}&language=es`
         
-        const response = await fetch(endpoint)
-        const data = await response.json()
+        const responseMapbox = await fetch(endpoint)
+        const dataMapbox = await responseMapbox.json()
         
-        if (data.features) {
-          setSuggestions(data.features)
+        if (dataMapbox.features) {
+          setSuggestions(dataMapbox.features)
         }
       } catch (error) {
-        console.error("Error consultando Mapbox:", error)
+        console.error("❌ Error en búsqueda de ubicaciones:", error)
       } finally {
         setIsSearchingMapbox(false)
       }
     }
 
-    searchMapbox()
+    searchLocation()
   }, [debouncedValue, MAPBOX_TOKEN])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -234,7 +298,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
               requestAnimationFrame(recalcDropdown)
             }}
             onKeyDown={(e) => e.key === 'Enter' && setIsOpen(false)}
-            placeholder="Ej: Heroínas y Ayacucho..."
+            placeholder="Ej: Av. América, Plaza Colón, Cala Cala..."
             className="w-full bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 font-inter pr-[70px] h-full"
           />
 
