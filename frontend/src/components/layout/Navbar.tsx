@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
  
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -40,7 +40,6 @@ type MeResponse = {
     correo: string;
     avatar?: string | null;
     rol?: string;
-    controlador?: boolean | null;
   };
 };
  
@@ -109,7 +108,6 @@ export default function Navbar() {
       localStorage.removeItem("nombre");
       localStorage.removeItem("correo");
       localStorage.removeItem("avatar");
-      localStorage.removeItem("searchHistory");
       setUser(null);
       setIsPanelOpen(false);
       setShowLogoutModal(false);
@@ -223,13 +221,13 @@ export default function Navbar() {
       month: "short",
     });
   };
- 
+
   // Tick para forzar re-render cada minuto (timestamps relativos)
   useEffect(() => {
     const interval = setInterval(() => setTick((t) => t + 1), 60000);
     return () => clearInterval(interval);
   }, []);
- 
+
   // Restaurar sesión y escuchar cambios
   useEffect(() => {
     void restoreSession();
@@ -249,7 +247,7 @@ export default function Navbar() {
       window.removeEventListener("online", handleOnline);
     };
   }, [restoreSession]);
- 
+
   // Cerrar paneles al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -271,7 +269,7 @@ export default function Navbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open, toggleNotifications]);
- 
+
   // Verificar expiración de sesión cada 10 segundos (una sola instancia)
   useEffect(() => {
     const interval = setInterval(() => {
@@ -283,7 +281,7 @@ export default function Navbar() {
  
     return () => clearInterval(interval);
   }, [user, router, clearSession]);
- 
+
   // Cerrar panel de notificaciones con Escape
   useEffect(() => {
     if (!open) return;
@@ -295,7 +293,7 @@ export default function Navbar() {
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [open, toggleNotifications]);
- 
+
   // Escuchar eventos para abrir/cerrar menú móvil desde el tour
   useEffect(() => {
     const abrir = () => setIsMobileMenuOpen(true);
@@ -346,7 +344,7 @@ export default function Navbar() {
     setIsLoggingOut(false);
     router.push("/");
   };
- 
+
   // Lanzar el tour: si ya estamos en "/", disparar evento directo;
   // si no, navegar primero y esperar a que el componente monte.
   const handleIniciarTour = () => {
@@ -360,7 +358,7 @@ export default function Navbar() {
       }, 600);
     }
   };
- 
+
   return (
     <>
       <nav className="sticky top-0 z-[999] w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
@@ -776,15 +774,15 @@ export default function Navbar() {
               >
                 Planes de membresía
               </Link>
- 
-              <Link
+
+              <button
                 id="tour-ayuda-mobile"
-                href="/ayuda"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+                type="button"
+                onClick={handleIniciarTour}
+                className="w-full text-left rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
                 Ayuda
-              </Link>
+              </button>
             </nav>
           </div>
         </div>

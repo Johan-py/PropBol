@@ -767,9 +767,10 @@ export default function TourGuiado() {
                 border: "none",
                 borderRadius: 8,
                 padding: "8px 18px",
-                fontSize: 13,
+                fontSize: fontBtn,
                 fontWeight: 600,
                 cursor: "pointer",
+                minHeight: 44,
               }}
             >
               {currentStep < TOUR_STEPS.length - 1 ? "Siguiente →" : "Finalizar"}
