@@ -62,11 +62,15 @@ export default function MiRegistroPage() {
 
     const data = await response.json()
 
-    setDatos((prev) => ({
-      ...prev,
-      direccion: data.display_name || ''
-    }))
-  }
+   // MINIMAL FIX: Recortar la dirección para no exceder los 80 caracteres
+      let dirLimpia = data.display_name ? data.display_name.split(',').slice(0, 3).join(',') : ''
+      if (dirLimpia.length >= 80) dirLimpia = dirLimpia.substring(0, 79)
+
+      setDatos((prev) => ({
+        ...prev,
+        direccion: dirLimpia
+      }))
+    }
 
   obtenerDireccion()
 }, [pinCoords])
