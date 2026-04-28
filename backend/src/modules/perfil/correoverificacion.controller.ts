@@ -13,6 +13,11 @@ interface AuthRequest extends Request {
 
 const MAX_INTENTOS_CAMBIO_PASSWORD = 5;
 const MINUTOS_BLOQUEO_CAMBIO_PASSWORD = 5;
+const PASSWORD_SEGURA_REGEX =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+const MENSAJE_PASSWORD_SEGURA =
+  "La nueva contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.";
 
 export const cambiarPassword = async (req: AuthRequest, res: Response) => {
   try {
@@ -27,6 +32,15 @@ export const cambiarPassword = async (req: AuthRequest, res: Response) => {
 
     if (!passwordActual || !nuevaPassword) {
       return res.status(400).json({ ok: false, msg: "Datos incompletos" });
+    }
+    const passwordActualNormalizada = String(passwordActual).trim();
+    const nuevaPasswordNormalizada = String(nuevaPassword).trim();
+
+    if (!PASSWORD_SEGURA_REGEX.test(nuevaPasswordNormalizada)) {
+      return res.status(400).json({
+        ok: false,
+        msg: MENSAJE_PASSWORD_SEGURA,
+      });
     }
 
     const usuario = await prisma.usuario.findUnique({
@@ -81,7 +95,7 @@ if (usuario.intentos_fallidos_cambio_password >= 5) {
   });
 }
 
-const passwordIncorrecta = usuario.password !== passwordActual;
+const passwordIncorrecta = usuario.password !== passwordActualNormalizada;
 
 if (passwordIncorrecta) {
   const nuevosIntentos = Math.min(
@@ -129,7 +143,7 @@ if (passwordIncorrecta) {
     await prisma.usuario.update({
       where: { id: usuarioId },
       data: {
-        password: nuevaPassword,
+        password: nuevaPasswordNormalizada,
         intentos_fallidos_cambio_password: 0,
         bloqueo_cambio_password_hasta: null,
         password_actualizado_en: new Date(),
