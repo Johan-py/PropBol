@@ -1,199 +1,89 @@
-"use client";
+import React from 'react';
+import { CheckCircle2, Calendar, CreditCard, Building2, ExternalLink } from 'lucide-react';
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Calendar, ArrowRight } from 'lucide-react'
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
-
-type Plan = {
-  id: number
-  name: string
-  price: number
-  description: string
-  comment: string
-  benefits: string[]
-  subscribers: number
+interface PaymentSuccessProps {
+  userName: string;
+  planName: string;
+  amount: number;
+  orderNumber: string;
+  date: string;
+  nextBillingDate: string;
 }
 
-const plansData: Plan[] = [
-  {
-    id: 1,
-    name: 'Básico',
-    price: 0,
-    description: 'Ideal para comenzar',
-    comment: 'Perfecto para empezar y explorar nuestras funciones esenciales sin complicaciones.',
-    benefits: ['3 publicaciones activas', 'Acceso limitado', 'Soporte basico', '1 usuario'],
-    subscribers: 25
-  },
-  {
-    id: 2,
-    name: 'Estándar',
-    price: 99,
-    description: 'Para usuarios intermedios',
-    comment:
-      'La opcion mas elegida para empresas pequeñas: balance perfecto entre funciones y precio.',
-    benefits: ['10 publicaciones activas', 'Acceso completo', 'Soporte prioritario', '5 usuarios'],
-    subscribers: 60
-  },
-  {
-    id: 3,
-    name: 'Pro',
-    price: 199,
-    description: 'Maximo rendimiento',
-    comment:
-      'Todo incluido, ideal para usuarios avanzados o empresas que buscan maximo rendimiento.',
-    benefits: ['Publicaciones ilimitadas', 'Todo incluido', 'Soporte 24/7', 'Usuarios ilimitados'],
-    subscribers: 10
-  }
-]
-
-export default function CobrosSuscripciones() {
-  const [plans] = useState(plansData)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [currentPlanId, setCurrentPlanId] = useState<number>(1)
-  const router = useRouter()
-
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-
-    if (token && token !== 'undefined' && token !== 'null') {
-      setIsLoggedIn(true)
-
-      fetch(`${API_URL}/api/suscripciones/mi-suscripcion`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((res) => (res.ok ? res.json() : null))
-        .then((data) => {
-          if (data?.activa && typeof data.idSuscripcion === 'number') {
-            setCurrentPlanId(data.idSuscripcion)
-          }
-        })
-        .catch(() => {})
-    }
-  }, [])
-
-  const maxSubscribers = Math.max(...plans.map((p) => p.subscribers))
-  const mostPopularId = plans.find((p) => p.subscribers === maxSubscribers)?.id
-
-  const handleSubscription = (plan: Plan) => {
-    const token = localStorage.getItem('token')
-
-    const url = `/pago/resumen?planId=${plan.id}&precio=${plan.price}`
-
-    if (!token || token === 'undefined' || token === 'null') {
-      localStorage.setItem('redirectAfterLogin', '/cobros-suscripciones')
-      localStorage.setItem('selectedPlan', JSON.stringify(plan))
-      router.push('/sign-in')
-      return
-    }
-
-    router.push(url)
-  }
-
+export default function PaymentSuccessEmail({
+  userName = "Usuario",
+  planName = "Estándar",
+  amount = 99,
+  orderNumber = "PB-88234",
+  date = new Date().toLocaleDateString(),
+  nextBillingDate = "28/05/2026"
+}: PaymentSuccessProps) {
   return (
-    <div className="min-h-screen bg-stone-50 flex justify-center p-10 font-inter">
-      <div className="w-full max-w-6xl">
-        <div className="mb-10">
-          <h1 className="text-4xl font-bold text-stone-900">Planes de membresía</h1>
+    <div className="bg-stone-50 p-4 md:p-8 font-inter flex justify-center">
+      <div className="max-w-xl w-full bg-white rounded-3xl shadow-xl overflow-hidden border border-stone-200">
+        {/* Cabecera con Branding */}
+        <div className="bg-amber-600 p-8 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-white/20 rounded-full mb-4">
+            <CheckCircle2 className="text-white w-10 h-10" />
+          </div>
+          <h1 className="text-2xl font-bold text-white uppercase tracking-tight">¡Pago Confirmado!</h1>
+          <p className="text-amber-100 mt-1">Gracias por confiar en PropBol</p>
+        </div>
 
-          <p className="text-stone-400 mt-2 text-lg">
-            Amplia tu alcance en el mercado inmobiliario de Bolivia.
+        {/* Cuerpo del Mensaje */}
+        <div className="p-8">
+          <h2 className="text-xl font-semibold text-stone-900 mb-4">Hola {userName},</h2>
+          <p className="text-stone-600 leading-relaxed mb-6">
+            Tu suscripción al plan <span className="font-bold text-stone-900">{planName}</span> ha sido procesada con éxito. 
+            Ya puedes disfrutar de todos los beneficios para potenciar tus propiedades.
+          </p>
+
+          {/* Tarjeta de Detalles del Cobro */}
+          <div className="bg-stone-50 rounded-2xl p-6 border border-stone-100 mb-6">
+            <h3 className="text-xs font-bold text-stone-400 uppercase tracking-wider mb-4 border-b border-stone-200 pb-2">
+              Resumen de la Transacción
+            </h3>
+            
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-stone-500 flex items-center gap-2"><CreditCard className="w-4 h-4"/> Orden:</span>
+                <span className="font-mono font-medium text-stone-900">#{orderNumber}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-stone-500 flex items-center gap-2"><Building2 className="w-4 h-4"/> Plan:</span>
+                <span className="font-medium text-stone-900">{planName}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-stone-500 flex items-center gap-2"><Calendar className="w-4 h-4"/> Próximo cobro:</span>
+                <span className="font-medium text-stone-900">{nextBillingDate}</span>
+              </div>
+              <div className="pt-3 border-t border-stone-200 flex justify-between items-end">
+                <span className="text-stone-900 font-bold">Total Pagado:</span>
+                <span className="text-2xl font-black text-amber-600">Bs. {amount}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Botón de Acción */}
+          <button className="w-full bg-stone-900 text-white py-4 rounded-2xl font-bold hover:bg-stone-800 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-stone-200">
+            Ir a mis publicaciones
+            <ExternalLink className="w-4 h-4" />
+          </button>
+
+          <p className="text-center text-stone-400 text-xs mt-8">
+            Si no reconoces este cargo, por favor contacta a soporte@propbol.com
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {plans.map((plan) => (
-            <div
-              key={plan.id}
-              className={`
-                relative p-6 w-80 flex flex-col justify-between
-                rounded-3xl border transition-all duration-300
-                bg-white border-stone-200
-                hover:bg-amber-50
-                hover:border-amber-400
-                hover:shadow-2xl
-                hover:-translate-y-1
-                ${plan.id === mostPopularId ? 'border-amber-400 shadow-lg' : ''}
-              `}
-            >
-              {plan.id === mostPopularId && (
-                <div className="absolute -top-3 right-4 bg-amber-500 text-white text-xs px-3 py-1 rounded-full shadow">
-                  MÁS POPULAR
-                </div>
-              )}
-
-              {isLoggedIn && plan.id === currentPlanId && (
-                <div className="absolute top-4 right-4 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                  Plan actual
-                </div>
-              )}
-
-              <div>
-                <h2 className="text-2xl font-semibold text-stone-900 mb-2">{plan.name}</h2>
-
-                <p className="text-3xl font-bold text-amber-600 mb-2">
-                  {plan.price === 0 ? 'Gratis' : `Bs. ${plan.price}`}
-                  <span className="text-sm text-stone-500"> / mes</span>
-                </p>
-
-                <p className="text-sm text-stone-600 mb-4">{plan.description}</p>
-              </div>
-
-              <ul className="space-y-2 mb-4">
-                {plan.benefits.map((b, i) => (
-                  <li key={i} className="flex items-center gap-2 text-sm text-stone-700">
-                    <span className="text-green-500 font-bold">✔</span>
-                    {b}
-                  </li>
-                ))}
-              </ul>
-
-              <p className="text-sm text-stone-500 mb-4">{plan.comment}</p>
-
-              <button
-                onClick={() => handleSubscription(plan)}
-                disabled={isLoggedIn && plan.id === currentPlanId}
-                className={`
-                  p-2 rounded-xl text-white transition
-                  ${
-                    isLoggedIn && plan.id === currentPlanId
-                      ? 'bg-stone-400 cursor-not-allowed'
-                      : 'bg-amber-600 hover:bg-amber-700'
-                  }
-                `}
-              >
-                {isLoggedIn && plan.id === currentPlanId
-                  ? 'Tu plan actual'
-                  : 'Suscribirse'}
-              </button>
-            </div>
-          ))}
-        </div>
-
-        {/* Banner de Suscripciones Anuales */}
-        <div className="mt-12 p-6 rounded-3xl bg-amber-50/50 border border-amber-100 flex items-center justify-between gap-6 shadow-sm">
-          <div className="flex items-center gap-5">
-            <div className="p-4 bg-white rounded-2xl shadow-sm border border-amber-100">
-              <Calendar className="w-8 h-8 text-amber-600" />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-stone-900">¿Prefieres pagar menos?</h3>
-              <p className="text-stone-600 text-sm max-w-md">
-                Ahorra hasta un 15% con nuestras suscripciones anuales. Mismos beneficios, mejor precio.
-              </p>
-            </div>
+        {/* Footer */}
+        <div className="bg-stone-100 p-6 text-center border-t border-stone-200">
+          <p className="text-stone-500 text-sm font-medium">PropBol - El mercado inmobiliario de Bolivia</p>
+          <div className="flex justify-center gap-4 mt-2">
+            <span className="text-[10px] text-stone-400">Términos y Condiciones</span>
+            <span className="text-[10px] text-stone-400">Privacidad</span>
           </div>
-          <button 
-            onClick={() => router.push('/LimiteConsumo')}
-            className="whitespace-nowrap px-8 py-3 bg-white border-2 border-amber-600/20 text-amber-700 rounded-2xl hover:bg-amber-100 hover:border-amber-600/40 transition-all font-bold flex items-center gap-2 shadow-sm active:scale-95"
-          >
-            Ver suscripciones anuales
-            <ArrowRight className="w-4 h-4" />
-          </button>
         </div>
       </div>
     </div>
-  )
+  );
 }
-//// autenticado
