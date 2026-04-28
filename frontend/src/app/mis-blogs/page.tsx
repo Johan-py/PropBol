@@ -186,8 +186,17 @@ export default function MisBlogsPage() {
             {filtrados.map((blog) => (
               <div
                 key={blog.id}
+                tabIndex={0}
+                role="button"
+                aria-label={`Ver detalle del blog: ${blog.titulo}`}
                 onClick={() => router.push(`/blog/${blog.id}`)}
-                className="cursor-pointer bg-white border border-[#E8DED0] rounded-[22px] overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    router.push(`/blog/${blog.id}`);
+                  }
+                }}
+                className="cursor-pointer bg-white border border-[#E8DED0] rounded-[22px] overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition focus:outline-none focus:ring-2 focus:ring-[#C28700] focus:ring-offset-2"
               >
                 <div className="relative h-52 bg-[#E5E0DA]">
                   <img
@@ -234,7 +243,7 @@ export default function MisBlogsPage() {
                           e.stopPropagation();
                           router.push(`/blog/${blog.id}/edit`);
                         }}
-                        className="text-xs font-bold text-[#3F3F3F] hover:text-[#B47A00] transition"
+                        className="text-xs font-bold text-[#3F3F3F] hover:text-[#B47A00] transition rounded focus:outline-none focus:ring-2 focus:ring-[#B47A00] focus:ring-offset-4"
                       >
                         ✎ {blog.estado === "BORRADOR" ? "Continuar" : "Editar"}
                       </button>
@@ -247,7 +256,7 @@ export default function MisBlogsPage() {
                         e.stopPropagation();
                         eliminarBlog(blog.id);
                       }}
-                      className="text-xs font-bold text-red-400 hover:text-red-600 transition"
+                      className="text-xs font-bold text-red-400 hover:text-red-600 transition rounded focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-4"
                     >
                       🗑 Eliminar
                     </button>
