@@ -112,7 +112,7 @@ export default function ConsumoPage() {
 
       {/*  MENSAJE SI NO SE INICIO SESION */}
       {!isLogged && ( 
-        <div className="mt-6 group flex items-center gap-3 bg-gradient-to-r from-black to-orange-400 text-white p-4 rounded-lg mb-6  justify-between ">
+        <div className="mt-16 group flex items-center gap-3 bg-gradient-to-r from-black to-orange-400 text-white p-4 rounded-lg mb-6  justify-between ">
           <span className="text-xl font-extrabold">Primero debe inicia sesión para ver su consumo</span>
           <Link href="/sign-in">
             <button className="bg-black text-white px-10 py-4 text-xl font-extrabold rounded-lg">Iniciar Sesión</button>
