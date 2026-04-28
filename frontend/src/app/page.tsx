@@ -1,9 +1,13 @@
-import { HomeCarousel } from "@/components/home/HomeCarousel";
-import FeaturedCitiesSection from "@/components/home/FeaturedCitiesSection";
-import ExploreSection from "@/components/layout/ExploreSection";
-import { getCities } from "@/services/city.service";
-import VisualFiltersSection from "@/components/VisualFilters/VisualFiltersSection";
-import HomeBlogsSection from "@/components/home/HomeBlogsSection";
+import { HomeCarousel } from '@/components/home/HomeCarousel'
+import FeaturedCitiesSection from '@/components/home/FeaturedCitiesSection'
+import ExploreSection from '@/components/layout/ExploreSection'
+import { getCities } from '@/services/city.service'
+import dynamic from 'next/dynamic'
+import VisualFiltersSection from '@/components/VisualFilters/VisualFiltersSection'
+import HomeBlogsSection from '@/components/home/HomeBlogsSection'
+
+const TourGuiado = dynamic(() => import('@/components/ui/TourGuiado'), { ssr: false })
+
 interface BannerRaw {
   id: number;
   url_imagen: string;
@@ -23,17 +27,16 @@ const fetchBanners = async (): Promise<BannerData[]> => {
 
   try {
     const response = await fetch(`${apiUrl}/api/banners`, {
-      // Revalidación ISR
-      cache: "no-store",
+      cache: 'no-store',
     });
 
     if (!response.ok) {
-      throw new Error(`Error HTTP al obtener banners: ${response.status}`);
+      console.warn(`Aviso: HTTP ${response.status} al obtener banners.`);
+      return [];
     }
 
     const data: BannerRaw[] = await response.json();
 
-    // Mapear snake_case del backend → camelCase esperado por los componentes
     return data.map((b) => ({
       id: b.id,
       urlImagen: b.url_imagen,
@@ -41,24 +44,21 @@ const fetchBanners = async (): Promise<BannerData[]> => {
       subtitulo: b.subtitulo,
     }));
   } catch (error) {
-    console.error("Error cargando el banner:", error);
+    console.warn("Aviso: El backend no está disponible para pre-renderizar los banners.", error);
     return [];
   }
 };
 
 export default async function Home() {
   const banners = await fetchBanners();
-  const cities = await getCities();
-
-  /*
-    Integración futura:
-    Cuando el backend exponga /api/cities con datos reales,
-    la sección FeaturedCitiesSection seguirá consumiendo desde getCities().
-  */
-
-  // No toquen esto :v
+  const cities = await getCities().catch((error) => {
+    console.warn("Aviso (Build): Falló getCities, devolviendo array vacío.", error);
+    return [];
+  });
   return (
     <main className="flex min-h-screen flex-col items-center bg-gray-50">
+      <TourGuiado />
+
       {banners.length > 0 ? (
         <HomeCarousel banners={banners} />
       ) : (
@@ -67,8 +67,7 @@ export default async function Home() {
         </div>
       )}
 
-      {/* CONTENEDOR PRINCIPAL */}
-      <div className="w-full  max-w-[1600px] mx-auto px-0 md:px-4 py-4">
+      <div className="w-full max-w-[1600px] mx-auto px-0 md:px-4 py-4">
         <div className="flex flex-col gap-0">
           {/* EXPLORE SECTION */}
           <section className="w-full">

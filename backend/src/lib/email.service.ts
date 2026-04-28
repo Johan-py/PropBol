@@ -89,12 +89,14 @@ const generarPDFComprobante = ({
   nombrePlan,
   monto,
   fechaHora,
+  tipoFacturacion = 'mensual',
 }: {
   idTransaccion: number;
   nombreUsuario: string;
   nombrePlan: string;
   monto: number;
   fechaHora: Date;
+  tipoFacturacion?: string;
 }): Promise<Buffer> => {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ margin: 50 });
@@ -113,8 +115,10 @@ const generarPDFComprobante = ({
     doc.text(`N° de transacción: ${idTransaccion}`);
     doc.text(`Titular: ${nombreUsuario}`);
     doc.text(`Plan: ${nombrePlan}`);
+    doc.text(`Tipo de facturación: ${tipoFacturacion === 'anual' ? 'Anual' : 'Mensual'}`);
     doc.text(`Monto: Bs. ${monto.toFixed(2)}`);
     doc.text(`Fecha y hora: ${fechaHora.toLocaleString('es-BO', { timeZone: 'America/La_Paz' })}`);
+    doc.text(`Moneda: BOB / Bolivianos`);
 
     doc.moveDown();
     doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke();
@@ -132,6 +136,7 @@ export const enviarComprobantePago = async ({
   nombrePlan,
   monto,
   fechaHora,
+  tipoFacturacion = 'mensual',
 }: {
   emailUsuario: string;
   nombreUsuario: string;
@@ -139,8 +144,9 @@ export const enviarComprobantePago = async ({
   nombrePlan: string;
   monto: number;
   fechaHora: Date;
+  tipoFacturacion?: string;
 }): Promise<EmailSendResult> => {
-  const pdfBuffer = await generarPDFComprobante({ idTransaccion, nombreUsuario, nombrePlan, monto, fechaHora });
+  const pdfBuffer = await generarPDFComprobante({ idTransaccion, nombreUsuario, nombrePlan, monto, fechaHora, tipoFacturacion });
   const pdfBase64 = pdfBuffer.toString('base64');
 
   const fechaStr = fechaHora.toLocaleString('es-BO', { timeZone: 'America/La_Paz' });
@@ -170,12 +176,20 @@ export const enviarComprobantePago = async ({
                   <td style="padding:10px;border:1px solid #e5e7eb;color:#333;">${nombrePlan}</td>
                 </tr>
                 <tr style="background:#f9fafb;">
+                  <td style="padding:10px;border:1px solid #e5e7eb;font-weight:bold;color:#374151;">Facturación</td>
+                  <td style="padding:10px;border:1px solid #e5e7eb;color:#333;">${tipoFacturacion === 'anual' ? 'Anual' : 'Mensual'}</td>
+                </tr>
+                <tr>
                   <td style="padding:10px;border:1px solid #e5e7eb;font-weight:bold;color:#374151;">Monto</td>
                   <td style="padding:10px;border:1px solid #e5e7eb;color:#333;">Bs. ${monto.toFixed(2)}</td>
                 </tr>
                 <tr>
                   <td style="padding:10px;border:1px solid #e5e7eb;font-weight:bold;color:#374151;">Fecha y hora</td>
                   <td style="padding:10px;border:1px solid #e5e7eb;color:#333;">${fechaStr}</td>
+                </tr>
+                <tr style="background:#f9fafb;">
+                  <td style="padding:10px;border:1px solid #e5e7eb;font-weight:bold;color:#374151;">Moneda</td>
+                  <td style="padding:10px;border:1px solid #e5e7eb;color:#333;">BOB / Bolivianos</td>
                 </tr>
               </table>
               <p style="font-size:14px;color:#666;">El comprobante en PDF está adjunto a este correo.</p>
@@ -186,7 +200,7 @@ export const enviarComprobantePago = async ({
           </div>
         </body></html>
       `,
-      textContent: `Hola ${nombreUsuario},\n\nTu pago ha sido procesado.\n\nN° Transacción: #${idTransaccion}\nPlan: ${nombrePlan}\nMonto: Bs. ${monto.toFixed(2)}\nFecha: ${fechaStr}\n\nEl comprobante PDF está adjunto.`,
+      textContent: `Hola ${nombreUsuario},\n\nTu pago ha sido procesado.\n\nN° Transacción: #${idTransaccion}\nPlan: ${nombrePlan}\nFacturación: ${tipoFacturacion === 'anual' ? 'Anual' : 'Mensual'}\nMonto: Bs. ${monto.toFixed(2)}\nFecha: ${fechaStr}\nMoneda: BOB / Bolivianos\n\nEl comprobante PDF está adjunto.`,
       attachment: {
         content: pdfBase64,
         name: `comprobante-${idTransaccion}.pdf`,
@@ -239,6 +253,8 @@ export const enviarCodigoCambioEmail = async ({
     textContent: `${saludo}\n\nTu código de verificación es: ${codigo}\n\nExpira en 5 minutos.`,
   });
 };
+
+
 
 export const enviarCodigoRegistro = async ({
   emailDestino,
@@ -356,5 +372,43 @@ export const enviarCodigo2FA = async ({
       </body></html>
     `,
     textContent: `${saludo}\n\nTu código de verificación es: ${codigo}\n\nEste código expirará en 5 minutos.`,
+  });
+};
+
+export const enviarCodigoDesactivacionCuenta = async ({
+  emailDestino,
+  codigo,
+  nombreUsuario,
+}: EnviarCodigoParams): Promise<EmailSendResult> => {
+  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : "Hola,";
+
+  return sendBrevoEmail({
+    to: emailDestino,
+    subject: "Código de verificación - Desactivación de cuenta PropBol",
+    htmlContent: `
+      <!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
+      <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
+        <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:10px;overflow:hidden;">
+          <div style="background:#dc2626;padding:20px;text-align:center;">
+            <h1 style="color:#fff;margin:0;font-size:24px;">Desactivación de cuenta</h1>
+          </div>
+          <div style="padding:30px;">
+            <p style="font-size:16px;color:#333;">${saludo}</p>
+            <p style="font-size:16px;color:#333;">Ingresa el siguiente código para confirmar la desactivación de tu cuenta:</p>
+            <div style="background:#fee2e2;padding:20px;text-align:center;margin:25px 0;border-radius:8px;border:1px solid #fecaca;">
+              <span style="font-size:36px;font-weight:bold;letter-spacing:5px;color:#b91c1c;">${codigo}</span>
+            </div>
+            <p style="font-size:14px;color:#666;">Este código expirará en <strong style="color:#dc2626;">5 minutos</strong>.</p>
+            <div style="background:#fef2f2;border-left:4px solid #dc2626;padding:12px;margin:20px 0;">
+              <p style="margin:0;font-size:13px;color:#7f1d1d;">Si no solicitaste esta acción, ignora este mensaje.</p>
+            </div>
+          </div>
+          <div style="background:#f9fafb;padding:20px;text-align:center;border-top:1px solid #e5e7eb;">
+            <p style="font-size:12px;color:#9ca3af;margin:0;">Este es un mensaje automático, por favor no responder.</p>
+          </div>
+        </div>
+      </body></html>
+    `,
+    textContent: `${saludo}\n\nTu código de verificación para desactivar la cuenta es: ${codigo}\n\nEste código expirará en 5 minutos.`,
   });
 };

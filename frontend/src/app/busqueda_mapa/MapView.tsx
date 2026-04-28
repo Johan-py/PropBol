@@ -8,7 +8,8 @@ import {
   Popup,
   Polyline,
   Polygon,
-  CircleMarker
+  CircleMarker,
+  Circle
 } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import L from 'leaflet'
@@ -16,7 +17,7 @@ import { useMap } from 'react-leaflet'
 import { useEffect, useState, useRef } from 'react'
 
 import ZoomControls from '@/components/ZoomControls'
-import { createGpsIcon } from '@/components/GpsPin'
+import { createGpsIcon, createSearchOriginIcon } from '@/components/GpsPin'
 import { createClusterIcon, CLUSTER_CONFIG } from '@/lib/clusterIcon'
 import ZonasOverlay from '@/components/map/ZonasOverlay'
 
@@ -119,22 +120,35 @@ function createPinIcon(type: PropertyMapPin['type']): L.DivIcon {
   })
 }
 
-function MapClickHandler({ onMapClick }: { onMapClick: (latlng: L.LatLng) => void }) {
+function MapClickHandler({ onMapClick, isDrawingMode }: {
+  onMapClick: (latlng: L.LatLng) => void
+  isDrawingMode: boolean
+}) {
   const map = useMap()
 
+  // AÑADIDO: Control nativo del cursor y bloqueo de arrastre (Criterios 2 y 20)
   useEffect(() => {
-    const handleClick = (e: L.LeafletMouseEvent) => {
-      onMapClick(e.latlng)
+    if (isDrawingMode) {
+      map.dragging.disable() // Bloquea el movimiento del mapa
+      map.getContainer().style.cursor = 'crosshair' // Fuerza la cruz
+    } else {
+      map.dragging.enable() // Restaura el movimiento
+      map.getContainer().style.cursor = '' // Restaura la manito
     }
+  }, [isDrawingMode, map])
 
-    map.on('click', handleClick)
+useEffect(() => {
+  const handleClick = (e: L.LeafletMouseEvent) => {
+    onMapClick(e.latlng)
+  }
+  map.on('click', handleClick)
 
-    return () => {
-      map.off('click', handleClick)
-    }
-  }, [map, onMapClick])
+  return () => {
+    map.off('click', handleClick)
+  }
+}, [map, onMapClick])
 
-  return null
+return null
 }
 
 function MapMouseHandler({ onMouseLeave }: { onMouseLeave: () => void }) {
@@ -209,9 +223,11 @@ function formatPrice(price: number, currency: 'USD' | 'BOB'): string {
 
 interface MapViewProps {
   properties: PropertyMapPin[]
+  searchOrigin?: [number, number] | null
   zonas?: ZonaPredefinida[]
   selectedZoneId?: number | null
   onZoneSelect?: (id: number | null) => void
+  onZoneCycle?: (direction: 1 | -1) => void
   center?: [number, number]
   zoom?: number
   selectedId?: string | null
@@ -219,8 +235,9 @@ interface MapViewProps {
   onClusterClick?: (properties: PropertyMapPin[]) => void
   activeClusterIds?: string[]
   isDrawingMode?: boolean
-  polygonPoints?: [number, number][]
+   polygonPoints?: [number, number][]
   isPolygonClosed?: boolean
+  drawnPolygons?: [number, number][][]
   isZoneEditingMode?: boolean
   editablePolygonPoints?: [number, number][]
   onEditablePointDrag?: (index: number, lat: number, lng: number) => void
@@ -228,6 +245,7 @@ interface MapViewProps {
   onPointClick?: (index: number) => void
   isLoading?: boolean
   error?: string | null
+  onClusterDissolve?: () => void
 }
 
 const vertexHandleIcon = L.divIcon({
@@ -245,9 +263,19 @@ const vertexHandleIcon = L.divIcon({
   iconSize: [12, 12],
   iconAnchor: [6, 6]
 })
+function ZoomHandler({ onClusterDissolve }: { onClusterDissolve?: () => void }) {
+  const map = useMap()
+  useEffect(() => {
+    const handler = () => onClusterDissolve?.()
+    map.on('zoomend', handler)
+    return () => { map.off('zoomend', handler) }
+  }, [map, onClusterDissolve])
+  return null
+}
 
 export default function MapView({
   properties = [],
+  searchOrigin = null,
   center = [-17.392418841841394, -66.1461583463333],
   zoom = 12,
   selectedId,
@@ -259,6 +287,7 @@ export default function MapView({
   isDrawingMode = false,
   polygonPoints = [],
   isPolygonClosed = false,
+  drawnPolygons = [],
   isZoneEditingMode = false,
   editablePolygonPoints = [],
   onEditablePointDrag,
@@ -266,7 +295,9 @@ export default function MapView({
   onPointClick,
   zonas = [],
   selectedZoneId = null,
-  onZoneSelect
+  onClusterDissolve,
+  onZoneSelect,
+  onZoneCycle
 }: MapViewProps) {
   const [isMounted, setIsMounted] = useState(false)
   const [hoveredPinId, setHoveredPinId] = useState<string | null>(null)
@@ -317,7 +348,7 @@ export default function MapView({
         touchZoom={true}
         dragging={true}
         style={{ height: '100%', width: '100%' }}
-        className="z-0"
+        className={`z-0 ${isDrawingMode && !isPolygonClosed ? '[&.leaflet-container]:cursor-crosshair [&_.leaflet-interactive]:cursor-crosshair' : ''}`}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -325,6 +356,8 @@ export default function MapView({
         />
 
         <ZoomControls />
+        <FlyToOrigin origin={searchOrigin} />
+        <ZoomHandler onClusterDissolve={onClusterDissolve} />
         <MapMouseHandler onMouseLeave={() => setHoveredPinId(null)} />
         <MapClickHandler
           onMapClick={(latlng) => {
@@ -335,12 +368,14 @@ export default function MapView({
               onZoneSelect?.(null) // criterio 10: clic neutral desactiva zona
             }
           }}
+          isDrawingMode={isDrawingMode}
         />
 
         <ZonasOverlay
           zonas={zonas}
           selectedZoneId={selectedZoneId}
           onZoneSelect={onZoneSelect ?? (() => {})}
+          onZoneCycle={onZoneCycle}
         />
 
         {/* --- INICIO CÓDIGO HU8 --- */}
@@ -412,6 +447,21 @@ export default function MapView({
           </>
         )}
         {/* --- FIN CÓDIGO HU8 --- */}
+        {/* --- POLÍGONOS CERRADOS ACUMULADOS --- */}
+        {drawnPolygons.map((poly, i) => (
+          <Polygon
+            key={`drawn-${i}`}
+            positions={poly}
+            pathOptions={{
+              color: '#ea580c',
+              fillColor: '#ea580c',
+              fillOpacity: 0.15,
+              weight: 2
+            }}
+          />
+        ))}
+        {/* --- FIN CÓDIGO HU8 --- */}
+        
         {selectedProperty && (
           <FlyToSelected
             id={selectedProperty.id}
@@ -424,7 +474,27 @@ export default function MapView({
           <Popup>Tu ubicación actual</Popup>
         </Marker>
 
+        {/* NUEVO: Marcador de Origen y Círculo de Radio */}
+        {searchOrigin && (
+          <>
+            <Circle 
+              center={searchOrigin} 
+              radius={1000} // 1000 metros = 1km
+              pathOptions={{ color: '#2563EB', fillColor: '#3B82F6', fillOpacity: 0.12, weight: 2, dashArray: '5, 5' }} 
+            />
+            <Marker position={searchOrigin} icon={createSearchOriginIcon()} zIndexOffset={1000}>
+              <Popup>
+                <div className="text-center min-w-[120px]">
+                  <p className="font-bold text-blue-600 mb-1">Centro de búsqueda</p>
+                  <p className="text-xs text-stone-500">Mostrando radio de 1km</p>
+                </div>
+              </Popup>
+            </Marker>
+          </>
+        )}
+
         <MarkerClusterGroup
+          key={activeClusterIds.join(',')}
           iconCreateFunction={(cluster: any) => {
             const markers = cluster.getAllChildMarkers()
             const ids = markers.map((m: any) => String(m.options.alt ?? '')).filter(Boolean)
@@ -524,6 +594,23 @@ function FlyToSelected({ lat, lng, id }: { lat: number; lng: number; id: string 
 
     setLastId(id)
   }, [lat, lng, id, map, lastId])
+
+  return null
+}
+// NUEVO: Componente para volar al punto de búsqueda
+function FlyToOrigin({ origin }: { origin: [number, number] | null }) {
+  const map = useMap()
+  
+  // Extraemos las coordenadas como números primitivos para el array de dependencias
+  const lat = origin?.[0]
+  const lng = origin?.[1]
+
+  useEffect(() => {
+    if (lat !== undefined && lng !== undefined) {
+      // Solo volamos si la latitud o longitud REALMENTE cambian en la URL
+      map.flyTo([lat, lng], 15, { duration: 1.2, easeLinearity: 0.25 })
+    }
+  }, [lat, lng, map]) 
 
   return null
 }

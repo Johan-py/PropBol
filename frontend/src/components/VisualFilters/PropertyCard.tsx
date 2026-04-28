@@ -16,6 +16,15 @@ interface PropertyCardProps {
   isEmpty?: boolean;
   previews?: Preview[];
 }
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+const getImageUrl = (url?: string) => {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+  return `${API_URL}/${url.replace(/^\/+/, "")}`;
+};
 
 export default function PropertyCard({
   image,
@@ -25,18 +34,18 @@ export default function PropertyCard({
   onClick,
   variant = "alquiler",
   isEmpty = false,
-   previews = [],
+  previews = [],
 }: PropertyCardProps) {
-   const isAlquiler = variant === "alquiler";
+  const isAlquiler = variant === "alquiler";
 
   const slides: Preview[] =
     previews.length > 0
-      ? previews
-      : [{ imagen: image, titulo: title }];
+      ? previews.map(p => ({ ...p, imagen: getImageUrl(p.imagen) }))
+      : [{ imagen: getImageUrl(image), titulo: title }];
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-   useEffect(() => {
+  useEffect(() => {
     if (slides.length <= 1) return;
 
     const interval = setInterval(() => {
@@ -47,7 +56,7 @@ export default function PropertyCard({
   }, [slides.length]);
 
   const currentSlide = slides[currentIndex];
-  const showImage = !isEmpty && currentSlide.imagen;
+  const showImage = !!currentSlide.imagen;
 
 
   return (
@@ -85,12 +94,20 @@ export default function PropertyCard({
           </div>
         ) : (
           <>
-            {/* Imagen con fade transition */}
             <img
               key={currentIndex}
               src={currentSlide.imagen}
               alt={currentSlide.titulo}
-              className="w-full h-full object-cover animate-fade"
+              onError={(e) => {
+                const img = e.target as HTMLImageElement;
+                const cityFallback = getImageUrl(image);
+                if (cityFallback && img.src !== cityFallback) {
+                  img.src = cityFallback;
+                } else {
+                  img.src = "/placeholder-house.jpg";
+                }
+              }}
+              className="w-full h-full object-cover transition-opacity duration-500"
             />
 
             {/* Título del inmueble rotando */}
@@ -108,9 +125,8 @@ export default function PropertyCard({
                 {slides.map((_, i) => (
                   <div
                     key={i}
-                    className={`w-1 h-1 rounded-full transition-all ${
-                      i === currentIndex ? "bg-white" : "bg-white/40"
-                    }`}
+                    className={`w-1 h-1 rounded-full transition-all ${i === currentIndex ? "bg-white" : "bg-white/40"
+                      }`}
                   />
                 ))}
               </div>
@@ -145,9 +161,8 @@ export default function PropertyCard({
         {!isAlquiler && count !== undefined && (
           <div className="flex items-center justify-between mt-1">
             <span
-              className={`text-[10px] font-semibold ${
-                isEmpty ? "text-gray-400" : "text-orange-500"
-              }`}
+              className={`text-[10px] font-semibold ${isEmpty ? "text-gray-400" : "text-orange-500"
+                }`}
             >
               {isEmpty ? "Sin propiedades" : `${count.toLocaleString()} Propiedades`}
             </span>
