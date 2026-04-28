@@ -1,9 +1,3 @@
-
-
-
-
-
-
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -245,6 +239,23 @@ export default function ResumenPanel({ publicacionId }: Props) {
       await checkEstado();
       await new Promise((resolve) => setTimeout(resolve, 400));
       await checkEstado();
+
+      const token = getAuthToken();
+      if (token && publicacionId) {
+        // NOTA: Puse método POST, si el backend usa PUT o PATCH, solo cambias esa palabrita.
+        const confirmarRes = await fetch(`${API_BASE_URL}/api/publicaciones/${publicacionId}/confirmar`, {
+          method: "POST", 
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!confirmarRes.ok) {
+          throw new Error("Error en el servidor al confirmar publicación");
+        }
+      }
+    
       setProgreso(100);
       setEstadoPublicacion("exito");
 
@@ -257,6 +268,7 @@ export default function ResumenPanel({ publicacionId }: Props) {
         setProgreso(0);
         setEstadoPublicacion("idle");
       } else {
+        // Si falla el endpoint de confirmar, caerá aquí y mostrará la pantalla roja de error
         setEstadoPublicacion("error_publicacion");
       }
     }
