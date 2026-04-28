@@ -41,9 +41,7 @@ export function useProperties(): UsePropertiesResult {
   useEffect(() => {
     let cancelled = false;
 
-    async function fetchProperties() {
-      setIsLoading(true);
-      setError(null);
+    async function fetchNormalSearch() {
       try {
         const res = await fetch(
           `${API_URL}/api/properties/inmuebles?${searchParamsStr}`,
@@ -126,11 +124,106 @@ export function useProperties(): UsePropertiesResult {
       }
     }
 
+    async function fetchProperties() {
+      setIsLoading(true);
+      setError(null);
+
+      const modoRecomendados = sessionStorage.getItem(
+        "propbol_modo_recomendados",
+      );
+      const resultadosRecomendados = sessionStorage.getItem(
+        "propbol_recomendados",
+      );
+
+      if (modoRecomendados === "true" && resultadosRecomendados) {
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const data = JSON.parse(resultadosRecomendados) as any[];
+          const selectedCurrency = (
+            (searchParams.get("currency") || "USD").toUpperCase() === "BOB"
+              ? "BOB"
+              : "USD"
+          ) as "USD" | "BOB";
+
+          const mappedData: PropertyMapPin[] = data
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .filter((item: any) => {
+              const ubicacion = item.ubicacion ?? item.ubicacion_inmueble;
+              const lat = Number(ubicacion?.latitud);
+              const lng = Number(ubicacion?.longitud);
+              return (
+                ubicacion &&
+                !isNaN(lat) &&
+                !isNaN(lng) &&
+                lat !== 0 &&
+                lng !== 0
+              );
+            })
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            .map((item: any) => {
+              const ubicacion = item.ubicacion ?? item.ubicacion_inmueble;
+              const publicaciones =
+                item.publicaciones ?? item.publicacion ?? [];
+              const basePrice = Number(item.precio);
+              const sourceCurrency = String(
+                item.currency || item.moneda || "USD",
+              ).toUpperCase();
+              const priceInUsd =
+                sourceCurrency === "BOB"
+                  ? basePrice / BOB_EXCHANGE_RATE
+                  : basePrice;
+              const displayPrice =
+                selectedCurrency === "BOB"
+                  ? priceInUsd * BOB_EXCHANGE_RATE
+                  : priceInUsd;
+              const formattedText =
+                selectedCurrency === "BOB"
+                  ? `Bs ${displayPrice.toLocaleString("es-BO")}`
+                  : `$${displayPrice.toLocaleString("en-US")} USD`;
+
+              return {
+                id: item.id.toString(),
+                lat: Number(ubicacion.latitud),
+                lng: Number(ubicacion.longitud),
+                price: displayPrice,
+                currency: selectedCurrency,
+                precioFormateado: formattedText,
+                type: (item.categoria?.toLowerCase().trim() ||
+                  "casa") as PropertyType,
+                title: item.titulo,
+                descripcion: item.descripcion ?? null,
+                nroCuartos: item.nroCuartos ?? null,
+                nroBanos: item.nroBanos ?? null,
+                superficieM2: item.superficieM2
+                  ? Number(item.superficieM2)
+                  : null,
+                thumbnailUrl:
+                  publicaciones?.[0]?.multimedia?.[0]?.url ?? undefined,
+              };
+            });
+
+          if (!cancelled) {
+            setProperties(mappedData);
+            sessionStorage.removeItem("propbol_modo_recomendados");
+            sessionStorage.removeItem("propbol_recomendados");
+          }
+        } catch (err) {
+          console.error("Error parseando recomendados:", err);
+          await fetchNormalSearch();
+        } finally {
+          if (!cancelled) setIsLoading(false);
+        }
+        return;
+      }
+
+      await fetchNormalSearch();
+    }
+
     fetchProperties();
     return () => {
       cancelled = true;
     };
-  }, [searchParamsStr, searchParams]); // string primitivo — React detecta el cambio por valor
+  }, [searchParamsStr, searchParams]);
 
   return { properties, isLoading, error };
 }

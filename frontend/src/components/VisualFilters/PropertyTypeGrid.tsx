@@ -39,28 +39,29 @@ export default function PropertyTypeGrid({ items }: PropertyTypeGridProps) {
                 casas: "CASA",
                 departamentos: "DEPARTAMENTO",
                 cuartos: "CUARTO",
+                oficinas: "OFICINA",
                 terrenos: "TERRENO",
                 espacioscementerios: "TERRENO_MORTUORIO",
               };
               const tipo = tipoMap[item.key] ?? item.key.toUpperCase();
-              
+
               const modos = ["VENTA", "ALQUILER", "ANTICRETO"];
 
               const params = new URLSearchParams();
               params.set("tipoInmueble", tipo);
               modos.forEach(m => params.append("modoInmueble", m));
 
-              const currentFilters = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}');
-              sessionStorage.setItem('propbol_global_filters', JSON.stringify({
+              const currentFilters = JSON.parse(sessionStorage.getItem("propbol_global_filters") || "{}");
+              sessionStorage.setItem("propbol_global_filters", JSON.stringify({
                 ...currentFilters,
                 tipoInmueble: [tipo],
                 modoInmueble: modos,
                 query: "",
-                updatedAt: new Date().toISOString()
+                updatedAt: new Date().toISOString(),
               }));
 
               router.push(`/busqueda_mapa?${params.toString()}`);
-            }}            
+            }}
             className="flex flex-col items-start w-full cursor-pointer transition-all duration-200 group"
           >
             <div className="bg-white rounded-[24px] shadow-sm flex items-center justify-center p-6 mb-3 w-full border border-gray-100 group-hover:shadow-md group-hover:border-[#965a1e] transition-all duration-300">

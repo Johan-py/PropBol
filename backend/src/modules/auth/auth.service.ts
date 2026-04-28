@@ -29,6 +29,7 @@ import {
   findActive2FACodeByUserId,
   increment2FACodeAttempts,
   mark2FACodeAsUsed,
+  completeTourByUserId,
 } from "./auth.repository.js";
 
 type LoginDTO = {
@@ -381,6 +382,7 @@ export const loginService = async (payload: LoginDTO) => {
       apellido: user.apellido,
       avatar: user.avatar,
       rol: user.rol,
+      controlador: user.controlador,
     },
     token,
   };
@@ -455,6 +457,7 @@ export const verify2FAService = async ({ userId, codigo }: Verify2FADTO) => {
       apellido: user.apellido,
       avatar: user.avatar,
       rol: user.rol,
+      controlador: user.controlador,
     },
     token,
   };
@@ -573,6 +576,9 @@ export const verifyRegisterCodeService = async (
       nombre: newUser.nombre,
       apellido: newUser.apellido,
       correo: newUser.correo,
+      avatar: newUser.avatar,
+      rol: newUser.rol,
+      controlador: newUser.controlador,
       telefonos: newUser.telefonos,
     },
     token,
@@ -598,8 +604,21 @@ export const getMeService = async (token: string) => {
       avatar: session.usuario.avatar,
       correo: session.usuario.correo,
       rol: session.usuario.rol,
+      controlador: session.usuario.controlador,
     },
   };
+};
+
+export const completeTourService = async (userId: number) => {
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  await completeTourByUserId(userId);
+
+  return { message: "Tour completado correctamente", controlador: true };
 };
 
 export const logoutService = async (token: string) => {
@@ -796,6 +815,7 @@ export const loginWithGoogleCodeService = async (code: string) => {
       apellido: user.apellido,
       avatar: user.avatar,
       rol: user.rol,
+      controlador: user.controlador,
     },
     token,
   };

@@ -1,6 +1,6 @@
-import type { Request, Response } from 'express'
-import { propertiesService } from './properties.service.js'
-import type { FiltrosBusqueda } from './properties.repository.js'
+import type { Request, Response } from "express";
+import { propertiesService } from "./properties.service.js";
+import type { FiltrosBusqueda } from "./properties.repository.js";
 
 export const propertiesController = {
   async getAll(req: Request, res: Response) {
@@ -10,6 +10,11 @@ export const propertiesController = {
         modoInmueble,
         query,
         locationId,
+        departamentoId,
+        provinciaId,
+        municipioId,
+        zonaId,
+        barrioId,
         fecha,
         precio,
         superficie,
@@ -22,18 +27,28 @@ export const propertiesController = {
         banosMax,
         tipoBano,
         minSuperficie,
-        maxSuperficie
-      } = req.query
+        maxSuperficie,
+        lat,
+        lng,
+        radius,
+      } = req.query;
 
-      let banoCompartido: boolean | undefined = undefined
-      if (tipoBano === 'privado') banoCompartido = false
-      if (tipoBano === 'compartido') banoCompartido = true
+      let banoCompartido: boolean | undefined = undefined;
+      if (tipoBano === "privado") banoCompartido = false;
+      if (tipoBano === "compartido") banoCompartido = true;
 
       const filtros: FiltrosBusqueda = {
         tipoInmueble: tipoInmueble as string | string[],
         modoInmueble: modoInmueble as string | string[],
         query: query as string,
         locationId: locationId ? Number(locationId) : undefined,
+
+        departamentoId: departamentoId as string,
+        provinciaId: provinciaId as string,
+        municipioId: municipioId as string,
+        zonaId: zonaId as string,
+        barrioId: barrioId as string,
+
         fecha: fecha as any,
         precio: precio as any,
         superficie: superficie as any,
@@ -42,51 +57,67 @@ export const propertiesController = {
         maxPrice: maxPrice ? Number(maxPrice) : null,
         currency: (currency as string) ?? null,
 
-        dormitoriosMin: dormitoriosMin ? parseInt(dormitoriosMin as string) : undefined,
-        dormitoriosMax: dormitoriosMax ? parseInt(dormitoriosMax as string) : undefined,
+        dormitoriosMin: dormitoriosMin
+          ? parseInt(dormitoriosMin as string)
+          : undefined,
+        dormitoriosMax: dormitoriosMax
+          ? parseInt(dormitoriosMax as string)
+          : undefined,
         banosMin: banosMin ? parseInt(banosMin as string) : undefined,
         banosMax: banosMax ? parseInt(banosMax as string) : undefined,
         banoCompartido,
         minSuperficie: minSuperficie ? Number(minSuperficie) : null,
-        maxSuperficie: maxSuperficie ? Number(maxSuperficie) : null
-      }
+        maxSuperficie: maxSuperficie ? Number(maxSuperficie) : null,
+
+        lat: lat ? Number(lat) : undefined,
+        lng: lng ? Number(lng) : undefined,
+        radius: radius ? Number(radius) : 1,
+      };
 
       const orden = {
-        fecha: fecha as 'mas-recientes' | 'mas-populares' | undefined,
-        precio: precio as 'menor-a-mayor' | 'mayor-a-menor' | undefined,
-        superficie: superficie as 'menor-a-mayor' | 'mayor-a-menor' | undefined
-      }
-      console.log('📥 Controller recibió filtros:', filtros)
-      const inmuebles = await propertiesService.getAll(filtros)
-      res.json({ ok: true, data: inmuebles })
+        fecha: fecha as "mas-recientes" | "mas-populares" | undefined,
+        precio: precio as "menor-a-mayor" | "mayor-a-menor" | undefined,
+        superficie: superficie as "menor-a-mayor" | "mayor-a-menor" | undefined,
+      };
+      console.log("📥 Controller recibió filtros:", filtros);
+      const inmuebles = await propertiesService.getAll(filtros);
+      res.json({ ok: true, data: inmuebles });
     } catch (error) {
-      console.error('Error detallado en getAll:', error)
-      res.status(500).json({ ok: false, message: 'Error al obtener inmuebles' })
+      console.error("Error detallado en getAll:", error);
+      res
+        .status(500)
+        .json({ ok: false, message: "Error al obtener inmuebles" });
     }
   },
   search: async (req: Request, res: Response) => {
     try {
       // Capturamos lo que envía el usePropertySearch del frontend
-      const { locationId, categoria, tipoAccion, search } = req.query
+      const { locationId, categoria, tipoAccion, search, lat, lng, radius } =
+        req.query;
 
       const filtros: FiltrosBusqueda = {
         // Mapeamos los nombres del frontend a los que espera el service/repository
         locationId: locationId ? Number(locationId) : undefined,
         tipoInmueble: categoria as string,
         modoInmueble: tipoAccion as string,
-        query: search as string
-      }
+        query: search as string,
+        lat: lat ? Number(lat) : undefined,
+        lng: lng ? Number(lng) : undefined,
+        radius: radius ? Number(radius) : 1,
+      };
 
-      const inmuebles = await propertiesService.getAll(filtros)
+      const inmuebles = await propertiesService.getAll(filtros);
 
       // Enviamos la data en el formato que espera tu frontend (data: json)
-      res.json({ ok: true, data: inmuebles })
+      res.json({ ok: true, data: inmuebles });
     } catch (error) {
-      console.error('Error en búsqueda:', error)
-      res.status(500).json({ ok: false, error: 'Error en la búsqueda avanzada' })
+      console.error("Error en búsqueda:", error);
+      res
+        .status(500)
+        .json({ ok: false, error: "Error en la búsqueda avanzada" });
     }
-  }
-}
+  },
+};
 
-export const search = propertiesController.search
-export const getAll = propertiesController.getAll
+export const search = propertiesController.search;
+export const getAll = propertiesController.getAll;

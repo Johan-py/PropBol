@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 const TOUR_STEPS = [
   {
@@ -215,14 +215,78 @@ export default function TourGuiado() {
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [tooltipH, setTooltipH] = useState(0);
 
+
   // Ref para trackear el step desde el que venimos REALMENTE
   // (funciona igual en navegación hacia adelante y hacia atrás)
   const prevStepRef = useRef<number>(-1);
 
-  useEffect(() => {
-    if (isLoggedIn()) {
-      setShowTour(true);
+  const checkAndShowTour = useCallback(() => {
+    if (!isLoggedIn()) return;
+
+    try {
+      const raw = localStorage.getItem("propbol_user");
+      if (raw) {
+        const sessionUser = JSON.parse(raw) as { controlador?: boolean | null };
+        if (sessionUser.controlador === true) return;
+        if (sessionUser.controlador === false) {
+          prevStepRef.current = -1;
+          setCurrentStep(0);
+          setHighlight(null);
+          setShowTour(true);
+          return;
+        }
+      }
+    } catch {
+      // propbol_user malformado → caer al fetch
     }
+
+    const token = localStorage.getItem("token");
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+    fetch(`${apiUrl}/api/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const controlador = data?.user?.controlador;
+
+        try {
+          const raw = localStorage.getItem("propbol_user");
+          if (raw && typeof controlador === "boolean") {
+            const sessionUser = JSON.parse(raw);
+            localStorage.setItem(
+              "propbol_user",
+              JSON.stringify({ ...sessionUser, controlador })
+            );
+          }
+        } catch { /* ignorar */ }
+
+        if (controlador === false || controlador === null) {
+          prevStepRef.current = -1;
+          setCurrentStep(0);
+          setHighlight(null);
+          setShowTour(true);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    checkAndShowTour();
+    window.addEventListener("propbol:login", checkAndShowTour);
+    return () => window.removeEventListener("propbol:login", checkAndShowTour);
+  }, [checkAndShowTour]);
+
+  useEffect(() => {
+    const handleSessionChanged = () => {
+      if (!isLoggedIn()) {
+        setShowTour(false);
+        setCurrentStep(0);
+        prevStepRef.current = -1;
+        setHighlight(null);
+      }
+    };
+    window.addEventListener("propbol:session-changed", handleSessionChanged);
+    return () => window.removeEventListener("propbol:session-changed", handleSessionChanged);
   }, []);
 
   useEffect(() => {
@@ -462,17 +526,45 @@ export default function TourGuiado() {
     };
   }, [currentStep, showTour]);
 
+  const completeTour = () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    // Marcar controlador: true en localStorage de forma inmediata para que
+    // checkAndShowTour no vuelva a mostrar el tour en la próxima visita
+    try {
+      const raw = localStorage.getItem("propbol_user");
+      if (raw) {
+        const sessionUser = JSON.parse(raw);
+        localStorage.setItem(
+          "propbol_user",
+          JSON.stringify({ ...sessionUser, controlador: true })
+        );
+      }
+    } catch {
+      // ignorar — el backend es la fuente de verdad
+    }
+
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+    fetch(`${apiUrl}/api/auth/tour`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${token}` },
+    }).catch(() => {});
+  };
+
   const handleNext = () => {
     if (currentStep < TOUR_STEPS.length - 1) {
       setCurrentStep((prev) => prev + 1);
     } else {
       window.dispatchEvent(new Event("propbol:cerrar-menu-movil"));
+      completeTour();
       setShowTour(false);
     }
   };
 
   const handleSkip = () => {
     window.dispatchEvent(new Event("propbol:cerrar-menu-movil"));
+    completeTour();
     setShowTour(false);
   };
 

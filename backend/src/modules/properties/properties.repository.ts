@@ -25,6 +25,10 @@ export interface FiltrosBusqueda {
   banosMin?: number;
   banosMax?: number;
   banoCompartido?: boolean;
+
+  lat?: number;
+  lng?: number;
+  radius?: number;
 }
 
 // Helper para limpiar las variaciones de Anticrético
@@ -38,6 +42,40 @@ export const propertiesRepository = {
     // ── WHERE ──────────────────────────────────────────────────────────────
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = { estado: "ACTIVO" };
+
+    // FILTRO GEOESPACIAL CON FÓRMULA DE HAVERSINE
+    if (filtros.lat !== undefined && filtros.lng !== undefined) {
+      const radio = filtros.radius || 1;
+
+      try {
+        const ubicacionesCercanas = await prisma.$queryRaw<
+          { inmueble_id: number }[]
+        >`
+          SELECT inmueble_id
+          FROM ubicacion_inmueble
+          WHERE (
+            6371 * acos(
+              cos(radians(${filtros.lat})) *
+              cos(radians(latitud)) *
+              cos(radians(longitud) - radians(${filtros.lng})) +
+              sin(radians(${filtros.lat})) *
+              sin(radians(latitud))
+            )
+          ) <= ${radio}
+        `;
+
+        const idsCercanos = ubicacionesCercanas.map((u) => u.inmueble_id);
+
+        if (idsCercanos.length === 0) {
+          return [];
+        }
+
+        where.id = { in: idsCercanos };
+      } catch (error) {
+        console.error("❌ Error ejecutando consulta SQL geoespacial:", error);
+        return [];
+      }
+    }
 
     // 1. Filtro de Categoría / Tipo Inmueble (Soporta múltiples selecciones)
     const CATEGORIAS_VALIDAS = [
@@ -83,67 +121,70 @@ export const propertiesRepository = {
     }
 
     // 3. Filtro de Ubicación (EL CEREBRO JERÁRQUICO)
-    if (filtros.query && filtros.query.trim() !== "") {
-      const texto = filtros.query.trim();
+    if (filtros.lat === undefined && filtros.lng === undefined) {
+      if (filtros.query && filtros.query.trim() !== "") {
+        const texto = filtros.query.trim();
 
-      where.OR = [
-        { titulo: { contains: texto, mode: "insensitive" } },
-        { descripcion: { contains: texto, mode: "insensitive" } },
-        {
-          ubicacion: {
-            OR: [
-              { direccion: { contains: texto, mode: "insensitive" } },
-              { barrio: { nombre: { contains: texto, mode: "insensitive" } } },
-              {
-                barrio: {
-                  zona: { nombre: { contains: texto, mode: "insensitive" } },
+        where.OR = [
+          { titulo: { contains: texto, mode: "insensitive" } },
+          { descripcion: { contains: texto, mode: "insensitive" } },
+          {
+            ubicacion: {
+              OR: [
+                { direccion: { contains: texto, mode: "insensitive" } },
+                {
+                  barrio: { nombre: { contains: texto, mode: "insensitive" } },
                 },
-              },
-              {
-                barrio: {
-                  zona: {
-                    municipio: {
-                      nombre: { contains: texto, mode: "insensitive" },
-                    },
+                {
+                  barrio: {
+                    zona: { nombre: { contains: texto, mode: "insensitive" } },
                   },
                 },
-              },
-              {
-                barrio: {
-                  zona: {
-                    municipio: {
-                      provincia: {
+                {
+                  barrio: {
+                    zona: {
+                      municipio: {
                         nombre: { contains: texto, mode: "insensitive" },
                       },
                     },
                   },
                 },
-              },
-              {
-                barrio: {
-                  zona: {
-                    municipio: {
-                      provincia: {
-                        departamento: {
+                {
+                  barrio: {
+                    zona: {
+                      municipio: {
+                        provincia: {
                           nombre: { contains: texto, mode: "insensitive" },
                         },
                       },
                     },
                   },
                 },
-              },
-              {
-                ubicacion_maestra: {
-                  nombre: { contains: texto, mode: "insensitive" },
+                {
+                  barrio: {
+                    zona: {
+                      municipio: {
+                        provincia: {
+                          departamento: {
+                            nombre: { contains: texto, mode: "insensitive" },
+                          },
+                        },
+                      },
+                    },
+                  },
                 },
-              },
-            ],
+                {
+                  ubicacion_maestra: {
+                    nombre: { contains: texto, mode: "insensitive" },
+                  },
+                },
+              ],
+            },
           },
-        },
-      ];
-    } else if (filtros.locationId) {
-      // Fallback: Si no hay texto, asumimos que viene de un botón antiguo de "Ciudades Destacadas"
-      where.ubicacion = { ubicacionMaestraId: Number(filtros.locationId) };
+        ];
+      } else if (filtros.locationId) {
+        where.ubicacion = { ubicacionMaestraId: Number(filtros.locationId) };
+      }
     }
     // Si un nivel está seleccionado y no es "todos", lo aplicamos y las demás condiciones (else if) se ignoran.
     if (
@@ -248,9 +289,19 @@ export const propertiesRepository = {
       }
     }
 
+    // ── FILTRO DE BAÑO COMPARTIDO
     if (filtros.banoCompartido !== undefined) {
-      where.banoCompartido = filtros.banoCompartido;
+      if (filtros.banoCompartido === true) {
+        where.categoria = "CUARTO";
+        where.banoCompartido = true;
+      } else {
+        where.OR = [
+          { categoria: { not: "CUARTO" } },
+          { categoria: "CUARTO", banoCompartido: false },
+        ];
+      }
     }
+
     // ── FILTRO DE SUPERFICIE ──────────────────────────────────────────────
     if (filtros.minSuperficie != null || filtros.maxSuperficie != null) {
       where.superficieM2 = {};

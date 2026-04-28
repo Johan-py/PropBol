@@ -118,7 +118,6 @@ export default function VisualFiltersSection() {
             total: found?.count ?? 0,
           };
         });
-        // Remove .sort() to preserve the exact required order
         setTipos(tiposMapped);
 
       } catch (err) {
@@ -188,7 +187,7 @@ export default function VisualFiltersSection() {
     key: item.nombre.toLowerCase().replace(/\s+/g, ""),
     label: item.nombre,
     count: item.total,
-  }));
+  })).sort((a, b) => b.count - a.count);
 
   return (
     <section id="tour-filtros-visuales" className="w-full px-4 md:px-8 py-8 flex justify-center">

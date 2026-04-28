@@ -1,10 +1,9 @@
 // FavoritesService.ts
-import { prisma } from '../../lib/prisma.client.js'
+import { prisma } from "../../lib/prisma.client.js";
 
 export class FavoritesService {
-
   static async getAll(usuarioId: number, page: number, perPage: number) {
-    const skip = (page - 1) * perPage
+    const skip = (page - 1) * perPage;
 
     const [total, favoritos] = await Promise.all([
       prisma.favorito.count({ where: { usuarioId } }),
@@ -12,13 +11,13 @@ export class FavoritesService {
         where: { usuarioId },
         skip,
         take: perPage,
-        orderBy: { agregadoEn: 'desc' },
+        orderBy: { agregadoEn: "desc" },
         include: {
           inmueble: {
             include: {
               ubicacion: true,
               publicaciones: {
-                where: { estado: 'ACTIVA' }, // Solo publicaciones activas
+                where: { estado: "ACTIVA" }, // Solo publicaciones activas
                 include: { multimedia: true },
                 take: 1,
               },
@@ -26,8 +25,9 @@ export class FavoritesService {
           },
         },
       }),
-    ])
+    ]);
 
+    // Por esto:
     return {
       total,
       page,
@@ -35,11 +35,14 @@ export class FavoritesService {
       data: favoritos.map((f) => ({
         id: f.id,
         agregadoEn: f.agregadoEn,
-        inmueble: f.inmueble
+        inmueble: {
+          ...f.inmueble,
+          imagen_principal:
+            f.inmueble.publicaciones[0]?.multimedia[0]?.url || null,
+        },
       })),
-      inmuebles: favoritos.map((f) => f.inmueble),
-      totalPages: Math.ceil(total / perPage)
-    }
+      totalPages: Math.ceil(total / perPage),
+    };
   }
 
   static async add(usuarioId: number, inmuebleId: number) {
@@ -48,15 +51,15 @@ export class FavoritesService {
       return await prisma.favorito.create({
         data: {
           usuarioId,
-          inmuebleId
+          inmuebleId,
         },
-      })
+      });
     } catch (error: any) {
       // P2002 es el error de Prisma para unique constraint violation
-      if (error.code === 'P2002') {
-        throw new Error('ALREADY_EXISTS')
+      if (error.code === "P2002") {
+        throw new Error("ALREADY_EXISTS");
       }
-      throw error
+      throw error;
     }
   }
 
@@ -67,32 +70,35 @@ export class FavoritesService {
         where: {
           usuarioId_inmuebleId: {
             usuarioId,
-            inmuebleId
-          }
-        }
-      })
+            inmuebleId,
+          },
+        },
+      });
     } catch (error: any) {
       // P2025 es el error de Prisma para registro no encontrado
-      if (error.code === 'P2025') {
-        throw new Error('NOT_FOUND')
+      if (error.code === "P2025") {
+        throw new Error("NOT_FOUND");
       }
-      throw error
+      throw error;
     }
   }
 
-  static async isFavorite(usuarioId: number, inmuebleId: number): Promise<boolean> {
+  static async isFavorite(
+    usuarioId: number,
+    inmuebleId: number,
+  ): Promise<boolean> {
     try {
       const favorite = await prisma.favorito.findUnique({
         where: {
           usuarioId_inmuebleId: {
             usuarioId,
-            inmuebleId
-          }
-        }
-      })
-      return !!favorite
+            inmuebleId,
+          },
+        },
+      });
+      return !!favorite;
     } catch (error) {
-      return false
+      return false;
     }
   }
 }

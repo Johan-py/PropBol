@@ -36,9 +36,16 @@ export const env = {
     process.env.EMAIL_PASSWORD ??
     process.env.BREVO_API_KEY ??
     requireEnv("EMAIL_PASSWORD"),
-    
+
   ADMIN_EMAIL: process.env.ADMIN_EMAIL ?? requireEnv("ADMIN_EMAIL"),
   EVOLUTION_API_URL: process.env.EVOLUTION_API_URL ?? "http://localhost:8080",
   EVOLUTION_API_KEY: process.env.EVOLUTION_API_KEY ?? "",
   EVOLUTION_INSTANCE: process.env.EVOLUTION_INSTANCE ?? "propbol",
+
+  CLOUDINARY_CLOUD_NAME: requireEnv("CLOUDINARY_CLOUD_NAME"),
+  CLOUDINARY_API_KEY: requireEnv("CLOUDINARY_API_KEY"),
+  CLOUDINARY_API_SECRET: requireEnv("CLOUDINARY_API_SECRET"),
+  CLOUDINARY_MULTIMEDIA_FOLDER:
+    process.env.CLOUDINARY_MULTIMEDIA_FOLDER ??
+    "propbol/publicaciones/multimedia",
 };
