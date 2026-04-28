@@ -137,7 +137,7 @@ export default function MisBlogsPage() {
             <ResumenCard
               titulo="Pendientes"
               valor={count("PENDIENTE")}
-              color="text-blue-600"
+              color="text-amber-600"
             />
 
             <ResumenCard
@@ -154,11 +154,12 @@ export default function MisBlogsPage() {
             <button
               key={estado}
               onClick={() => setFiltro(estado)}
-              className={`px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-[0.16em] border transition ${
-                filtro === estado
+              className={`flex items-center px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-[0.16em] border transition ${filtro === estado
                   ? "bg-[#111111] text-white border-[#111111]"
-                  : "bg-white text-[#242424] border-[#D8CEC2] hover:bg-[#FAF7F2]"
-              }`}
+                  : estado === "TODOS"
+                    ? "bg-white text-[#242424] border-[#D8CEC2] hover:bg-[#FAF7F2]"
+                    : `${getEstadoColor(estado)} hover:opacity-80`
+                }`}
             >
               {estado === "TODOS" ? "Todos" : getEstadoLabel(estado)}
 
@@ -225,9 +226,9 @@ export default function MisBlogsPage() {
 
                   <div className="flex justify-between items-center border-t border-[#EEE6DC] pt-4">
                     {blog.estado === "BORRADOR" ||
-                    blog.estado === "RECHAZADO" ||
-                    blog.estado === "PENDIENTE" ||
-                    blog.estado === "PUBLICADO" ? (
+                      blog.estado === "RECHAZADO" ||
+                      blog.estado === "PENDIENTE" ||
+                      blog.estado === "PUBLICADO" ? (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -303,7 +304,7 @@ function getEstadoColor(estado: string) {
     case "PUBLICADO":
       return "bg-[#E8F7EE] text-[#198754] border-[#BFE8CD]";
     case "PENDIENTE":
-      return "bg-[#EAF2FF] text-[#2563EB] border-[#C7DDFE]";
+      return "bg-amber-50 text-amber-700 border-amber-200";
     case "RECHAZADO":
       return "bg-[#FDECEC] text-[#D94848] border-[#F3BABA]";
     case "BORRADOR":
