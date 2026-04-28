@@ -220,7 +220,7 @@ export default function ConsumoPage() {
           {/* Icono libro azul */}
           <div className="bg-blue-50 p-4 rounded-2xl text-5xl">📘</div>
 
-          {/* Bloque de texto informativo */}
+          {/* Texto del Cards3 */}
           <div className="flex flex-col text-left">
             <h3 className="text-6xl font-black text-blue-600 leading-none">
               {data.limite}
