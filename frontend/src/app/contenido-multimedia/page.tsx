@@ -1,454 +1,579 @@
-'use client'
+"use client";
 
-import { Suspense, useRef, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import FotosSection from '@/components/contenido-multimedia/FotosSection'
-import VideosSection from '@/components/contenido-multimedia/VideosSection'
-import PublicarSection from '@/components/contenido-multimedia/PublicarSection'
-import PlanModal from '@/components/contenido-multimedia/PlanModal'
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import InfoPropiedad from "./InfoPropiedad";
+import GaleriaResumen from "./GaleriaResumen";
+import AceptacionPublicacion from "./AceptacionPublicacion";
+import ParametrosPersonalizados from "./ParametrosPersonalizados";
 
-type ImageItem = {
-  id: string
-  file: File
-  previewUrl: string
-  name: string
+interface Props {
+  publicacionId: number | null;
 }
 
-type VideoItem = {
-  id: string
-  type: 'file' | 'youtube'
-  name: string
-  previewUrl?: string
-  embedUrl?: string
-  file?: File
-  sourceUrl?: string
+type ParametroItem = {
+  id: number;
+  nombre: string;
+};
+
+export interface ResumenFinalData {
+  id: number;
+  publicacionId: number;
+  inmuebleId: number;
+  publicacion: {
+    titulo: string | null;
+    descripcion: string | null;
+    estado: string;
+    fechaPublicacion: string | null;
+  };
+  datosGenerales: {
+    tipoOperacion: string | null;
+    tipoInmueble: string | null;
+    direccion: string | null;
+    ciudad: string | null;
+    zona: string | null;
+    precio: number | null;
+    areaM2: number | null;
+    coordenadas: {
+      latitud: number | null;
+      longitud: number | null;
+    };
+  };
+  caracteristicas: {
+    habitaciones: number | null;
+    banos: number | null;
+    estacionamiento: number | null;
+  };
+  parametrosPersonalizados?: ParametroItem[];
+  multimedia: {
+    total: number;
+    imagenes: Array<{
+      id: number;
+      url: string;
+      tipo: string;
+      pesoMb: number | null;
+    }>;
+    videos: Array<{
+      id: number;
+      url: string;
+      tipo: string;
+      pesoMb: number | null;
+    }>;
+  };
+  soloLectura: boolean;
 }
 
-function getApiUrl() {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL
-
-  if (!apiUrl) {
-    throw new Error('Falta NEXT_PUBLIC_API_URL en el entorno')
-  }
-
-  return apiUrl
+interface ResumenFinalApiResponse {
+  ok: boolean;
+  data: ResumenFinalData;
+  message?: string;
 }
 
-export default function ContenidoMultimediaPage() {
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
+
+function getAuthToken(): string | null {
+  if (typeof window === "undefined") return null;
+
   return (
-    <Suspense fallback={<div style={{ padding: '24px' }}>Cargando...</div>}>
-      <ContenidoMultimediaPageContent />
-    </Suspense>
-  )
+    localStorage.getItem("token") ||
+    localStorage.getItem("authToken") ||
+    localStorage.getItem("access_token") ||
+    null
+  );
 }
 
-function ContenidoMultimediaPageContent() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const publicacionId = Number(searchParams.get('publicacionId'))
+function extraerParametro(item: unknown, index: number): ParametroItem | null {
+  if (!item || typeof item !== "object") return null;
 
-  const [images, setImages] = useState<ImageItem[]>([])
-  const [videos, setVideos] = useState<VideoItem[]>([])
-  const [videoUrl, setVideoUrl] = useState('')
-  const [confirmed, setConfirmed] = useState(false)
+  const obj = item as Record<string, unknown>;
 
-  const [imageError, setImageError] = useState('')
-  const [videoError, setVideoError] = useState('')
-  const [publishError, setPublishError] = useState('')
-
-  const [isUploadingImages, setIsUploadingImages] = useState(false)
-  const [isUploadingVideos, setIsUploadingVideos] = useState(false)
-  const [isPublishing, setIsPublishing] = useState(false)
-
-  const [showPlanModal, setShowPlanModal] = useState(false)
-
-  const imageInputRef = useRef<HTMLInputElement | null>(null)
-  const videoInputRef = useRef<HTMLInputElement | null>(null)
-
-  const hasMultimedia = images.length > 0 || videos.length > 0
-
-  const handleOpenImagePicker = () => {
-    imageInputRef.current?.click()
+  if (typeof obj.nombre === "string" && obj.nombre.trim() !== "") {
+    return {
+      id:
+        typeof obj.id === "number"
+          ? obj.id
+          : typeof obj.id === "string"
+            ? Number(obj.id)
+            : index,
+      nombre: obj.nombre.trim(),
+    };
   }
 
-  const handleOpenVideoPicker = () => {
-    videoInputRef.current?.click()
+  if (
+    typeof obj.nombreParametro === "string" &&
+    obj.nombreParametro.trim() !== ""
+  ) {
+    return {
+      id:
+        typeof obj.id === "number"
+          ? obj.id
+          : typeof obj.id === "string"
+            ? Number(obj.id)
+            : index,
+      nombre: obj.nombreParametro.trim(),
+    };
   }
 
-  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || [])
-    if (!files.length) return
+  if (obj.parametro && typeof obj.parametro === "object") {
+    const parametro = obj.parametro as Record<string, unknown>;
 
-    setImageError('')
-
-    if (images.length + files.length > 5) {
-      setImageError('Límite alcanzado. Solo puedes subir máximo 5 imágenes.')
-      event.target.value = ''
-      return
-    }
-
-    const allowedTypes = ['image/png', 'image/jpeg']
-    const maxSize = 5 * 1024 * 1024
-
-    setIsUploadingImages(true)
-
-    const validImages: ImageItem[] = []
-
-    for (const file of files) {
-      if (!allowedTypes.includes(file.type)) {
-        setImageError('Formato no permitido. Solo PNG o JPG')
-        continue
-      }
-
-      if (file.size > maxSize) {
-        setImageError('Una de las imágenes supera los 5 MB.')
-        continue
-      }
-
-      validImages.push({
-        id: `${file.name}-${Date.now()}-${Math.random()}`,
-        file,
-        previewUrl: URL.createObjectURL(file),
-        name: file.name
-      })
-    }
-
-    setImages((prev) => [...prev, ...validImages].slice(0, 5))
-    setIsUploadingImages(false)
-    event.target.value = ''
-  }
-
-  const handleRemoveImage = (id: string) => {
-    setImages((prev) => {
-      const target = prev.find((image) => image.id === id)
-      if (target?.previewUrl) URL.revokeObjectURL(target.previewUrl)
-      return prev.filter((image) => image.id !== id)
-    })
-  }
-
-  const handleVideoFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || [])
-    if (!files.length) return
-
-    setVideoError('')
-
-    if (videos.length + files.length > 2) {
-      setVideoError('Límite alcanzado. Solo puedes subir máximo 2 videos.')
-      event.target.value = ''
-      return
-    }
-
-    const allowedTypes = ['video/mp4', 'video/x-matroska', 'video/avi', 'video/x-msvideo']
-    const maxSize = 20 * 1024 * 1024
-
-    setIsUploadingVideos(true)
-
-    const validVideos: VideoItem[] = []
-
-    for (const file of files) {
-      const extension = file.name.split('.').pop()
-      const extensionAllowed = ['mp4', 'mkv', 'avi'].includes(extension || '')
-
-      if (!allowedTypes.includes(file.type) && !extensionAllowed) {
-        setVideoError('Formato no permitido. Solo MP4, MKV o AVI')
-        continue
-      }
-
-      if (file.size > maxSize) {
-        setVideoError('Uno de los videos supera los 20 MB.')
-        continue
-      }
-
-      validVideos.push({
-        id: `${file.name}-${Date.now()}-${Math.random()}`,
-        type: 'file',
-        name: file.name,
-        file,
-        previewUrl: URL.createObjectURL(file)
-      })
-    }
-
-    setVideos((prev) => [...prev, ...validVideos].slice(0, 2))
-    setIsUploadingVideos(false)
-    event.target.value = ''
-  }
-
-  const getYoutubeData = (url: string) => {
-    const trimmed = url.trim()
-
-    const shortMatch = trimmed.match(/(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/)
-
-    if (shortMatch) {
+    if (
+      typeof parametro.nombre === "string" &&
+      parametro.nombre.trim() !== ""
+    ) {
       return {
-        embedUrl: `https://www.youtube.com/embed/${shortMatch[1]}`,
-        sourceUrl: trimmed
-      }
+        id:
+          typeof parametro.id === "number"
+            ? parametro.id
+            : typeof parametro.id === "string"
+              ? Number(parametro.id)
+              : index,
+        nombre: parametro.nombre.trim(),
+      };
     }
+  }
 
-    const normalMatch = trimmed.match(
-      /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/
-    )
+  if (
+    obj.parametroPersonalizado &&
+    typeof obj.parametroPersonalizado === "object"
+  ) {
+    const parametro = obj.parametroPersonalizado as Record<string, unknown>;
 
-    if (normalMatch) {
+    if (
+      typeof parametro.nombre === "string" &&
+      parametro.nombre.trim() !== ""
+    ) {
       return {
-        embedUrl: `https://www.youtube.com/embed/${normalMatch[1]}`,
-        sourceUrl: trimmed
-      }
+        id:
+          typeof parametro.id === "number"
+            ? parametro.id
+            : typeof parametro.id === "string"
+              ? Number(parametro.id)
+              : index,
+        nombre: parametro.nombre.trim(),
+      };
     }
+  }
 
-    const embedMatch = trimmed.match(
-      /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/
-    )
+  if (
+    obj.parametros_personalizados &&
+    typeof obj.parametros_personalizados === "object"
+  ) {
+    const parametro = obj.parametros_personalizados as Record<string, unknown>;
 
-    if (embedMatch) {
+    if (
+      typeof parametro.nombre === "string" &&
+      parametro.nombre.trim() !== ""
+    ) {
       return {
-        embedUrl: `https://www.youtube.com/embed/${embedMatch[1]}`,
-        sourceUrl: trimmed
+        id:
+          typeof parametro.id === "number"
+            ? parametro.id
+            : typeof parametro.id === "string"
+              ? Number(parametro.id)
+              : index,
+        nombre: parametro.nombre.trim(),
+      };
+    }
+  }
+
+  if (obj.etiqueta && typeof obj.etiqueta === "object") {
+    const etiqueta = obj.etiqueta as Record<string, unknown>;
+
+    if (typeof etiqueta.nombre === "string" && etiqueta.nombre.trim() !== "") {
+      return {
+        id:
+          typeof etiqueta.id === "number"
+            ? etiqueta.id
+            : typeof etiqueta.id === "string"
+              ? Number(etiqueta.id)
+              : index,
+        nombre: etiqueta.nombre.trim(),
+      };
+    }
+  }
+
+  return null;
+}
+
+function normalizarParametros(payload: unknown): ParametroItem[] {
+  const colecciones: unknown[] = [];
+
+  if (Array.isArray(payload)) {
+    colecciones.push(payload);
+  }
+
+  if (payload && typeof payload === "object") {
+    const obj = payload as Record<string, unknown>;
+
+    if (Array.isArray(obj.data)) {
+      colecciones.push(obj.data);
+    }
+
+    if (obj.data && typeof obj.data === "object") {
+      const dataObj = obj.data as Record<string, unknown>;
+
+      if (Array.isArray(dataObj.items)) {
+        colecciones.push(dataObj.items);
+      }
+
+      if (Array.isArray(dataObj.parametros)) {
+        colecciones.push(dataObj.parametros);
+      }
+
+      if (Array.isArray(dataObj.parametrosPersonalizados)) {
+        colecciones.push(dataObj.parametrosPersonalizados);
+      }
+
+      if (Array.isArray(dataObj.data)) {
+        colecciones.push(dataObj.data);
       }
     }
 
-    return null
+    if (Array.isArray(obj.items)) {
+      colecciones.push(obj.items);
+    }
+
+    if (Array.isArray(obj.parametros)) {
+      colecciones.push(obj.parametros);
+    }
+
+    if (Array.isArray(obj.parametrosPersonalizados)) {
+      colecciones.push(obj.parametrosPersonalizados);
+    }
   }
 
-  const handleAddVideoLink = () => {
-    setVideoError('')
+  for (const col of colecciones) {
+    const normalizados = (col as unknown[])
+      .map((item, index) => extraerParametro(item, index))
+      .filter((item): item is ParametroItem => item !== null);
 
-    if (!videoUrl.trim()) {
-      setVideoError('Debes ingresar un enlace de video.')
-      return
+    if (normalizados.length > 0) {
+      return normalizados.filter(
+        (parametro, index, array) =>
+          array.findIndex((x) => x.nombre === parametro.nombre) === index
+      );
     }
-
-    if (videos.length >= 2) {
-      setVideoError('Límite alcanzado. Solo puedes agregar máximo 2 videos.')
-      return
-    }
-
-    const parsed = getYoutubeData(videoUrl)
-
-    if (!parsed) {
-      setVideoError('Enlace de video no válido')
-      return
-    }
-
-    const newVideo: VideoItem = {
-      id: `youtube-${Date.now()}-${Math.random()}`,
-      type: 'youtube',
-      name: 'Video de YouTube',
-      embedUrl: parsed.embedUrl,
-      sourceUrl: parsed.sourceUrl
-    }
-
-    setVideos((prev) => [...prev, newVideo].slice(0, 2))
-    setVideoUrl('')
   }
 
-  const handleRemoveVideo = (id: string) => {
-    setVideos((prev) => {
-      const target = prev.find((video) => video.id === id)
-      if (target?.previewUrl) URL.revokeObjectURL(target.previewUrl)
-      return prev.filter((video) => video.id !== id)
-    })
+  return [];
+}
+
+async function obtenerResumenFinal(
+  publicacionId: number
+): Promise<ResumenFinalData> {
+  const token = getAuthToken();
+
+  if (!publicacionId || Number.isNaN(publicacionId)) {
+    throw new Error("No se recibió un id válido de publicación");
   }
 
-  const uploadImages = async (token: string) => {
-    if (!images.length) return
+  if (!token) {
+    throw new Error("No se encontró el token de autenticación");
+  }
 
-    const formData = new FormData()
+  if (!API_BASE_URL) {
+    throw new Error(
+      "La variable NEXT_PUBLIC_API_URL no está configurada en el frontend"
+    );
+  }
 
-    images.forEach((image) => {
-      formData.append('images', image.file)
-    })
-
-    const response = await fetch(`${getApiUrl()}/api/publicaciones/${publicacionId}/multimedia/images`, {
-      method: 'POST',
+  const response = await fetch(
+    `${API_BASE_URL}/api/publicaciones/${publicacionId}/resumen-final`,
+    {
+      method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      body: formData
-    })
-
-    const data = await response.json().catch(() => null)
-
-    if (!response.ok) {
-      throw new Error(data?.message || 'No se pudieron registrar las imágenes.')
+      cache: "no-store",
     }
+  );
+
+  const payload: ResumenFinalApiResponse | { ok: false; message?: string } =
+    await response.json();
+
+  if (!response.ok || !("ok" in payload) || !payload.ok) {
+    const message =
+      "message" in payload && payload.message
+        ? payload.message
+        : "No se pudo obtener el resumen final";
+    throw new Error(message);
   }
 
-  const uploadYoutubeLinks = async (token: string) => {
-    const youtubeVideos = videos.filter(
-      (video): video is VideoItem & { sourceUrl: string } =>
-        video.type === 'youtube' && typeof video.sourceUrl === 'string' && video.sourceUrl.length > 0
-    )
+  return payload.data;
+}
 
-    for (const video of youtubeVideos) {
-      const response = await fetch(
-        `${getApiUrl()}/api/publicaciones/${publicacionId}/multimedia/video-link`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            videoUrl: video.sourceUrl
-          })
-        }
-      )
+async function obtenerParametrosPublicacion(
+  publicacionId: number
+): Promise<ParametroItem[]> {
+  const token = getAuthToken();
 
-      const data = await response.json().catch(() => null)
+  if (!publicacionId || Number.isNaN(publicacionId)) {
+    return [];
+  }
 
-      if (!response.ok) {
-        throw new Error(data?.message || 'No se pudo registrar el enlace del video.')
+  if (!API_BASE_URL) {
+    return [];
+  }
+
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(
+    `${API_BASE_URL}/api/publicaciones/${publicacionId}/parametros`,
+    {
+      method: "GET",
+      headers,
+      cache: "no-store",
+    }
+  );
+
+  const rawText = await response.text();
+  let payload: unknown = null;
+
+  try {
+    payload = rawText ? JSON.parse(rawText) : null;
+  } catch {
+    console.error("La respuesta de /parametros no es JSON válido:", rawText);
+    return [];
+  }
+
+  console.log("Respuesta RAW /parametros:", payload);
+
+  if (!response.ok) {
+    console.error("Error en /parametros:", response.status, payload);
+    return [];
+  }
+
+  const normalizados = normalizarParametros(payload);
+  console.log("Parámetros normalizados:", normalizados);
+
+  return normalizados;
+}
+
+export default function ResumenPanel({ publicacionId }: Props) {
+  const router = useRouter();
+  const [aceptado, setAceptado] = useState(false);
+  const [data, setData] = useState<ResumenFinalData | null>(null);
+  const [parametrosExtra, setParametrosExtra] = useState<ParametroItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [mostrarModalExito, setMostrarModalExito] = useState(false);
+
+  useEffect(() => {
+    if (!publicacionId) {
+      setLoading(false);
+      setError("No se recibió el id de la publicación");
+      return;
+    }
+
+    const cargarResumen = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const [resumen, parametrosRutaNueva] = await Promise.all([
+          obtenerResumenFinal(publicacionId),
+          obtenerParametrosPublicacion(publicacionId),
+        ]);
+
+        console.log("Resumen final recibido:", resumen);
+        console.log(
+          "Parámetros desde resumen-final:",
+          resumen.parametrosPersonalizados
+        );
+        console.log(
+          "Parámetros desde /publicaciones/:id/parametros:",
+          parametrosRutaNueva
+        );
+
+        setData(resumen);
+        setParametrosExtra(parametrosRutaNueva);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error al cargar resumen");
+      } finally {
+        setLoading(false);
       }
+    };
+
+    cargarResumen();
+  }, [publicacionId]);
+
+  const parametrosFinales = useMemo(() => {
+    const desdeResumen = Array.isArray(data?.parametrosPersonalizados)
+      ? data.parametrosPersonalizados.filter(
+          (item) =>
+            item &&
+            typeof item.nombre === "string" &&
+            item.nombre.trim() !== ""
+        )
+      : [];
+
+    if (desdeResumen.length > 0) {
+      return desdeResumen;
     }
+
+    return parametrosExtra;
+  }, [data, parametrosExtra]);
+
+  const abrirModalExito = () => {
+    if (!aceptado) return;
+    setMostrarModalExito(true);
+  };
+
+  const cerrarModalExito = () => {
+    setMostrarModalExito(false);
+  };
+
+  const irAlHome = () => {
+    setMostrarModalExito(false);
+    router.push("/");
+  };
+
+  if (loading) {
+    return (
+      <section className="mx-auto max-w-7xl rounded-[28px] bg-white p-8 shadow-sm">
+        <p className="text-lg text-gray-600">Cargando resumen final...</p>
+      </section>
+    );
   }
 
-  const handlePublish = async () => {
-    setPublishError('')
-
-    if (!publicacionId || Number.isNaN(publicacionId)) {
-      setPublishError('No se recibió el ID de la publicación.')
-      return
-    }
-
-    if (!hasMultimedia) {
-      setPublishError('Debes agregar al menos una imagen o un video antes de publicar el inmueble.')
-      return
-    }
-
-    if (!confirmed) {
-      setPublishError('Debes confirmar que la información es correcta.')
-      return
-    }
-
-    const token = localStorage.getItem('token')
-
-    if (!token) {
-      setPublishError('No se encontró la sesión del usuario.')
-      return
-    }
-
-    const hasLocalVideoFiles = videos.some((video) => video.type === 'file')
-
-    if (hasLocalVideoFiles) {
-      setPublishError(
-        'Por ahora el backend solo permite registrar enlaces de video. Los videos subidos como archivo aún no están soportados.'
-      )
-      return
-    }
-
-    try {
-      setIsPublishing(true)
-
-      await uploadImages(token)
-      await uploadYoutubeLinks(token)
-
-      router.push(`/resumen-final?id=${publicacionId}`)
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Ocurrió un error al registrar el contenido multimedia.'
-      setPublishError(message)
-    } finally {
-      setIsPublishing(false)
-    }
+  if (error) {
+    return (
+      <section className="mx-auto max-w-7xl rounded-[28px] bg-white p-8 shadow-sm">
+        <h2 className="mb-3 text-2xl font-bold text-[#0f172a]">
+          Resumen final
+        </h2>
+        <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
+          {error}
+        </p>
+      </section>
+    );
   }
+
+  if (!data) return null;
 
   return (
-    <main
-      style={{
-        minHeight: '100vh',
-        background: '#fdf7f5',
-        padding: '24px'
-      }}
-    >
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <h1 style={{ fontSize: '40px', marginBottom: '8px' }}>Contenido Multimedia</h1>
-
-        <p style={{ fontSize: '20px', color: '#666', marginBottom: '24px' }}>
-          Agrega hasta 5 fotos y 2 videos para mostrar mejor tu inmueble
-        </p>
-
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: '18px'
-          }}
-        >
-          <p style={{ fontSize: '14px', color: '#888', margin: 0 }}>
-            Publicación actual: #{publicacionId || 'sin id'}
-          </p>
-
-          <button
-            type="button"
-            onClick={() => router.push(`/propiedades/parametros?publicacionId=${publicacionId || ""}&origen
-              =multimedia`)
-            }
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#f57c00',
-              fontSize: '16px',
-              fontWeight: 700,
-              cursor: 'pointer'
-            }}
-          >
-            + Añadir otros parámetros
-          </button>
+    <>
+      <section className="mx-auto max-w-7xl rounded-[28px] bg-white p-5 shadow-sm md:p-8">
+        <div className="mb-3 text-sm text-gray-500">
+          Home <span className="mx-2">{">"}</span> Publicar propiedades{" "}
+          <span className="mx-2">{">"}</span>
+          <span className="font-medium text-gray-700">
+            Ver resumen final de la propiedad antes de confirmar
+          </span>
         </div>
 
-        <input
-          ref={imageInputRef}
-          type="file"
-          accept=".png,.jpg,.jpeg,image/png,image/jpeg"
-          multiple
-          style={{ display: 'none' }}
-          onChange={handleImageChange}
-        />
+        <h1 className="mb-6 text-2xl font-bold leading-tight text-[#0f172a] md:text-5xl">
+          Ver resumen final de la propiedad antes de confirmar
+        </h1>
 
-        <input
-          ref={videoInputRef}
-          type="file"
-          accept=".mp4,.mkv,.avi,video/mp4,video/x-matroska,video/avi,video/x-msvideo"
-          multiple
-          style={{ display: 'none' }}
-          onChange={handleVideoFileChange}
-        />
+        <div className="mb-8 overflow-hidden rounded-2xl border border-[#f1dfd0]">
+          <div className="h-[3px] w-full bg-[#f28c28]" />
+          <div className="grid grid-cols-1 md:grid-cols-3">
+            <div className="bg-white px-6 py-3 text-center text-sm font-medium text-[#2f241f] md:text-base">
+              Paso 1: Datos Generales
+            </div>
+            <div className="bg-white px-6 py-3 text-center text-sm font-medium text-[#2f241f] md:text-base">
+              Paso 2: Multimedia
+            </div>
+            <div className="bg-white px-6 py-3 text-center text-sm font-semibold text-[#2f241f] md:text-base">
+              Paso 3: Parámetros Personalizados
+            </div>
+          </div>
+        </div>
 
-        <FotosSection
-          images={images}
-          onOpenPicker={handleOpenImagePicker}
-          onRemoveImage={handleRemoveImage}
-          error={imageError}
-          isUploading={isUploadingImages}
-        />
+        <div className="rounded-[24px] border border-gray-200 bg-[#fcfcfc] p-4 md:p-6">
+          <h2 className="mb-6 text-2xl font-bold text-[#0f172a]">
+            Resumen de la Propiedad
+          </h2>
 
-        <VideosSection
-          videos={videos}
-          videoUrl={videoUrl}
-          onVideoUrlChange={setVideoUrl}
-          onAddVideoLink={handleAddVideoLink}
-          onOpenVideoPicker={handleOpenVideoPicker}
-          onRemoveVideo={handleRemoveVideo}
-          error={videoError}
-          isUploading={isUploadingVideos}
-        />
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div className="rounded-[24px] border border-[#ececec] bg-white p-3 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+              <InfoPropiedad data={data} />
+            </div>
 
-        <PublicarSection
-          confirmed={confirmed}
-          onConfirmedChange={setConfirmed}
-          onPublish={handlePublish}
-          publishError={isPublishing ? 'Publicando contenido multimedia...' : publishError}
-          canPublish={hasMultimedia && !isPublishing}
-        />
+            <div className="rounded-[24px] border border-[#ececec] bg-white p-3 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+              <GaleriaResumen multimedia={data.multimedia} />
+            </div>
+          </div>
 
-        <PlanModal
-          open={showPlanModal}
-          onClose={() => setShowPlanModal(false)}
-          onPayNow={() => alert('Aquí luego conectas el flujo de pago')}
-        />
-      </div>
-    </main>
-  )
+          <div className="mt-6 rounded-[24px] border border-[#ececec] bg-white p-3 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+            <ParametrosPersonalizados parametros={parametrosFinales} />
+          </div>
+
+          <div className="mt-8 flex justify-center">
+            <div className="w-full max-w-[560px]">
+              <AceptacionPublicacion
+                aceptado={aceptado}
+                setAceptado={setAceptado}
+              />
+            </div>
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
+            <button
+              onClick={() => window.history.back()}
+              className="rounded-xl border border-gray-400 bg-white px-6 py-4 text-lg font-medium text-gray-700 transition hover:bg-gray-50"
+            >
+              Volver
+            </button>
+
+            <button
+              onClick={abrirModalExito}
+              disabled={!aceptado}
+              className={`rounded-xl px-6 py-4 text-lg font-semibold text-white transition ${
+                aceptado
+                  ? "bg-orange-500 hover:bg-orange-600"
+                  : "cursor-not-allowed bg-orange-300"
+              }`}
+            >
+              Confirmar y Publicar
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {mostrarModalExito && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 px-4">
+          <div className="relative w-full max-w-[700px] rounded-[28px] bg-white px-6 py-10 shadow-2xl md:px-10 md:py-12">
+            <button
+              onClick={cerrarModalExito}
+              className="absolute right-6 top-5 text-[40px] leading-none text-gray-400 transition hover:text-gray-600"
+              aria-label="Cerrar modal"
+            >
+              ×
+            </button>
+
+            <div className="flex flex-col items-center text-center">
+              <div className="mb-7 flex h-[108px] w-[108px] items-center justify-center rounded-full bg-[#f58600] text-[64px] font-bold text-white">
+                ✓
+              </div>
+
+              <h3 className="mb-5 text-3xl font-bold text-[#4a3b39] md:text-[34px]">
+                ¡Inmueble publicado con éxito!
+              </h3>
+
+              <p className="mb-9 text-xl text-gray-500 md:text-[22px]">
+                Tu inmueble se ha publicado correctamente.
+              </p>
+
+              <button
+                onClick={irAlHome}
+                className="min-w-[220px] rounded-2xl bg-[#f58600] px-10 py-4 text-2xl font-semibold text-white transition hover:bg-[#de7800]"
+              >
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
 }

@@ -7,9 +7,6 @@ import GaleriaResumen from "./GaleriaResumen";
 import AceptacionPublicacion from "./AceptacionPublicacion";
 import ParametrosPersonalizados from "./ParametrosPersonalizados";
 
-import PublicarModal from "../publicacion/PublicarModal";
-import { EstadoPublicacion } from "../../types/publicacion";
-
 interface Props {
   publicacionId: number | null;
 }
@@ -96,8 +93,8 @@ function extraerParametro(item: unknown, index: number): ParametroItem | null {
         typeof obj.id === "number"
           ? obj.id
           : typeof obj.id === "string"
-          ? Number(obj.id)
-          : index,
+            ? Number(obj.id)
+            : index,
       nombre: obj.nombre.trim(),
     };
   }
@@ -111,8 +108,8 @@ function extraerParametro(item: unknown, index: number): ParametroItem | null {
         typeof obj.id === "number"
           ? obj.id
           : typeof obj.id === "string"
-          ? Number(obj.id)
-          : index,
+            ? Number(obj.id)
+            : index,
       nombre: obj.nombreParametro.trim(),
     };
   }
@@ -129,8 +126,8 @@ function extraerParametro(item: unknown, index: number): ParametroItem | null {
           typeof parametro.id === "number"
             ? parametro.id
             : typeof parametro.id === "string"
-            ? Number(parametro.id)
-            : index,
+              ? Number(parametro.id)
+              : index,
         nombre: parametro.nombre.trim(),
       };
     }
@@ -151,8 +148,8 @@ function extraerParametro(item: unknown, index: number): ParametroItem | null {
           typeof parametro.id === "number"
             ? parametro.id
             : typeof parametro.id === "string"
-            ? Number(parametro.id)
-            : index,
+              ? Number(parametro.id)
+              : index,
         nombre: parametro.nombre.trim(),
       };
     }
@@ -173,8 +170,8 @@ function extraerParametro(item: unknown, index: number): ParametroItem | null {
           typeof parametro.id === "number"
             ? parametro.id
             : typeof parametro.id === "string"
-            ? Number(parametro.id)
-            : index,
+              ? Number(parametro.id)
+              : index,
         nombre: parametro.nombre.trim(),
       };
     }
@@ -189,8 +186,8 @@ function extraerParametro(item: unknown, index: number): ParametroItem | null {
           typeof etiqueta.id === "number"
             ? etiqueta.id
             : typeof etiqueta.id === "string"
-            ? Number(etiqueta.id)
-            : index,
+              ? Number(etiqueta.id)
+              : index,
         nombre: etiqueta.nombre.trim(),
       };
     }
@@ -410,7 +407,7 @@ export default function ResumenPanel({ publicacionId }: Props) {
 
   const parametrosFinales = useMemo(() => {
     const desdeResumen = Array.isArray(data?.parametrosPersonalizados)
-      ? data!.parametrosPersonalizados.filter(
+      ? data.parametrosPersonalizados.filter(
           (item) =>
             item &&
             typeof item.nombre === "string" &&
@@ -491,7 +488,6 @@ export default function ResumenPanel({ publicacionId }: Props) {
             </div>
           </div>
         </div>
-      </section>
 
         <div className="rounded-[24px] border border-gray-200 bg-[#fcfcfc] p-4 md:p-6">
           <h2 className="mb-6 text-2xl font-bold text-[#0f172a]">
