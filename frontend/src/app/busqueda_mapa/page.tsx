@@ -316,14 +316,17 @@ const toggleCapacidad = () => {
 
   const saveDraftZone = useCallback(async () => {
     if (!isAuthenticated || isSavingNewZone || !isCreatingCustomZone) return
-    if (currentPolygonPoints.length < 3) return
+    
+    // ✅ FIX: Leemos del polígono cerrado en caso de que ya lo haya finalizado
+    const puntosBase = currentPolygonPoints.length >= 3 ? currentPolygonPoints : drawnPolygons[0]
+    if (!puntosBase || puntosBase.length < 3) return
 
     const token = localStorage.getItem('token')
     if (!token) return
 
     setIsSavingNewZone(true)
     try {
-      const ring = [...currentPolygonPoints, currentPolygonPoints[0]].map(([lat, lng]) => [lng, lat])
+      const ring = [...puntosBase, puntosBase[0]].map(([lat, lng]) => [lng, lat])
       const nombreFinal = newZoneName.trim() || 'Nueva zona'
 
       const response = await fetch(`${API_URL}/api/perfil/zonas`, {
@@ -1398,8 +1401,7 @@ const toggleCapacidad = () => {
                         setDrawnPolygons((prev) => [...prev, currentPolygonPoints])
                         setCurrentPolygonPoints([])
                         setDrawingError(false)
-                        setIsDrawingMode(false)
-                        setTimeout(() => setIsDrawingMode(true), 0)
+                        setIsDrawingMode(false) // ✅ FIX: Detenemos el lápiz
                       }
                     }}
                     className="bg-[#ea580c] text-white px-4 py-2 rounded-lg shadow-md border border-orange-600 hover:bg-[#c2410c] transition-all text-sm font-semibold"
@@ -1432,13 +1434,22 @@ const toggleCapacidad = () => {
 
           {/* CAMBIO: Se removió isCreatingCustomZone para que aparezca siempre que haya un polígono cerrado */}
           {drawnPolygons.length > 0 && !editingZoneId && (
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000]">
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[1000] flex flex-row gap-3 pointer-events-auto">
               <button
                 onClick={resetDrawing}
-                className="bg-[#ea580c] text-white px-6 py-2.5 rounded-full shadow-[0_4px_14px_rgba(234,88,12,0.4)] hover:bg-[#c2410c] active:scale-95 transition-transform text-sm font-bold tracking-wide pointer-events-auto"
+                className="bg-white text-stone-700 px-6 py-2.5 rounded-full shadow-lg border border-stone-200 hover:bg-stone-50 active:scale-95 transition-all text-sm font-bold tracking-wide"
               >
-                Borrar Dibujo
+                Borrar dibujo
               </button>
+              {/* ✅ AÑADIDO: Botón para reactivar el lápiz conscientemente */}
+              {!isDrawingMode && (
+                <button
+                  onClick={() => setIsDrawingMode(true)}
+                  className="bg-[#ea580c] text-white px-6 py-2.5 rounded-full shadow-[0_4px_14px_rgba(234,88,12,0.4)] hover:bg-[#c2410c] active:scale-95 transition-all text-sm font-bold tracking-wide"
+                >
+                  Añadir dibujo
+                </button>
+              )}
             </div>
           )}
           {/* --- FIN BOTONES FLOTANTES HU8 --- */}
@@ -1480,8 +1491,7 @@ const toggleCapacidad = () => {
                   setDrawnPolygons((prev) => [...prev, currentPolygonPoints])
                   setCurrentPolygonPoints([])
                   setDrawingError(false)
-                  setIsDrawingMode(false)
-                  setTimeout(() => setIsDrawingMode(true), 0)
+                  setIsDrawingMode(false) // ✅ FIX: Detenemos el lápiz
                 }
               }}
             />
@@ -1498,7 +1508,7 @@ const toggleCapacidad = () => {
           onEditingZoneNameChange={setEditingZoneName}
           onConfirmEditZone={saveEditedZone}
           onCancelEditZone={cancelEditZone}
-          isDraftZoneVisible={isAuthenticated && isCreatingCustomZone && currentPolygonPoints.length >= 3}
+          isDraftZoneVisible={isAuthenticated && isCreatingCustomZone && (currentPolygonPoints.length >= 3 || drawnPolygons.length > 0)}
           draftZoneName={newZoneName}
           isSavingDraftZone={isSavingNewZone}
           onDraftZoneNameChange={setNewZoneName}
