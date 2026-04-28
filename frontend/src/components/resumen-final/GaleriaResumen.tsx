@@ -1,5 +1,19 @@
 import type { ResumenFinalData } from "./ResumenPanel";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "";
 
+function resolverUrlMultimedia(url: string) {
+  if (!url) return "";
+
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+
+  if (url.startsWith("/uploads")) {
+    return `${API_BASE_URL}${url}`;
+  }
+
+  return url;
+}
 interface Props {
   multimedia: ResumenFinalData["multimedia"];
 }
@@ -25,7 +39,7 @@ export default function GaleriaResumen({ multimedia }: Props) {
                 className="relative h-32 overflow-hidden rounded-2xl md:h-36"
               >
                 <img
-                  src={imagen.url}
+                  src={resolverUrlMultimedia(imagen.url)}
                   alt={`Foto ${index + 1}`}
                   className="h-full w-full object-cover"
                 />
