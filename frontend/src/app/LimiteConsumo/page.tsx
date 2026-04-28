@@ -185,7 +185,7 @@ export default function ConsumoPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-28 mb-10">
         <div className="bg-white p-10 rounded-3xl shadow-sm border-b-4 border-emerald-500 flex items-center justify-center gap-6 transition-transform hover:scale-105">
           
-          {/* ICONO (A la izquierda) */}
+          {/* Icono libro verde */}
           <div className="bg-emerald-50 p-4 rounded-2xl text-4xl">📗</div>
           
           {/* CONTENEDOR DE TEXTO (Agrupa número y etiqueta para que se apilen) */}
