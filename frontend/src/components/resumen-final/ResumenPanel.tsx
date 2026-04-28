@@ -67,6 +67,17 @@ interface ResumenFinalApiResponse {
   message?: string;
 }
 
+interface ConfirmarPublicacionApiResponse {
+  ok: boolean;
+  message?: string;
+  data?: {
+    id: number;
+    estado: string | null;
+    fechaPublicacion: string | null;
+    multimediaTotal: number;
+  };
+}
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
 
 function getAuthToken(): string | null {
@@ -125,13 +136,54 @@ async function obtenerResumenFinal(
   return payload.data;
 }
 
+async function confirmarPublicacion(
+  publicacionId: number
+): Promise<ConfirmarPublicacionApiResponse> {
+  const token = getAuthToken();
+
+  if (!publicacionId || Number.isNaN(publicacionId)) {
+    throw new Error("No se recibió un id válido de publicación");
+  }
+
+  if (!token) {
+    throw new Error("No se encontró el token de autenticación");
+  }
+
+  if (!API_BASE_URL) {
+    throw new Error(
+      "La variable NEXT_PUBLIC_API_URL no está configurada en el frontend"
+    );
+  }
+
+  const response = await fetch(
+    `${API_BASE_URL}/api/publicaciones/${publicacionId}/confirmar`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const payload: ConfirmarPublicacionApiResponse = await response.json();
+
+  if (!response.ok || !payload.ok) {
+    throw new Error(payload.message ?? "No se pudo confirmar la publicación");
+  }
+
+  return payload;
+}
+
 export default function ResumenPanel({ publicacionId }: Props) {
   const router = useRouter();
+
   const [aceptado, setAceptado] = useState(false);
   const [data, setData] = useState<ResumenFinalData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [mostrarModalExito, setMostrarModalExito] = useState(false);
+  const [confirmando, setConfirmando] = useState(false);
 
   useEffect(() => {
     if (!publicacionId) {
@@ -147,7 +199,9 @@ export default function ResumenPanel({ publicacionId }: Props) {
         const resumen = await obtenerResumenFinal(publicacionId);
         setData(resumen);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Error al cargar resumen");
+        setError(
+          err instanceof Error ? err.message : "Error al cargar resumen"
+        );
       } finally {
         setLoading(false);
       }
@@ -156,9 +210,21 @@ export default function ResumenPanel({ publicacionId }: Props) {
     cargarResumen();
   }, [publicacionId]);
 
-  const abrirModalExito = () => {
-    if (!aceptado) return;
-    setMostrarModalExito(true);
+  const abrirModalExito = async () => {
+    if (!aceptado || !publicacionId || confirmando) return;
+
+    try {
+      setConfirmando(true);
+      setError("");
+      await confirmarPublicacion(publicacionId);
+      setMostrarModalExito(true);
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Error al confirmar publicación"
+      );
+    } finally {
+      setConfirmando(false);
+    }
   };
 
   const cerrarModalExito = () => {
@@ -237,22 +303,25 @@ export default function ResumenPanel({ publicacionId }: Props) {
 
           <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
             <button
+              type="button"
               onClick={() => window.history.back()}
-              className="rounded-xl border border-gray-400 bg-white px-6 py-4 text-lg font-medium text-gray-700 transition hover:bg-gray-50"
+              disabled={confirmando}
+              className="rounded-xl border border-gray-400 bg-white px-6 py-4 text-lg font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
             >
               Volver
             </button>
 
             <button
+              type="button"
               onClick={abrirModalExito}
-              disabled={!aceptado}
+              disabled={!aceptado || confirmando}
               className={`rounded-xl px-6 py-4 text-lg font-semibold text-white transition ${
-                aceptado
+                aceptado && !confirmando
                   ? "bg-orange-500 hover:bg-orange-600"
                   : "cursor-not-allowed bg-orange-300"
               }`}
             >
-              Confirmar y Publicar
+              {confirmando ? "Publicando..." : "Confirmar y Publicar"}
             </button>
           </div>
         </div>
@@ -262,6 +331,7 @@ export default function ResumenPanel({ publicacionId }: Props) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 px-4">
           <div className="relative w-full max-w-[700px] rounded-[28px] bg-white px-6 py-10 shadow-2xl md:px-10 md:py-12">
             <button
+              type="button"
               onClick={cerrarModalExito}
               className="absolute right-6 top-5 text-[40px] leading-none text-gray-400 transition hover:text-gray-600"
               aria-label="Cerrar modal"
@@ -283,6 +353,7 @@ export default function ResumenPanel({ publicacionId }: Props) {
               </p>
 
               <button
+                type="button"
                 onClick={irAlHome}
                 className="min-w-[220px] rounded-2xl bg-[#f58600] px-10 py-4 text-2xl font-semibold text-white transition hover:bg-[#de7800]"
               >
@@ -295,4 +366,3 @@ export default function ResumenPanel({ publicacionId }: Props) {
     </>
   );
 }
-
