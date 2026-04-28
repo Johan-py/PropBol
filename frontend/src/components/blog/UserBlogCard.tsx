@@ -20,6 +20,7 @@ const UserBlogCard: React.FC<UserBlogCardProps> = ({ blog }) => {
           alt={blog.titulo}
           fill
           className="object-cover"
+          unoptimized
         />
       </div>
 
