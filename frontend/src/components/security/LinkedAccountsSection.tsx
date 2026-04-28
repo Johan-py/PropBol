@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 
-type ProviderId = "facebook" | "discord";
+type ProviderId = "facebook" | "discord" | "google";
 type AccountStatus = "vinculado" | "no-vinculado";
 
 type LinkedAccount = {
@@ -27,6 +27,10 @@ type SocialLinksResponse = {
     linked: boolean;
     linkedEmail: string | null;
   };
+  google: {
+    linked: boolean;
+    linkedEmail: string | null;
+  };
 };
 
 type SocialLinkPopupSuccess = {
@@ -46,6 +50,16 @@ type SocialLinkPopupError = {
 type SocialLinkPopupMessage = SocialLinkPopupSuccess | SocialLinkPopupError;
 
 const initialAccounts: LinkedAccount[] = [
+  {
+    id: "google",
+    platform: "Google",
+    description:
+      "Vincula tu cuenta de Google para iniciar sesión con un solo clic.",
+    status: "no-vinculado",
+    linkedEmail: "",
+    color: "bg-red-500",
+    letter: "G",
+  },
   {
     id: "facebook",
     platform: "Facebook",
@@ -142,7 +156,9 @@ function SocialCard({
               ? "bg-red-500 hover:bg-red-600"
               : account.id === "facebook"
                 ? "bg-[#1877F2] hover:brightness-95"
-                : "bg-[#5865F2] hover:brightness-95"
+                : account.id === "discord" || account.id === "google"
+                  ? "bg-[#5865F2] hover:brightness-95"
+                  : "bg-[#5865F2] hover:brightness-95"
           }`}
         >
           {isProcessing
@@ -168,7 +184,16 @@ const isSocialLinkPopupMessage = (
   value: unknown,
 ): value is SocialLinkPopupMessage => {
   if (!value || typeof value !== "object") return false;
-  return "type" in value;
+
+  const message = value as { type?: unknown; provider?: unknown };
+
+  return (
+    (message.type === "propbol:social-link-success" ||
+      message.type === "propbol:social-link-error") &&
+    (message.provider === "facebook" ||
+      message.provider === "discord" ||
+      message.provider === "google")
+  );
 };
 
 export default function LinkedAccountsSection() {
@@ -188,10 +213,7 @@ export default function LinkedAccountsSection() {
   const isLastLinkedAccount = (id: ProviderId) => {
     const account = accounts.find((item) => item.id === id);
 
-    return (
-      account?.status === "vinculado" &&
-      linkedAccountsCount <= 1
-    );
+    return account?.status === "vinculado" && linkedAccountsCount <= 1;
   };
 
   const fetchLinks = async () => {
@@ -501,7 +523,7 @@ export default function LinkedAccountsSection() {
         <div className="space-y-4">
           <p className="text-sm text-neutral-500">Cargando redes...</p>
 
-          {[1, 2].map((item) => (
+          {[1, 2, 3].map((item) => (
             <div
               key={item}
               className="flex items-center justify-between rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm"
