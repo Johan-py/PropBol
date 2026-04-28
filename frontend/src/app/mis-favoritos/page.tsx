@@ -15,6 +15,7 @@ type Inmueble = {
     direccion?: string;
     zona?: string;
   };
+  imagen_principal?: string;
   publicaciones?: Array<{
     multimedia?: Array<{
       url: string;
@@ -116,16 +117,14 @@ export default function MisFavoritos() {
   };
 
   const getImagenUrl = (inmueble: Inmueble): string => {
-    const publicacionActiva = inmueble.publicaciones?.find(p => p.multimedia?.length);
-    const primeraImagen = publicacionActiva?.multimedia?.find(m => m.tipo === "IMAGEN");
-
-    if (primeraImagen?.url) {
-      if (primeraImagen.url.startsWith("/uploads")) {
-        return `${process.env.NEXT_PUBLIC_API_URL}${primeraImagen.url}`;
+    // Usar el nuevo campo imagen_principal
+    if (inmueble.imagen_principal) {
+      const url = inmueble.imagen_principal;
+      if (url.startsWith("/uploads") || url.startsWith("/images")) {
+        return `${process.env.NEXT_PUBLIC_API_URL}${url}`;
       }
-      return primeraImagen.url;
+      return url;
     }
-
     return "https://via.placeholder.com/400x300?text=Sin+imagen";
   };
 
@@ -304,8 +303,8 @@ export default function MisFavoritos() {
                       key={pageNum}
                       onClick={() => setPage(pageNum)}
                       className={`w-9 h-9 flex items-center justify-center rounded-md text-sm font-bold transition-colors ${page === pageNum
-                          ? "bg-[#E87B00] text-white"
-                          : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                        ? "bg-[#E87B00] text-white"
+                        : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
                         }`}
                     >
                       {pageNum}
