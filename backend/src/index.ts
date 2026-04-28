@@ -42,7 +42,8 @@ import {
   deactivate2FAController,
   get2FAStatusController,
   forgotPasswordController,
-  resetPasswordController
+  resetPasswordController,
+  resend2FAController,
 } from './modules/auth/auth.controller.js'
 import { requireAuth } from './middleware/auth.middleware.js'
 
@@ -154,6 +155,7 @@ app.use('/uploads', express.static(path.resolve('uploads')))
 // RUTAS LEGACY
 // --------------------
 app.post('/api/auth/forgot-password', forgotPasswordController)
+app.post('/api/auth/resend-2fa', resend2FAController)
 app.post('/api/auth/reset-password', resetPasswordController)
 app.use('/api/auth-legacy', authRoutes)
 app.get('/api/users/:id/publicaciones/free', authMiddleware, (_req, res) => {

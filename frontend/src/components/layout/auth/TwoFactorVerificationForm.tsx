@@ -7,6 +7,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 const PENDING_2FA_KEY = 'pending2FA'
 const REDIRECT_AFTER_LOGIN_KEY = 'redirectAfterLogin'
 const DEFAULT_POST_LOGIN_REDIRECT = '/'
+const RESEND_COOLDOWN_SECONDS = 60
 
 type Verify2FAResponse = {
   message?: string
@@ -102,6 +103,9 @@ export default function TwoFactorVerificationForm() {
   const [error, setError] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isResending, setIsResending] = useState(false)
+  const [resendCooldown, setResendCooldown] = useState(0)
+
 
   const pending2FA = typeof window !== 'undefined' ? getPending2FA() : null
 
@@ -180,6 +184,48 @@ export default function TwoFactorVerificationForm() {
     router.push('/sign-in')
   }
 
+  const handleResendCode = async () => {
+  if (!pending2FA?.userId || resendCooldown > 0 || isResending) return
+
+  setIsResending(true)
+  setError('')
+  setSuccessMessage('')
+
+  try {
+    const response = await fetch(`${API_URL}/api/auth/resend-2fa`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: pending2FA.userId }),
+    })
+
+    const data = await response.json() as { message?: string }
+
+    if (!response.ok) {
+      setError(data.message || 'No se pudo reenviar el código')
+      return
+    }
+
+    setSuccessMessage('Código reenviado. Revisa tu correo.')
+    setCode('')
+
+    
+    setResendCooldown(RESEND_COOLDOWN_SECONDS)
+    const interval = window.setInterval(() => {
+      setResendCooldown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+  } catch {
+    setError('No se pudo conectar con el servidor. Intenta nuevamente.')
+  } finally {
+    setIsResending(false)
+  }
+}
+
   return (
     <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-md">
       <h1 className="text-2xl font-bold text-gray-900">
@@ -214,11 +260,30 @@ export default function TwoFactorVerificationForm() {
               : 'border-gray-300 focus:border-orange-500'
           }`}
         />
+        {error && (
+  <div className="mt-1">
+    <p className="text-xs text-red-500">{error}</p>
+  </div>
+)}
+{successMessage && (
+  <p className="mt-1 text-xs text-green-600">{successMessage}</p>
+)}
 
-        {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
-        {successMessage && (
-          <p className="mt-1 text-xs text-green-600">{successMessage}</p>
-        )}
+{/* NUEVO: botón reenviar, siempre visible debajo */}
+<div className="mt-3 text-center">
+  <button
+    type="button"
+    onClick={handleResendCode}
+    disabled={resendCooldown > 0 || isResending || !pending2FA?.userId}
+    className="text-sm text-orange-500 hover:text-orange-600 disabled:text-gray-400 disabled:cursor-not-allowed underline-offset-2 hover:underline disabled:no-underline transition-colors"
+  >
+    {isResending
+      ? 'Reenviando...'
+      : resendCooldown > 0
+        ? `Reenviar código (${resendCooldown}s)`
+        : 'Reenviar código'}
+  </button>
+</div>
       </div>
 
       <div className="mt-6 flex gap-3">
