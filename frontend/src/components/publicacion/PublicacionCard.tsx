@@ -96,10 +96,6 @@ export default function PublicacionCard({
     router.push(`/mis-publicaciones/${publicacion.id}/editar`)
   }
 
-  const irAParametros = () => {
-  router.push(`/propiedades/parametros?publicacionId=${publicacion.id}&origen=mis-publicaciones`)
-  }
-
   return (
     <>
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md">
@@ -198,14 +194,6 @@ export default function PublicacionCard({
                 Eliminar
               </button>
             </div>
-
-            <button
-              type="button"
-              onClick={irAParametros}
-              className="w-full rounded-lg bg-[#F3EBDD] px-4 py-2 text-left text-[14px] font-semibold text-[#D97706] transition hover:bg-[#eee2cf]"
-            >
-              + Añadir otros parámetros
-            </button>
           </div>
         </div>
       </div>
