@@ -186,7 +186,7 @@ export default function CobrosSuscripciones() {
           </div>
           <button 
             onClick={() => router.push('/LimiteConsumo')}
-            className="w-full sm:w-auto text-center px-6 py-3 bg-white border-2 border-amber-600/20 text-amber-700 rounded-2xl hover:bg-amber-100 hover:border-amber-600/40 transition-all font-bold flex items-center gap-2 shadow-sm active:scale-95"
+            className="whitespace-nowrap px-8 py-3 bg-white border-2 border-amber-600/20 text-amber-700 rounded-2xl hover:bg-amber-100 hover:border-amber-600/40 transition-all font-bold flex items-center gap-2 shadow-sm active:scale-95"
           >
             Ver suscripciones anuales
             <ArrowRight className="w-4 h-4" />
