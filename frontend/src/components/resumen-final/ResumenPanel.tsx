@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import InfoPropiedad from "./InfoPropiedad";
 import GaleriaResumen from "./GaleriaResumen";
@@ -10,6 +10,11 @@ import ParametrosPersonalizados from "./ParametrosPersonalizados";
 interface Props {
   publicacionId: number | null;
 }
+
+type ParametroItem = {
+  id: number;
+  nombre: string;
+};
 
 export interface ResumenFinalData {
   id: number;
@@ -39,10 +44,7 @@ export interface ResumenFinalData {
     banos: number | null;
     estacionamiento: number | null;
   };
-  parametrosPersonalizados: Array<{
-    id: number;
-    nombre: string;
-  }>;
+  parametrosPersonalizados?: ParametroItem[];
   multimedia: {
     total: number;
     imagenes: Array<{
@@ -78,6 +80,183 @@ function getAuthToken(): string | null {
     localStorage.getItem("access_token") ||
     null
   );
+}
+
+function extraerParametro(item: unknown, index: number): ParametroItem | null {
+  if (!item || typeof item !== "object") return null;
+
+  const obj = item as Record<string, unknown>;
+
+  if (typeof obj.nombre === "string" && obj.nombre.trim() !== "") {
+    return {
+      id:
+        typeof obj.id === "number"
+          ? obj.id
+          : typeof obj.id === "string"
+            ? Number(obj.id)
+            : index,
+      nombre: obj.nombre.trim(),
+    };
+  }
+
+  if (
+    typeof obj.nombreParametro === "string" &&
+    obj.nombreParametro.trim() !== ""
+  ) {
+    return {
+      id:
+        typeof obj.id === "number"
+          ? obj.id
+          : typeof obj.id === "string"
+            ? Number(obj.id)
+            : index,
+      nombre: obj.nombreParametro.trim(),
+    };
+  }
+
+  if (obj.parametro && typeof obj.parametro === "object") {
+    const parametro = obj.parametro as Record<string, unknown>;
+
+    if (
+      typeof parametro.nombre === "string" &&
+      parametro.nombre.trim() !== ""
+    ) {
+      return {
+        id:
+          typeof parametro.id === "number"
+            ? parametro.id
+            : typeof parametro.id === "string"
+              ? Number(parametro.id)
+              : index,
+        nombre: parametro.nombre.trim(),
+      };
+    }
+  }
+
+  if (
+    obj.parametroPersonalizado &&
+    typeof obj.parametroPersonalizado === "object"
+  ) {
+    const parametro = obj.parametroPersonalizado as Record<string, unknown>;
+
+    if (
+      typeof parametro.nombre === "string" &&
+      parametro.nombre.trim() !== ""
+    ) {
+      return {
+        id:
+          typeof parametro.id === "number"
+            ? parametro.id
+            : typeof parametro.id === "string"
+              ? Number(parametro.id)
+              : index,
+        nombre: parametro.nombre.trim(),
+      };
+    }
+  }
+
+  if (
+    obj.parametros_personalizados &&
+    typeof obj.parametros_personalizados === "object"
+  ) {
+    const parametro = obj.parametros_personalizados as Record<string, unknown>;
+
+    if (
+      typeof parametro.nombre === "string" &&
+      parametro.nombre.trim() !== ""
+    ) {
+      return {
+        id:
+          typeof parametro.id === "number"
+            ? parametro.id
+            : typeof parametro.id === "string"
+              ? Number(parametro.id)
+              : index,
+        nombre: parametro.nombre.trim(),
+      };
+    }
+  }
+
+  if (obj.etiqueta && typeof obj.etiqueta === "object") {
+    const etiqueta = obj.etiqueta as Record<string, unknown>;
+
+    if (typeof etiqueta.nombre === "string" && etiqueta.nombre.trim() !== "") {
+      return {
+        id:
+          typeof etiqueta.id === "number"
+            ? etiqueta.id
+            : typeof etiqueta.id === "string"
+              ? Number(etiqueta.id)
+              : index,
+        nombre: etiqueta.nombre.trim(),
+      };
+    }
+  }
+
+  return null;
+}
+
+function normalizarParametros(payload: unknown): ParametroItem[] {
+  const colecciones: unknown[] = [];
+
+  if (Array.isArray(payload)) {
+    colecciones.push(payload);
+  }
+
+  if (payload && typeof payload === "object") {
+    const obj = payload as Record<string, unknown>;
+
+    if (Array.isArray(obj.data)) {
+      colecciones.push(obj.data);
+    }
+
+    if (obj.data && typeof obj.data === "object") {
+      const dataObj = obj.data as Record<string, unknown>;
+
+      if (Array.isArray(dataObj.items)) {
+        colecciones.push(dataObj.items);
+      }
+
+      if (Array.isArray(dataObj.parametros)) {
+        colecciones.push(dataObj.parametros);
+      }
+
+      if (Array.isArray(dataObj.parametrosPersonalizados)) {
+        colecciones.push(dataObj.parametrosPersonalizados);
+      }
+
+      if (Array.isArray(dataObj.data)) {
+        colecciones.push(dataObj.data);
+      }
+    }
+
+    if (Array.isArray(obj.items)) {
+      colecciones.push(obj.items);
+    }
+
+    if (Array.isArray(obj.parametros)) {
+      colecciones.push(obj.parametros);
+    }
+
+    if (Array.isArray(obj.parametrosPersonalizados)) {
+      colecciones.push(obj.parametrosPersonalizados);
+    }
+  }
+
+  for (const col of colecciones) {
+    const normalizados = (col as unknown[])
+      .map((item, index) => extraerParametro(item, index))
+      .filter((item): item is ParametroItem => item !== null);
+
+    if (normalizados.length > 0) {
+      return normalizados.filter(
+        (parametro, index, array) =>
+          array.findIndex((x) => x.nombre === parametro.nombre) === index
+      );
+    }
+  }
+
+  return [];
 }
 
 async function obtenerResumenFinal(
@@ -125,10 +304,64 @@ async function obtenerResumenFinal(
   return payload.data;
 }
 
+async function obtenerParametrosPublicacion(
+  publicacionId: number
+): Promise<ParametroItem[]> {
+  const token = getAuthToken();
+
+  if (!publicacionId || Number.isNaN(publicacionId)) {
+    return [];
+  }
+
+  if (!API_BASE_URL) {
+    return [];
+  }
+
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(
+    `${API_BASE_URL}/api/publicaciones/${publicacionId}/parametros`,
+    {
+      method: "GET",
+      headers,
+      cache: "no-store",
+    }
+  );
+
+  const rawText = await response.text();
+  let payload: unknown = null;
+
+  try {
+    payload = rawText ? JSON.parse(rawText) : null;
+  } catch {
+    console.error("La respuesta de /parametros no es JSON válido:", rawText);
+    return [];
+  }
+
+  console.log("Respuesta RAW /parametros:", payload);
+
+  if (!response.ok) {
+    console.error("Error en /parametros:", response.status, payload);
+    return [];
+  }
+
+  const normalizados = normalizarParametros(payload);
+  console.log("Parámetros normalizados:", normalizados);
+
+  return normalizados;
+}
+
 export default function ResumenPanel({ publicacionId }: Props) {
   const router = useRouter();
   const [aceptado, setAceptado] = useState(false);
   const [data, setData] = useState<ResumenFinalData | null>(null);
+  const [parametrosExtra, setParametrosExtra] = useState<ParametroItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [mostrarModalExito, setMostrarModalExito] = useState(false);
@@ -144,8 +377,24 @@ export default function ResumenPanel({ publicacionId }: Props) {
       try {
         setLoading(true);
         setError("");
-        const resumen = await obtenerResumenFinal(publicacionId);
+
+        const [resumen, parametrosRutaNueva] = await Promise.all([
+          obtenerResumenFinal(publicacionId),
+          obtenerParametrosPublicacion(publicacionId),
+        ]);
+
+        console.log("Resumen final recibido:", resumen);
+        console.log(
+          "Parámetros desde resumen-final:",
+          resumen.parametrosPersonalizados
+        );
+        console.log(
+          "Parámetros desde /publicaciones/:id/parametros:",
+          parametrosRutaNueva
+        );
+
         setData(resumen);
+        setParametrosExtra(parametrosRutaNueva);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error al cargar resumen");
       } finally {
@@ -155,6 +404,23 @@ export default function ResumenPanel({ publicacionId }: Props) {
 
     cargarResumen();
   }, [publicacionId]);
+
+  const parametrosFinales = useMemo(() => {
+    const desdeResumen = Array.isArray(data?.parametrosPersonalizados)
+      ? data.parametrosPersonalizados.filter(
+          (item) =>
+            item &&
+            typeof item.nombre === "string" &&
+            item.nombre.trim() !== ""
+        )
+      : [];
+
+    if (desdeResumen.length > 0) {
+      return desdeResumen;
+    }
+
+    return parametrosExtra;
+  }, [data, parametrosExtra]);
 
   const abrirModalExito = () => {
     if (!aceptado) return;
@@ -196,7 +462,7 @@ export default function ResumenPanel({ publicacionId }: Props) {
   return (
     <>
       <section className="mx-auto max-w-7xl rounded-[28px] bg-white p-5 shadow-sm md:p-8">
-        <div className="mb-4 text-sm text-gray-500">
+        <div className="mb-3 text-sm text-gray-500">
           Home <span className="mx-2">{">"}</span> Publicar propiedades{" "}
           <span className="mx-2">{">"}</span>
           <span className="font-medium text-gray-700">
@@ -204,29 +470,45 @@ export default function ResumenPanel({ publicacionId }: Props) {
           </span>
         </div>
 
-        <h1 className="mb-5 text-2xl font-bold text-[#0f172a] md:text-5xl">
+        <h1 className="mb-6 text-2xl font-bold leading-tight text-[#0f172a] md:text-5xl">
           Ver resumen final de la propiedad antes de confirmar
         </h1>
 
-        <div className="mb-8 h-1 w-full rounded-full bg-orange-500" />
+        <div className="mb-8 overflow-hidden rounded-2xl border border-[#f1dfd0]">
+          <div className="h-[3px] w-full bg-[#f28c28]" />
+          <div className="grid grid-cols-1 md:grid-cols-3">
+            <div className="bg-white px-6 py-3 text-center text-sm font-medium text-[#2f241f] md:text-base">
+              Paso 1: Datos Generales
+            </div>
+            <div className="bg-white px-6 py-3 text-center text-sm font-medium text-[#2f241f] md:text-base">
+              Paso 2: Multimedia
+            </div>
+            <div className="bg-white px-6 py-3 text-center text-sm font-semibold text-[#2f241f] md:text-base">
+              Paso 3: Parámetros Personalizados
+            </div>
+          </div>
+        </div>
 
-        <div className="rounded-[24px] border border-gray-200 bg-white p-4 md:p-6">
+        <div className="rounded-[24px] border border-gray-200 bg-[#fcfcfc] p-4 md:p-6">
           <h2 className="mb-6 text-2xl font-bold text-[#0f172a]">
             Resumen de la Propiedad
           </h2>
 
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-stretch">
-            <div className="flex flex-col gap-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div className="rounded-[24px] border border-[#ececec] bg-white p-3 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
               <InfoPropiedad data={data} />
-              <ParametrosPersonalizados
-                parametros={data.parametrosPersonalizados}
-              />
             </div>
 
-            <GaleriaResumen multimedia={data.multimedia} />
+            <div className="rounded-[24px] border border-[#ececec] bg-white p-3 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+              <GaleriaResumen multimedia={data.multimedia} />
+            </div>
           </div>
 
-          <div className="mt-6 flex justify-center">
+          <div className="mt-6 rounded-[24px] border border-[#ececec] bg-white p-3 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+            <ParametrosPersonalizados parametros={parametrosFinales} />
+          </div>
+
+          <div className="mt-8 flex justify-center">
             <div className="w-full max-w-[560px]">
               <AceptacionPublicacion
                 aceptado={aceptado}
@@ -295,4 +577,3 @@ export default function ResumenPanel({ publicacionId }: Props) {
     </>
   );
 }
-

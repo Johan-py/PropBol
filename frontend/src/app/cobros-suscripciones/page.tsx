@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Calendar, ArrowRight } from 'lucide-react'
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
 type Plan = {
   id: number
@@ -48,6 +51,7 @@ const plansData: Plan[] = [
 export default function CobrosSuscripciones() {
   const [plans] = useState(plansData)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [currentPlanId, setCurrentPlanId] = useState<number>(1)
   const router = useRouter()
 
   useEffect(() => {
@@ -55,13 +59,22 @@ export default function CobrosSuscripciones() {
 
     if (token && token !== 'undefined' && token !== 'null') {
       setIsLoggedIn(true)
+
+      fetch(`${API_URL}/api/suscripciones/mi-suscripcion`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data?.activa && typeof data.idSuscripcion === 'number') {
+            setCurrentPlanId(data.idSuscripcion)
+          }
+        })
+        .catch(() => {})
     }
   }, [])
 
   const maxSubscribers = Math.max(...plans.map((p) => p.subscribers))
   const mostPopularId = plans.find((p) => p.subscribers === maxSubscribers)?.id
-
-  const currentPlanId = 1
 
   const handleSubscription = (plan: Plan) => {
     const token = localStorage.getItem('token')
@@ -156,6 +169,28 @@ export default function CobrosSuscripciones() {
               </button>
             </div>
           ))}
+        </div>
+
+        {/* Banner de Suscripciones Anuales */}
+        <div className="mt-12 p-6 rounded-3xl bg-amber-50/50 border border-amber-100 flex items-center justify-between gap-6 shadow-sm">
+          <div className="flex items-center gap-5">
+            <div className="p-4 bg-white rounded-2xl shadow-sm border border-amber-100">
+              <Calendar className="w-8 h-8 text-amber-600" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-stone-900">¿Prefieres pagar menos?</h3>
+              <p className="text-stone-600 text-sm max-w-md">
+                Ahorra hasta un 15% con nuestras suscripciones anuales. Mismos beneficios, mejor precio.
+              </p>
+            </div>
+          </div>
+          <button 
+            onClick={() => router.push('/LimiteConsumo')}
+            className="whitespace-nowrap px-8 py-3 bg-white border-2 border-amber-600/20 text-amber-700 rounded-2xl hover:bg-amber-100 hover:border-amber-600/40 transition-all font-bold flex items-center gap-2 shadow-sm active:scale-95"
+          >
+            Ver suscripciones anuales
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </div>

@@ -93,6 +93,8 @@ export default function AdminPagosValidacion() {
 
   useEffect(() => {
     cargarTransacciones()
+    const interval = setInterval(cargarTransacciones, 20000)
+    return () => clearInterval(interval)
   }, [])
 
   const accionarPago = async (id: number, accion: 'confirmar' | 'rechazar') => {

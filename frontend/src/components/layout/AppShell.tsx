@@ -56,6 +56,7 @@ const clearSession = () => {
   localStorage.removeItem(USER_STORAGE_KEY);
   localStorage.removeItem(SESSION_EXPIRES_KEY);
   localStorage.removeItem(TOKEN_STORAGE_KEY);
+  localStorage.removeItem("searchHistory");
 };
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
