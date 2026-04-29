@@ -102,6 +102,7 @@ export function useNotifications() {
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isOnline, setIsOnline] = useState(true)
+  const [hasRealtimeUpdate, setHasRealtimeUpdate] = useState(false)
 
   const notificationRef = useRef<HTMLDivElement>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
@@ -456,8 +457,16 @@ export function useNotifications() {
     eventSourceRef.current = eventSource
 
     eventSource.addEventListener('connected', () => {})
+    eventSource.addEventListener('created', () => {
+    setHasRealtimeUpdate(true)
+    void refreshNotifications(filter, { silent: true })
 
-    const realtimeEvents = ['created', 'read', 'read-all', 'deleted', 'archived']
+    window.setTimeout(() => {
+     setHasRealtimeUpdate(false)
+    }, 3000)
+  })
+
+    const realtimeEvents = ['read', 'read-all', 'deleted', 'archived']
 
       realtimeEvents.forEach((eventName) => {
       eventSource.addEventListener(eventName, () => {
@@ -504,6 +513,7 @@ eventSource.addEventListener('ping', () => {})
     isLoadingMore,
     error,
     isOnline,
+    hasRealtimeUpdate,
     notificationRef,
     scrollContainerRef,
     saveScrollPosition,
