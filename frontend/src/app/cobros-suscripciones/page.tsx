@@ -107,7 +107,7 @@ export default function CobrosSuscripciones() {
             <div
               key={plan.id}
               className={`
-                relative p-6 w-80 flex flex-col justify-between
+                relative p-4 sm:p-6 w-full flex flex-col justify-between
                 rounded-3xl border transition-all duration-300
                 bg-white border-stone-200
                 hover:bg-amber-50
