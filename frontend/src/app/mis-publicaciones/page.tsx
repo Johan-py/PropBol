@@ -174,9 +174,6 @@ export default function MisPublicacionesList() {
             {filtro === 'activas' && 'No tienes publicaciones activas.'}
             {filtro === 'pausadas' && 'No tienes publicaciones pausadas.'}
           </p>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
-            Crear Nueva Publicación
-          </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
