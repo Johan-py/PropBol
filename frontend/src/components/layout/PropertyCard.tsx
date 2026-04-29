@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import { BedDouble, Bath, Square, ImageOff, MapPin } from 'lucide-react' // Quité MessageSquareText porque ya viene en tu botón
 import ContactButton from '../galeria/ContactButton' // <-- Tu botón modular importado
+import ActionButton from '../galeria/ActionButton' // <-- Botón de ver detalles (opcional, lo puedes usar o no dependiendo de tu diseño)
 import { useState } from 'react'
 
 type PropsTarjeta = {
@@ -13,6 +14,7 @@ type PropsTarjeta = {
   camas: number
   banos: number
   metros: number
+  onViewDetails?: () => void
 }
 
 // 1. Definimos una constante para el color gris de fondo cuando no hay imagen
@@ -25,7 +27,8 @@ export default function PropertyCard({
   descripcion,
   camas,
   banos,
-  metros
+  metros,
+  onViewDetails
 }: PropsTarjeta) {
   const [isHovered, setIsHovered] = useState(false)
   return (
@@ -91,6 +94,20 @@ export default function PropertyCard({
         <div className="mt-1 w-full">
           <ContactButton type="whatsapp" variant="grid" />
         </div>
+
+        {/* 4. Botón de ver detalles (HU4 - Nuevo botón para abrir el detalle en una nueva pestaña) */}
+        <div className="mt-2 w-full">
+          <ActionButton
+            variant="grid"
+            label="Ver detalles"
+            onClick={(event) => {
+              // HU4 - Evita disparar el click general del card
+              event.stopPropagation()
+              onViewDetails?.()
+            }}
+          />
+        </div>
+
       </div>
     </div>
   )

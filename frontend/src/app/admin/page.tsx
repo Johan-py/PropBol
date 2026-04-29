@@ -15,6 +15,7 @@ export default function AdminDashboard() {
     const fetchPendingCount = async () => {
       try {
         const token = localStorage.getItem('token')
+        window.dispatchEvent(new Event("propbol:token-guardado"));
         if (!token) return
 
         const [blogsRes, pagosRes] = await Promise.all([
