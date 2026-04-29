@@ -1,15 +1,19 @@
 "use client";
 
-import { Eye, EyeOff, LockKeyhole } from "lucide-react";
+import { Eye, EyeOff, LockKeyhole, Loader2 } from "lucide-react";
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+
+const MENSAJE_SALIDA_SIN_GUARDAR =
+  "Tienes cambios sin guardar. Si sales ahora, la nueva contraseña no se guardará. ¿Deseas continuar?";
 
 type PasswordFieldProps = Readonly<{
   label: string;
   placeholder: string;
   value: string;
   onChange: (value: string) => void;
+  disabled?: boolean;
 }>;
 
 function PasswordField({
@@ -17,6 +21,7 @@ function PasswordField({
   placeholder,
   value,
   onChange,
+  disabled = false,
 }: PasswordFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -31,14 +36,16 @@ function PasswordField({
           type={showPassword ? "text" : "password"}
           placeholder={placeholder}
           value={value}
+          disabled={disabled}
           onChange={(e) => onChange(e.target.value)}
-          className="h-11 w-full border-none bg-transparent px-3 text-sm text-neutral-900 outline-none"
+          className="h-11 w-full border-none bg-transparent px-3 text-sm text-neutral-900 outline-none disabled:cursor-not-allowed disabled:text-neutral-400"
         />
 
         <button
           type="button"
+          disabled={disabled}
           onClick={() => setShowPassword((prev) => !prev)}
-          className="text-neutral-400 transition hover:text-neutral-600"
+          className="text-neutral-400 transition hover:text-neutral-600 disabled:cursor-not-allowed disabled:text-neutral-300"
           aria-label={
             showPassword
               ? `Ocultar ${label.toLowerCase()}`
@@ -55,8 +62,7 @@ function PasswordField({
     </div>
   );
 }
-  const MENSAJE_SALIDA_SIN_GUARDAR =
-    "Tienes cambios sin guardar. Si sales ahora, la nueva contraseña no se guardará. ¿Deseas continuar?";
+
 export default function PasswordSection() {
   const [passwordActual, setPasswordActual] = useState("");
   const [nuevaPassword, setNuevaPassword] = useState("");
@@ -74,7 +80,7 @@ export default function PasswordSection() {
     confirmarPassword.trim() !== "";
 
   const PASSWORD_SEGURA_REGEX =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
   const MENSAJE_PASSWORD_SEGURA =
     "La nueva contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.";
@@ -145,103 +151,106 @@ export default function PasswordSection() {
   }, [bloqueadoHasta, claveIntentos, claveBloqueo]);
 
   useEffect(() => {
-  const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-    if (!formularioTieneCambios) return;
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!formularioTieneCambios) return;
 
-    event.preventDefault();
-    event.returnValue = "";
-  };
-
-  window.addEventListener("beforeunload", handleBeforeUnload);
-
-  return () => {
-    window.removeEventListener("beforeunload", handleBeforeUnload);
-  };
-}, [formularioTieneCambios]);
-
-useEffect(() => {
-  const handleIntentoSalida = (event: MouseEvent) => {
-    if (!formularioTieneCambios) return;
-
-    const target = event.target as HTMLElement | null;
-    if (!target) return;
-
-    const estaDentroDelFormulario = target.closest(
-      "[data-password-form='true']"
-    );
-
-    if (estaDentroDelFormulario) return;
-
-    const enlace = target.closest("a[href]") as HTMLAnchorElement | null;
-    const botonConNavegacion = target.closest(
-      "[data-confirm-exit='true']"
-    ) as HTMLElement | null;
-
-    if (!enlace && !botonConNavegacion) return;
-
-    if (enlace) {
-      const mismaPagina = enlace.href === window.location.href;
-
-      if (mismaPagina) return;
-    }
-
-    const confirmaSalida = window.confirm(MENSAJE_SALIDA_SIN_GUARDAR);
-
-    if (!confirmaSalida) {
       event.preventDefault();
-      event.stopPropagation();
-      event.stopImmediatePropagation();
+      event.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [formularioTieneCambios]);
+
+  useEffect(() => {
+    const handleIntentoSalida = (event: MouseEvent) => {
+      if (!formularioTieneCambios) return;
+
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
+
+      const estaDentroDelFormulario = target.closest(
+        "[data-password-form='true']"
+      );
+
+      if (estaDentroDelFormulario) return;
+
+      const enlace = target.closest("a[href]") as HTMLAnchorElement | null;
+      const botonConNavegacion = target.closest(
+        "[data-confirm-exit='true']"
+      ) as HTMLElement | null;
+
+      if (!enlace && !botonConNavegacion) return;
+
+      if (enlace) {
+        const mismaPagina = enlace.href === window.location.href;
+
+        if (mismaPagina) return;
+      }
+
+      const confirmaSalida = window.confirm(MENSAJE_SALIDA_SIN_GUARDAR);
+
+      if (!confirmaSalida) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+      }
+    };
+
+    document.addEventListener("click", handleIntentoSalida, true);
+
+    return () => {
+      document.removeEventListener("click", handleIntentoSalida, true);
+    };
+  }, [formularioTieneCambios]);
+
+  useEffect(() => {
+    if (!formularioTieneCambios) {
+      bloqueoHistorialActivado.current = false;
+      return;
     }
-  };
 
-  document.addEventListener("click", handleIntentoSalida, true);
-
-  return () => {
-    document.removeEventListener("click", handleIntentoSalida, true);
-  };
-}, [formularioTieneCambios]);
-
-useEffect(() => {
-  if (!formularioTieneCambios) {
-    bloqueoHistorialActivado.current = false;
-    return;
-  }
-
-  if (!bloqueoHistorialActivado.current) {
-    window.history.pushState(
-      { bloqueoFormularioPassword: true },
-      "",
-      window.location.href
-    );
-    bloqueoHistorialActivado.current = true;
-  }
-
-  const handlePopState = () => {
-    const confirmaSalida = window.confirm(MENSAJE_SALIDA_SIN_GUARDAR);
-
-    if (!confirmaSalida) {
+    if (!bloqueoHistorialActivado.current) {
       window.history.pushState(
         { bloqueoFormularioPassword: true },
         "",
         window.location.href
       );
-      return;
+      bloqueoHistorialActivado.current = true;
     }
 
-    bloqueoHistorialActivado.current = false;
-    window.removeEventListener("popstate", handlePopState);
-    window.history.back();
-  };
+    const handlePopState = () => {
+      const confirmaSalida = window.confirm(MENSAJE_SALIDA_SIN_GUARDAR);
 
-  window.addEventListener("popstate", handlePopState);
+      if (!confirmaSalida) {
+        window.history.pushState(
+          { bloqueoFormularioPassword: true },
+          "",
+          window.location.href
+        );
+        return;
+      }
 
-  return () => {
-    window.removeEventListener("popstate", handlePopState);
-  };
-}, [formularioTieneCambios]);
+      bloqueoHistorialActivado.current = false;
+      window.removeEventListener("popstate", handlePopState);
+      window.history.back();
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [formularioTieneCambios]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (isLoading) return;
+
     setError("");
     setSuccess("");
 
@@ -322,8 +331,13 @@ useEffect(() => {
       setPasswordActual("");
       setNuevaPassword("");
       setConfirmarPassword("");
-    } catch (error: any) {
-      setError(error.message || "Error al actualizar la contraseña");
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Error al actualizar la contraseña";
+
+      setError(message);
     } finally {
       setIsLoading(false);
     }
@@ -351,6 +365,7 @@ useEffect(() => {
             placeholder="••••••••"
             value={passwordActual}
             onChange={setPasswordActual}
+            disabled={isLoading || bloqueado}
           />
 
           <PasswordField
@@ -358,6 +373,7 @@ useEffect(() => {
             placeholder="••••••••"
             value={nuevaPassword}
             onChange={setNuevaPassword}
+            disabled={isLoading || bloqueado}
           />
 
           <PasswordField
@@ -365,6 +381,7 @@ useEffect(() => {
             placeholder="••••••••"
             value={confirmarPassword}
             onChange={setConfirmarPassword}
+            disabled={isLoading || bloqueado}
           />
 
           {error && <p className="text-sm font-medium text-red-600">{error}</p>}
@@ -382,17 +399,22 @@ useEffect(() => {
           <button
             type="submit"
             disabled={isLoading || bloqueado}
-            className={`mt-2 inline-flex w-full items-center justify-center rounded-lg px-5 py-3 text-sm font-semibold text-white transition ${
+            className={`mt-2 inline-flex w-full items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold text-white transition ${
               isLoading || bloqueado
                 ? "cursor-not-allowed bg-orange-300"
                 : "bg-orange-500 hover:bg-orange-600"
             }`}
           >
-            {isLoading
-              ? "Verificando..."
-              : bloqueado
-              ? "Bloqueado"
-              : "Cambiar contraseña"}
+            {isLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Guardando...
+              </>
+            ) : bloqueado ? (
+              "Bloqueado"
+            ) : (
+              "Cambiar contraseña"
+            )}
           </button>
         </form>
       </div>
