@@ -147,8 +147,8 @@ export default function NavLinks() {
           }, 300);
         }}
         className={linkStyle}
-      >
-        Ayuda
+        >
+         Ayuda
       </button>
     </div>
   );

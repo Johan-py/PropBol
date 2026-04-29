@@ -67,6 +67,7 @@ function BlogRow({ blog }: { blog: AdminModerationBlog }) {
             width={56}
             height={56}
             className="h-14 w-14 object-cover"
+            unoptimized
           />
         </div>
 
