@@ -172,7 +172,7 @@ export default function CobrosSuscripciones() {
         </div>
 
         {/* Banner de Suscripciones Anuales */}
-        <div className="mt-12 p-6 rounded-3xl bg-amber-50/50 border border-amber-100 flex items-center justify-between gap-6 shadow-sm">
+        <div className="mt-12 p-4 sm:p-6 rounded-3xl bg-amber-50/50 border border-amber-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 shadow-sm">
           <div className="flex items-center gap-5">
             <div className="p-4 bg-white rounded-2xl shadow-sm border border-amber-100">
               <Calendar className="w-8 h-8 text-amber-600" />
@@ -186,7 +186,7 @@ export default function CobrosSuscripciones() {
           </div>
           <button 
             onClick={() => router.push('/LimiteConsumo')}
-            className="whitespace-nowrap px-8 py-3 bg-white border-2 border-amber-600/20 text-amber-700 rounded-2xl hover:bg-amber-100 hover:border-amber-600/40 transition-all font-bold flex items-center gap-2 shadow-sm active:scale-95"
+            className="w-full sm:w-auto text-center px-6 py-3 bg-white border-2 border-amber-600/20 text-amber-700 rounded-2xl hover:bg-amber-100 hover:border-amber-600/40 transition-all font-bold flex items-center gap-2 shadow-sm active:scale-95"
           >
             Ver suscripciones anuales
             <ArrowRight className="w-4 h-4" />
