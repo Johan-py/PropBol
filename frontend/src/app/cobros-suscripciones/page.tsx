@@ -95,9 +95,9 @@ export default function CobrosSuscripciones() {
     <div className="min-h-screen bg-stone-50 flex justify-center px-4 py-6 sm:p-10 font-inter">
       <div className="w-full max-w-6xl">
         <div className="mb-10">
-          <h1 className="text-4xl font-bold text-stone-900">Planes de membresía</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-stone-900">Planes de membresía</h1>
 
-          <p className="text-stone-400 mt-2 text-lg">
+          <p className="text-sm sm:text-base md:text-lg text-stone-400 mt-2">
             Amplia tu alcance en el mercado inmobiliario de Bolivia.
           </p>
         </div>
