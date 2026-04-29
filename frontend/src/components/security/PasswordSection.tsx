@@ -72,6 +72,7 @@ export default function PasswordSection() {
   const [success, setSuccess] = useState("");
   const [intentosFallidos, setIntentosFallidos] = useState(0);
   const [bloqueadoHasta, setBloqueadoHasta] = useState<number | null>(null);
+  const [tiempoActual, setTiempoActual] = useState(() => Date.now());
   const bloqueoHistorialActivado = useRef(false);
 
   const formularioTieneCambios =
@@ -104,7 +105,25 @@ export default function PasswordSection() {
   );
 
   const bloqueado =
-    bloqueadoHasta !== null && Date.now() < Number(bloqueadoHasta);
+  bloqueadoHasta !== null && tiempoActual < Number(bloqueadoHasta);
+
+  const tiempoRestanteBloqueo = useMemo(() => {
+    if (!bloqueadoHasta) return null;
+
+    const diferenciaMs = bloqueadoHasta - tiempoActual;
+
+    if (diferenciaMs <= 0) return null;
+
+    const totalSegundos = Math.ceil(diferenciaMs / 1000);
+    const minutos = Math.floor(totalSegundos / 60);
+    const segundos = totalSegundos % 60;
+
+    if (minutos <= 0) {
+      return `${segundos} segundo(s)`;
+    }
+
+    return `${minutos} minuto(s) y ${segundos} segundo(s)`;
+  }, [bloqueadoHasta, tiempoActual]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -135,20 +154,24 @@ export default function PasswordSection() {
   }, [claveIntentos, claveBloqueo]);
 
   useEffect(() => {
-    if (!bloqueadoHasta) return;
+  if (!bloqueadoHasta) return;
 
-    const intervalo = setInterval(() => {
-      if (Date.now() >= bloqueadoHasta) {
-        setBloqueadoHasta(null);
-        setIntentosFallidos(0);
-        localStorage.removeItem(claveIntentos);
-        localStorage.removeItem(claveBloqueo);
-        clearInterval(intervalo);
-      }
-    }, 1000);
+  const intervalo = setInterval(() => {
+    const ahora = Date.now();
 
-    return () => clearInterval(intervalo);
-  }, [bloqueadoHasta, claveIntentos, claveBloqueo]);
+    setTiempoActual(ahora);
+
+    if (ahora >= bloqueadoHasta) {
+      setBloqueadoHasta(null);
+      setIntentosFallidos(0);
+      localStorage.removeItem(claveIntentos);
+      localStorage.removeItem(claveBloqueo);
+      clearInterval(intervalo);
+    }
+  }, 1000);
+
+  return () => clearInterval(intervalo);
+}, [bloqueadoHasta, claveIntentos, claveBloqueo]);
 
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
@@ -255,9 +278,13 @@ export default function PasswordSection() {
     setSuccess("");
 
     if (bloqueado) {
-      setError("Has superado los 5 intentos fallidos. Intenta más tarde.");
-      return;
-    }
+  setError(
+    tiempoRestanteBloqueo
+      ? `La acción está bloqueada. Intenta nuevamente en ${tiempoRestanteBloqueo}.`
+      : "La acción está bloqueada temporalmente. Intenta más tarde."
+  );
+  return;
+}
 
     const token = localStorage.getItem("token");
 
@@ -384,7 +411,18 @@ export default function PasswordSection() {
             disabled={isLoading || bloqueado}
           />
 
-          {error && <p className="text-sm font-medium text-red-600">{error}</p>}
+          {error && !bloqueado && (
+            <p className="text-sm font-medium text-red-600">{error}</p>
+          )}
+
+          {bloqueado && (
+            <p className="text-sm font-medium text-red-600">
+              La acción está bloqueada temporalmente.
+              {tiempoRestanteBloqueo && (
+                <> Intenta nuevamente en {tiempoRestanteBloqueo}.</>
+              )}
+            </p>
+          )}
 
           {!error && intentosFallidos > 0 && !bloqueado && (
             <p className="text-sm font-medium text-amber-600">
@@ -406,10 +444,12 @@ export default function PasswordSection() {
             }`}
           >
             {isLoading ? (
-              <>
+  <>
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Guardando...
               </>
+            ) : bloqueado && tiempoRestanteBloqueo ? (
+              `Bloqueado ${tiempoRestanteBloqueo}`
             ) : bloqueado ? (
               "Bloqueado"
             ) : (
