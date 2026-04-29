@@ -232,24 +232,40 @@ export const cambiarPassword = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    await prisma.$transaction([
-      prisma.historial_password.create({
-        data: {
-          usuarioId,
-          passwordHash: usuario.password,
-        },
-      }),
+    const cambioRealizado = await prisma.$transaction(async (tx) => {
+    const resultadoActualizacion = await tx.usuario.updateMany({
+      where: {
+        id: usuarioId,
+        password: passwordActualNormalizada,
+      },
+      data: {
+        password: nuevaPasswordNormalizada,
+        intentos_fallidos_cambio_password: 0,
+        bloqueo_cambio_password_hasta: null,
+        password_actualizado_en: new Date(),
+      },
+    });
 
-      prisma.usuario.update({
-        where: { id: usuarioId },
-        data: {
-          password: nuevaPasswordNormalizada,
-          intentos_fallidos_cambio_password: 0,
-          bloqueo_cambio_password_hasta: null,
-          password_actualizado_en: new Date(),
-        },
-      }),
-    ]);
+    if (resultadoActualizacion.count !== 1) {
+      return false;
+    }
+
+    await tx.historial_password.create({
+      data: {
+        usuarioId,
+        passwordHash: passwordActualNormalizada,
+      },
+    });
+
+    return true;
+  });
+
+  if (!cambioRealizado) {
+    return res.status(409).json({
+      ok: false,
+      msg: "La contraseña ya fue modificada en otra ventana. Actualiza la página e intenta nuevamente.",
+    });
+  }
 
     await invalidateOtherUserSessions(usuarioId, currentToken);
 
