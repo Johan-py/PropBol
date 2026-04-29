@@ -446,7 +446,16 @@ export const obtenerPreferenciasNotificacion = async (req: AuthRequest, res: Res
       where: { id: usuarioId },
       select: {
         notificacion_email: true,
-        notificacion_whatsapp: true
+        notificacion_whatsapp: true,
+        correo: true,
+        telefonos: {
+          take: 1,
+          select: { numero: true, principal: true }
+        },
+        telefono_telefono_usuario_idTousuario: {
+          take: 1,
+          select: { numero: true }
+        }
       }
     })
     if (!usuario) return res.status(404).json({ ok: false, msg: 'Usuario no encontrado' })
@@ -455,7 +464,9 @@ export const obtenerPreferenciasNotificacion = async (req: AuthRequest, res: Res
       preferencias: {
         email: usuario.notificacion_email ?? true,
         whatsapp: usuario.notificacion_whatsapp ?? false
-      }
+      },
+      tieneCorreo: !!usuario.correo,
+      tieneTelefono: usuario.telefonos.length > 0 || usuario.telefono_telefono_usuario_idTousuario.length > 0
     })
   } catch (error) {
     console.error('Error en obtenerPreferenciasNotificacion:', error)
