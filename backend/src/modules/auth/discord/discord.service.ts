@@ -51,8 +51,9 @@ const exchangeCodeForTokens = async (code: string) => {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
+      "User-Agent": "PropBol/1.0 (https://propbol-tsiq.onrender.com)", // ← Agregado para evitar bloqueo de Cloudflare
     },
-    body: params.toString(), // ← Convertir explícitamente a string
+    body: params.toString(),
   });
 
   console.log("[Discord] Response status:", response.status);
@@ -63,6 +64,19 @@ const exchangeCodeForTokens = async (code: string) => {
 
   // Verificar si la respuesta es JSON antes de parsear
   const contentType = response.headers.get("content-type");
+
+  // Manejo específico para rate limiting
+  if (response.status === 429) {
+    const textResponse = await response.text();
+    console.error("[Discord] Rate limit hit (429)");
+    console.error("[Discord] Response:", textResponse.substring(0, 500));
+    throw new DiscordAuthError(
+      "Discord está limitando las peticiones. Espera unos minutos e intenta de nuevo.",
+      "DISCORD_AUTH_FAILED",
+      429,
+    );
+  }
+
   if (!contentType?.includes("application/json")) {
     const textResponse = await response.text();
     console.error("[Discord] Unexpected response type:", contentType);
