@@ -174,7 +174,6 @@ const registerFailedAttempt = (correo: string) => {
     retryAfterSeconds: 0,
   };
 };
-
 const clearFailedAttempts = (correo: string) => {
   loginAttempts.delete(correo);
 };
