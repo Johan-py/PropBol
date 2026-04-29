@@ -66,6 +66,7 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
             width={1600}
             height={900}
             className="h-full min-h-[240px] w-full object-cover sm:min-h-[360px]"
+            unoptimized
           />
         </div>
       </header>

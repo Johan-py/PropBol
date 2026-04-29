@@ -3,7 +3,7 @@
 
 import { X, Bath } from 'lucide-react'
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { RangeSliderControl } from '../busqueda/capacidad/RangeSliderControl'
 
 type TipoBano = 'cualquiera' | 'privado' | 'compartido'
@@ -27,6 +27,7 @@ interface CapacidadSidebarProps {
 
 export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarProps) {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const [dormitoriosMin, setDormitoriosMin] = useState(DEFAULT_DORM_MIN)
   const [dormitoriosMax, setDormitoriosMax] = useState(DEFAULT_DORM_MAX)
   const [banosMin, setBanosMin] = useState(DEFAULT_BANOS_MIN)
@@ -98,6 +99,15 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
     setTipoBano('cualquiera')
     setDormitoriosError('')
     setBanosError('')
+
+    const params = new URLSearchParams(searchParams.toString())
+    params.delete('dormitoriosMin')
+    params.delete('dormitoriosMax')
+    params.delete('banosMin')
+    params.delete('banosMax')
+    params.delete('tipoBano')
+
+    router.push(`/busqueda_mapa?${params.toString()}`)
   }
 
   if (!isOpen) return null
@@ -146,7 +156,7 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
             className="text-[#d97706]  hover:text-gray-600 text-xs font-bold"
             title="Restablecer filtros de dormitorios"
           >
-              Reset
+            Reset
           </button>
         </div>
 
@@ -159,7 +169,7 @@ export function CapacidadSidebar({ isOpen, onClose, onApply }: CapacidadSidebarP
           onMinChange={handleDormitoriosMinChange}
           onMaxChange={handleDormitoriosMaxChange}
           unit="+"
-          hideTitle={true} 
+          hideTitle={true}
         />
 
         {dormitoriosError && <p className="text-xs text-red-500 mt-1">{dormitoriosError}</p>}
