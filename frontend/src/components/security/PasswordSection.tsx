@@ -1,15 +1,19 @@
 "use client";
 
-import { Eye, EyeOff, LockKeyhole } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { Eye, EyeOff, LockKeyhole, Loader2 } from "lucide-react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+
+const MENSAJE_SALIDA_SIN_GUARDAR =
+  "Tienes cambios sin guardar. Si sales ahora, la nueva contraseña no se guardará. ¿Deseas continuar?";
 
 type PasswordFieldProps = Readonly<{
   label: string;
   placeholder: string;
   value: string;
   onChange: (value: string) => void;
+  disabled?: boolean;
 }>;
 
 function PasswordField({
@@ -17,6 +21,7 @@ function PasswordField({
   placeholder,
   value,
   onChange,
+  disabled = false,
 }: PasswordFieldProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -31,14 +36,16 @@ function PasswordField({
           type={showPassword ? "text" : "password"}
           placeholder={placeholder}
           value={value}
+          disabled={disabled}
           onChange={(e) => onChange(e.target.value)}
-          className="h-11 w-full border-none bg-transparent px-3 text-sm text-neutral-900 outline-none"
+          className="h-11 w-full border-none bg-transparent px-3 text-sm text-neutral-900 outline-none disabled:cursor-not-allowed disabled:text-neutral-400"
         />
 
         <button
           type="button"
+          disabled={disabled}
           onClick={() => setShowPassword((prev) => !prev)}
-          className="text-neutral-400 transition hover:text-neutral-600"
+          className="text-neutral-400 transition hover:text-neutral-600 disabled:cursor-not-allowed disabled:text-neutral-300"
           aria-label={
             showPassword
               ? `Ocultar ${label.toLowerCase()}`
@@ -65,6 +72,19 @@ export default function PasswordSection() {
   const [success, setSuccess] = useState("");
   const [intentosFallidos, setIntentosFallidos] = useState(0);
   const [bloqueadoHasta, setBloqueadoHasta] = useState<number | null>(null);
+  const [tiempoActual, setTiempoActual] = useState(() => Date.now());
+  const bloqueoHistorialActivado = useRef(false);
+
+  const formularioTieneCambios =
+    passwordActual.trim() !== "" ||
+    nuevaPassword.trim() !== "" ||
+    confirmarPassword.trim() !== "";
+
+  const PASSWORD_SEGURA_REGEX =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+  const MENSAJE_PASSWORD_SEGURA =
+    "La nueva contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.";
 
   const usuarioGuardado =
     typeof window !== "undefined"
@@ -85,7 +105,25 @@ export default function PasswordSection() {
   );
 
   const bloqueado =
-    bloqueadoHasta !== null && Date.now() < Number(bloqueadoHasta);
+  bloqueadoHasta !== null && tiempoActual < Number(bloqueadoHasta);
+
+  const tiempoRestanteBloqueo = useMemo(() => {
+    if (!bloqueadoHasta) return null;
+
+    const diferenciaMs = bloqueadoHasta - tiempoActual;
+
+    if (diferenciaMs <= 0) return null;
+
+    const totalSegundos = Math.ceil(diferenciaMs / 1000);
+    const minutos = Math.floor(totalSegundos / 60);
+    const segundos = totalSegundos % 60;
+
+    if (minutos <= 0) {
+      return `${segundos} segundo(s)`;
+    }
+
+    return `${minutos} minuto(s) y ${segundos} segundo(s)`;
+  }, [bloqueadoHasta, tiempoActual]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -116,30 +154,137 @@ export default function PasswordSection() {
   }, [claveIntentos, claveBloqueo]);
 
   useEffect(() => {
-    if (!bloqueadoHasta) return;
+  if (!bloqueadoHasta) return;
 
-    const intervalo = setInterval(() => {
-      if (Date.now() >= bloqueadoHasta) {
-        setBloqueadoHasta(null);
-        setIntentosFallidos(0);
-        localStorage.removeItem(claveIntentos);
-        localStorage.removeItem(claveBloqueo);
-        clearInterval(intervalo);
+  const intervalo = setInterval(() => {
+    const ahora = Date.now();
+
+    setTiempoActual(ahora);
+
+    if (ahora >= bloqueadoHasta) {
+      setBloqueadoHasta(null);
+      setIntentosFallidos(0);
+      localStorage.removeItem(claveIntentos);
+      localStorage.removeItem(claveBloqueo);
+      clearInterval(intervalo);
+    }
+  }, 1000);
+
+  return () => clearInterval(intervalo);
+}, [bloqueadoHasta, claveIntentos, claveBloqueo]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (!formularioTieneCambios) return;
+
+      event.preventDefault();
+      event.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [formularioTieneCambios]);
+
+  useEffect(() => {
+    const handleIntentoSalida = (event: MouseEvent) => {
+      if (!formularioTieneCambios) return;
+
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
+
+      const estaDentroDelFormulario = target.closest(
+        "[data-password-form='true']"
+      );
+
+      if (estaDentroDelFormulario) return;
+
+      const enlace = target.closest("a[href]") as HTMLAnchorElement | null;
+      const botonConNavegacion = target.closest(
+        "[data-confirm-exit='true']"
+      ) as HTMLElement | null;
+
+      if (!enlace && !botonConNavegacion) return;
+
+      if (enlace) {
+        const mismaPagina = enlace.href === window.location.href;
+
+        if (mismaPagina) return;
       }
-    }, 1000);
 
-    return () => clearInterval(intervalo);
-  }, [bloqueadoHasta, claveIntentos, claveBloqueo]);
+      const confirmaSalida = window.confirm(MENSAJE_SALIDA_SIN_GUARDAR);
+
+      if (!confirmaSalida) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+      }
+    };
+
+    document.addEventListener("click", handleIntentoSalida, true);
+
+    return () => {
+      document.removeEventListener("click", handleIntentoSalida, true);
+    };
+  }, [formularioTieneCambios]);
+
+  useEffect(() => {
+    if (!formularioTieneCambios) {
+      bloqueoHistorialActivado.current = false;
+      return;
+    }
+
+    if (!bloqueoHistorialActivado.current) {
+      window.history.pushState(
+        { bloqueoFormularioPassword: true },
+        "",
+        window.location.href
+      );
+      bloqueoHistorialActivado.current = true;
+    }
+
+    const handlePopState = () => {
+      const confirmaSalida = window.confirm(MENSAJE_SALIDA_SIN_GUARDAR);
+
+      if (!confirmaSalida) {
+        window.history.pushState(
+          { bloqueoFormularioPassword: true },
+          "",
+          window.location.href
+        );
+        return;
+      }
+
+      bloqueoHistorialActivado.current = false;
+      window.removeEventListener("popstate", handlePopState);
+      window.history.back();
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [formularioTieneCambios]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (isLoading) return;
+
     setError("");
     setSuccess("");
 
     if (bloqueado) {
-      setError("Has superado los 5 intentos fallidos. Intenta más tarde.");
-      return;
-    }
+  setError(
+    tiempoRestanteBloqueo
+      ? `La acción está bloqueada. Intenta nuevamente en ${tiempoRestanteBloqueo}.`
+      : "La acción está bloqueada temporalmente. Intenta más tarde."
+  );
+  return;
+}
 
     const token = localStorage.getItem("token");
 
@@ -157,8 +302,8 @@ export default function PasswordSection() {
       return;
     }
 
-    if (nuevaPassword.trim().length < 8) {
-      setError("La nueva contraseña debe tener al menos 8 caracteres");
+    if (!PASSWORD_SEGURA_REGEX.test(nuevaPassword.trim())) {
+      setError(MENSAJE_PASSWORD_SEGURA);
       return;
     }
 
@@ -213,8 +358,13 @@ export default function PasswordSection() {
       setPasswordActual("");
       setNuevaPassword("");
       setConfirmarPassword("");
-    } catch (error: any) {
-      setError(error.message || "Error al actualizar la contraseña");
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Error al actualizar la contraseña";
+
+      setError(message);
     } finally {
       setIsLoading(false);
     }
@@ -232,12 +382,17 @@ export default function PasswordSection() {
       </header>
 
       <div className="max-w-xl rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form
+          data-password-form="true"
+          className="space-y-4"
+          onSubmit={handleSubmit}
+        >
           <PasswordField
             label="Ingresa tu contraseña actual"
             placeholder="••••••••"
             value={passwordActual}
             onChange={setPasswordActual}
+            disabled={isLoading || bloqueado}
           />
 
           <PasswordField
@@ -245,6 +400,7 @@ export default function PasswordSection() {
             placeholder="••••••••"
             value={nuevaPassword}
             onChange={setNuevaPassword}
+            disabled={isLoading || bloqueado}
           />
 
           <PasswordField
@@ -252,9 +408,21 @@ export default function PasswordSection() {
             placeholder="••••••••"
             value={confirmarPassword}
             onChange={setConfirmarPassword}
+            disabled={isLoading || bloqueado}
           />
 
-          {error && <p className="text-sm font-medium text-red-600">{error}</p>}
+          {error && !bloqueado && (
+            <p className="text-sm font-medium text-red-600">{error}</p>
+          )}
+
+          {bloqueado && (
+            <p className="text-sm font-medium text-red-600">
+              La acción está bloqueada temporalmente.
+              {tiempoRestanteBloqueo && (
+                <> Intenta nuevamente en {tiempoRestanteBloqueo}.</>
+              )}
+            </p>
+          )}
 
           {!error && intentosFallidos > 0 && !bloqueado && (
             <p className="text-sm font-medium text-amber-600">
@@ -269,17 +437,24 @@ export default function PasswordSection() {
           <button
             type="submit"
             disabled={isLoading || bloqueado}
-            className={`mt-2 inline-flex w-full items-center justify-center rounded-lg px-5 py-3 text-sm font-semibold text-white transition ${
+            className={`mt-2 inline-flex w-full items-center justify-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold text-white transition ${
               isLoading || bloqueado
                 ? "cursor-not-allowed bg-orange-300"
                 : "bg-orange-500 hover:bg-orange-600"
             }`}
           >
-            {isLoading
-              ? "Verificando..."
-              : bloqueado
-              ? "Bloqueado"
-              : "Cambiar contraseña"}
+            {isLoading ? (
+  <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Guardando...
+              </>
+            ) : bloqueado && tiempoRestanteBloqueo ? (
+              `Bloqueado ${tiempoRestanteBloqueo}`
+            ) : bloqueado ? (
+              "Bloqueado"
+            ) : (
+              "Cambiar contraseña"
+            )}
           </button>
         </form>
       </div>
