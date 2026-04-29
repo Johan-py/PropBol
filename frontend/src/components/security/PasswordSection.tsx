@@ -1,7 +1,7 @@
 "use client";
 
 import { Eye, EyeOff, LockKeyhole } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 
@@ -55,7 +55,8 @@ function PasswordField({
     </div>
   );
 }
-
+  const MENSAJE_SALIDA_SIN_GUARDAR =
+    "Tienes cambios sin guardar. Si sales ahora, la nueva contraseña no se guardará. ¿Deseas continuar?";
 export default function PasswordSection() {
   const [passwordActual, setPasswordActual] = useState("");
   const [nuevaPassword, setNuevaPassword] = useState("");
@@ -65,6 +66,18 @@ export default function PasswordSection() {
   const [success, setSuccess] = useState("");
   const [intentosFallidos, setIntentosFallidos] = useState(0);
   const [bloqueadoHasta, setBloqueadoHasta] = useState<number | null>(null);
+  const bloqueoHistorialActivado = useRef(false);
+
+  const formularioTieneCambios =
+    passwordActual.trim() !== "" ||
+    nuevaPassword.trim() !== "" ||
+    confirmarPassword.trim() !== "";
+
+  const PASSWORD_SEGURA_REGEX =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+
+  const MENSAJE_PASSWORD_SEGURA =
+    "La nueva contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial.";
 
   const usuarioGuardado =
     typeof window !== "undefined"
@@ -131,6 +144,102 @@ export default function PasswordSection() {
     return () => clearInterval(intervalo);
   }, [bloqueadoHasta, claveIntentos, claveBloqueo]);
 
+  useEffect(() => {
+  const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+    if (!formularioTieneCambios) return;
+
+    event.preventDefault();
+    event.returnValue = "";
+  };
+
+  window.addEventListener("beforeunload", handleBeforeUnload);
+
+  return () => {
+    window.removeEventListener("beforeunload", handleBeforeUnload);
+  };
+}, [formularioTieneCambios]);
+
+useEffect(() => {
+  const handleIntentoSalida = (event: MouseEvent) => {
+    if (!formularioTieneCambios) return;
+
+    const target = event.target as HTMLElement | null;
+    if (!target) return;
+
+    const estaDentroDelFormulario = target.closest(
+      "[data-password-form='true']"
+    );
+
+    if (estaDentroDelFormulario) return;
+
+    const enlace = target.closest("a[href]") as HTMLAnchorElement | null;
+    const botonConNavegacion = target.closest(
+      "[data-confirm-exit='true']"
+    ) as HTMLElement | null;
+
+    if (!enlace && !botonConNavegacion) return;
+
+    if (enlace) {
+      const mismaPagina = enlace.href === window.location.href;
+
+      if (mismaPagina) return;
+    }
+
+    const confirmaSalida = window.confirm(MENSAJE_SALIDA_SIN_GUARDAR);
+
+    if (!confirmaSalida) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+    }
+  };
+
+  document.addEventListener("click", handleIntentoSalida, true);
+
+  return () => {
+    document.removeEventListener("click", handleIntentoSalida, true);
+  };
+}, [formularioTieneCambios]);
+
+useEffect(() => {
+  if (!formularioTieneCambios) {
+    bloqueoHistorialActivado.current = false;
+    return;
+  }
+
+  if (!bloqueoHistorialActivado.current) {
+    window.history.pushState(
+      { bloqueoFormularioPassword: true },
+      "",
+      window.location.href
+    );
+    bloqueoHistorialActivado.current = true;
+  }
+
+  const handlePopState = () => {
+    const confirmaSalida = window.confirm(MENSAJE_SALIDA_SIN_GUARDAR);
+
+    if (!confirmaSalida) {
+      window.history.pushState(
+        { bloqueoFormularioPassword: true },
+        "",
+        window.location.href
+      );
+      return;
+    }
+
+    bloqueoHistorialActivado.current = false;
+    window.removeEventListener("popstate", handlePopState);
+    window.history.back();
+  };
+
+  window.addEventListener("popstate", handlePopState);
+
+  return () => {
+    window.removeEventListener("popstate", handlePopState);
+  };
+}, [formularioTieneCambios]);
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
@@ -157,8 +266,8 @@ export default function PasswordSection() {
       return;
     }
 
-    if (nuevaPassword.trim().length < 8) {
-      setError("La nueva contraseña debe tener al menos 8 caracteres");
+    if (!PASSWORD_SEGURA_REGEX.test(nuevaPassword.trim())) {
+      setError(MENSAJE_PASSWORD_SEGURA);
       return;
     }
 
@@ -232,7 +341,11 @@ export default function PasswordSection() {
       </header>
 
       <div className="max-w-xl rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form
+          data-password-form="true"
+          className="space-y-4"
+          onSubmit={handleSubmit}
+        >
           <PasswordField
             label="Ingresa tu contraseña actual"
             placeholder="••••••••"
