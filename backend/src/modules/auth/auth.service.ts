@@ -292,10 +292,7 @@ export const loginService = async (payload: LoginDTO) => {
   const user = await findUser(correo);
 
   if (!user) {
-    throw new AuthError(
-      "No existe una cuenta asociada a este correo. Regístrate para crear una cuenta.",
-      404,
-    );
+    throw new AuthError("Credenciales inválidas", 401);
   }
 
   const isValidPassword = user.password === password;
