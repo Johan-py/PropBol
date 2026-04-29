@@ -28,6 +28,19 @@ export function usePropertySearch() {
 
     if (filters.locationId) params.append('locationId', filters.locationId.toString())
     if (filters.query) params.append('search', filters.query)
+    //HU6
+    if (filters.amenities && filters.amenities.length > 0) {
+      params.append('amenities', filters.amenities.join(','));
+    }
+    if (filters.labels && filters.labels.length > 0) {
+      params.append('labels', filters.labels.join(','));
+    }
+    if (filters.amenities && filters.amenities.length > 0) {
+      params.append('amenities', filters.amenities.join(','))
+    }
+    if (filters.labels && filters.labels.length > 0) {
+      params.append('labels', filters.labels.join(','))
+    }
 
     try {
       setLoading(true)
