@@ -126,15 +126,49 @@ if (passwordIncorrecta) {
   });
 }
 
-    await prisma.usuario.update({
-      where: { id: usuarioId },
-      data: {
-        password: nuevaPassword,
-        intentos_fallidos_cambio_password: 0,
-        bloqueo_cambio_password_hasta: null,
-        password_actualizado_en: new Date(),
-      },
-    });
+if (nuevaPassword === usuario.password) {
+  return res.status(400).json({
+    ok: false,
+    msg: "La nueva contraseña no puede ser igual a la actual",
+  });
+}
+
+const historial = await prisma.historial_password.findMany({
+  where: { usuarioId },
+  orderBy: { creadoEn: "desc" },
+  take: 3,
+});
+
+const coincideConHistorial = historial.some(
+  (h) => h.passwordHash === nuevaPassword
+);
+
+if (coincideConHistorial) {
+  return res.status(400).json({
+    ok: false,
+    msg: "No puedes usar una de tus últimas 3 contraseñas",
+  });
+}
+
+const ultimoHistorial = historial[0];
+if (!ultimoHistorial || ultimoHistorial.passwordHash !== usuario.password) {
+  await prisma.historial_password.create({
+    data: {
+      usuarioId,
+      passwordHash: usuario.password,
+    },
+  });
+}
+
+await prisma.usuario.update({
+  where: { id: usuarioId },
+  data: {
+    password: nuevaPassword,
+    intentos_fallidos_cambio_password: 0,
+    bloqueo_cambio_password_hasta: null,
+    password_actualizado_en: new Date(),
+  },
+});
 
     await invalidateOtherUserSessions(usuarioId, currentToken);
 
