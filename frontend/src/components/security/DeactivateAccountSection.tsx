@@ -5,29 +5,11 @@ import { useRouter } from "next/navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const MAX_PASSWORD_LENGTH = 255;
-<<<<<<< HEAD
 const LOCKOUT_MS = 15 * 60 * 1000;
 const LOCKOUT_UNTIL_KEY = "propbol_deactivate_lockout_until";
 
 type DeactivateResponse = { message: string };
 
-=======
-const AUTH_ERROR_STATUSES = [401, 403];
-
-type DeactivateResponse = {
-  message: string;
-  verificationToken?: string;
-};
-
-const notifySecurityAuthError = () => {
-  window.dispatchEvent(new Event("propbol:auth-error"));
-};
-
-const isSecurityAuthError = (status: number) => {
-  return AUTH_ERROR_STATUSES.includes(status);
-};
-
->>>>>>> b911b2bf644730e8e9778ee2b2988ca63e6edaa2
 const clearClientSession = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("propbol_user");
@@ -62,7 +44,6 @@ export default function DeactivateAccountSection() {
   const [isVerifyingCode, setIsVerifyingCode] = useState(false);
   const [emailVerificationToken, setEmailVerificationToken] = useState("");
 
-<<<<<<< HEAD
   // Restaurar bloqueo desde localStorage al montar
   useEffect(() => {
     const until = Number(localStorage.getItem(LOCKOUT_UNTIL_KEY) ?? 0);
@@ -101,8 +82,6 @@ export default function DeactivateAccountSection() {
     setSecondsLeft(LOCKOUT_MS / 1000);
   };
 
-=======
->>>>>>> b911b2bf644730e8e9778ee2b2988ca63e6edaa2
   const resetPasswordState = () => {
     setPassword("");
     setErrorMessage("");
@@ -118,13 +97,6 @@ export default function DeactivateAccountSection() {
     setIsSendingCode(false);
     setIsVerifyingCode(false);
     setEmailVerificationToken("");
-<<<<<<< HEAD
-=======
-  };
-
-  const handleOpenWarning = () => {
-    setShowWarningModal(true);
->>>>>>> b911b2bf644730e8e9778ee2b2988ca63e6edaa2
   };
 
   const handleOpenWarning = () => setShowWarningModal(true);
@@ -149,65 +121,6 @@ export default function DeactivateAccountSection() {
   };
 
   const handleOpenEmailVerification = async () => {
-<<<<<<< HEAD
-=======
-    try {
-      setErrorMessage("");
-      setEmailCodeError("");
-      setEmailCodeSuccess("");
-
-      if (!API_URL) {
-        setErrorMessage("No se configuró NEXT_PUBLIC_API_URL en el frontend.");
-        return;
-      }
-
-      const token =
-        typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
-      if (!token) {
-        notifySecurityAuthError();
-        return;
-      }
-
-      setIsSendingCode(true);
-
-      const response = await fetch(
-        `${API_URL}/api/security/deactivate-account/send-code`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      if (isSecurityAuthError(response.status)) {
-        notifySecurityAuthError();
-        return;
-      }
-
-      const data = (await response.json()) as DeactivateResponse;
-
-      if (!response.ok) {
-        setErrorMessage(data.message || "No se pudo enviar el código.");
-        return;
-      }
-
-      setEmailVerificationToken(data.verificationToken || "");
-      setShowPasswordModal(false);
-      setShowEmailCodeModal(true);
-      setEmailCode("");
-      setEmailCodeSuccess("Enviamos un código al correo asociado a tu cuenta.");
-    } catch {
-      setErrorMessage("No se pudo conectar con el servidor.");
-    } finally {
-      setIsSendingCode(false);
-    }
-  };
-
-  const handleDeactivateAccount = async () => {
->>>>>>> b911b2bf644730e8e9778ee2b2988ca63e6edaa2
     try {
       setErrorMessage("");
       if (!API_URL) { setErrorMessage("No se configuró NEXT_PUBLIC_API_URL en el frontend."); return; }
@@ -252,7 +165,6 @@ export default function DeactivateAccountSection() {
     const token = localStorage.getItem("token");
     if (!token) { setErrorMessage("No se encontró la sesión del usuario."); return; }
 
-<<<<<<< HEAD
     setIsSubmitting(true);
     try {
       const response = await fetch(`${API_URL}/api/security/deactivate-account`, {
@@ -260,39 +172,6 @@ export default function DeactivateAccountSection() {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ password }),
       });
-=======
-      if (!API_URL) {
-        setErrorMessage("No se configuró NEXT_PUBLIC_API_URL en el frontend.");
-        return;
-      }
-
-      const token =
-        typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
-      if (!token) {
-        notifySecurityAuthError();
-        return;
-      }
-
-      setIsSubmitting(true);
-
-      const response = await fetch(
-        `${API_URL}/api/security/deactivate-account`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ password }),
-        },
-      );
->>>>>>> b911b2bf644730e8e9778ee2b2988ca63e6edaa2
-
-      if (isSecurityAuthError(response.status)) {
-        notifySecurityAuthError();
-        return;
-      }
 
       const data = (await response.json()) as DeactivateResponse;
 
@@ -307,10 +186,7 @@ export default function DeactivateAccountSection() {
         return;
       }
 
-<<<<<<< HEAD
       localStorage.removeItem(LOCKOUT_UNTIL_KEY);
-=======
->>>>>>> b911b2bf644730e8e9778ee2b2988ca63e6edaa2
       setSuccessMessage("Tu cuenta fue desactivada. Redirigiendo...");
       clearClientSession();
       window.setTimeout(() => router.push("/"), 1500);
@@ -325,7 +201,6 @@ export default function DeactivateAccountSection() {
     try {
       setEmailCodeError("");
       setEmailCodeSuccess("");
-<<<<<<< HEAD
       const trimmedCode = emailCode.trim();
       if (!trimmedCode) { setEmailCodeError("El código es obligatorio."); return; }
       if (!/^\d{6}$/.test(trimmedCode)) { setEmailCodeError("El código debe tener exactamente 6 dígitos."); return; }
@@ -344,78 +219,6 @@ export default function DeactivateAccountSection() {
       setEmailCodeSuccess("Tu cuenta fue desactivada. Redirigiendo...");
       clearClientSession();
       window.setTimeout(() => router.push("/"), 1500);
-=======
-
-      const trimmedCode = emailCode.trim();
-
-      if (!trimmedCode) {
-        setEmailCodeError("El código es obligatorio.");
-        return;
-      }
-
-      if (!/^\d{6}$/.test(trimmedCode)) {
-        setEmailCodeError("El código debe tener exactamente 6 dígitos.");
-        return;
-      }
-
-      if (!emailVerificationToken) {
-        setEmailCodeError(
-          "No se encontró la verificación del código. Solicita uno nuevo.",
-        );
-        return;
-      }
-
-      if (!API_URL) {
-        setEmailCodeError(
-          "No se configuró NEXT_PUBLIC_API_URL en el frontend.",
-        );
-        return;
-      }
-
-      const token =
-        typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
-      if (!token) {
-        notifySecurityAuthError();
-        return;
-      }
-
-      setIsVerifyingCode(true);
-
-      const response = await fetch(
-        `${API_URL}/api/security/deactivate-account/verify-code`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            codigo: trimmedCode,
-            verificationToken: emailVerificationToken,
-          }),
-        },
-      );
-
-      if (isSecurityAuthError(response.status)) {
-        notifySecurityAuthError();
-        return;
-      }
-
-      const data = (await response.json()) as DeactivateResponse;
-
-      if (!response.ok) {
-        setEmailCodeError(data.message || "No se pudo validar el código.");
-        return;
-      }
-
-      setEmailCodeSuccess("Tu cuenta fue desactivada. Redirigiendo...");
-      clearClientSession();
-
-      window.setTimeout(() => {
-        router.push("/");
-      }, 1500);
->>>>>>> b911b2bf644730e8e9778ee2b2988ca63e6edaa2
     } catch {
       setEmailCodeError("No se pudo conectar con el servidor.");
     } finally {
@@ -454,16 +257,12 @@ export default function DeactivateAccountSection() {
         </div>
       </div>
 
-<<<<<<< HEAD
       {/* Modal 1: Advertencia */}
-=======
->>>>>>> b911b2bf644730e8e9778ee2b2988ca63e6edaa2
       {showWarningModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           <div className="w-full max-w-md rounded-xl border border-neutral-300 bg-white p-5 shadow-xl">
             <div className="mb-4 flex items-start gap-3">
               <div className="mt-1 text-red-500">⚠</div>
-
               <div>
                 <h2 className="text-base font-bold text-neutral-900">
                   ¿Estás seguro de que quieres desactivar tu cuenta?
@@ -496,10 +295,7 @@ export default function DeactivateAccountSection() {
         </div>
       )}
 
-<<<<<<< HEAD
       {/* Modal 2: Contraseña */}
-=======
->>>>>>> b911b2bf644730e8e9778ee2b2988ca63e6edaa2
       {showPasswordModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           <div className="w-full max-w-md rounded-xl border border-neutral-300 bg-white p-5 shadow-xl">
@@ -522,15 +318,9 @@ export default function DeactivateAccountSection() {
                   id="current-password"
                   type={showPassword ? "text" : "password"}
                   value={password}
-<<<<<<< HEAD
                   onChange={(e) => { if (!isLocked) setPassword(e.target.value); }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !isSubmitting && !isLocked) {
-=======
-                  onChange={(event) => setPassword(event.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" && !isSubmitting) {
->>>>>>> b911b2bf644730e8e9778ee2b2988ca63e6edaa2
                       void handleDeactivateAccount();
                     }
                   }}
@@ -539,10 +329,6 @@ export default function DeactivateAccountSection() {
                   disabled={isLocked || isSubmitting || !!successMessage}
                   className="w-full border-none bg-transparent text-sm text-neutral-900 outline-none placeholder:text-red-400 disabled:cursor-not-allowed disabled:opacity-60"
                 />
-<<<<<<< HEAD
-=======
-
->>>>>>> b911b2bf644730e8e9778ee2b2988ca63e6edaa2
                 <button
                   type="button"
                   onClick={() => { if (!isLocked) setShowPassword((c) => !c); }}
@@ -565,12 +351,7 @@ export default function DeactivateAccountSection() {
 
             <div className="mt-3">
               <p className="text-sm text-neutral-600">
-<<<<<<< HEAD
                 Si te registraste con Google, Discord u otro método externo, puedes verificar mediante correo.
-=======
-                Si te registraste con Google, Discord u otro método externo,
-                puedes verificar mediante correo.
->>>>>>> b911b2bf644730e8e9778ee2b2988ca63e6edaa2
               </p>
               <button
                 type="button"
@@ -578,9 +359,7 @@ export default function DeactivateAccountSection() {
                 disabled={isSubmitting || !!successMessage || isSendingCode}
                 className="mt-2 text-sm font-medium text-blue-600 transition hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isSendingCode
-                  ? "Enviando código..."
-                  : "Verificación mediante correo"}
+                {isSendingCode ? "Enviando código..." : "Verificación mediante correo"}
               </button>
             </div>
 
@@ -613,10 +392,7 @@ export default function DeactivateAccountSection() {
         </div>
       )}
 
-<<<<<<< HEAD
       {/* Modal 3: Verificación por correo */}
-=======
->>>>>>> b911b2bf644730e8e9778ee2b2988ca63e6edaa2
       {showEmailCodeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           <div className="w-full max-w-md rounded-xl border border-neutral-300 bg-white p-5 shadow-xl">
@@ -632,33 +408,17 @@ export default function DeactivateAccountSection() {
               </div>
             </div>
             <div className="space-y-2">
-<<<<<<< HEAD
               <label htmlFor="email-code" className="text-sm font-medium text-neutral-700">
                 Código de verificación
               </label>
-=======
-              <label
-                htmlFor="email-code"
-                className="text-sm font-medium text-neutral-700"
-              >
-                Código de verificación
-              </label>
-
->>>>>>> b911b2bf644730e8e9778ee2b2988ca63e6edaa2
               <div className="flex h-11 items-center rounded-lg border border-neutral-300 px-3">
                 <input
                   id="email-code"
                   type="text"
                   value={emailCode}
-<<<<<<< HEAD
                   onChange={(e) => setEmailCode(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !isVerifyingCode) {
-=======
-                  onChange={(event) => setEmailCode(event.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" && !isVerifyingCode) {
->>>>>>> b911b2bf644730e8e9778ee2b2988ca63e6edaa2
                       void handleDeactivateAccountWithCode();
                     }
                   }}
@@ -669,28 +429,12 @@ export default function DeactivateAccountSection() {
                 />
               </div>
             </div>
-<<<<<<< HEAD
             {emailCodeError && (
               <p className="mt-3 text-sm font-medium text-red-600">{emailCodeError}</p>
             )}
             {emailCodeSuccess && (
               <p className="mt-3 text-sm font-medium text-green-600">{emailCodeSuccess}</p>
             )}
-=======
-
-            {emailCodeError && (
-              <p className="mt-3 text-sm font-medium text-red-600">
-                {emailCodeError}
-              </p>
-            )}
-
-            {emailCodeSuccess && (
-              <p className="mt-3 text-sm font-medium text-green-600">
-                {emailCodeSuccess}
-              </p>
-            )}
-
->>>>>>> b911b2bf644730e8e9778ee2b2988ca63e6edaa2
             <div className="mt-5 flex justify-end gap-3">
               <button
                 type="button"
@@ -700,10 +444,6 @@ export default function DeactivateAccountSection() {
               >
                 Cancelar
               </button>
-<<<<<<< HEAD
-=======
-
->>>>>>> b911b2bf644730e8e9778ee2b2988ca63e6edaa2
               <button
                 type="button"
                 onClick={handleDeactivateAccountWithCode}
