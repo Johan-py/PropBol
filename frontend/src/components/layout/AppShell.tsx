@@ -9,7 +9,7 @@ import { useInactivityLogout } from "@/hooks/useInactivityLogout";
 import { useAccountStatus } from "@/hooks/useAccountStatus";
 import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 
-const AUTH_ROUTES = ["/sign-in", "/sign-up"];
+const AUTH_ROUTES = ["/sign-in", "/sign-up", "/sign-in/verify-2fa"];
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const SESSION_EXPIRES_KEY = "propbol_session_expires";
 const TOKEN_STORAGE_KEY = "token";
