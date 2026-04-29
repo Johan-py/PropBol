@@ -1,20 +1,19 @@
 import type { Request, Response } from 'express'
+import type { Express } from 'express'
+import { uploadImageToCloudinary } from './cloudinary.service.js'
 import {
   getPublicationMultimediaService,
   registerImagesService,
   registerVideoLinkService
 } from './multimedia.service.js'
-import type {
-  ImageUploadItemInput,
-  RegisterImagesBody,
-  RegisterVideoLinkBody
-} from './multimedia.types.js'
+import type { ImageUploadItemInput, RegisterVideoLinkBody } from './multimedia.types.js'
 
 type AuthenticatedRequest = Request & {
   user?: {
     id?: number
     email?: string
   }
+  files?: Express.Multer.File[]
 }
 
 const parsePublicacionId = (req: Request): number => {
@@ -69,14 +68,13 @@ const getErrorStatus = (message: string): number => {
 
 const handleControllerError = (error: unknown, res: Response) => {
   const message = error instanceof Error ? error.message : 'Error interno del servidor'
-
   const status = getErrorStatus(message)
 
   if (status === 500) {
     console.error('[multimedia.controller] Error inesperado:', error)
   }
 
-  res.status(status).json({
+  return res.status(status).json({
     message: status === 500 ? 'Error interno del servidor' : message
   })
 }
@@ -91,12 +89,12 @@ export const getPublicationMultimediaController = async (req: Request, res: Resp
       usuarioId
     })
 
-    res.json({
+    return res.json({
       message: 'Multimedia obtenida correctamente',
       data: result
     })
   } catch (error) {
-    handleControllerError(error, res)
+    return handleControllerError(error, res)
   }
 }
 
@@ -112,12 +110,12 @@ export const registerVideoLinkController = async (req: Request, res: Response) =
       videoUrl: typeof videoUrl === 'string' ? videoUrl : ''
     })
 
-    res.status(201).json({
+    return res.status(201).json({
       message: 'Video registrado correctamente',
       data: result
     })
   } catch (error) {
-    handleControllerError(error, res)
+    return handleControllerError(error, res)
   }
 }
 
@@ -125,9 +123,24 @@ export const registerImagesController = async (req: Request, res: Response) => {
   try {
     const publicacionId = parsePublicacionId(req)
     const usuarioId = getAuthenticatedUserId(req as AuthenticatedRequest)
-    const { images } = req.body as Partial<RegisterImagesBody>
+    const files = (req as AuthenticatedRequest).files ?? []
 
-    const normalizedImages: ImageUploadItemInput[] = Array.isArray(images) ? images : []
+    if (files.length === 0) {
+      throw new Error('Debe enviar al menos una imagen')
+    }
+
+    const normalizedImages: ImageUploadItemInput[] = await Promise.all(
+      files.map(async (file) => {
+        const extension = file.originalname.split('.').pop()?.toLowerCase() ?? ''
+        const uploadedImage = await uploadImageToCloudinary(file, publicacionId)
+
+        return {
+          url: uploadedImage.url,
+          extension,
+          pesoMb: uploadedImage.pesoMb
+        }
+      })
+    )
 
     const result = await registerImagesService({
       publicacionId,
@@ -135,11 +148,11 @@ export const registerImagesController = async (req: Request, res: Response) => {
       images: normalizedImages
     })
 
-    res.status(201).json({
+    return res.status(201).json({
       message: 'Imágenes registradas correctamente',
       data: result
     })
   } catch (error) {
-    handleControllerError(error, res)
+    return handleControllerError(error, res)
   }
 }

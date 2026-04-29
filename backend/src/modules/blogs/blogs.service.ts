@@ -1,0 +1,161 @@
+import { estado_blog } from "@prisma/client";
+import { blogsRepository, comentariosRepository } from "./blogs.repository.js";
+
+// BLOGS SERVICE PE
+
+export const blogsService = {
+  async listar(params: {
+    categoria_id?: number;
+    page?: number;
+    limit?: number;
+  }) {
+    return blogsRepository.findAll(params);
+  },
+
+  async misBlogs(usuario_id: number) {
+    return blogsRepository.findByUserId(usuario_id);
+  },
+
+  async obtener(id: number) {
+    const blog = await blogsRepository.findById(id);
+    if (!blog) throw new Error("BLOG_NOT_FOUND");
+    return blog;
+  },
+  async crear(
+    usuario_id: number,
+    data: {
+      titulo: string;
+      contenido: string;
+      imagen?: string;
+      categoria_id: number;
+      accion: "borrador" | "pendiente";
+    },
+  ) {
+    const estado: estado_blog =
+      data.accion === "pendiente" ? "PENDIENTE" : "BORRADOR";
+
+    return blogsRepository.create({
+      titulo: data.titulo,
+      contenido: data.contenido,
+      imagen: data.imagen,
+      categoria_id: data.categoria_id,
+      usuario_id,
+      estado,
+    });
+  },
+  async actualizar(
+    id: number,
+    usuario_id: number,
+    data: {
+      titulo?: string;
+      contenido?: string;
+      imagen?: string;
+      categoria_id?: number;
+      accion?: "borrador" | "pendiente";
+    },
+  ) {
+    const blog = await blogsRepository.findById(id);
+    if (!blog) throw new Error("BLOG_NOT_FOUND");
+    if (blog.usuario_id !== usuario_id) throw new Error("FORBIDDEN");
+    if (
+      blog.estado !== "BORRADOR" &&
+      blog.estado !== "PENDIENTE" &&
+      blog.estado !== "PUBLICADO" &&
+      blog.estado !== "RECHAZADO"
+    ) {
+      throw new Error("BLOG_NOT_EDITABLE");
+    }
+
+    let estado: estado_blog | undefined;
+
+    if (blog.estado === "PENDIENTE") {
+      estado = "PENDIENTE";
+    } else if (blog.estado === "PUBLICADO" || blog.estado === "RECHAZADO") {
+      estado = "PENDIENTE";
+    } else if (data.accion === "pendiente") {
+      estado = "PENDIENTE";
+    } else if (data.accion === "borrador") {
+      estado = "BORRADOR";
+    }
+
+    return blogsRepository.update(id, {
+      titulo: data.titulo,
+      contenido: data.contenido,
+      imagen: data.imagen,
+      categoria_id: data.categoria_id,
+      ...(estado ? { estado } : {}),
+    });
+  },
+  async subirImagen(file: Express.Multer.File, usuario_id: number) {
+    return blogsRepository.uploadImage(file, usuario_id);
+  },
+  async cambiarEstado(
+    id: number,
+    estado: "PUBLICADO" | "RECHAZADO",
+    razon_rechazo?: string,
+  ) {
+    const blog = await blogsRepository.findById(id);
+    if (!blog) throw new Error("BLOG_NOT_FOUND");
+    if (blog.estado !== "PENDIENTE") throw new Error("BLOG_NOT_PENDING");
+    if (estado === "RECHAZADO" && !razon_rechazo) {
+      throw new Error("RAZON_RECHAZO_REQUIRED");
+    }
+
+    return blogsRepository.changeEstado(
+      id,
+      estado as estado_blog,
+      razon_rechazo,
+    );
+  },
+  async eliminar(id: number, usuario_id: number) {
+    const blog = await blogsRepository.findById(id);
+    if (!blog) throw new Error("BLOG_NOT_FOUND");
+    if (blog.usuario_id !== usuario_id) throw new Error("FORBIDDEN");
+    return blogsRepository.delete(id);
+  },
+  async listarAdmin(params: {
+    estado?: estado_blog;
+    categoria_id?: number;
+    page?: number;
+    limit?: number;
+  }) {
+    return blogsRepository.findAllAdmin(params);
+  },
+  async listarCategorias() {
+    return blogsRepository.findAllCategories();
+  },
+};
+// COMENTARIOS SERVICE
+export const comentariosService = {
+  async crear(data: {
+    contenido: string;
+    usuario_id: number;
+    blog_id: number;
+    comentario_padre_id?: number;
+  }) {
+    return comentariosRepository.create(data);
+  },
+
+  async listarPorBlog(blog_id: number, usuario_id?: number, page: number = 1, limit: number = 10) {
+    return comentariosRepository.findByBlogId({ blog_id, usuario_id, page, limit });
+  },
+
+  async actualizar(id: number, usuario_id: number, data: { contenido: string }) {
+    const comentario = await comentariosRepository.findById(id);
+    if (!comentario) throw new Error("COMENTARIO_NOT_FOUND");
+    if (comentario.usuario_id !== usuario_id) throw new Error("FORBIDDEN");
+
+    return comentariosRepository.update(id, data);
+  },
+
+  async toggleLike(usuario_id: number, comentario_id: number) {
+    return comentariosRepository.toggleLike(usuario_id, comentario_id);
+  },
+
+  async eliminar(id: number, usuario_id: number) {
+    const comentario = await comentariosRepository.findById(id);
+    if (!comentario) throw new Error("COMENTARIO_NOT_FOUND");
+    if (comentario.usuario_id !== usuario_id) throw new Error("FORBIDDEN");
+    return comentariosRepository.delete(id);
+  },
+};
