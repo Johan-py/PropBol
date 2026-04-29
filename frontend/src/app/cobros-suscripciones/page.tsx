@@ -92,7 +92,7 @@ export default function CobrosSuscripciones() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50 flex justify-center p-10 font-inter">
+    <div className="min-h-screen bg-stone-50 flex justify-center px-4 py-6 sm:p-10 font-inter">
       <div className="w-full max-w-6xl">
         <div className="mb-10">
           <h1 className="text-4xl font-bold text-stone-900">Planes de membresía</h1>
