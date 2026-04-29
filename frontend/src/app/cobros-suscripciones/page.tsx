@@ -23,7 +23,7 @@ const plansData: Plan[] = [
     price: 0,
     description: 'Ideal para comenzar',
     comment: 'Perfecto para empezar y explorar nuestras funciones esenciales sin complicaciones.',
-    benefits: ['3 publicaciones activas', 'Acceso limitado', 'Soporte basico', '1 usuario'],
+    benefits: ['2 publicaciones activas', 'Acceso limitado', 'Soporte basico', '1 usuario'],
     subscribers: 25
   },
   {
