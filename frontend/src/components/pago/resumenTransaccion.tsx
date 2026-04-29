@@ -31,7 +31,7 @@ export default function ResumenTransaccion({ transaccion }: Props) {
       <div className="mt-6 bg-green-50 p-4 rounded-lg text-center border border-green-100">
         <p className="text-sm text-green-800 font-medium">Total a pagar</p>
         <p className="text-2xl font-bold text-green-700">Bs. {total.toFixed(2)}</p>
-        <p className="text-xs text-green-600 mt-1">IVA incluido</p>
+        <p className="text-xs text-green-600 mt-1">IVA incluido en le costo</p>
       </div>
     </div>
   );
