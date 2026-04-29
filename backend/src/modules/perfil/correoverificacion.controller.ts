@@ -1,7 +1,8 @@
 // correoverificacion.controller.ts
 import type { Request, Response } from "express";
 import { prisma } from "../../lib/prisma.client.js";
-import { enviarCodigoCambioEmail } from "../../lib/email.service.js";
+import { enviarCodigoCambioEmail, enviarAvisoCambioPassword } from "../../lib/email.service.js";
+import { notificarCambioPassword } from "../whatsapp/whatsapp.notifications.js";
 import { invalidateOtherUserSessions } from "../auth/auth.repository.js";
 
 interface AuthRequest extends Request {
@@ -252,6 +253,15 @@ export const cambiarPassword = async (req: AuthRequest, res: Response) => {
     ]);
 
     await invalidateOtherUserSessions(usuarioId, currentToken);
+
+    enviarAvisoCambioPassword({
+      emailDestino: usuario.correo,
+      nombreUsuario: usuario.nombre,
+    }).catch((err) => console.error("Error enviando email de aviso cambio password:", err));
+
+    notificarCambioPassword(usuarioId).catch((err) =>
+      console.error("Error enviando WhatsApp de aviso cambio password:", err)
+    );
 
     return res.json({
       ok: true,
