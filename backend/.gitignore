@@ -37,3 +37,5 @@ seed-datos_ub_maestra.ts
 
 /src/generated/prisma
 frontend/
+
+/src/generated/prisma
