@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const MAX_PASSWORD_LENGTH = 255;
+const LOCKOUT_UNTIL_KEY = "propbol_deactivate_lockout_until";
+const LOCKOUT_DURATION_MS = 15 * 60 * 1000;
 
 type DeactivateResponse = {
   message: string;
@@ -31,6 +33,42 @@ export default function DeactivateAccountSection() {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // --- Bloqueo por intentos fallidos ---
+  const [secondsLeft, setSecondsLeft] = useState<number>(() => {
+    if (typeof window === "undefined") return 0;
+    const until = Number(localStorage.getItem(LOCKOUT_UNTIL_KEY) ?? 0);
+    const remaining = Math.ceil((until - Date.now()) / 1000);
+    return remaining > 0 ? remaining : 0;
+  });
+
+  useEffect(() => {
+    if (secondsLeft <= 0) return;
+    const id = window.setTimeout(() => {
+      setSecondsLeft((prev) => {
+        const next = prev - 1;
+        if (next <= 0) localStorage.removeItem(LOCKOUT_UNTIL_KEY);
+        return next < 0 ? 0 : next;
+      });
+    }, 1000);
+    return () => window.clearTimeout(id);
+  }, [secondsLeft]);
+
+  const isLocked = secondsLeft > 0;
+
+  const formatCountdown = () => {
+    const m = Math.floor(secondsLeft / 60);
+    const s = secondsLeft % 60;
+    return `${m}:${String(s).padStart(2, "0")}`;
+  };
+
+  const triggerLockout = () => {
+    const until = Date.now() + LOCKOUT_DURATION_MS;
+    localStorage.setItem(LOCKOUT_UNTIL_KEY, String(until));
+    setPassword("");
+    setSecondsLeft(LOCKOUT_DURATION_MS / 1000);
+  };
+  // --- Fin bloqueo ---
   const [showEmailCodeModal, setShowEmailCodeModal] = useState(false);
   const [emailCode, setEmailCode] = useState("");
   const [emailCodeError, setEmailCodeError] = useState("");
@@ -187,6 +225,13 @@ export default function DeactivateAccountSection() {
       const data = (await response.json()) as DeactivateResponse;
 
       if (!response.ok) {
+        if (response.status === 429) {
+          triggerLockout();
+          setErrorMessage(
+            "Demasiados intentos fallidos. El campo y el botón estarán bloqueados durante 15 minutos.",
+          );
+          return;
+        }
         setErrorMessage(data.message || "No se pudo desactivar la cuenta.");
         return;
       }
@@ -377,27 +422,28 @@ export default function DeactivateAccountSection() {
                 Ingresa tu contraseña
               </label>
 
-              <div className="flex h-11 items-center rounded-lg border border-neutral-300 px-3">
+              <div className={`flex h-11 items-center rounded-lg border px-3 transition-colors ${isLocked ? "border-red-300 bg-red-50" : "border-neutral-300"}`}>
                 <input
                   id="current-password"
                   type={showPassword ? "text" : "password"}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => { if (!isLocked) setPassword(e.target.value); }}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" && !isSubmitting) {
+                    if (e.key === "Enter" && !isSubmitting && !isLocked) {
                       void handleDeactivateAccount();
                     }
                   }}
-                  placeholder="••••••••"
+                  placeholder={isLocked ? "Bloqueado temporalmente" : "••••••••"}
                   maxLength={MAX_PASSWORD_LENGTH}
-                  disabled={isSubmitting || !!successMessage}
-                  className="w-full border-none bg-transparent text-sm text-neutral-900 outline-none disabled:opacity-50"
+                  disabled={isLocked || isSubmitting || !!successMessage}
+                  className="w-full border-none bg-transparent text-sm text-neutral-900 outline-none placeholder:text-red-400 disabled:cursor-not-allowed disabled:opacity-60"
                 />
                 
                 <button
                   type="button"
                   onClick={handleTogglePasswordVisibility}
-                  className="ml-3 text-sm font-medium text-neutral-600 transition hover:text-neutral-900"
+                  disabled={isLocked}
+                  className="ml-3 text-sm font-medium text-neutral-600 transition hover:text-neutral-900 disabled:pointer-events-none disabled:opacity-40"
                 >
                   {showPassword ? "Ocultar" : "Ver"}
                 </button>
@@ -426,6 +472,15 @@ export default function DeactivateAccountSection() {
               </p>
             )}
 
+            {isLocked && (
+              <div className="mt-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2">
+                <p className="text-sm font-medium text-red-700">
+                  Intenta de nuevo en{" "}
+                  <span className="font-bold tabular-nums">{formatCountdown()}</span>.
+                </p>
+              </div>
+            )}
+
             {successMessage && (
               <p className="mt-3 text-sm font-medium text-green-600">
                 {successMessage}
@@ -445,7 +500,7 @@ export default function DeactivateAccountSection() {
               <button
                 type="button"
                 onClick={handleDeactivateAccount}
-                disabled={isSubmitting || !!successMessage}
+                disabled={isLocked || isSubmitting || !!successMessage}
                 className="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isSubmitting ? "Desactivando..." : "Desactivar cuenta"}
