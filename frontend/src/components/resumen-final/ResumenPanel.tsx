@@ -105,7 +105,6 @@ function normalizarParametros(data: any): ParametroItem[] {
 
 export default function ResumenPanel({ publicacionId }: Props) {
   const router = useRouter();
-
   const [aceptado, setAceptado] = useState(false);
   const [data, setData] = useState<ResumenFinalData | null>(null);
   const [parametrosExtra, setParametrosExtra] = useState<ParametroItem[]>([]);
@@ -225,7 +224,6 @@ export default function ResumenPanel({ publicacionId }: Props) {
 
     isCancelled.current = false;
     isPaused.current = false;
-
     setEstadoPublicacion("publicando");
     setProgreso(0);
 
