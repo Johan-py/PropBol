@@ -178,17 +178,17 @@ export default function CobrosSuscripciones() {
               <Calendar className="w-8 h-8 text-amber-600" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-stone-900">¿Prefieres pagar menos?</h3>
+              <h3 className="text-xl font-bold text-stone-900">Tu suscripción actual</h3>
               <p className="text-stone-600 text-sm max-w-md">
-                Ahorra hasta un 15% con nuestras suscripciones anuales. Mismos beneficios, mejor precio.
+                Revisa cuántas publicaciones has usado este mes y el límite de tu plan.
               </p>
             </div>
           </div>
-          <button 
+          <button
             onClick={() => router.push('/LimiteConsumo')}
             className="whitespace-nowrap px-8 py-3 bg-white border-2 border-amber-600/20 text-amber-700 rounded-2xl hover:bg-amber-100 hover:border-amber-600/40 transition-all font-bold flex items-center gap-2 shadow-sm active:scale-95"
           >
-            Ver suscripciones anuales
+            Ir al panel de consumo
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
