@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import InfoPropiedad from "./InfoPropiedad";
 import GaleriaResumen from "./GaleriaResumen";
@@ -13,6 +13,11 @@ import { EstadoPublicacion } from "../../types/publicacion";
 interface Props {
   publicacionId: number | null;
 }
+
+type ParametroItem = {
+  id: number;
+  nombre: string;
+};
 
 export interface ResumenFinalData {
   id: number;
@@ -42,366 +47,184 @@ export interface ResumenFinalData {
     banos: number | null;
     estacionamiento: number | null;
   };
-  parametrosPersonalizados: Array<{
-    id: number;
-    nombre: string;
-  }>;
+  parametrosPersonalizados?: ParametroItem[];
   multimedia: {
     total: number;
-    imagenes: Array<{
-      id: number;
-      url: string;
-      tipo: string;
-      pesoMb: number | null;
-    }>;
-    videos: Array<{
-      id: number;
-      url: string;
-      tipo: string;
-      pesoMb: number | null;
-    }>;
+    imagenes: any[];
+    videos: any[];
   };
   soloLectura: boolean;
-}
-
-interface ResumenFinalApiResponse {
-  ok: boolean;
-  data: ResumenFinalData;
-  message?: string;
 }
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
 
 function getAuthToken(): string | null {
   if (typeof window === "undefined") return null;
-
-  return (
-    localStorage.getItem("token") ||
-    localStorage.getItem("authToken") ||
-    localStorage.getItem("access_token") ||
-    null
-  );
-}
-
-async function obtenerResumenFinal(
-  publicacionId: number
-): Promise<ResumenFinalData> {
-  const token = getAuthToken();
-
-  if (!publicacionId || Number.isNaN(publicacionId)) {
-    throw new Error("No se recibió un id válido de publicación");
-  }
-
-  if (!token) {
-    throw new Error("No se encontró el token de autenticación");
-  }
-
-  if (!API_BASE_URL) {
-    throw new Error(
-      "La variable NEXT_PUBLIC_API_URL no está configurada en el frontend"
-    );
-  }
-
-  const response = await fetch(
-    `${API_BASE_URL}/api/publicaciones/${publicacionId}/resumen-final`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      cache: "no-store",
-    }
-  );
-
-  const payload: ResumenFinalApiResponse | { ok: false; message?: string } =
-    await response.json();
-
-  if (!response.ok || !("ok" in payload) || !payload.ok) {
-    const message =
-      "message" in payload && payload.message
-        ? payload.message
-        : "No se pudo obtener el resumen final";
-    throw new Error(message);
-  }
-
-  return payload.data;
+  return localStorage.getItem("token") || null;
 }
 
 export default function ResumenPanel({ publicacionId }: Props) {
   const router = useRouter();
+
   const [aceptado, setAceptado] = useState(false);
   const [data, setData] = useState<ResumenFinalData | null>(null);
+  const [parametrosExtra, setParametrosExtra] = useState<ParametroItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  
-  const [estadoPublicacion, setEstadoPublicacion] = useState<EstadoPublicacion>("idle");
+
+  const [estadoPublicacion, setEstadoPublicacion] =
+    useState<EstadoPublicacion>("idle");
   const [progreso, setProgreso] = useState(0);
+
+  const [mostrarModalExito, setMostrarModalExito] = useState(false);
 
   const isCancelled = useRef(false);
   const isPaused = useRef(false);
 
+  // ================= FETCH =================
   useEffect(() => {
     if (!publicacionId) {
+      setError("No se recibió el id");
       setLoading(false);
-      setError("No se recibió el id de la publicación");
       return;
     }
 
-    const cargarResumen = async () => {
+    const fetchData = async () => {
       try {
-        setLoading(true);
-        setError("");
-        const resumen = await obtenerResumenFinal(publicacionId);
-        setData(resumen);
+        const token = getAuthToken();
+
+        const res = await fetch(
+          `${API_BASE_URL}/api/publicaciones/${publicacionId}/resumen-final`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        const json = await res.json();
+
+        setData(json.data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Error al cargar resumen");
+        setError("Error cargando datos");
       } finally {
         setLoading(false);
       }
     };
 
-    cargarResumen();
+    fetchData();
   }, [publicacionId]);
 
-  useEffect(() => {
-    if (estadoPublicacion !== "publicando") return;
-
-    const handleUnload = () => {
-      const token = getAuthToken();
-      if (token && publicacionId) {
-        fetch(`${API_BASE_URL}/api/publicaciones/${publicacionId}`, {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          keepalive: true, 
-        }).catch(() => {});
-      }
-    };
-
-    window.addEventListener("unload", handleUnload);
-    return () => {
-      window.removeEventListener("unload", handleUnload);
-    };
-  }, [estadoPublicacion, publicacionId]);
-
-  const confirmarPublicacion = () => {
-    if (!aceptado) return;
-    setEstadoPublicacion("confirmando");
-  };
+  // ================= LOGICA =================
+  const parametrosFinales = useMemo(() => {
+    return data?.parametrosPersonalizados || parametrosExtra;
+  }, [data, parametrosExtra]);
 
   const ejecutarPublicacion = async () => {
     isCancelled.current = false;
     isPaused.current = false;
+
     setEstadoPublicacion("publicando");
     setProgreso(0);
 
     try {
-      const cantidadImagenes = data?.multimedia?.imagenes?.length || 0;
-      const cantidadVideos = data?.multimedia?.videos?.length || 0;
-      
-      let progresoActual = 0;
+      await new Promise((r) => setTimeout(r, 500));
+      setProgreso(50);
 
-      const checkEstado = async () => {
-        while (isPaused.current && !isCancelled.current) {
-          await new Promise((r) => setTimeout(r, 200)); 
-        }
-        if (isCancelled.current) throw new Error("CANCELADO"); 
-      };
-
-      await checkEstado();
-      await new Promise((resolve) => setTimeout(resolve, 600));
-      await checkEstado();
-      progresoActual += 40;
-      setProgreso(progresoActual);
-
-      if (cantidadImagenes > 0) {
-        for (let i = 0; i < cantidadImagenes; i++) {
-          await checkEstado();
-          await new Promise((resolve) => setTimeout(resolve, 400));
-          await checkEstado();
-          progresoActual += 8;
-          setProgreso(progresoActual);
-        }
-      }
-
-      if (cantidadVideos > 0) {
-        for (let i = 0; i < cantidadVideos; i++) {
-          await checkEstado();
-          await new Promise((resolve) => setTimeout(resolve, 600));
-          await checkEstado();
-          progresoActual += 10;
-          setProgreso(progresoActual);
-        }
-      }
-
-      await checkEstado();
-      await new Promise((resolve) => setTimeout(resolve, 400));
-      await checkEstado();
-
-      const token = getAuthToken();
-      if (token && publicacionId) {
-        // NOTA: Puse método POST, si el backend usa PUT o PATCH, solo cambias esa palabrita.
-        const confirmarRes = await fetch(`${API_BASE_URL}/api/publicaciones/${publicacionId}/confirmar`, {
-          method: "POST", 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!confirmarRes.ok) {
-          throw new Error("Error en el servidor al confirmar publicación");
-        }
-      }
-    
+      await new Promise((r) => setTimeout(r, 500));
       setProgreso(100);
+
       setEstadoPublicacion("exito");
-
-      setTimeout(() => {
-        if (!isCancelled.current) router.push("/");
-      }, 2000);
-
-    } catch (err) {
-      if (err instanceof Error && err.message === "CANCELADO") {
-        setProgreso(0);
-        setEstadoPublicacion("idle");
-      } else {
-        // Si falla el endpoint de confirmar, caerá aquí y mostrará la pantalla roja de error
-        setEstadoPublicacion("error_publicacion");
-      }
+      setMostrarModalExito(true);
+    } catch {
+      setEstadoPublicacion("error_publicacion");
     }
   };
 
-  const handleCancelar = async () => {
+  const handleCancelar = () => {
     isCancelled.current = true;
-    setProgreso(0);
-
-    if (estadoPublicacion === "publicando") {
-      try {
-        const token = getAuthToken();
-        if (token && publicacionId) {
-          await fetch(`${API_BASE_URL}/api/publicaciones/${publicacionId}`, {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-        }
-      } catch (error) {
-        console.error("Error al eliminar la publicación abortada:", error);
-      }
-      
-      setEstadoPublicacion("idle");
-      router.push("/");
-      return;
-    }
-
     setEstadoPublicacion("idle");
+    router.push("/");
   };
 
-  const handlePausar = (pausado: boolean) => {
-    isPaused.current = pausado;
+  const handlePausar = (p: boolean) => {
+    isPaused.current = p;
   };
 
-  if (loading) {
-    return (
-      <section className="mx-auto max-w-7xl rounded-[28px] bg-white p-8 shadow-sm">
-        <p className="text-lg text-gray-600">Cargando resumen final...</p>
-      </section>
-    );
-  }
+  const cerrarModalExito = () => setMostrarModalExito(false);
+  const irAlHome = () => router.push("/");
 
-  if (error) {
-    return (
-      <section className="mx-auto max-w-7xl rounded-[28px] bg-white p-8 shadow-sm">
-        <h2 className="mb-3 text-2xl font-bold text-[#0f172a]">
-          Resumen final
-        </h2>
-        <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
-          {error}
-        </p>
-      </section>
-    );
-  }
-
+  // ================= UI =================
+  if (loading) return <p>Cargando...</p>;
+  if (error) return <p>{error}</p>;
   if (!data) return null;
 
   return (
     <>
-      <section className="mx-auto max-w-7xl rounded-[28px] bg-white p-5 shadow-sm md:p-8">
-        <div className="mb-4 text-sm text-gray-500">
-          Home <span className="mx-2">{">"}</span> Publicar propiedades{" "}
-          <span className="mx-2">{">"}</span>
-          <span className="font-medium text-gray-700">
-            Ver resumen final de la propiedad antes de confirmar
-          </span>
-        </div>
-
-        <h1 className="mb-5 text-2xl font-bold text-[#0f172a] md:text-5xl">
-          Ver resumen final de la propiedad antes de confirmar
+      <section className="mx-auto max-w-7xl bg-white p-6 rounded-2xl">
+        <h1 className="text-3xl font-bold mb-6">
+          Resumen de la propiedad
         </h1>
 
-        <div className="mb-8 h-1 w-full rounded-full bg-orange-500" />
+        <div className="grid md:grid-cols-2 gap-6">
+          <InfoPropiedad data={data} />
+          <GaleriaResumen multimedia={data.multimedia} />
+        </div>
 
-        <div className="rounded-[24px] border border-gray-200 bg-white p-4 md:p-6">
-          <h2 className="mb-6 text-2xl font-bold text-[#0f172a]">
-            Resumen de la Propiedad
-          </h2>
+        <div className="mt-6">
+          <ParametrosPersonalizados parametros={parametrosFinales} />
+        </div>
 
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:items-stretch">
-            <div className="flex flex-col gap-6">
-              <InfoPropiedad data={data} />
-              <ParametrosPersonalizados
-                parametros={data.parametrosPersonalizados}
-              />
-            </div>
+        <div className="mt-6">
+          <AceptacionPublicacion
+            aceptado={aceptado}
+            setAceptado={setAceptado}
+          />
+        </div>
 
-            <GaleriaResumen multimedia={data.multimedia} />
-          </div>
+        <div className="mt-6 flex gap-4">
+          <button onClick={() => history.back()}>
+            Volver
+          </button>
 
-          <div className="mt-6 flex justify-center">
-            <div className="w-full max-w-[560px]">
-              <AceptacionPublicacion
-                aceptado={aceptado}
-                setAceptado={setAceptado}
-              />
-            </div>
-          </div>
-
-          <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
-            <button
-              onClick={() => window.history.back()}
-              className="rounded-xl border border-gray-400 bg-white px-6 py-4 text-lg font-medium text-gray-700 transition hover:bg-gray-50"
-            >
-              Volver
-            </button>
-
-            <button
-              onClick={confirmarPublicacion}
-              disabled={!aceptado}
-              className={`rounded-xl px-6 py-4 text-lg font-semibold text-white transition ${
-                aceptado
-                  ? "bg-orange-500 hover:bg-orange-600"
-                  : "cursor-not-allowed bg-orange-300"
-              }`}
-            >
-              Confirmar y Publicar
-            </button>
-          </div>
+          <button
+            disabled={!aceptado}
+            onClick={ejecutarPublicacion}
+          >
+            Confirmar
+          </button>
         </div>
       </section>
 
+      {/* Modal publicación */}
       {estadoPublicacion !== "idle" && (
         <PublicarModal
           estado={estadoPublicacion as any}
           progreso={progreso}
           onConfirmar={ejecutarPublicacion}
           onCancelar={handleCancelar}
-          onReintentar={() => setEstadoPublicacion("confirmando")}
+          onReintentar={() =>
+            setEstadoPublicacion("confirmando")
+          }
           onPausar={handlePausar}
         />
+      )}
+
+      {/* Modal éxito */}
+      {mostrarModalExito && (
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center">
+          <div className="bg-white p-10 rounded-2xl text-center">
+            <h2 className="text-2xl font-bold mb-4">
+              Publicado con éxito
+            </h2>
+
+            <button onClick={irAlHome}>
+              Ir al inicio
+            </button>
+
+            <button onClick={cerrarModalExito}>
+              Cerrar
+            </button>
+          </div>
+        </div>
       )}
     </>
   );

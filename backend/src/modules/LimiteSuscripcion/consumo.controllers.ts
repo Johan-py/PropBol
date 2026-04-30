@@ -3,10 +3,10 @@ import { obtenerConsumo } from '../../modules/LimiteSuscripcion/consumo.service.
 
 export const getConsumo = async (req: Request, res: Response) => {
   try {
-    const userId = Number(req.params.userId)
+    const userId = req.user?.id
 
     if (!userId) {
-      return res.status(400).json({ message: 'userId inválido' })
+      return res.status(401).json({ message: 'No autenticado' })
     }
 
     const data = await obtenerConsumo(userId)
