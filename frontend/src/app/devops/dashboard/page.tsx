@@ -38,9 +38,12 @@ export default function DashboardDevOps() {
   if (error) return <p className="text-red-500 font-bold m-5">Error cargando datos</p>;
   if (!data) return <p className="m-5 text-gray-500 animate-pulse">Cargando...</p>;
 
-  // Usamos el Array final entregado en json.teams para pintar los graficos y las tablas 
+  // Usamos el Array final entregado en json.teams para dibujar los graficos 
   const losEquipos = data.teams;
-
+  //Creamos una copia de los datos y ordenamos la tabla de mayor a menor segun score
+  const equiposOrdenados = [...(data.teams || [])].sort((a, b) =>
+  (b.total_score || 0) - (a.total_score || 0)
+);
   return (
     <div className="p-8 max-w-7xl mx-auto font-sans bg-slate-50 min-h-screen">
       <h1 className="text-3xl font-extrabold mb-8 text-slate-800">Dashboard DevOps Métricas</h1>
@@ -51,21 +54,21 @@ export default function DashboardDevOps() {
          <table className="min-w-full table-auto border-collapse">
            <thead className="bg-slate-200">
              <tr>
-               <th className="p-3 text-left">Equipo</th>
-	       <th className="p-3 text-left">Score</th>
-               <th className="p-3 text-left">Calidad</th>
-               <th className="p-3 text-left">CI Success Rate</th>
-               <th className="p-3 text-left">Total Commits</th>
+               <th className="p-3 text-center">Equipo</th>
+	       <th className="p-3 text-center">Score</th>
+               <th className="p-3 text-center">Calidad</th>
+               <th className="p-3 text-center">CI Success Rate</th>
+               <th className="p-3 text-center">Total Commits</th>
              </tr>
            </thead>
            <tbody>
-             {losEquipos.map((row: any, i: number) => (
+             {equiposOrdenados.map((row: any, i: number) => (
                <tr key={i} className="border-b">
-                 <td className="p-3 font-semibold text-slate-700">{row.team}</td>
-		 <td className="p-3 font-bold text-purple-600">{row.total_score}</td>
-                 <td className="p-3 text-blue-600">{row.avg_commit_score}</td>
-                 <td className="p-3 text-green-600">{row.ci_success_rate * 100}%</td>
-                 <td className="p-3">{row.total_commits}</td>
+                 <td className="p-3 text-center font-semibold text-slate-700">{row.team}</td>
+		 <td className="p-3 text-center font-bold text-purple-600">{row.total_score}</td>
+                 <td className="p-3 text-center text-blue-600">{row.avg_commit_score}</td>
+                 <td className="p-3 text-center text-green-600">{row.ci_success_rate * 100}%</td>
+                 <td className="p-3 text-center ">{row.total_commits}</td>
                </tr>
              ))}
            </tbody>
