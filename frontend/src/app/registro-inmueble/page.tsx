@@ -964,11 +964,7 @@ export default function MiRegistroPage() {
                     onClick={guardarPropiedad}
                     className="px-12 py-3 rounded-full border-2 border-orange-400 bg-[#D9D9D9] hover:bg-orange-100 transition"
                   >
-<<<<<<< HEAD
-                    Continuar
-=======
                     Continuar 
->>>>>>> 12fdeeebd8671cb7cc09d10a1f93d4cbeffbac5c
                   </button>
                 </div>
 
