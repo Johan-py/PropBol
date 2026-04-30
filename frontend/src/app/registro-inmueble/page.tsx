@@ -1,3 +1,5 @@
+
+
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
@@ -608,6 +610,7 @@ export default function MiRegistroPage() {
       setEstado('ninguno')
       setMensajeError('')
       setCampoError(null)
+      
 
       router.push(`/contenido-multimedia?publicacionId=${publicacionId}`)
     } catch (error) {
@@ -961,7 +964,7 @@ export default function MiRegistroPage() {
                     onClick={guardarPropiedad}
                     className="px-12 py-3 rounded-full border-2 border-orange-400 bg-[#D9D9D9] hover:bg-orange-100 transition"
                   >
-                    Continuar
+                    Continuar 
                   </button>
                 </div>
 
