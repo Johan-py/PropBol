@@ -1,6 +1,7 @@
 import { publicacionesRepository } from "./publicaciones.repository.js";
 import { Publicacion } from "@prisma/client";
 import { suscripcionesService } from "../suscripciones/suscripciones.service.js";
+import { prisma } from "../../lib/prisma.client.js";
 
 export const publicacionesService = {
   async listarTodas(): Promise<Publicacion[]> {
@@ -110,3 +111,23 @@ export const publicacionesService = {
     };
   },
 };
+
+export async function obtenerMetricasPublicacion(publicacionId: number) {
+  const [visitas, favoritos, contactos] = await Promise.all([
+    prisma.propiedadVista.count({
+      where: { publicacionId }
+    }),
+    prisma.favorito.count({
+      where: { publicacionId }
+    }),
+    prisma.contacto.count({
+      where: { publicacionId }
+    })
+  ]);
+
+  return {
+    visitas,
+    favoritos,
+    contactos
+  };
+}
