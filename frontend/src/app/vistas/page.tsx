@@ -1,9 +1,8 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
-import { Calendar, Trash2 } from "lucide-react";
+import { Calendar, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
 
 const PropertyCard = ({ prop }: { prop: any }) => {
-
     const fecha = new Date(prop.viewedDate).toLocaleDateString('es-ES', {
         day: '2-digit', month: '2-digit'
     });
@@ -31,7 +30,6 @@ const PropertyCard = ({ prop }: { prop: any }) => {
                     <span>3 hab</span><span>•</span><span>2 baños</span><span>•</span><span>1 garaje</span>
                 </div>
                 <div className="mt-4 flex gap-2">
-                    
                     <button className="w-full bg-[#E87B00] text-white py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm text-center">
                         Ver Detalle
                     </button>
@@ -45,6 +43,11 @@ export default function VistasRecientesPage() {
     const [properties, setProperties] = useState<any[]>([]);
     const [filteredProperties, setFilteredProperties] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+
+    // --- ESTADOS DE PAGINACIÓN ---
+    const [currentPage, setCurrentPage] = useState(1);
+    const propertiesPerPage = 8; // Muestra exactamente 2 filas de 4
+
     const dateInputRef = useRef<HTMLInputElement>(null);
 
     const fetchHistorial = async () => {
@@ -54,6 +57,7 @@ export default function VistasRecientesPage() {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
+            // Carga todos los registros encontrados (ej. los 22 de tu tabla)
             setProperties(data);
             setFilteredProperties(data);
         } catch (error) {
@@ -65,9 +69,20 @@ export default function VistasRecientesPage() {
 
     useEffect(() => { fetchHistorial(); }, []);
 
-    // FUNCIONALIDAD: Filtrar por fecha (Calendario)
+    // --- LÓGICA DE PAGINACIÓN ---
+    const indexOfLastProperty = currentPage * propertiesPerPage;
+    const indexOfFirstProperty = indexOfLastProperty - propertiesPerPage;
+    const currentItems = filteredProperties.slice(indexOfFirstProperty, indexOfLastProperty);
+    const totalPages = Math.ceil(filteredProperties.length / propertiesPerPage);
+
+    const paginate = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     const handleDateFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedDate = e.target.value; // Formato YYYY-MM-DD
+        const selectedDate = e.target.value;
+        setCurrentPage(1);
         if (!selectedDate) {
             setFilteredProperties(properties);
             return;
@@ -78,9 +93,12 @@ export default function VistasRecientesPage() {
         setFilteredProperties(filtered);
     };
 
-    // FUNCIONALIDAD: Borrar historial
     const handleClearHistory = async () => {
+        // BUG FIX: Evita el confirm si no hay nada que borrar
+        if (properties.length === 0) return;
+
         if (!confirm("¿Deseas borrar todo tu historial de vistas?")) return;
+
         const token = localStorage.getItem('token');
         try {
             await fetch('http://localhost:5000/api/perfil/historial/vistas', {
@@ -102,12 +120,13 @@ export default function VistasRecientesPage() {
                 <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                     <div>
                         <h1 className="text-xl md:text-2xl font-bold text-gray-900">Propiedades vistas recientemente</h1>
-                        <p className="text-gray-500 text-xs">{filteredProperties.length} propiedades encontradas</p>
+                        <p className="text-gray-500 text-xs">
+                            {filteredProperties.length} propiedades encontradas en total
+                        </p>
                     </div>
 
                     <div className="flex gap-3 items-center">
                         <div className="relative">
-                            {/* BUG FIX: Atributos min y max añadidos para habilitar navegación libre de años */}
                             <input
                                 type="date"
                                 ref={dateInputRef}
@@ -124,30 +143,80 @@ export default function VistasRecientesPage() {
                             </button>
                         </div>
 
+                        {/* BOTÓN CON UX MEJORADO: Deshabilitado si el historial está vacío */}
                         <button
                             onClick={handleClearHistory}
-                            className="flex items-center gap-2 px-4 py-2 bg-white border border-red-100 text-red-600 rounded-lg shadow-sm text-sm font-medium hover:bg-red-50"
+                            disabled={properties.length === 0}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow-sm text-sm font-medium transition-all ${
+                                properties.length === 0
+                                    ? 'bg-gray-50 text-gray-300 border-gray-100 cursor-not-allowed'
+                                    : 'bg-white border-red-100 text-red-600 hover:bg-red-50'
+                            }`}
                         >
                             <Trash2 size={16} /> Limpiar Historial
                         </button>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* GRILLA DE PROPIEDADES */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 min-h-[600px]">
                     {properties.length === 0 ? (
                         <div className="col-span-full text-center py-20 text-gray-400 font-medium">
                             Aún no has visto ninguna propiedad
                         </div>
-                    ) : filteredProperties.length > 0 ? (
-                        filteredProperties.map((prop: any) => (
+                    ) : currentItems.length > 0 ? (
+                        currentItems.map((prop: any) => (
                             <PropertyCard key={prop.id} prop={prop} />
                         ))
                     ) : (
                         <div className="col-span-full text-center py-20 text-gray-400 font-medium">
-                            No se encontraron propiedades para esta selección.
+                            No se encontraron propiedades para esta fecha.
                         </div>
                     )}
                 </div>
+
+                {/* PAGINACIÓN DINÁMICA: Aparece automáticamente si hay más de 8 registros */}
+                {totalPages > 1 && (
+                    <div className="flex justify-center items-center mt-12 mb-10 gap-2">
+                        <button
+                            onClick={() => paginate(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className={`p-2 rounded-lg border transition-all ${
+                                currentPage === 1
+                                    ? 'text-gray-300 border-gray-100 cursor-not-allowed'
+                                    : 'text-black border-gray-300 hover:bg-gray-100'
+                            }`}
+                        >
+                            <ChevronLeft size={20} />
+                        </button>
+
+                        {[...Array(totalPages)].map((_, i) => (
+                            <button
+                                key={i + 1}
+                                onClick={() => paginate(i + 1)}
+                                className={`w-10 h-10 rounded-lg text-sm font-bold transition-all ${
+                                    currentPage === i + 1
+                                        ? 'bg-[#E87B00] text-white shadow-md'
+                                        : 'bg-white text-black border border-gray-300 hover:bg-gray-50'
+                                }`}
+                            >
+                                {i + 1}
+                            </button>
+                        ))}
+
+                        <button
+                            onClick={() => paginate(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className={`p-2 rounded-lg border transition-all ${
+                                currentPage === totalPages
+                                    ? 'text-gray-300 border-gray-100 cursor-not-allowed'
+                                    : 'text-black border-gray-300 hover:bg-gray-100'
+                            }`}
+                        >
+                            <ChevronRight size={20} />
+                        </button>
+                    </div>
+                )}
             </div>
         </main>
     );
