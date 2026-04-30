@@ -52,6 +52,7 @@ export default function DashboardDevOps() {
            <thead className="bg-slate-200">
              <tr>
                <th className="p-3 text-left">Equipo</th>
+	       <th className="p-3 text-left">Score</th>
                <th className="p-3 text-left">Calidad</th>
                <th className="p-3 text-left">CI Success Rate</th>
                <th className="p-3 text-left">Total Commits</th>
@@ -61,6 +62,7 @@ export default function DashboardDevOps() {
              {losEquipos.map((row: any, i: number) => (
                <tr key={i} className="border-b">
                  <td className="p-3 font-semibold text-slate-700">{row.team}</td>
+		 <td className="p-3 font-bold text-purple-600">{row.total_score}</td>
                  <td className="p-3 text-blue-600">{row.avg_commit_score}</td>
                  <td className="p-3 text-green-600">{row.ci_success_rate * 100}%</td>
                  <td className="p-3">{row.total_commits}</td>

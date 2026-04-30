@@ -109,13 +109,18 @@ export async function GET() {
       const calculatedRawAvg = eData.num_devs > 0 ? eData.sum_score / eData.num_devs : 0
       const calculateCirawRate =
         eData.total_pipelines > 0 ? eData.success_pipelines / eData.total_pipelines : 0
+      //Score total 
+      //                     calidad                ci                commits
+      const totalScore = (calculatedRawAvg + (calculateCirawRate*100) + 100) / 3;
+
 
       return {
         team: eData.team,
         avg_commit_score: Number(calculatedRawAvg.toFixed(2)) || 0,
         ci_success_rate: Number(calculateCirawRate.toFixed(2)) || 0,
         total_commits: eData.total_commits || 0,
-        total_pipelines: eData.total_pipelines || 0
+        total_pipelines: eData.total_pipelines || 0,
+	total_score: Number(totalScore.toFixed(2)) || 0
       }
     })
 
