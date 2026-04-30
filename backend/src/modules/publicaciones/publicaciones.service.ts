@@ -1,6 +1,7 @@
 import { publicacionesRepository } from "./publicaciones.repository.js";
 import { Publicacion } from "@prisma/client";
 import { suscripcionesService } from "../suscripciones/suscripciones.service.js";
+import { prisma } from "../../lib/prisma.client.js";
 
 export const publicacionesService = {
   async listarTodas(): Promise<Publicacion[]> {
@@ -11,7 +12,7 @@ export const publicacionesService = {
     return publicacionesRepository.findGratis();
   },
 
-  async listarMisPublicaciones(userId: number) {
+  async listarMisPublicaciones(userId: number): Promise<any> {
     return publicacionesRepository.findByUserId(userId);
   },
 
@@ -109,4 +110,29 @@ export const publicacionesService = {
       mensaje: "Publicación lista para guardar",
     };
   },
+
+  async obtenerMetricasPorInmueble(inmuebleId: number): Promise<{
+    visitas: number;
+    favoritos: number;
+    contactos: number;
+  }> {
+    const [visitas, favoritos] = await Promise.all([
+      prisma.propiedad_vista.count({
+        where: { inmuebleId }
+      }),
+      prisma.favorito.count({
+        where: { inmuebleId }
+      }),
+      prisma.contacto.count({
+        where: { inmuebleId }
+      })
+    ]);
+
+    return {
+      visitas,
+      favoritos,
+      contactos: 0 // hasta que exista modelo contacto
+    };
+  }
 };
+
