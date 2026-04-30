@@ -652,7 +652,7 @@ export default function MiRegistroPage() {
       }
 
       // FETCH REAL AL BACKEND CON LA SEÑAL DE ABORTO
-      const response = await fetch(`${API_URL}/api/publicaciones`, {
+      const response = await fetch(`${API_URL}/api/properties`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -746,7 +746,7 @@ export default function MiRegistroPage() {
         const token = localStorage.getItem('token');
         const pid = publicacionIdRef.current;
         if (token && pid) {
-          await fetch(`${API_URL}/api/publicaciones/${pid}`, {
+          await fetch(`${API_URL}/api/properties/${pid}`, {
             method: "DELETE",
             headers: { Authorization: `Bearer ${token}` },
           });
