@@ -1,3 +1,5 @@
+
+
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
@@ -5,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { ErrorValidacion } from "../../types/publicacion";
 import ErrorPanel from "../../components/publicacion/ErrorPanel";
+import PublicarModal from "../../components/publicacion/PublicarModal";
 
 const MapaPinSelector = dynamic(
   () => import('../../components/MapaPinSelector'),
@@ -50,7 +53,13 @@ export default function MiRegistroPage() {
   const [vertices, setVertices] = useState<[number, number][]>([])
   const [modoPinActivo, setModoPinActivo] = useState(false)
   const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
-
+  const [estadoPublicacion, setEstadoPublicacion] = useState<any>("idle");
+  const [progreso, setProgreso] = useState(0);
+  const [payloadPendiente, setPayloadPendiente] = useState<any>(null);
+  const isCancelled = useRef(false);
+  const isPaused = useRef(false);
+  const publicacionIdRef = useRef<number | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
   useEffect(() => {
     const obtenerDireccion = async () => {
       if (!pinCoords) return
@@ -577,6 +586,41 @@ export default function MiRegistroPage() {
 
     console.log('📤 Payload enviado al backend:', payload)
 
+
+    setPayloadPendiente(payload);
+    setEstadoPublicacion("confirmando");
+    setProgreso(0);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+      
+  }
+
+  useEffect(() => {
+    if (estadoPublicacion !== "publicando") return;
+
+    const handleUnload = () => {
+      const token = localStorage.getItem('token');
+      const pid = publicacionIdRef.current;
+      if (token && pid) {
+        fetch(`${API_URL}/api/publicaciones/${pid}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+          keepalive: true, 
+        }).catch(() => {});
+      }
+    };
+
+    window.addEventListener("unload", handleUnload);
+    return () => window.removeEventListener("unload", handleUnload);
+  }, [estadoPublicacion]);
+
+  const ejecutarPublicacion = async () => {
+    isCancelled.current = false;
+    isPaused.current = false;
+    setEstadoPublicacion("publicando");
+    setProgreso(0);
+
+    abortControllerRef.current = new AbortController();
+
     try {
       const token = localStorage.getItem('token')
 
@@ -584,58 +628,143 @@ export default function MiRegistroPage() {
         setMensajeError('DEBES INICIAR SESIÓN PARA REGISTRAR UNA PROPIEDAD')
         setCampoError(null)
         setEstado('error')
+        setEstadoPublicacion("idle");
         return
       }
 
+      let progresoActual = 0;
+      const metaProgreso = 85; 
+
+      while (progresoActual < metaProgreso) {
+        while (isPaused.current && !isCancelled.current) {
+          await new Promise((r) => setTimeout(r, 200)); 
+        }
+        
+        if (isCancelled.current) throw new Error("CANCELADO_POR_USUARIO");
+
+        const incremento = Math.floor(Math.random() * 5) + 2;
+        progresoActual += incremento;
+        if (progresoActual > metaProgreso) progresoActual = metaProgreso;
+        
+        setProgreso(progresoActual);
+        
+        await new Promise(r => setTimeout(r, Math.random() * 400 + 300));
+      }
+
+      // FETCH REAL AL BACKEND CON LA SEÑAL DE ABORTO
       const response = await fetch(`${API_URL}/api/properties`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payloadPendiente),
+        signal: abortControllerRef.current.signal
       })
 
       const result = await response.json()
 
-      if (!response.ok) {
-        if (result.message === 'LIMIT_REACHED') {
+      if (!response.ok || result.error) {
+        if (result.error === 'LIMIT_REACHED') {
+          setEstadoPublicacion("idle");
           router.push('/Cobros-Limite')
           return
         }
 
+        if (result.error === 'FORM_INCOMPLETE') {
+          setMensajeError(result.message || 'Debes completar todas las etapas antes de publicar.');
+          setCampoError(null);
+          setEstado('error');
+          setEstadoPublicacion("error_publicacion");
+          return;
+        }
+
+        if (result.error === 'PUBLICATION_CANCELLED') {
+          throw new Error("CANCELADO_POR_USUARIO");
+        }
+
         const erroresBackend =
           result.errores?.map((e: { mensaje: string }) => `• ${e.mensaje}`).join('\n') ||
-          result.mensaje ||
-          result.message ||
-          'ERROR AL GUARDAR LA PROPIEDAD'
+          result.mensaje || result.message || 'ERROR AL GUARDAR LA PROPIEDAD'
 
         setMensajeError(erroresBackend)
         setCampoError(null)
         setEstado('error')
+        setEstadoPublicacion("error_publicacion");
         return
       }
 
-      const publicacionId = result?.property?.publicacion?.id
+    
+      const publicacionId = result?.publicacion?.id || result?.property?.publicacion?.id
 
       if (!publicacionId) {
         setMensajeError('No se recibió el ID de la publicación creada')
         setEstado('error')
+        setEstadoPublicacion("error_publicacion");
         return
       }
 
-      setEstado('ninguno')
-      setMensajeError('')
-      setCampoError(null)
+      publicacionIdRef.current = publicacionId;
 
-      router.push(`/contenido-multimedia?publicacionId=${publicacionId}`)
-    } catch (error) {
-      setMensajeError('NO SE PUDO CONECTAR CON EL BACKEND')
-      setCampoError(null)
-      setEstado('error')
+      setProgreso(result.progress || 100);
+      setEstadoPublicacion("exito");
+      setEstado('exito');
+      setMensajeError('');
+      setCampoError(null);
+
+      setTimeout(() => {
+        if (!isCancelled.current) {
+          router.push(`/contenido-multimedia?publicacionId=${publicacionId}`);
+        }
+      }, 2000);
+
+    } catch (error: any) {
+    
+      if (error.name === 'AbortError' || error.message === "CANCELADO_POR_USUARIO") {
+        setProgreso(0);
+        setEstadoPublicacion("idle");
+      } else {
+        setMensajeError('NO SE PUDO CONECTAR CON EL BACKEND')
+        setCampoError(null)
+        setEstado('error')
+        setEstadoPublicacion("error_publicacion");
+      }
     }
   }
 
+  const handleCancelar = async () => {
+    isCancelled.current = true;
+    setProgreso(0);
+
+    // Matamos la petición de raíz
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    if (estadoPublicacion === "publicando") {
+      try {
+        const token = localStorage.getItem('token');
+        const pid = publicacionIdRef.current;
+        if (token && pid) {
+          await fetch(`${API_URL}/api/properties/${pid}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+        }
+      } catch (error) {
+        console.error("Error al eliminar la publicación abortada:", error);
+      }
+      
+      setEstadoPublicacion("idle");
+      return;
+    }
+
+    setEstadoPublicacion("idle");
+  };
+
+  const handlePausar = (pausado: boolean) => {
+    isPaused.current = pausado;
+  };
   const errorTitulo = campoError === 'titulo'
   const errorDescripcion = campoError === 'descripcion'
   const errorDireccion = campoError === 'direccion'
@@ -646,7 +775,6 @@ export default function MiRegistroPage() {
   const errorArea = campoError === 'area'
   const errorOperacion = campoError === 'operacion'
   const errorMapa = campoError === 'mapa'
-
   return (
     <div className="min-h-screen bg-white text-gray-900">
       <main className="max-w-6xl mx-auto p-8 md:p-12">
@@ -997,7 +1125,7 @@ export default function MiRegistroPage() {
                     onClick={guardarPropiedad}
                     className="px-12 py-3 rounded-full border-2 border-orange-400 bg-[#D9D9D9] hover:bg-orange-100 transition"
                   >
-                    Continuar
+                    Continuar 
                   </button>
                 </div>
 
@@ -1011,6 +1139,17 @@ export default function MiRegistroPage() {
           </div>
         </div>
       </main>
+      {/* Componente del Modal de Publicación */}
+      {(estadoPublicacion !== "idle") && (
+        <PublicarModal
+          estado={estadoPublicacion as any}
+          progreso={progreso}
+          onConfirmar={ejecutarPublicacion}
+          onCancelar={handleCancelar}
+          onReintentar={() => setEstadoPublicacion("confirmando")}
+          onPausar={handlePausar}
+        />
+      )}
     </div>
   )
 }
