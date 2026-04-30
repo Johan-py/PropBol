@@ -15,7 +15,7 @@ export default function DashboardDevOps() {
   const [data, setData] = useState<{ teams: any[] } | null>(null);
   const [error, setError] = useState(false);
 
-  // Implementacion TICKET 5 (Peticion por FETCH a lo que armamos previamente)
+  // Peticion por FETCH a lo que armamos previamente (T5)
   useEffect(() => {
     async function loadMetricas() {
       try {
@@ -23,7 +23,7 @@ export default function DashboardDevOps() {
         if (!res.ok) throw new Error("Falla al recuperar los datos");
         
         const jsonResponse = await res.json();
-        // Console Log Obligatorio por el criterio de TICKET 6 ("datos visibles en consola")
+        // Log en consola (criterio de T6) 
         console.log("Datos frontend dashboard obtenidos: ", jsonResponse); 
         setData(jsonResponse);
       } catch (err) {
@@ -31,6 +31,7 @@ export default function DashboardDevOps() {
         setError(true);
       }
     }
+    //Llamamos a la función para cargar las metricas
     loadMetricas();
   }, []);
 
@@ -48,7 +49,7 @@ export default function DashboardDevOps() {
     <div className="p-8 max-w-7xl mx-auto font-sans bg-slate-50 min-h-screen">
       <h1 className="text-3xl font-extrabold mb-8 text-slate-800">Dashboard DevOps Métricas</h1>
 
-      {/* ------ TABLA SIMPLE MÍNIMA REQUERIDA (Ticket 6 by Roberto, completada aquí) ------ */}
+      {/* ------ TABLA de metricas de grupos (T6) ------ */}
       <div className="mb-10 bg-white p-4 shadow-sm border rounded-lg">
          <h2 className="text-xl font-bold mb-4">Tabla General</h2>
          <table className="min-w-full table-auto border-collapse">
@@ -76,7 +77,7 @@ export default function DashboardDevOps() {
       </div>
 
 
-      {/* ------ ZONA TICKET 7 MÍO (GRAFICOS EXIGIDOS) ------ */}
+      {/* ------ ZONA TICKET 7 MÍO (GRAFICOS) ------ */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         
         {/* GRÁFICO 1: Calidad de Commit Por equipo (AVG Score) */}

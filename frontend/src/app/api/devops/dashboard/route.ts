@@ -3,7 +3,7 @@ import { promises as fs } from 'fs'
 import csv from 'csvtojson'
 import path from 'path'
 
-// Requisito: Forzar runtime de Node.js
+// Forzar runtime de Node.js
 export const runtime = 'nodejs'
 
 export async function GET() {
@@ -11,14 +11,16 @@ export async function GET() {
   let pipelinesCsv = ''
   let authorCsv = ''
 
-  // === TICKET 10: MANEJO ESPECÍFICO DE ARCHIVO NO ENCONTRADO ===
+  // === T10: MANEJO ESPECÍFICO DE ARCHIVO NO ENCONTRADO ===
   try {
+    // Ruta 
     const basePath = path.join(process.cwd(), 'src', 'core_data')
+    //Lectura de los archivos csv
     usuariosCsv = await fs.readFile(path.join(basePath, 'usuarios.csv'), 'utf-8')
     pipelinesCsv = await fs.readFile(path.join(basePath, 'pipelines_runs.csv'), 'utf-8')
     authorCsv = await fs.readFile(path.join(basePath, 'author_consist.csv'), 'utf-8')
 
-    // TICKET 10: Validación "CSV vacío"
+    // Validación "CSV vacío" (T10)
     if (!usuariosCsv.trim() || !pipelinesCsv.trim() || !authorCsv.trim()) {
       throw new Error('Uno de los CSV se encuentra vacío')
     }
@@ -27,32 +29,33 @@ export async function GET() {
     return Response.json({ error: 'Error leyendo archivos CSV' }, { status: 500 })
   }
 
-  // Lógica principal
+  // ------------------------ Lógica principal -----------------------------
+  // logs en consola sobre el nro de filas de los csv files
   try {
     console.log(`📄 usuarios.csv leídos: ${usuariosCsv.trim().split('\n').length} filas.`)
     console.log(`📄 pipelines_runs.csv leídos: ${pipelinesCsv.trim().split('\n').length} filas.`)
     console.log(`📄 author_consist.csv leídos: ${authorCsv.trim().split('\n').length} filas.`)
 
-    // --- Conversión csv a json ---
+    // --- Conversión csv a json (objeto) ---
     const [usuariosData, pipelinesData, authorsData] = await Promise.all([
       csv({ checkType: true }).fromString(usuariosCsv),
       csv({ checkType: true }).fromString(pipelinesCsv),
       csv({ checkType: true }).fromString(authorCsv)
     ])
 
-    // === TICKET 10: Validaciones Obligatorias de "Columnas Faltantes" ===
+    // === T10: Validaciones Obligatorias de "Columnas Faltantes" ===
     // (Verificamos y prevenimos usando las validaciones pedidas en doc sin crashear)
     const faltaUsuariosCol = usuariosData.length > 0 && !('nombre_equipo' in usuariosData[0])
     const faltaPipelineCol = pipelinesData.length > 0 && !('conclusion' in pipelinesData[0])
     const faltaAuthorCol = authorsData.length > 0 && !('commit_score' in authorsData[0])
-
+    // Si se encuentra registros vacios de un campo:
     if (faltaUsuariosCol || faltaPipelineCol || faltaAuthorCol) {
       console.warn(
         '⚠️ Validacion T10: Faltan columnas en los datos base, algunos resultados pueden ir en ceros'
       )
     }
 
-    // --- Tu procesamiento de Métricas Intacto (Ticket 4) ---
+    // --- Procesamiento de Métricas(T4) ---
     const equipoStats: any = {}
     const unionUsuarioAEquipo: any = {}
 
@@ -79,7 +82,7 @@ export async function GET() {
       }
     })
 
-    // B. Scores
+    // B. Calidad
     authorsData.forEach((a: any) => {
       const equipoVinculado = a.team?.trim()
       if (equipoVinculado && equipoStats[equipoVinculado]) {
@@ -106,10 +109,12 @@ export async function GET() {
     // D. Agrupar evitando DivisionByZero
     const formatedMetricaList = Object.values(equipoStats).map((eData: any) => {
       // Uso extra del operador condicional asegura prevenir caidas de memoria
+	    // calidad
       const calculatedRawAvg = eData.num_devs > 0 ? eData.sum_score / eData.num_devs : 0
+      // CI
       const calculateCirawRate =
         eData.total_pipelines > 0 ? eData.success_pipelines / eData.total_pipelines : 0
-      //Score total 
+      // Operación para calcular Score total 
       //                     calidad                ci                commits
       const totalScore = (calculatedRawAvg + (calculateCirawRate*100) + 100) / 3;
 
