@@ -44,9 +44,9 @@ export default function VistasRecientesPage() {
     const [filteredProperties, setFilteredProperties] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // --- LÓGICA DE PAGINACIÓN DINÁMICA ---
+    // --- ESTADOS DE PAGINACIÓN ---
     const [currentPage, setCurrentPage] = useState(1);
-    const propertiesPerPage = 8;
+    const propertiesPerPage = 8; // Muestra exactamente 2 filas de 4
 
     const dateInputRef = useRef<HTMLInputElement>(null);
 
@@ -57,7 +57,7 @@ export default function VistasRecientesPage() {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
-            // Guardamos todos los datos recibidos (los 22 o más)
+            // Carga todos los registros encontrados (ej. los 22 de tu tabla)
             setProperties(data);
             setFilteredProperties(data);
         } catch (error) {
@@ -69,14 +69,10 @@ export default function VistasRecientesPage() {
 
     useEffect(() => { fetchHistorial(); }, []);
 
-    // Cálculo dinámico basado en la longitud total del arreglo
+    // --- LÓGICA DE PAGINACIÓN ---
     const indexOfLastProperty = currentPage * propertiesPerPage;
     const indexOfFirstProperty = indexOfLastProperty - propertiesPerPage;
-
-    // Aquí se seleccionan los 8 correspondientes a la página actual
     const currentItems = filteredProperties.slice(indexOfFirstProperty, indexOfLastProperty);
-
-    // El número de páginas crece según la cantidad de datos en filteredProperties
     const totalPages = Math.ceil(filteredProperties.length / propertiesPerPage);
 
     const paginate = (pageNumber: number) => {
@@ -98,7 +94,11 @@ export default function VistasRecientesPage() {
     };
 
     const handleClearHistory = async () => {
+        // BUG FIX: Evita el confirm si no hay nada que borrar
+        if (properties.length === 0) return;
+
         if (!confirm("¿Deseas borrar todo tu historial de vistas?")) return;
+
         const token = localStorage.getItem('token');
         try {
             await fetch('http://localhost:5000/api/perfil/historial/vistas', {
@@ -121,8 +121,7 @@ export default function VistasRecientesPage() {
                     <div>
                         <h1 className="text-xl md:text-2xl font-bold text-gray-900">Propiedades vistas recientemente</h1>
                         <p className="text-gray-500 text-xs">
-                            {/* Muestra el total real detectado en la BD */}
-                            {filteredProperties.length} propiedades encontradas
+                            {filteredProperties.length} propiedades encontradas en total
                         </p>
                     </div>
 
@@ -144,15 +143,22 @@ export default function VistasRecientesPage() {
                             </button>
                         </div>
 
+                        {/* BOTÓN CON UX MEJORADO: Deshabilitado si el historial está vacío */}
                         <button
                             onClick={handleClearHistory}
-                            className="flex items-center gap-2 px-4 py-2 bg-white border border-red-100 text-red-600 rounded-lg shadow-sm text-sm font-medium hover:bg-red-50"
+                            disabled={properties.length === 0}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow-sm text-sm font-medium transition-all ${
+                                properties.length === 0
+                                    ? 'bg-gray-50 text-gray-300 border-gray-100 cursor-not-allowed'
+                                    : 'bg-white border-red-100 text-red-600 hover:bg-red-50'
+                            }`}
                         >
                             <Trash2 size={16} /> Limpiar Historial
                         </button>
                     </div>
                 </div>
 
+                {/* GRILLA DE PROPIEDADES */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 min-h-[600px]">
                     {properties.length === 0 ? (
                         <div className="col-span-full text-center py-20 text-gray-400 font-medium">
@@ -164,12 +170,12 @@ export default function VistasRecientesPage() {
                         ))
                     ) : (
                         <div className="col-span-full text-center py-20 text-gray-400 font-medium">
-                            No se encontraron propiedades para esta selección.
+                            No se encontraron propiedades para esta fecha.
                         </div>
                     )}
                 </div>
 
-                {/* CONTROLES DE NAVEGACIÓN (Se adaptan a cualquier cantidad de datos) */}
+                {/* PAGINACIÓN DINÁMICA: Aparece automáticamente si hay más de 8 registros */}
                 {totalPages > 1 && (
                     <div className="flex justify-center items-center mt-12 mb-10 gap-2">
                         <button
@@ -178,7 +184,7 @@ export default function VistasRecientesPage() {
                             className={`p-2 rounded-lg border transition-all ${
                                 currentPage === 1
                                     ? 'text-gray-300 border-gray-100 cursor-not-allowed'
-                                    : 'text-black border-gray-300 hover:bg-gray-100 active:scale-95'
+                                    : 'text-black border-gray-300 hover:bg-gray-100'
                             }`}
                         >
                             <ChevronLeft size={20} />
@@ -204,7 +210,7 @@ export default function VistasRecientesPage() {
                             className={`p-2 rounded-lg border transition-all ${
                                 currentPage === totalPages
                                     ? 'text-gray-300 border-gray-100 cursor-not-allowed'
-                                    : 'text-black border-gray-300 hover:bg-gray-100 active:scale-95'
+                                    : 'text-black border-gray-300 hover:bg-gray-100'
                             }`}
                         >
                             <ChevronRight size={20} />
