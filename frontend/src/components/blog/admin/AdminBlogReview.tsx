@@ -167,6 +167,7 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
               height={980}
               className="h-auto w-full object-cover"
               priority
+              unoptimized
             />
           </div>
 
