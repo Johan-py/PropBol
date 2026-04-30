@@ -1,11 +1,12 @@
+
+
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { ErrorValidacion, EstadoPublicacion } from "../../types/publicacion";
+import { ErrorValidacion } from "../../types/publicacion";
 import ErrorPanel from "../../components/publicacion/ErrorPanel";
-import PublicarModal from "../../components/publicacion/PublicarModal";
 
 const MapaPinSelector = dynamic(
   () => import('../../components/MapaPinSelector'),
@@ -52,9 +53,28 @@ export default function MiRegistroPage() {
   const [modoPinActivo, setModoPinActivo] = useState(false)
   const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
 
-  const [estadoPublicacion, setEstadoPublicacion] = useState<EstadoPublicacion>("idle")
-  const [progreso, setProgreso] = useState(0)
-  const [payloadPendiente, setPayloadPendiente] = useState<any>(null)
+  useEffect(() => {
+    const obtenerDireccion = async () => {
+      if (!pinCoords) return
+
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pinCoords.lat}&lon=${pinCoords.lng}`
+      )
+
+      const data = await response.json()
+
+      // MINIMAL FIX: Recortar la dirección para no exceder los 80 caracteres
+      let dirLimpia = data.display_name ? data.display_name.split(',').slice(0, 3).join(',') : ''
+      if (dirLimpia.length >= 80) dirLimpia = dirLimpia.substring(0, 79)
+
+      setDatos((prev) => ({
+        ...prev,
+        direccion: dirLimpia
+      }))
+    }
+
+    obtenerDireccion()
+  }, [pinCoords])
 
   const refs: Record<string, React.RefObject<any>> = {
     titulo: useRef<HTMLInputElement>(null),
@@ -89,7 +109,7 @@ export default function MiRegistroPage() {
         router.push('/sign-in')
         return
       }
-      
+
       try {
         const response = await fetch(`${API_URL}/api/publicaciones/flujo`, {
           method: 'GET',
@@ -109,7 +129,7 @@ export default function MiRegistroPage() {
     }
 
     validarFlujo()
-  }, [router]) 
+  }, [router])
 
   const limpiarError = () => {
     setMensajeError('')
@@ -524,23 +544,6 @@ export default function MiRegistroPage() {
       return
     }
 
-    const tienePin = pinCoords !== null
-    const tieneDifuminado = vertices.length >= 3
-
-    if (!tienePin && !tieneDifuminado) {
-      setMensajeError('DEBE MARCAR UNA UBICACIÓN EN EL MAPA (PIN O ZONA DIFUMINADA)')
-      setCampoError('mapa')
-      setEstado('error')
-      return
-    }
-
-    const centroide = tieneDifuminado && !tienePin
-      ? {
-          lat: vertices.reduce((s, p) => s + p[0], 0) / vertices.length,
-          lng: vertices.reduce((s, p) => s + p[1], 0) / vertices.length
-        }
-      : null
-
     const payload = {
       titulo: tituloLimpio,
       tipoAccion: datos.operacion,
@@ -552,37 +555,18 @@ export default function MiRegistroPage() {
       descripcion: descripcionLimpia,
       direccion: direccionLimpia,
       zona: zonaLimpia,
-      ciudad: datos.ciudad,
-      latitud: tienePin ? pinCoords!.lat : centroide!.lat,
-      longitud: tienePin ? pinCoords!.lng : centroide!.lng,
-      verticesDifuminado: tieneDifuminado ? vertices : undefined
+      ciudad: datos.ciudad
     }
 
     console.log('📤 Payload enviado al backend:', payload)
-
-    setPayloadPendiente(payload);
-    setEstadoPublicacion("confirmando");
-    setProgreso(0);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  const ejecutarPublicacion = async () => {
-    setEstadoPublicacion("publicando");
-    setProgreso(0);
-
-    const intervaloBarra = setInterval(() => {
-      setProgreso(p => p >= 90 ? 90 : p + 10);
-    }, 300);
 
     try {
       const token = localStorage.getItem('token')
 
       if (!token) {
-        clearInterval(intervaloBarra);
         setMensajeError('DEBES INICIAR SESIÓN PARA REGISTRAR UNA PROPIEDAD')
         setCampoError(null)
         setEstado('error')
-        setEstadoPublicacion("idle");
         return
       }
 
@@ -592,15 +576,13 @@ export default function MiRegistroPage() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(payloadPendiente)
+        body: JSON.stringify(payload)
       })
 
       const result = await response.json()
-      clearInterval(intervaloBarra);
 
       if (!response.ok) {
         if (result.message === 'LIMIT_REACHED') {
-          setEstadoPublicacion("idle");
           router.push('/Cobros-Limite')
           return
         }
@@ -614,7 +596,6 @@ export default function MiRegistroPage() {
         setMensajeError(erroresBackend)
         setCampoError(null)
         setEstado('error')
-        setEstadoPublicacion("error_publicacion");
         return
       }
 
@@ -623,25 +604,19 @@ export default function MiRegistroPage() {
       if (!publicacionId) {
         setMensajeError('No se recibió el ID de la publicación creada')
         setEstado('error')
-        setEstadoPublicacion("error_publicacion");
         return
       }
 
-      setProgreso(100);
-      setEstadoPublicacion("exito");
-      setEstado('exito')
+      setEstado('ninguno')
       setMensajeError('')
       setCampoError(null)
+      
 
-      setTimeout(() => {
-        router.push(`/contenido-multimedia?publicacionId=${publicacionId}`)
-      }, 2000);
+      router.push(`/contenido-multimedia?publicacionId=${publicacionId}`)
     } catch (error) {
-      clearInterval(intervaloBarra);
       setMensajeError('NO SE PUDO CONECTAR CON EL BACKEND')
       setCampoError(null)
       setEstado('error')
-      setEstadoPublicacion("error_publicacion");
     }
   }
 
@@ -654,7 +629,6 @@ export default function MiRegistroPage() {
   const errorPrecio = campoError === 'precio'
   const errorArea = campoError === 'area'
   const errorOperacion = campoError === 'operacion'
-  const errorMapa = campoError === 'mapa'
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -811,6 +785,7 @@ export default function MiRegistroPage() {
                           }
                         } as React.ChangeEvent<HTMLInputElement>)
                       }}
+                      placeholder="Ej: 3"
                       className={`w-full p-3 rounded-xl border ${
                         errorHabitaciones ? 'border-red-500' : 'border-gray-200'
                       }`}
@@ -842,6 +817,7 @@ export default function MiRegistroPage() {
                           }
                         } as React.ChangeEvent<HTMLInputElement>)
                       }}
+                      placeholder="Ej: 2"
                       className={`w-full p-3 rounded-xl border ${
                         errorBanos ? 'border-red-500' : 'border-gray-200'
                       }`}
@@ -858,6 +834,7 @@ export default function MiRegistroPage() {
                       value={datos.direccion}
                       onChange={manejarCambio}
                       maxLength={80}
+                      placeholder="Ej: Av. América #123"
                       className={`w-full p-3 rounded-xl border ${
                         errorDireccion ? 'border-red-500' : 'border-gray-200'
                       }`}
@@ -870,13 +847,14 @@ export default function MiRegistroPage() {
                 </div>
 
                 <div className="mt-4 w-full">
-                  <label className="block text-[15px] font-bold mb-2">Zona</label>
+                  <label className="block text-[15px] font-bold mb-2">Zona *</label>
                   <input
                     ref={refs.zona}
                     name="zona"
                     value={datos.zona}
                     onChange={manejarCambio}
                     maxLength={80}
+                    placeholder="Ej: Cala Cala"
                     className={`w-full p-3 rounded-xl border ${
                       errorZona ? 'border-red-500' : 'border-gray-200'
                     }`}
@@ -910,76 +888,67 @@ export default function MiRegistroPage() {
                   {datos.descripcion.length}/300 caracteres
                 </p>
               </div>
-             <div className="mt-6">
-               
-              <div className="flex items-center justify-between mb-4 gap-4">
 
-            <div className="flex gap-3">
+              <div className="mt-6">
+                <div className="flex items-center justify-between mb-4 gap-4">
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setModoPinActivo(true)
+                        setModoDifuminadoActivo(false)
+                      }}
+                      className={`px-4 py-2 rounded-full text-sm ${
+                        modoPinActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
+                      }`}
+                    >
+                      Pin
+                    </button>
 
-             <button
-                type="button"
-               onClick={() => {
-             setModoPinActivo(true)
-             setModoDifuminadoActivo(false)
-             setVertices([])
-               }}
-             className={`px-4 py-2 rounded-full text-sm ${
-                 modoPinActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
-             }`}
-             >
-                Pin
-              </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setModoDifuminadoActivo(true)
+                        setModoPinActivo(false)
+                      }}
+                      className={`px-4 py-2 rounded-full text-sm ${
+                        modoDifuminadoActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
+                      }`}
+                    >
+                      Difuminado
+                    </button>
+                  </div>
 
-                <button
-                 type="button"
-                 onClick={() => {
-                 setModoDifuminadoActivo(true)
-                 setModoPinActivo(false)
-                 setPinCoords(null)
-                }}
-                className={`px-4 py-2 rounded-full text-sm ${
-                 modoDifuminadoActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
-             }`}
-                >
-                Difuminado
-             </button>
+                  <button
+                    type="button"
+                    disabled={!pinCoords && vertices.length === 0}
+                    onClick={() => {
+                      setPinCoords(null)
+                      setVertices([])
+                      setModoPinActivo(false)
+                      setModoDifuminadoActivo(false)
+                    }}
+                    className={`px-4 py-2 rounded-full text-sm transition ${
+                      !pinCoords && vertices.length === 0
+                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        : 'bg-orange-500 text-white hover:bg-orange-600'
+                    }`}
+                  >
+                    Eliminar selección
+                  </button>
+                </div>
 
-         </div>
-
-             <button
-             type="button"
-             disabled={!pinCoords && vertices.length === 0}
-             onClick={() => {
-                setPinCoords(null)
-                setVertices([])
-                setModoPinActivo(false)
-                setModoDifuminadoActivo(false)
-            }}
-             className={`px-4 py-2 rounded-full text-sm transition ${
-            !pinCoords && vertices.length === 0
-          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-          : 'bg-orange-500 text-white hover:bg-orange-600'
-         }`}
-        >
-             Eliminar selección
-        </button>
-
-         </div>
-
-           <div className={`relative z-0 rounded-2xl overflow-hidden border max-w-full h-[320px] ${errorMapa ? 'border-red-500' : 'border-gray-200'}`}>
-            <MapaPinSelector
-               pinCoords={pinCoords}
-               setPinCoords={setPinCoords}
-               vertices={vertices}
-               setVertices={setVertices}
-               modoPinActivo={modoPinActivo}
-               modoDifuminadoActivo={modoDifuminadoActivo}
-                 />
+                <div className="relative z-0 rounded-2xl overflow-hidden border border-gray-200 max-w-full h-[320px]">
+                  <MapaPinSelector
+                    pinCoords={pinCoords}
+                    setPinCoords={setPinCoords}
+                    vertices={vertices}
+                    setVertices={setVertices}
+                    modoPinActivo={modoPinActivo}
+                    modoDifuminadoActivo={modoDifuminadoActivo}
+                  />
+                </div>
               </div>
-              {errorMapa && (
-                <p className="text-red-500 text-sm mt-2">{mensajeError}</p>
-              )}
-             </div>
 
               <div className="mt-12 space-y-6">
                 <div className="flex justify-center md:justify-end gap-6">
@@ -995,7 +964,11 @@ export default function MiRegistroPage() {
                     onClick={guardarPropiedad}
                     className="px-12 py-3 rounded-full border-2 border-orange-400 bg-[#D9D9D9] hover:bg-orange-100 transition"
                   >
+<<<<<<< HEAD
                     Continuar
+=======
+                    Continuar 
+>>>>>>> 12fdeeebd8671cb7cc09d10a1f93d4cbeffbac5c
                   </button>
                 </div>
 
@@ -1004,27 +977,11 @@ export default function MiRegistroPage() {
                     {mensajeError}
                   </div>
                 )}
-
-                {estado === 'exito' && (
-                  <div className="bg-white border-2 border-green-400 rounded-2xl p-4 shadow-md max-w-md ml-auto">
-    
-                  </div>
-                )}
               </div>
             </div>
           </div>
         </div>
       </main>
-
-      {(estadoPublicacion !== "idle") && (
-        <PublicarModal
-          estado={estadoPublicacion as any}
-          progreso={progreso}
-          onConfirmar={ejecutarPublicacion}
-          onCancelar={() => setEstadoPublicacion("idle")}
-          onReintentar={() => setEstadoPublicacion("confirmando")}
-        />
-      )}
     </div>
   )
 }

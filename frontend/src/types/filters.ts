@@ -11,4 +11,7 @@ export type GlobalFilters = {
   municipioId?: number
   zonaId?: number
   barrioId?: number
+  //HU6
+  amenities?: number[]
+  labels?: number[]
 }
