@@ -29,7 +29,7 @@ export default function ConsumoPage() {
 
     const fetchData = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/consumo/1')
+        const res = await fetch('http://localhost:5000/umo/1')
 
         if (!res.ok) {
           throw new Error('Error en la API')

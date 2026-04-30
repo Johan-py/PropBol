@@ -956,6 +956,48 @@ export const resetPasswordService = async (payload: ResetPasswordDTO) => {
   tokenAttempts.delete(token);
 
   return {
-    message: "Contraseña actualizada correctamente. Ya puedes iniciar sesión.",
-  };
-};
+    message: 'Contraseña actualizada correctamente. Ya puedes iniciar sesión.'
+  }
+}
+export const resend2FAService = async (userId: number) => {
+  if (!userId) {
+    throw new AuthError('El usuario es obligatorio', 400)
+  }
+
+  const user = await findUserById(userId)
+
+  if (!user) {
+    throw new AuthError('Usuario no encontrado', 404)
+  }
+
+  if (!user.two_factor_activo) {
+    throw new AuthError('El usuario no tiene 2FA activado', 400)
+  }
+
+  const codigo = generate2FACode()
+  const codigoHash = hash2FACode(codigo)
+  const expiraEn = new Date(Date.now() + TWO_FACTOR_CODE_TTL_MINUTES * 60 * 1000)
+
+  await invalidateActive2FACodesByUserId(user.id)
+
+  await create2FACode({
+    usuarioId: user.id,
+    codigoHash,
+    expiraEn
+  })
+
+  const emailResult = await enviarCodigo2FA({
+    emailDestino: user.correo,
+    codigo,
+    nombreUsuario: user.nombre
+  })
+
+  if (!emailResult.success) {
+    throw new Error('No se pudo reenviar el código. Intenta nuevamente.')
+  }
+
+  return {
+    message: 'Código reenviado correctamente',
+    expiresInMinutes: TWO_FACTOR_CODE_TTL_MINUTES
+  }
+}
