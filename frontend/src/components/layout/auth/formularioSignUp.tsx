@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import DiscordRegisterButton from "@/components/layout/auth/discord/DiscordRegisterButton";
 import {
   Eye,
   EyeOff,
@@ -725,25 +726,41 @@ export default function SignUpForm() {
               disabled={isSubmitting}
             />
 
-            <FacebookRegisterButton
-              onSuccess={async (payload) => {
-                setServerError("");
-                try {
-                  saveGoogleSession({
-                    type: "propbol:google-login-success",
-                    message: payload.message,
-                    token: payload.token,
-                    user: payload.user,
-                  });
-                  router.replace("/");
-                } catch {
-                  setServerError("No se pudo guardar la sesión iniciada con Facebook.");
-                }
-              }}
-              onError={setServerError}
-              disabled={isSubmitting}
-            />
-
+    
+  <FacebookRegisterButton
+    onSuccess={async (payload) => {
+      setServerError("");
+      try {
+        saveGoogleSession({
+          type: "propbol:google-login-success",
+          message: payload.message,
+          token: payload.token,
+          user: payload.user,
+        });
+        router.replace("/");
+      } catch {
+        setServerError("No se pudo guardar la sesión iniciada con Facebook.");
+      }
+    }}
+    onError={setServerError}
+    disabled={isSubmitting}
+  />
+  <DiscordRegisterButton
+  onSuccess={async (payload) => {
+    setServerError("");
+    try {
+      saveSession({
+        token: payload.token,
+        user: payload.user,
+      });
+      router.replace("/");
+    } catch {
+      setServerError("No se pudo guardar la sesión iniciada con Discord.");
+    }
+  }}
+  onError={setServerError}
+  disabled={isSubmitting}
+/>
             <button
               type="button"
               onClick={handleCancel}
