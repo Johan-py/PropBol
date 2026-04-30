@@ -758,6 +758,14 @@ model zona_geografica {
   @@unique([nombre, municipio_id], map: "zona_geografica_nombre_municipio_unique")
 }
 
+model contacto {
+  id            Int      @id @default(autoincrement())
+  usuarioId     Int
+  inmuebleId    Int
+  mensaje       String
+  creadoEn      DateTime @default(now())
+}
+
 enum Genero {
   MASCULINO
   FEMENINO

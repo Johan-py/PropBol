@@ -111,28 +111,28 @@ export const publicacionesService = {
     };
   },
 
-  async obtenerMetricasPublicacion(publicacionId: number): Promise<{
+  async obtenerMetricasPorInmueble(inmuebleId: number): Promise<{
     visitas: number;
     favoritos: number;
     contactos: number;
   }> {
-    const [visitas, favoritos, contactos] = await Promise.all([
-      prisma.propiedadVista.count({
-        where: { publicacionId }
+    const [visitas, favoritos] = await Promise.all([
+      prisma.propiedad_vista.count({
+        where: { inmuebleId }
       }),
       prisma.favorito.count({
-        where: { publicacionId }
+        where: { inmuebleId }
       }),
       prisma.contacto.count({
-        where: { publicacionId }
+        where: { inmuebleId }
       })
     ]);
 
     return {
       visitas,
       favoritos,
-      contactos
+      contactos: 0 // hasta que exista modelo contacto
     };
-  },
+  }
 };
 

@@ -347,7 +347,7 @@ export const listarMisPublicaciones = async (
     const publicacionesConMetricas = await Promise.all(
       publicaciones.map(async (pub: any) => ({
         ...pub,
-        metricas: await publicacionesService.obtenerMetricasPublicacion(pub.id)
+        metricas: await publicacionesService.obtenerMetricasPorInmueble(pub.inmuebleId)
       }))
     );
 
