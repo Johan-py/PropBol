@@ -30,6 +30,7 @@ const PropertyCard = ({ prop }: { prop: any }) => {
                     <span>3 hab</span><span>•</span><span>2 baños</span><span>•</span><span>1 garaje</span>
                 </div>
                 <div className="mt-4 flex gap-2">
+
                     <button className="w-full bg-[#E87B00] text-white py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm text-center">
                         Ver Detalle
                     </button>
@@ -53,13 +54,12 @@ export default function VistasRecientesPage() {
     const fetchHistorial = async () => {
         const token = localStorage.getItem('token');
         try {
-            const response = await fetch('http://localhost:5000/api/perfil/historial/vistas', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/perfil/historial/vistas`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
-            // Carga todos los registros encontrados (ej. los 22 de tu tabla)
-            setProperties(data);
-            setFilteredProperties(data);
+            setProperties(data.data);
+            setFilteredProperties(data.data);
         } catch (error) {
             console.error("Error cargando historial:", error);
         } finally {
