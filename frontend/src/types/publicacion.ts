@@ -9,6 +9,11 @@ export interface MisPublicacionesItem {
   imagenUrl: string | null
   tipoOperacion?: string
   activa?: boolean
+  metricas?: {
+    visitas: number
+    favoritos: number
+    contactos: number
+  }
 }
 
 export interface FormPublicar {
