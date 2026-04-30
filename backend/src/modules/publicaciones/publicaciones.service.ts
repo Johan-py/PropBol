@@ -12,7 +12,7 @@ export const publicacionesService = {
     return publicacionesRepository.findGratis();
   },
 
-  async listarMisPublicaciones(userId: number) {
+  async listarMisPublicaciones(userId: number): Promise<any> {
     return publicacionesRepository.findByUserId(userId);
   },
 
@@ -110,24 +110,29 @@ export const publicacionesService = {
       mensaje: "Publicación lista para guardar",
     };
   },
+
+  async obtenerMetricasPublicacion(publicacionId: number): Promise<{
+    visitas: number;
+    favoritos: number;
+    contactos: number;
+  }> {
+    const [visitas, favoritos, contactos] = await Promise.all([
+      prisma.propiedadVista.count({
+        where: { publicacionId }
+      }),
+      prisma.favorito.count({
+        where: { publicacionId }
+      }),
+      prisma.contacto.count({
+        where: { publicacionId }
+      })
+    ]);
+
+    return {
+      visitas,
+      favoritos,
+      contactos
+    };
+  },
 };
 
-export async function obtenerMetricasPublicacion(publicacionId: number) {
-  const [visitas, favoritos, contactos] = await Promise.all([
-    prisma.propiedadVista.count({
-      where: { publicacionId }
-    }),
-    prisma.favorito.count({
-      where: { publicacionId }
-    }),
-    prisma.contacto.count({
-      where: { publicacionId }
-    })
-  ]);
-
-  return {
-    visitas,
-    favoritos,
-    contactos
-  };
-}
