@@ -50,6 +50,7 @@ type UserBlogResponse = {
 const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({ blogs: propBlogs }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [internalBlogs, setInternalBlogs] = useState<Blog[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const syncAuthState = async () => {
@@ -58,6 +59,7 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({ blogs: propBlog
       setIsAuthenticated(isAuth);
 
       if (token) {
+        setIsLoading(true);
         try {
           const res = await fetch(`${API_URL}/api/blogs/mis-blogs`, {
             headers: { Authorization: `Bearer ${token}` }
@@ -76,7 +78,12 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({ blogs: propBlog
               : ''
           }));
           setInternalBlogs(mapped);
-        } catch { }
+        } catch {
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        setIsLoading(false);
       }
     };
 
@@ -95,10 +102,24 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({ blogs: propBlog
   const blogs = propBlogs || internalBlogs;
   const visible = blogs.slice(0, MAX_VISIBLE);
 
+  if (isLoading && !propBlogs) {
+    return (
+      <section className="bg-white rounded-[32px] p-6 border border-stone-100 shadow-sm mb-10">
+        <div className="animate-pulse flex space-x-4">
+          <div className="flex-1 space-y-4 py-1">
+            <div className="h-4 bg-stone-200 rounded w-1/4"></div>
+            <div className="h-4 bg-stone-200 rounded w-1/2"></div>
+          </div>
+        </div>
+        <p className="mt-4 text-sm text-stone-400">Cargando tus blogs...</p>
+      </section>
+    );
+  }
+
   if (blogs.length === 0) {
     return (
       <section className="bg-white rounded-[32px] p-6 border border-stone-100 shadow-sm mb-10">
-        <p className="text-sm text-gray-400">No publicaste ningún blog aún</p>
+        <p className="text-sm text-stone-400">No publicaste ningún blog aún</p>
       </section>
     );
   }
@@ -140,6 +161,7 @@ const MyRecentBlogsPanel: React.FC<MyRecentBlogsPanelProps> = ({ blogs: propBlog
                 fill
                 className="object-cover"
                 sizes="80px"
+                unoptimized
               />
             </div>
 
