@@ -7,7 +7,7 @@ const createProperty = async (data: any, userId: number) => {
 
   console.log('📊 Publicaciones actuales del usuario:', count)
 
-  if (count >= 2) {
+  if (count >= 3) {
     throw new Error('LIMIT_REACHED')
   }
 
