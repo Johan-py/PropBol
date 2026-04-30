@@ -43,7 +43,12 @@ export default function MisPublicacionesList() {
       superficieM2: pub.inmueble?.superficieM2 ? parseFloat(pub.inmueble.superficieM2) : null,
       imagenUrl: pub.multimedia?.[0]?.url || pub.usuario?.avatar || null,
       tipoOperacion: pub.inmueble?.tipoAccion || 'VENTA',
-      activa: pub.estado === "ACTIVA"  // true = ACTIVA, false = PAUSADA o ELIMINADA
+      activa: pub.estado === "ACTIVA",  // true = ACTIVA, false = PAUSADA o ELIMINADA
+      metricas: pub.metricas || {
+        visitas: 0,
+        favoritos: 0,
+        contactos: 0
+      }
     }
   }
 
