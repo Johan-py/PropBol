@@ -1,24 +1,24 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import BlogCard from "@/components/blog/BlogCard";
-import MyRecentBlogsPanel from "@/components/blog/MyRecentBlogsPanel";
-import AddPostButton from "@/components/blog/AddPostButton";
-import BlogFilterChips from "@/components/blog/BlogFilterChips";
-import FeaturedBlogSpotlight from "@/components/blog/FeaturedBlogSpotlight";
-import { useBlogFeed } from "@/hooks/useBlogFeed";
-import { Blog } from "@/types/blog";
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import BlogCard from '@/components/blog/BlogCard'
+import MyRecentBlogsPanel from '@/components/blog/MyRecentBlogsPanel'
+import AddPostButton from '@/components/blog/AddPostButton'
+import BlogFilterChips from '@/components/blog/BlogFilterChips'
+import FeaturedBlogSpotlight from '@/components/blog/FeaturedBlogSpotlight'
+import { useBlogFeed } from '@/hooks/useBlogFeed'
+import { Blog } from '@/types/blog'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 
 type UserBlogResponse = {
-  id: number;
-  titulo: string;
-  estado: Blog["estado"];
-  imagen?: string | null;
-  fecha_creacion?: string;
-};
+  id: number
+  titulo: string
+  estado: Blog['estado']
+  imagen?: string | null
+  fecha_creacion?: string
+}
 
 export default function BlogsPage() {
   const {
@@ -30,8 +30,8 @@ export default function BlogsPage() {
     hasResults,
     isLoading,
     toggleCategory,
-    loadMore,
-  } = useBlogFeed();
+    loadMore
+  } = useBlogFeed()
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#fbf6ef_0%,#f5efe7_45%,#ffffff_100%)]">
@@ -43,17 +43,16 @@ export default function BlogsPage() {
             Perspectivas para el Bien Raiz Moderno.
           </h1>
 
-          <div className="flex flex-row items-center justify-between gap-4">
-            <div className="flex-1 overflow-x-auto pb-1">
+          <div className="flex flex-col gap-3">
+            <div className="flex justify-end">
+              <AddPostButton />
+            </div>
+            <div className="overflow-x-auto pb-1">
               <BlogFilterChips
                 categories={categories}
                 activeCategory={activeCategory}
                 onToggleCategory={toggleCategory}
               />
-            </div>
-
-            <div className="flex-shrink-0">
-              <AddPostButton />
             </div>
           </div>
         </section>
@@ -80,8 +79,7 @@ export default function BlogsPage() {
             </h2>
 
             <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-stone-600">
-              Prueba con otra etiqueta para seguir explorando las publicaciones
-              disponibles.
+              Prueba con otra etiqueta para seguir explorando las publicaciones disponibles.
             </p>
           </section>
         )}
@@ -115,5 +113,5 @@ export default function BlogsPage() {
         )}
       </div>
     </div>
-  );
+  )
 }
