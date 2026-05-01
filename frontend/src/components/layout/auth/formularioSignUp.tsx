@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import DiscordRegisterButton from "@/components/layout/auth/discord/DiscordRegisterButton";
 import {
   Eye,
   EyeOff,
@@ -14,6 +15,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { validateEmail, validatePassword } from "@/lib/validators/auth";
 import GoogleRegisterButton from "@/components/layout/auth/google/GoogleRegisterButton";
+import FacebookRegisterButton from "@/components/layout/auth/facebook/FacebookRegisterButton";
 
 type FormData = {
   email: string;
@@ -108,7 +110,10 @@ function FieldLabel({
   );
 }
 
-const saveGoogleSession = (payload: GooglePopupSuccessPayload) => {
+const saveSession = (payload: {
+  token: string;
+  user: { id: number; correo: string; nombre?: string; apellido?: string };
+}) => {
   const userName =
     payload.user.nombre && payload.user.apellido
       ? `${payload.user.nombre} ${payload.user.apellido}`
@@ -117,11 +122,7 @@ const saveGoogleSession = (payload: GooglePopupSuccessPayload) => {
   localStorage.setItem("token", payload.token);
   localStorage.setItem(
     "propbol_user",
-    JSON.stringify({
-      name: userName,
-      email: payload.user.correo,
-      avatar: null,
-    }),
+    JSON.stringify({ name: userName, email: payload.user.correo, avatar: null }),
   );
   localStorage.setItem("nombre", userName);
   localStorage.setItem("correo", payload.user.correo);
@@ -135,6 +136,8 @@ const saveGoogleSession = (payload: GooglePopupSuccessPayload) => {
   window.dispatchEvent(new Event("propbol:session-changed"));
   window.dispatchEvent(new Event("auth-state-changed"));
 };
+
+const saveGoogleSession = (payload: GooglePopupSuccessPayload) => saveSession(payload);
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -723,6 +726,41 @@ export default function SignUpForm() {
               disabled={isSubmitting}
             />
 
+    
+  <FacebookRegisterButton
+    onSuccess={async (payload) => {
+      setServerError("");
+      try {
+        saveGoogleSession({
+          type: "propbol:google-login-success",
+          message: payload.message,
+          token: payload.token,
+          user: payload.user,
+        });
+        router.replace("/");
+      } catch {
+        setServerError("No se pudo guardar la sesión iniciada con Facebook.");
+      }
+    }}
+    onError={setServerError}
+    disabled={isSubmitting}
+  />
+  <DiscordRegisterButton
+  onSuccess={async (payload) => {
+    setServerError("");
+    try {
+      saveSession({
+        token: payload.token,
+        user: payload.user,
+      });
+      router.replace("/");
+    } catch {
+      setServerError("No se pudo guardar la sesión iniciada con Discord.");
+    }
+  }}
+  onError={setServerError}
+  disabled={isSubmitting}
+/>
             <button
               type="button"
               onClick={handleCancel}

@@ -10,10 +10,18 @@ export class RecomendacionesRepository {
         usuarioId,
         vistaEn: { gte: fechaLimite }
       },
-      include: {
+      select: {
+        inmuebleId: true,
+        vistaEn: true,
         inmueble: {
-          include: {
-            ubicacion: true
+          select: {
+            id: true,
+            categoria: true,
+            precio: true,
+            superficieM2: true,
+            ubicacion: {
+              select: { zona: true, ciudad: true }
+            }
           }
         }
       },
@@ -69,16 +77,8 @@ export class RecomendacionesRepository {
   }
 
   async getInmueblesCandidatos(usuarioId: number, limit: number = 100) {
-    const vistasPrevias = await prisma.propiedad_vista.findMany({
-      where: { usuarioId },
-      select: { inmuebleId: true }
-    })
-
-    const idsExcluir = vistasPrevias.map((v) => v.inmuebleId)
-
     return await prisma.inmueble.findMany({
       where: {
-        id: { notIn: idsExcluir.length > 0 ? idsExcluir : [0] },
         estado: 'ACTIVO'
       },
       include: {
@@ -86,6 +86,7 @@ export class RecomendacionesRepository {
       },
       take: limit
     })
+    console.log('DATABASE_URL actual:', process.env.DATABASE_URL)
   }
 
   async getInmueblesPorZona(zona: string, limit: number = 50) {
@@ -138,24 +139,30 @@ export class RecomendacionesRepository {
 
     const popularesPorZona = await prisma.propiedad_vista.groupBy({
       by: ['inmuebleId'],
+      where: {
+        vistaEn: { gte: fechaLimite }
+      },
       _count: { inmuebleId: true },
       orderBy: { _count: { inmuebleId: 'desc' } },
-      take: limit
+      take: limit * 2
     })
 
     const ids = popularesPorZona.map((v) => v.inmuebleId)
     if (ids.length === 0) return []
 
+    const idsFinales = ids.filter((id) => !idsExcluir.includes(id))
+    if (idsFinales.length === 0) return []
+
     return await prisma.inmueble.findMany({
       where: {
-        id: { in: ids },
+        id: { in: idsFinales },
         estado: 'ACTIVO',
         ubicacion: {
           zona: { contains: zona, mode: 'insensitive' }
-        },
-        ...(idsExcluir.length > 0 ? { id: { notIn: idsExcluir } } : {})
+        }
       },
-      include: { ubicacion: true }
+      include: { ubicacion: true },
+      take: limit
     })
   }
 
@@ -166,5 +173,17 @@ export class RecomendacionesRepository {
     })
 
     return usuario?.zona_conexion || null
+  }
+
+  async getInmueblesPorIds(ids: number[]) {
+    return await prisma.inmueble.findMany({
+      where: {
+        id: { in: ids },
+        estado: 'ACTIVO'
+      },
+      include: {
+        ubicacion: true
+      }
+    })
   }
 }

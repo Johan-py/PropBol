@@ -1,6 +1,6 @@
 "use client";
-
-import { useEffect, useRef, useState } from "react";
+ 
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -13,22 +13,24 @@ import {
   WifiOff,
   Settings,
   X,
+  ChevronDown,
 } from "lucide-react";
-
+ 
 import Logo from "../navbar/Logo";
 import NavLinks from "../navbar/NavLinks";
 import UserMenu from "../navbar/UserMenu";
 import LogoutModal from "../navbar/LogoutModal";
 import { useNotifications } from "@/hooks/useNotifications";
+import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 import type { NotificationFilter } from "@/types/notification";
-
+ 
 export type User = {
   name: string;
   email: string;
   avatar?: string | null;
+  role?: string | null;
 };
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 type MeResponse = {
   message?: string;
   user?: {
@@ -37,42 +39,43 @@ type MeResponse = {
     apellido?: string;
     correo: string;
     avatar?: string | null;
+    rol?: string;
   };
 };
-
+ 
 class SessionValidationError extends Error {
   statusCode: number;
-
+ 
   constructor(message: string, statusCode: number) {
     super(message);
     this.name = "SessionValidationError";
     this.statusCode = statusCode;
   }
 }
-
+ 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
-const USER_STORAGE_KEY = "propbol_user";
 const SESSION_EXPIRES_KEY = "propbol_session_expires";
-
+ 
 const filters: NotificationFilter[] = [
   "todas",
   "leida",
   "no leida",
   "archivada",
 ];
-
+ 
 export default function Navbar() {
   const router = useRouter();
   const panelRef = useRef<HTMLDivElement | null>(null);
   const notificationPanelRef = useRef<HTMLDivElement | null>(null);
   const [, setTick] = useState(0);
-
+ 
   const [user, setUser] = useState<User | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  const [isPropiedadesOpen, setIsPropiedadesOpen] = useState(false);
+ 
   const {
     open,
     filter,
@@ -82,6 +85,7 @@ export default function Navbar() {
     isLoadingMore,
     error,
     isOnline,
+    hasRealtimeUpdate,
     scrollContainerRef,
     saveScrollPosition,
     toggleNotifications,
@@ -96,31 +100,34 @@ export default function Navbar() {
     isLoggedIn,
     setIsLoggedIn,
   } = useNotifications();
-
-  const clearSession = (emitEvent = true) => {
-    localStorage.removeItem(USER_STORAGE_KEY);
-    localStorage.removeItem(SESSION_EXPIRES_KEY);
-    localStorage.removeItem("token");
-    localStorage.removeItem("nombre");
-    localStorage.removeItem("correo");
-    localStorage.removeItem("avatar");
-    setUser(null);
-    setIsPanelOpen(false);
-    setShowLogoutModal(false);
-    setIsLoggedIn(false);
-
-    if (emitEvent) {
-      window.dispatchEvent(new Event("propbol:session-changed"));
-      window.dispatchEvent(new Event("auth-state-changed"));
-    }
-  };
-
+ 
+  const clearSession = useCallback(
+    (emitEvent = true) => {
+      localStorage.removeItem(USER_STORAGE_KEY);
+      localStorage.removeItem(SESSION_EXPIRES_KEY);
+      localStorage.removeItem("token");
+      localStorage.removeItem("nombre");
+      localStorage.removeItem("correo");
+      localStorage.removeItem("avatar");
+      setUser(null);
+      setIsPanelOpen(false);
+      setShowLogoutModal(false);
+      setIsLoggedIn(false);
+ 
+      if (emitEvent) {
+        window.dispatchEvent(new Event("propbol:session-changed"));
+        window.dispatchEvent(new Event("auth-state-changed"));
+      }
+    },
+    [setIsLoggedIn],
+  );
+ 
   const isSessionExpired = () => {
     const expiresAt = localStorage.getItem(SESSION_EXPIRES_KEY);
     if (!expiresAt) return true;
     return Date.now() > Number(expiresAt);
   };
-
+ 
   const fetchCurrentUser = async (token: string) => {
     const response = await fetch(`${API_URL}/api/auth/me`, {
       method: "GET",
@@ -128,75 +135,58 @@ export default function Navbar() {
         Authorization: `Bearer ${token}`,
       },
     });
-
+ 
     const data = (await response.json()) as MeResponse;
-
+ 
     if (!response.ok || !data.user) {
       throw new SessionValidationError(
         data.message || "Sesión inválida o expirada",
         response.status,
       );
     }
-
+ 
     return data.user;
   };
-
-  const restoreSession = async () => {
+ 
+  const restoreSession = useCallback(async () => {
     const savedUser = localStorage.getItem(USER_STORAGE_KEY);
     const expiresAt = localStorage.getItem(SESSION_EXPIRES_KEY);
     const token = localStorage.getItem("token");
-
+ 
     if (!savedUser || !expiresAt || !token) {
       clearSession(false);
       return;
     }
-
+ 
     if (Date.now() > Number(expiresAt)) {
       clearSession(false);
       return;
     }
-
+ 
     let parsedUser: User;
-
+ 
     try {
       parsedUser = JSON.parse(savedUser) as User;
     } catch {
       clearSession(false);
       return;
     }
-
+ 
     if (!navigator.onLine) {
       setUser(parsedUser);
       setIsLoggedIn(true);
       return;
     }
-
+ 
     try {
       const validatedUser = await fetchCurrentUser(token);
-
-      const finalName =
-        validatedUser.nombre && validatedUser.apellido
-          ? `${validatedUser.nombre} ${validatedUser.apellido}`
-          : validatedUser.nombre || validatedUser.correo;
-
-      const finalUser: User = {
-        name: finalName,
-        email: validatedUser.correo,
-        avatar: validatedUser.avatar ?? null,
-      };
-
-      localStorage.setItem(
-        USER_STORAGE_KEY,
-        JSON.stringify({
-          name: finalUser.name,
-          email: finalUser.email,
-          avatar: finalUser.avatar,
-        }),
-      );
+      const finalUser: User = buildSessionUser(validatedUser);
+ 
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(finalUser));
       localStorage.setItem("nombre", finalUser.name);
       localStorage.setItem("correo", finalUser.email);
       localStorage.setItem("avatar", finalUser.avatar ?? "");
-
+ 
       setUser(finalUser);
       setIsLoggedIn(true);
     } catch (error) {
@@ -207,78 +197,59 @@ export default function Navbar() {
         clearSession(false);
         return;
       }
-
+ 
       setUser(parsedUser);
       setIsLoggedIn(true);
     }
-  };
-
+  }, [clearSession, setIsLoggedIn]);
+ 
   const formatRelativeTime = (fecha: string | null): string => {
     if (!fecha) return "";
     const diff = Date.now() - new Date(fecha).getTime();
     const mins = Math.floor(diff / 60000);
-
+ 
     if (mins < 1) return "hace un momento";
     if (mins < 60) return `hace ${mins} min`;
-
+ 
     const hours = Math.floor(mins / 60);
     if (hours < 24) return `hace ${hours} h`;
-
+ 
     const days = Math.floor(hours / 24);
     if (days < 7) return `hace ${days} d`;
-
+ 
     return new Date(fecha).toLocaleDateString("es-BO", {
       day: "numeric",
       month: "short",
     });
   };
 
+  // Tick para forzar re-render cada minuto (timestamps relativos)
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTick((t) => t + 1);
-    }, 60000);
-
+    const interval = setInterval(() => setTick((t) => t + 1), 60000);
     return () => clearInterval(interval);
   }, []);
 
+  // Restaurar sesión y escuchar cambios
   useEffect(() => {
     void restoreSession();
-
-    const handleSessionChange = () => {
-      void restoreSession();
-    };
-
-    const handleOnline = () => {
-      void restoreSession();
-    };
-
+ 
+    const handleSessionChange = () => void restoreSession();
+    const handleOnline = () => void restoreSession();
+ 
     window.addEventListener("storage", handleSessionChange);
     window.addEventListener("propbol:login", handleSessionChange);
     window.addEventListener("propbol:session-changed", handleSessionChange);
     window.addEventListener("online", handleOnline);
-
+ 
     return () => {
       window.removeEventListener("storage", handleSessionChange);
       window.removeEventListener("propbol:login", handleSessionChange);
-      window.removeEventListener(
-        "propbol:session-changed",
-        handleSessionChange,
-      );
+      window.removeEventListener("propbol:session-changed", handleSessionChange);
       window.removeEventListener("online", handleOnline);
     };
-  }, []);
+  }, [restoreSession]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (user && isSessionExpired()) {
-        clearSession();
-        router.push("/");
-      }
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, [user, router]);
-
+  // Cerrar paneles al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -295,73 +266,125 @@ export default function Navbar() {
         toggleNotifications();
       }
     };
-
+ 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open, toggleNotifications]);
 
+  // Verificar expiración de sesión cada 10 segundos (una sola instancia)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (user && isSessionExpired()) {
+        clearSession();
+        router.push("/");
+      }
+    }, 10000);
+ 
+    return () => clearInterval(interval);
+  }, [user, router, clearSession]);
+
+  // Cerrar panel de notificaciones con Escape
   useEffect(() => {
     if (!open) return;
-
+ 
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === "Escape") toggleNotifications();
     };
-
+ 
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [open, toggleNotifications]);
 
+  // Escuchar eventos para abrir/cerrar menú móvil desde el tour
+  useEffect(() => {
+    const abrir = () => setIsMobileMenuOpen(true);
+    const cerrar = () => setIsMobileMenuOpen(false);
+    window.addEventListener("propbol:abrir-menu-movil", abrir);
+    window.addEventListener("propbol:cerrar-menu-movil", cerrar);
+    return () => {
+      window.removeEventListener("propbol:abrir-menu-movil", abrir);
+      window.removeEventListener("propbol:cerrar-menu-movil", cerrar);
+    };
+  }, []);
+ 
   const togglePanel = () => {
     if (user && isSessionExpired()) {
       clearSession();
       router.push("/");
       return;
     }
-
     setIsPanelOpen((prev) => !prev);
   };
-
+ 
   const handleLoginRedirect = () => router.push("/sign-in");
-  const handleOpenLogoutModal = () => setShowLogoutModal(true);
-
+  const handleOpenLogoutModal = () => {
+    setShowLogoutModal(true);
+    setIsPanelOpen(false);
+  };
+ 
   const handleCancelLogout = () => {
     if (isLoggingOut) return;
     setShowLogoutModal(false);
   };
-
+ 
   const handleConfirmLogout = async () => {
     if (isLoggingOut) return;
-
+ 
     setIsLoggingOut(true);
     const token = localStorage.getItem("token");
-
+ 
     if (token) {
       try {
         await fetch(`${API_URL}/api/auth/logout`, {
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
         });
-      } catch {}
+      } catch (err) {
+        console.warn("Error al cerrar sesión en el servidor:", err);
+      }
     }
-
+ 
     clearSession();
     setIsLoggingOut(false);
     router.push("/");
   };
 
+  // Lanzar el tour: si ya estamos en "/", disparar evento directo;
+  // si no, navegar primero y esperar a que el componente monte.
+  const handleIniciarTour = () => {
+    setIsMobileMenuOpen(false);
+    if (window.location.pathname === "/") {
+      window.dispatchEvent(new Event("propbol:iniciar-tour"));
+    } else {
+      router.push("/");
+      setTimeout(() => {
+        window.dispatchEvent(new Event("propbol:iniciar-tour"));
+      }, 600);
+    }
+  };
+
   return (
     <>
-      <nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
-        <div className="container mx-auto px-4 py-1.5">
+      <nav className="sticky top-0 z-[999] w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
+        <div className="mx-auto max-w-[1440px] px-4 py-1.5 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
               <Logo />
               <NavLinks />
             </div>
-
+ 
             <div className="flex items-center gap-4">
+              <Link
+                id="tour-publicar-home"
+                href="/registro-inmueble"
+                className="hidden md:block rounded-md bg-[#E68B25] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-amber-700"
+              >
+                Publica tu inmueble
+              </Link>
+ 
               <div className="relative" ref={notificationPanelRef}>
                 <button
+                  id="tour-notificaciones"
                   type="button"
                   onClick={toggleNotifications}
                   aria-label="Abrir notificaciones"
@@ -376,7 +399,7 @@ export default function Navbar() {
                     </span>
                   )}
                 </button>
-
+ 
                 {open && (
                   <div
                     role="dialog"
@@ -410,16 +433,14 @@ export default function Navbar() {
                         </div>
                       )}
                     </div>
-
+ 
                     {!isOnline && (
                       <div className="flex items-center gap-2 border-b border-stone-100 bg-stone-50 px-4 py-2 text-xs text-stone-500">
                         <WifiOff className="h-3 w-3 shrink-0" />
-                        <span>
-                          Sin conexión. Se actualizará al reconectarte.
-                        </span>
+                        <span>Sin conexión. Se actualizará al reconectarte.</span>
                       </div>
                     )}
-
+ 
                     {!isLoggedIn ? (
                       <div className="px-4 py-6 text-center">
                         <p className="text-sm text-stone-500">
@@ -465,7 +486,7 @@ export default function Navbar() {
                             </button>
                           ))}
                         </div>
-
+ 
                         <div
                           ref={scrollContainerRef}
                           role="list"
@@ -474,15 +495,11 @@ export default function Navbar() {
                           className="max-h-[60vh] overflow-y-auto sm:max-h-80"
                           onScroll={(e) => {
                             const target = e.currentTarget;
+                            saveScrollPosition(target.scrollTop);
                             const reachedBottom =
-                              target.scrollTop + target.clientHeight >=
-                              target.scrollHeight - 20;
-
+                              target.scrollTop + target.clientHeight >= target.scrollHeight - 20;
                             if (reachedBottom && hasMore && !isLoadingMore) {
-                              // @ts-ignore
-                              saveScrollPosition();
-                              // @ts-ignore
-                              void loadMoreNotifications(filter);
+                              void loadMoreNotifications();
                             }
                           }}
                         >
@@ -496,9 +513,7 @@ export default function Navbar() {
                               <p className="text-sm text-red-500">{error}</p>
                               <button
                                 type="button"
-                                onClick={() =>
-                                  void refreshNotifications(filter)
-                                }
+                                onClick={() => void refreshNotifications(filter)}
                                 className="mt-3 rounded border border-stone-300 px-3 py-1 text-sm text-stone-700 transition hover:bg-stone-50"
                               >
                                 Reintentar
@@ -524,9 +539,10 @@ export default function Navbar() {
                                     ) {
                                       void markAsRead(notification.id);
                                     }
-
-                                    toggleNotifications()
-                                    router.push(`/notificaciones/${notification.id}`)
+                                    toggleNotifications();
+                                    router.push(
+                                      `/notificaciones/${notification.id}`,
+                                    );
                                   }}
                                   className={`border-b border-stone-100 px-4 py-3 transition hover:bg-stone-50 ${
                                     notification.status === "no leida"
@@ -541,16 +557,15 @@ export default function Navbar() {
                                           <span className="h-2 w-2 shrink-0 rounded-full bg-amber-500" />
                                         )}
                                         <p className="truncate text-sm font-semibold text-stone-900">
-                                          {notification.title?.trim() ||
-                                            "(Sin título)"}
+                                          {notification.title?.trim() || "(Sin título)"}
                                         </p>
                                       </div>
-
+ 
                                       <p className="mt-1 line-clamp-2 text-sm text-stone-600">
                                         {notification.description?.trim() ||
                                           "(Sin descripción disponible)"}
                                       </p>
-
+ 
                                       <div className="mt-2 flex items-center gap-2">
                                         <span className="text-[10px] uppercase text-stone-400">
                                           {notification.status}
@@ -563,7 +578,7 @@ export default function Navbar() {
                                         </span>
                                       </div>
                                     </div>
-
+ 
                                     <div
                                       className="flex shrink-0 items-center gap-2"
                                       onClick={(e) => e.stopPropagation()}
@@ -572,9 +587,7 @@ export default function Navbar() {
                                         <button
                                           type="button"
                                           onClick={() =>
-                                            void archiveNotification(
-                                              notification.id,
-                                            )
+                                            void archiveNotification(notification.id)
                                           }
                                           aria-label="Archivar notificación"
                                           className="text-stone-400 transition hover:text-amber-600 disabled:cursor-not-allowed disabled:opacity-40"
@@ -582,13 +595,11 @@ export default function Navbar() {
                                           <Archive className="h-4 w-4" />
                                         </button>
                                       )}
-
+ 
                                       <button
                                         type="button"
                                         onClick={() =>
-                                          void deleteNotification(
-                                            notification.id,
-                                          )
+                                          void deleteNotification(notification.id)
                                         }
                                         disabled={!isOnline}
                                         className="text-xs text-red-500 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-40"
@@ -607,7 +618,7 @@ export default function Navbar() {
                             </>
                           )}
                         </div>
-
+ 
                         <div className="border-t border-stone-100 px-4 py-3 text-center">
                           <Link
                             href="/notificaciones"
@@ -622,7 +633,7 @@ export default function Navbar() {
                   </div>
                 )}
               </div>
-
+ 
               <div className="relative" ref={panelRef}>
                 <UserMenu
                   user={user}
@@ -633,8 +644,9 @@ export default function Navbar() {
                   onOpenLogoutModal={handleOpenLogoutModal}
                 />
               </div>
-
+ 
               <button
+                id="tour-menu-mobile"
                 type="button"
                 onClick={() => setIsMobileMenuOpen(true)}
                 className="rounded-full p-2 transition duration-200 hover:bg-black/5 hover:shadow-sm md:hidden"
@@ -646,6 +658,12 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
+ 
+      {hasRealtimeUpdate && (
+        <div className="fixed right-4 top-20 z-[9999] rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm font-medium text-orange-700 shadow-lg">
+          Nueva notificación recibida
+        </div>
+      )}
 
       <LogoutModal
         show={showLogoutModal}
@@ -653,7 +671,7 @@ export default function Navbar() {
         onCancel={handleCancelLogout}
         onConfirm={handleConfirmLogout}
       />
-
+ 
       {isMobileMenuOpen && (
         <div
           className="fixed inset-0 z-[9999] bg-black/40 md:hidden"
@@ -662,7 +680,7 @@ export default function Navbar() {
           role="dialog"
         >
           <div
-            className="fixed right-0 top-0 h-full w-4/5 max-w-xs bg-[#F9F6EE] p-6 shadow-xl"
+            className="fixed right-0 top-0 h-full w-4/5 max-w-xs bg-[#F9F6EE] p-6 shadow-xl overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -676,61 +694,105 @@ export default function Navbar() {
                 <X className="h-6 w-6 text-stone-600" />
               </button>
             </div>
-
-            <nav className="mt-10 flex flex-col gap-4">
+ 
+            <nav className="mt-10 flex flex-col gap-2">
+              {/* FIX: agregado id="tour-publicar-home-mobile" que faltaba.
+                  Sin este id, el tour no podía encontrar el elemento al
+                  retroceder desde "tour-notificaciones" al paso anterior. */}
               <Link
-                href="/"
+                id="tour-publicar-home-mobile"
+                href="/registro-inmueble"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+                className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"
               >
-                Inicio
+                Publica tu inmueble
               </Link>
-
+ 
+              <div id="tour-propiedades-mobile" className="flex flex-col">
+                <button
+                  onClick={() => setIsPropiedadesOpen(!isPropiedadesOpen)}
+                  className="flex w-full items-center justify-between rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+                >
+                  <span>Propiedades</span>
+                  <ChevronDown
+                    className={`h-5 w-5 transition-transform duration-200 ${isPropiedadesOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+                <div
+                  className={`flex flex-col overflow-hidden transition-all duration-300 ${isPropiedadesOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"}`}
+                >
+                  {[
+                    "Casas",
+                    "Departamentos",
+                    "Cuartos",
+                    "Terrenos",
+                    "Espacios de cementerios",
+                  ].map((item) => (
+                    <button
+                      key={item}
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        const tipoMap: Record<string, string> = {
+                          "Casas": "CASA",
+                          "Departamentos": "DEPARTAMENTO",
+                          "Cuartos": "CUARTO",
+                          "Terrenos": "TERRENO",
+                          "Espacios de cementerios": "TERRENO_MORTUORIO",
+                        };
+                        const tipoFinal = tipoMap[item];
+                        const modosFinales = ["VENTA"];
+                        const nuevosFiltros = {
+                          tipoInmueble: [tipoFinal],
+                          modoInmueble: modosFinales,
+                          query: "",
+                          updatedAt: new Date().toISOString(),
+                        };
+                        const currentFilters = JSON.parse(
+                          sessionStorage.getItem("propbol_global_filters") || "{}"
+                        );
+                        sessionStorage.setItem(
+                          "propbol_global_filters",
+                          JSON.stringify({ ...currentFilters, ...nuevosFiltros })
+                        );
+                        const params = new URLSearchParams();
+                        modosFinales.forEach((m) => params.append("modoInmueble", m));
+                        if (tipoFinal) params.set("tipoInmueble", tipoFinal);
+                        router.push(`/busqueda_mapa?${params.toString()}`);
+                      }}
+                      className="pl-8 py-2 text-base text-gray-600 hover:text-[#E68B25] text-left w-full"
+                    >
+                      {item}
+                    </button>
+                  ))}
+                </div>
+              </div>
+ 
               <Link
-                href="/propiedades"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
-              >
-                Propiedades
-              </Link>
-
-              <Link
-                href="/propiedades"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
-              >
-                Blogs
-              </Link>
-
-              <Link
-                href="/cobros-suscripciones"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
-              >
-                Planes de membresia
-              </Link>
-
-              <Link
+                id="tour-blogs-mobile"
                 href="/blogs"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
                 Blogs
               </Link>
+ 
               <Link
+                id="tour-planes-mobile"
                 href="/cobros-suscripciones"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
-                Planes de membresia
+                Planes de membresía
               </Link>
-              <Link
-                href="/ayuda"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
+
+              <button
+                id="tour-ayuda-mobile"
+                type="button"
+                onClick={handleIniciarTour}
+                className="w-full text-left rounded-md px-3 py-2 text-lg font-medium text-gray-700 hover:bg-[#E68B25]/10 hover:text-[#E68B25]"
               >
                 Ayuda
-              </Link>
+              </button>
             </nav>
           </div>
         </div>

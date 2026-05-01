@@ -30,6 +30,7 @@ export const obtenerPerfil = async (req: AuthRequest, res: Response) => {
         genero: true,
         direccion: true,
         telefonos: true,
+        fecha_nacimiento: true,
       },
     });
 
@@ -342,13 +343,21 @@ export const listarMisPublicaciones = async (
     const publicaciones =
       await publicacionesService.listarMisPublicaciones(usuarioId);
 
+    // Agregar métricas a cada publicación
+    const publicacionesConMetricas = await Promise.all(
+      publicaciones.map(async (pub: any) => ({
+        ...pub,
+        metricas: await publicacionesService.obtenerMetricasPorInmueble(pub.inmuebleId)
+      }))
+    );
+
     // Obtener estadísticas de publicaciones y suscripción
     const estadisticas =
       await publicacionesService.obtenerEstadisticasPublicaciones(usuarioId);
 
     return res.json({
       ok: true,
-      publicaciones,
+      publicaciones: publicacionesConMetricas,
       estadisticas,
     });
   } catch (error) {
@@ -359,15 +368,102 @@ export const listarMisPublicaciones = async (
     });
   }
 };
+
+export const eliminarPublicacion = async (req: AuthRequest, res: Response) => {
+  try {
+    const usuarioId = req.usuario?.id;
+    const { id } = req.params;
+
+    if (!usuarioId) {
+      return res.status(401).json({ ok: false, msg: "No hay token válido" });
+    }
+
+    // ✅ CORRECCIÓN: Asegurar que id sea string
+    const idStr = Array.isArray(id) ? id[0] : id;
+    const publicacionId = parseInt(idStr);
+
+    if (isNaN(publicacionId)) {
+      return res.status(400).json({ ok: false, msg: "ID inválido" });
+    }
+
+    await publicacionesService.eliminar(publicacionId, usuarioId);
+
+    return res.json({ ok: true, msg: "Publicación eliminada correctamente" });
+  } catch (error: any) {
+    console.error("Error en eliminarPublicacion:", error);
+
+    if (error.message === "PUBLICACION_NOT_FOUND") {
+      return res.status(404).json({ ok: false, msg: "Publicación no encontrada" });
+    }
+    if (error.message === "UNAUTHORIZED") {
+      return res.status(403).json({ ok: false, msg: "No autorizado" });
+    }
+
+    return res.status(500).json({ ok: false, msg: "Error al eliminar la publicación" });
+  }
+};
+
+export const togglePublicacionEstado = async (req: AuthRequest, res: Response) => {
+  try {
+    const usuarioId = req.usuario?.id;
+    const { id } = req.params;
+    const { activa } = req.body;
+
+    if (!usuarioId) {
+      return res.status(401).json({ ok: false, msg: "No hay token válido" });
+    }
+
+    if (typeof activa !== 'boolean') {
+      return res.status(400).json({ ok: false, msg: "El campo 'activa' debe ser true o false" });
+    }
+
+    // ✅ CORRECCIÓN: Asegurar que id sea string
+    const idStr = Array.isArray(id) ? id[0] : id;
+    const publicacionId = parseInt(idStr);
+
+    if (isNaN(publicacionId)) {
+      return res.status(400).json({ ok: false, msg: "ID inválido" });
+    }
+
+    await publicacionesService.cambiarEstado(publicacionId, usuarioId, activa);
+
+    return res.json({
+      ok: true,
+      msg: `Publicación ${activa ? 'activada' : 'desactivada'} correctamente`,
+      activa
+    });
+  } catch (error: any) {
+    console.error("Error en togglePublicacionEstado:", error);
+
+    if (error.message === "PUBLICACION_NOT_FOUND") {
+      return res.status(404).json({ ok: false, msg: "Publicación no encontrada" });
+    }
+    if (error.message === "UNAUTHORIZED") {
+      return res.status(403).json({ ok: false, msg: "No autorizado" });
+    }
+
+    return res.status(500).json({ ok: false, msg: "Error al cambiar el estado" });
+  }
+};
+
 export const obtenerPreferenciasNotificacion = async (req: AuthRequest, res: Response) => {
   try {
     const usuarioId = req.usuario?.id
     if (!usuarioId) return res.status(401).json({ ok: false, msg: 'No hay token válido' })
     const usuario = await prisma.usuario.findUnique({
       where: { id: usuarioId },
-      select: { 
-        notificacion_email: true, 
-        notificacion_whatsapp: true 
+      select: {
+        notificacion_email: true,
+        notificacion_whatsapp: true,
+        correo: true,
+        telefonos: {
+          take: 1,
+          select: { numero: true, principal: true }
+        },
+        telefono_telefono_usuario_idTousuario: {
+          take: 1,
+          select: { numero: true }
+        }
       }
     })
     if (!usuario) return res.status(404).json({ ok: false, msg: 'Usuario no encontrado' })
@@ -376,7 +472,9 @@ export const obtenerPreferenciasNotificacion = async (req: AuthRequest, res: Res
       preferencias: {
         email: usuario.notificacion_email ?? true,
         whatsapp: usuario.notificacion_whatsapp ?? false
-      }
+      },
+      tieneCorreo: !!usuario.correo,
+      tieneTelefono: usuario.telefonos.length > 0 || usuario.telefono_telefono_usuario_idTousuario.length > 0
     })
   } catch (error) {
     console.error('Error en obtenerPreferenciasNotificacion:', error)
@@ -393,9 +491,9 @@ export const actualizarPreferenciasNotificacion = async (req: AuthRequest, res: 
     }
     await prisma.usuario.update({
       where: { id: usuarioId },
-      data: { 
-        notificacion_email: email, 
-        notificacion_whatsapp: whatsapp 
+      data: {
+        notificacion_email: email,
+        notificacion_whatsapp: whatsapp
       }
     })
     return res.json({
@@ -408,3 +506,135 @@ export const actualizarPreferenciasNotificacion = async (req: AuthRequest, res: 
     return res.status(500).json({ ok: false, msg: 'Error al guardar preferencias' })
   }
 }
+// Editar fecha de nacimiento
+export const editarFechaNacimiento = async (req: AuthRequest, res: Response) => {
+  try {
+    const usuarioId = req.usuario?.id;
+    const { fecha_nacimiento } = req.body;
+
+    if (!usuarioId) {
+      return res.status(401).json({ ok: false, msg: "No hay token válido" });
+    }
+
+    // Validar que se proporcionó la fecha
+    if (!fecha_nacimiento) {
+      return res.status(400).json({
+        ok: false,
+        msg: "La fecha de nacimiento es requerida",
+      });
+    }
+
+    // Validar formato de fecha
+    const fechaDate = new Date(fecha_nacimiento);
+    if (isNaN(fechaDate.getTime())) {
+      return res.status(400).json({
+        ok: false,
+        msg: "Formato de fecha inválido. Use formato ISO (YYYY-MM-DD)",
+      });
+    }
+
+    // Validar que no sea una fecha futura
+    const hoy = new Date();
+    if (fechaDate > hoy) {
+      return res.status(400).json({
+        ok: false,
+        msg: "La fecha de nacimiento no puede ser futura",
+      });
+    }
+
+    // Validar edad mínima (18 años) - opcional
+    const edadMinima = 18;
+    const fechaLimite = new Date();
+    fechaLimite.setFullYear(hoy.getFullYear() - edadMinima);
+
+    if (fechaDate > fechaLimite) {
+      return res.status(400).json({
+        ok: false,
+        msg: `Debes tener al menos ${edadMinima} años`,
+      });
+    }
+
+    // Actualizar la fecha de nacimiento
+    const usuarioActualizado = await prisma.usuario.update({
+      where: { id: usuarioId },
+      data: {
+        fecha_nacimiento: fechaDate,
+        updatedAt: new Date()
+      },
+    });
+
+    // Formatear fecha para respuesta
+    const fechaFormateada = usuarioActualizado.fecha_nacimiento
+      ? usuarioActualizado.fecha_nacimiento.toISOString().split('T')[0]
+      : null;
+
+    return res.json({
+      ok: true,
+      msg: "Fecha de nacimiento actualizada exitosamente",
+      fecha_nacimiento: fechaFormateada,
+    });
+  } catch (error) {
+    console.error("Error en editarFechaNacimiento:", error);
+    return res.status(500).json({
+      ok: false,
+      msg: "Error al editar la fecha de nacimiento",
+    });
+  }
+};
+
+// Obtener fecha de nacimiento
+export const obtenerFechaNacimiento = async (req: AuthRequest, res: Response) => {
+  try {
+    const usuarioId = req.usuario?.id;
+
+    if (!usuarioId) {
+      return res.status(401).json({ ok: false, msg: "No hay token válido" });
+    }
+
+    const usuario = await prisma.usuario.findUnique({
+      where: { id: usuarioId },
+      select: {
+        id: true,
+        nombre: true,
+        apellido: true,
+        fecha_nacimiento: true,
+      },
+    });
+
+    if (!usuario) {
+      return res.status(404).json({ ok: false, msg: "Usuario no encontrado" });
+    }
+
+    // Calcular edad
+    let edad = null;
+    if (usuario.fecha_nacimiento) {
+      const hoy = new Date();
+      const nacimiento = new Date(usuario.fecha_nacimiento);
+      edad = hoy.getFullYear() - nacimiento.getFullYear();
+      const mesDiff = hoy.getMonth() - nacimiento.getMonth();
+      if (mesDiff < 0 || (mesDiff === 0 && hoy.getDate() < nacimiento.getDate())) {
+        edad--;
+      }
+    }
+
+    const fechaFormateada = usuario.fecha_nacimiento
+      ? usuario.fecha_nacimiento.toISOString().split('T')[0]
+      : null;
+
+    return res.json({
+      ok: true,
+      data: {
+        fecha_nacimiento: fechaFormateada,
+        edad: edad,
+      },
+    });
+  } catch (error) {
+    console.error("Error en obtenerFechaNacimiento:", error);
+    return res.status(500).json({
+      ok: false,
+      msg: "Error al obtener la fecha de nacimiento",
+    });
+  }
+};
+
+

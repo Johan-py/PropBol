@@ -1,3 +1,4 @@
+// FavoritesService.ts
 import { prisma } from '../../lib/prisma.client.js'
 
 export class FavoritesService {
@@ -17,6 +18,7 @@ export class FavoritesService {
             include: {
               ubicacion: true,
               publicaciones: {
+                where: { estado: 'ACTIVA' }, // Solo publicaciones activas
                 include: { multimedia: true },
                 take: 1,
               },
@@ -26,54 +28,74 @@ export class FavoritesService {
       }),
     ])
 
+    // Por esto:
     return {
       total,
       page,
       per_page: perPage,
-      inmuebles: favoritos.map((f) => f.inmueble),
+      data: favoritos.map((f) => ({
+        id: f.id,
+        agregadoEn: f.agregadoEn,
+        inmueble: {
+          ...f.inmueble,
+          imagen_principal: f.inmueble.publicaciones[0]?.multimedia[0]?.url || null
+        }
+      })),
+      totalPages: Math.ceil(total / perPage)
     }
   }
 
   static async add(usuarioId: number, inmuebleId: number) {
-    const existing = await prisma.favorito.findFirst({
-      where: {
-        usuarioId: usuarioId,
-        inmuebleId: inmuebleId
+    try {
+      // Usar create directamente con el unique compuesto
+      return await prisma.favorito.create({
+        data: {
+          usuarioId,
+          inmuebleId
+        },
+      })
+    } catch (error: any) {
+      // P2002 es el error de Prisma para unique constraint violation
+      if (error.code === 'P2002') {
+        throw new Error('ALREADY_EXISTS')
       }
-    })
-    
-    if (existing) throw new Error('ALREADY_EXISTS')
-
-    return await prisma.favorito.create({
-      data: { 
-        usuarioId: usuarioId, 
-        inmuebleId: inmuebleId 
-      },
-    })
+      throw error
+    }
   }
 
   static async remove(usuarioId: number, inmuebleId: number) {
-    const existing = await prisma.favorito.findFirst({
-      where: {
-        usuarioId: usuarioId,
-        inmuebleId: inmuebleId
+    try {
+      // Eliminar directamente usando el unique compuesto
+      return await prisma.favorito.delete({
+        where: {
+          usuarioId_inmuebleId: {
+            usuarioId,
+            inmuebleId
+          }
+        }
+      })
+    } catch (error: any) {
+      // P2025 es el error de Prisma para registro no encontrado
+      if (error.code === 'P2025') {
+        throw new Error('NOT_FOUND')
       }
-    })
-    
-    if (!existing) throw new Error('NOT_FOUND')
-
-    return await prisma.favorito.delete({
-      where: { id: existing.id },
-    })
+      throw error
+    }
   }
 
   static async isFavorite(usuarioId: number, inmuebleId: number): Promise<boolean> {
-    const existing = await prisma.favorito.findFirst({
-      where: {
-        usuarioId: usuarioId,
-        inmuebleId: inmuebleId
-      }
-    })
-    return !!existing
+    try {
+      const favorite = await prisma.favorito.findUnique({
+        where: {
+          usuarioId_inmuebleId: {
+            usuarioId,
+            inmuebleId
+          }
+        }
+      })
+      return !!favorite
+    } catch (error) {
+      return false
+    }
   }
 }

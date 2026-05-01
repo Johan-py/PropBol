@@ -2,169 +2,232 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { MapPin, Search, Loader2, X, History } from 'lucide-react'
+import { MapPin, Loader2, X, History, Search } from 'lucide-react'
 import { usePopularidad } from '@/hooks/usePopularidad'
 import { useSearchFilters } from '@/hooks/useSearchFilters'
+import { useDebounce } from 'use-debounce'
 
-type Location = {
-  id: number
-  nivel: string
-  nombre: string
-  contexto: string
+interface MapboxFeature {
+  id: string;
+  place_name: string;
+  center: [number, number];
+  text: string;
+  isLocal?: boolean;
+  nivel?: string;
+  contexto?: string;
+  locationId?: number;
 }
 
 type LocationSearchProps = {
   value: string
-  onChange: (value: string) => void
+  onChange: (data: string | { nombre: string, lat?: number, lng?: number, locationId?: number }) => void
 }
 
 export function LocationSearch({ value, onChange }: LocationSearchProps) {
-  const [suggestions, setSuggestions] = useState<Location[]>([])
   const [isOpen, setIsOpen] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
   const [history, setHistory] = useState<string[]>([])
   const [showAll, setShowAll] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({})
-
   const { updateFilters } = useSearchFilters()
   const { registrarConsulta } = usePopularidad()
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+  const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
+  const [inputValue, setInputValue] = useState(value || '')
+  const [debouncedValue] = useDebounce(inputValue, 400)
+  const [suggestions, setSuggestions] = useState<MapboxFeature[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    setInputValue(value || '');
+  }, [value]);
 
   const recalcDropdown = () => {
     if (!containerRef.current) return
-    const rect = containerRef.current.getBoundingClientRect()
     setDropdownStyle({
-      position: 'fixed',
-      top: rect.bottom + 8,
-      left: rect.left,
-      width: rect.width,
-      zIndex: 9999
+      position: 'absolute',
+      top: 'calc(100% + 8px)',
+      left: 0,
+      width: '100%',
+      zIndex: 50
     })
   }
 
   useEffect(() => {
-    if (!isOpen) return
-    // CORRECCIÓN: Se usa const porque frame1 y frame2 no se reasignan
-    const frame1 = requestAnimationFrame(() => {
-      requestAnimationFrame(recalcDropdown)
-    })
-    return () => cancelAnimationFrame(frame1)
-  }, [isOpen])
-
-  useEffect(() => {
-    if (!isOpen) return
-    window.addEventListener('resize', recalcDropdown)
-    window.addEventListener('scroll', recalcDropdown, true)
-    return () => {
-      window.removeEventListener('resize', recalcDropdown)
-      window.removeEventListener('scroll', recalcDropdown, true)
-    }
-  }, [isOpen])
-
-  // ── Selección de ubicación ─────────────────────────────────────────────────
-  const handleSelectLocation = (loc: Location) => {
-    // Mostramos el nombre limpio en el input
-    const displayValue = loc.nombre
-    updateFilters({
-      locationId: loc.id,
-      query: displayValue
-    })
-    onChange(displayValue)
-    saveToHistory(displayValue)
-    setIsOpen(false)
-    registrarConsulta(loc.id, displayValue)
-
-    // Auto-submit tras elegir sugerencia
-    setTimeout(() => {
-      containerRef.current?.closest('form')?.requestSubmit()
-    }, 100)
-  }
-
-  useEffect(() => {
-    const savedHistory = localStorage.getItem('searchHistory')
-    if (savedHistory) {
-      setHistory(JSON.parse(savedHistory))
-    }
-  }, [])
-
-  const saveToHistory = (item: string) => {
-    if (!item.trim()) return 
-    const updatedHistory = [item, ...history.filter((i) => i !== item)].slice(0, 20)
-    setHistory(updatedHistory)
-    localStorage.setItem('searchHistory', JSON.stringify(updatedHistory))
-  }
-  
-  const handleDeleteItem = (e: React.MouseEvent, term: string) => {
-    e.stopPropagation()
-    const updated = history.filter((h) => h !== term)
-    setHistory(updated)
-    localStorage.setItem('searchHistory', JSON.stringify(updated))
-  }
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const rawValue = e.target.value
-    const cleanValue = rawValue.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-]/gi, '').trimStart()
-    onChange(cleanValue)
-  }
-
-  const isSelected = value.includes('Bolivia')
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setIsOpen(false)
+    if (isOpen) {
+      const frame = requestAnimationFrame(recalcDropdown)
+      window.addEventListener('resize', recalcDropdown)
+      window.addEventListener('scroll', recalcDropdown, true)
+      return () => {
+        cancelAnimationFrame(frame)
+        window.removeEventListener('resize', recalcDropdown)
+        window.removeEventListener('scroll', recalcDropdown, true)
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+  }, [isOpen])
 
   useEffect(() => {
-    const fetchLocations = async () => {
-      if (value.trim().length < 2 || isSelected) {
+    const syncHistory = async () => {
+      const token = localStorage.getItem("token")
+      if (!token) {
+        const visitorSaved = localStorage.getItem('visitorSearchHistory')
+        const parsed = visitorSaved ? JSON.parse(visitorSaved) : []
+        setHistory(parsed.slice(0, 10))
+        return
+      }
+      try {
+        const authSaved = localStorage.getItem('authSearchHistory')
+        if (authSaved) setHistory(JSON.parse(authSaved))
+        const res = await fetch(`${API_BASE}/api/perfil/historial-busqueda`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        if (res.ok) {
+          const data = await res.json()
+          const remoteHistory = data.map((h: any) => typeof h === 'string' ? h : h.termino).slice(0, 20)
+          setHistory(remoteHistory)
+          localStorage.setItem('authSearchHistory', JSON.stringify(remoteHistory))
+        }
+      } catch (error) { console.error("Error historial:", error) }
+    }
+    syncHistory()
+    window.addEventListener('propbol:login', syncHistory)
+    window.addEventListener('propbol:session-changed', syncHistory)
+    return () => {
+      window.removeEventListener('propbol:login', syncHistory)
+      window.removeEventListener('propbol:session-changed', syncHistory)
+    }
+  }, [API_BASE])
+
+  const saveToHistory = async (item: string) => {
+    if (!item.trim()) return
+    const token = localStorage.getItem("token")
+    const limit = token ? 20 : 10
+    const updated = [item, ...history.filter(i => i !== item)].slice(0, limit)
+    setHistory(updated)
+    if (token) {
+      localStorage.setItem('authSearchHistory', JSON.stringify(updated))
+      try {
+        await fetch(`${API_BASE}/api/perfil/historial-busqueda`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ termino: item })
+        })
+      } catch (e) { console.error(e) }
+    } else {
+      localStorage.setItem('visitorSearchHistory', JSON.stringify(updated))
+    }
+  }
+
+  const handleDeleteHistoryItem = async (e: React.MouseEvent, term: string) => {
+    e.stopPropagation()
+    const token = localStorage.getItem("token")
+    const updated = history.filter((h) => h !== term)
+    setHistory(updated)
+    if (token) {
+      localStorage.setItem('authSearchHistory', JSON.stringify(updated))
+      try {
+        await fetch(`${API_BASE}/api/perfil/historial-busqueda/${encodeURIComponent(term)}`, {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` }
+        })
+      } catch (e) { console.error(e) }
+    } else {
+      localStorage.setItem('visitorSearchHistory', JSON.stringify(updated))
+    }
+  }
+
+  useEffect(() => {
+    const searchAll = async () => {
+      if (!debouncedValue || debouncedValue.length < 2) {
         setSuggestions([])
         return
       }
       setIsLoading(true)
       try {
-        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
-        const res = await fetch(`${API_BASE}/api/locations/search?q=${encodeURIComponent(value)}`)
-        if (res.ok) {
-          const data = await res.json()
-          setSuggestions(data)
-          setIsOpen(true)
+        const resLocal = await fetch(`${API_BASE}/api/locations/search?q=${encodeURIComponent(debouncedValue)}`)
+        let localResults: MapboxFeature[] = []
+        if (resLocal.ok) {
+          const dataLocal = await resLocal.json()
+          localResults = dataLocal.map((loc: any) => ({
+            id: `local-${loc.id}`,
+            text: loc.nombre,
+            place_name: loc.contexto,
+            center: [0, 0],
+            locationId: loc.id,
+            nivel: loc.nivel,
+            isLocal: true
+          }))
         }
-      } catch (error) {
-        console.error('Error buscando ubicaciones:', error)
-      } finally {
-        setIsLoading(false)
-      }
+        const matchInterseccion = debouncedValue.match(/(.+?)\s+y\s+(.+)/i);
+        let osmResults: MapboxFeature[] = []
+        if (matchInterseccion) {
+          const bbox = "-17.519,-66.368,-17.288,-65.986";
+          const queryOSM = `[out:json][timeout:5];way["name"~"${matchInterseccion[1]}", i](${bbox})->.w1;way["name"~"${matchInterseccion[2]}", i](${bbox})->.w2;node(w.w1)(w.w2);out center;`;
+          const resOSM = await fetch("https://overpass-api.de/api/interpreter", {
+            method: "POST",
+            body: "data=" + encodeURIComponent(queryOSM)
+          })
+          const dataOSM = await resOSM.json()
+          osmResults = dataOSM.elements.map((el: any) => ({
+            id: `osm-${el.id}`,
+            text: `${matchInterseccion[1].toUpperCase()} Y ${matchInterseccion[2].toUpperCase()}`,
+            place_name: "Intersección (Cochabamba)",
+            center: [el.lon, el.lat]
+          }))
+        }
+        const resMapbox = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(debouncedValue)}.json?access_token=${MAPBOX_TOKEN}&country=bo&bbox=-66.368,-17.519,-65.986,-17.288&language=es`)
+        const dataMapbox = await resMapbox.json()
+        const mapboxResults = dataMapbox.features || []
+        setSuggestions([...localResults, ...osmResults, ...mapboxResults])
+      } catch (e) { console.error(e) }
+      finally { setIsLoading(false) }
     }
-    const timer = setTimeout(fetchLocations, 300)
-    return () => clearTimeout(timer)
-  }, [value, isSelected])
+    searchAll()
+  }, [debouncedValue, API_BASE, MAPBOX_TOKEN])
+
+  const handleSelect = (place: MapboxFeature) => {
+    const nombre = place.text
+    setInputValue(nombre)
+    saveToHistory(nombre)
+    setIsOpen(false)
+    onChange({ nombre, lat: place.center[1] !== 0 ? place.center[1] : undefined, lng: place.center[0] !== 0 ? place.center[0] : undefined, locationId: place.locationId })
+    if (place.isLocal && place.locationId) {
+      registrarConsulta(place.locationId, nombre)
+      updateFilters({ locationId: place.locationId, query: nombre })
+    }
+    setTimeout(() => containerRef.current?.closest('form')?.requestSubmit(), 100)
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) setIsOpen(false)
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   return (
     <div className="w-full relative" ref={containerRef}>
-      <div className={`h-[46px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${isOpen ? 'border-amber-600 ring-2 ring-amber-100' : 'border-stone-300'}`}>
-        <MapPin className={`w-5 h-5 flex-shrink-0 ${value ? 'text-amber-600' : 'text-stone-400'}`} />
+      <div className={`h-[40px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${isOpen ? 'border-orange-500 ring-1 ring-orange-500' : 'border-stone-200 hover:border-orange-500'}`}>
+        <MapPin className={`w-5 h-5 flex-shrink-0 ${inputValue ? 'text-orange-500' : 'text-stone-400'}`} />
         <div className="relative flex-1 flex items-center w-full h-full min-w-0">
           <input
             type="text"
-            value={value}
-            onChange={handleInputChange}
-            onFocus={() => {
-              setIsOpen(true)
-              requestAnimationFrame(recalcDropdown)
-            }}
+            value={inputValue}
+            onChange={(e) => { setInputValue(e.target.value); setIsOpen(true); }}
+            onFocus={() => { setIsOpen(true); recalcDropdown(); }}
             onKeyDown={(e) => e.key === 'Enter' && setIsOpen(false)}
-            placeholder="Cochabamba, La Paz..."
-            className="w-full bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 font-inter pr-[70px]"
+            placeholder="Ej: Av. América, Plaza Colón, Cala Cala..."
+            className="w-full bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 pr-[70px] h-full"
           />
           <div className="absolute right-0 flex items-center gap-2 bg-white pl-2 h-full">
-            {isSelected && <Image src="https://flagcdn.com/w20/bo.png" alt="BO" width={20} height={14} className="rounded-sm flex-shrink-0" />}
-            {isLoading ? <Loader2 className="w-4 h-4 animate-spin text-amber-600" /> : value && (
-              <button onClick={() => onChange('')} type="button" className="p-1 hover:bg-stone-100 rounded-full transition-colors flex-shrink-0">
+            {(inputValue.toLowerCase().includes('bolivia') || suggestions.some(s => s.isLocal)) && (
+              <Image src="https://flagcdn.com/w20/bo.png" alt="BO" width={20} height={14} className="rounded-sm flex-shrink-0" />
+            )}
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin text-orange-500" />
+            ) : inputValue && (
+              <button onClick={() => { setInputValue(''); setSuggestions([]); onChange(''); }} type="button" className="p-1 hover:bg-stone-100 rounded-full">
                 <X className="w-4 h-4 text-stone-400 hover:text-red-500" />
               </button>
             )}
@@ -174,87 +237,64 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
 
       {isOpen && (
         <div style={dropdownStyle} className="bg-white border border-stone-200 rounded-xl shadow-xl overflow-hidden">
-          {value === '' && history.length > 0 && (
-            <div className="max-h-60 overflow-y-auto overscroll-contain"> 
-              <div className="px-4 py-2 bg-stone-50 border-b border-stone-100">
+          {/* HISTORIAL: Solo cuando el input está vacío */}
+          {inputValue === '' && history.length > 0 && (
+            <div className="max-h-60 overflow-y-auto overscroll-contain">
+              <div className="px-4 py-2 bg-stone-50 border-b border-stone-100 flex justify-between items-center">
                 <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">Búsquedas recientes</span>
+                {!localStorage.getItem("token") && (
+                  <span className="text-[9px] text-stone-300 font-medium">Limite (Máx 10)</span>
+                )}
               </div>
               {(showAll ? history : history.slice(0, 5)).map((item, idx) => (
-                <div key={`hist-${idx}`} className="group flex items-center justify-between hover:bg-amber-50 border-b border-stone-50 last:border-0">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onChange(item)
-                      setIsOpen(false)
-                      updateFilters({ query: item })
-                      setTimeout(() => containerRef.current?.closest('form')?.requestSubmit(), 100)
-                    }}
-                    className="flex-1 px-4 py-3 flex items-center gap-3 text-left"
-                  >
-                    <History className="w-3.5 h-3.5 text-stone-300" />
-                    <span className="text-sm text-stone-600">{item}</span>
+                <div key={`hist-${idx}`} className="group flex items-center justify-between hover:bg-orange-50 border-b border-stone-50 last:border-0">
+                  <button type="button" onClick={() => { setInputValue(item); onChange(item); setIsOpen(false); }} className="flex-1 px-4 py-3 flex items-center gap-3 text-left">
+                    <History className="w-3.5 h-3.5 text-stone-400" />
+                    <div className="flex items-center justify-between w-full pr-2">
+                      <span className="text-sm text-stone-600">{item}</span>
+                      <Image src="https://flagcdn.com/w20/bo.png" alt="BO" width={16} height={11} className="rounded-sm opacity-70" />
+                    </div>
                   </button>
-                  <button
-                    type="button"
-                    onClick={(e) => handleDeleteItem(e, item)}
-                    className="pr-4 opacity-100 md:opacity-0 group-hover:opacity-100 text-stone-400 hover:text-red-500 transition-opacity p-2"
-                  >
+                  <button type="button" onClick={(e) => handleDeleteHistoryItem(e, item)} className="pr-4 opacity-100 md:opacity-0 group-hover:opacity-100 text-stone-400 hover:text-red-500 p-2">
                     <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
               ))}
-              {history.length > 5 && !showAll && (
-                <button
-                  type="button"
-                  onClick={() => setShowAll(true)}
-                  className="w-full py-2 text-xs text-amber-600 font-bold hover:bg-amber-100 border-t border-stone-50"
-                >
-                  Ver más
-                </button>
+              {history.length > 5 && (
+                <div className="flex justify-end border-t border-stone-50 bg-white">
+                  <button type="button" onClick={() => setShowAll(!showAll)} className={`px-4 py-2 text-xs font-bold transition-colors ${showAll ? "text-stone-500 hover:text-stone-700" : "text-orange-500 hover:text-orange-600"}`}>
+                    {showAll ? "Ver menos" : "Ver más"}
+                  </button>
+                </div>
               )}
             </div>
           )}
 
-          {value.trim().length >= 2 && !isSelected && (
-            <div className="max-h-[300px] overflow-y-auto">
+          {inputValue.length >= 2 && (
+            <div className="max-h-[300px] overflow-y-auto overscroll-contain">
               {isLoading ? (
                 <div className="px-4 py-6 text-center flex flex-col items-center gap-2">
-                  <Loader2 className="w-5 h-5 animate-spin text-amber-600" />
+                  <Loader2 className="w-5 h-5 animate-spin text-orange-500" />
                   <span className="text-sm text-stone-500 italic">Buscando zonas...</span>
                 </div>
               ) : suggestions.length > 0 ? (
-                <div className="max-h-[300px] overflow-y-auto">
-                  {suggestions.slice(0, 5).map((loc) => (
-                    <button
-                      key={loc.id}
-                      type="button"
-                      onClick={() => handleSelectLocation(loc)}
-                      className="w-full px-4 py-3 flex items-center justify-between hover:bg-amber-50 transition-colors text-left border-b border-stone-50 last:border-0"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Search className="w-3.5 h-3.5 text-stone-500" />
-                        <div className="flex flex-col">
-                          <span className="text-sm font-bold text-stone-600">
-                            {loc.nombre}
-                          </span>
-                          <span className="text-xs text-stone-400">
-                            {loc.contexto}
-                          </span>
-                        </div>
+                suggestions.map((place) => (
+                  <button key={place.id} type="button" onClick={() => handleSelect(place)} className="w-full px-4 py-3 flex items-center justify-between hover:bg-orange-50 border-b border-stone-50 last:border-0 transition-colors">
+                    <div className="flex items-center gap-3 overflow-hidden">
+                      <Search className="w-4 h-4 text-stone-400 flex-shrink-0" />
+                      <div className="flex flex-col text-left min-w-0">
+                        <span className="text-sm font-bold text-stone-600 truncate">{place.text}</span>
+                        <span className="text-xs text-stone-400 truncate">{place.place_name}</span>
                       </div>
-                      <div className="text-[10px] font-bold px-2 py-1 bg-stone-100 text-stone-500 rounded-md uppercase">
-                        {loc.nivel}
-                      </div>
-                      <Image
-                        src="https://flagcdn.com/w20/bo.png"
-                        alt="BO"
-                        width={20}
-                        height={14}
-                        className="rounded-sm"
-                      />
-                    </button>
-                  ))}
-                </div>
+                    </div>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {place.nivel && (
+                        <div className="text-[10px] font-bold px-2 py-1 bg-stone-100 text-stone-500 rounded-md uppercase">{place.nivel}</div>
+                      )}
+                      <Image src="https://flagcdn.com/w20/bo.png" alt="BO" width={20} height={14} className="rounded-sm" />
+                    </div>
+                  </button>
+                ))
               ) : (
                 <div className="px-4 py-8 text-center bg-stone-50/50">
                   <p className="text-sm text-stone-600 font-medium">No se encontraron resultados</p>

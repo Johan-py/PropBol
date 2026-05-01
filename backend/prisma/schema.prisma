@@ -36,7 +36,7 @@ model Usuario {
   controlador                           Boolean                 @default(false)
   notificacionWhatsapp                  Boolean?                @default(false)
   rolId                                 Int?
-  notificacion_email                     Boolean?                @default(true)
+  notificacion_email                    Boolean?                @default(true)
   notificacion_whatsapp                 Boolean?                @default(false)
   fecha_registro                        DateTime?               @default(now()) @db.Timestamp(6)
   updatedAt                             DateTime?               @updatedAt @db.Timestamp(6)
@@ -74,7 +74,6 @@ model Usuario {
   @@index([correo], map: "idx_usuario_correo")
   @@index([rolId], map: "idx_usuario_rol")
   @@index([rolId], map: "idx_usuario_rol_id")
-  @@index([correo])
   @@map("usuario")
 }
 
@@ -185,13 +184,13 @@ model UbicacionInmueble {
   inmuebleId         Int                @unique @map("inmueble_id")
   ubicacionMaestraId Int?               @map("ubicacion_maestra_id")
   barrio_id          Int?
+  verticesDifuminado Json?              @map("vertices_difuminado")
   marcador_mapa      MarcadorMapa[]
   barrio             barrio?            @relation(fields: [barrio_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   inmueble           Inmueble           @relation(fields: [inmuebleId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "ubicacion_inmueble_fk")
   ubicacion_maestra  ubicacion_maestra? @relation(fields: [ubicacionMaestraId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([ubicacionMaestraId], map: "idx_ubicacion_maestra")
-  @@index([ubicacionMaestraId])
   @@map("ubicacion_inmueble")
 }
 
@@ -206,8 +205,8 @@ model Etiqueta {
 model InmuebleEtiqueta {
   inmueble_id Int
   etiqueta_id Int
-  etiqueta    Etiqueta @relation(fields: [etiqueta_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "inmueble_etiqueta_etiqueta_fk")
-  inmueble    Inmueble @relation(fields: [inmueble_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "inmueble_etiqueta_inmueble_fk")
+  etiqueta    Etiqueta @relation(fields: [etiqueta_id], references: [id], onUpdate: NoAction, map: "inmueble_etiqueta_etiqueta_fk")
+  inmueble    Inmueble @relation(fields: [inmueble_id], references: [id], onUpdate: NoAction, map: "inmueble_etiqueta_inmueble_fk")
 
   @@id([inmueble_id, etiqueta_id])
   @@map("inmueble_etiqueta")
@@ -315,7 +314,7 @@ model InteraccionMapa {
   @@map("interaccion_mapa")
 }
 
-model BannerHome {
+model banner_home {
   id             Int       @id @default(autoincrement())
   url_imagen     String
   orden          Int
@@ -640,13 +639,11 @@ model amenidad {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model barrio {
-  id                                                      Int                 @id @default(autoincrement())
-  nombre                                                  String              @db.VarChar(255)
-  zona_id                                                 Int
-  zona_geografica                                         Int?
-  zona_geografica_barrio_zona_idTozona_geografica         zona_geografica     @relation("barrio_zona_idTozona_geografica", fields: [zona_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "barrio_zona_fk")
-  zona_geografica_barrio_zona_geograficaTozona_geografica zona_geografica?    @relation("barrio_zona_geograficaTozona_geografica", fields: [zona_geografica], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  ubicacion_inmueble                                      UbicacionInmueble[]
+  id                 Int                 @id @default(autoincrement())
+  nombre             String              @db.VarChar(255)
+  zona_id            Int
+  zona               zona_geografica     @relation(fields: [zona_id], references: [id], onUpdate: NoAction, map: "barrio_zona_fk")
+  ubicacion_inmueble UbicacionInmueble[]
 
   @@unique([nombre, zona_id], map: "barrio_nombre_zona_unique")
 }
@@ -713,9 +710,9 @@ model comentario_like {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model departamento {
-  id                                             Int         @id @default(autoincrement())
-  nombre                                         String      @unique @db.VarChar(255)
-  provincia_provincia_departamentoTodepartamento provincia[] @relation("provincia_departamentoTodepartamento")
+  id         Int         @id @default(autoincrement())
+  nombre     String      @unique @db.VarChar(255)
+  provincias provincia[]
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -730,39 +727,43 @@ model inmueble_amenidad {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model municipio {
-  id                                                   Int               @id @default(autoincrement())
-  nombre                                               String            @db.VarChar(255)
-  provincia                                            Int
-  provincia_id                                         Int?
-  provincia_municipio_provinciaToprovincia             provincia         @relation("municipio_provinciaToprovincia", fields: [provincia], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  zona_geografica_zona_geografica_municipioTomunicipio zona_geografica[] @relation("zona_geografica_municipioTomunicipio")
+  id           Int               @id @default(autoincrement())
+  nombre       String            @db.VarChar(255)
+  provincia_id Int?              @map("provincia")
+  provincia    provincia?        @relation(fields: [provincia_id], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  zonas        zona_geografica[]
 
-  @@unique([nombre, provincia], map: "municipio_nombre_provincia_unique")
+  @@unique([nombre, provincia_id], map: "municipio_nombre_provincia_unique")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model provincia {
-  id                                                Int          @id @default(autoincrement())
-  nombre                                            String       @db.VarChar(255)
-  departamento                                      Int
-  departamento_id                                   Int?
-  municipio_municipio_provinciaToprovincia          municipio[]  @relation("municipio_provinciaToprovincia")
-  departamento_provincia_departamentoTodepartamento departamento @relation("provincia_departamentoTodepartamento", fields: [departamento], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id              Int          @id @default(autoincrement())
+  nombre          String       @db.VarChar(255)
+  departamento_id Int          @map("departamento")
+  municipios      municipio[]
+  departamento    departamento @relation(fields: [departamento_id], references: [id], onUpdate: NoAction)
 
-  @@unique([nombre, departamento], map: "provincia_nombre_departamento_unique")
+  @@unique([nombre, departamento_id], map: "provincia_nombre_departamento_unique")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model zona_geografica {
-  id                                             Int       @id @default(autoincrement())
-  nombre                                         String    @db.VarChar(255)
-  municipio                                      Int
-  municipio_id                                   Int?
-  barrio_barrio_zona_idTozona_geografica         barrio[]  @relation("barrio_zona_idTozona_geografica")
-  barrio_barrio_zona_geograficaTozona_geografica barrio[]  @relation("barrio_zona_geograficaTozona_geografica")
-  municipio_zona_geografica_municipioTomunicipio municipio @relation("zona_geografica_municipioTomunicipio", fields: [municipio], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id           Int       @id @default(autoincrement())
+  nombre       String    @db.VarChar(255)
+  municipio_id Int       @map("municipio")
+  barrios      barrio[]
+  municipio    municipio @relation(fields: [municipio_id], references: [id], onUpdate: NoAction)
 
-  @@unique([nombre, municipio], map: "zona_geografica_nombre_municipio_unique")
+  @@unique([nombre, municipio_id], map: "zona_geografica_nombre_municipio_unique")
+}
+
+model contacto {
+  id            Int      @id @default(autoincrement())
+  usuarioId     Int
+  inmuebleId    Int
+  mensaje       String
+  creadoEn      DateTime @default(now())
 }
 
 enum Genero {
@@ -805,6 +806,8 @@ enum Categoria {
   DEPARTAMENTO
   TERRENO
   OFICINA
+  CUARTO
+  TERRENO_MORTUORIO
 
   @@map("categoria")
 }
@@ -845,6 +848,8 @@ enum public_Categoria {
   DEPARTAMENTO
   TERRENO
   OFICINA
+  CUARTO
+  TERRENO_MORTUORIO
 
   @@map("Categoria")
 }

@@ -1,15 +1,13 @@
 "use client";
 
 import { BlogCategory } from "@/types/publicBlog";
+import { getCategoryColor } from "@/utils/blogColors";
 
 type BlogFilterChipsProps = {
   categories: readonly BlogCategory[];
   activeCategory: BlogCategory | null;
-  onToggleCategory: (category: BlogCategory) => void;
+  onToggleCategory: (category: BlogCategory | null) => void;
 };
-
-const baseChipClassName =
-  "rounded-full border px-4 py-2 text-sm font-semibold uppercase tracking-[0.18em] transition-colors duration-200 whitespace-nowrap";
 
 export default function BlogFilterChips({
   categories,
@@ -17,9 +15,23 @@ export default function BlogFilterChips({
   onToggleCategory,
 }: BlogFilterChipsProps) {
   return (
-    <div className="flex min-w-max gap-3 sm:min-w-0 sm:flex-wrap">
+    <div className="flex flex-wrap gap-2 sm:flex-wrap sm:overflow-x-visible">
+      <button
+        type="button"
+        onClick={() => onToggleCategory(null)}
+        aria-pressed={activeCategory === null}
+        className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 cursor-pointer ${
+          activeCategory === null
+            ? "bg-stone-900 text-white border-stone-900"
+            : "bg-white text-stone-900 border-stone-300 hover:border-stone-500"
+        }`}
+      >
+        Todos
+      </button>
+
       {categories.map((category) => {
         const isActive = activeCategory === category;
+        const color = getCategoryColor(category);
 
         return (
           <button
@@ -27,10 +39,10 @@ export default function BlogFilterChips({
             type="button"
             onClick={() => onToggleCategory(category)}
             aria-pressed={isActive}
-            className={`${baseChipClassName} ${
+            className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all duration-200 cursor-pointer ${
               isActive
-                ? "border-stone-900 bg-stone-900 text-white"
-                : "border-stone-300 bg-white text-stone-700 hover:border-stone-500 hover:text-stone-900"
+                ? "bg-stone-900 text-white border-stone-900"
+                : `bg-white text-stone-900 border-stone-300 ${color.hoverBorder}`
             }`}
           >
             {category}

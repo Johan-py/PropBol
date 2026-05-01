@@ -1,113 +1,222 @@
 "use client";
-import React, { useState } from 'react';
-import { Star } from "lucide-react";
-import { MOCK_PROPERTIES } from '@/data/mockProperties';
+import React, { useState, useEffect, useRef } from 'react';
+import { Calendar, Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+
+const PropertyCard = ({ prop }: { prop: any }) => {
+    const fecha = new Date(prop.viewedDate).toLocaleDateString('es-ES', {
+        day: '2-digit', month: '2-digit'
+    });
+
+    return (
+        <div className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden relative hover:shadow-md transition-all">
+            <div className="relative h-44 w-full bg-gray-200">
+                <img
+                    src={prop.imageUrl || 'https://via.placeholder.com/400x300'}
+                    alt={prop.title}
+                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
+                />
+            </div>
+            <div className="p-4 relative">
+                <div className="absolute top-4 right-4 text-right flex flex-col items-end">
+                    <div className="bg-[#4B4B4B] text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm mb-1">
+                        Visto: {fecha}
+                    </div>
+                    <span className="text-[9px] text-gray-300 font-medium">Ref: #{prop.id}</span>
+                </div>
+                <p className="text-[#E87B00] font-bold text-lg">${prop.price?.toLocaleString()} USD</p>
+                <h3 className="font-bold text-black text-sm mt-1 truncate">{prop.title}</h3>
+                <p className="text-black text-[11px] mt-1 font-medium italic">{prop.location}</p>
+                <div className="flex items-center gap-2 mt-3 text-[10px] text-black font-medium italic">
+                    <span>3 hab</span><span>•</span><span>2 baños</span><span>•</span><span>1 garaje</span>
+                </div>
+                <div className="mt-4 flex gap-2">
+
+                    <button className="w-full bg-[#E87B00] text-white py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm text-center">
+                        Ver Detalle
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 export default function VistasRecientesPage() {
-    const displayedProperties = MOCK_PROPERTIES.slice(0, 8).map((prop, index) => ({
-        ...prop,
-        fechaVista: index === 0 ? "Hoy" : index < 3 ? "Ayer" : `1${index}/04/2026`
-    }));
+    const [properties, setProperties] = useState<any[]>([]);
+    const [filteredProperties, setFilteredProperties] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    // --- ESTADOS DE PAGINACIÓN ---
+    const [currentPage, setCurrentPage] = useState(1);
+    const propertiesPerPage = 8; // Muestra exactamente 2 filas de 4
+
+    const dateInputRef = useRef<HTMLInputElement>(null);
+
+    const fetchHistorial = async () => {
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/perfil/historial/vistas`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await response.json();
+            setProperties(data.data);
+            setFilteredProperties(data.data);
+        } catch (error) {
+            console.error("Error cargando historial:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => { fetchHistorial(); }, []);
+
+    // --- LÓGICA DE PAGINACIÓN ---
+    const indexOfLastProperty = currentPage * propertiesPerPage;
+    const indexOfFirstProperty = indexOfLastProperty - propertiesPerPage;
+    const currentItems = filteredProperties.slice(indexOfFirstProperty, indexOfLastProperty);
+    const totalPages = Math.ceil(filteredProperties.length / propertiesPerPage);
+
+    const paginate = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleDateFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedDate = e.target.value;
+        setCurrentPage(1);
+        if (!selectedDate) {
+            setFilteredProperties(properties);
+            return;
+        }
+        const filtered = properties.filter(p =>
+            new Date(p.viewedDate).toISOString().split('T')[0] === selectedDate
+        );
+        setFilteredProperties(filtered);
+    };
+
+    const handleClearHistory = async () => {
+        // BUG FIX: Evita el confirm si no hay nada que borrar
+        if (properties.length === 0) return;
+
+        if (!confirm("¿Deseas borrar todo tu historial de vistas?")) return;
+
+        const token = localStorage.getItem('token');
+        try {
+            await fetch('http://localhost:5000/api/perfil/historial/vistas', {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            setProperties([]);
+            setFilteredProperties([]);
+        } catch (error) {
+            console.error("Error al borrar:", error);
+        }
+    };
+
+    if (loading) return <div className="p-20 text-center font-bold text-black">Conectando con PropBol...</div>;
 
     return (
         <main className="min-h-screen bg-[#F8F9FA] p-4 md:p-6 font-sans">
             <div className="max-w-7xl mx-auto">
-
-                {/* Header con botones de acción */}
                 <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                     <div>
                         <h1 className="text-xl md:text-2xl font-bold text-gray-900">Propiedades vistas recientemente</h1>
-                        <p className="text-gray-500 text-xs">{MOCK_PROPERTIES.length} propiedades encontradas</p>
+                        <p className="text-gray-500 text-xs">
+                            {filteredProperties.length} propiedades encontradas en total
+                        </p>
                     </div>
 
-                    <div className="flex gap-3">
-                        <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium hover:bg-gray-50 transition-all">
-                            Filtrar por Fecha
-                        </button>
-                        <button className="px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all">
-                            Limpiar Historial
-                        </button>
-                    </div>
-                </div>
-
-                {/* Grid de Propiedades */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {displayedProperties.map((prop: any) => {
-                        //Estado de favorito por card
-                        const [favorito, setFavorito] = useState(false);
-                        return(  
-                        <div key={prop.id} className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden relative hover:shadow-md transition-all">
-
-                            {/* Contenedor de Imagen */}
-                            <div className="relative h-44 w-full bg-gray-200">
-                                <img
-                                    src={prop.image || 'https://via.placeholder.com/400x300'}
-                                    alt={prop.title}
-                                    className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
-                                />
-                            </div>
-
-                            {/* Contenido de la Tarjeta */}
-                            <div className="p-4 relative">
-                                {/* Badge de Fecha y Referencia */}
-                                <div className="absolute top-4 right-4 text-right flex flex-col items-end">
-                                    <div className="bg-[#4B4B4B] text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm mb-1">
-                                        Visto: {prop.fechaVista}
-                                    </div>
-                                    <span className="text-[9px] text-gray-300 font-medium">Ref: #{prop.id || 'prop-001'}</span>
-                                </div>
-
-                                {/* Precio */}
-                                <p className="text-[#E87B00] font-bold text-lg">${prop.price || '150,000'} USD</p>
-
-                                {/* Título en Negro */}
-                                <h3 className="font-bold text-black text-sm mt-1 truncate">{prop.title}</h3>
-
-                                {/* Ubicación (Sin icono) */}
-                                <p className="text-black text-[11px] mt-1 font-medium italic">Cochabamba, Bolivia</p>
-
-                                {/* Detalles técnicos */}
-                                <div className="flex items-center gap-2 mt-3 text-[10px] text-black font-medium italic">
-                                    <span>3 hab</span>
-                                    <span>•</span>
-                                    <span>2 baños</span>
-                                    <span>•</span>
-                                    <span>1 garaje</span>
-                                </div>
-
-                                {/* Botón Ver Detalle (Texto Negro y ocupa todo el ancho) */}
-                                <div className="mt-4 flex gap-2">
-                                    {/* Favorito */}
-                                        <button
-                                            onClick={() => setFavorito(!favorito)}
-                                            className="flex items-center justify-center px-3 bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm transition-colors"
-                                        >
-                                            <Star
-                                                size={16}
-                                                strokeWidth={2}
-                                                fill={favorito ? "black" : "none"}
-                                                color="black"
-                                            />
-                                        </button>
-                                    <button className="w-full bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm transition-colors text-center">
-                                        Ver Detalle
-                                    </button>
-                                </div>
-                            </div>
+                    <div className="flex gap-3 items-center">
+                        <div className="relative">
+                            <input
+                                type="date"
+                                ref={dateInputRef}
+                                onChange={handleDateFilter}
+                                min="2000-01-01"
+                                max="2100-12-31"
+                                className="absolute opacity-0 pointer-events-none"
+                            />
+                            <button
+                                onClick={() => dateInputRef.current?.showPicker()}
+                                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium hover:bg-gray-50 text-black"
+                            >
+                                <Calendar size={16} /> Filtrar por Fecha
+                            </button>
                         </div>
-                        );
-                    })}
+
+                        {/* BOTÓN CON UX MEJORADO: Deshabilitado si el historial está vacío */}
+                        <button
+                            onClick={handleClearHistory}
+                            disabled={properties.length === 0}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow-sm text-sm font-medium transition-all ${
+                                properties.length === 0
+                                    ? 'bg-gray-50 text-gray-300 border-gray-100 cursor-not-allowed'
+                                    : 'bg-white border-red-100 text-red-600 hover:bg-red-50'
+                            }`}
+                        >
+                            <Trash2 size={16} /> Limpiar Historial
+                        </button>
+                    </div>
                 </div>
 
-                {/* Paginación */}
-                <div className="mt-10 flex justify-center items-center gap-1.5 pb-10">
-                    <button className="w-9 h-9 flex items-center justify-center bg-[#E87B00] text-white rounded-md shadow-sm text-sm font-bold">1</button>
-                    {[2, 3, 4, 5, 6, 7, 8, 10].map((n) => (
-                        <button key={n} className="w-9 h-9 flex items-center justify-center bg-white border border-gray-200 rounded-md text-sm text-gray-600 hover:bg-gray-50 transition-all">
-                            {n}
-                        </button>
-                    ))}
+                {/* GRILLA DE PROPIEDADES */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 min-h-[600px]">
+                    {properties.length === 0 ? (
+                        <div className="col-span-full text-center py-20 text-gray-400 font-medium">
+                            Aún no has visto ninguna propiedad
+                        </div>
+                    ) : currentItems.length > 0 ? (
+                        currentItems.map((prop: any) => (
+                            <PropertyCard key={prop.id} prop={prop} />
+                        ))
+                    ) : (
+                        <div className="col-span-full text-center py-20 text-gray-400 font-medium">
+                            No se encontraron propiedades para esta fecha.
+                        </div>
+                    )}
                 </div>
+
+                {/* PAGINACIÓN DINÁMICA: Aparece automáticamente si hay más de 8 registros */}
+                {totalPages > 1 && (
+                    <div className="flex justify-center items-center mt-12 mb-10 gap-2">
+                        <button
+                            onClick={() => paginate(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className={`p-2 rounded-lg border transition-all ${
+                                currentPage === 1
+                                    ? 'text-gray-300 border-gray-100 cursor-not-allowed'
+                                    : 'text-black border-gray-300 hover:bg-gray-100'
+                            }`}
+                        >
+                            <ChevronLeft size={20} />
+                        </button>
+
+                        {[...Array(totalPages)].map((_, i) => (
+                            <button
+                                key={i + 1}
+                                onClick={() => paginate(i + 1)}
+                                className={`w-10 h-10 rounded-lg text-sm font-bold transition-all ${
+                                    currentPage === i + 1
+                                        ? 'bg-[#E87B00] text-white shadow-md'
+                                        : 'bg-white text-black border border-gray-300 hover:bg-gray-50'
+                                }`}
+                            >
+                                {i + 1}
+                            </button>
+                        ))}
+
+                        <button
+                            onClick={() => paginate(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className={`p-2 rounded-lg border transition-all ${
+                                currentPage === totalPages
+                                    ? 'text-gray-300 border-gray-100 cursor-not-allowed'
+                                    : 'text-black border-gray-300 hover:bg-gray-100'
+                            }`}
+                        >
+                            <ChevronRight size={20} />
+                        </button>
+                    </div>
+                )}
             </div>
         </main>
     );

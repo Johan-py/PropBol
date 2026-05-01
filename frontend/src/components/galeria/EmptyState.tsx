@@ -1,6 +1,13 @@
 import { SearchX } from 'lucide-react'
+interface EmptyStateProps {
+  titulo?: string
+  mensaje?: string
+}
 
-export default function EmptyState() {
+export default function EmptyState({
+  titulo = 'No hay propiedades existentes',
+  mensaje = 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría para ver más resultados.'
+}: EmptyStateProps) {
   return (
     // Se quitó "h-full" y se agregó "py-16"
     <div className="flex flex-col items-center justify-center py-16 text-center px-8 bg-white/50 rounded-xl border border-dashed border-gray-300 mx-4 my-8">

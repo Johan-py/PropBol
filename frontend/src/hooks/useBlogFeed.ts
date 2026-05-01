@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BLOG_FILTERS } from "@/lib/mock/publicBlogs.mock";
-import { getPublishedBlogs } from "@/services/blogs.service";
+import { getPublishedBlogs, getBlogCategories } from "@/services/blogs.service";
 import { BlogCategory, PublicBlogCard } from "@/types/publicBlog";
 
 const INITIAL_VISIBLE_CARDS = 3;
@@ -22,13 +21,81 @@ const orderBlogs = (blogs: PublicBlogCard[]) => {
 };
 
 export const useBlogFeed = () => {
+  const [blogs, setBlogs] = useState<PublicBlogCard[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [activeCategory, setActiveCategory] = useState<BlogCategory | null>(
     null,
   );
   const [visibleCards, setVisibleCards] = useState(INITIAL_VISIBLE_CARDS);
-  const publicBlogs = orderBlogs(getPublishedBlogs());
+  const [isLoading, setIsLoading] = useState(true);
 
-  const filteredBlogs = publicBlogs.filter((blog) =>
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const [blogsData, categoriesData] = await Promise.all([
+          getPublishedBlogs(50),
+          getBlogCategories(),
+        ]);
+        setBlogs(orderBlogs(blogsData));
+        setCategories(categoriesData.map((c) => c.nombre));
+      } catch (error) {
+        console.error("Error fetching data for blog feed:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // RESTAURAR CATEGORÍA
+  useEffect(() => {
+    const savedCategory = localStorage.getItem("blogCategory");
+    if (savedCategory) {
+      setActiveCategory(savedCategory as BlogCategory);
+    }
+  }, []);
+
+  // ✅ GUARDAR CATEGORÍA
+  useEffect(() => {
+    if (activeCategory) {
+      localStorage.setItem("blogCategory", activeCategory);
+    } else {
+      localStorage.removeItem("blogCategory");
+    }
+  }, [activeCategory]);
+
+  // ✅ RESTAURAR SCROLL
+  useEffect(() => {
+    const savedScroll = localStorage.getItem("blogScroll");
+    if (savedScroll) {
+      setTimeout(() => {
+        window.scrollTo(0, Number(savedScroll));
+      }, 100);
+    }
+  }, []);
+
+  // 🔥 FETCH DATA
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const [blogsData, categoriesData] = await Promise.all([
+          getPublishedBlogs(50),
+          getBlogCategories(),
+        ]);
+        setBlogs(orderBlogs(blogsData));
+        setCategories(categoriesData.map((c) => c.nombre));
+      } catch (error) {
+        console.error("Error fetching data for blog feed:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const filteredBlogs = blogs.filter((blog) =>
     activeCategory ? blog.category === activeCategory : true,
   );
 
@@ -40,7 +107,11 @@ export const useBlogFeed = () => {
     setVisibleCards(INITIAL_VISIBLE_CARDS);
   }, [activeCategory]);
 
-  const toggleCategory = (category: BlogCategory) => {
+  const toggleCategory = (category: BlogCategory | null) => {
+    if (category === null) {
+      setActiveCategory(null);
+      return;
+    }
     setActiveCategory((currentCategory) =>
       currentCategory === category ? null : category,
     );
@@ -48,11 +119,12 @@ export const useBlogFeed = () => {
 
   return {
     activeCategory,
-    categories: BLOG_FILTERS,
+    categories,
     featuredBlog,
     secondaryBlogs,
     canLoadMore,
     hasResults: filteredBlogs.length > 0,
+    isLoading,
     toggleCategory,
     loadMore: () =>
       setVisibleCards((currentVisibleCards) => currentVisibleCards + 3),
