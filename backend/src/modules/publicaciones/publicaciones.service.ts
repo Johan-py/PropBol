@@ -92,7 +92,6 @@ export const publicacionesService = {
 
   async validarPublicacionHU5(userId: number, data: Partial<Publicacion>) {
     const count = await publicacionesRepository.countByUser(userId)
-
     if (count >= 3) {
       throw new Error('LIMIT_REACHED')
     }
@@ -120,7 +119,7 @@ export const publicacionesService = {
     return {
       visitas,
       favoritos,
-      contactos: 0
+      contactos: 0 // hasta que exista modelo contacto
     }
   }
 }
