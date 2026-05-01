@@ -88,7 +88,25 @@ export const propertiesRepository = {
     }
 
     // 3. Filtro de Ubicación (EL CEREBRO JERÁRQUICO)
-    if (filtros.query && filtros.query.trim() !== "") {
+    if (filtros.lat && filtros.lng) {
+      // Búsqueda por Bounding Box (Radio aprox 1km)
+      const RADIO_KM = filtros.radius || 1;
+      const latDelta = RADIO_KM / 111.12; 
+      const lngDelta = RADIO_KM / 106; // Ajuste trigonométrico aprox para Bolivia
+
+      where.ubicacion = {
+        ...((where.ubicacion as object) ?? {}),
+        latitud: {
+          gte: Number(filtros.lat) - latDelta,
+          lte: Number(filtros.lat) + latDelta,
+        },
+        longitud: {
+          gte: Number(filtros.lng) - lngDelta,
+          lte: Number(filtros.lng) + lngDelta,
+        },
+      };
+    } else if (filtros.query && filtros.query.trim() !== "") {
+      // Fallback original: Búsqueda estricta por texto
       const texto = filtros.query.trim();
 
       where.OR = [
