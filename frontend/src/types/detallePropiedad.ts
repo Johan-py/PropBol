@@ -1,5 +1,6 @@
 export interface DetallePropiedad {
   id: number
+  inmuebleId: number
   titulo: string
   precio: number
   tipoInmueble: string | null

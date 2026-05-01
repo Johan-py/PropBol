@@ -43,7 +43,12 @@ export default function MisPublicacionesList() {
       superficieM2: pub.inmueble?.superficieM2 ? parseFloat(pub.inmueble.superficieM2) : null,
       imagenUrl: pub.multimedia?.[0]?.url || pub.usuario?.avatar || null,
       tipoOperacion: pub.inmueble?.tipoAccion || 'VENTA',
-      activa: pub.estado === "ACTIVA"  // true = ACTIVA, false = PAUSADA o ELIMINADA
+      activa: pub.estado === "ACTIVA",  // true = ACTIVA, false = PAUSADA o ELIMINADA
+      metricas: pub.metricas || {
+        visitas: 0,
+        favoritos: 0,
+        contactos: 0
+      }
     }
   }
 
@@ -174,9 +179,6 @@ export default function MisPublicacionesList() {
             {filtro === 'activas' && 'No tienes publicaciones activas.'}
             {filtro === 'pausadas' && 'No tienes publicaciones pausadas.'}
           </p>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
-            Crear Nueva Publicación
-          </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

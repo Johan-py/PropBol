@@ -412,3 +412,46 @@ export const enviarCodigoDesactivacionCuenta = async ({
     textContent: `${saludo}\n\nTu código de verificación para desactivar la cuenta es: ${codigo}\n\nEste código expirará en 5 minutos.`,
   });
 };
+
+export const enviarAvisoCambioPassword = async ({
+  emailDestino,
+  nombreUsuario,
+}: {
+  emailDestino: string;
+  nombreUsuario?: string;
+}): Promise<EmailSendResult> => {
+  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : "Hola,";
+
+  return sendBrevoEmail({
+    to: emailDestino,
+    subject: "Tu contraseña ha sido cambiada - PropBol",
+    htmlContent: `
+      <!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
+      <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
+        <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:10px;overflow:hidden;">
+          <div style="background:#d97706;padding:20px;text-align:center;">
+            <h1 style="color:#fff;margin:0;font-size:24px;">Seguridad de tu cuenta</h1>
+          </div>
+          <div style="padding:30px;">
+            <p style="font-size:16px;color:#333;">${saludo}</p>
+            <p style="font-size:16px;color:#333;">Te informamos que la contraseña de tu cuenta en PropBol ha sido actualizada correctamente.</p>
+            <div style="background:#f9fafb;border-left:4px solid #d97706;padding:15px;margin:20px 0;">
+              <p style="margin:0;font-size:14px;color:#374151;">
+                Si tú realizaste este cambio, no necesitas realizar ninguna acción adicional.
+              </p>
+            </div>
+            <div style="background:#fffbeb;border-left:4px solid #f59e0b;padding:15px;margin:20px 0;">
+              <p style="margin:0;font-size:14px;color:#78350f;">
+                <strong>¿No fuiste tú?</strong> Si no realizaste este cambio, por favor ponte en contacto con nuestro equipo de soporte de inmediato o intenta restablecer tu contraseña desde la página de inicio de sesión.
+              </p>
+            </div>
+          </div>
+          <div style="background:#f9fafb;padding:20px;text-align:center;border-top:1px solid #e5e7eb;">
+            <p style="font-size:12px;color:#9ca3af;margin:0;">© 2026 PropBol Inmobiliaria · Todos los derechos reservados</p>
+          </div>
+        </div>
+      </body></html>
+    `,
+    textContent: `${saludo}\n\nTe informamos que la contraseña de tu cuenta en PropBol ha sido actualizada correctamente.\n\nSi no realizaste este cambio, por favor contacta a soporte de inmediato.`,
+  });
+};

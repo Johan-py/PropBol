@@ -155,10 +155,10 @@ export default function MisBlogsPage() {
               key={estado}
               onClick={() => setFiltro(estado)}
               className={`flex items-center px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-[0.16em] border transition ${filtro === estado
-                  ? "bg-[#111111] text-white border-[#111111]"
-                  : estado === "TODOS"
-                    ? "bg-white text-[#242424] border-[#D8CEC2] hover:bg-[#FAF7F2]"
-                    : `${getEstadoColor(estado)} hover:opacity-80`
+                ? "bg-[#111111] text-white border-[#111111]"
+                : estado === "TODOS"
+                  ? "bg-white text-[#242424] border-[#D8CEC2] hover:bg-[#FAF7F2]"
+                  : `${getEstadoColor(estado)} hover:opacity-80`
                 }`}
             >
               {estado === "TODOS" ? "Todos" : getEstadoLabel(estado)}
@@ -296,7 +296,7 @@ function ResumenCard({
 function getEstadoLabel(estado: string) {
   switch (estado) {
     case "PUBLICADO":
-      return "Aprobado";
+      return "Publicado";
     case "PENDIENTE":
       return "Pendiente";
     case "RECHAZADO":
