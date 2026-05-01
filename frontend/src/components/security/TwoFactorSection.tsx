@@ -45,6 +45,8 @@ export default function TwoFactorSection() {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
+
+            cache: "no-store",
           },
         );
 
