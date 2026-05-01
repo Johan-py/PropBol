@@ -13,6 +13,7 @@ export const findUserPasswordByIdRepository = async (
     select: {
       id: true,
       password: true,
+      two_factor_activo: true,
     },
   });
 };
