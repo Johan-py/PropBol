@@ -97,15 +97,16 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
   }
 
   return (
-    <div className="flex flex-col gap-8 p-6 w-full bg-white h-full overflow-y-auto">
-      <div>
+    <div className="flex flex-col h-full min-h-0 bg-white">
+      {/* 1. HEADER (Fijo) */}
+      <div className="shrink-0 p-6 pb-2">
         <h3 className="font-bold text-sm text-stone-800 uppercase tracking-wide mb-1 text-center">
           Filtrar por Precio
         </h3>
         <p className="text-sm text-stone-500 mb-4 text-center">Seleccione el tipo de moneda:</p>
 
         {/* Toggle de Moneda */}
-        <div className="flex bg-stone-100 rounded-full p-1 w-fit mb-6 shadow-inner mx-auto">
+        <div className="flex bg-stone-100 rounded-full p-1 w-fit shadow-inner mx-auto">
           <button
             onClick={() => handleMonedaChange('BOB')}
             className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${
@@ -127,7 +128,10 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
             $USD
           </button>
         </div>
+      </div>
 
+      {/* 2. CONTENIDO (Con Scroll) */}
+      <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6 custom-scrollbar">
         {/* Inputs Desde / Hasta */}
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-3">
@@ -173,81 +177,84 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
             />
           </div>
         </div>
+        
         {error && (
-          <p className="text-red-500 text-xs mt-2">{error}</p>
+          <p className="text-red-500 text-xs">{error}</p>
         )}
         {!error && minPrice && maxPrice && Number(minPrice) > Number(maxPrice) && (
-          <p className="text-red-500 text-xs mt-1">
+          <p className="text-red-500 text-xs">
             El precio mínimo no puede ser mayor al máximo
           </p>
         )}
+
+        {/* Sliders bidireccionales sincronizados con inputs */}
+        <div className="flex flex-col gap-3">
+          <label className="font-bold text-xs text-stone-400 uppercase tracking-wide">
+            Rango de Precio
+          </label>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-stone-500 w-8">Min</span>
+            <input
+              type="range" min="0" max={LIMITE_MAX} step="100"
+              value={Number(minPrice) || 0}
+              onChange={(e) => { setMinPrice(e.target.value); setError('') }}
+              className="flex-1 accent-[#d97706]"
+            />
+            <span className="text-xs text-stone-600 w-20 text-right">
+              {formatCurrency(minPrice) || '0'} {moneda}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-stone-500 w-8">Máx</span>
+            <input
+              type="range" min="0" max={LIMITE_MAX} step="100"
+              value={Number(maxPrice) || LIMITE_MAX}
+              onChange={(e) => { setMaxPrice(e.target.value); setError('') }}
+              className="flex-1 accent-[#d97706]"
+            />
+            <span className="text-xs text-stone-600 w-20 text-right">
+              {maxPrice ? formatCurrency(maxPrice) : `${(LIMITE_MAX/1000).toLocaleString('de-DE')}K`} {moneda}
+            </span>
+          </div>
+        </div>
+
+        {/* Empty state cuando no hay resultados */}
+        {filtroAplicado && totalResultados === 0 && (
+          <div className="flex flex-col items-center gap-2 py-3 text-center">
+            <span className="text-xl">🔍</span>
+            <p className="text-sm font-semibold text-stone-700">Sin resultados</p>
+            <p className="text-xs text-stone-400">
+              No se encontraron propiedades dentro del rango de precio seleccionado
+            </p>
+          </div>
+        )}
       </div>
 
-      {/* Sliders bidireccionales sincronizados con inputs */}
-      <div className="flex flex-col gap-3 mt-2">
-        <label className="font-bold text-xs text-stone-400 uppercase tracking-wide">
-          Rango de Precio
-        </label>
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-stone-500 w-8">Min</span>
-          <input
-            type="range" min="0" max={LIMITE_MAX} step="100"
-            value={Number(minPrice) || 0}
-            onChange={(e) => { setMinPrice(e.target.value); setError('') }}
-            className="flex-1 accent-[#d97706]"
-          />
-          <span className="text-xs text-stone-600 w-20 text-right">
-            {formatCurrency(minPrice) || '0'} {moneda}
-          </span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-stone-500 w-8">Máx</span>
-          <input
-            type="range" min="0" max={LIMITE_MAX} step="100"
-            value={Number(maxPrice) || LIMITE_MAX}
-            onChange={(e) => { setMaxPrice(e.target.value); setError('') }}
-            className="flex-1 accent-[#d97706]"
-          />
-          <span className="text-xs text-stone-600 w-20 text-right">
-            {maxPrice ? formatCurrency(maxPrice) : `${(LIMITE_MAX/1000).toLocaleString('de-DE')}K`} {moneda}
-          </span>
-        </div>
+      {/* 3. FOOTER (Fijo al fondo) */}
+      <div className="shrink-0 px-6 pb-6 pt-4 border-t border-stone-100 bg-white">
+        <button
+          type="button"
+          onClick={() => {
+            setMinPrice(''); setMaxPrice(''); setError(''); setFiltroAplicado(false)
+            const params = new URLSearchParams(searchParams.toString())
+            params.delete('minPrice'); params.delete('maxPrice')
+            params.delete('currency')
+            router.push(`/busqueda_mapa?${params.toString()}`)
+          }}
+          className="text-xs text-stone-400 hover:text-[#d97706] transition-colors underline text-center w-full mb-3"
+        >
+          Limpiar filtro
+        </button>
+
+        {/* Botón Aplicar */}
+        <button
+          id="btn-aplicar-precio"
+          onClick={handleApply}
+          className="bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold py-3 px-4 w-full transition-all active:scale-95 shadow-md"
+        >
+          Aplicar
+        </button>
       </div>
-
-      {/* Empty state cuando no hay resultados */}
-      {filtroAplicado && totalResultados === 0 && (
-        <div className="flex flex-col items-center gap-2 py-3 text-center">
-          <span className="text-xl">🔍</span>
-          <p className="text-sm font-semibold text-stone-700">Sin resultados</p>
-          <p className="text-xs text-stone-400">
-            No se encontraron propiedades dentro del rango de precio seleccionado
-          </p>
-        </div>
-      )}
-
-      {/* Limpiar filtro */}
-      <button
-        type="button"
-        onClick={() => {
-          setMinPrice(''); setMaxPrice(''); setError(''); setFiltroAplicado(false)
-          const params = new URLSearchParams(searchParams.toString())
-          params.delete('minPrice'); params.delete('maxPrice')
-          params.delete('currency')
-          router.push(`/busqueda_mapa?${params.toString()}`)
-        }}
-        className="text-xs text-stone-400 hover:text-[#d97706] transition-colors underline text-center w-full"
-      >
-        Limpiar filtro
-      </button>
-
-      {/* Botón Aplicar */}
-      <button
-        id="btn-aplicar-precio"
-        onClick={handleApply}
-        className="mt-6 bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold py-3 px-4 w-full transition-all active:scale-95 shadow-md"
-      >
-        Aplicar
-      </button>
     </div>
   )
 }
