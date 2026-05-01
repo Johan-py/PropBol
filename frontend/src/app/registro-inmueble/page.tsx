@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
@@ -55,20 +56,30 @@ export default function MiRegistroPage() {
     const obtenerDireccion = async () => {
       if (!pinCoords) return
 
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pinCoords.lat}&lon=${pinCoords.lng}`
-      )
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pinCoords.lat}&lon=${pinCoords.lng}`
+        )
 
-      const data = await response.json()
+        const data = await response.json()
 
-      // MINIMAL FIX: Recortar la dirección para no exceder los 80 caracteres
-      let dirLimpia = data.display_name ? data.display_name.split(',').slice(0, 3).join(',') : ''
-      if (dirLimpia.length >= 80) dirLimpia = dirLimpia.substring(0, 79)
+        let dirLimpia = data.display_name
+          ? data.display_name.split(',').slice(0, 3).join(',')
+          : ''
 
-      setDatos((prev) => ({
-        ...prev,
-        direccion: dirLimpia
-      }))
+        if (dirLimpia.length >= 80) dirLimpia = dirLimpia.substring(0, 79)
+
+        setDatos((prev) => ({
+          ...prev,
+          direccion: dirLimpia
+        }))
+
+        if (campoError === 'mapa') {
+          limpiarError()
+        }
+      } catch (error) {
+        console.error('Error al obtener dirección desde el mapa:', error)
+      }
     }
 
     obtenerDireccion()
@@ -542,6 +553,13 @@ export default function MiRegistroPage() {
       return
     }
 
+    if (!pinCoords) {
+      setMensajeError('DEBES SELECCIONAR UNA UBICACIÓN EN EL MAPA')
+      setCampoError('mapa')
+      setEstado('error')
+      return
+    }
+
     const payload = {
       titulo: tituloLimpio,
       tipoAccion: datos.operacion,
@@ -553,7 +571,9 @@ export default function MiRegistroPage() {
       descripcion: descripcionLimpia,
       direccion: direccionLimpia,
       zona: zonaLimpia,
-      ciudad: datos.ciudad
+      ciudad: datos.ciudad,
+      latitud: pinCoords.lat,
+      longitud: pinCoords.lng
     }
 
     console.log('📤 Payload enviado al backend:', payload)
@@ -626,6 +646,7 @@ export default function MiRegistroPage() {
   const errorPrecio = campoError === 'precio'
   const errorArea = campoError === 'area'
   const errorOperacion = campoError === 'operacion'
+  const errorMapa = campoError === 'mapa'
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -924,6 +945,11 @@ export default function MiRegistroPage() {
                       setVertices([])
                       setModoPinActivo(false)
                       setModoDifuminadoActivo(false)
+
+                      setDatos((prev) => ({
+                        ...prev,
+                        direccion: ''
+                      }))
                     }}
                     className={`px-4 py-2 rounded-full text-sm transition ${
                       !pinCoords && vertices.length === 0
@@ -945,6 +971,17 @@ export default function MiRegistroPage() {
                     modoDifuminadoActivo={modoDifuminadoActivo}
                   />
                 </div>
+
+                {errorMapa && (
+                  <p className="text-red-500 text-sm mt-2">{mensajeError}</p>
+                )}
+
+                {pinCoords && (
+                  <div className="mt-2 text-xs text-gray-500">
+                    <p>Latitud: {pinCoords.lat}</p>
+                    <p>Longitud: {pinCoords.lng}</p>
+                  </div>
+                )}
               </div>
 
               <div className="mt-12 space-y-6">

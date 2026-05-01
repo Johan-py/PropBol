@@ -147,10 +147,10 @@ export default function FacebookRegisterButton({
       type="button"
       onClick={handleFacebookRegister}
       disabled={disabled || isLoading}
-      className="flex w-full items-center justify-center gap-3 rounded-md border border-[#d6d3d1] bg-white px-4 py-2.5 text-[13px] font-medium text-[#292524] transition hover:bg-[#fafaf9] disabled:cursor-not-allowed disabled:opacity-60"
+      className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#1877F2] px-4 py-3 text-[15px] font-bold text-white shadow-sm transition hover:bg-[#166FE5] disabled:cursor-not-allowed disabled:opacity-60"
     >
       <FacebookLogo />
-      {isLoading ? "Conectando con Facebook..." : "Registrar con Facebook"}
+      {isLoading ? "Conectando con Facebook..." : "Continuar con Facebook"}
     </button>
   );
 }

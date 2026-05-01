@@ -343,13 +343,21 @@ export const listarMisPublicaciones = async (
     const publicaciones =
       await publicacionesService.listarMisPublicaciones(usuarioId);
 
+    // Agregar métricas a cada publicación
+    const publicacionesConMetricas = await Promise.all(
+      publicaciones.map(async (pub: any) => ({
+        ...pub,
+        metricas: await publicacionesService.obtenerMetricasPorInmueble(pub.inmuebleId)
+      }))
+    );
+
     // Obtener estadísticas de publicaciones y suscripción
     const estadisticas =
       await publicacionesService.obtenerEstadisticasPublicaciones(usuarioId);
 
     return res.json({
       ok: true,
-      publicaciones,
+      publicaciones: publicacionesConMetricas,
       estadisticas,
     });
   } catch (error) {
