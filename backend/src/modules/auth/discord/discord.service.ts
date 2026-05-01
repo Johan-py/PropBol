@@ -29,23 +29,84 @@ const SESSION_DURATION_MS = 60 * 60 * 1000;
 type DiscordAuthMode = "login" | "register";
 
 const exchangeCodeForTokens = async (code: string) => {
+  console.log("[Discord] Exchanging code for tokens...");
+  console.log("[Discord] CLIENT_ID:", env.DISCORD_CLIENT_ID);
+  console.log("[Discord] CALLBACK_URL:", env.DISCORD_CALLBACK_URL);
+  console.log(
+    "[Discord] CLIENT_SECRET preview:",
+    `${env.DISCORD_CLIENT_SECRET?.substring(0, 4)}...${env.DISCORD_CLIENT_SECRET?.substring(env.DISCORD_CLIENT_SECRET.length - 4)}`,
+  );
+
+  const params = new URLSearchParams({
+    client_id: env.DISCORD_CLIENT_ID,
+    client_secret: env.DISCORD_CLIENT_SECRET,
+    grant_type: "authorization_code",
+    code,
+    redirect_uri: env.DISCORD_CALLBACK_URL,
+  });
+
+  console.log("[Discord] Request body:", params.toString());
+
   const response = await fetch(DISCORD_TOKEN_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
+      "User-Agent": "PropBol/1.0 (https://propbol-tsiq.onrender.com)", // ← Agregado para evitar bloqueo de Cloudflare
     },
-    body: new URLSearchParams({
-      code,
-      client_id: env.DISCORD_CLIENT_ID,
-      client_secret: env.DISCORD_CLIENT_SECRET,
-      redirect_uri: env.DISCORD_CALLBACK_URL,
-      grant_type: "authorization_code",
-    }),
+    body: params.toString(),
   });
+
+  console.log("[Discord] Response status:", response.status);
+  console.log(
+    "[Discord] Response Content-Type:",
+    response.headers.get("content-type"),
+  );
+
+  // Verificar si la respuesta es JSON antes de parsear
+  const contentType = response.headers.get("content-type");
+
+  // Manejo específico para rate limiting
+  if (response.status === 429) {
+    const textResponse = await response.text();
+    console.error("[Discord] Rate limit hit (429)");
+    console.error("[Discord] Response:", textResponse.substring(0, 500));
+    throw new DiscordAuthError(
+      "Discord está limitando las peticiones. Espera unos minutos e intenta de nuevo.",
+      "DISCORD_AUTH_FAILED",
+      429,
+    );
+  }
+
+  if (!contentType?.includes("application/json")) {
+    const textResponse = await response.text();
+    console.error("[Discord] Unexpected response type:", contentType);
+    console.error(
+      "[Discord] Raw response (first 1000 chars):",
+      textResponse.substring(0, 1000),
+    );
+    throw new DiscordAuthError(
+      "Discord devolvió una respuesta inválida (HTML en lugar de JSON). Verifica las credenciales y el redirect_uri.",
+      "DISCORD_AUTH_FAILED",
+      401,
+    );
+  }
 
   const data = (await response.json()) as DiscordTokenResponse;
 
   if (!response.ok || !data.access_token) {
+    console.error(
+      "[DISCORD ERROR]",
+      JSON.stringify({
+        status: response.status,
+        error: data.error,
+        error_description: data.error_description,
+        client_id: env.DISCORD_CLIENT_ID,
+        callback_url: env.DISCORD_CALLBACK_URL,
+        secret_length: env.DISCORD_CLIENT_SECRET?.length,
+        secret_preview: `${env.DISCORD_CLIENT_SECRET?.substring(0, 4)}...${env.DISCORD_CLIENT_SECRET?.substring(env.DISCORD_CLIENT_SECRET.length - 4)}`,
+      }),
+    );
+
     throw new DiscordAuthError(
       data.error_description || "No se pudo obtener el token de Discord.",
       "DISCORD_AUTH_FAILED",
@@ -53,6 +114,7 @@ const exchangeCodeForTokens = async (code: string) => {
     );
   }
 
+  console.log("[Discord] Token exchange successful");
   return data;
 };
 

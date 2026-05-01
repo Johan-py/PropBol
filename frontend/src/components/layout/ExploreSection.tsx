@@ -22,7 +22,7 @@ export default function ExploreSection() {
   const [location, setLocation] = useState('')
   const [propertyType, setPropertyType] = useState('Cualquier tipo')
   const [errorMessage, setErrorMessage] = useState('')
-  
+
   // 🚀 2. Estado para guardar las coordenadas temporalmente
   const [coords, setCoords] = useState<{ lat?: number, lng?: number }>({})
 
@@ -95,7 +95,7 @@ export default function ExploreSection() {
     modoMapeado.forEach((modo) => params.append('modoInmueble', modo))
     if (tipoFinal) params.set('tipoInmueble', tipoFinal)
     if (location.trim() !== '') params.set('query', location.trim())
-    
+
     // 🚀 5. Inyectamos la magia de Mapbox a la URL si existen las coordenadas
     if (coords.lat && coords.lng) {
       params.set('lat', coords.lat.toString())
@@ -170,16 +170,14 @@ export default function ExploreSection() {
                     className="flex items-center gap-2.5 transition-colors duration-200 group focus:outline-none"
                   >
                     <div
-                      className={`w-7 h-7 rounded-md border shadow-sm flex items-center justify-center transition-all ${
-                        isSelected ? 'bg-amber-500 border-amber-500' : 'bg-white border-stone-300'
-                      }`}
+                      className={`w-7 h-7 rounded-md border shadow-sm flex items-center justify-center transition-all ${isSelected ? 'bg-amber-500 border-amber-500' : 'bg-white border-stone-300'
+                        }`}
                     >
                       {isSelected && <span className="text-white text-sm font-bold">✓</span>}
                     </div>
                     <span
-                      className={`font-semibold font-montserrat text-lg transition-colors ${
-                        isSelected ? 'text-amber-700' : 'text-stone-900 group-hover:text-amber-600'
-                      }`}
+                      className={`font-semibold font-montserrat text-lg transition-colors ${isSelected ? 'text-amber-700' : 'text-stone-900 group-hover:text-amber-600'
+                        }`}
                     >
                       {option.name}
                     </span>

@@ -40,24 +40,35 @@ export const createGoogleUser = async (
   googleId: string,
   correoProveedor: string,
 ) => {
-  const user = await createUser({
-    nombre: data.nombre,
-    apellido: data.apellido,
-    correo: data.correo,
-    password: data.password,
-  });
+  return await prisma.$transaction(async (tx) => {
+    const rol = await tx.rol.upsert({
+      where: { nombre: "VISITANTE" },
+      update: {},
+      create: { nombre: "VISITANTE" },
+    });
 
-  await prisma.autenticacion_social.create({
-    data: {
-      usuarioId: user.id,
-      proveedor: "google",
-      idExterno: googleId,
-      correoProveedor,
-      activo: true,
-    },
-  });
+    const user = await tx.usuario.create({
+      data: {
+        nombre: data.nombre,
+        apellido: data.apellido,
+        correo: data.correo,
+        password: data.password,
+        rolId: rol.id,
+      },
+    });
 
-  return user;
+    await tx.autenticacion_social.create({
+      data: {
+        usuarioId: user.id,
+        proveedor: "google",
+        idExterno: googleId,
+        correoProveedor,
+        activo: true,
+      },
+    });
+
+    return user;
+  });
 };
 
 export const linkGoogleToUser = async (

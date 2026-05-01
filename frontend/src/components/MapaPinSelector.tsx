@@ -60,9 +60,42 @@ function EventosMapa({
       }
 
       if (modoDifuminadoActivo) {
-        setVertices([...vertices, [e.latlng.lat, e.latlng.lng]])
+  const nuevoPunto: [number, number] = [
+    e.latlng.lat,
+    e.latlng.lng
+  ]
+
+  if (vertices.length < 3) {
+    setVertices([...vertices, nuevoPunto])
+  } else {
+    let mejorIndex = 0
+    let menorDistancia = Infinity
+
+    for (let i = 0; i < vertices.length; i++) {
+      const actual = vertices[i]
+      const siguiente = vertices[(i + 1) % vertices.length]
+
+      const centroLat = (actual[0] + siguiente[0]) / 2
+      const centroLng = (actual[1] + siguiente[1]) / 2
+
+      const distancia = Math.sqrt(
+        Math.pow(nuevoPunto[0] - centroLat, 2) +
+        Math.pow(nuevoPunto[1] - centroLng, 2)
+      )
+
+      if (distancia < menorDistancia) {
+        menorDistancia = distancia
+        mejorIndex = i + 1
       }
     }
+
+    const nuevosVertices = [...vertices]
+    nuevosVertices.splice(mejorIndex, 0, nuevoPunto)
+
+    setVertices(nuevosVertices)
+  }
+}
+}
   })
 
   return null
@@ -76,6 +109,7 @@ export default function MapaPinSelector({
   modoPinActivo,
   modoDifuminadoActivo
 }: Props) {
+ 
   return (
     <MapContainer
       center={[-17.3895, -66.1568]}
@@ -137,7 +171,7 @@ export default function MapaPinSelector({
     positions={vertices}
     pathOptions={{
       color: '#f97316',
-      fillOpacity: 0.3
+      fillOpacity: 0.45
     }}
   />
 )}

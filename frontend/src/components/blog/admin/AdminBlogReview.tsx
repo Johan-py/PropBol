@@ -20,10 +20,10 @@ function StatusBanner({
   status,
   rejectionComment,
 }: {
-  status: "APROBADO" | "RECHAZADO";
+  status: "PUBLICADO" | "RECHAZADO";
   rejectionComment: string | null;
 }) {
-  if (status === "APROBADO") {
+  if (status === "PUBLICADO") {
     return (
       <div className="rounded-3xl border border-green-200 bg-green-50 px-6 py-5 text-green-800 font-inter">
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-green-600">
@@ -31,7 +31,7 @@ function StatusBanner({
         </p>
         <h2 className="mt-2 text-2xl font-bold font-montserrat">Artículo publicado</h2>
         <p className="mt-2 text-sm leading-7">
-          Este blog ya fue aprobado en la demo, por lo que no volverá a
+          Este blog ya fue publicado, por lo que no volverá a
           aparecer en la pestaña de pendientes.
         </p>
       </div>
@@ -56,6 +56,7 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
   const { blogs, isReady, updateBlogStatus } = useAdminBlogModeration();
   const [rejectionComment, setRejectionComment] = useState("");
   const [formError, setFormError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const blog = useMemo(
     () => blogs.find((currentBlog) => currentBlog.id === blogId),
@@ -97,18 +98,30 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
   }
 
   const handleApprove = async () => {
-    await updateBlogStatus(blog.id, "APROBADO");
-    router.push("/admin/blogs");
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      await updateBlogStatus(blog.id, "PUBLICADO");
+      router.push("/admin/blogs");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReject = async () => {
+    if (isSubmitting) return;
     if (!rejectionComment.trim()) {
       setFormError("Agrega un comentario para justificar el rechazo.");
       return;
     }
 
-    await updateBlogStatus(blog.id, "RECHAZADO", rejectionComment);
-    router.push("/admin/blogs");
+    setIsSubmitting(true);
+    try {
+      await updateBlogStatus(blog.id, "RECHAZADO", rejectionComment);
+      router.push("/admin/blogs");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -167,6 +180,7 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
               height={980}
               className="h-auto w-full object-cover"
               priority
+              unoptimized
             />
           </div>
 
@@ -179,8 +193,8 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
                   </h2>
                 )}
 
-                <MarkdownRenderer 
-                  content={section.paragraphs.join("\n\n")} 
+                <MarkdownRenderer
+                  content={section.paragraphs.join("\n\n")}
                 />
               </section>
             ))}
@@ -226,18 +240,20 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
                   <button
                     type="button"
                     onClick={handleReject}
-                    className="inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full border border-red-500 px-8 text-sm font-semibold uppercase tracking-[0.2em] text-red-600 transition-colors hover:bg-red-50"
+                    disabled={isSubmitting}
+                    className={`inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full border border-red-500 px-8 text-sm font-semibold uppercase tracking-[0.2em] text-red-600 transition-colors ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-50'}`}
                   >
                     <XCircle className="h-4 w-4" />
-                    Rechazar
+                    {isSubmitting ? 'Procesando...' : 'Rechazar'}
                   </button>
                   <button
                     type="button"
                     onClick={handleApprove}
-                    className="inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full bg-amber-600 px-8 text-sm font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:bg-amber-700 shadow-sm shadow-amber-200"
+                    disabled={isSubmitting}
+                    className={`inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full bg-amber-600 px-8 text-sm font-semibold uppercase tracking-[0.2em] text-white transition-colors shadow-sm shadow-amber-200 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-amber-700'}`}
                   >
                     <CheckCircle2 className="h-4 w-4" />
-                    Publicar
+                    {isSubmitting ? 'Procesando...' : 'Publicar'}
                   </button>
                 </div>
               </div>

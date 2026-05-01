@@ -18,7 +18,7 @@ export const publicacionesRepository = {
     return prisma.publicacion.count({ where: { usuarioId: userId } });
   },
 
-  async findByUserId(userId: number) {
+  async findByUserId(userId: number): Promise<Publicacion[]> {
     return prisma.publicacion.findMany({
       where: { usuarioId: userId },
       include: {

@@ -11,7 +11,8 @@ import {
   registerUser,
   resetPasswordService,
   verify2FAService,
-  verifyRegisterCodeService
+  verifyRegisterCodeService,
+  resend2FAService,
 } from './auth.service.js'
 
 type RegisterBody = {
@@ -60,6 +61,27 @@ const getRegisterErrorMessage = (message: string) => {
 
   return message;
 };
+
+export const resend2FAController = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.body
+
+    const result = await resend2FAService(userId)
+
+    return res.status(200).json(result)
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message
+      })
+    }
+
+    const message =
+      error instanceof Error ? error.message : 'Error al reenviar el código 2FA'
+
+    return res.status(400).json({ message })
+  }
+}
 
 export const loginController = async (req: Request, res: Response) => {
   try {
