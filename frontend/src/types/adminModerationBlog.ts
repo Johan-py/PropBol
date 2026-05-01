@@ -1,4 +1,4 @@
-export type AdminModerationStatus = 'PENDIENTE' | 'APROBADO' | 'RECHAZADO'
+export type AdminModerationStatus = 'PENDIENTE' | 'PUBLICADO' | 'RECHAZADO'
 
 export type AdminBlogSection = {
   heading?: string

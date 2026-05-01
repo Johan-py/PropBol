@@ -20,10 +20,10 @@ function StatusBanner({
   status,
   rejectionComment,
 }: {
-  status: "APROBADO" | "RECHAZADO";
+  status: "PUBLICADO" | "RECHAZADO";
   rejectionComment: string | null;
 }) {
-  if (status === "APROBADO") {
+  if (status === "PUBLICADO") {
     return (
       <div className="rounded-3xl border border-green-200 bg-green-50 px-6 py-5 text-green-800 font-inter">
         <p className="text-xs font-semibold uppercase tracking-[0.25em] text-green-600">
@@ -31,7 +31,7 @@ function StatusBanner({
         </p>
         <h2 className="mt-2 text-2xl font-bold font-montserrat">Artículo publicado</h2>
         <p className="mt-2 text-sm leading-7">
-          Este blog ya fue aprobado en la demo, por lo que no volverá a
+          Este blog ya fue publicado, por lo que no volverá a
           aparecer en la pestaña de pendientes.
         </p>
       </div>
@@ -97,7 +97,7 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
   }
 
   const handleApprove = async () => {
-    await updateBlogStatus(blog.id, "APROBADO");
+    await updateBlogStatus(blog.id, "PUBLICADO");
     router.push("/admin/blogs");
   };
 

@@ -135,7 +135,9 @@ export const ADMIN_MODERATION_BLOGS_MOCK: AdminModerationBlog[] = [
         ]
       }
     ],
-    status: 'APROBADO',
+
+    status: 'PUBLICADO',
+
     rejectionComment: null,
     reviewedAt: '2026-10-20T12:15:00.000Z'
   },
