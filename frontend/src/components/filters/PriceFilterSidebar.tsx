@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { X } from 'lucide-react'
 interface PriceFilterSidebarProps {
   isOpen: boolean;  
   onClose: () => void;
@@ -99,12 +100,19 @@ export default function PriceFilterSidebar({ isOpen, onClose, totalResultados = 
   return (
     <div className="flex flex-col h-full min-h-0 bg-white">
       {/* 1. HEADER (Fijo) */}
-      <div className="shrink-0 p-6 pb-2">
-        <h3 className="font-bold text-sm text-stone-800 uppercase tracking-wide mb-1 text-center">
-          Filtrar por Precio
-        </h3>
+      <div className="shrink-0 p-4 pb-2 relative flex flex-col items-center justify-center">
+        <div className="w-full flex items-center justify-center relative mb-1">
+          <h3 className="font-bold text-sm text-stone-800 uppercase tracking-wide text-center">
+            Filtrar por Precio
+          </h3>
+          <button
+            onClick={onClose}
+            className="absolute right-0 p-1 hover:bg-stone-100 rounded-full transition-colors"
+          >
+            <X size={20} className="text-stone-500" />
+          </button>
+        </div>
         <p className="text-sm text-stone-500 mb-4 text-center">Seleccione el tipo de moneda:</p>
-
         {/* Toggle de Moneda */}
         <div className="flex bg-stone-100 rounded-full p-1 w-fit shadow-inner mx-auto">
           <button
