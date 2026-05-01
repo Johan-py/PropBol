@@ -89,7 +89,7 @@ export default function PublicacionCard({
     setError('')
   }
 
-  const precioFormateado = `Bs. ${publicacion.precio.toLocaleString('es-BO')}`
+  const precioFormateado = `USD ${publicacion.precio.toLocaleString('en-US')}`
   const tipoOperacionTexto = publicacion.tipoOperacion || 'Venta / Alquiler'
 
   const irAEditar = () => {
@@ -178,7 +178,6 @@ export default function PublicacionCard({
           </div>
 
           <div className="mt-3 flex flex-col gap-2">
-            {/* Sección de métricas estadísticas */}
             {publicacion.metricas && (
               <div className="grid grid-cols-3 gap-3 border-b border-gray-200 pb-3">
                 <div className="flex flex-col items-center text-center">
