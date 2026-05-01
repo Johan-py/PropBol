@@ -61,7 +61,7 @@ export const publicacionesService = {
 
     return 'FLOW_ALLOWED'
   },
-  // Agregar después de validarFlujo
+
   async eliminar(publicacionId: number, userId: number): Promise<void> {
     const publicacion = await publicacionesRepository.findById(publicacionId)
 
@@ -90,15 +90,13 @@ export const publicacionesService = {
     await publicacionesRepository.updateEstado(publicacionId, activa)
   },
 
-  // 👉 Nueva función HU‑5 v2
   async validarPublicacionHU5(userId: number, data: Partial<Publicacion>) {
     const count = await publicacionesRepository.countByUser(userId)
+
     if (count >= 3) {
       throw new Error('LIMIT_REACHED')
     }
 
-    // Aquí no validamos campos (eso lo hace el validator),
-    // solo devolvemos estado de negocio
     return {
       estado: 'Validado',
       mensaje: 'Publicación lista para guardar'
@@ -116,16 +114,13 @@ export const publicacionesService = {
       }),
       prisma.favorito.count({
         where: { inmuebleId }
-      }),
-      prisma.contacto.count({
-        where: { inmuebleId }
       })
     ])
 
     return {
       visitas,
       favoritos,
-      contactos: 0 // hasta que exista modelo contacto
+      contactos: 0
     }
   }
 }
