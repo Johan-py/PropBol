@@ -161,7 +161,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
         const matchInterseccion = debouncedValue.match(/(.+?)\s+y\s+(.+)/i);
         let osmResults: MapboxFeature[] = []
         if (matchInterseccion) {
-          const bbox = "-17.519,-66.368,-17.288,-65.986";
+          const bbox = "-22.9068,-69.6445,-9.6806,-57.4539";
           const queryOSM = `[out:json][timeout:5];way["name"~"${matchInterseccion[1]}", i](${bbox})->.w1;way["name"~"${matchInterseccion[2]}", i](${bbox})->.w2;node(w.w1)(w.w2);out center;`;
           const resOSM = await fetch("https://overpass-api.de/api/interpreter", {
             method: "POST",
@@ -175,7 +175,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             center: [el.lon, el.lat]
           }))
         }
-        const resMapbox = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(debouncedValue)}.json?access_token=${MAPBOX_TOKEN}&country=bo&bbox=-66.368,-17.519,-65.986,-17.288&language=es`)
+        const resMapbox = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(debouncedValue)}.json?access_token=${MAPBOX_TOKEN}&country=bo&language=es`)
         const dataMapbox = await resMapbox.json()
         const mapboxResults = dataMapbox.features || []
         setSuggestions([...localResults, ...osmResults, ...mapboxResults])
@@ -194,7 +194,15 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     if (place.isLocal && place.locationId) {
       registrarConsulta(place.locationId, nombre)
       updateFilters({ locationId: place.locationId, query: nombre })
-    }
+    }else {
+    // Aseguramos que Mapbox también actualice los filtros con lat/lng
+    updateFilters({ 
+      query: nombre, 
+      lat: place.center[1], 
+      lng: place.center[0], 
+      locationId: undefined 
+    })
+  }
     setTimeout(() => containerRef.current?.closest('form')?.requestSubmit(), 100)
   }
 
