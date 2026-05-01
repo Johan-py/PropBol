@@ -181,7 +181,17 @@ export default function EditarPublicacionPage() {
         textoBoton.includes('mis zonas') ||
         textoBoton.includes('mis comparaciones') ||
         textoBoton.includes('seguridad') ||
-        textoBoton.includes('cerrar sesión')
+        textoBoton.includes('cerrar sesión') ||
+        textoBoton.includes('contacto') ||
+        textoBoton.includes('términos') ||
+        textoBoton.includes('terminos') ||
+        textoBoton.includes('privacidad') ||
+        textoBoton.includes('política') ||
+        textoBoton.includes('politica') ||
+        textoBoton.includes('facebook') ||
+        textoBoton.includes('instagram') ||
+        textoBoton.includes('twitter') ||
+        textoBoton.includes('linkedin')
 
       if (esLinkValido || esBotonDeNavegacion) {
         const confirmar = window.confirm(
@@ -206,6 +216,53 @@ export default function EditarPublicacionPage() {
       )
     }
   }, [])
+
+  useEffect(() => {
+    const estadoActual = window.history.state
+
+    window.history.pushState(estadoActual, '', window.location.href)
+
+    const protegerBotonAtras = () => {
+      if (hayCambiosPendientes()) {
+        const confirmar = window.confirm(
+          '¿Estás seguro que quieres salirte sin editar nada?'
+        )
+
+        if (!confirmar) {
+          window.history.pushState(
+            window.history.state,
+            '',
+            window.location.href
+          )
+          return
+        }
+      }
+
+      window.removeEventListener('popstate', protegerBotonAtras)
+      window.history.back()
+    }
+
+    window.addEventListener('popstate', protegerBotonAtras)
+
+    return () => {
+      window.removeEventListener('popstate', protegerBotonAtras)
+    }
+  }, [form, originalForm])
+
+  useEffect(() => {
+    const protegerRecargaOCierre = (event: BeforeUnloadEvent) => {
+      if (hayCambiosPendientes()) {
+        event.preventDefault()
+        event.returnValue = ''
+      }
+    }
+
+    window.addEventListener('beforeunload', protegerRecargaOCierre)
+
+    return () => {
+      window.removeEventListener('beforeunload', protegerRecargaOCierre)
+    }
+  }, [form, originalForm])
 
   const handleCancelar = () => {
     if (hayCambiosPendientes()) {
