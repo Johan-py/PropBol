@@ -138,15 +138,52 @@ export default function EditarPublicacionPage() {
   }
 
   useEffect(() => {
-    const protegerSalidaMisPublicaciones = (event: MouseEvent) => {
+    const protegerSalidaEditarPublicacion = (event: MouseEvent) => {
       const target = event.target as HTMLElement
-      const link = target.closest('a') as HTMLAnchorElement | null
 
-      if (!link) return
+      const elementoNavegable = target.closest('a, button') as
+        | HTMLAnchorElement
+        | HTMLButtonElement
+        | null
 
-      const href = link.getAttribute('href')
+      if (!elementoNavegable) return
 
-      if (href === '/mis-publicaciones') {
+      const estaDentroDelFormulario = elementoNavegable.closest('form')
+
+      if (estaDentroDelFormulario) return
+
+      const href =
+        elementoNavegable instanceof HTMLAnchorElement
+          ? elementoNavegable.getAttribute('href')
+          : null
+
+      const textoBoton =
+        elementoNavegable.textContent?.trim().toLowerCase() ?? ''
+
+      const esLinkValido =
+        href &&
+        !href.startsWith('#') &&
+        !href.startsWith('mailto:') &&
+        !href.startsWith('tel:') &&
+        href !== window.location.pathname
+
+      const esBotonDeNavegacion =
+        textoBoton.includes('propbol') ||
+        textoBoton.includes('propiedades') ||
+        textoBoton.includes('blogs') ||
+        textoBoton.includes('planes') ||
+        textoBoton.includes('ayuda') ||
+        textoBoton.includes('publica tu inmueble') ||
+        textoBoton.includes('mi cuenta') ||
+        textoBoton.includes('mis propiedades vistas') ||
+        textoBoton.includes('mis favoritos') ||
+        textoBoton.includes('mis publicaciones') ||
+        textoBoton.includes('mis zonas') ||
+        textoBoton.includes('mis comparaciones') ||
+        textoBoton.includes('seguridad') ||
+        textoBoton.includes('cerrar sesión')
+
+      if (esLinkValido || esBotonDeNavegacion) {
         const confirmar = window.confirm(
           '¿Estás seguro que quieres salirte sin editar nada?'
         )
@@ -154,14 +191,19 @@ export default function EditarPublicacionPage() {
         if (!confirmar) {
           event.preventDefault()
           event.stopPropagation()
+          event.stopImmediatePropagation()
         }
       }
     }
 
-    document.addEventListener('click', protegerSalidaMisPublicaciones, true)
+    document.addEventListener('click', protegerSalidaEditarPublicacion, true)
 
     return () => {
-      document.removeEventListener('click', protegerSalidaMisPublicaciones, true)
+      document.removeEventListener(
+        'click',
+        protegerSalidaEditarPublicacion,
+        true
+      )
     }
   }, [])
 
