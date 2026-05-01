@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
@@ -686,6 +685,7 @@ export default function MiRegistroPage() {
                       value={datos.titulo}
                       onChange={manejarCambio}
                       maxLength={80}
+                      placeholder="Ej: Casa amplia en venta ubicada en zona céntrica"
                       className={`w-full p-3 rounded-xl border bg-white/70 ${
                         errorTitulo ? 'border-red-500' : 'border-gray-200'
                       }`}
