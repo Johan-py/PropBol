@@ -102,7 +102,7 @@ export function useAdminBlogModeration() {
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-          estado: nextStatus === 'APROBADO' ? 'PUBLICADO' : 'RECHAZADO',
+          estado: nextStatus === 'PUBLICADO' ? 'PUBLICADO' : 'RECHAZADO',
           razon_rechazo: rejectionComment
         })
       })

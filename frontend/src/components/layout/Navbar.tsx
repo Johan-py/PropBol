@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
  
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -317,7 +317,10 @@ export default function Navbar() {
   };
  
   const handleLoginRedirect = () => router.push("/sign-in");
-  const handleOpenLogoutModal = () => setShowLogoutModal(true);
+  const handleOpenLogoutModal = () => {
+    setShowLogoutModal(true);
+    setIsPanelOpen(false);
+  };
  
   const handleCancelLogout = () => {
     if (isLoggingOut) return;
