@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
@@ -268,6 +268,15 @@ export default function LoginForm() {
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [googleError, setGoogleError] = useState("");
+
+  useEffect(() => {
+    const authMessage = sessionStorage.getItem("authMessage");
+
+    if (authMessage) {
+      setErrorMessage(authMessage);
+      sessionStorage.removeItem("authMessage");
+    }
+  }, []);
 
   const passwordContainerRef = useRef<HTMLDivElement>(null);
 
