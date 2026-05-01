@@ -56,7 +56,7 @@ export default function PropertyCard({
   }, [slides.length]);
 
   const currentSlide = slides[currentIndex];
-  const showImage = !!currentSlide.imagen;
+  const showImage = Boolean(currentSlide?.imagen);
 
 
   return (
