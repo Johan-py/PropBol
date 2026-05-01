@@ -119,7 +119,7 @@ export default function ResumenPanel({ publicacionId }: Props) {
 
   const isCancelled = useRef(false);
   const isPaused = useRef(false);
-
+  const abortControllerRef = useRef<AbortController | null>(null);
   // ================= FETCH RESUMEN + PARAMETROS =================
   useEffect(() => {
     if (!publicacionId) {
@@ -219,32 +219,103 @@ export default function ResumenPanel({ publicacionId }: Props) {
     return parametrosExtra;
   }, [data, parametrosExtra]);
 
-  const ejecutarPublicacion = async () => {
+ const ejecutarPublicacion = async () => {
     if (!aceptado) return;
 
     isCancelled.current = false;
     isPaused.current = false;
     setEstadoPublicacion("publicando");
     setProgreso(0);
+    abortControllerRef.current = new AbortController();
 
     try {
-      await new Promise((r) => setTimeout(r, 500));
-      setProgreso(50);
+      const token = getAuthToken();
 
-      await new Promise((r) => setTimeout(r, 500));
+      // --- LÓGICA QA: CARGA SIMULADA LENTA Y PAUSABLE ---
+      let progresoActual = 0;
+      const metaProgreso = 85; 
+
+      while (progresoActual < metaProgreso) {
+        // Soporte para Pausa (Bug 2 QA)
+        while (isPaused.current && !isCancelled.current) {
+          await new Promise((r) => setTimeout(r, 200)); 
+        }
+        
+        if (isCancelled.current) throw new Error("CANCELADO_POR_USUARIO");
+
+        // Incrementos aleatorios naturales (Bug 1 QA)
+        const incremento = Math.floor(Math.random() * 5) + 2;
+        progresoActual += incremento;
+        if (progresoActual > metaProgreso) progresoActual = metaProgreso;
+        
+        setProgreso(progresoActual);
+        await new Promise(r => setTimeout(r, Math.random() * 400 + 300));
+      }
+
+      // --- PETICIÓN REAL AL BACKEND ---
+      const response = await fetch(`${API_BASE_URL}/api/publicaciones`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ publicacionId }),
+        signal: abortControllerRef.current.signal // Permite cancelar la petición
+      });
+
+      const result = await response.json();
+
+      // --- MANEJO DE RESPUESTAS (Incluye redirección a pagos solicitada por Lead) ---
+      if (!response.ok || result.error) {
+        if (result.error === 'LIMIT_REACHED' || result.message === 'LIMIT_REACHED') {
+          setEstadoPublicacion("idle");
+          router.push('/Cobros-Limite'); // Respeta la lógica de Mariela
+          return;
+        }
+        setEstadoPublicacion("error_publicacion");
+        return;
+      }
+
+      // Éxito final
       setProgreso(100);
-
       setEstadoPublicacion("exito");
-      setMostrarModalExito(true);
-    } catch {
-      setEstadoPublicacion("error_publicacion");
+      setTimeout(() => {
+        setMostrarModalExito(true);
+      }, 1000);
+
+    } catch (error: any) {
+      if (error.name === 'AbortError' || error.message === "CANCELADO_POR_USUARIO") {
+        setProgreso(0);
+        setEstadoPublicacion("idle");
+      } else {
+        setEstadoPublicacion("error_publicacion");
+      }
     }
   };
 
-  const handleCancelar = () => {
+  const handleCancelar = async () => {
     isCancelled.current = true;
+    setProgreso(0);
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort(); // Corta la conexión HTTP al instante
+    }
+
+    if (estadoPublicacion === "publicando") {
+      try {
+        const token = getAuthToken();
+        if (token && publicacionId) {
+          // Limpieza opcional del borrador en BD
+          await fetch(`${API_BASE_URL}/api/properties/${publicacionId}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+        }
+      } catch (error) {
+        console.error("Error al abortar:", error);
+      }
+    }
     setEstadoPublicacion("idle");
-    router.push("/");
   };
 
   const handlePausar = (p: boolean) => {
