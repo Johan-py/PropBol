@@ -19,6 +19,7 @@ export default function FeaturedBlogSpotlight({
             width={1200}
             height={900}
             className="h-full min-h-[260px] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] sm:min-h-[320px]"
+            unoptimized
           />
         </div>
 

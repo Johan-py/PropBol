@@ -137,7 +137,7 @@ export default function MisBlogsPage() {
             <ResumenCard
               titulo="Pendientes"
               valor={count("PENDIENTE")}
-              color="text-blue-600"
+              color="text-amber-600"
             />
 
             <ResumenCard
@@ -154,11 +154,12 @@ export default function MisBlogsPage() {
             <button
               key={estado}
               onClick={() => setFiltro(estado)}
-              className={`px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-[0.16em] border transition ${
-                filtro === estado
-                  ? "bg-[#111111] text-white border-[#111111]"
-                  : "bg-white text-[#242424] border-[#D8CEC2] hover:bg-[#FAF7F2]"
-              }`}
+              className={`flex items-center px-5 py-2 rounded-full text-xs font-extrabold uppercase tracking-[0.16em] border transition ${filtro === estado
+                ? "bg-[#111111] text-white border-[#111111]"
+                : estado === "TODOS"
+                  ? "bg-white text-[#242424] border-[#D8CEC2] hover:bg-[#FAF7F2]"
+                  : `${getEstadoColor(estado)} hover:opacity-80`
+                }`}
             >
               {estado === "TODOS" ? "Todos" : getEstadoLabel(estado)}
 
@@ -185,8 +186,17 @@ export default function MisBlogsPage() {
             {filtrados.map((blog) => (
               <div
                 key={blog.id}
+                tabIndex={0}
+                role="button"
+                aria-label={`Ver detalle del blog: ${blog.titulo}`}
                 onClick={() => router.push(`/blog/${blog.id}`)}
-                className="cursor-pointer bg-white border border-[#E8DED0] rounded-[22px] overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    router.push(`/blog/${blog.id}`);
+                  }
+                }}
+                className="cursor-pointer bg-white border border-[#E8DED0] rounded-[22px] overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition focus:outline-none focus:ring-2 focus:ring-[#C28700] focus:ring-offset-2"
               >
                 <div className="relative h-52 bg-[#E5E0DA]">
                   <img
@@ -225,15 +235,15 @@ export default function MisBlogsPage() {
 
                   <div className="flex justify-between items-center border-t border-[#EEE6DC] pt-4">
                     {blog.estado === "BORRADOR" ||
-                    blog.estado === "RECHAZADO" ||
-                    blog.estado === "PENDIENTE" ||
-                    blog.estado === "PUBLICADO" ? (
+                      blog.estado === "RECHAZADO" ||
+                      blog.estado === "PENDIENTE" ||
+                      blog.estado === "PUBLICADO" ? (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           router.push(`/blog/${blog.id}/edit`);
                         }}
-                        className="text-xs font-bold text-[#3F3F3F] hover:text-[#B47A00] transition"
+                        className="text-xs font-bold text-[#3F3F3F] hover:text-[#B47A00] transition rounded focus:outline-none focus:ring-2 focus:ring-[#B47A00] focus:ring-offset-4"
                       >
                         ✎ {blog.estado === "BORRADOR" ? "Continuar" : "Editar"}
                       </button>
@@ -246,7 +256,7 @@ export default function MisBlogsPage() {
                         e.stopPropagation();
                         eliminarBlog(blog.id);
                       }}
-                      className="text-xs font-bold text-red-400 hover:text-red-600 transition"
+                      className="text-xs font-bold text-red-400 hover:text-red-600 transition rounded focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-4"
                     >
                       🗑 Eliminar
                     </button>
@@ -286,7 +296,7 @@ function ResumenCard({
 function getEstadoLabel(estado: string) {
   switch (estado) {
     case "PUBLICADO":
-      return "Aprobado";
+      return "Publicado";
     case "PENDIENTE":
       return "Pendiente";
     case "RECHAZADO":
@@ -303,7 +313,7 @@ function getEstadoColor(estado: string) {
     case "PUBLICADO":
       return "bg-[#E8F7EE] text-[#198754] border-[#BFE8CD]";
     case "PENDIENTE":
-      return "bg-[#EAF2FF] text-[#2563EB] border-[#C7DDFE]";
+      return "bg-amber-50 text-amber-700 border-amber-200";
     case "RECHAZADO":
       return "bg-[#FDECEC] text-[#D94848] border-[#F3BABA]";
     case "BORRADOR":

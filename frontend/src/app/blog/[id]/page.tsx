@@ -6,6 +6,8 @@ import BlogCommentsSection from '@/components/blog/BlogCommentsSection'
 import MarkdownRenderer from '@/components/blog/MarkdownRenderer'
 import { MOCK_USER_BLOGS } from '@/lib/mock/blogs.mock'
 import { getPublishedBlogById } from '@/services/blogs.service'
+import BackButton from "@/app/blogs/backButton"
+
 const formatPublishedDate = (value: string) =>
   new Date(value).toLocaleDateString('es-BO', {
     day: 'numeric',
@@ -66,6 +68,7 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
             width={1600}
             height={900}
             className="h-full min-h-[240px] w-full object-cover sm:min-h-[360px]"
+            unoptimized
           />
         </div>
       </header>
@@ -78,13 +81,9 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
         <BlogCommentsSection blogId={params.id} />
 
         <div className="pt-12">
-          <Link
-            href="/blogs"
-            className="inline-flex items-center gap-1 text-sm font-semibold text-stone-500 transition-colors hover:text-[#a56400]"
-          >
-            <ChevronLeft size={18} />
-            Volver a blogs
-          </Link>
+          <div className="pt-12">
+            <BackButton />
+          </div>
         </div>
       </main>
     </article>
