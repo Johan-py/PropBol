@@ -33,3 +33,16 @@ export interface RecomendacionesParams {
   excludeIds?: number[] // Inmuebles a excluir
   zonaForzada?: string // Para forzar 60% de una zona
 }
+export interface ReglasAvanzadasConfig {
+  umbralClicsRecomendacionAvanzada: number // 5 por defecto: activa modo avanzado
+  pesoFavoritoSimilar: number // 15 por defecto
+  pesoZonaConexion: number // 10 por defecto
+  pesoSimilaridadFuerte: number // 20 por defecto: bono por 3/4 coincidencias
+}
+
+export interface SimilaridadFuerte {
+  mismaZona: boolean
+  mismaCategoria: boolean
+  rangoPrecioCercano: boolean // precio dentro del ±20% respecto a un favorito
+  rangoSuperficieCercano: boolean // superficie dentro del ±20% respecto a un favorito
+}

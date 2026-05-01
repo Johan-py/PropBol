@@ -22,7 +22,7 @@ export type OrdenDireccion = 'menor-a-mayor' | 'mayor-a-menor'
 
 // Qué criterio está manejando el usuario en este momento.
 // null = nadie tocó nada todavía → se aplica el default (fecha más recientes)
-export type CriterioActivo = 'fecha' | 'precio' | 'superficie' | null
+export type CriterioActivo = 'fecha' | 'precio' | 'superficie' | 'recomendados' | null
 
 export interface EstadoOrdenamiento {
   fecha: OrdenFecha

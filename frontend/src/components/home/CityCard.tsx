@@ -1,5 +1,6 @@
 'use client'
 
+import { type KeyboardEvent } from 'react'
 import CityCarousel from '@/components/home/CityCarousel'
 import type { City } from '@/types/city'
 
@@ -13,22 +14,35 @@ export default function CityCard({ city, onClick }: Props) {
     onClick(city)
   }
 
+  const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      handleClick()
+    }
+  }
+
   return (
     <article
       onClick={handleClick}
-      className="overflow-hidden rounded-2xl bg-white shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-label={`Ver propiedades de ${city.name}`}
+      className="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl bg-white shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
     >
       <CityCarousel images={city.images} cityName={city.name} />
 
-      <div className="space-y-3 p-4">
+      <div className="flex flex-1 flex-col space-y-3 p-4">
         <div className="space-y-1">
-          <h3 className="text-2xl font-semibold text-stone-900">{city.name}</h3>
+          <h3 className="text-2xl font-semibold text-stone-900 transition-colors duration-200 group-hover:text-amber-700 group-focus-visible:text-amber-700">
+            {city.name}
+          </h3>
           {city.locationReference ? (
             <p className="text-sm font-medium text-stone-500">{city.locationReference}</p>
           ) : null}
         </div>
 
-        <p className="text-sm leading-6 text-stone-600">{city.description}</p>
+        <p className="flex-1 text-sm leading-6 text-stone-600">{city.description}</p>
 
         <button
           type="button"

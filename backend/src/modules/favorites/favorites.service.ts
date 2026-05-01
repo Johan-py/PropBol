@@ -28,6 +28,7 @@ export class FavoritesService {
       }),
     ])
 
+    // Por esto:
     return {
       total,
       page,
@@ -35,9 +36,11 @@ export class FavoritesService {
       data: favoritos.map((f) => ({
         id: f.id,
         agregadoEn: f.agregadoEn,
-        inmueble: f.inmueble
+        inmueble: {
+          ...f.inmueble,
+          imagen_principal: f.inmueble.publicaciones[0]?.multimedia[0]?.url || null
+        }
       })),
-      inmuebles: favoritos.map((f) => f.inmueble),
       totalPages: Math.ceil(total / perPage)
     }
   }

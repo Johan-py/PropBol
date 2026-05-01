@@ -89,12 +89,14 @@ const generarPDFComprobante = ({
   nombrePlan,
   monto,
   fechaHora,
+  tipoFacturacion = 'mensual',
 }: {
   idTransaccion: number;
   nombreUsuario: string;
   nombrePlan: string;
   monto: number;
   fechaHora: Date;
+  tipoFacturacion?: string;
 }): Promise<Buffer> => {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ margin: 50 });
@@ -113,8 +115,10 @@ const generarPDFComprobante = ({
     doc.text(`N° de transacción: ${idTransaccion}`);
     doc.text(`Titular: ${nombreUsuario}`);
     doc.text(`Plan: ${nombrePlan}`);
+    doc.text(`Tipo de facturación: ${tipoFacturacion === 'anual' ? 'Anual' : 'Mensual'}`);
     doc.text(`Monto: Bs. ${monto.toFixed(2)}`);
     doc.text(`Fecha y hora: ${fechaHora.toLocaleString('es-BO', { timeZone: 'America/La_Paz' })}`);
+    doc.text(`Moneda: BOB / Bolivianos`);
 
     doc.moveDown();
     doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke();
@@ -132,6 +136,7 @@ export const enviarComprobantePago = async ({
   nombrePlan,
   monto,
   fechaHora,
+  tipoFacturacion = 'mensual',
 }: {
   emailUsuario: string;
   nombreUsuario: string;
@@ -139,8 +144,9 @@ export const enviarComprobantePago = async ({
   nombrePlan: string;
   monto: number;
   fechaHora: Date;
+  tipoFacturacion?: string;
 }): Promise<EmailSendResult> => {
-  const pdfBuffer = await generarPDFComprobante({ idTransaccion, nombreUsuario, nombrePlan, monto, fechaHora });
+  const pdfBuffer = await generarPDFComprobante({ idTransaccion, nombreUsuario, nombrePlan, monto, fechaHora, tipoFacturacion });
   const pdfBase64 = pdfBuffer.toString('base64');
 
   const fechaStr = fechaHora.toLocaleString('es-BO', { timeZone: 'America/La_Paz' });
@@ -170,12 +176,20 @@ export const enviarComprobantePago = async ({
                   <td style="padding:10px;border:1px solid #e5e7eb;color:#333;">${nombrePlan}</td>
                 </tr>
                 <tr style="background:#f9fafb;">
+                  <td style="padding:10px;border:1px solid #e5e7eb;font-weight:bold;color:#374151;">Facturación</td>
+                  <td style="padding:10px;border:1px solid #e5e7eb;color:#333;">${tipoFacturacion === 'anual' ? 'Anual' : 'Mensual'}</td>
+                </tr>
+                <tr>
                   <td style="padding:10px;border:1px solid #e5e7eb;font-weight:bold;color:#374151;">Monto</td>
                   <td style="padding:10px;border:1px solid #e5e7eb;color:#333;">Bs. ${monto.toFixed(2)}</td>
                 </tr>
                 <tr>
                   <td style="padding:10px;border:1px solid #e5e7eb;font-weight:bold;color:#374151;">Fecha y hora</td>
                   <td style="padding:10px;border:1px solid #e5e7eb;color:#333;">${fechaStr}</td>
+                </tr>
+                <tr style="background:#f9fafb;">
+                  <td style="padding:10px;border:1px solid #e5e7eb;font-weight:bold;color:#374151;">Moneda</td>
+                  <td style="padding:10px;border:1px solid #e5e7eb;color:#333;">BOB / Bolivianos</td>
                 </tr>
               </table>
               <p style="font-size:14px;color:#666;">El comprobante en PDF está adjunto a este correo.</p>
@@ -186,7 +200,7 @@ export const enviarComprobantePago = async ({
           </div>
         </body></html>
       `,
-      textContent: `Hola ${nombreUsuario},\n\nTu pago ha sido procesado.\n\nN° Transacción: #${idTransaccion}\nPlan: ${nombrePlan}\nMonto: Bs. ${monto.toFixed(2)}\nFecha: ${fechaStr}\n\nEl comprobante PDF está adjunto.`,
+      textContent: `Hola ${nombreUsuario},\n\nTu pago ha sido procesado.\n\nN° Transacción: #${idTransaccion}\nPlan: ${nombrePlan}\nFacturación: ${tipoFacturacion === 'anual' ? 'Anual' : 'Mensual'}\nMonto: Bs. ${monto.toFixed(2)}\nFecha: ${fechaStr}\nMoneda: BOB / Bolivianos\n\nEl comprobante PDF está adjunto.`,
       attachment: {
         content: pdfBase64,
         name: `comprobante-${idTransaccion}.pdf`,
@@ -396,5 +410,48 @@ export const enviarCodigoDesactivacionCuenta = async ({
       </body></html>
     `,
     textContent: `${saludo}\n\nTu código de verificación para desactivar la cuenta es: ${codigo}\n\nEste código expirará en 5 minutos.`,
+  });
+};
+
+export const enviarAvisoCambioPassword = async ({
+  emailDestino,
+  nombreUsuario,
+}: {
+  emailDestino: string;
+  nombreUsuario?: string;
+}): Promise<EmailSendResult> => {
+  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : "Hola,";
+
+  return sendBrevoEmail({
+    to: emailDestino,
+    subject: "Tu contraseña ha sido cambiada - PropBol",
+    htmlContent: `
+      <!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
+      <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
+        <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:10px;overflow:hidden;">
+          <div style="background:#d97706;padding:20px;text-align:center;">
+            <h1 style="color:#fff;margin:0;font-size:24px;">Seguridad de tu cuenta</h1>
+          </div>
+          <div style="padding:30px;">
+            <p style="font-size:16px;color:#333;">${saludo}</p>
+            <p style="font-size:16px;color:#333;">Te informamos que la contraseña de tu cuenta en PropBol ha sido actualizada correctamente.</p>
+            <div style="background:#f9fafb;border-left:4px solid #d97706;padding:15px;margin:20px 0;">
+              <p style="margin:0;font-size:14px;color:#374151;">
+                Si tú realizaste este cambio, no necesitas realizar ninguna acción adicional.
+              </p>
+            </div>
+            <div style="background:#fffbeb;border-left:4px solid #f59e0b;padding:15px;margin:20px 0;">
+              <p style="margin:0;font-size:14px;color:#78350f;">
+                <strong>¿No fuiste tú?</strong> Si no realizaste este cambio, por favor ponte en contacto con nuestro equipo de soporte de inmediato o intenta restablecer tu contraseña desde la página de inicio de sesión.
+              </p>
+            </div>
+          </div>
+          <div style="background:#f9fafb;padding:20px;text-align:center;border-top:1px solid #e5e7eb;">
+            <p style="font-size:12px;color:#9ca3af;margin:0;">© 2026 PropBol Inmobiliaria · Todos los derechos reservados</p>
+          </div>
+        </div>
+      </body></html>
+    `,
+    textContent: `${saludo}\n\nTe informamos que la contraseña de tu cuenta en PropBol ha sido actualizada correctamente.\n\nSi no realizaste este cambio, por favor contacta a soporte de inmediato.`,
   });
 };

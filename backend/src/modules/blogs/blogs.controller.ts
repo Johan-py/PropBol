@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { blogsService, comentariosService } from "./blogs.service.js";
 import { estado_blog } from "@prisma/client";
+import { verifyJwtToken } from "../../utils/jwt.js";
+import { findActiveSessionByToken } from "../auth/auth.repository.js";
 
 // Tipo extendido con usuario autenticado
 export type AuthRequest = Request & {
@@ -173,7 +175,8 @@ export const actualizarBlog = async (req: AuthRequest, res: Response) => {
           .json({ message: "No tienes permiso para editar este blog" });
       if (error.message === "BLOG_NOT_EDITABLE")
         return res.status(409).json({
-          message: "Solo puedes editar blogs en estado BORRADOR o RECHAZADO",
+          message:
+            "Solo puedes editar blogs en estado BORRADOR, PENDIENTE, PUBLICADO o RECHAZADO",
         });
     }
     return handleError(res, error);
@@ -277,9 +280,71 @@ export const crearComentario = async (req: AuthRequest, res: Response) => {
 export const listarComentarios = async (req: Request, res: Response) => {
   try {
     const blog_id = Number(req.params.id);
-    const comentarios = await comentariosService.listarPorBlog(blog_id);
+    const { page, limit } = req.query;
+
+    let usuario_id: number | undefined;
+    const authHeader = req.headers.authorization;
+    if (authHeader?.startsWith("Bearer ")) {
+      const token = authHeader.split(" ")[1];
+      if (token) {
+        try {
+          verifyJwtToken(token);
+          const session = await findActiveSessionByToken(token);
+          if (session) {
+            usuario_id = session.usuario.id;
+          }
+        } catch (err) {
+          console.error("Error al extraer sesion para comentarios:", err);
+        }
+      }
+    }
+
+    const comentarios = await comentariosService.listarPorBlog(
+      blog_id,
+      usuario_id,
+      page ? Number(page) : 1,
+      limit ? Number(limit) : 10
+    );
+
     return res.json(comentarios);
   } catch (error: unknown) {
+    return handleError(res, error);
+  }
+};
+
+/** PATCH /api/comentarios/:id */
+export const actualizarComentario = async (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.user)
+      return res.status(401).json({ message: "NOT_AUTHENTICATED" });
+
+    const id = Number(req.params.id);
+    const { contenido } = req.body;
+
+    if (!contenido) {
+      return res.status(400).json({ message: "contenido es requerido" });
+    }
+
+    if (contenido.length > 500) {
+      return res
+        .status(400)
+        .json({ message: "El comentario no puede exceder los 500 caracteres" });
+    }
+
+    const comentario = await comentariosService.actualizar(id, req.user.id, {
+      contenido,
+    });
+
+    return res.json(comentario);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      if (error.message === "COMENTARIO_NOT_FOUND")
+        return res.status(404).json({ message: "Comentario no encontrado" });
+      if (error.message === "FORBIDDEN")
+        return res
+          .status(403)
+          .json({ message: "No tienes permiso para editar este comentario" });
+    }
     return handleError(res, error);
   }
 };

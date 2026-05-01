@@ -31,7 +31,8 @@ const fetchBanners = async (): Promise<BannerData[]> => {
     });
 
     if (!response.ok) {
-      throw new Error(`Error HTTP al obtener banners: ${response.status}`);
+      console.warn(`Aviso: HTTP ${response.status} al obtener banners.`);
+      return [];
     }
 
     const data: BannerRaw[] = await response.json();
@@ -43,15 +44,17 @@ const fetchBanners = async (): Promise<BannerData[]> => {
       subtitulo: b.subtitulo,
     }));
   } catch (error) {
-    console.error("Error cargando el banner:", error);
+    console.warn("Aviso: El backend no está disponible para pre-renderizar los banners.", error);
     return [];
   }
 };
 
 export default async function Home() {
   const banners = await fetchBanners();
-  const cities = await getCities();
-
+  const cities = await getCities().catch((error) => {
+    console.warn("Aviso (Build): Falló getCities, devolviendo array vacío.", error);
+    return [];
+  });
   return (
     <main className="flex min-h-screen flex-col items-center bg-gray-50">
       <TourGuiado />

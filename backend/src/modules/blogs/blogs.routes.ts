@@ -16,6 +16,7 @@ import {
   listarComentarios,
   toggleLikeComentario,
   eliminarComentario,
+  actualizarComentario,
 } from "./blogs.controller.js";
 
 const router = Router();
@@ -54,6 +55,7 @@ router.patch("/:id/estado", requireAuth, cambiarEstadoBlog);
 // Rutas de Comentarios
 router.post("/comentarios", requireAuth, crearComentario);
 router.get("/:id/comentarios", listarComentarios);
+router.patch("/comentarios/:id", requireAuth, actualizarComentario);
 router.post("/comentarios/:id/like", requireAuth, toggleLikeComentario);
 router.delete("/comentarios/:id", requireAuth, eliminarComentario);
 

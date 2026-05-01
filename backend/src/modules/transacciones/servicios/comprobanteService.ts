@@ -12,6 +12,8 @@ export async function emitirComprobante(transaccionId: number): Promise<boolean>
 
   if (!transaccion) throw new Error(`Transacción ${transaccionId} no encontrada`)
 
+  const tipoFacturacion = transaccion.metodo_pago === 'QR_BANCARIO_ANUAL' ? 'anual' : 'mensual'
+
   const resultado = await enviarComprobantePago({
     emailUsuario: transaccion.usuario.correo,
     nombreUsuario: `${transaccion.usuario.nombre} ${transaccion.usuario.apellido}`,
@@ -19,6 +21,7 @@ export async function emitirComprobante(transaccionId: number): Promise<boolean>
     nombrePlan: transaccion.plan_suscripcion.nombre_plan ?? 'Plan PropBol',
     monto: Number(transaccion.total),
     fechaHora: transaccion.fecha_completado ?? transaccion.fecha_intento ?? new Date(),
+    tipoFacturacion,
   })
 
   await prisma.bitacora_pagos.create({

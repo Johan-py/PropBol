@@ -184,6 +184,7 @@ model UbicacionInmueble {
   inmuebleId         Int                @unique @map("inmueble_id")
   ubicacionMaestraId Int?               @map("ubicacion_maestra_id")
   barrio_id          Int?
+  verticesDifuminado Json?              @map("vertices_difuminado")
   marcador_mapa      MarcadorMapa[]
   barrio             barrio?            @relation(fields: [barrio_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   inmueble           Inmueble           @relation(fields: [inmuebleId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "ubicacion_inmueble_fk")
@@ -755,6 +756,14 @@ model zona_geografica {
   municipio    municipio @relation(fields: [municipio_id], references: [id], onUpdate: NoAction)
 
   @@unique([nombre, municipio_id], map: "zona_geografica_nombre_municipio_unique")
+}
+
+model contacto {
+  id            Int      @id @default(autoincrement())
+  usuarioId     Int
+  inmuebleId    Int
+  mensaje       String
+  creadoEn      DateTime @default(now())
 }
 
 enum Genero {

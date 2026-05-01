@@ -6,6 +6,7 @@ type SessionUserInput = {
   apellido?: string
   avatar?: string | null
   rol?: string | { nombre: string }
+  controlador?: boolean | null
 }
 
 export type SessionUser = {
@@ -13,6 +14,7 @@ export type SessionUser = {
   email: string
   avatar: string | null
   role: string | null
+  controlador: boolean | null
 }
 
 export function buildSessionUser(user?: SessionUserInput): SessionUser {
@@ -23,6 +25,7 @@ export function buildSessionUser(user?: SessionUserInput): SessionUser {
     name: fullName || user?.correo || 'Usuario',
     email: user?.correo ?? '',
     avatar: user?.avatar ?? null,
-    role: roleName ?? null
+    role: roleName ?? null,
+    controlador: user?.controlador ?? null
   }
 }

@@ -7,7 +7,18 @@ import type { MisPublicacionesItem } from '@/types/publicacion'
 
 export default function MisPublicacionesList() {
   const [publicaciones, setPublicaciones] = useState<MisPublicacionesItem[]>([])
-  const [estadisticas, setEstadisticas] = useState({
+  const [estadisticas, setEstadisticas] = useState<{
+    totalPublicaciones: number
+    limite: number
+    disponibles: number
+    tieneSuscripcion: boolean
+    suscripcion: {
+      id: number
+      planNombre: string
+      fechaInicio: string
+      fechaFin: string
+    } | null
+  }>({
     totalPublicaciones: 0,
     limite: 2,
     disponibles: 0,
@@ -32,7 +43,12 @@ export default function MisPublicacionesList() {
       superficieM2: pub.inmueble?.superficieM2 ? parseFloat(pub.inmueble.superficieM2) : null,
       imagenUrl: pub.multimedia?.[0]?.url || pub.usuario?.avatar || null,
       tipoOperacion: pub.inmueble?.tipoAccion || 'VENTA',
-      activa: pub.estado === "ACTIVA"  // true = ACTIVA, false = PAUSADA o ELIMINADA
+      activa: pub.estado === "ACTIVA",  // true = ACTIVA, false = PAUSADA o ELIMINADA
+      metricas: pub.metricas || {
+        visitas: 0,
+        favoritos: 0,
+        contactos: 0
+      }
     }
   }
 
@@ -112,7 +128,9 @@ export default function MisPublicacionesList() {
       {/* Tarjeta de estadísticas */}
       <div className="bg-blue-50 p-4 rounded-xl">
         <h3 className="font-semibold text-gray-800">
-          Mi Plan actual: {estadisticas.tieneSuscripcion ? 'Premium ⭐' : 'Básico (Gratis)'}
+          Mi Plan actual: {estadisticas.suscripcion?.planNombre
+            ? `${estadisticas.suscripcion.planNombre} ⭐`
+            : 'Básico (Gratis)'}
         </h3>
         <p className="text-sm text-gray-600">
           Publicaciones Activas: {publicacionesActivas.length} / {estadisticas.limite}
@@ -161,9 +179,6 @@ export default function MisPublicacionesList() {
             {filtro === 'activas' && 'No tienes publicaciones activas.'}
             {filtro === 'pausadas' && 'No tienes publicaciones pausadas.'}
           </p>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
-            Crear Nueva Publicación
-          </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

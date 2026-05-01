@@ -253,6 +253,7 @@ function ParametrosPageContent() {
         ) : (
           <ExtrasPropiedad
             valoresIniciales={parametrosGuardados}
+            catalogoParametros={catalogoParametros}
             onGuardar={manejarGuardarParametros}
             onCancelar={volverSegunOrigen}
           />

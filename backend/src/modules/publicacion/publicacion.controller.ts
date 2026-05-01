@@ -5,7 +5,8 @@ import {
   editarPublicacionService,
   obtenerResumenFinalService,
   obtenerDetallePublicacionService,
-  obtenerDetallePublicacionPorInmuebleService
+  obtenerDetallePublicacionPorInmuebleService,
+  confirmarPublicacionService
 } from './publicacion.service.js'
 
 interface AuthRequest extends Request {
@@ -280,7 +281,6 @@ export const obtenerDetallePublicacionController = async (req: Request, res: Res
     })
   }
 }
-
 export const obtenerDetallePublicacionPorInmuebleController = async (
   req: Request,
   res: Response
@@ -306,16 +306,80 @@ export const obtenerDetallePublicacionPorInmuebleController = async (
         case 'PUBLICACION_NO_EXISTE':
           return res.status(404).json({
             ok: false,
-            message: 'No existe una publicación activa para este inmueble'
+            message: 'No existe una publicación asociada a este inmueble'
           })
       }
     }
 
-    console.error('Error al obtener detalle por inmueble:', error)
+    console.error('Error al obtener detalle de publicación por inmueble:', error)
 
     return res.status(500).json({
       ok: false,
-      message: 'No se pudo obtener el detalle de la propiedad'
+      message: 'No se pudo obtener el detalle de la publicación por inmueble'
+    })
+  }
+}
+export const confirmarPublicacionController = async (req: AuthRequest, res: Response) => {
+  const publicacionId = Number(req.params.id)
+  const usuarioSolicitanteId = req.user?.id
+
+  try {
+    const resultado = await confirmarPublicacionService(
+      publicacionId,
+      Number(usuarioSolicitanteId)
+    )
+
+    return res.status(200).json({
+      ok: true,
+      message: 'Publicación confirmada correctamente',
+      data: resultado
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      switch (error.message) {
+        case 'ID_INVALIDO':
+          return res.status(400).json({
+            ok: false,
+            message: 'El id de la publicación es inválido'
+          })
+
+        case 'USUARIO_INVALIDO':
+          return res.status(401).json({
+            ok: false,
+            message: 'Usuario no autenticado'
+          })
+
+        case 'PUBLICACION_NO_EXISTE':
+          return res.status(404).json({
+            ok: false,
+            message: 'La publicación no existe'
+          })
+
+        case 'NO_AUTORIZADO':
+          return res.status(403).json({
+            ok: false,
+            message: 'No puede confirmar publicaciones de otros usuarios'
+          })
+
+        case 'PUBLICACION_YA_ELIMINADA':
+          return res.status(409).json({
+            ok: false,
+            message: 'La publicación ya fue eliminada'
+          })
+
+        case 'MULTIMEDIA_REQUERIDA':
+          return res.status(400).json({
+            ok: false,
+            message: 'Debe agregar al menos una imagen o video antes de publicar'
+          })
+      }
+    }
+
+    console.error('Error al confirmar publicación:', error)
+
+    return res.status(500).json({
+      ok: false,
+      message: 'No se pudo confirmar la publicación'
     })
   }
 }

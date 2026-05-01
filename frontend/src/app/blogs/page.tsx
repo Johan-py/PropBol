@@ -9,7 +9,16 @@ import BlogFilterChips from "@/components/blog/BlogFilterChips";
 import FeaturedBlogSpotlight from "@/components/blog/FeaturedBlogSpotlight";
 import { useBlogFeed } from "@/hooks/useBlogFeed";
 import { Blog } from "@/types/blog";
-import error from "next/error";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+
+type UserBlogResponse = {
+  id: number;
+  titulo: string;
+  estado: Blog["estado"];
+  imagen?: string | null;
+  fecha_creacion?: string;
+};
 
 export default function BlogsPage() {
   const {
@@ -19,40 +28,23 @@ export default function BlogsPage() {
     secondaryBlogs,
     canLoadMore,
     hasResults,
+    isLoading,
     toggleCategory,
     loadMore,
   } = useBlogFeed();
 
-const [myBlogs, setMyBlogs] = useState<Blog[]>([]);
-
-useEffect(() => {
-  const token = localStorage.getItem("token");
-
-  if (!token) return;
-
-  fetch("http://localhost:5000/api/blogs/mis-blogs", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then((res) => res.json())
-    .then((data) => {setMyBlogs(data.data ?? data);
-    })
-    .catch(console.error);
-}, []);
-
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#fbf6ef_0%,#f5efe7_45%,#ffffff_100%)]">
       <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-        <MyRecentBlogsPanel blogs={myBlogs} />
+        <MyRecentBlogsPanel />
 
         <section className="space-y-6">
           <h1 className="max-w-3xl font-heading text-4xl font-bold leading-tight text-stone-900 sm:text-5xl">
             Perspectivas para el Bien Raiz Moderno.
           </h1>
 
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="overflow-x-auto pb-1">
+          <div className="flex flex-row items-center justify-between gap-4">
+            <div className="flex-1 overflow-x-auto pb-1">
               <BlogFilterChips
                 categories={categories}
                 activeCategory={activeCategory}
@@ -60,21 +52,22 @@ useEffect(() => {
               />
             </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <div className="flex-shrink-0">
               <AddPostButton />
-
-              {/* TODO: restringir este acceso por rol cuando se integre backend. */}
-              <Link
-                href="/admin/blogs"
-                className="inline-flex min-h-[54px] items-center justify-center border border-stone-300 px-8 text-sm font-semibold uppercase tracking-[0.22em] text-stone-700 transition-colors hover:border-[#a56400] hover:text-[#a56400]"
-              >
-                Moderar Posts
-              </Link>
             </div>
           </div>
         </section>
 
-        {hasResults && featuredBlog ? (
+        {isLoading ? (
+          <section className="rounded-[32px] border border-stone-200 bg-white px-6 py-12 text-center shadow-sm">
+            <div className="animate-pulse flex flex-col items-center">
+              <div className="h-4 bg-stone-200 rounded w-1/4 mb-4"></div>
+              <div className="h-8 bg-stone-200 rounded w-1/2 mb-4"></div>
+              <div className="h-4 bg-stone-200 rounded w-3/4"></div>
+            </div>
+            <p className="mt-4 text-sm text-stone-400">Cargando artículos...</p>
+          </section>
+        ) : hasResults && featuredBlog ? (
           <FeaturedBlogSpotlight blog={featuredBlog} />
         ) : (
           <section className="rounded-[32px] border border-dashed border-stone-300 bg-white px-6 py-12 text-center shadow-sm">
@@ -93,31 +86,33 @@ useEffect(() => {
           </section>
         )}
 
-        <section className="space-y-6">
-          {secondaryBlogs.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {secondaryBlogs.map((blog) => (
-                <BlogCard key={blog.id} {...blog} />
-              ))}
-            </div>
-          ) : hasResults ? (
-            <div className="rounded-[28px] border border-stone-200 bg-white px-6 py-10 text-center text-stone-600 shadow-sm">
-              Esta categoria solo tiene un articulo destacado por el momento.
-            </div>
-          ) : null}
+        {!isLoading && (
+          <section className="space-y-6">
+            {secondaryBlogs.length > 0 ? (
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                {secondaryBlogs.map((blog) => (
+                  <BlogCard key={blog.id} {...blog} />
+                ))}
+              </div>
+            ) : hasResults ? (
+              <div className="rounded-[28px] border border-stone-200 bg-white px-6 py-10 text-center text-stone-600 shadow-sm">
+                Esta categoria solo tiene un articulo destacado por el momento.
+              </div>
+            ) : null}
 
-          {canLoadMore && (
-            <div className="flex justify-center pt-2">
-              <button
-                type="button"
-                onClick={loadMore}
-                className="rounded-full border border-amber-600 px-6 py-3 text-sm font-semibold text-amber-700 transition-colors hover:bg-amber-600 hover:text-white"
-              >
-                CONTINUAR LEYENDO
-              </button>
-            </div>
-          )}
-        </section>
+            {canLoadMore && (
+              <div className="flex justify-center pt-2">
+                <button
+                  type="button"
+                  onClick={loadMore}
+                  className="rounded-full border border-amber-600 px-6 py-3 text-sm font-semibold text-amber-700 transition-colors hover:bg-amber-600 hover:text-white"
+                >
+                  CONTINUAR LEYENDO
+                </button>
+              </div>
+            )}
+          </section>
+        )}
       </div>
     </div>
   );

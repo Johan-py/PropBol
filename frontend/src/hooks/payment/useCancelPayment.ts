@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { PaymentData } from '@/types/payment'
 
-export function useCancelPayment() {
+export function useCancelPayment(payment?: PaymentData | null) {
   const router = useRouter()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -12,20 +13,15 @@ export function useCancelPayment() {
     setIsModalOpen(false)
 
     try {
-      const stored = localStorage.getItem('currentPayment')
-      if (stored) {
-        const payment = JSON.parse(stored)
+      if (payment?.id) {
         await fetch(`/api/transacciones/${payment.id}/cancelar`, { method: 'PATCH' })
-        const planId = payment.planId
-        localStorage.removeItem('currentPayment')
-        router.push(planId ? `/pago/resumen?planId=${planId}` : '/cobros-suscripciones')
-        return
       }
     } catch {
       // No bloqueamos la navegación si la llamada falla
     }
 
-    router.push('/cobros-suscripciones')
+    localStorage.removeItem('currentPayment')
+    router.push(payment?.planId ? `/pago/resumen?planId=${payment.planId}` : '/cobros-suscripciones')
   }
 
   useEffect(() => {

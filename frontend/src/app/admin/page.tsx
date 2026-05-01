@@ -1,6 +1,6 @@
 'use client'
 
-import { Newspaper, Clock } from 'lucide-react'
+import { Newspaper, Clock, CreditCard } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
@@ -8,26 +8,35 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 
 export default function AdminDashboard() {
   const [pendingCount, setPendingCount] = useState<number | null>(null)
+  const [pendingPayments, setPendingPayments] = useState<number | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchPendingCount = async () => {
       try {
         const token = localStorage.getItem('token')
+        window.dispatchEvent(new Event("propbol:token-guardado"));
         if (!token) return
 
-        const response = await fetch(`${API_URL}/api/blogs/admin?estado=PENDIENTE&limit=1`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
+        const [blogsRes, pagosRes] = await Promise.all([
+          fetch(`${API_URL}/api/blogs/admin?estado=PENDIENTE&limit=1`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch(`${API_URL}/api/transacciones/admin`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ])
 
-        if (response.ok) {
-          const data = await response.json()
+        if (blogsRes.ok) {
+          const data = await blogsRes.json()
           setPendingCount(data.total)
         }
+        if (pagosRes.ok) {
+          const data: Array<{ estado: string }> = await pagosRes.json()
+          setPendingPayments(data.filter((t) => t.estado === 'PENDIENTE').length)
+        }
       } catch (error) {
-        console.error('Error fetching pending blogs count:', error)
+        console.error('Error fetching pending counts:', error)
       } finally {
         setIsLoading(false)
       }
@@ -75,6 +84,32 @@ export default function AdminDashboard() {
                         <div className="h-8 w-12 bg-stone-100 animate-pulse rounded"></div>
                       ) : (
                         (pendingCount ?? 0)
+                      )}
+                    </h3>
+                  </div>
+                </div>
+                <div className="h-8 w-8 rounded-full bg-stone-50 flex items-center justify-center transition-colors group-hover:bg-amber-600 group-hover:text-white">
+                  <Clock className="h-4 w-4" />
+                </div>
+              </Link>
+
+              <Link
+                href="/admin/pagos"
+                className="group flex items-center justify-between rounded-2xl border border-stone-100 bg-white p-6 shadow-sm transition-all hover:shadow-md hover:border-amber-600"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="rounded-xl bg-amber-50 p-3 text-amber-600 transition-colors group-hover:bg-amber-100">
+                    <CreditCard className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium font-inter text-stone-500">
+                      Pagos por Validar
+                    </p>
+                    <h3 className="text-2xl font-bold font-montserrat text-stone-900">
+                      {isLoading ? (
+                        <div className="h-8 w-12 bg-stone-100 animate-pulse rounded"></div>
+                      ) : (
+                        (pendingPayments ?? 0)
                       )}
                     </h3>
                   </div>

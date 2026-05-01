@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { CheckCircle2, ChevronLeft, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAdminBlogModeration } from "@/hooks/useAdminBlogModeration";
+import MarkdownRenderer from "@/components/blog/MarkdownRenderer";
 
 function formatDate(date: string) {
   return new Intl.DateTimeFormat("es-BO", {
@@ -166,13 +167,11 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
               height={980}
               className="h-auto w-full object-cover"
               priority
+              unoptimized
             />
           </div>
 
           <div className="mx-auto mt-10 max-w-4xl space-y-9 text-lg leading-9 text-stone-700 font-inter">
-            <p className="text-2xl leading-10 text-stone-800 font-montserrat font-bold">{blog.excerpt}</p>
-            <p className="text-xl leading-9 text-stone-600">{blog.lead}</p>
-
             {blog.sections.map((section, index) => (
               <section key={`${blog.id}-${index}`} className="space-y-4">
                 {section.heading && (
@@ -181,9 +180,9 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
                   </h2>
                 )}
 
-                {section.paragraphs.map((paragraph, paragraphIndex) => (
-                  <p key={`${blog.id}-${index}-${paragraphIndex}`}>{paragraph}</p>
-                ))}
+                <MarkdownRenderer 
+                  content={section.paragraphs.join("\n\n")} 
+                />
               </section>
             ))}
           </div>

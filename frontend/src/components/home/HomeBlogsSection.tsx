@@ -50,12 +50,12 @@ export default async function HomeBlogsSection() {
                 Blogs
               </p>
               <h3 className="font-['Montserrat'] text-6xl font-black uppercase tracking-tighter text-stone-900 sm:text-7xl">
-                Aprende
+                Descubre
               </h3>
             </div>
 
             <p className="font-['Inter'] text-lg leading-relaxed text-stone-600 max-w-sm">
-              Exploramos la intersección entre la arquitectura de vanguardia, el mercado de capitales y el estilo de vida contemporáneo.
+              Mantente al día con las últimas tendencias del mercado, consejos de inversión y guías prácticas para encontrar la propiedad de tus sueños.
             </p>
 
             <Link

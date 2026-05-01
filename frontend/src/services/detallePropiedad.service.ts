@@ -13,7 +13,7 @@ function getApiUrl() {
 export async function obtenerDetallePropiedad(id: number): Promise<DetallePropiedad> {
   const apiUrl = getApiUrl()
 
-  const response = await fetch(`${apiUrl}/api/publicaciones/${id}/detalle`, {
+  const response = await fetch(`${apiUrl}/api/publicaciones/inmueble/${id}/detalle`, {
     method: 'GET',
     cache: 'no-store'
   })

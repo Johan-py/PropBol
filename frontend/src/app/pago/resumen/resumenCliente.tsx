@@ -7,11 +7,14 @@ import Link from 'next/link';
 import ResumenTransaccion from '@/components/pago/resumenTransaccion';
 import Stepper from '@/components/ui/Stepper';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
 export default function ResumenCliente() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const planIdParam = searchParams.get('planId');
 
+  const [plan, setPlan] = useState<any>(null);
   const [transaccion, setTransaccion] = useState<any>(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,6 +28,8 @@ export default function ResumenCliente() {
 
   const nombreMetodo: Record<string, string> = { qr: 'QR Bancario' };
 
+  const idSuscripcion = planIdParam ? parseInt(planIdParam, 10) : NaN;
+
   useEffect(() => {
     if (!planIdParam) {
       setError('No se especificó un plan');
@@ -32,26 +37,23 @@ export default function ResumenCliente() {
       return;
     }
 
-    const idSuscripcion = parseInt(planIdParam, 10);
-
     if (isNaN(idSuscripcion)) {
       setError('ID inválido');
       setCargando(false);
       return;
     }
 
-    async function iniciarTransaccion() {
+    async function cargarPlan() {
       try {
-        const res = await fetch('/api/transacciones', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ idSuscripcion }),
+        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+        const res = await fetch(`${API_URL}/api/planes/${idSuscripcion}`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         });
 
-        if (!res.ok) throw new Error('Error al crear la transacción');
+        if (!res.ok) throw new Error('No se pudo cargar el plan');
 
         const data = await res.json();
-        setTransaccion(data);
+        setPlan(data);
       } catch (err: any) {
         setError(err.message || 'Error desconocido');
       } finally {
@@ -59,8 +61,28 @@ export default function ResumenCliente() {
       }
     }
 
-    iniciarTransaccion();
-  }, [planIdParam]);
+    cargarPlan();
+  }, [planIdParam, idSuscripcion]);
+
+  async function obtenerOCrearTransaccion(): Promise<any> {
+    if (transaccion) return transaccion;
+
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    const res = await fetch('/api/transacciones', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({ idSuscripcion }),
+    });
+
+    if (!res.ok) throw new Error('Error al crear la transacción');
+
+    const data = await res.json();
+    setTransaccion(data);
+    return data;
+  }
 
   useEffect(() => {
     if (tipoFacturacion === 'anual') {
@@ -71,7 +93,7 @@ export default function ResumenCliente() {
   }, [tipoFacturacion]);
 
   const calculos = useMemo(() => {
-    if (!transaccion) {
+    if (!plan) {
       return {
         subtotalMensual: 0,
         subtotalAnual: 0,
@@ -83,7 +105,7 @@ export default function ResumenCliente() {
       };
     }
 
-    const subtotalMensual = Number(transaccion.total || 0);
+    const subtotalMensual = Number(plan.precio_plan || 0);
     const subtotalAnual = subtotalMensual * 12;
 
     const subtotalBase =
@@ -94,7 +116,7 @@ export default function ResumenCliente() {
     const descuentoMonto =
       (subtotalBase * descuentoPorcentaje) / 100;
 
-    const descuentoCupon = Number(transaccion.monto_descuento || 0);
+    const descuentoCupon = Number(transaccion?.monto_descuento || 0);
 
     const totalFinal =
       subtotalBase - descuentoMonto - descuentoCupon;
@@ -118,36 +140,30 @@ export default function ResumenCliente() {
       fechaInicio: fechaInicio.toLocaleDateString(),
       fechaFin: fechaFin.toLocaleDateString(),
     };
-  }, [transaccion, tipoFacturacion, descuentoPorcentaje]);
+  }, [plan, transaccion, tipoFacturacion, descuentoPorcentaje]);
 
-  const manejarContinuar = () => {
-    if (metodoSeleccionado && transaccion) {
-      localStorage.setItem(
-        'currentPayment',
-        JSON.stringify({
-          id: transaccion.id,
-          monto: calculos.totalFinal,
-          referencia: transaccion.referencia || transaccion.id,
-          estado: 'pendiente',
-          billingCycle: tipoFacturacion,
-          grossAmount: calculos.subtotalBase,
-          discountAmount:
-            calculos.descuentoMonto +
-            Number(transaccion.monto_descuento || 0),
-          netAmount: calculos.totalFinal,
-          subtotalAnual: calculos.subtotalAnual,
-          fechaInicio: calculos.fechaInicio,
-          fechaFin: calculos.fechaFin,
-          fechaExpiracion:
-            transaccion.fechaExpiracion ||
-            new Date(Date.now() + 30 * 60 * 1000).toISOString(),
-          qrContent:
-            transaccion.plan_suscripcion?.imagen_gr_url ||
-            '/qrs/estandar.png',
-        })
-      );
+  const manejarContinuar = async () => {
+    if (!metodoSeleccionado || !plan) return;
 
-      router.push(`/pago/qr?transaccionId=${transaccion.id}`);
+    try {
+      const t = await obtenerOCrearTransaccion();
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+      await fetch(`/api/transacciones/${t.id}/actualizar`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          tipoFacturacion,
+          totalFinal: calculos.totalFinal,
+        }),
+      });
+
+      router.push(`/pago/qr?transaccionId=${t.id}`);
+    } catch (err: any) {
+      setError(err.message || 'No se pudo iniciar el pago');
     }
   };
 
@@ -160,7 +176,9 @@ export default function ResumenCliente() {
     setAplicandoCupon(true);
 
     try {
-      const res = await fetch(`/api/transacciones/${transaccion.id}/cupon`, {
+      const t = await obtenerOCrearTransaccion();
+
+      const res = await fetch(`/api/transacciones/${t.id}/cupon`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -174,8 +192,7 @@ export default function ResumenCliente() {
       if (!res.ok) throw new Error(data.error || 'Error al aplicar cupón');
 
       setTransaccion((prev: any) => ({
-        ...prev,
-        total: prev.total,
+        ...(prev ?? t),
         monto_descuento: data.monto_descuento,
       }));
 
@@ -201,9 +218,7 @@ export default function ResumenCliente() {
   if (error)
     return <div className="text-center py-10 text-red-600">Error: {error}</div>;
 
-  if (!transaccion) return null;
-
-  const plan = transaccion.plan_suscripcion;
+  if (!plan) return null;
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white font-sans">
@@ -233,7 +248,7 @@ export default function ResumenCliente() {
 
             <p className="text-gray-600">
               {plan.nro_publicaciones_plan} publicaciones activas · Vigencia{' '}
-              {plan.duración_plan_días} días · Galería {plan.fotos_galeria} fotos
+              {plan.duracion_plan_dias ?? plan.duración_plan_días} días
             </p>
           </div>
 
@@ -321,7 +336,18 @@ export default function ResumenCliente() {
         </div>
 
         <div>
-          <ResumenTransaccion transaccion={transaccion} />
+          <ResumenTransaccion
+            transaccion={
+              transaccion ?? {
+                subtotal: Number(plan.precio_plan || 0) / 1.13,
+                iva_monto:
+                  Number(plan.precio_plan || 0) -
+                  Number(plan.precio_plan || 0) / 1.13,
+                total: Number(plan.precio_plan || 0),
+                monto_descuento: 0,
+              }
+            }
+          />
 
           <div className="mt-6 border border-gray-200 rounded-lg p-6 bg-white shadow-md">
             <h3 className="text-lg font-semibold mb-4 text-gray-900">
@@ -355,11 +381,11 @@ export default function ResumenCliente() {
                 </div>
               )}
 
-              {Number(transaccion.monto_descuento || 0) > 0 && (
+              {Number(transaccion?.monto_descuento || 0) > 0 && (
                 <div className="flex justify-between text-green-600">
                   <span>Cupón aplicado</span>
                   <span>
-                    - Bs. {Number(transaccion.monto_descuento).toFixed(2)}
+                    - Bs. {Number(transaccion?.monto_descuento).toFixed(2)}
                   </span>
                 </div>
               )}

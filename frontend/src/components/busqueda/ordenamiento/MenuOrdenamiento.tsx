@@ -157,14 +157,14 @@ export function MenuOrdenamiento({
 
   // ── Seleccionar FECHA ──────────────────────────────────────────────────────
   function seleccionarFecha(valor: EstadoOrdenamiento['fecha']) {
-    aplicar({
-      fecha: valor,
-      precio: ORDENAMIENTO_DEFAULT.precio,
-      superficie: ORDENAMIENTO_DEFAULT.superficie,
-      criterioActivo: 'fecha'
-    })
-    setDropdownAbierto(null)
-  }
+  aplicar({
+    fecha: valor,
+    precio: ORDENAMIENTO_DEFAULT.precio,
+    superficie: ORDENAMIENTO_DEFAULT.superficie,
+    criterioActivo: valor === 'mas-recomendados' ? 'recomendados' : 'fecha',
+  })
+  setDropdownAbierto(null)
+}
 
   // ── Seleccionar PRECIO ─────────────────────────────────────────────────────
   function seleccionarPrecio(valor: OrdenDireccion) {

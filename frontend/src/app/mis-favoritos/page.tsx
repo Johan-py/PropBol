@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Star, Heart, Eye } from "lucide-react";
+import { Star, Heart } from "lucide-react";
 
 type Inmueble = {
   id: number;
@@ -15,6 +15,7 @@ type Inmueble = {
     direccion?: string;
     zona?: string;
   };
+  imagen_principal?: string;
   publicaciones?: Array<{
     multimedia?: Array<{
       url: string;
@@ -116,16 +117,14 @@ export default function MisFavoritos() {
   };
 
   const getImagenUrl = (inmueble: Inmueble): string => {
-    const publicacionActiva = inmueble.publicaciones?.find(p => p.multimedia?.length);
-    const primeraImagen = publicacionActiva?.multimedia?.find(m => m.tipo === "IMAGEN");
-
-    if (primeraImagen?.url) {
-      if (primeraImagen.url.startsWith("/uploads")) {
-        return `${process.env.NEXT_PUBLIC_API_URL}${primeraImagen.url}`;
+    // Usar el nuevo campo imagen_principal
+    if (inmueble.imagen_principal) {
+      const url = inmueble.imagen_principal;
+      if (url.startsWith("/uploads") || url.startsWith("/images")) {
+        return `${process.env.NEXT_PUBLIC_API_URL}${url}`;
       }
-      return primeraImagen.url;
+      return url;
     }
-
     return "https://via.placeholder.com/400x300?text=Sin+imagen";
   };
 
@@ -159,15 +158,14 @@ export default function MisFavoritos() {
         {/* HEADER */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <Heart className="w-7 h-7 text-[#E87B00]" fill="#E87B00" />
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
-              Mis Favoritos
+              Gestión de Favoritos
             </h1>
           </div>
           <p className="text-gray-500 text-sm">
             {total === 0
               ? "Aún no tienes propiedades favoritas"
-              : `${total} propiedad${total !== 1 ? "es" : ""} guardada${total !== 1 ? "s" : ""}`}
+              : `${total} propiedad${total !== 1 ? "es" : ""} encontrada${total !== 1 ? "s" : ""}`}
           </p>
         </div>
 
@@ -179,7 +177,7 @@ export default function MisFavoritos() {
               No tienes favoritos aún
             </h3>
             <p className="text-gray-400 text-sm">
-              Explora nuestras propiedades y marca las que más te gusten con el botón ⭐
+              Explora nuestras propiedades favoritas...
             </p>
           </div>
         ) : (
@@ -268,7 +266,6 @@ export default function MisFavoritos() {
                           onClick={() => window.location.href = `/propiedad/${inmueble.id}`}
                           className="flex-1 bg-[#E87B00] text-white py-2.5 rounded-lg text-sm font-bold hover:bg-orange-600 transition-colors flex items-center justify-center gap-2"
                         >
-                          <Eye size={16} />
                           Ver Detalle
                         </button>
                       </div>
@@ -279,7 +276,7 @@ export default function MisFavoritos() {
             </div>
 
             {/* PAGINACIÓN */}
-            {totalPages > 1 && (
+            {totalPages >= 1 && (
               <div className="mt-10 flex justify-center gap-2 pb-10">
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
@@ -306,8 +303,8 @@ export default function MisFavoritos() {
                       key={pageNum}
                       onClick={() => setPage(pageNum)}
                       className={`w-9 h-9 flex items-center justify-center rounded-md text-sm font-bold transition-colors ${page === pageNum
-                          ? "bg-[#E87B00] text-white"
-                          : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                        ? "bg-[#E87B00] text-white"
+                        : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
                         }`}
                     >
                       {pageNum}

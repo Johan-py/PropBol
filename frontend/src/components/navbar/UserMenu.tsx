@@ -30,8 +30,8 @@ const MenuLink = ({
     onClick={onClick}
     className="flex items-center gap-3 py-2 px-2 text-gray-500 text-sm hover:bg-black/5 hover:text-[#E68B25] transition-colors rounded"
   >
-    <Icon size={18} strokeWidth={1.5} />
-    {label}
+    <Icon size={18} strokeWidth={1.5} className="flex-shrink-0" />
+    <span className="truncate">{label}</span>
   </Link>
 );
 
@@ -46,7 +46,7 @@ export default function UserMenu({
 
   // Estado local para manejar los datos del usuario de forma independiente
   const [localUser, setLocalUser] = useState<User | null>(user);
-  
+
   // Usamos una referencia para saber si acabamos de hacer una actualización local.
   // Esto actúa como un "escudo" temporal contra las props del padre.
   const isLocalUpdateRef = useRef(false);
@@ -54,18 +54,18 @@ export default function UserMenu({
   // Inicialización segura desde localStorage si está disponible (solo lado del cliente)
   useEffect(() => {
     if (user && typeof window !== 'undefined') {
-        const storedAvatar = localStorage.getItem('avatar');
-        const storedName = localStorage.getItem('nombre');
-        const storedEmail = localStorage.getItem('correo');
-        
-        setLocalUser(prev => ({
-            ...user,
-            avatar: storedAvatar || user.avatar,
-            name: storedName || user.name,
-            email: storedEmail || user.email
-        }));
+      const storedAvatar = localStorage.getItem('avatar');
+      const storedName = localStorage.getItem('nombre');
+      const storedEmail = localStorage.getItem('correo');
+
+      setLocalUser(prev => ({
+        ...user,
+        avatar: storedAvatar || user.avatar,
+        name: storedName || user.name,
+        email: storedEmail || user.email
+      }));
     } else {
-        setLocalUser(user);
+      setLocalUser(user);
     }
   }, []); // Solo se ejecuta una vez al montar
 
@@ -74,11 +74,11 @@ export default function UserMenu({
     // Si la última actualización fue local, ignoramos las props del padre por un breve momento
     // para evitar el "parpadeo" mientras el servidor refresca.
     if (isLocalUpdateRef.current) {
-        // Reseteamos la bandera después de un breve delay
-        const timer = setTimeout(() => {
-            isLocalUpdateRef.current = false;
-        }, 4000); // Suficiente tiempo para que el router.refresh() termine
-        return () => clearTimeout(timer);
+      // Reseteamos la bandera después de un breve delay
+      const timer = setTimeout(() => {
+        isLocalUpdateRef.current = false;
+      }, 4000); // Suficiente tiempo para que el router.refresh() termine
+      return () => clearTimeout(timer);
     }
 
     if (user) {
@@ -107,7 +107,7 @@ export default function UserMenu({
       if (e.detail && e.detail.key && e.detail.value) {
         // Levantamos el escudo protector
         isLocalUpdateRef.current = true;
-        
+
         setLocalUser((prev) => {
           if (!prev) return prev;
           const keyMap: Record<string, keyof User> = {
@@ -127,7 +127,7 @@ export default function UserMenu({
     const handleStorageFallback = () => {
       // Levantamos el escudo protector
       isLocalUpdateRef.current = true;
-      
+
       setLocalUser((prev) => {
         if (!prev) return prev;
         return {
@@ -222,11 +222,13 @@ export default function UserMenu({
                   localUser.name.charAt(0).toUpperCase()
                 )}
               </div>
-              <div className="flex flex-col">
-                <p className="font-bold text-gray-800 text-sm leading-tight">
+              <div className="flex flex-col min-w-0 flex-1">
+                <p className="font-bold text-gray-800 text-sm leading-tight truncate">
                   {localUser.name}
                 </p>
-                <p className="text-xs text-gray-500">{localUser.email}</p>
+                <p className="text-xs text-gray-500 truncate" title={localUser.email}>
+                  {localUser.email}
+                </p>
               </div>
             </div>
 
