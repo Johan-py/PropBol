@@ -941,6 +941,21 @@ export const resetPasswordService = async (payload: ResetPasswordDTO) => {
 
   tokenAttempts.set(token, attempts + 1);
 
+  // Obtener el usuario para validar que la nueva contraseña sea diferente
+  const user = await findUserById(recovery.usuarioId);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  // Validar que la nueva contraseña sea diferente a la actual
+  if (user.password === password) {
+    throw new AuthError(
+      "La nueva contraseña debe ser diferente a la contraseña actual",
+      400,
+    );
+  }
+
   await prisma.$transaction([
     prisma.recuperacion_password.update({
       where: { id: recovery.id },
