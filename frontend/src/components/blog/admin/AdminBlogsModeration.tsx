@@ -12,7 +12,7 @@ const FILTERS: Array<{
   value: AdminModerationStatus
 }> = [
     { label: 'Pendientes', value: 'PENDIENTE' },
-    { label: 'Aprobados', value: 'APROBADO' },
+    { label: 'Publicados', value: 'PUBLICADO' },
     { label: 'Rechazados', value: 'RECHAZADO' }
   ]
 
@@ -25,7 +25,7 @@ function formatDate(date: string) {
 }
 
 function getStatusStyles(status: AdminModerationStatus) {
-  if (status === 'APROBADO') {
+  if (status === 'PUBLICADO') {
     return 'bg-green-50 text-green-700'
   }
 
@@ -40,8 +40,8 @@ function EmptyState({ filter }: { filter: AdminModerationStatus }) {
   const copy =
     filter === 'PENDIENTE'
       ? 'No hay blogs pendientes por revisar.'
-      : filter === 'APROBADO'
-        ? 'Aún no hay blogs aprobados.'
+      : filter === 'PUBLICADO'
+        ? 'Aún no hay blogs publicados.'
         : 'Todavía no hay blogs rechazados.'
 
   return (
@@ -137,7 +137,7 @@ export default function AdminBlogsModeration() {
         },
         {
           PENDIENTE: 0,
-          APROBADO: 0,
+          PUBLICADO: 0,
           RECHAZADO: 0
         }
       ),
