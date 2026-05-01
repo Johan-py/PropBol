@@ -83,14 +83,6 @@ const getFacebookUserInfo = async (accessToken: string) => {
     );
   }
 
-  if (!data.email?.trim()) {
-    throw new FacebookAuthError(
-      "No se pudo obtener el correo de la cuenta de Facebook. Verifica que el email esté disponible y autorizado en Meta.",
-      "FACEBOOK_AUTH_FAILED",
-      401,
-    );
-  }
-
   return data;
 };
 
@@ -163,11 +155,11 @@ const authenticateWithFacebook = async (
   );
 
   const facebookId = facebookUser.id?.trim();
-  const correo = facebookUser.email?.trim().toLowerCase();
+  const correo = facebookUser.email?.trim().toLowerCase() || null;
 
-  if (!facebookId || !correo) {
+  if (!facebookId) {
     throw new FacebookAuthError(
-      "No se pudo obtener la información de la cuenta de Facebook.",
+      "No se pudo obtener el identificador de la cuenta de Facebook.",
       "FACEBOOK_AUTH_FAILED",
       401,
     );
@@ -181,6 +173,14 @@ const authenticateWithFacebook = async (
         "Esta cuenta de Facebook ya está registrada. Inicia sesión con Facebook desde la pantalla de login.",
         "ACCOUNT_ALREADY_REGISTERED",
         409,
+      );
+    }
+
+    if (!correo) {
+      throw new FacebookAuthError(
+        "No se pudo crear la cuenta porque Facebook no devolvió un correo. Crea tu cuenta manualmente y luego vincula Facebook desde Seguridad.",
+        "FACEBOOK_AUTH_FAILED",
+        401,
       );
     }
 
@@ -218,6 +218,14 @@ const authenticateWithFacebook = async (
     return await buildFacebookSessionResponse(
       userByFacebookId,
       "Inicio de sesión con Facebook exitoso",
+    );
+  }
+
+  if (!correo) {
+    throw new FacebookAuthError(
+      "Esta cuenta de Facebook no está vinculada. Inicia sesión manualmente y vincúlala desde Seguridad.",
+      "ACCOUNT_NOT_REGISTERED",
+      404,
     );
   }
 
