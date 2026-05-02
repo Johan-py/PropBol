@@ -58,6 +58,7 @@ type LocationValue =
     nombre: string
     lat?: number
     lng?: number
+    locationId?: number
   }
 
 // Botón Mock
@@ -370,7 +371,12 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
   const handleLocationChange = (val: LocationValue) => {
     if (typeof val === 'object' && val !== null) {
       setUbicacionTexto(val.nombre)
-      setCoords({ lat: val.lat, lng: val.lng })
+      if (val.locationId) {
+        // Si tenemos locationId, VACIAMOS las coordenadas para que el backend busque en toda la zona
+        setCoords({}) 
+      } else {
+        setCoords({ lat: val.lat, lng: val.lng })
+      }
     } else {
       setUbicacionTexto(val as string)
       setCoords({}) // Si es solo texto del historial, borramos las coordenadas
