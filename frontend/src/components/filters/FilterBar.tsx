@@ -515,10 +515,19 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                 type="button" 
                 onClick={(e) => {
                   e.preventDefault()
+                  
+                  // 1. Vaciamos todos los estados visuales por completo
                   setTipoInmueble('Cualquier tipo')
-                  setModosSeleccionados(['VENTA'])
+                  setModosSeleccionados([]) // Arreglo vacío para desmarcar todos los checkboxes
                   setUbicacionTexto('')
                   setCoords({})
+                  
+                  // 2. Limpiamos la memoria del navegador para matar los filtros "fantasma"
+                  sessionStorage.removeItem('propbol_global_filters')
+                  sessionStorage.removeItem('propbol_modo_recomendados')
+                  sessionStorage.removeItem('propbol_recomendados')
+                  
+                  // 3. Reseteamos la URL a su estado más puro
                   router.push('/busqueda_mapa')
                 }} 
                 className="text-xs font-bold text-stone-400 hover:text-stone-600 underline ml-auto mr-3 transition-colors"
