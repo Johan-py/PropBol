@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
  
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -85,6 +85,7 @@ export default function Navbar() {
     isLoadingMore,
     error,
     isOnline,
+    hasRealtimeUpdate,
     scrollContainerRef,
     saveScrollPosition,
     toggleNotifications,
@@ -316,7 +317,10 @@ export default function Navbar() {
   };
  
   const handleLoginRedirect = () => router.push("/sign-in");
-  const handleOpenLogoutModal = () => setShowLogoutModal(true);
+  const handleOpenLogoutModal = () => {
+    setShowLogoutModal(true);
+    setIsPanelOpen(false);
+  };
  
   const handleCancelLogout = () => {
     if (isLoggingOut) return;
@@ -655,6 +659,12 @@ export default function Navbar() {
         </div>
       </nav>
  
+      {hasRealtimeUpdate && (
+        <div className="fixed right-4 top-20 z-[9999] rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm font-medium text-orange-700 shadow-lg">
+          Nueva notificación recibida
+        </div>
+      )}
+
       <LogoutModal
         show={showLogoutModal}
         isLoggingOut={isLoggingOut}

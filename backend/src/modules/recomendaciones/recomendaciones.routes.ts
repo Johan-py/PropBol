@@ -5,12 +5,12 @@ import {
   ordenarPorAfinidad,
   invalidarCacheUsuario
 } from './recomendaciones.controller.js'
-import { validarJWT } from '../../middleware/validarJWT.js'
+import { validarJWT, validarJWTOpcional } from '../../middleware/validarJWT.js'
 
 const router = Router()
 
-router.get('/globales', validarJWT, getRecomendacionesGlobales)
-router.get('/inmuebles', validarJWT, getInmueblesRecomendados)
+router.get('/globales', validarJWTOpcional, getRecomendacionesGlobales)
+router.get('/inmuebles', validarJWTOpcional, getInmueblesRecomendados)
 router.post('/ordenar', validarJWT, ordenarPorAfinidad)
 router.post('/invalidar-cache', validarJWT, invalidarCacheUsuario)
 

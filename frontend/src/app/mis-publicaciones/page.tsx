@@ -9,7 +9,7 @@ export default function MisPublicacionesList() {
   const [publicaciones, setPublicaciones] = useState<MisPublicacionesItem[]>([])
   const [estadisticas, setEstadisticas] = useState<{
     totalPublicaciones: number
-    limite: number
+    limite: number // Este valor se obtiene del backend y puede ser 3 para usuarios sin suscripción o el límite del plan para usuarios con suscripción
     disponibles: number
     tieneSuscripcion: boolean
     suscripcion: {
@@ -20,8 +20,8 @@ export default function MisPublicacionesList() {
     } | null
   }>({
     totalPublicaciones: 0,
-    limite: 2,
-    disponibles: 0,
+    limite: 3, // Límite gratuito por defecto 
+    disponibles: 0, // Calculado luego de obtener datos del backend
     tieneSuscripcion: false,
     suscripcion: null
   })
@@ -43,7 +43,12 @@ export default function MisPublicacionesList() {
       superficieM2: pub.inmueble?.superficieM2 ? parseFloat(pub.inmueble.superficieM2) : null,
       imagenUrl: pub.multimedia?.[0]?.url || pub.usuario?.avatar || null,
       tipoOperacion: pub.inmueble?.tipoAccion || 'VENTA',
-      activa: pub.estado === "ACTIVA"  // true = ACTIVA, false = PAUSADA o ELIMINADA
+      activa: pub.estado === "ACTIVA",  // true = ACTIVA, false = PAUSADA o ELIMINADA
+      metricas: pub.metricas || {
+        visitas: 0,
+        favoritos: 0,
+        contactos: 0
+      }
     }
   }
 
@@ -174,9 +179,6 @@ export default function MisPublicacionesList() {
             {filtro === 'activas' && 'No tienes publicaciones activas.'}
             {filtro === 'pausadas' && 'No tienes publicaciones pausadas.'}
           </p>
-          <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
-            Crear Nueva Publicación
-          </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

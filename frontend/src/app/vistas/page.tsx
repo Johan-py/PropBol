@@ -57,6 +57,11 @@ export default function VistasRecientesPage() {
     const [properties, setProperties] = useState<any[]>([]);
     const [filteredProperties, setFilteredProperties] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+
+    // --- ESTADOS DE PAGINACIÓN ---
+    const [currentPage, setCurrentPage] = useState(1);
+    const propertiesPerPage = 8; // Muestra exactamente 2 filas de 4
+
     const dateInputRef = useRef<HTMLInputElement>(null);
 
     const fetchHistorial = async () => {
@@ -66,8 +71,8 @@ export default function VistasRecientesPage() {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
-            setProperties(data);
-            setFilteredProperties(data);
+            setProperties(data.data);
+            setFilteredProperties(data.data);
         } catch (error) {
             console.error("Error cargando historial:", error);
         } finally {
@@ -92,7 +97,11 @@ export default function VistasRecientesPage() {
     };
 
     const handleClearHistory = async () => {
+        // BUG FIX: Evita el confirm si no hay nada que borrar
+        if (properties.length === 0) return;
+
         if (!confirm("¿Deseas borrar todo tu historial de vistas?")) return;
+
         const token = localStorage.getItem('token');
         try {
             await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/perfil/historial/vistas`, {
@@ -118,7 +127,9 @@ export default function VistasRecientesPage() {
                 <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                     <div>
                         <h1 className="text-xl md:text-2xl font-bold text-gray-900">Propiedades vistas recientemente</h1>
-                        <p className="text-gray-500 text-xs">{filteredProperties.length} propiedades encontradas</p>
+                        <p className="text-gray-500 text-xs">
+                            {filteredProperties.length} propiedades encontradas en total
+                        </p>
                     </div>
 
                     <div className="flex gap-3 items-center">
@@ -139,6 +150,7 @@ export default function VistasRecientesPage() {
                             </button>
                         </div>
 
+                        {/* BOTÓN CON UX MEJORADO: Deshabilitado si el historial está vacío */}
                         <button
                             onClick={handleClearHistory}
                             className="flex items-center gap-2 px-4 py-2 bg-white border border-red-100 text-red-600 rounded-lg shadow-sm text-sm font-medium hover:bg-red-50 transition-colors"
@@ -148,7 +160,8 @@ export default function VistasRecientesPage() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* GRILLA DE PROPIEDADES */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 min-h-[600px]">
                     {properties.length === 0 ? (
                         <div className="col-span-full text-center py-20 text-gray-400 font-medium">
                             Aún no has visto ninguna propiedad
@@ -163,10 +176,53 @@ export default function VistasRecientesPage() {
                         ))
                     ) : (
                         <div className="col-span-full text-center py-20 text-gray-400 font-medium">
-                            No se encontraron propiedades para esta selección.
+                            No se encontraron propiedades para esta fecha.
                         </div>
                     )}
                 </div>
+
+                {/* PAGINACIÓN DINÁMICA: Aparece automáticamente si hay más de 8 registros */}
+                {totalPages > 1 && (
+                    <div className="flex justify-center items-center mt-12 mb-10 gap-2">
+                        <button
+                            onClick={() => paginate(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className={`p-2 rounded-lg border transition-all ${
+                                currentPage === 1
+                                    ? 'text-gray-300 border-gray-100 cursor-not-allowed'
+                                    : 'text-black border-gray-300 hover:bg-gray-100'
+                            }`}
+                        >
+                            <ChevronLeft size={20} />
+                        </button>
+
+                        {[...Array(totalPages)].map((_, i) => (
+                            <button
+                                key={i + 1}
+                                onClick={() => paginate(i + 1)}
+                                className={`w-10 h-10 rounded-lg text-sm font-bold transition-all ${
+                                    currentPage === i + 1
+                                        ? 'bg-[#E87B00] text-white shadow-md'
+                                        : 'bg-white text-black border border-gray-300 hover:bg-gray-50'
+                                }`}
+                            >
+                                {i + 1}
+                            </button>
+                        ))}
+
+                        <button
+                            onClick={() => paginate(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className={`p-2 rounded-lg border transition-all ${
+                                currentPage === totalPages
+                                    ? 'text-gray-300 border-gray-100 cursor-not-allowed'
+                                    : 'text-black border-gray-300 hover:bg-gray-100'
+                            }`}
+                        >
+                            <ChevronRight size={20} />
+                        </button>
+                    </div>
+                )}
             </div>
         </main>
     );

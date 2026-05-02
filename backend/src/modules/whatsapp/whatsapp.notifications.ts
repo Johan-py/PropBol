@@ -85,6 +85,21 @@ export const notificarPagoConfirmado = async (
   return enviarMensajeWhatsapp({ telefono: datos.telefono, mensaje });
 };
 
+export const notificarCambioPassword = async (
+  usuarioId: number
+): Promise<NotificacionWhatsappResult> => {
+  const datos = await obtenerDatosWhatsapp(usuarioId);
+  if (!datos) return { success: false, omitido: true };
+
+  const mensaje =
+    `⚠️ *Seguridad: Cambio de contraseña*\n\n` +
+    `Hola ${datos.nombre}, te informamos que la contraseña de tu cuenta en *PropBol* ha sido actualizada.\n\n` +
+    `Si no realizaste este cambio, por favor contactate con soporte de inmediato.\n\n` +
+    `_PropBol - Tu plataforma inmobiliaria en Bolivia_`;
+
+  return enviarMensajeWhatsapp({ telefono: datos.telefono, mensaje });
+};
+
 // ─── Notificación genérica (para cualquier otro evento) ───────────────────
 export const notificarMensajeGenerico = async (
   usuarioId: number,

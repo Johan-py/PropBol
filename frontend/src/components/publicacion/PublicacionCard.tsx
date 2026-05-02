@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Bath, BedDouble, MapPin, Square, Trash2 } from 'lucide-react'
+import { Bath, BedDouble, MapPin, Square, Trash2, Eye, Heart, Mail } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { publicacionService } from '@/services/publicacionn.service'
 import type { MisPublicacionesItem } from '@/types/publicacion'
@@ -89,16 +89,14 @@ export default function PublicacionCard({
     setError('')
   }
 
-  const precioFormateado = `Bs. ${publicacion.precio.toLocaleString('es-BO')}`
+  const precioFormateado = `USD ${publicacion.precio.toLocaleString('en-US')}`
   const tipoOperacionTexto = publicacion.tipoOperacion || 'Venta / Alquiler'
 
   const irAEditar = () => {
     router.push(`/mis-publicaciones/${publicacion.id}/editar`)
   }
 
-  const irAParametros = () => {
-  router.push(`/propiedades/parametros?publicacionId=${publicacion.id}&origen=mis-publicaciones`)
-  }
+  const mostrarMetricas = false   // Cambia a true si quieres mostrar las métricas en el card
 
   return (
     <>
@@ -182,6 +180,38 @@ export default function PublicacionCard({
           </div>
 
           <div className="mt-3 flex flex-col gap-2">
+            {mostrarMetricas && publicacion.metricas && (
+              <div className="grid grid-cols-3 gap-3 border-b border-gray-200 pb-3">
+                <div className="flex flex-col items-center text-center">
+                  <div className="flex items-center justify-center gap-1 text-gray-600">
+                    <Eye size={16} className="text-blue-500" />
+                    <span className="text-xs text-gray-500">Visitas</span>
+                  </div>
+                  <span className="mt-1 text-sm font-semibold text-gray-900">
+                    {publicacion.metricas.visitas}
+                  </span>
+                </div>
+                <div className="flex flex-col items-center text-center">
+                  <div className="flex items-center justify-center gap-1 text-gray-600">
+                    <Heart size={16} className="text-red-500" />
+                    <span className="text-xs text-gray-500">Favoritos</span>
+                  </div>
+                  <span className="mt-1 text-sm font-semibold text-gray-900">
+                    {publicacion.metricas.favoritos}
+                  </span>
+                </div>
+                <div className="flex flex-col items-center text-center">
+                  <div className="flex items-center justify-center gap-1 text-gray-600">
+                    <Mail size={16} className="text-green-500" />
+                    <span className="text-xs text-gray-500">Contactos</span>
+                  </div>
+                  <span className="mt-1 text-sm font-semibold text-gray-900">
+                    {publicacion.metricas.contactos}
+                  </span>
+                </div>
+              </div>
+            )}
+
             <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={irAEditar}
@@ -198,14 +228,6 @@ export default function PublicacionCard({
                 Eliminar
               </button>
             </div>
-
-            <button
-              type="button"
-              onClick={irAParametros}
-              className="w-full rounded-lg bg-[#F3EBDD] px-4 py-2 text-left text-[14px] font-semibold text-[#D97706] transition hover:bg-[#eee2cf]"
-            >
-              + Añadir otros parámetros
-            </button>
           </div>
         </div>
       </div>
