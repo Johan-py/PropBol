@@ -24,6 +24,7 @@ export type SecurityUserRecord = {
   correo: string;
   nombre: string;
 };
+//prueba
 
 export const findSecurityUserByIdRepository = async (
   userId: number,

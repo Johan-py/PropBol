@@ -46,7 +46,7 @@ export default function TwoFactorSection() {
               Authorization: `Bearer ${token}`,
             },
 
-            cache: "no-store",
+        
           },
         );
 
