@@ -9,7 +9,7 @@ export default function MisPublicacionesList() {
   const [publicaciones, setPublicaciones] = useState<MisPublicacionesItem[]>([])
   const [estadisticas, setEstadisticas] = useState<{
     totalPublicaciones: number
-    limite: number
+    limite: number // Este valor se obtiene del backend y puede ser 3 para usuarios sin suscripción o el límite del plan para usuarios con suscripción
     disponibles: number
     tieneSuscripcion: boolean
     suscripcion: {
@@ -20,8 +20,8 @@ export default function MisPublicacionesList() {
     } | null
   }>({
     totalPublicaciones: 0,
-    limite: 2,
-    disponibles: 0,
+    limite: 3, // Límite gratuito por defecto 
+    disponibles: 0, // Calculado luego de obtener datos del backend
     tieneSuscripcion: false,
     suscripcion: null
   })

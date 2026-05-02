@@ -86,8 +86,8 @@ export const validarPublicacionesFree = async (req: Request, res: Response) => {
       where: { usuarioId: userId },
     });
 
-    const limiteGratis = 2;
-    const restantes = Math.max(limiteGratis - publicaciones, 0);
+    const limiteGratis = 3; // Límite gratuito de publicaciones
+    const restantes = Math.max(limiteGratis - publicaciones, 0); // Calcula cuántas publicaciones gratuitas le quedan al usuario
 
     res.json({ restantes });
   } catch (_error) {
