@@ -250,6 +250,18 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
         router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
       }
     }))
+    const orden = params.get('orden')
+    if (orden === 'recomendados') {
+      filters.push({
+        id: 'orden-recomendados',
+        label: 'Recomendados',
+        onRemove: () => {
+          sessionStorage.removeItem('propbol_modo_recomendados')
+          sessionStorage.removeItem('propbol_recomendados')
+          removeParam(['orden']) // Esto lo quita de la URL y recarga
+        }
+      })
+    }
 
     return filters
   }, [searchParams, propertyTypes])
@@ -321,6 +333,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     params.delete('lat')
     params.delete('lng')
     params.delete('radius')
+    params.delete('orden')
     try {
       const merged = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}') as {
         locationId?: string | number
@@ -433,24 +446,40 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
            
             <button
               type="button"
-              onClick={async () => {
+              onClick={async (e) => {
+                e.preventDefault()
+
+                // Copiamos los filtros actuales de la URL en vez de destruirlos
+                const params = new URLSearchParams(searchParams?.toString() || '')
+
+                if (isRecomendadosActive) {
+                  // MODO: APAGAR
+                  sessionStorage.removeItem('propbol_modo_recomendados')
+                  sessionStorage.removeItem('propbol_recomendados')
+                  params.delete('orden')
+                  router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
+                  return // Nos detenemos aquí
+                }
+
+                // MODO: ENCENDER
                 const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
-                const params = new URLSearchParams({ orden: 'recomendados' })
                 if (token) {
-                  const res = await fetch(`/api/inmuebles/recomendados?${params}`, {
+                  // Llamada a la API respetando los parámetros de búsqueda actuales (ej. si estaban en Cochabamba)
+                  const fetchParams = new URLSearchParams({ orden: 'recomendados' })
+                  const res = await fetch(`/api/inmuebles/recomendados?${fetchParams}`, {
                     headers: { Authorization: `Bearer ${token}` }
                   })
                   const data = await res.json()
-                  console.log('Recomendados:', data)
                   if (data.success && data.data.length > 0) {
-                    // Guardar recomendaciones en sessionStorage para que ResultadosBusqueda las lea
                     sessionStorage.setItem('recomendaciones_resultado', JSON.stringify(data.data))
-                      router.push('/busqueda_mapa?orden=recomendados')
-          }
-                } else {
-                  // Usuario no logueado — redirigir a búsqueda general
-                  router.push('/busqueda_mapa?orden=recomendados')
+                    sessionStorage.setItem('propbol_modo_recomendados', 'true')
+                    sessionStorage.setItem('propbol_recomendados', JSON.stringify(data.data))
+                  }
                 }
+                
+                // Actualizamos la URL manteniendo el resto de filtros (zona, precio, etc.) y agregando orden=recomendados
+                params.set('orden', 'recomendados')
+                router.push(`/busqueda_mapa?${params.toString()}`)
               }}
               className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${
                 isRecomendadosActive
@@ -458,7 +487,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                   : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
               }`}
             >
-              <Award className="w-4 h-4 text-stone-500" />
+              <Award className={`w-4 h-4 ${isRecomendadosActive ? 'text-white' : 'text-stone-500'}`} />
               <span>Recomendados</span>
             </button>
           </div>
