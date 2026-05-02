@@ -29,24 +29,13 @@ export default function TwoFactorSection() {
   };
 
   useEffect(() => {
-    const fetch2FAStatus = async (isInitialLoad = true) => {
-      console.log('🔍 Consultando estado 2FA...', { isInitialLoad });
-      
-      if (isInitialLoad) {
-        setLoadingStatus(true);
-      }
-      
+    const fetch2FAStatus = async () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          console.log('❌ No hay token');
-          if (isInitialLoad) {
-            setLoadingStatus(false);
-          }
+          setLoadingStatus(false);
           return;
         }
-
-        console.log('📡 Haciendo petición a:', `${process.env.NEXT_PUBLIC_API_URL}/api/security/2fa-status`);
 
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/security/2fa-status`,
@@ -55,46 +44,26 @@ export default function TwoFactorSection() {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
-              "Cache-Control": "no-cache",
-              "Pragma": "no-cache",
             },
-            cache: "no-store",
+
+        
           },
         );
 
         const data = await res.json();
-        console.log('📥 Respuesta del servidor:', data);
 
         if (res.ok) {
-          const isEnabled = Boolean(data.two_factor_activo);
-          console.log('✅ Actualizando estado a:', isEnabled);
-          setIsTwoFactorEnabled(isEnabled);
+          setIsTwoFactorEnabled(Boolean(data.two_factor_activo));
           setIsGoogleUser(Boolean(data.isGoogleUser));
-        } else {
-          console.log('❌ Error en respuesta:', res.status, data);
         }
-      } catch (error) {
-        console.error("❌ Error al obtener estado 2FA:", error);
+      } catch {
+        console.error("No se pudo obtener el estado 2FA");
       } finally {
-        if (isInitialLoad) {
-          setLoadingStatus(false);
-        }
+        setLoadingStatus(false);
       }
     };
 
-    fetch2FAStatus(true);
-
-    // Consultar también cuando la ventana vuelve a tener foco
-    const handleFocus = () => {
-      console.log('👁️ Ventana recuperó el foco, consultando estado...');
-      fetch2FAStatus(false);
-    };
-
-    window.addEventListener("focus", handleFocus);
-
-    return () => {
-      window.removeEventListener("focus", handleFocus);
-    };
+    fetch2FAStatus();
   }, []);
 
   const handleConfirm = async () => {
@@ -128,18 +97,13 @@ export default function TwoFactorSection() {
       );
 
       const data = await res.json();
-      console.log('📥 Respuesta de activar 2FA:', data);
 
       if (res.ok) {
-        console.log('✅ 2FA activado, valor recibido:', data.two_factor_activo);
         setShowModal(false);
         setPassword("");
         setShowPassword(false);
         setError("");
-        // Usar el valor que retorna el backend
-        const newState = Boolean(data.two_factor_activo);
-        console.log('🔄 Actualizando estado local a:', newState);
-        setIsTwoFactorEnabled(newState);
+        setIsTwoFactorEnabled(true);
         return;
       }
 
