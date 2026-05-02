@@ -6,7 +6,7 @@ import type { ZonaPredefinida } from '@/types/zona'
 
 const MIN_ZOOM_LABELS = 13
 const MAX_LABEL_CHARS = 32
-const MAX_LABEL_CHARS_SELECTED = 44
+const MAX_LABEL_CHARS_SELECTED = 50
 
 function cerrarAnillo(coords: [number, number][]): [number, number][] {
   if (coords.length < 2) return coords
@@ -71,27 +71,88 @@ function dimensionarEtiqueta(
   maxCharsPorLinea: number
   lineas: number
 } {
-  const zoomFactor = Math.max(0, Math.min(1, (zoom - MIN_ZOOM_LABELS) / 5))
-  const selectedBoost = isSelected ? 0.12 : 0
-  const scale = Math.max(0.72, Math.min(1.15, 0.78 + zoomFactor * 0.37 + selectedBoost))
+  // Escala proporcional al zoom: mientras más bajo el zoom, más pequeño el scale
+  // Usamos zoom directamente para un ajuste continuo
+  const selectedBoost = isSelected && zoom >= MIN_ZOOM_LABELS ? 0.04 : 0
+  
+  // Scale proporcional: reduce continuamente conforme el zoom disminuye
+  // Para zoom=13: 0.64, para zoom=18: ~1.02, para zoom<13: reduce hasta 0.36
+  const zoomOffset = Math.max(-MIN_ZOOM_LABELS, zoom - MIN_ZOOM_LABELS) // Puede ser negativo
+  const zoomProportional = 0.64 + (zoomOffset / 8) * 0.38 // Rango: 0.36 a ~1.02
+  const scale = Math.max(0.36, Math.min(1.12, zoomProportional + selectedBoost))
 
-  const fontSize = Math.round((11.5 * scale) * 10) / 10
-  const lineHeight = Math.round((fontSize * 1.18) * 10) / 10
   const paddingX = Math.round((8 * scale) * 10) / 10
-  const paddingY = Math.round((4 * scale) * 10) / 10
+  const paddingY = Math.round((5 * scale) * 10) / 10
 
-  const maxCharsPorLineaBase = Math.max(8, Math.round(13 * scale))
-  const maxCharsPorLinea = isSelected ? maxCharsPorLineaBase + 2 : maxCharsPorLineaBase
-  const lineasTexto = construirLineasEtiqueta(nombre, maxCharsPorLinea)
+  // Calcular fontSize inicial basado en escala
+  let fontSize = Math.round((11.5 * scale) * 10) / 10
+  let lineHeight = Math.round((fontSize * 1.20) * 10) / 10
+
+  const widthMin = Math.round(80 * scale)
+  const widthMax = Math.round(135 * scale)
+  
+  // Ser agresivo con word wrap para AMBOS casos (seleccionada y no seleccionada)
+  const factorAnchoWrap = isSelected ? 0.70 : 0.75
+  const charWidthEstimado = fontSize * 0.56
+  const anchoDisponible = widthMax * factorAnchoWrap - paddingX * 2 - 16
+  
+  // Intentar iterativamente para encontrar fontSize que funcione sin quebrar palabras
+  let maxCharsPorLinea = Math.max(4, Math.floor(anchoDisponible / charWidthEstimado))
+  let lineasTexto = construirLineasEtiqueta(nombre, maxCharsPorLinea)
+  let largoLineaMasLarga = lineasTexto.reduce((max, linea) => Math.max(max, linea.length), 0)
+  
+  // Iterar para reducir fontSize si hay palabras que no caben
+  let intentos = 0
+  while (largoLineaMasLarga > maxCharsPorLinea && fontSize > 7 && intentos < 5) {
+    fontSize = Math.max(7, Math.round((fontSize - 0.5) * 10) / 10)
+    lineHeight = Math.round((fontSize * 1.20) * 10) / 10
+    const newAnchoDisponible = widthMax * factorAnchoWrap - paddingX * 2 - 16
+    const newCharWidth = fontSize * 0.56
+    maxCharsPorLinea = Math.max(4, Math.floor(newAnchoDisponible / newCharWidth))
+    lineasTexto = construirLineasEtiqueta(nombre, maxCharsPorLinea)
+    largoLineaMasLarga = lineasTexto.reduce((max, linea) => Math.max(max, linea.length), 0)
+    intentos++
+  }
+  
   const lineas = lineasTexto.length
-  const largoLineaMasLarga = lineasTexto.reduce((max, linea) => Math.max(max, linea.length), 0)
-  const widthMin = Math.round(84 * scale)
-  const widthMax = Math.round(142 * scale)
-  const widthObjetivo = Math.round(largoLineaMasLarga * (fontSize * 0.62) + paddingX * 2 + 12)
-  const width = Math.min(widthMax, Math.max(widthMin, widthObjetivo))
+  
+  // Calcular ancho objetivo basado en el contenido
+  const widthObjetivo = Math.round(largoLineaMasLarga * (fontSize * 0.56) + paddingX * 2 + 18)
+  let width = Math.min(widthMax, Math.max(widthMin, widthObjetivo))
+  
+  // Si aún así excede, reducir fontSize más
+  if (widthObjetivo > widthMax && largoLineaMasLarga > 0) {
+    const espacioDisponible = widthMax - paddingX * 2 - 18
+    const fontSizeAjustado = Math.max(
+      7,
+      (espacioDisponible / largoLineaMasLarga) * 0.85
+    )
+    
+    if (fontSizeAjustado < fontSize) {
+      fontSize = Math.round(fontSizeAjustado * 10) / 10
+      lineHeight = Math.round((fontSize * 1.20) * 10) / 10
+    }
+  }
+  
+  // Recalcular width con el fontSize final
+  const finalWidthObjetivo = Math.round(largoLineaMasLarga * (fontSize * 0.56) + paddingX * 2 + 18)
+  width = Math.min(widthMax, Math.max(widthMin, finalWidthObjetivo))
+  
+  // Cuando está seleccionada con múltiples líneas, considerar reducir fontSize más
+  if (isSelected && lineas > 1) {
+    const totalHeightNeeded = lineas * lineHeight + paddingY * 2 + 10
+    const maxHeightReasonable = Math.round(70 * scale)
+    
+    if (totalHeightNeeded > maxHeightReasonable) {
+      const reductionFactor = Math.min(0.90, maxHeightReasonable / totalHeightNeeded)
+      fontSize = Math.max(7, Math.round(fontSize * reductionFactor * 10) / 10)
+      lineHeight = Math.round((fontSize * 1.20) * 10) / 10
+    }
+  }
+  
   const height = Math.max(
-    Math.round(28 * scale),
-    Math.round(lineas * lineHeight + paddingY * 2 + 4)
+    Math.round(30 * scale),
+    Math.round(lineas * lineHeight + paddingY * 2 + 10)
   )
 
   return { width, height, fontSize, lineHeight, paddingX, paddingY, maxCharsPorLinea, lineas }
@@ -123,6 +184,15 @@ function construirLineasEtiqueta(nombre: string, maxCharsPorLinea: number): stri
   let actual = ''
 
   for (const palabra of palabras) {
+    // Si una palabra sola excede el límite, retornarla como está
+    // (el caller reducirá el fontSize si es necesario)
+    if (palabra.length > maxCharsPorLinea) {
+      if (actual) lineas.push(actual)
+      lineas.push(palabra)
+      actual = ''
+      continue
+    }
+
     const candidata = actual ? `${actual} ${palabra}` : palabra
     if (candidata.length <= maxCharsPorLinea) {
       actual = candidata
@@ -131,17 +201,8 @@ function construirLineasEtiqueta(nombre: string, maxCharsPorLinea: number): stri
 
     if (actual) {
       lineas.push(actual)
-      actual = palabra
-      continue
     }
-
-    // Si una sola palabra es muy larga, se trocea para evitar desborde.
-    let resto = palabra
-    while (resto.length > maxCharsPorLinea) {
-      lineas.push(resto.slice(0, maxCharsPorLinea))
-      resto = resto.slice(maxCharsPorLinea)
-    }
-    actual = resto
+    actual = palabra
   }
 
   if (actual) lineas.push(actual)
@@ -172,8 +233,9 @@ function esValido(coords: unknown): coords is [number, number][] {
 
 // criterio 20: word-wrap; criterio 8: cursor pointer; criterio 23: tabindex + keydown→click
 function labelIcon(nombre: string, isSelected: boolean, zoom: number): L.DivIcon {
-  const maxChars = isSelected ? MAX_LABEL_CHARS_SELECTED : MAX_LABEL_CHARS
-  const nombreVisible = truncarNombreEtiqueta(nombre, maxChars)
+  // Cuando está seleccionada, permitir más caracteres para el word wrap
+  const maxChars = isSelected ? MAX_LABEL_CHARS_SELECTED * 1.3 : MAX_LABEL_CHARS
+  const nombreVisible = truncarNombreEtiqueta(nombre, Math.round(maxChars))
   const {
     width,
     height,
@@ -208,10 +270,11 @@ function labelIcon(nombre: string, isSelected: boolean, zoom: number): L.DivIcon
         min-height: ${height}px;
         text-align: center;
         overflow: hidden;
-        overflow-wrap: anywhere;
+        overflow-wrap: break-word;
         word-break: break-word;
         hyphens: auto;
         white-space: normal;
+        word-spacing: -0.05em;
         cursor: pointer;
         text-shadow: ${shadow};
         outline: 2px solid transparent;
@@ -220,8 +283,9 @@ function labelIcon(nombre: string, isSelected: boolean, zoom: number): L.DivIcon
         display: flex;
         align-items: center;
         justify-content: center;
+        box-sizing: border-box;
       ">
-      <span title="${nombreCompletoEscapado}" aria-label="${nombreCompletoEscapado}" style="display:block;max-width:100%;white-space:normal;overflow-wrap:anywhere;word-break:break-word;">
+      <span title="${nombreCompletoEscapado}" aria-label="${nombreCompletoEscapado}" style="display:block;max-width:100%;white-space:normal;overflow-wrap:break-word;word-break:break-word;width:100%;overflow:hidden;">
         ${textoHtml}
       </span>
     </div>`,
@@ -304,7 +368,7 @@ function ZonaInteractiva({
           lineJoin: 'round',
           lineCap: 'round'
         }}
-        bubblingMouseEvents={false as any}
+        bubblingMouseEvents={false}
         eventHandlers={{
           add: () => {
             const element = polygonRef.current?.getElement() as SVGPathElement | null
@@ -347,7 +411,7 @@ function ZonaInteractiva({
         }}
       />
 
-      {(zoom >= MIN_ZOOM_LABELS || selected) && (
+      {zoom >= MIN_ZOOM_LABELS && (
         <Marker
           position={center}
           icon={labelIcon(zona.nombre, selected, zoom)}
