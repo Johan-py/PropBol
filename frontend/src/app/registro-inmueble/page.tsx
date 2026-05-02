@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
@@ -44,7 +43,7 @@ export default function MiRegistroPage() {
     descripcion: ''
   })
 
-  const [estado, setEstado] = useState<'ninguno' | 'exito' | 'error'>('ninguno')
+  const [estado, setEstado] = useState< 'idle'|'confirmando' | 'publicando' | 'exito' | 'error_publicacion'>('idle');
   const [mensajeError, setMensajeError] = useState('')
   const [campoError, setCampoError] = useState<CampoError>(null)
   const [pinCoords, setPinCoords] = useState<{ lat: number; lng: number } | null>(null)
@@ -98,7 +97,7 @@ export default function MiRegistroPage() {
     descripcion: useRef<HTMLTextAreaElement>(null),
   }
 
-  const erroresHU5: ErrorValidacion[] = campoError && estado === 'error' && mensajeError
+  const erroresHU5: ErrorValidacion[] = campoError && estado === 'error_publicacion' && mensajeError
     ? [{ campo: campoError as any, seccion: "Información Básica", mensaje: mensajeError }]
     : [];
 
@@ -143,7 +142,7 @@ export default function MiRegistroPage() {
   const limpiarError = () => {
     setMensajeError('')
     setCampoError(null)
-    setEstado('ninguno')
+    setEstado('idle')
   }
 
   const limpiarSoloNumeros = (valor: string) => valor.replace(/\D/g, '')
@@ -176,14 +175,14 @@ export default function MiRegistroPage() {
       if (numeroLimitado < 1) {
         setMensajeError('PRECIO DEBE SER MÍNIMO 1')
         setCampoError('precio')
-        setEstado('error')
+        setEstado('error_publicacion')
         return
       }
 
       if (numeroLimitado >= 999999999) {
         setMensajeError('Has llegado al máximo de 999.999.999')
         setCampoError('precio')
-        setEstado('error')
+        setEstado('error_publicacion')
         return
       }
 
@@ -208,7 +207,7 @@ export default function MiRegistroPage() {
       if (numeroLimitado >= 10000000) {
         setMensajeError('Has llegado al máximo de 10.000.000')
         setCampoError('area')
-        setEstado('error')
+        setEstado('error_publicacion')
         return
       }
 
@@ -229,7 +228,7 @@ export default function MiRegistroPage() {
         setDatos({ ...datos, habitaciones: value })
         setMensajeError('HABITACIONES DEBE SER MÍNIMO 1')
         setCampoError('habitaciones')
-        setEstado('error')
+        setEstado('error_publicacion')
         return
       }
 
@@ -237,7 +236,7 @@ export default function MiRegistroPage() {
         setDatos({ ...datos, habitaciones: '50' })
         setMensajeError('Has llegado al máximo de 50 habitaciones')
         setCampoError('habitaciones')
-        setEstado('error')
+        setEstado('error_publicacion')
         return
       }
 
@@ -260,7 +259,7 @@ export default function MiRegistroPage() {
         setDatos({ ...datos, banos: value })
         setMensajeError('BAÑOS DEBE SER MÍNIMO 1')
         setCampoError('banos')
-        setEstado('error')
+        setEstado('error_publicacion')
         return
       }
 
@@ -268,7 +267,7 @@ export default function MiRegistroPage() {
         setDatos({ ...datos, banos: '50' })
         setMensajeError('Has llegado al máximo de 50 baños')
         setCampoError('banos')
-        setEstado('error')
+        setEstado('error_publicacion')
         return
       }
 
@@ -285,7 +284,7 @@ export default function MiRegistroPage() {
       if (!value) {
         setMensajeError('DEBE SELECCIONAR EL TIPO DE OPERACIÓN')
         setCampoError('operacion')
-        setEstado('error')
+        setEstado('error_publicacion')
       } else {
         if (campoError === 'operacion') limpiarError()
       }
@@ -297,15 +296,15 @@ export default function MiRegistroPage() {
       if (!tituloLimpio) {
         setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
         setCampoError('titulo')
-        setEstado('error')
+        setEstado('error_publicacion')
       } else if (tituloLimpio.length < 20) {
         setMensajeError('TÍTULO MUY CORTO, DEBE TENER MÍNIMO 20 CARACTERES')
         setCampoError('titulo')
-        setEstado('error')
+        setEstado('error_publicacion')
       } else if (tituloLimpio.length >= 80) {
         setMensajeError('Has llegado al máximo de 80 caracteres')
         setCampoError('titulo')
-        setEstado('error')
+        setEstado('error_publicacion')
       } else {
         if (campoError === 'titulo') limpiarError()
       }
@@ -317,15 +316,15 @@ export default function MiRegistroPage() {
       if (!descripcionLimpia) {
         setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
         setCampoError('descripcion')
-        setEstado('error')
+        setEstado('error_publicacion')
       } else if (descripcionLimpia.length < 50) {
         setMensajeError('DESCRIPCIÓN MUY CORTA, DEBE TENER MÍNIMO 50 CARACTERES')
         setCampoError('descripcion')
-        setEstado('error')
+        setEstado('error_publicacion')
       } else if (descripcionLimpia.length >= 300) {
         setMensajeError('Has llegado al máximo de 300 caracteres')
         setCampoError('descripcion')
-        setEstado('error')
+        setEstado('error_publicacion')
       } else {
         if (campoError === 'descripcion') limpiarError()
       }
@@ -337,15 +336,15 @@ export default function MiRegistroPage() {
       if (!direccionLimpia) {
         setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
         setCampoError('direccion')
-        setEstado('error')
+        setEstado('error_publicacion')
       } else if (direccionLimpia.length < 8) {
         setMensajeError('DIRECCIÓN MUY CORTA, MÍNIMO 8 CARACTERES')
         setCampoError('direccion')
-        setEstado('error')
+        setEstado('error_publicacion')
       } else if (direccionLimpia.length >= 80) {
         setMensajeError('Has llegado al máximo de 80 caracteres')
         setCampoError('direccion')
-        setEstado('error')
+        setEstado('error_publicacion')
       } else {
         if (campoError === 'direccion') limpiarError()
       }
@@ -357,15 +356,15 @@ export default function MiRegistroPage() {
       if (!zonaLimpia) {
         setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
         setCampoError('zona')
-        setEstado('error')
+        setEstado('error_publicacion')
       } else if (zonaLimpia.length < 8) {
         setMensajeError('ZONA MUY CORTA, MÍNIMO 8 CARACTERES')
         setCampoError('zona')
-        setEstado('error')
+        setEstado('error_publicacion')
       } else if (zonaLimpia.length >= 80) {
         setMensajeError('Has llegado al máximo de 80 caracteres')
         setCampoError('zona')
-        setEstado('error')
+        setEstado('error_publicacion')
       } else {
         if (campoError === 'zona') limpiarError()
       }
@@ -373,7 +372,7 @@ export default function MiRegistroPage() {
   }
 
   const guardarPropiedad = async () => {
-    setEstado('ninguno')
+    setEstado('idle')
     setMensajeError('')
     setCampoError(null)
 
@@ -390,119 +389,119 @@ export default function MiRegistroPage() {
     if (!datos.operacion) {
       setMensajeError('DEBE SELECCIONAR EL TIPO DE OPERACIÓN')
       setCampoError('operacion')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
     if (!tituloLimpio) {
       setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
       setCampoError('titulo')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
     if (tituloLimpio.length < 20) {
       setMensajeError('TÍTULO MUY CORTO, DEBE TENER MÍNIMO 20 CARACTERES')
       setCampoError('titulo')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
     if (tituloLimpio.length >= 80) {
       setMensajeError('Has llegado al máximo de 80 caracteres')
       setCampoError('titulo')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
     if (precioNumero === null) {
       setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
       setCampoError('precio')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
     if (precioNumero < 1) {
       setMensajeError('PRECIO DEBE SER MÍNIMO 1')
       setCampoError('precio')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
     if (precioNumero >= 999999999) {
       setMensajeError('Has llegado al máximo de 999.999.999')
       setCampoError('precio')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
     if (areaNumero !== null && areaNumero >= 10000000) {
       setMensajeError('Has llegado al máximo de 10.000.000')
       setCampoError('area')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
     if (!descripcionLimpia) {
       setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
       setCampoError('descripcion')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
     if (descripcionLimpia.length < 50) {
       setMensajeError('DESCRIPCIÓN MUY CORTA, DEBE TENER MÍNIMO 50 CARACTERES')
       setCampoError('descripcion')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
     if (descripcionLimpia.length >= 300) {
       setMensajeError('Has llegado al máximo de 300 caracteres')
       setCampoError('descripcion')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
     if (!direccionLimpia) {
       setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
       setCampoError('direccion')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
     if (direccionLimpia.length < 8) {
       setMensajeError('DIRECCIÓN MUY CORTA, MÍNIMO 8 CARACTERES')
       setCampoError('direccion')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
     if (direccionLimpia.length >= 80) {
       setMensajeError('Has llegado al máximo de 80 caracteres')
       setCampoError('direccion')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
     if (!zonaLimpia) {
       setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
       setCampoError('zona')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
     if (zonaLimpia.length < 8) {
       setMensajeError('ZONA MUY CORTA, MÍNIMO 8 CARACTERES')
       setCampoError('zona')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
     if (zonaLimpia.length >= 80) {
       setMensajeError('Has llegado al máximo de 80 caracteres')
       setCampoError('zona')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
@@ -510,14 +509,14 @@ export default function MiRegistroPage() {
       if (habitacionesNumero < 1) {
         setMensajeError('HABITACIONES DEBE SER MÍNIMO 1')
         setCampoError('habitaciones')
-        setEstado('error')
+        setEstado('error_publicacion')
         return
       }
 
       if (habitacionesNumero >= 50) {
         setMensajeError('Has llegado al máximo de 50 habitaciones')
         setCampoError('habitaciones')
-        setEstado('error')
+        setEstado('error_publicacion')
         return
       }
     }
@@ -526,14 +525,14 @@ export default function MiRegistroPage() {
       if (banosNumero < 1) {
         setMensajeError('BAÑOS DEBE SER MÍNIMO 1')
         setCampoError('banos')
-        setEstado('error')
+        setEstado('error_publicacion')
         return
       }
 
       if (banosNumero >= 50) {
         setMensajeError('Has llegado al máximo de 50 baños')
         setCampoError('banos')
-        setEstado('error')
+        setEstado('error_publicacion')
         return
       }
     }
@@ -549,14 +548,14 @@ export default function MiRegistroPage() {
     if (incompleto) {
       setMensajeError('DEBE LLENAR TODOS LOS CAMPOS OBLIGATORIOS')
       setCampoError(null)
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
     if (!pinCoords) {
       setMensajeError('DEBES SELECCIONAR UNA UBICACIÓN EN EL MAPA')
       setCampoError('mapa')
-      setEstado('error')
+      setEstado('error_publicacion')
       return
     }
 
@@ -584,7 +583,7 @@ export default function MiRegistroPage() {
       if (!token) {
         setMensajeError('DEBES INICIAR SESIÓN PARA REGISTRAR UNA PROPIEDAD')
         setCampoError(null)
-        setEstado('error')
+        setEstado('error_publicacion')
         return
       }
 
@@ -613,7 +612,7 @@ export default function MiRegistroPage() {
 
         setMensajeError(erroresBackend)
         setCampoError(null)
-        setEstado('error')
+        setEstado('error_publicacion')
         return
       }
 
@@ -621,11 +620,11 @@ export default function MiRegistroPage() {
 
       if (!publicacionId) {
         setMensajeError('No se recibió el ID de la publicación creada')
-        setEstado('error')
+        setEstado('error_publicacion')
         return
       }
 
-      setEstado('ninguno')
+      setEstado('idle')
       setMensajeError('')
       setCampoError(null)
 
@@ -633,7 +632,7 @@ export default function MiRegistroPage() {
     } catch (error) {
       setMensajeError('NO SE PUDO CONECTAR CON EL BACKEND')
       setCampoError(null)
-      setEstado('error')
+      setEstado('error_publicacion')
     }
   }
 
@@ -995,14 +994,14 @@ export default function MiRegistroPage() {
                   </button>
 
                   <button
-                    onClick={guardarPropiedad}
+                    onClick={() => guardarPropiedad()}
                     className="px-12 py-3 rounded-full border-2 border-orange-400 bg-[#D9D9D9] hover:bg-orange-100 transition"
                   >
                     Continuar
                   </button>
                 </div>
 
-                {estado === 'error' && mensajeError && !campoError && (
+                {estado === 'error_publicacion' && mensajeError && !campoError && (
                   <div className="bg-white border-2 border-red-400 rounded-2xl p-4 shadow-md max-w-md ml-auto whitespace-pre-line">
                     {mensajeError}
                   </div>
