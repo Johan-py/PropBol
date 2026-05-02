@@ -96,6 +96,8 @@ export default function PublicacionCard({
     router.push(`/mis-publicaciones/${publicacion.id}/editar`)
   }
 
+  const mostrarMetricas = false   // Cambia a true si quieres mostrar las métricas en el card
+
   return (
     <>
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md">
@@ -178,7 +180,7 @@ export default function PublicacionCard({
           </div>
 
           <div className="mt-3 flex flex-col gap-2">
-            {publicacion.metricas && (
+            {mostrarMetricas && publicacion.metricas && (
               <div className="grid grid-cols-3 gap-3 border-b border-gray-200 pb-3">
                 <div className="flex flex-col items-center text-center">
                   <div className="flex items-center justify-center gap-1 text-gray-600">

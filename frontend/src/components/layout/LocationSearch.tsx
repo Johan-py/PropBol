@@ -214,10 +214,73 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  // Geocodifica el término del historial antes de buscar
+  const handleHistorySelect = async (term: string) => {
+    setInputValue(term)
+    setIsOpen(false) // Ocultamos el dropdown visualmente para UX fluida
+
+    try {
+      let isLocal = false
+      let bestMatch: any = null
+
+      // 1. Intentar con backend local
+      const resLocal = await fetch(`${API_BASE}/api/locations/search?q=${encodeURIComponent(term)}`)
+      if (resLocal.ok) {
+        const dataLocal = await resLocal.json()
+        if (dataLocal.length > 0) {
+          const loc = dataLocal[0]
+          bestMatch = { nombre: loc.nombre, locationId: loc.id }
+          isLocal = true
+        }
+      }
+
+      // 2. Si no es local, intentar con Mapbox
+      if (!bestMatch) {
+        const resMapbox = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(term)}.json?access_token=${MAPBOX_TOKEN}&country=bo&language=es`)
+        const dataMapbox = await resMapbox.json()
+        if (dataMapbox.features && dataMapbox.features.length > 0) {
+          const place = dataMapbox.features[0]
+          bestMatch = {
+            nombre: place.text,
+            lat: place.center[1],
+            lng: place.center[0]
+          }
+        }
+      }
+
+      // 3. Pasar los datos completos (con coordenadas) al FilterBar
+      if (bestMatch) {
+        onChange(bestMatch)
+        if (isLocal && bestMatch.locationId) {
+          registrarConsulta(bestMatch.locationId, bestMatch.nombre)
+          updateFilters({ locationId: bestMatch.locationId, query: bestMatch.nombre })
+        } else {
+          updateFilters({
+            query: bestMatch.nombre,
+            lat: bestMatch.lat,
+            lng: bestMatch.lng,
+            locationId: undefined
+          })
+        }
+      } else {
+        onChange(term) // Fallback de seguridad
+      }
+
+      // 4. Forzar la búsqueda
+      setTimeout(() => containerRef.current?.closest('form')?.requestSubmit(), 100)
+
+    } catch (error) {
+      console.error("Error al recuperar coordenadas del historial:", error)
+      onChange(term)
+      setTimeout(() => containerRef.current?.closest('form')?.requestSubmit(), 100)
+    }
+  }
+
   return (
     <div className="w-full relative" ref={containerRef}>
-      <div className={`h-[40px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${isOpen ? 'border-orange-500 ring-1 ring-orange-500' : 'border-stone-200 hover:border-orange-500'}`}>
-        <MapPin className={`w-5 h-5 flex-shrink-0 ${inputValue ? 'text-orange-500' : 'text-stone-400'}`} />
+      <div className={`h-[40px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${isOpen ? 'border-[#d97706] ring-1 ring-[#d97706]' : 'border-stone-200 hover:border-[#d97706]'}`}>
+        <MapPin className={`w-5 h-5 flex-shrink-0 ${inputValue ? 'text-[#d97706]' : 'text-stone-400'}`} />
+        
         <div className="relative flex-1 flex items-center w-full h-full min-w-0">
           <input
             type="text"
@@ -256,7 +319,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
               </div>
               {(showAll ? history : history.slice(0, 5)).map((item, idx) => (
                 <div key={`hist-${idx}`} className="group flex items-center justify-between hover:bg-orange-50 border-b border-stone-50 last:border-0">
-                  <button type="button" onClick={() => { setInputValue(item); onChange(item); setIsOpen(false); }} className="flex-1 px-4 py-3 flex items-center gap-3 text-left">
+                  <button type="button" onClick={() => handleHistorySelect(item)} className="flex-1 px-4 py-3 flex items-center gap-3 text-left">
                     <History className="w-3.5 h-3.5 text-stone-400" />
                     <div className="flex items-center justify-between w-full pr-2">
                       <span className="text-sm text-stone-600">{item}</span>
