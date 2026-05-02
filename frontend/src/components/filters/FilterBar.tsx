@@ -363,6 +363,50 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       setCoords({}) // Si es solo texto del historial, borramos las coordenadas
     }
   }
+  const handleRecomendadosClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    const btn = e.currentTarget
+    const originalText = btn.innerHTML
+
+    try {
+      // 1. Mostrar estado de carga
+      btn.innerHTML = '<span class="animate-spin inline-block w-4 h-4 border-2 border-stone-500 border-t-transparent rounded-full"></span><span class="ml-2">Cargando...</span>'
+      btn.disabled = true
+
+      // 2. Obtener el token de autorización
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      }
+      if (token) headers['Authorization'] = `Bearer ${token}`
+
+      // 3. Llamar al backend para obtener los inmuebles recomendados
+      const res = await fetch('/api/inmuebles/recomendados', {
+        method: 'GET',
+        headers
+      })
+
+      const data = await res.json()
+
+      if (data.success && data.data && data.data.length > 0) {
+        // 4. Guardar en sessionStorage para que useProperties.ts lo lea
+        sessionStorage.setItem('propbol_modo_recomendados', 'true')
+        sessionStorage.setItem('propbol_recomendados', JSON.stringify(data.data))
+        
+        // 5. Navegar forzando el modo recomendados
+        router.push('/busqueda_mapa?orden=recomendados')
+      } else {
+        alert('No se encontraron recomendaciones en este momento o necesitas iniciar sesión.')
+      }
+    } catch (error) {
+      console.error('Error al cargar recomendados:', error)
+      alert('Error al cargar recomendaciones')
+    } finally {
+      // Restaurar el botón independientemente de si falla o tiene éxito
+      btn.innerHTML = originalText
+      btn.disabled = false
+    }
+  }
 
   // FIX Z-INDEX MASIVO: Agregamos z-[99999] y !overflow-visible para aplastar al mapa
   const containerStyles =
@@ -429,7 +473,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
               <span>Más Filtros</span>
             </button>
            
-            <button type="button" onClick={async () => { /* Logica recomendados */ }} className="h-[38px] flex items-center gap-2 px-4 rounded-full bg-white border border-stone-200 text-stone-600 text-sm font-medium hover:border-[#d97706] shadow-sm transition-all focus:outline-none shrink-0">
+            <button type="button" onClick={handleRecomendadosClick} className="h-[38px] flex items-center gap-2 px-4 rounded-full bg-white border border-stone-200 text-stone-600 text-sm font-medium hover:border-[#d97706] shadow-sm transition-all focus:outline-none shrink-0">
               <Award className="w-4 h-4 text-stone-500" />
               <span>Recomendados</span>
             </button>
