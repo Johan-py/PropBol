@@ -6,7 +6,8 @@ import {
   eliminarLogicamentePublicacionRepository,
   buscarDetallePublicacionPorIdRepository,
   confirmarPublicacionRepository,
-  buscarDetallePublicacionPorInmuebleIdRepository
+  buscarDetallePublicacionPorInmuebleIdRepository,
+  registrarVistaRepository
 } from './publicacion.repository.js'
 
 type TipoAccionPermitido = 'VENTA' | 'ALQUILER' | 'ANTICRETO'
@@ -516,4 +517,20 @@ export const confirmarPublicacionService = async (
     fechaPublicacion: publicacionConfirmada.fechaPublicacion,
     multimediaTotal: publicacionConfirmada.multimedia.length
   }
+}
+
+// Función para contar publicaciones activas por usuario
+export const registrarVistaService = async (publicacionId: number) => {
+  if (Number.isNaN(publicacionId) || publicacionId <= 0) {
+    throw new Error('ID_INVALIDO')
+  }
+
+  const publicacion = await buscarPublicacionPorIdRepository(publicacionId)
+
+  if (!publicacion || publicacion.estado === 'ELIMINADA') {
+    throw new Error('PUBLICACION_NO_EXISTE')
+  }
+
+  // usamos inmuebleId
+  return registrarVistaRepository(publicacion.inmuebleId)
 }

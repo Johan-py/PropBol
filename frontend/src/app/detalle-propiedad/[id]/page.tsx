@@ -17,6 +17,17 @@ export default function DetallePropiedadPage() {
   const router = useRouter()
   const id = Number(params.id)
 
+  // Registra la vista de la propiedad
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+
+  useEffect(() => {
+    if (!id || isNaN(id)) return
+
+    fetch(`${API_URL}/api/publicacion/${id}/view`, {
+      method: 'POST'
+    })
+  }, [id])
+
   const { detalle, loading, error } = useDetallePropiedad(id)
 
   const [isAuthenticated, setIsAuthenticated] = useState(false)

@@ -393,3 +393,13 @@ export const confirmarPublicacionRepository = async (publicacionId: number) => {
     }
   })
 }
+
+// Función para contar publicaciones activas por usuario
+export const registrarVistaRepository = async (inmuebleId: number) => {
+  return prisma.propiedad_vista.create({
+    data: {
+      inmuebleId,
+      fecha: new Date()
+    }
+  })
+}

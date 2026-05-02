@@ -6,7 +6,8 @@ import {
   obtenerResumenFinalService,
   obtenerDetallePublicacionService,
   obtenerDetallePublicacionPorInmuebleService,
-  confirmarPublicacionService
+  confirmarPublicacionService,
+  registrarVistaService
 } from './publicacion.service.js'
 
 interface AuthRequest extends Request {
@@ -380,6 +381,43 @@ export const confirmarPublicacionController = async (req: AuthRequest, res: Resp
     return res.status(500).json({
       ok: false,
       message: 'No se pudo confirmar la publicación'
+    })
+  }
+}
+
+// Nuevo controlador para registrar vista
+export const registrarVistaController = async (req: Request, res: Response) => {
+  const publicacionId = Number(req.params.id)
+
+  try {
+    await registrarVistaService(publicacionId)
+
+    return res.status(200).json({
+      ok: true,
+      message: 'Vista registrada'
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      switch (error.message) {
+        case 'ID_INVALIDO':
+          return res.status(400).json({
+            ok: false,
+            message: 'ID inválido'
+          })
+
+        case 'PUBLICACION_NO_EXISTE':
+          return res.status(404).json({
+            ok: false,
+            message: 'Publicación no encontrada'
+          })
+      }
+    }
+
+    console.error('Error registrando vista:', error)
+
+    return res.status(500).json({
+      ok: false,
+      message: 'Error interno'
     })
   }
 }
