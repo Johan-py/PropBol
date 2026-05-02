@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { Calendar, Trash2 } from "lucide-react";
+import { Calendar, Trash2, ChevronLeft, ChevronRight } from "lucide-react"; // 👈 AGREGAR ChevronLeft y ChevronRight
 
 const PropertyCard = ({ prop, onVerDetalle }: { prop: any; onVerDetalle: (id: number) => void }) => {
     const fecha = new Date(prop.viewedDate).toLocaleDateString('es-ES', {
@@ -61,8 +61,22 @@ export default function VistasRecientesPage() {
     // --- ESTADOS DE PAGINACIÓN ---
     const [currentPage, setCurrentPage] = useState(1);
     const propertiesPerPage = 8; // Muestra exactamente 2 filas de 4
-
     const dateInputRef = useRef<HTMLInputElement>(null);
+
+    // 👈 CALCULAR totalPages BASADO EN filteredProperties
+    const totalPages = Math.ceil(filteredProperties.length / propertiesPerPage);
+    
+    // 👈 FUNCIÓN paginate
+    const paginate = (pageNumber: number) => {
+        if (pageNumber >= 1 && pageNumber <= totalPages) {
+            setCurrentPage(pageNumber);
+        }
+    };
+
+    // 👈 OBTENER propiedades ACTUALES según la página
+    const indexOfLastProperty = currentPage * propertiesPerPage;
+    const indexOfFirstProperty = indexOfLastProperty - propertiesPerPage;
+    const currentProperties = filteredProperties.slice(indexOfFirstProperty, indexOfLastProperty);
 
     const fetchHistorial = async () => {
         const token = localStorage.getItem('token');
@@ -71,8 +85,9 @@ export default function VistasRecientesPage() {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
-            setProperties(data.data);
-            setFilteredProperties(data.data);
+            setProperties(data.data || data); // Maneja ambos formatos
+            setFilteredProperties(data.data || data);
+            setCurrentPage(1); // Resetear página al cargar nuevos datos
         } catch (error) {
             console.error("Error cargando historial:", error);
         } finally {
@@ -88,18 +103,18 @@ export default function VistasRecientesPage() {
         const selectedDate = e.target.value;
         if (!selectedDate) {
             setFilteredProperties(properties);
+            setCurrentPage(1);
             return;
         }
         const filtered = properties.filter(p =>
             new Date(p.viewedDate).toISOString().split('T')[0] === selectedDate
         );
         setFilteredProperties(filtered);
+        setCurrentPage(1); // Resetear página al filtrar
     };
 
     const handleClearHistory = async () => {
-        // BUG FIX: Evita el confirm si no hay nada que borrar
         if (properties.length === 0) return;
-
         if (!confirm("¿Deseas borrar todo tu historial de vistas?")) return;
 
         const token = localStorage.getItem('token');
@@ -110,6 +125,7 @@ export default function VistasRecientesPage() {
             });
             setProperties([]);
             setFilteredProperties([]);
+            setCurrentPage(1);
         } catch (error) {
             console.error("Error al borrar:", error);
         }
@@ -150,10 +166,10 @@ export default function VistasRecientesPage() {
                             </button>
                         </div>
 
-                        {/* BOTÓN CON UX MEJORADO: Deshabilitado si el historial está vacío */}
                         <button
                             onClick={handleClearHistory}
-                            className="flex items-center gap-2 px-4 py-2 bg-white border border-red-100 text-red-600 rounded-lg shadow-sm text-sm font-medium hover:bg-red-50 transition-colors"
+                            disabled={properties.length === 0}
+                            className="flex items-center gap-2 px-4 py-2 bg-white border border-red-100 text-red-600 rounded-lg shadow-sm text-sm font-medium hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <Trash2 size={16} /> Limpiar Historial
                         </button>
@@ -166,8 +182,8 @@ export default function VistasRecientesPage() {
                         <div className="col-span-full text-center py-20 text-gray-400 font-medium">
                             Aún no has visto ninguna propiedad
                         </div>
-                    ) : filteredProperties.length > 0 ? (
-                        filteredProperties.map((prop: any) => (
+                    ) : currentProperties.length > 0 ? (
+                        currentProperties.map((prop: any) => (
                             <PropertyCard
                                 key={prop.id}
                                 prop={prop}
@@ -181,7 +197,7 @@ export default function VistasRecientesPage() {
                     )}
                 </div>
 
-                {/* PAGINACIÓN DINÁMICA: Aparece automáticamente si hay más de 8 registros */}
+                {/* PAGINACIÓN DINÁMICA */}
                 {totalPages > 1 && (
                     <div className="flex justify-center items-center mt-12 mb-10 gap-2">
                         <button
