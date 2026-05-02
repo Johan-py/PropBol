@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Bath, BedDouble, MapPin, Square, Trash2, Eye, Heart, Mail } from 'lucide-react'
+import { Bath, BedDouble, MapPin, Square, Trash2, Eye, Heart, Mail, Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { publicacionService } from '@/services/publicacionn.service'
 import type { MisPublicacionesItem } from '@/types/publicacion'
@@ -96,7 +96,11 @@ export default function PublicacionCard({
     router.push(`/mis-publicaciones/${publicacion.id}/editar`)
   }
 
-  const mostrarMetricas = false   // Cambia a true si quieres mostrar las métricas en el card
+  const irAParametros = () => {
+    router.push(`/propiedades/parametros?publicacionId=${publicacion.id}&returnTo=mis-publicaciones`)
+  }
+
+  const mostrarMetricas = false
 
   return (
     <>
@@ -107,6 +111,7 @@ export default function PublicacionCard({
             alt={publicacion.titulo}
             className="h-[180px] w-full object-cover"
           />
+
           {!activa && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/40">
               <span className="rounded-full bg-red-500 px-3 py-1 text-sm font-medium text-white">
@@ -137,10 +142,12 @@ export default function PublicacionCard({
                   <BedDouble size={14} />
                   <span>{publicacion.nroCuartos ?? '-'} habs</span>
                 </div>
+
                 <div className="flex items-center gap-1">
                   <Bath size={14} />
                   <span>{publicacion.nroBanos ?? '-'} baños</span>
                 </div>
+
                 <div className="flex items-center gap-1">
                   <Square size={14} />
                   <span>{publicacion.superficieM2 ?? '-'} m²</span>
@@ -168,9 +175,11 @@ export default function PublicacionCard({
                   }`}
                 />
               </button>
+
               <span className="mt-1 text-[12px] font-medium text-gray-800">
                 {isToggling ? '...' : activa ? 'Activa' : 'Inactiva'}
               </span>
+
               {toggleError && (
                 <span className="mt-1 text-[10px] text-red-500">
                   {toggleError}
@@ -187,24 +196,29 @@ export default function PublicacionCard({
                     <Eye size={16} className="text-blue-500" />
                     <span className="text-xs text-gray-500">Visitas</span>
                   </div>
+
                   <span className="mt-1 text-sm font-semibold text-gray-900">
                     {publicacion.metricas.visitas}
                   </span>
                 </div>
+
                 <div className="flex flex-col items-center text-center">
                   <div className="flex items-center justify-center gap-1 text-gray-600">
                     <Heart size={16} className="text-red-500" />
                     <span className="text-xs text-gray-500">Favoritos</span>
                   </div>
+
                   <span className="mt-1 text-sm font-semibold text-gray-900">
                     {publicacion.metricas.favoritos}
                   </span>
                 </div>
+
                 <div className="flex flex-col items-center text-center">
                   <div className="flex items-center justify-center gap-1 text-gray-600">
                     <Mail size={16} className="text-green-500" />
                     <span className="text-xs text-gray-500">Contactos</span>
                   </div>
+
                   <span className="mt-1 text-sm font-semibold text-gray-900">
                     {publicacion.metricas.contactos}
                   </span>
@@ -214,6 +228,7 @@ export default function PublicacionCard({
 
             <div className="grid grid-cols-2 gap-3">
               <button
+                type="button"
                 onClick={irAEditar}
                 className="h-10 rounded-lg border border-[#9a9a9a] bg-white px-3 text-[13px] font-medium text-[#2c2c2c] transition hover:bg-gray-50"
               >
@@ -221,11 +236,23 @@ export default function PublicacionCard({
               </button>
 
               <button
+                type="button"
                 onClick={abrirConfirmacion}
                 className="flex h-10 items-center justify-center gap-2 rounded-lg bg-[#D97706] px-3 text-[13px] font-medium text-white transition hover:bg-[#bf6905]"
               >
                 <Trash2 size={15} />
                 Eliminar
+              </button>
+            </div>
+
+            <div className="mt-1 flex justify-start">
+              <button
+                type="button"
+                onClick={irAParametros}
+                className="inline-flex items-center gap-1 border-0 bg-transparent p-0 text-[12px] font-semibold text-orange-600 shadow-none outline-none transition hover:text-orange-700 hover:underline"
+              >
+                <Plus size={12} />
+                Añadir otros parámetros
               </button>
             </div>
           </div>
