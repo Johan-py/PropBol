@@ -278,8 +278,9 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
 
   return (
     <div className="w-full relative" ref={containerRef}>
-      <div className={`h-[40px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${isOpen ? 'border-orange-500 ring-1 ring-orange-500' : 'border-stone-200 hover:border-orange-500'}`}>
-        <MapPin className={`w-5 h-5 flex-shrink-0 ${inputValue ? 'text-orange-500' : 'text-stone-400'}`} />
+      <div className={`h-[40px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${isOpen ? 'border-[#d97706] ring-1 ring-[#d97706]' : 'border-stone-200 hover:border-[#d97706]'}`}>
+        <MapPin className={`w-5 h-5 flex-shrink-0 ${inputValue ? 'text-[#d97706]' : 'text-stone-400'}`} />
+        
         <div className="relative flex-1 flex items-center w-full h-full min-w-0">
           <input
             type="text"
