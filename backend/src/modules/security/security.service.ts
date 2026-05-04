@@ -350,27 +350,41 @@ export const activate2FAService = async (userId: number, password?: string) => {
   const isGoogleUser = await findUserGoogleAuthRepository(userId);
 
   if (isGoogleUser) {
-    await prisma.usuario.update({
+    const updatedUser = await prisma.usuario.update({
       where: { id: userId },
       data: {
         two_factor_activo: true,
         two_factor_activado_en: new Date(),
+        two_factor_metodo: "email",
+      },
+      select: {
+        two_factor_activo: true,
       },
     });
-    return { message: "Verificación en dos pasos activada correctamente." };
+    return {
+      message: "Verificación en dos pasos activada correctamente.",
+      two_factor_activo: updatedUser.two_factor_activo,
+    };
   }
 
   await validateCurrentPasswordService(userId, password ?? "");
 
-  await prisma.usuario.update({
+  const updatedUser = await prisma.usuario.update({
     where: { id: userId },
     data: {
       two_factor_activo: true,
       two_factor_activado_en: new Date(),
+      two_factor_metodo: "email",
+    },
+    select: {
+      two_factor_activo: true,
     },
   });
 
-  return { message: "Verificación en dos pasos activada correctamente." };
+  return {
+    message: "Verificación en dos pasos activada correctamente.",
+    two_factor_activo: updatedUser.two_factor_activo,
+  };
 };
 
 export const get2FAStatusService = async (userId: number) => {
@@ -384,7 +398,7 @@ export const get2FAStatusService = async (userId: number) => {
   const isGoogleUser = await findUserGoogleAuthRepository(userId);
 
   return {
-    two_factor_activo: (user as any).two_factor_activo ?? false,
+    two_factor_activo: user.two_factor_activo ?? false,
     isGoogleUser,
   };
 };

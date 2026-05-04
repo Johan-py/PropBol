@@ -7,19 +7,18 @@ export default async function HomeBlogsSection() {
 
   const topBlogs = sortedBlogs.slice(0, 3);
 
-
   return (
     <section className="w-full py-20 px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto space-y-24">
       {/* TOP SECTION: BLOGS HEADER */}
       <div className="space-y-12">
-        <div className="flex items-end justify-between border-b border-stone-200 pb-8">
-          <h2 className="font-['Montserrat'] text-6xl font-black uppercase tracking-tighter text-stone-900 sm:text-8xl">
+        <div className="flex flex-col gap-5 border-b border-stone-200 pb-8 sm:flex-row sm:items-end sm:justify-between">
+          <h2 className="font-['Montserrat'] text-5xl font-black uppercase tracking-tighter text-stone-900 sm:text-8xl">
             Blogs
           </h2>
 
           <Link
             href="/blogs"
-            className="hidden sm:block rounded-full bg-[#D97706] px-8 py-3 text-xs font-bold uppercase tracking-widest text-white transition-all hover:bg-stone-900 hover:shadow-xl"
+            className="inline-flex self-start rounded-full bg-[#D97706] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.2em] text-white transition-all hover:bg-stone-900 hover:shadow-xl sm:self-auto sm:px-8 sm:text-xs sm:tracking-widest"
           >
             Explorar Blogs
           </Link>

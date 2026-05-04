@@ -14,4 +14,7 @@ export type GlobalFilters = {
   //HU6
   amenities?: number[]
   labels?: number[]
+  lat?: number
+  lng?: number
+  radius?: number
 }

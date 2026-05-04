@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const PENDING_2FA_KEY = "pending2FA";
@@ -40,23 +41,14 @@ const saveSession = (
 ) => {
   localStorage.setItem("token", token);
 
-  const userName =
-    user?.nombre && user?.apellido
-      ? `${user.nombre} ${user.apellido}`
-      : user?.nombre || user?.correo || "Usuario";
+  const sessionUser = buildSessionUser(user);
 
-  localStorage.setItem(
-    "propbol_user",
-    JSON.stringify({
-      name: userName,
-      email: user?.correo ?? "",
-      avatar: user?.avatar ?? null,
-    }),
-  );
+  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(sessionUser));
+  localStorage.setItem("controlador", "false");
 
-  localStorage.setItem("nombre", userName);
-  localStorage.setItem("correo", user?.correo ?? "");
-  localStorage.setItem("avatar", user?.avatar ?? "");
+  localStorage.setItem("nombre", sessionUser.name);
+  localStorage.setItem("correo", sessionUser.email);
+  localStorage.setItem("avatar", sessionUser.avatar ?? "");
   localStorage.setItem(
     "propbol_session_expires",
     String(Date.now() + 60 * 60 * 1000),
@@ -65,6 +57,7 @@ const saveSession = (
   window.dispatchEvent(new Event("propbol:login"));
   window.dispatchEvent(new Event("propbol:session-changed"));
   window.dispatchEvent(new Event("auth-state-changed"));
+  window.dispatchEvent(new Event("propbol:token-guardado"));
 };
 
 const getRedirectAfterLogin = () => {
