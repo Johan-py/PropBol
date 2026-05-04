@@ -33,7 +33,7 @@ export const suscripcionesService = {
   /**
    * Obtiene los publicaciones permitidas para un usuario
    * - Si tiene suscripción activa: retorna el límite del plan
-   * - Si no tiene suscripción: retorna 2 (límite gratuito)
+   * - Si no tiene suscripción: retorna 3 (límite gratuito)
    */
   async obtenerLimitePublicaciones(usuarioId: number): Promise<number> {
     const suscripcion = await this.obtenerSuscripcionActiva(usuarioId);
@@ -43,7 +43,7 @@ export const suscripcionesService = {
     }
 
     // Límite gratuito
-    return 2;
+    return 3;
   },
 
   /**

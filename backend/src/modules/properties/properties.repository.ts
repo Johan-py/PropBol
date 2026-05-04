@@ -89,22 +89,7 @@ export const propertiesRepository = {
 
     // 3. Filtro de Ubicación (EL CEREBRO JERÁRQUICO)
     if (filtros.lat && filtros.lng) {
-      // Búsqueda por Bounding Box (Radio aprox 1km)
-      const RADIO_KM = filtros.radius || 1;
-      const latDelta = RADIO_KM / 111.12; 
-      const lngDelta = RADIO_KM / 106; // Ajuste trigonométrico aprox para Bolivia
-
-      where.ubicacion = {
-        ...((where.ubicacion as object) ?? {}),
-        latitud: {
-          gte: Number(filtros.lat) - latDelta,
-          lte: Number(filtros.lat) + latDelta,
-        },
-        longitud: {
-          gte: Number(filtros.lng) - lngDelta,
-          lte: Number(filtros.lng) + lngDelta,
-        },
-      };
+      // Búsqueda geoespacial por latitud/longitud con un radio (en km)
     } else if (filtros.query && filtros.query.trim() !== "") {
       // Fallback original: Búsqueda estricta por texto
       const texto = filtros.query.trim();
@@ -360,6 +345,39 @@ export const propertiesRepository = {
       },
     });
 
+    const resultados = (filtros.lat && filtros.lng) 
+      ? inmuebles.filter((inmueble) => {
+          const u = inmueble.ubicacion;
+          if (!u || !u.latitud || !u.longitud) return false;
+
+          const lat = Number(u.latitud);
+          const lng = Number(u.longitud);
+
+          // Ignorar coordenadas inválidas
+          if (isNaN(lat) || isNaN(lng) || (lat === 0 && lng === 0)) return false;
+
+          const centerLat = Number(filtros.lat);
+          const centerLng = Number(filtros.lng);
+          const radiusKm = filtros.radius || 1; // 1 km por defecto (igual que en el mapa)
+
+          // Fórmula matemática para calcular distancia exacta en esfera (Tierra)
+          const R = 6371; // Radio de la Tierra en km
+          const dLat = ((lat - centerLat) * Math.PI) / 180;
+          const dLng = ((lng - centerLng) * Math.PI) / 180;
+          const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos((centerLat * Math.PI) / 180) *
+              Math.cos((lat * Math.PI) / 180) *
+              Math.sin(dLng / 2) *
+              Math.sin(dLng / 2);
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+          const distancia = R * c;
+
+          // Solo retorna true si la propiedad está estrictamente dentro del radio
+          return distancia <= radiusKm;
+        })
+      : inmuebles;
+
     if (filtros.fecha === "mas-populares") {
       console.log("🔥 Entrando al bloque mas-populares");
       const vistas = await prisma.propiedad_vista.groupBy({
@@ -370,11 +388,11 @@ export const propertiesRepository = {
       const vistaMap = new Map(
         vistas.map((v) => [v.inmuebleId, v._count.usuarioId ?? 0]),
       );
-      return inmuebles.sort(
+      return resultados.sort(
         (a, b) => (vistaMap.get(b.id) ?? 0) - (vistaMap.get(a.id) ?? 0),
       );
     }
 
-    return inmuebles;
+    return resultados;
   },
 };
