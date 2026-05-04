@@ -292,11 +292,10 @@ export const loginService = async (payload: LoginDTO) => {
   const user = await findUser(correo);
 
   if (!user) {
-    throw new AuthError("Usuario no encontrado", 404);
-  }
-
-  if (user.activo === false) {
-    throw new AuthError("Esta cuenta está desactivada", 403);
+    throw new AuthError(
+      "Esta cuenta no está registrada. Puedes registrarte para crear una cuenta.",
+      404,
+    );
   }
 
   const isValidPassword = user.password === password;
@@ -315,12 +314,16 @@ export const loginService = async (payload: LoginDTO) => {
     }
 
     throw new AuthError(
-      `Credenciales inválidas. Te quedan ${attemptStatus.attemptsLeft} intento(s) antes del bloqueo temporal.`,
+      `Contraseña incorrecta. Te quedan ${attemptStatus.attemptsLeft} intento(s) antes del bloqueo temporal.`,
       401,
     );
   }
 
   clearFailedAttempts(correo);
+
+  if (user.activo === false) {
+    throw new AuthError("Esta cuenta está desactivada", 403);
+  }
 
   if (user.two_factor_activo) {
     const codigo = generate2FACode();
@@ -938,6 +941,21 @@ export const resetPasswordService = async (payload: ResetPasswordDTO) => {
 
   tokenAttempts.set(token, attempts + 1);
 
+  // Obtener el usuario para validar que la nueva contraseña sea diferente
+  const user = await findUserById(recovery.usuarioId);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  // Validar que la nueva contraseña sea diferente a la actual
+  if (user.password === password) {
+    throw new AuthError(
+      "La nueva contraseña debe ser diferente a la contraseña actual",
+      400,
+    );
+  }
+
   await prisma.$transaction([
     prisma.recuperacion_password.update({
       where: { id: recovery.id },
@@ -956,48 +974,50 @@ export const resetPasswordService = async (payload: ResetPasswordDTO) => {
   tokenAttempts.delete(token);
 
   return {
-    message: 'Contraseña actualizada correctamente. Ya puedes iniciar sesión.'
-  }
-}
+    message: "Contraseña actualizada correctamente. Ya puedes iniciar sesión.",
+  };
+};
 export const resend2FAService = async (userId: number) => {
   if (!userId) {
-    throw new AuthError('El usuario es obligatorio', 400)
+    throw new AuthError("El usuario es obligatorio", 400);
   }
 
-  const user = await findUserById(userId)
+  const user = await findUserById(userId);
 
   if (!user) {
-    throw new AuthError('Usuario no encontrado', 404)
+    throw new AuthError("Usuario no encontrado", 404);
   }
 
   if (!user.two_factor_activo) {
-    throw new AuthError('El usuario no tiene 2FA activado', 400)
+    throw new AuthError("El usuario no tiene 2FA activado", 400);
   }
 
-  const codigo = generate2FACode()
-  const codigoHash = hash2FACode(codigo)
-  const expiraEn = new Date(Date.now() + TWO_FACTOR_CODE_TTL_MINUTES * 60 * 1000)
+  const codigo = generate2FACode();
+  const codigoHash = hash2FACode(codigo);
+  const expiraEn = new Date(
+    Date.now() + TWO_FACTOR_CODE_TTL_MINUTES * 60 * 1000,
+  );
 
-  await invalidateActive2FACodesByUserId(user.id)
+  await invalidateActive2FACodesByUserId(user.id);
 
   await create2FACode({
     usuarioId: user.id,
     codigoHash,
-    expiraEn
-  })
+    expiraEn,
+  });
 
   const emailResult = await enviarCodigo2FA({
     emailDestino: user.correo,
     codigo,
-    nombreUsuario: user.nombre
-  })
+    nombreUsuario: user.nombre,
+  });
 
   if (!emailResult.success) {
-    throw new Error('No se pudo reenviar el código. Intenta nuevamente.')
+    throw new Error("No se pudo reenviar el código. Intenta nuevamente.");
   }
 
   return {
-    message: 'Código reenviado correctamente',
-    expiresInMinutes: TWO_FACTOR_CODE_TTL_MINUTES
-  }
-}
+    message: "Código reenviado correctamente",
+    expiresInMinutes: TWO_FACTOR_CODE_TTL_MINUTES,
+  };
+};

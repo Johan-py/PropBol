@@ -28,6 +28,10 @@ export function usePropertySearch() {
 
     if (filters.locationId) params.append('locationId', filters.locationId.toString())
     if (filters.query) params.append('search', filters.query)
+    // Empaquetar las coordenadas para el backend
+    if (filters.lat) params.append('lat', filters.lat.toString())
+    if (filters.lng) params.append('lng', filters.lng.toString())
+    if (filters.radius) params.append('radius', filters.radius.toString())
     //HU6
     if (filters.amenities && filters.amenities.length > 0) {
       params.append('amenities', filters.amenities.join(','));

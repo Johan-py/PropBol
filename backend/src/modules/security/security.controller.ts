@@ -141,6 +141,16 @@ export async function get2FAStatusController(
 ) {
   try {
     const userId = Number(req.user?.id);
+
+    // Deshabilitar caché para asegurar que siempre se obtenga el estado actualizado
+    res.setHeader(
+      "Cache-Control",
+      "no-store, no-cache, must-revalidate, proxy-revalidate",
+    );
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+    res.setHeader("Surrogate-Control", "no-store");
+
     const result = await get2FAStatusService(userId);
     return res.status(200).json(result);
   } catch (error) {

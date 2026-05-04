@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Star, Heart } from "lucide-react";
 
 type Inmueble = {
@@ -39,6 +40,7 @@ type FavoritesResponse = {
 };
 
 export default function MisFavoritos() {
+  const router = useRouter();
   const [favoritos, setFavoritos] = useState<FavoritoItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -137,6 +139,9 @@ export default function MisFavoritos() {
     });
   };
 
+  const verDetalle = (inmuebleId: number) => {
+    router.push(`/detalle-propiedad/${inmuebleId}`);
+  };
   useEffect(() => {
     fetchFavoritos(page);
   }, [page]);
@@ -263,7 +268,7 @@ export default function MisFavoritos() {
 
                         {/* Botón Ver Detalle */}
                         <button
-                          onClick={() => window.location.href = `/propiedad/${inmueble.id}`}
+                          onClick={() => verDetalle(inmueble.id)}  // 👈 Cambiar esta línea
                           className="flex-1 bg-[#E87B00] text-white py-2.5 rounded-lg text-sm font-bold hover:bg-orange-600 transition-colors flex items-center justify-center gap-2"
                         >
                           Ver Detalle

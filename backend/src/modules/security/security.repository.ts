@@ -3,6 +3,7 @@ import { prisma } from "../../lib/prisma.client.js";
 export type SecurityUserPasswordRecord = {
   id: number;
   password: string | null;
+  two_factor_activo: boolean;
 };
 
 export const findUserPasswordByIdRepository = async (
@@ -13,6 +14,7 @@ export const findUserPasswordByIdRepository = async (
     select: {
       id: true,
       password: true,
+      two_factor_activo: true,
     },
   });
 };
@@ -23,6 +25,7 @@ export type SecurityUserRecord = {
   correo: string;
   nombre: string;
 };
+//prueba
 
 export const findSecurityUserByIdRepository = async (
   userId: number,

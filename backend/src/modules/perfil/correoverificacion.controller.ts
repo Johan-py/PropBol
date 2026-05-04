@@ -221,7 +221,25 @@ export const cambiarPassword = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    const bloqueoPorCambiosFrecuentes =
+    const historialReciente = await prisma.historial_password.findMany({
+      where: { usuarioId },
+      orderBy: { creadoEn: "desc" },
+      take: 3,
+      select: { passwordHash: true },
+    });
+
+    const esPasswordReciente = historialReciente.some(
+      (h) => h.passwordHash === nuevaPasswordNormalizada
+    );
+
+    if (esPasswordReciente) {
+      return res.status(400).json({
+        ok: false,
+        msg: "No puedes usar ninguna de tus últimas 3 contraseñas.",
+      });
+    }
+
+    const bloqueoPorCambiosFrecuentes = await obtenerBloqueoPorCambiosFrecuentes(usuarioId);
       await obtenerBloqueoPorCambiosFrecuentes(usuarioId);
 
     if (bloqueoPorCambiosFrecuentes) {
