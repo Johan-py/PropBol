@@ -53,6 +53,10 @@ export function useInactivityLogout({
   const logout = useCallback(() => {
     clearTimers();
     clearSession();
+    sessionStorage.setItem(
+      "authMessage",
+      "Tu sesión expiró por inactividad. Inicia sesión nuevamente.",
+    );
     onLogout?.();
     router.replace("/sign-in?reason=inactivity");
   }, [clearSession, clearTimers, onLogout, router]);
