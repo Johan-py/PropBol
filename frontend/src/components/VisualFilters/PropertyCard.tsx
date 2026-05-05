@@ -56,25 +56,25 @@ export default function PropertyCard({
   }, [slides.length]);
 
   const currentSlide = slides[currentIndex];
-  const showImage = !!currentSlide.imagen;
+  const showImage = Boolean(currentSlide?.imagen);
 
 
   return (
     <div
-      onClick={onClick}
+      onClick={isEmpty ? undefined : onClick}
       className={`
-        relative cursor-pointer rounded-xl overflow-hidden bg-white
-        shadow-sm border border-gray-100
-        transition-all duration-200 hover:scale-105 hover:shadow-lg
-        ${isAlquiler ? "min-w-[200px] w-[200px]" : "min-w-[160px] w-[160px]"}
+        group relative flex flex-col rounded-[20px] overflow-hidden bg-white
+        shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-gray-100 p-3
+        transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)]
+        ${isAlquiler ? "min-w-[220px] w-[220px]" : "min-w-[240px] w-[240px]"}
         flex-shrink-0
       `}
     >
       {/* Imagen */}
       <div
         className={`
-          relative w-full overflow-hidden bg-gray-100
-          ${isAlquiler ? "h-[140px]" : "h-[100px]"}
+          relative w-full overflow-hidden bg-gray-100 rounded-2xl
+          ${isAlquiler ? "h-[140px]" : "h-[160px]"}
         `}
       >
         {isEmpty || !showImage ? (
@@ -110,15 +110,6 @@ export default function PropertyCard({
               className="w-full h-full object-cover transition-opacity duration-500"
             />
 
-            {/* Título del inmueble rotando */}
-            {previews.length > 0 && (
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-2 py-1">
-                <p className="text-white text-[9px] font-medium truncate">
-                  {currentSlide.titulo}
-                </p>
-              </div>
-            )}
-
             {/* Indicadores de slide */}
             {slides.length > 1 && (
               <div className="absolute top-1 left-1/2 -translate-x-1/2 flex gap-0.5">
@@ -134,7 +125,7 @@ export default function PropertyCard({
           </>
         )}
 
-        {/* ALQUILERES */}
+        {/* ALQUILERES: badge superior derecho */}
         {isAlquiler && count !== undefined && (
           <span
             className={`
@@ -149,28 +140,28 @@ export default function PropertyCard({
       </div>
 
       {/* Info */}
-      <div className="p-2">
-        <p className="text-[11px] font-bold text-gray-800 uppercase truncate">
+      <div className="flex flex-col px-1 pt-3 pb-1">
+        {/* Nombre de la ciudad */}
+        <p className="text-[10px] font-extrabold text-[#b48348] uppercase tracking-wider">
           {title}
         </p>
-        <p className="text-[10px] text-gray-500 truncate">
-          {isEmpty ? "No disponible" : location}
+
+        {/* Título de la propiedad */}
+        <p className="text-[15px] font-black text-gray-900 truncate mt-1">
+          {previews.length > 0 && !isEmpty ? currentSlide.titulo : (isEmpty ? "Sin inmuebles" : "Destacados")}
         </p>
 
-        {/* EN VENTA */}
-        {!isAlquiler && count !== undefined && (
-          <div className="flex items-center justify-between mt-1">
-            <span
-              className={`text-[10px] font-semibold ${isEmpty ? "text-gray-400" : "text-orange-500"
-                }`}
-            >
-              {isEmpty ? "Sin propiedades" : `${count.toLocaleString()} Propiedades`}
+        {/* Cantidad de propiedades */}
+        <div className="flex items-center justify-between mt-3">
+          <span className="text-[11px] font-medium text-gray-500">
+            {isEmpty ? "Sin propiedades" : `${count?.toLocaleString()} Propiedades`}
+          </span>
+          {!isEmpty && (
+            <span className="text-[#b48348] text-lg font-bold leading-none translate-x-0 group-hover:translate-x-1 transition-transform">
+              →
             </span>
-            {!isEmpty && (
-              <span className="text-orange-400 text-[10px]">→</span>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

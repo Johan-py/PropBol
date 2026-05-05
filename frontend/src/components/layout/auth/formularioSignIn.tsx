@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
@@ -159,13 +159,13 @@ const saveSession = (
     apellido?: string;
     avatar?: string | null;
   },
-  controlador?: boolean
+  controlador?: boolean,
 ) => {
   localStorage.setItem("token", token);
   const sessionUser = buildSessionUser(user);
 
   localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(sessionUser));
-   localStorage.setItem("controlador", String(controlador ?? false));
+  localStorage.setItem("controlador", String(controlador ?? false));
 
   localStorage.setItem("nombre", sessionUser.name);
   localStorage.setItem("correo", sessionUser.email);
@@ -254,10 +254,11 @@ const fetchCurrentUser = async (
 
 export default function LoginForm() {
   const router = useRouter();
+
   const [showPassword, setShowPassword] = useState(false);
   const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
   const [isLoadingDiscord, setIsLoadingDiscord] = useState(false);
-  const passwordContainerRef = useRef<HTMLDivElement>(null);
+  const [isLoadingFacebook, setIsLoadingFacebook] = useState(false);
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ correo?: string; password?: string }>(
@@ -267,7 +268,17 @@ export default function LoginForm() {
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [googleError, setGoogleError] = useState("");
-  const [isLoadingFacebook, setIsLoadingFacebook] = useState(false);
+
+  useEffect(() => {
+    const authMessage = sessionStorage.getItem("authMessage");
+
+    if (authMessage) {
+      setErrorMessage(authMessage);
+      sessionStorage.removeItem("authMessage");
+    }
+  }, []);
+
+  const passwordContainerRef = useRef<HTMLDivElement>(null);
 
   const redirectAfterSuccessfulLogin = () => {
     const redirect = getRedirectAfterLogin();
@@ -280,6 +291,27 @@ export default function LoginForm() {
     password.length > 0 &&
     !errors.correo &&
     !errors.password;
+
+  const hasFormContent =
+    correo.trim() !== "" ||
+    password.trim() !== "" ||
+    errorMessage !== "" ||
+    successMessage !== "" ||
+    googleError !== "";
+
+  const handleCancel = () => {
+    setCorreo("");
+    setPassword("");
+    setErrors({});
+    setErrorMessage("");
+    setSuccessMessage("");
+    setGoogleError("");
+    setShowPassword(false);
+    setIsLoading(false);
+    setIsLoadingGoogle(false);
+    setIsLoadingFacebook(false);
+    setIsLoadingDiscord(false);
+  };
 
   const validate = (field: string, value: string) => {
     const newErrors = { ...errors };
@@ -318,14 +350,17 @@ export default function LoginForm() {
       throw new Error("No se pudo obtener el usuario autenticado.");
     }
 
-    saveSession(token, {
-      id: validatedUser.id,
-      correo: validatedUser.correo,
-      nombre: validatedUser.nombre ?? fallbackUser?.nombre,
-      apellido: validatedUser.apellido ?? fallbackUser?.apellido,
-      avatar: validatedUser.avatar ?? fallbackUser?.avatar ?? null,
-      
-    },validatedUser.controlador);
+    saveSession(
+      token,
+      {
+        id: validatedUser.id,
+        correo: validatedUser.correo,
+        nombre: validatedUser.nombre ?? fallbackUser?.nombre,
+        apellido: validatedUser.apellido ?? fallbackUser?.apellido,
+        avatar: validatedUser.avatar ?? fallbackUser?.avatar ?? null,
+      },
+      validatedUser.controlador,
+    );
   };
 
   const handleGoogleLogin = () => {
@@ -649,6 +684,7 @@ export default function LoginForm() {
       if (event.origin !== expectedOrigin) {
         return;
       }
+
       if (!isFacebookPopupMessage(event.data)) {
         return;
       }
@@ -711,20 +747,17 @@ export default function LoginForm() {
       }
     }, 500);
 
-    facebookTimeoutId = window.setTimeout(
-      () => {
-        cleanup();
+    facebookTimeoutId = window.setTimeout(() => {
+      cleanup();
 
-        if (!popup.closed) {
-          popup.close();
-        }
+      if (!popup.closed) {
+        popup.close();
+      }
 
-        if (!authWasResolved) {
-          setGoogleError(FACEBOOK_TIMEOUT_MESSAGE);
-        }
-      },
-      2 * 60 * 1000,
-    );
+      if (!authWasResolved) {
+        setGoogleError(FACEBOOK_TIMEOUT_MESSAGE);
+      }
+    }, GOOGLE_LOGIN_TIMEOUT_MS);
 
     window.addEventListener("message", handleMessage);
   };
@@ -789,6 +822,7 @@ export default function LoginForm() {
       }
 
       const data = event.data;
+
       if (
         !data ||
         typeof data !== "object" ||
@@ -979,39 +1013,61 @@ export default function LoginForm() {
           {isLoading ? "Ingresando..." : "Iniciar sesión"}
         </button>
 
-        <button
-          type="button"
-          onClick={handleGoogleLogin}
-          disabled={isLoadingGoogle}
-          className="flex w-full items-center justify-center gap-2 rounded-md border border-gray-300 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-        >
-          <span className="text-base font-bold">G</span>
-          {isLoadingGoogle ? "Autenticando..." : "Continuar con Google"}
-        </button>
-
-        {googleError && (
-          <p className="mt-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
-            {googleError}
-          </p>
-        )}
-
         <div className="space-y-3">
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            disabled={isLoadingGoogle}
+            className="flex w-full items-center justify-center gap-3 rounded-md border border-[#d6d3d1] bg-white px-4 py-2.5 text-[13px] font-medium text-[#292524] transition hover:bg-[#fafaf9] disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 48 48"
+              className="h-5 w-5"
+              aria-hidden="true"
+            >
+              <path
+                fill="#FFC107"
+                d="M43.611 20.083H42V20H24v8h11.303C33.654 32.657 29.194 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.28 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"
+              />
+              <path
+                fill="#FF3D00"
+                d="M6.306 14.691l6.571 4.819C14.655 16.108 18.961 13 24 13c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.28 4 24 4c-7.682 0-14.344 4.337-17.694 10.691z"
+              />
+              <path
+                fill="#4CAF50"
+                d="M24 44c5.161 0 9.86-1.977 13.409-5.196l-6.19-5.238C29.145 35.091 26.715 36 24 36c-5.173 0-9.62-3.326-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"
+              />
+              <path
+                fill="#1976D2"
+                d="M43.611 20.083H42V20H24v8h11.303c-.792 2.237-2.231 4.166-4.084 5.566l.003-.002 6.19 5.238C36.973 39.2 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"
+              />
+            </svg>
+
+            {isLoadingGoogle
+              ? "Conectando con Google..."
+              : "Continuar con Google"}
+          </button>
+
           <button
             type="button"
             onClick={handleFacebookLogin}
             disabled={isLoadingFacebook}
-            className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#1877F2] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-70"
+            className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#1877F2] px-4 py-3 text-[15px] font-bold text-white shadow-sm transition hover:bg-[#166FE5] disabled:cursor-not-allowed disabled:opacity-60"
           >
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/15 text-base font-bold text-white">
               f
             </span>
-            {isLoadingFacebook ? "Autenticando..." : "Continuar con Facebook"}
+            {isLoadingFacebook
+              ? "Conectando con Facebook..."
+              : "Continuar con Facebook"}
           </button>
 
           <button
             type="button"
             onClick={handleDiscordLogin}
-            className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#5865F2] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:brightness-95"
+            disabled={isLoadingDiscord}
+            className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#5865F2] px-4 py-3 text-[15px] font-bold text-white shadow-sm transition hover:bg-[#4752C4] disabled:cursor-not-allowed disabled:opacity-60"
           >
             <svg
               viewBox="0 0 24 24"
@@ -1020,14 +1076,27 @@ export default function LoginForm() {
             >
               <path d="M20.317 4.369A19.79 19.79 0 0 0 15.885 3c-.191.328-.403.769-.552 1.117a18.27 18.27 0 0 0-5.333 0A11.64 11.64 0 0 0 9.448 3a19.736 19.736 0 0 0-4.433 1.369C2.211 8.58 1.443 12.686 1.826 16.735A19.923 19.923 0 0 0 7.239 19.5c.438-.6.828-1.235 1.164-1.904-.634-.24-1.239-.541-1.813-.896.152-.111.301-.227.445-.347 3.495 1.643 7.285 1.643 10.739 0 .146.12.294.236.446.347-.575.355-1.182.656-1.817.896.336.669.726 1.304 1.164 1.904a19.874 19.874 0 0 0 5.416-2.765c.451-4.695-.769-8.763-3.666-12.366ZM9.349 14.546c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.84 2.154-1.909 2.154Zm5.303 0c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.831 2.154-1.909 2.154Z" />
             </svg>
-            Continuar con Discord
+            {isLoadingDiscord
+              ? "Conectando con Discord..."
+              : "Continuar con Discord"}
           </button>
         </div>
 
+        {googleError && (
+          <p className="mt-2 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+            {googleError}
+          </p>
+        )}
+
         <button
           type="button"
-          onClick={() => router.push("/")}
-          className="mx-auto block w-fit rounded-md bg-gray-700 px-4 py-1.5 text-xs font-medium text-white hover:bg-gray-800"
+          onClick={handleCancel}
+          disabled={!hasFormContent}
+          className={`mx-auto block rounded-md px-4 py-2 text-[11px] font-semibold transition ${
+            hasFormContent
+              ? "bg-[#292524] text-white hover:bg-[#1c1917]"
+              : "cursor-not-allowed bg-[#d6d3d1] text-[#a8a29e]"
+          }`}
         >
           Cancelar Inicio de sesión
         </button>
@@ -1042,6 +1111,14 @@ export default function LoginForm() {
           Regístrate
         </Link>
       </p>
+
+      <button
+        type="button"
+        onClick={() => router.push("/")}
+        className="mt-2 w-full text-center text-[12px] font-medium text-[#57534e] underline transition hover:text-[#292524]"
+      >
+        Ir a la página principal
+      </button>
     </div>
   );
 }

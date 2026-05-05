@@ -66,7 +66,7 @@ export const createFacebookUser = async (
 export const linkFacebookToUser = async (
   usuarioId: number,
   facebookId: string,
-  correoProveedor: string,
+  correoProveedor: string | null,
 ) => {
   return await prisma.autenticacion_social.create({
     data: {

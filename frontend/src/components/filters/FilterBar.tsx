@@ -58,6 +58,7 @@ type LocationValue =
     nombre: string
     lat?: number
     lng?: number
+    locationId?: number
   }
 
 // Botón Mock
@@ -250,6 +251,18 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
         router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
       }
     }))
+    const orden = params.get('orden')
+    if (orden === 'recomendados') {
+      filters.push({
+        id: 'orden-recomendados',
+        label: 'Recomendados',
+        onRemove: () => {
+          sessionStorage.removeItem('propbol_modo_recomendados')
+          sessionStorage.removeItem('propbol_recomendados')
+          removeParam(['orden']) // Esto lo quita de la URL y recarga
+        }
+      })
+    }
 
     return filters
   }, [searchParams, propertyTypes])
@@ -321,6 +334,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     params.delete('lat')
     params.delete('lng')
     params.delete('radius')
+    params.delete('orden')
     try {
       const merged = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}') as {
         locationId?: string | number
@@ -357,19 +371,25 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
   const handleLocationChange = (val: LocationValue) => {
     if (typeof val === 'object' && val !== null) {
       setUbicacionTexto(val.nombre)
-      setCoords({ lat: val.lat, lng: val.lng })
+      if (val.locationId) {
+        // Si tenemos locationId, VACIAMOS las coordenadas para que el backend busque en toda la zona
+        setCoords({}) 
+      } else {
+        setCoords({ lat: val.lat, lng: val.lng })
+      }
     } else {
       setUbicacionTexto(val as string)
       setCoords({}) // Si es solo texto del historial, borramos las coordenadas
     }
   }
+  const isRecomendadosActive = searchParams?.get('orden') === 'recomendados'
+  
 
-  // 🚀 FIX Z-INDEX MASIVO: Agregamos z-[99999] y !overflow-visible para aplastar al mapa
+  // FIX Z-INDEX MASIVO: Agregamos z-[99999] y !overflow-visible para aplastar al mapa
   const containerStyles =
     variant === 'map'
-      ? 'bg-[#faf9f6] border-b border-stone-200 py-2 px-4 w-full flex flex-col gap-2 shadow-sm sticky top-0 z-50 !overflow-visible'
-      : 'bg-white shadow-lg rounded-[30px] p-6 flex flex-col gap-6 w-full max-w-[921px] relative z-[99999] !overflow-visible'
-
+      ? 'bg-[#faf9f6] border-b border-stone-200 py-2 px-4 w-full flex flex-col gap-2 shadow-sm sticky top-0 z-[9999] !overflow-visible'
+      : 'bg-white shadow-lg rounded-[30px] p-6 flex flex-col gap-6 w-full max-w-[921px] relative z-[999999] !overflow-visible'
   return (
     <form className={containerStyles} onSubmit={handleSearch}>
       
@@ -430,8 +450,50 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
               <span>Más Filtros</span>
             </button>
            
-            <button type="button" onClick={async () => { /* Logica recomendados */ }} className="h-[38px] flex items-center gap-2 px-4 rounded-full bg-white border border-stone-200 text-stone-600 text-sm font-medium hover:border-[#d97706] shadow-sm transition-all focus:outline-none shrink-0">
-              <Award className="w-4 h-4 text-stone-500" />
+            <button
+              type="button"
+              onClick={async (e) => {
+                e.preventDefault()
+
+                // Copiamos los filtros actuales de la URL en vez de destruirlos
+                const params = new URLSearchParams(searchParams?.toString() || '')
+
+                if (isRecomendadosActive) {
+                  // MODO: APAGAR
+                  sessionStorage.removeItem('propbol_modo_recomendados')
+                  sessionStorage.removeItem('propbol_recomendados')
+                  params.delete('orden')
+                  router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
+                  return // Nos detenemos aquí
+                }
+
+                // MODO: ENCENDER
+                const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+                if (token) {
+                  // Llamada a la API respetando los parámetros de búsqueda actuales (ej. si estaban en Cochabamba)
+                  const fetchParams = new URLSearchParams({ orden: 'recomendados' })
+                  const res = await fetch(`/api/inmuebles/recomendados?${fetchParams}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                  })
+                  const data = await res.json()
+                  if (data.success && data.data.length > 0) {
+                    sessionStorage.setItem('recomendaciones_resultado', JSON.stringify(data.data))
+                    sessionStorage.setItem('propbol_modo_recomendados', 'true')
+                    sessionStorage.setItem('propbol_recomendados', JSON.stringify(data.data))
+                  }
+                }
+                
+                // Actualizamos la URL manteniendo el resto de filtros (zona, precio, etc.) y agregando orden=recomendados
+                params.set('orden', 'recomendados')
+                router.push(`/busqueda_mapa?${params.toString()}`)
+              }}
+              className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${
+                isRecomendadosActive
+                  ? 'bg-[#d97706] text-white border-[#d97706]'
+                  : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+              }`}
+            >
+              <Award className={`w-4 h-4 ${isRecomendadosActive ? 'text-white' : 'text-stone-500'}`} />
               <span>Recomendados</span>
             </button>
           </div>
@@ -459,10 +521,19 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                 type="button" 
                 onClick={(e) => {
                   e.preventDefault()
+                  
+                  // 1. Vaciamos todos los estados visuales por completo
                   setTipoInmueble('Cualquier tipo')
-                  setModosSeleccionados(['VENTA'])
+                  setModosSeleccionados([]) // Arreglo vacío para desmarcar todos los checkboxes
                   setUbicacionTexto('')
                   setCoords({})
+                  
+                  // 2. Limpiamos la memoria del navegador para matar los filtros "fantasma"
+                  sessionStorage.removeItem('propbol_global_filters')
+                  sessionStorage.removeItem('propbol_modo_recomendados')
+                  sessionStorage.removeItem('propbol_recomendados')
+                  
+                  // 3. Reseteamos la URL a su estado más puro
                   router.push('/busqueda_mapa')
                 }} 
                 className="text-xs font-bold text-stone-400 hover:text-stone-600 underline ml-auto mr-3 transition-colors"

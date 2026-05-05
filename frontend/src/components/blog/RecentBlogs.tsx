@@ -34,7 +34,14 @@ const RecentBlogs = () => {
             : ''
         }))
 
-        setBlogs(mapped)
+        const recientes = mapped
+        .sort(
+          (a, b) =>
+            new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
+        )
+        .slice(0, 3)
+
+        setBlogs(recientes)
       } catch {
         setError('No se pudieron cargar los blogs')
       } finally {

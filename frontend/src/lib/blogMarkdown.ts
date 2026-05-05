@@ -6,6 +6,7 @@ const HEADING_PATTERN = /^\s{0,3}#{1,6}\s+/gm
 const BLOCKQUOTE_PATTERN = /^\s{0,3}>\s?/gm
 const LIST_PATTERN = /^\s*([-*+]|\d+\.)\s+/gm
 const EMPHASIS_PATTERN = /(\*\*|__|\*|_|~~)/g
+const HARD_BREAK_PATTERN = /\\\r?\n/g
 
 export function stripMarkdown(markdown: string): string {
   return markdown
@@ -17,6 +18,7 @@ export function stripMarkdown(markdown: string): string {
     .replace(BLOCKQUOTE_PATTERN, "")
     .replace(LIST_PATTERN, "")
     .replace(EMPHASIS_PATTERN, "")
+    .replace(HARD_BREAK_PATTERN, "\n")
     .replace(/\r\n/g, "\n")
     .replace(/\n{2,}/g, "\n")
     .replace(/[ \t]{2,}/g, " ")

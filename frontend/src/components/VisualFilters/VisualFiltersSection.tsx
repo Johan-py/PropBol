@@ -60,6 +60,14 @@ function normalizeName(name: string): string {
   return name.trim().toUpperCase();
 }
 
+function formatImageUrl(imagen: string | undefined): string {
+  if (!imagen) return "";
+  if (imagen.startsWith("http://") || imagen.startsWith("https://") || imagen.startsWith("/")) {
+    return imagen;
+  }
+  return `${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000"}/${imagen}`;
+}
+
 function mergeDepartamentos(
   base: string[],
   datos: BackendItem[]
@@ -71,7 +79,10 @@ function mergeDepartamentos(
     return {
       nombre: dept,
       total: found?.count ?? 0,
-      previews: found?.previews ?? [],
+      previews: (found?.previews ?? []).map(p => ({
+        ...p,
+        imagen: formatImageUrl(p.imagen)
+      })),
     };
   });
 
