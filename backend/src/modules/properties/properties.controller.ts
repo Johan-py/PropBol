@@ -115,8 +115,44 @@ export const propertiesController = {
       console.error('Error en búsqueda:', error)
       res.status(500).json({ ok: false, error: 'Error en la búsqueda avanzada' })
     }
+  },
+  // NUEVO MÉTODO COMPARADOR: compare
+  compare: async (req: Request, res: Response) => {
+    try {
+      const { ids } = req.body;
+
+      if (!ids || !Array.isArray(ids) || ids.length === 0) {
+        return res.status(400).json({ 
+          ok: false, 
+          message: 'Se requiere un arreglo de IDs válidos para comparar.' 
+        });
+      }
+
+      if (ids.length > 4) {
+        return res.status(400).json({ 
+          ok: false, 
+          message: 'El límite máximo es de 4 propiedades.' 
+        });
+      }
+
+      // Convertimos el array de strings a números para Prisma
+      const idsNumericos = ids.map(id => Number(id)).filter(id => !isNaN(id));
+
+      const inmuebles = await propertiesService.getForComparison(idsNumericos);
+
+      // Ordenar para que el modal muestre las propiedades en el mismo orden que se hizo clic
+      const sortedInmuebles = inmuebles.sort(
+        (a, b) => idsNumericos.indexOf(a.id) - idsNumericos.indexOf(b.id)
+      );
+
+      res.json({ ok: true, data: sortedInmuebles });
+    } catch (error) {
+      console.error('Error en compare:', error);
+      res.status(500).json({ ok: false, error: 'Error al obtener propiedades para comparar' });
+    }
   }
 }
 
 export const search = propertiesController.search
 export const getAll = propertiesController.getAll
+export const compare = propertiesController.compare
