@@ -43,6 +43,7 @@ import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenam
 import { ErrorState } from '@/components/ClusterSidebar'
 import SuperficieFilterSidebar from '@/components/filters/SuperficieFilterSidebar'
 import { UbicacionEspecificaPanel } from '@/components/filters/UbicacionEspecificaPanel';
+import ComparatorModal from '@/components/busqueda/ComparatorModal'
 
 // Carga dinámica del mapa (sin SSR)
 const MapView = nextDynamic(() => import('./MapView'), {
@@ -146,6 +147,7 @@ function BusquedaMapaContent() {
   const tieneFiltrSuperficie = minSuperficie || maxSuperficie
   const [isScrolled, setIsScrolled] = useState(false)
   const { isCompareMode, selectedIds, toggleProperty } = useCompareStore()
+  const [isModalOpen, setIsModalOpen] = useState(false); 
 
   const latParam = searchParams.get('lat')
   const lngParam = searchParams.get('lng')
@@ -1439,10 +1441,7 @@ function BusquedaMapaContent() {
               
               <button
                 disabled={selectedIds.length < 2}
-                onClick={() => {
-                  /* Lógica para abrir el Modal Comparativo (Escenario 4) */
-                  console.log("Abrir modal con IDs:", selectedIds);
-                }}
+                onClick={() => setIsModalOpen(true)}
                 className="px-6 py-2.5 bg-[#ea580c] text-white rounded-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#c2410c] transition-colors shadow-md"
               >
                 Listo
@@ -1645,6 +1644,11 @@ function BusquedaMapaContent() {
           }}
         />
       </main>
+      {/* MONTAJE DEL MODAL COMPARATIVO */}
+      <ComparatorModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </div>
   )
 }
