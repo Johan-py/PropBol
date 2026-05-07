@@ -436,7 +436,7 @@ export const enviarCodigoActivacionCuenta = async ({
             <div style="background:#fff7ed;padding:20px;text-align:center;margin:25px 0;border-radius:8px;border:1px solid #ffedd5;">
               <span style="font-size:36px;font-weight:bold;letter-spacing:5px;color:#9a3412;">${codigo}</span>
             </div>
-            <p style="font-size:14px;color:#666;">Este código expirará en <strong style="color:#ea580c;">5 minutos</strong>.</p>
+            <p style="font-size:14px;color:#666;">Este código expirará en <strong style="color:#ea580c;">1 minuto</strong>.</p>
             <div style="background:#fff7ed;border-left:4px solid #ea580c;padding:12px;margin:20px 0;">
               <p style="margin:0;font-size:13px;color:#7c2d12;">Si no solicitaste esta acción, ignora este mensaje.</p>
             </div>
@@ -447,7 +447,7 @@ export const enviarCodigoActivacionCuenta = async ({
         </div>
       </body></html>
     `,
-    textContent: `${saludo}\n\nTu código de verificación para activar la cuenta es: ${codigo}\n\nEste código expirará en 5 minutos.`,
+    textContent: `${saludo}\n\nTu código de verificación para activar la cuenta es: ${codigo}\n\nEste código expirará en 1 minuto.`,
   });
 };
 
