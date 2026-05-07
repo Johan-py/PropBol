@@ -395,4 +395,28 @@ export const propertiesRepository = {
 
     return resultados;
   },
+  // NUEVO MÉTODO PARA EL COMPARADOR
+  async getByIds(ids: number[]) {
+    const inmuebles = await prisma.inmueble.findMany({
+      where: {
+        id: { in: ids },
+        estado: "ACTIVO",
+      },
+      // Incluimos exactamente lo necesario para la matriz comparativa
+      include: {
+        publicaciones: {
+          where: { estado: "ACTIVA" },
+          include: { multimedia: true },
+        },
+        inmueble_etiqueta: {
+          include: { etiqueta: true },
+        },
+        inmueble_amenidad: {
+          include: { amenidad: true }
+        }
+      },
+    });
+
+    return inmuebles;
+  }
 };
