@@ -328,7 +328,11 @@ function BusquedaMapaContent() {
     setIsSavingNewZone(true)
     try {
       const ring = [...puntosBase, puntosBase[0]].map(([lat, lng]) => [lng, lat])
-      const nombreFinal = newZoneName.trim() || 'Nueva zona'
+      
+      // Limpiamos la cadena dejando solo alfanuméricos, espacios y caracteres acentuados
+      let nombreLimpio = newZoneName.trim() || 'Nueva zona'
+      nombreLimpio = nombreLimpio.replace(/[^a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚ]/g, '')
+      const nombreFinal = nombreLimpio || 'Zona sin nombre'
 
       const response = await fetch(`${API_URL}/api/perfil/zonas`, {
         method: 'POST',
@@ -418,7 +422,11 @@ function BusquedaMapaContent() {
     setIsSavingEditedZone(true)
     try {
       const ring = [...editingPolygonPoints, editingPolygonPoints[0]].map(([lat, lng]) => [lng, lat])
-      const nombreFinal = editingZoneName.trim() || 'Nueva zona'
+      
+      // Aplicamos la misma limpieza de caracteres alfanuméricos
+      let nombreLimpio = editingZoneName.trim() || 'Nueva zona'
+      nombreLimpio = nombreLimpio.replace(/[^a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚ]/g, '')
+      const nombreFinal = nombreLimpio || 'Zona sin nombre'
 
       const response = await fetch(`${API_URL}/api/perfil/zonas/${zoneId}`, {
         method: 'PUT',
@@ -839,7 +847,11 @@ function BusquedaMapaContent() {
                   }}
                   onMapClick={(latlng) => {
                     if (isDrawingMode) {
-                      setCurrentPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
+                      if (currentPolygonPoints.length >= 15) {
+                        alert('Límite máximo de 15 vértices');
+                        return; 
+                      }
+                      setCurrentPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]]);
                     }
                   }}
                   onPointClick={(index) => {
@@ -916,10 +928,14 @@ function BusquedaMapaContent() {
                 )
               }}
               onMapClick={(latlng) => {
-                if (isDrawingMode) {
-                  setCurrentPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
-                }
-              }}
+                    if (isDrawingMode) {
+                      if (currentPolygonPoints.length >= 15) {
+                        alert('Límite máximo de 15 vértices');
+                        return;
+                      }
+                      setCurrentPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]]);
+                    }
+                  }}
               onPointClick={(index) => {
                 if (isDrawingMode && index === 0 && currentPolygonPoints.length >= 3) {
                   setDrawnPolygons((prev) => [...prev, currentPolygonPoints])
@@ -1518,10 +1534,14 @@ function BusquedaMapaContent() {
                 )
               }}
               onMapClick={(latlng) => {
-                if (isDrawingMode) {
-                  setCurrentPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
-                }
-              }}
+                    if (isDrawingMode) {
+                      if (currentPolygonPoints.length >= 15) {
+                        alert('Límite máximo de 15 vértices');
+                        return;
+                      }
+                      setCurrentPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]]);
+                    }
+                  }}
               onPointClick={(index) => {
                 if (isDrawingMode && index === 0 && currentPolygonPoints.length >= 3) {
                   setDrawnPolygons((prev) => [...prev, currentPolygonPoints])
