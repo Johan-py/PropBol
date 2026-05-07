@@ -642,6 +642,19 @@ export default function LoginForm() {
     setShowActivationPassword(false);
   };
 
+  const maskEmail = (email: string) => {
+    const [name, domain] = email.split("@");
+
+    if (!name || !domain) {
+      return email;
+    }
+
+    const visiblePart = name.slice(0, 3);
+    const hiddenPart = "*".repeat(Math.max(name.length - 3, 3));
+
+    return `${visiblePart}${hiddenPart}@${domain}`;
+  };
+
   const handleFacebookLogin = () => {
     clearClientSession();
     setGoogleError("");
@@ -1239,7 +1252,7 @@ export default function LoginForm() {
               <p className="mt-3 text-sm text-gray-600">
                 Correo asociado:{" "}
                 <span className="font-medium text-gray-700">
-                  {activationEmail}
+                  {maskEmail(activationEmail)}
                 </span>
               </p>
 
