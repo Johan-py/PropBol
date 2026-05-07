@@ -279,6 +279,17 @@ export default function LoginForm() {
   const [activationEmail, setActivationEmail] = useState("");
   const [activationError, setActivationError] = useState("");
   const [isActivating, setIsActivating] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [timeLeft]);
 
   useEffect(() => {
     const authMessage = sessionStorage.getItem("authMessage");
@@ -708,6 +719,81 @@ export default function LoginForm() {
       window.removeEventListener("keydown", handleEscapeKey);
     };
   }, [showActivationModal]);
+
+  const handleRequestActivationCode = async () => {
+    setActivationError("");
+    setIsActivating(true);
+
+    try {
+      const response = await fetch(`${API_URL}/api/auth/request-activation-code`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo: activationEmail }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setActivationError(data.message || "Error al enviar el código");
+        return;
+      }
+
+      setActivationStep("code");
+      setTimeLeft(60);
+    } catch (error) {
+      setActivationError(
+        error instanceof Error
+          ? error.message
+          : "Error al conectar con el servidor",
+      );
+    } finally {
+      setIsActivating(false);
+    }
+  };
+
+  const handleActivateByCode = async () => {
+    const trimmedCode = activationCode.trim();
+
+    if (!trimmedCode) {
+      setActivationError("El código es obligatorio");
+      return;
+    }
+
+    setActivationError("");
+    setIsActivating(true);
+
+    try {
+      const response = await fetch(`${API_URL}/api/auth/activate-by-code`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          correo: activationEmail,
+          codigo: trimmedCode,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setActivationError(data.message || "Error al activar la cuenta");
+        return;
+      }
+
+      setSuccessMessage(data.message || "Cuenta activada correctamente. Ahora puedes iniciar sesión.");
+      setErrorMessage("");
+      setPassword("");
+      closeActivationModal();
+      router.push("/sign-in");
+    } catch (error) {
+      setActivationError(
+        error instanceof Error
+          ? error.message
+          : "Error al conectar con el servidor",
+      );
+    } finally {
+      setIsActivating(false);
+    }
+  };
 
   const maskEmail = (email: string) => {
     const [name, domain] = email.split("@");
@@ -1343,34 +1429,62 @@ export default function LoginForm() {
                   onChange={(e) => setActivationCode(e.target.value)}
                   placeholder="Ingresa tu código"
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500"
+                  disabled={isActivating}
                 />
+
+                {activationError && (
+                  <p className="mt-2 text-xs text-red-500">{activationError}</p>
+                )}
               </div>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setActivationStep("options");
-                  setActivationCode("");
-                }}
-                className="mt-4 text-sm font-medium text-gray-500 underline hover:text-gray-700"
-              >
-                ← Volver
-              </button>
+              <div className="mt-3 flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActivationStep("options");
+                    setActivationCode("");
+                    setActivationError("");
+                  }}
+                  disabled={isActivating}
+                  className="text-sm font-medium text-gray-500 underline hover:text-gray-700 disabled:opacity-50"
+                >
+                  ← Volver
+                </button>
+
+                {timeLeft > 0 ? (
+                  <p className="text-xs text-gray-500">
+                    Reenviar en {Math.floor(timeLeft / 60)}:
+                    {(timeLeft % 60).toString().padStart(2, "0")}
+                  </p>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleRequestActivationCode}
+                    disabled={isActivating}
+                    className="text-xs font-semibold text-orange-500 hover:underline disabled:opacity-50"
+                  >
+                    Volver a enviar
+                  </button>
+                )}
+              </div>
 
               <div className="mt-5 grid grid-cols-2 gap-3">
                 <button
                   type="button"
                   onClick={closeActivationModal}
-                  className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
+                  disabled={isActivating}
+                  className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-50"
                 >
                   Cancelar
                 </button>
 
                 <button
                   type="button"
-                  className="rounded-md bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600"
+                  onClick={handleActivateByCode}
+                  disabled={isActivating || !activationCode.trim()}
+                  className="rounded-md bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:bg-orange-300"
                 >
-                  Confirmar
+                  {isActivating ? "Activando..." : "Confirmar"}
                 </button>
               </div>
             </div>
@@ -1422,14 +1536,15 @@ export default function LoginForm() {
 
                 <button
                   type="button"
-                  onClick={() => setActivationStep("code")}
-                  className="flex w-full items-center justify-between rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-800 transition hover:bg-gray-50"
+                  onClick={handleRequestActivationCode}
+                  disabled={isActivating}
+                  className="flex w-full items-center justify-between rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-800 transition hover:bg-gray-50 disabled:opacity-50"
                 >
                   <span className="flex items-center gap-3">
                     <span className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100 text-orange-500">
                       ✉️
                     </span>
-                    Código de Verificación
+                    {isActivating ? "Enviando..." : "Código de Verificación"}
                   </span>
 
                   <span className="text-xl text-gray-700">›</span>

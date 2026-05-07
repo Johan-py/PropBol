@@ -7,6 +7,7 @@ import {
   enviarCodigo2FA,
   enviarCodigoRegistro,
   enviarCorreoRecuperacionPassword,
+  enviarCodigoActivacionCuenta,
 } from "../../lib/email.service.js";
 import { generateToken, type JwtPayload } from "../../utils/jwt.js";
 import {
@@ -1060,5 +1061,101 @@ export const resend2FAService = async (userId: number) => {
   return {
     message: "Código reenviado correctamente",
     expiresInMinutes: TWO_FACTOR_CODE_TTL_MINUTES,
+  };
+};
+
+export const requestActivationCodeService = async (correo: string) => {
+  const normalizedCorreo = correo?.trim().toLowerCase();
+
+  if (!normalizedCorreo) {
+    throw new AuthError("El correo es obligatorio", 400);
+  }
+
+  const user = await findUserByCorreo(normalizedCorreo);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  if (user.activo === true) {
+    throw new AuthError("Esta cuenta ya está activa", 400);
+  }
+
+  const codigo = generate2FACode();
+  const codigoHash = hash2FACode(codigo);
+  const expiraEn = new Date(
+    Date.now() + TWO_FACTOR_CODE_TTL_MINUTES * 60 * 1000,
+  );
+
+  await invalidateActive2FACodesByUserId(user.id);
+
+  await create2FACode({
+    usuarioId: user.id,
+    codigoHash,
+    expiraEn,
+  });
+
+  const emailResult = await enviarCodigoActivacionCuenta({
+    emailDestino: user.correo,
+    codigo,
+    nombreUsuario: user.nombre,
+  });
+
+  if (!emailResult.success) {
+    throw new Error(
+      "No se pudo enviar el código de activación. Intenta nuevamente.",
+    );
+  }
+
+  return {
+    message: "Código de activación enviado correctamente",
+    expiresInMinutes: TWO_FACTOR_CODE_TTL_MINUTES,
+  };
+};
+
+export const activateAccountByCodeService = async (
+  correo: string,
+  codigo: string,
+) => {
+  const normalizedCorreo = correo?.trim().toLowerCase();
+  const normalizedCode = codigo?.trim();
+
+  if (!normalizedCorreo || !normalizedCode) {
+    throw new AuthError("Correo y código son obligatorios", 400);
+  }
+
+  const user = await findUserByCorreo(normalizedCorreo);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  if (user.activo === true) {
+    throw new AuthError("Esta cuenta ya está activa", 400);
+  }
+
+  const activeCode = await findActive2FACodeByUserId(user.id);
+
+  if (!activeCode) {
+    throw new AuthError("El código es incorrecto", 401);
+  }
+
+  if (activeCode.expiraEn.getTime() < Date.now()) {
+    await expire2FACode(activeCode.id);
+    throw new AuthError("El código ha expirado", 401);
+  }
+
+  const codigoHash = hash2FACode(normalizedCode);
+
+  if (codigoHash !== activeCode.codigoHash) {
+    await increment2FACodeAttempts(activeCode.id, activeCode.intentos ?? 0);
+    throw new AuthError("El código es incorrecto", 401);
+  }
+
+  await mark2FACodeAsUsed(activeCode.id);
+  await activateUser(user.id);
+
+  return {
+    message: "Cuenta activada correctamente. Ya puedes iniciar sesión.",
   };
 };

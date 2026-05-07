@@ -14,6 +14,8 @@ import {
   verifyRegisterCodeService,
   resend2FAService,
   activateAccountByPasswordService,
+  requestActivationCodeService,
+  activateAccountByCodeService,
 } from './auth.service.js'
 
 type RegisterBody = {
@@ -390,6 +392,54 @@ export const activateAccountByPasswordController = async (req: Request, res: Res
   try {
     const { correo, password } = req.body;
     const result = await activateAccountByPasswordService({ correo, password });
+
+    return res.status(200).json(result);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
+    const message =
+      error instanceof Error ? error.message : "Error al activar la cuenta";
+
+    return res.status(400).json({ message });
+  }
+};
+
+export const requestActivationCodeController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { correo } = req.body;
+    const result = await requestActivationCodeService(correo);
+
+    return res.status(200).json(result);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Error al solicitar código de activación";
+
+    return res.status(400).json({ message });
+  }
+};
+
+export const activateAccountByCodeController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { correo, codigo } = req.body;
+    const result = await activateAccountByCodeService(correo, codigo);
 
     return res.status(200).json(result);
   } catch (error) {
