@@ -644,6 +644,24 @@ export default function LoginForm() {
     setActivationCode("");
   };
 
+  useEffect(() => {
+    if (!showActivationModal) {
+      return;
+    }
+
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeActivationModal();
+      }
+    };
+
+    window.addEventListener("keydown", handleEscapeKey);
+
+    return () => {
+      window.removeEventListener("keydown", handleEscapeKey);
+    };
+  }, [showActivationModal]);
+
   const maskEmail = (email: string) => {
     const [name, domain] = email.split("@");
 
@@ -1172,9 +1190,13 @@ export default function LoginForm() {
       </button>
 
       {showActivationModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+        <div 
+          onClick={closeActivationModal} 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           {activationStep === "password" && (
-            <div className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
+            <div 
+              onClick={(event) => event.stopPropagation()}
+              className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
               <h2 className="text-xl font-bold text-gray-900">
                 Activar cuenta
               </h2>
@@ -1239,7 +1261,9 @@ export default function LoginForm() {
           )}
 
           {activationStep === "code" && (
-            <div className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
+            <div 
+              onClick={(event) => event.stopPropagation()}
+              className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
               <h2 className="text-xl font-bold text-gray-900">
                 Activar cuenta
               </h2>
@@ -1294,7 +1318,9 @@ export default function LoginForm() {
           )}
 
           {activationStep === "options" && (
-            <div className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
+            <div 
+              onClick={(event) => event.stopPropagation()}
+              className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
               <button
                 type="button"
                 onClick={closeActivationModal}
