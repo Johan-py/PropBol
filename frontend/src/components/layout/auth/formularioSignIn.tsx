@@ -1015,14 +1015,17 @@ export default function LoginForm() {
             </label>
 
             <input
-              type="email"
-              required
-              autoFocus
-              placeholder="Ingresa tu correo electrónico"
-              value={magicLinkEmail}
-              onChange={(e) => setMagicLinkEmail(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500"
-            />
+             type="email"
+             autoFocus
+             placeholder="Ingresa tu correo electrónico"
+             value={magicLinkEmail}
+             onChange={(e) => {
+             setMagicLinkEmail(e.target.value);
+             setMagicLinkError("");
+             setMagicLinkSuccess("");
+             }}
+             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500"
+              />
           </div>
 
           {magicLinkError && (
