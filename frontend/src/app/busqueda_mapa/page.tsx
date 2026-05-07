@@ -776,7 +776,9 @@ function BusquedaMapaContent() {
                   banos={property.nroBanos ?? 0}
                   metros={property.superficieM2 ?? 0}
                   // HU4 - Pasa la acción de abrir detalle al botón "Ver detalles" en vista grilla
-                  onViewDetails={() => abrirDetallePropiedad(property.id)}
+                  onViewDetails={() => {
+                    if (!isCompareMode) abrirDetallePropiedad(property.id)
+                  }}
                 />
               ) : (
                 <PropertyRow
@@ -793,8 +795,10 @@ function BusquedaMapaContent() {
                     'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
                   }
                   // HU4 - Pasa la acción de abrir detalle al botón "Ver detalles" en vista tabla
-                  onViewDetails={() => abrirDetallePropiedad(property.id)}
-                />
+                  onViewDetails={() => {
+                    if (!isCompareMode) abrirDetallePropiedad(property.id)
+                  }}
+                  />
               )}
             </div>
           ))}
@@ -1405,7 +1409,9 @@ function BusquedaMapaContent() {
                           camas={property.nroCuartos ?? 0}
                           banos={property.nroBanos ?? 0}
                           metros={property.superficieM2 ?? 0}
-                          onViewDetails={() => abrirDetallePropiedad(property.id)}
+                          onViewDetails={() => {
+                            if (!isCompareMode) abrirDetallePropiedad(property.id)
+                          }}
                         />
                       ) : (
                         <PropertyRow
