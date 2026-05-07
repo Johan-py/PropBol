@@ -776,9 +776,7 @@ function BusquedaMapaContent() {
                   banos={property.nroBanos ?? 0}
                   metros={property.superficieM2 ?? 0}
                   // HU4 - Pasa la acción de abrir detalle al botón "Ver detalles" en vista grilla
-                  onViewDetails={() => {
-                    if (!isCompareMode) abrirDetallePropiedad(property.id)
-                  }}
+                  onViewDetails={() => abrirDetallePropiedad(property.id)}
                 />
               ) : (
                 <PropertyRow
@@ -795,9 +793,7 @@ function BusquedaMapaContent() {
                     'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
                   }
                   // HU4 - Pasa la acción de abrir detalle al botón "Ver detalles" en vista tabla
-                  onViewDetails={() => {
-                    if (!isCompareMode) abrirDetallePropiedad(property.id)
-                  }}
+                  onViewDetails={() => abrirDetallePropiedad(property.id)}
                 />
               )}
             </div>
@@ -806,7 +802,6 @@ function BusquedaMapaContent() {
       )}
     </div>
   )
-
 
   const renderListPaginationFooter = () => {
     if (isClusterView) {
@@ -1090,6 +1085,9 @@ function BusquedaMapaContent() {
                         estado={pinnedProperty.type}
                         precioFormateado={pinnedProperty.precioFormateado || 'Consultar precio'}
                         descripcion={pinnedProperty.descripcion || pinnedProperty.title}
+                        ubicacionTexto={pinnedProperty.ubicacionTexto}
+                        categoriaTexto={pinnedProperty.categoriaTexto}
+                        accionTexto={pinnedProperty.accionTexto}
                         camas={pinnedProperty.nroCuartos ?? 0}
                         banos={pinnedProperty.nroBanos ?? 0}
                         metros={pinnedProperty.superficieM2 ?? 0}
@@ -1407,9 +1405,7 @@ function BusquedaMapaContent() {
                           camas={property.nroCuartos ?? 0}
                           banos={property.nroBanos ?? 0}
                           metros={property.superficieM2 ?? 0}
-                          onViewDetails={() => {
-                            if (!isCompareMode) abrirDetallePropiedad(property.id)
-                          }}
+                          onViewDetails={() => abrirDetallePropiedad(property.id)}
                         />
                       ) : (
                         <PropertyRow
@@ -1425,9 +1421,7 @@ function BusquedaMapaContent() {
                             property.imagen ||
                             'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
                           }
-                          onViewDetails={() => {
-                            if (!isCompareMode) abrirDetallePropiedad(property.id)
-                          }}
+                          onViewDetails={() => abrirDetallePropiedad(property.id)}
                         />
                       )}
                     </div>
