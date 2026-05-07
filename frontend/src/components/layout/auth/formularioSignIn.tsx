@@ -675,9 +675,11 @@ export default function LoginForm() {
         return;
       }
 
-      setSuccessMessage(data.message || "Cuenta activada correctamente");
+      setSuccessMessage(data.message || "Cuenta activada correctamente. Ahora puedes iniciar sesión.");
       setErrorMessage("");
+      setPassword("");
       closeActivationModal();
+      router.push("/sign-in");
     } catch (error) {
       setActivationError(
         error instanceof Error
