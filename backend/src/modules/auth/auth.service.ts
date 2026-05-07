@@ -71,6 +71,10 @@ type LoginAttemptState = {
   blockedUntil: number | null;
 };
 
+type RequestMagicLinkDTO = {
+  correo: string;
+};
+
 export class AuthError extends Error {
   statusCode: number;
   retryAfterSeconds?: number;
@@ -808,6 +812,38 @@ type ForgotPasswordDTO = {
 };
 
 const RESET_PASSWORD_TTL_MINUTES = 15;
+
+export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
+  const correo = payload.correo?.trim().toLowerCase();
+
+  if (!correo) {
+    throw new AuthError("El correo es obligatorio", 400);
+  }
+
+  const emailRegex = /\S+@\S+\.\S+/;
+
+  if (!emailRegex.test(correo)) {
+    throw new AuthError("Formato de correo inválido", 400);
+  }
+
+  const user = await findUserByCorreo(correo);
+
+  if (!user) {
+    throw new AuthError(
+      "No existe una cuenta registrada con este correo electrónico.",
+      404,
+    );
+  }
+
+  if (user.activo === false) {
+    throw new AuthError("Esta cuenta está desactivada", 403);
+  }
+
+  return {
+    message:
+      "Correo verificado correctamente. Luego se enviará el link mágico de acceso.",
+  };
+};
 
 export const forgotPasswordService = async (payload: ForgotPasswordDTO) => {
   const correo = payload.correo?.trim().toLowerCase();

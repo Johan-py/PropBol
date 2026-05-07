@@ -33,6 +33,10 @@ type MeResponse = {
   };
 };
 
+type MagicLinkResponse = {
+  message?: string;
+};
+
 type GooglePopupSuccessMessage = {
   type: "propbol:google-login-success";
   message: string;
@@ -270,6 +274,9 @@ export default function LoginForm() {
   const [googleError, setGoogleError] = useState("");
   const [showMagicLinkForm, setShowMagicLinkForm] = useState(false);
   const [magicLinkEmail, setMagicLinkEmail] = useState("");
+  const [magicLinkError, setMagicLinkError] = useState("");
+  const [magicLinkSuccess, setMagicLinkSuccess] = useState("");
+  const [isLoadingMagicLink, setIsLoadingMagicLink] = useState(false);
 
   useEffect(() => {
     const authMessage = sessionStorage.getItem("authMessage");
@@ -317,6 +324,8 @@ export default function LoginForm() {
 
   const handleOpenMagicLinkForm = () => {
     setMagicLinkEmail(correo);
+    setMagicLinkError("");
+    setMagicLinkSuccess("");
     setErrorMessage("");
     setSuccessMessage("");
     setGoogleError("");
@@ -324,11 +333,72 @@ export default function LoginForm() {
   };
 
   const handleBackToLogin = () => {
+    setMagicLinkError("");
+    setMagicLinkSuccess("");
+    setIsLoadingMagicLink(false);
     setShowMagicLinkForm(false);
   };
 
-  const handleMagicLinkSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleMagicLinkSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const trimmedEmail = magicLinkEmail.trim().toLowerCase();
+
+    setMagicLinkError("");
+    setMagicLinkSuccess("");
+
+    if (!trimmedEmail) {
+      setMagicLinkError("El correo es obligatorio");
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(trimmedEmail)) {
+      setMagicLinkError("Formato de correo inválido");
+      return;
+    }
+
+    if (hasNoInternetConnection()) {
+      setMagicLinkError(NO_CONNECTION_MESSAGE);
+      return;
+    }
+
+    setIsLoadingMagicLink(true);
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => {
+      controller.abort();
+    }, LOGIN_TIMEOUT_MS);
+
+    try {
+      const response = await fetch(`${API_URL}/api/auth/magic-link/request`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          correo: trimmedEmail,
+        }),
+        signal: controller.signal,
+      });
+
+      const data = (await response.json()) as MagicLinkResponse;
+
+      if (!response.ok) {
+        setMagicLinkError(
+          data.message || "No se pudo solicitar el link mágico.",
+        );
+        return;
+      }
+
+      setMagicLinkSuccess(
+        data.message || "Solicitud de link mágico procesada correctamente.",
+      );
+    } catch (error) {
+      setMagicLinkError(getRequestErrorMessage(error));
+    } finally {
+      window.clearTimeout(timeoutId);
+      setIsLoadingMagicLink(false);
+    }
   };
 
   const validate = (field: string, value: string) => {
@@ -955,11 +1025,28 @@ export default function LoginForm() {
             />
           </div>
 
+          {magicLinkError && (
+            <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+              {magicLinkError}
+            </p>
+          )}
+
+          {magicLinkSuccess && (
+            <p className="rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-600">
+              {magicLinkSuccess}
+            </p>
+          )}
+
           <button
             type="submit"
-            className="w-full rounded-md bg-orange-500 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-600"
+            disabled={isLoadingMagicLink}
+            className={`w-full rounded-md py-2.5 text-sm font-semibold text-white transition ${
+              isLoadingMagicLink
+                ? "cursor-not-allowed bg-orange-300"
+                : "bg-orange-500 hover:bg-orange-600"
+            }`}
           >
-            Enviar link mágico
+            {isLoadingMagicLink ? "Enviando..." : "Enviar link mágico"}
           </button>
 
           <button
