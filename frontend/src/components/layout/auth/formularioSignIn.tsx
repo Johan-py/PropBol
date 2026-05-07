@@ -277,6 +277,8 @@ export default function LoginForm() {
   const [showActivationPassword, setShowActivationPassword] = useState(false);
   const [activationCode, setActivationCode] = useState("");
   const [activationEmail, setActivationEmail] = useState("");
+  const [activationError, setActivationError] = useState("");
+  const [isActivating, setIsActivating] = useState(false);
 
   useEffect(() => {
     const authMessage = sessionStorage.getItem("authMessage");
@@ -642,6 +644,49 @@ export default function LoginForm() {
     setActivationPassword("");
     setShowActivationPassword(false);
     setActivationCode("");
+    setActivationError("");
+  };
+
+  const handleActivateByPassword = async () => {
+    const trimmedPassword = activationPassword.trim();
+
+    if (!trimmedPassword) {
+      setActivationError("La contraseña es obligatoria");
+      return;
+    }
+
+    setActivationError("");
+    setIsActivating(true);
+
+    try {
+      const response = await fetch(`${API_URL}/api/auth/activate-by-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          correo: activationEmail,
+          password: trimmedPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setActivationError(data.message || "Error al activar la cuenta");
+        return;
+      }
+
+      setSuccessMessage(data.message || "Cuenta activada correctamente");
+      setErrorMessage("");
+      closeActivationModal();
+    } catch (error) {
+      setActivationError(
+        error instanceof Error
+          ? error.message
+          : "Error al conectar con el servidor",
+      );
+    } finally {
+      setIsActivating(false);
+    }
   };
 
   const maskEmail = (email: string) => {
@@ -1195,16 +1240,23 @@ export default function LoginForm() {
                     onChange={(e) => setActivationPassword(e.target.value)}
                     placeholder="Ingresa tu contraseña"
                     className="w-full rounded-md border border-gray-300 px-3 py-2 pr-16 text-sm outline-none focus:border-orange-500"
+                    disabled={isActivating}
                   />
 
                   <button
                     type="button"
-                    onClick={() => setShowActivationPassword(!showActivationPassword)}
+                    onClick={() =>
+                      setShowActivationPassword(!showActivationPassword)
+                    }
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-orange-500 hover:underline"
                   >
                     {showActivationPassword ? "Ocultar" : "Ver"}
                   </button>
                 </div>
+
+                {activationError && (
+                  <p className="mt-2 text-xs text-red-500">{activationError}</p>
+                )}
               </div>
 
               <button
@@ -1213,8 +1265,10 @@ export default function LoginForm() {
                   setActivationStep("options");
                   setActivationPassword("");
                   setShowActivationPassword(false);
+                  setActivationError("");
                 }}
-                className="mt-4 text-sm font-medium text-gray-500 underline hover:text-gray-700"
+                disabled={isActivating}
+                className="mt-4 text-sm font-medium text-gray-500 underline hover:text-gray-700 disabled:opacity-50"
               >
                 ← Volver
               </button>
@@ -1223,16 +1277,19 @@ export default function LoginForm() {
                 <button
                   type="button"
                   onClick={closeActivationModal}
-                  className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
+                  disabled={isActivating}
+                  className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-50"
                 >
                   Cancelar
                 </button>
 
                 <button
                   type="button"
-                  className="rounded-md bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600"
+                  onClick={handleActivateByPassword}
+                  disabled={isActivating || !activationPassword.trim()}
+                  className="rounded-md bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:bg-orange-300"
                 >
-                  Confirmar
+                  {isActivating ? "Activando..." : "Confirmar"}
                 </button>
               </div>
             </div>

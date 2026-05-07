@@ -44,6 +44,7 @@ import {
   forgotPasswordController,
   resetPasswordController,
   resend2FAController,
+  activateAccountByPasswordController,
 } from './modules/auth/auth.controller.js'
 import { requireAuth } from './middleware/auth.middleware.js'
 
@@ -220,6 +221,7 @@ app.post("/api/auth/deactivate-2fa", requireAuth, deactivate2FAController);
 app.get("/api/auth/2fa-status", requireAuth, get2FAStatusController);
 app.post("/api/auth/logout", logoutController);
 app.post("/api/auth/verify-register", verifyRegisterCodeController);
+app.post("/api/auth/activate-by-password", activateAccountByPasswordController);
 app.get("/api/auth/me", getMeController);
 app.get("/api/auth/google/login", StratGoogleLoginController);
 app.get("/api/auth/google/register", StartGoogleRegisterController);
@@ -228,6 +230,7 @@ app.post("/api/auth/register", registerController);
 app.post("/api/auth/login", loginController);
 app.post("/api/auth/logout", logoutController);
 app.post("/api/auth/verify-register", verifyRegisterCodeController);
+app.post("/api/auth/activate-by-password", activateAccountByPasswordController);
 app.get("/api/auth/me", getMeController);
 app.get("/api/auth/google/login", StratGoogleLoginController);
 app.get("/api/auth/google/register", StartGoogleRegisterController);

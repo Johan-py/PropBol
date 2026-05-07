@@ -29,11 +29,52 @@ import {
   findActive2FACodeByUserId,
   increment2FACodeAttempts,
   mark2FACodeAsUsed,
+  activateUser,
 } from "./auth.repository.js";
 
 type LoginDTO = {
   correo: string;
   password: string;
+};
+
+type ActivateAccountByPasswordDTO = {
+  correo: string;
+  password: string;
+};
+
+export const activateAccountByPasswordService = async (
+  payload: ActivateAccountByPasswordDTO,
+) => {
+  const correo = payload.correo?.trim().toLowerCase();
+  const password = payload.password?.trim();
+
+  if (!correo) {
+    throw new AuthError("El correo es obligatorio", 400);
+  }
+
+  if (!password) {
+    throw new AuthError("La contraseña es obligatoria", 400);
+  }
+
+  const user = await findUserByCorreo(correo);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  if (user.activo === true) {
+    throw new AuthError("Esta cuenta ya está activa", 400);
+  }
+
+  if (user.password !== password) {
+    throw new AuthError("Contraseña incorrecta", 401);
+  }
+
+  await activateUser(user.id);
+
+  return {
+    message: "Cuenta activada correctamente. Ya puedes iniciar sesión.",
+  };
 };
 
 type RegisterDTO = {

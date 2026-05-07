@@ -477,6 +477,16 @@ export const completeTourByUserId = async (id: number) => {
   })
 }
 
+export const activateUser = async (id: number) => {
+  return await prisma.usuario.update({
+    where: { id },
+    data: {
+      activo: true,
+      desactivado_en: null,
+    },
+  });
+};
+
 export const countActiveSocialLinksByUser = async (usuarioId: number) => {
   return await prisma.autenticacion_social.count({
     where: {
