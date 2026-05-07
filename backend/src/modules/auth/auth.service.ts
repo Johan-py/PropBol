@@ -131,7 +131,7 @@ const MAX_LOGIN_ATTEMPTS = 5;
 const LOGIN_BLOCK_TIME_MS = 15 * 60 * 1000;
 
 const REGISTER_CODE_TTL_MINUTES = 5;
-const TWO_FACTOR_CODE_TTL_MINUTES = 5;
+const TWO_FACTOR_CODE_TTL_MINUTES = 1;
 
 // límite de solicitudes de recuperación
 const MAX_RECOVERY_REQUESTS = 3;
