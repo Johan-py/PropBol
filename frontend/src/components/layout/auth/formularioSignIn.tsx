@@ -268,6 +268,8 @@ export default function LoginForm() {
   const [successMessage, setSuccessMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [googleError, setGoogleError] = useState("");
+  const [showMagicLinkForm, setShowMagicLinkForm] = useState(false);
+  const [magicLinkEmail, setMagicLinkEmail] = useState("");
 
   useEffect(() => {
     const authMessage = sessionStorage.getItem("authMessage");
@@ -311,6 +313,22 @@ export default function LoginForm() {
     setIsLoadingGoogle(false);
     setIsLoadingFacebook(false);
     setIsLoadingDiscord(false);
+  };
+
+  const handleOpenMagicLinkForm = () => {
+    setMagicLinkEmail(correo);
+    setErrorMessage("");
+    setSuccessMessage("");
+    setGoogleError("");
+    setShowMagicLinkForm(true);
+  };
+
+  const handleBackToLogin = () => {
+    setShowMagicLinkForm(false);
+  };
+
+  const handleMagicLinkSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
   };
 
   const validate = (field: string, value: string) => {
@@ -909,6 +927,57 @@ export default function LoginForm() {
     window.addEventListener("message", handleMessage);
   };
 
+  if (showMagicLinkForm) {
+    return (
+      <div className="w-full max-w-sm rounded-md bg-white p-6 shadow-md">
+        <h1 className="mb-4 text-3xl font-bold text-gray-900">
+          Ingresa sin contraseña
+        </h1>
+
+        <p className="mb-6 text-sm leading-6 text-gray-600">
+          Te enviaremos un enlace de acceso único a tu correo electrónico.
+        </p>
+
+        <form className="space-y-4" onSubmit={handleMagicLinkSubmit}>
+          <div>
+            <label className="mb-2 block text-sm font-medium text-gray-700">
+              Correo electrónico
+            </label>
+
+            <input
+              type="email"
+              required
+              autoFocus
+              placeholder="Ingresa tu correo electrónico"
+              value={magicLinkEmail}
+              onChange={(e) => setMagicLinkEmail(e.target.value)}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full rounded-md bg-orange-500 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-600"
+          >
+            Enviar link mágico
+          </button>
+
+          <button
+            type="button"
+            onClick={handleBackToLogin}
+            className="w-full rounded-md bg-[#1f2937] py-2.5 text-sm font-semibold text-white transition hover:bg-[#111827]"
+          >
+            Volver al inicio de sesión
+          </button>
+
+          <p className="pt-4 text-center text-xs text-gray-500">
+            El enlace expirará en 15 minutos y solo podrá usarse una vez.
+          </p>
+        </form>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-sm rounded-md bg-white p-6 shadow-md">
       <h1 className="mb-4 text-3xl font-bold text-gray-900">Iniciar Sesión</h1>
@@ -1015,6 +1084,7 @@ export default function LoginForm() {
 
         <button
           type="button"
+          onClick={handleOpenMagicLinkForm}
           className="flex w-full items-center justify-center gap-2 rounded-md border border-orange-500 bg-white py-2 text-sm font-semibold text-orange-500 transition hover:bg-orange-50"
         >
           <span aria-hidden="true">🔗</span>
