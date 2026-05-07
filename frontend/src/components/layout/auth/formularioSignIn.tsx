@@ -269,6 +269,8 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [googleError, setGoogleError] = useState("");
 
+  const [showActivationModal, setShowActivationModal] = useState(false);
+
   useEffect(() => {
     const authMessage = sessionStorage.getItem("authMessage");
 
@@ -1001,6 +1003,7 @@ export default function LoginForm() {
 
             <button
               type="button"
+              onClick={() => setShowActivationModal(true)}
               className="mt-3 text-sm font-medium text-orange-500 hover:underline"
             >
               Activar cuenta
@@ -1138,6 +1141,21 @@ export default function LoginForm() {
       >
         Ir a la página principal
       </button>
+
+      {showActivationModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="relative w-full max-w-sm min-h-[190px] rounded-xl bg-white shadow-lg">
+            <button
+              type="button"
+              onClick={() => setShowActivationModal(false)}
+              className="absolute right-4 top-4 text-2xl font-medium text-gray-700 hover:text-gray-900"
+              aria-label="Cerrar ventana"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
