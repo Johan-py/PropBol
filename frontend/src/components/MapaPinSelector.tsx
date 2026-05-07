@@ -48,7 +48,8 @@ function EventosMapa({
   modoDifuminadoActivo,
   setPinCoords,
   vertices,
-  setVertices
+  setVertices,
+  setMensajeLimite,
 }: any) {
   useMapEvents({
     click(e) {
@@ -60,6 +61,16 @@ function EventosMapa({
       }
 
       if (modoDifuminadoActivo) {
+        // Limitar máximo de puntos
+  if (vertices.length >= 10) {
+   setMensajeLimite(true)
+
+  setTimeout(() => {
+    setMensajeLimite(false)
+  }, 2000)
+
+  return
+  }
   const nuevoPunto: [number, number] = [
     e.latlng.lat,
     e.latlng.lng
@@ -109,8 +120,10 @@ export default function MapaPinSelector({
   modoPinActivo,
   modoDifuminadoActivo
 }: Props) {
+  const [mensajeLimite, setMensajeLimite] = useState(false)
  
   return (
+    <div className="relative">
     <MapContainer
       center={[-17.3895, -66.1568]}
       zoom={13}
@@ -128,6 +141,7 @@ export default function MapaPinSelector({
         setPinCoords={setPinCoords}
         vertices={vertices}
         setVertices={setVertices}
+        setMensajeLimite={setMensajeLimite}
       />
 
      {pinCoords && (
@@ -188,6 +202,14 @@ export default function MapaPinSelector({
     }}
   />
 ))}
-    </MapContainer>
-  )
+   </MapContainer>
+
+{mensajeLimite && (
+ <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[9999] text-orange-500 text-sm font-medium">
+    Límite máximo de 10 puntos alcanzado
+  </div>
+)}
+
+</div>
+)
 }
