@@ -270,11 +270,12 @@ export default function LoginForm() {
   const [googleError, setGoogleError] = useState("");
 
   const [showActivationModal, setShowActivationModal] = useState(false);
-  const [activationStep, setActivationStep] = useState<"options" | "password">(
-    "options",
-  );
+  const [activationStep, setActivationStep] = useState<
+  "options" | "password" | "code"
+>("options");
   const [activationPassword, setActivationPassword] = useState("");
   const [showActivationPassword, setShowActivationPassword] = useState(false);
+  const [activationCode, setActivationCode] = useState("");
   const [activationEmail, setActivationEmail] = useState("");
 
   useEffect(() => {
@@ -640,6 +641,7 @@ export default function LoginForm() {
     setActivationStep("options");
     setActivationPassword("");
     setShowActivationPassword(false);
+    setActivationCode("");
   };
 
   const maskEmail = (email: string) => {
@@ -1171,7 +1173,7 @@ export default function LoginForm() {
 
       {showActivationModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          {activationStep === "password" ? (
+          {activationStep === "password" && (
             <div className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
               <h2 className="text-xl font-bold text-gray-900">
                 Activar cuenta
@@ -1234,7 +1236,64 @@ export default function LoginForm() {
                 </button>
               </div>
             </div>
-          ) : (
+          )}
+
+          {activationStep === "code" && (
+            <div className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
+              <h2 className="text-xl font-bold text-gray-900">
+                Activar cuenta
+              </h2>
+
+              <p className="mt-3 text-sm text-gray-600">
+                Hemos enviado un código de verificación a tu correo electrónico.
+                Ingresa el código para activar tu cuenta.
+              </p>
+
+              <div className="mt-5">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Código de verificación
+                </label>
+
+                <input
+                  type="text"
+                  value={activationCode}
+                  onChange={(e) => setActivationCode(e.target.value)}
+                  placeholder="Ingresa tu código"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500"
+                />
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setActivationStep("options");
+                  setActivationCode("");
+                }}
+                className="mt-4 text-sm font-medium text-gray-500 underline hover:text-gray-700"
+              >
+                ← Volver
+              </button>
+
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={closeActivationModal}
+                  className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50"
+                >
+                  Cancelar
+                </button>
+
+                <button
+                  type="button"
+                  className="rounded-md bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600"
+                >
+                  Confirmar
+                </button>
+              </div>
+            </div>
+          )}
+
+          {activationStep === "options" && (
             <div className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
               <button
                 type="button"
@@ -1278,6 +1337,7 @@ export default function LoginForm() {
 
                 <button
                   type="button"
+                  onClick={() => setActivationStep("code")}
                   className="flex w-full items-center justify-between rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-800 transition hover:bg-gray-50"
                 >
                   <span className="flex items-center gap-3">
