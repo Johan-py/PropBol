@@ -1,6 +1,7 @@
 'use client'
 
 import 'leaflet/dist/leaflet.css'
+import 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css' // MAPAS HU11
 import {
   MapContainer,
   TileLayer,
@@ -31,6 +32,9 @@ if (typeof window !== 'undefined') {
     iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
     shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
   })
+  //Agregamos el plugin de gesture handling para moviles MAPAS HU11
+  const { GestureHandling } = require('leaflet-gesture-handling')
+  L.Map.addInitHook('addHandler', 'gestureHandling', GestureHandling)
 }
 
 const PIN_FILL: Record<PropertyMapPin['type'], string> = {
@@ -349,6 +353,17 @@ export default function MapView({
         dragging={true}
         style={{ height: '100%', width: '100%' }}
         className={`z-0 ${isDrawingMode && !isPolygonClosed ? '[&.leaflet-container]:cursor-crosshair [&_.leaflet-interactive]:cursor-crosshair' : ''}`}
+        // Agregado: Control nativo del cursor y bloqueo de arrastre en modo dibujo MAPAS HU11
+        {...({ 
+          gestureHandling: true,
+          gestureHandlingOptions: {
+            text: {
+              touch: "Usa dos dedos para mover el mapa",
+              scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
+              scrollMac: "Usa \u2318 + scroll para hacer zoom en el mapa"
+            }
+          }
+        } as any)} //FIN AGREGADO MAPAS HU11
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
