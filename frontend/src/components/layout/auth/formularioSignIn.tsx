@@ -270,6 +270,7 @@ export default function LoginForm() {
   const [googleError, setGoogleError] = useState("");
 
   const [showActivationModal, setShowActivationModal] = useState(false);
+  const [activationEmail, setActivationEmail] = useState("");
 
   useEffect(() => {
     const authMessage = sessionStorage.getItem("authMessage");
@@ -565,6 +566,7 @@ export default function LoginForm() {
         setPassword("");
 
         if (response.status === 403) {
+          setActivationEmail(trimmedCorreo);
           setErrorMessage(DEACTIVATED_ACCOUNT_MESSAGE);
           return;
         }
@@ -1144,15 +1146,60 @@ export default function LoginForm() {
 
       {showActivationModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="relative w-full max-w-sm min-h-[190px] rounded-xl bg-white shadow-lg">
+          <div className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
             <button
               type="button"
               onClick={() => setShowActivationModal(false)}
               className="absolute right-4 top-4 text-2xl font-medium text-gray-700 hover:text-gray-900"
               aria-label="Cerrar ventana"
             >
-              ×
+             ×
             </button>
+
+            <h2 className="text-xl font-bold text-gray-900">
+             Activar cuenta
+            </h2>
+
+            <p className="mt-3 text-sm text-gray-600">
+              Correo asociado:{" "}
+              <span className="font-medium text-gray-700">
+                {activationEmail}
+              </span>
+            </p>
+
+            <p className="mt-5 text-sm text-gray-600">
+              Escoja el método de activación
+            </p>
+
+            <div className="mt-3 space-y-3">
+              <button
+                type="button"
+                className="flex w-full items-center justify-between rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-800 transition hover:bg-gray-50"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100 text-orange-500">
+                    🔒
+                  </span>
+                  Contraseña
+                </span>
+
+                <span className="text-xl text-gray-700">›</span>
+              </button>
+
+              <button
+                type="button"
+                className="flex w-full items-center justify-between rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-800 transition hover:bg-gray-50"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100 text-orange-500">
+                    ✉️
+                  </span>
+                  Código de Verificación
+                </span>
+
+                <span className="text-xl text-gray-700">›</span>
+              </button>
+            </div>
           </div>
         </div>
       )}
