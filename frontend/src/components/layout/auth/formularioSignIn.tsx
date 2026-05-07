@@ -1013,6 +1013,14 @@ export default function LoginForm() {
           {isLoading ? "Ingresando..." : "Iniciar sesión"}
         </button>
 
+        <button
+          type="button"
+          className="flex w-full items-center justify-center gap-2 rounded-md border border-orange-500 bg-white py-2 text-sm font-semibold text-orange-500 transition hover:bg-orange-50"
+        >
+          <span aria-hidden="true">🔗</span>
+          Ingresar con link mágico
+        </button>
+
         <div className="space-y-3">
           <button
             type="button"
