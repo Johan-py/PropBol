@@ -26,6 +26,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { UbicacionEspecificaPanel } from './UbicacionEspecificaPanel';
 import SuperficieFilter from './SuperficieFilter'
 import AdvancedFiltersModal from './AdvancedFiltersModal'
+import { useCompareStore } from '@/hooks/useCompareStore'
+import { BarChart2 } from 'lucide-react'
 
 // --- DICCIONARIOS PARA MAPEAR IDs A NOMBRES ---
 const AMENITIES_MAP: Record<string, string> = {
@@ -121,6 +123,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
   const [tipoInmueble, setTipoInmueble] = useState<string>('Cualquier tipo')
   const [ubicacionTexto, setUbicacionTexto] = useState('')
   const [isZonaOpen, setIsZonaOpen] = useState(false)
+  const { isCompareMode, toggleCompareMode, selectedIds } = useCompareStore()
 
   //Estado para almacenar las coordenadas temporalmente
   const [coords, setCoords] = useState<{ lat?: number, lng?: number }>({})
@@ -495,6 +498,21 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
             >
               <Award className={`w-4 h-4 ${isRecomendadosActive ? 'text-white' : 'text-stone-500'}`} />
               <span>Recomendados</span>
+            </button>
+            <button
+              type="button"
+              onClick={(e) => { 
+                e.preventDefault(); 
+                toggleCompareMode(); 
+              }}
+              className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${
+                isCompareMode
+                  ? 'bg-[#d97706] text-white border-[#d97706]'
+                  : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+              }`}
+            >
+              <BarChart2 className={`w-4 h-4 ${isCompareMode ? 'text-white' : 'text-stone-500'}`} />
+              <span>Comparar {isCompareMode && selectedIds.length > 0 ? `(${selectedIds.length})` : ''}</span>
             </button>
           </div>
 
