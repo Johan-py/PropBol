@@ -1481,7 +1481,7 @@ export default function LoginForm() {
                 <button
                   type="button"
                   onClick={handleActivateByCode}
-                  disabled={isActivating || !activationCode.trim()}
+                  disabled={isActivating}
                   className="rounded-md bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:bg-orange-300"
                 >
                   {isActivating ? "Activando..." : "Confirmar"}

@@ -1137,19 +1137,19 @@ export const activateAccountByCodeService = async (
   const activeCode = await findActive2FACodeByUserId(user.id);
 
   if (!activeCode) {
-    throw new AuthError("El código es incorrecto", 401);
+    throw new AuthError("El código es inválido", 401);
   }
 
   if (activeCode.expiraEn.getTime() < Date.now()) {
     await expire2FACode(activeCode.id);
-    throw new AuthError("El código ha expirado", 401);
+    throw new AuthError("El código expiró", 401);
   }
 
   const codigoHash = hash2FACode(normalizedCode);
 
   if (codigoHash !== activeCode.codigoHash) {
     await increment2FACodeAttempts(activeCode.id, activeCode.intentos ?? 0);
-    throw new AuthError("El código es incorrecto", 401);
+    throw new AuthError("El código es inválido", 401);
   }
 
   await mark2FACodeAsUsed(activeCode.id);
