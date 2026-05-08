@@ -30,6 +30,10 @@ interface MisZonasSidebarProps {
   onDeleteZone: (id: string) => void
   currentUserId?: number
   onZoneSelect?: (id: number) => void
+  showPredefinidas?: boolean
+  onShowPredefinidas?: (show: boolean) => void
+  showPersonalizadas?: boolean
+  onShowPersonalizadas?: (show: boolean) => void
 }
 
 // Asegúrate de que tenga "export default function"
@@ -55,6 +59,10 @@ export default function MisZonasSidebar({
   onZoneSelect,
   onDeleteZone,
   currentUserId,
+  showPredefinidas = true,
+  onShowPredefinidas,
+  showPersonalizadas = true,
+  onShowPersonalizadas,
 }: MisZonasSidebarProps) {
   return (
     <>
@@ -78,6 +86,40 @@ export default function MisZonasSidebar({
           >
             <ChevronRight size={20} />
           </button>
+        </div>
+
+        {/* Toggles de visibilidad de zonas */}
+        <div className="px-4 py-3 border-b border-stone-200 space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-stone-700">Zonas predefinidas</span>
+            <button
+              onClick={() => onShowPredefinidas?.(!showPredefinidas)}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                showPredefinidas ? 'bg-amber-500' : 'bg-stone-300'
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-lg transition-transform ${
+                  showPredefinidas ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-stone-700">Mis zonas</span>
+            <button
+              onClick={() => onShowPersonalizadas?.(!showPersonalizadas)}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                showPersonalizadas ? 'bg-green-500' : 'bg-stone-300'
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-lg transition-transform ${
+                  showPersonalizadas ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
         </div>
 
         {/* Contenido principal condicionado por la autenticación */}

@@ -139,6 +139,8 @@ function esZonaNavegable(coords: [number, number][]): boolean {
 
 function BusquedaMapaContent() {
   const [isMisZonasOpen, setIsMisZonasOpen] = useState(false)
+  const [showPredefinidas, setShowPredefinidas] = useState(true)
+  const [showPersonalizadas, setShowPersonalizadas] = useState(true)
   const router = useRouter();
   const searchParams = useSearchParams();
   const filterResetKey = searchParams.toString();
@@ -315,15 +317,40 @@ function BusquedaMapaContent() {
           id: -zonaUsuario.id,
           nombre: zonaUsuario.nombre,
           coordenadas,
-          color: '#ea580c',
           activa: true,
-          creadoEn: new Date().toISOString()
+          creadoEn: new Date().toISOString(),
+          tipo: 'personalizada' as const
         }
       })
       .filter((zona): zona is NonNullable<typeof zona> => Boolean(zona))
 
-    return [...zonas, ...zonasUsuarioParaMapa]
+    const zonasPredefinidasParaMapa = zonas.map((zona) => ({
+      ...zona,
+      tipo: 'predefinida' as const,
+    }))
+
+    return [...zonasPredefinidasParaMapa, ...zonasUsuarioParaMapa]
   }, [zonas, misZonas])
+
+  const zonasFiltradas = useMemo(() => {
+    return zonasCombinadas.filter((zona) => {
+      if (zona.tipo === 'personalizada' && !showPersonalizadas) return false
+      if (zona.tipo === 'predefinida' && !showPredefinidas) return false
+      return true
+    })
+  }, [zonasCombinadas, showPredefinidas, showPersonalizadas])
+
+  useEffect(() => {
+    if (selectedZoneId === null) return
+
+    const zonaVisible = zonasFiltradas.some((zona) => zona.id === selectedZoneId)
+    if (zonaVisible) return
+
+    setSelectedZoneId(null)
+    setIsClusterView(false)
+    setActiveClusterIds([])
+    setClusterProperties([])
+  }, [selectedZoneId, zonasFiltradas])
 
   const zonasSidebar = useMemo(
     () => misZonas.map((zona) => ({ id: String(zona.id), nombre: zona.nombre })),
@@ -863,7 +890,7 @@ function BusquedaMapaContent() {
                   properties={inmueblesOrdenados}
                   selectedId={selectedPropertyId}
                   searchOrigin={searchOrigin}
-                  zonas={zonasCombinadas}
+                  zonas={zonasFiltradas}
                   selectedZoneId={selectedZoneId}
                   onZoneSelect={handleZoneSelect}
                   onZoneCycle={handleZoneCycle}
@@ -945,7 +972,7 @@ function BusquedaMapaContent() {
               properties={inmueblesOrdenados}
               selectedId={selectedPropertyId}
               searchOrigin={searchOrigin}
-              zonas={zonasCombinadas}
+              zonas={zonasFiltradas}
               selectedZoneId={selectedZoneId}
               onZoneSelect={handleZoneSelect}
               onZoneCycle={handleZoneCycle}
@@ -1606,7 +1633,7 @@ function BusquedaMapaContent() {
               activeClusterIds={activeClusterIds}
               isLoading={isLoading}
               error={error}
-              zonas={zonasCombinadas}
+              zonas={zonasFiltradas}
               selectedZoneId={selectedZoneId}
               onZoneSelect={handleZoneSelect}
               onZoneCycle={handleZoneCycle}
@@ -1646,7 +1673,7 @@ function BusquedaMapaContent() {
         <MisZonasSidebar
           isOpen={isMisZonasOpen}
           onClose={() => setIsMisZonasOpen(false)}
-          isAuthenticated={isAuthenticated} // Mapeado al estado que acabamos de crear
+          isAuthenticated={isAuthenticated}
           zonas={zonasSidebar}
           editingZoneId={editingZoneId}
           editingZoneName={editingZoneName}
@@ -1677,6 +1704,11 @@ function BusquedaMapaContent() {
             if (Number.isNaN(zoneId)) return
             setSelectedZoneId(-zoneId)
           }}
+          showPredefinidas={showPredefinidas}
+          onShowPredefinidas={setShowPredefinidas}
+          showPersonalizadas={showPersonalizadas}
+          onShowPersonalizadas={setShowPersonalizadas}
+
         />
       </main>
       {/* MONTAJE DEL MODAL COMPARATIVO */}
