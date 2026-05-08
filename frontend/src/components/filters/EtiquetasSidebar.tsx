@@ -79,7 +79,6 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
     }
 
     fetchEtiquetas()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]) // Dependencia única y limpia recomendada por Claude
 
   // 2. Sincronizar selección con la URL al abrir (F2)
