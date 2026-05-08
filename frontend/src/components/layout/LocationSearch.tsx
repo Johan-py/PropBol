@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { MapPin, Loader2, X, History, Search } from 'lucide-react'
 import { usePopularidad } from '@/hooks/usePopularidad'
 import { useSearchFilters } from '@/hooks/useSearchFilters'
-import { useDebounce } from 'use-debounce'
+import { useDebounce } from '@/hooks/useDebounce'
 
 interface MapboxFeature {
   id: string;
@@ -34,7 +34,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
   const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
   const [inputValue, setInputValue] = useState(value || '')
-  const [debouncedValue] = useDebounce(inputValue, 400)
+  const debouncedValue = useDebounce(inputValue, 400)
   const [suggestions, setSuggestions] = useState<MapboxFeature[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
@@ -138,7 +138,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
 
   useEffect(() => {
     const searchAll = async () => {
-      if (!debouncedValue || debouncedValue.length < 2) {
+      if (!debouncedValue || debouncedValue.length < 3) {
         setSuggestions([])
         return
       }
@@ -175,7 +175,9 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             center: [el.lon, el.lat]
           }))
         }
-        const resMapbox = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(debouncedValue)}.json?access_token=${MAPBOX_TOKEN}&country=bo&language=es`)
+        const resMapbox = await fetch(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(debouncedValue)}.json?access_token=${MAPBOX_TOKEN}&country=bo&language=es&autocomplete=true&types=address,neighborhood,locality,poi`
+        )
         const dataMapbox = await resMapbox.json()
         const mapboxResults = dataMapbox.features || []
         setSuggestions([...localResults, ...osmResults, ...mapboxResults])
@@ -243,7 +245,9 @@ const handleSelect = (place: MapboxFeature) => {
 
       // 2. Si no es local, intentar con Mapbox
       if (!bestMatch) {
-        const resMapbox = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(term)}.json?access_token=${MAPBOX_TOKEN}&country=bo&language=es`)
+        const resMapbox = await fetch(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(debouncedValue)}.json?access_token=${MAPBOX_TOKEN}&country=bo&language=es&autocomplete=true&types=address,neighborhood,locality,poi`
+        )
         const dataMapbox = await resMapbox.json()
         if (dataMapbox.features && dataMapbox.features.length > 0) {
           const place = dataMapbox.features[0]
@@ -351,7 +355,7 @@ const handleSelect = (place: MapboxFeature) => {
             </div>
           )}
 
-          {inputValue.length >= 2 && (
+          {inputValue.length >= 3 && (
             <div className="max-h-[300px] overflow-y-auto overscroll-contain">
               {isLoading ? (
                 <div className="px-4 py-6 text-center flex flex-col items-center gap-2">
