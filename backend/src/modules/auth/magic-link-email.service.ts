@@ -15,22 +15,35 @@ type EmailSendResult = {
   error?: unknown;
 };
 
+const escapeHtml = (value: string) => {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+};
+
 export const sendMagicLinkEmail = async ({
   emailDestino,
   magicLink,
   nombreUsuario,
   minutosExpiracion,
 }: MagicLinkEmailParams): Promise<EmailSendResult> => {
-  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : "Hola,";
   const brevoApiKey = process.env.BREVO_API_KEY;
 
   if (!brevoApiKey) {
     console.error("❌ BREVO_API_KEY no está configurado");
+
     return {
       success: false,
       error: "BREVO_API_KEY no está configurado",
     };
   }
+
+  const safeNombre = nombreUsuario ? escapeHtml(nombreUsuario) : "";
+  const safeMagicLink = escapeHtml(magicLink);
+  const saludo = safeNombre ? `Hola ${safeNombre},` : "Hola,";
 
   try {
     const response = await fetch(BREVO_API_URL, {
@@ -49,68 +62,112 @@ export const sendMagicLinkEmail = async ({
             email: emailDestino,
           },
         ],
-        subject: "Tu link mágico de acceso - PropBol",
+        subject: "Ingresa a PropBol con tu link mágico",
         htmlContent: `
           <!DOCTYPE html>
-          <html>
+          <html lang="es">
             <head>
               <meta charset="UTF-8" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+              <title>Magic Link PropBol</title>
             </head>
-            <body style="font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px;">
-              <div style="max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 10px; overflow: hidden;">
-                <div style="background: #f97316; padding: 20px; text-align: center;">
-                  <h1 style="color: #ffffff; margin: 0; font-size: 24px;">
-                    Acceso sin contraseña
-                  </h1>
-                </div>
 
-                <div style="padding: 30px;">
-                  <p style="font-size: 16px; color: #333333;">
-                    ${saludo}
-                  </p>
-
-                  <p style="font-size: 16px; color: #333333;">
-                    Solicitaste ingresar a PropBol usando un link mágico.
-                  </p>
-
-                  <div style="text-align: center; margin: 30px 0;">
-                    <a href="${magicLink}"
-                      style="background: #f97316; color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">
-                      Ingresar a PropBol
-                    </a>
-                  </div>
-
-                  <p style="font-size: 14px; color: #666666;">
-                    Este enlace expirará en <strong style="color: #f97316;">${minutosExpiracion} minutos</strong>
-                    y solo podrá usarse una vez.
-                  </p>
-
-                  <div style="background: #fffbeb; border-left: 4px solid #f97316; padding: 12px; margin: 20px 0;">
-                    <p style="margin: 0; font-size: 13px; color: #78350f;">
-                      Si no solicitaste este acceso, ignora este mensaje.
-                    </p>
-                  </div>
-                </div>
-
-                <div style="background: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
-                  <p style="font-size: 12px; color: #9ca3af; margin: 0;">
-                    Mensaje automático, por favor no responder.
-                  </p>
-                </div>
+            <body style="margin: 0; padding: 0; background-color: #f5f5f4; font-family: Arial, Helvetica, sans-serif;">
+              <div style="display: none; max-height: 0; overflow: hidden; opacity: 0;">
+                Usa este enlace único para ingresar a PropBol sin contraseña.
               </div>
+
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f5f5f4; padding: 32px 16px;">
+                <tr>
+                  <td align="center">
+                    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #ffffff; border-radius: 18px; overflow: hidden; box-shadow: 0 8px 24px rgba(41, 37, 36, 0.10);">
+                      
+                      <tr>
+                        <td style="background: linear-gradient(135deg, #f97316, #d97706); padding: 28px 24px; text-align: center;">
+                          <h1 style="margin: 0; color: #ffffff; font-size: 26px; font-weight: 800; line-height: 1.3;">
+                            Acceso sin contraseña
+                          </h1>
+                          <p style="margin: 10px 0 0; color: #ffedd5; font-size: 14px; line-height: 1.5;">
+                            Ingresa a tu cuenta de PropBol usando un enlace seguro.
+                          </p>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="padding: 32px 28px;">
+                          <p style="margin: 0 0 18px; color: #292524; font-size: 16px; line-height: 1.6;">
+                            ${saludo}
+                          </p>
+
+                          <p style="margin: 0 0 18px; color: #44403c; font-size: 15px; line-height: 1.7;">
+                            Recibimos una solicitud para iniciar sesión en PropBol mediante un
+                            <strong style="color: #292524;">link mágico</strong>. 
+                            Haz clic en el botón de abajo para ingresar al sistema.
+                          </p>
+
+                          <table role="presentation" cellspacing="0" cellpadding="0" width="100%" style="margin: 30px 0;">
+                            <tr>
+                              <td align="center">
+                                <a href="${safeMagicLink}"
+                                  style="display: inline-block; background-color: #f97316; color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 700; padding: 14px 32px; border-radius: 10px; box-shadow: 0 6px 14px rgba(249, 115, 22, 0.28);">
+                                  Ingresar a PropBol
+                                </a>
+                              </td>
+                            </tr>
+                          </table>
+
+                          <div style="background-color: #fff7ed; border: 1px solid #fed7aa; border-radius: 12px; padding: 16px; margin: 24px 0;">
+                            <p style="margin: 0; color: #9a3412; font-size: 14px; line-height: 1.6;">
+                              Este enlace expirará en 
+                              <strong>${minutosExpiracion} minutos</strong> 
+                              y solo podrá usarse una vez.
+                            </p>
+                          </div>
+
+                          <p style="margin: 0 0 10px; color: #57534e; font-size: 13px; line-height: 1.6;">
+                            Si el botón no funciona, copia y pega este enlace en tu navegador:
+                          </p>
+
+                          <p style="margin: 0; word-break: break-all; color: #d97706; font-size: 12px; line-height: 1.6;">
+                            ${safeMagicLink}
+                          </p>
+
+                          <div style="margin-top: 26px; padding-top: 20px; border-top: 1px solid #e7e5e4;">
+                            <p style="margin: 0; color: #78716c; font-size: 13px; line-height: 1.6;">
+                              Si no solicitaste este acceso, puedes ignorar este correo. 
+                              Tu cuenta seguirá protegida.
+                            </p>
+                          </div>
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td style="background-color: #fafaf9; padding: 20px 24px; text-align: center; border-top: 1px solid #e7e5e4;">
+                          <p style="margin: 0; color: #a8a29e; font-size: 12px; line-height: 1.5;">
+                            PropBol · Mensaje automático, por favor no responder.
+                          </p>
+                        </td>
+                      </tr>
+
+                    </table>
+                  </td>
+                </tr>
+              </table>
             </body>
           </html>
         `,
         textContent: `${saludo}
 
-Solicitaste ingresar a PropBol usando un link mágico.
+Recibimos una solicitud para iniciar sesión en PropBol mediante un link mágico.
 
-Ingresa con este enlace:
+Ingresa a PropBol usando este enlace:
 ${magicLink}
 
 Este enlace expirará en ${minutosExpiracion} minutos y solo podrá usarse una vez.
 
-Si no solicitaste este acceso, ignora este mensaje.`,
+Si no solicitaste este acceso, ignora este correo. Tu cuenta seguirá protegida.
+
+PropBol · Mensaje automático, por favor no responder.`,
       }),
     });
 
