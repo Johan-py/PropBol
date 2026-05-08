@@ -5,15 +5,9 @@ import { getCities } from '@/services/city.service'
 import dynamic from 'next/dynamic'
 import VisualFiltersSection from '@/components/VisualFilters/VisualFiltersSection'
 import HomeBlogsSection from '@/components/home/HomeBlogsSection'
-import ExchangeRateBar from '@/components/ExchangeRateBar'
+import HomeExchangeSection from '@/components/home/HomeExchangeSection'
 
 const TourGuiado = dynamic(() => import('@/components/ui/TourGuiado'), { ssr: false })
-
-const mockExchangeRate = {
-  officialRate: 6.96,
-  referentialRate: 11.5,
-  updatedAt: "4/5/2026",
-}
 
 interface BannerRaw {
   id: number;
@@ -74,11 +68,7 @@ export default async function Home() {
         </div>
       )}
 
-      <ExchangeRateBar
-        officialRate={mockExchangeRate.officialRate}
-        referentialRate={mockExchangeRate.referentialRate}
-        updatedAt={mockExchangeRate.updatedAt}
-      />
+      <HomeExchangeSection />
 
       <div className="w-full max-w-[1600px] mx-auto px-0 md:px-4 py-4">
         <div className="flex flex-col gap-0">
