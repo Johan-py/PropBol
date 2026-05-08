@@ -1,0 +1,251 @@
+import { randomUUID } from "node:crypto";
+import { env } from "../../../config/env.js";
+import { generateToken, type JwtPayload } from "../../../utils/jwt.js";
+import {
+  createLinkedInSession,
+  createLinkedInUser,
+  findLinkedInLinkByExternalId,
+  findLinkedInLinkByUserId,
+  findUserByLinkedInEmail,
+  findUserByLinkedInId,
+  findUserByLinkedInSessionToken,
+  linkLinkedInToUser,
+  createLinkedInLinkForUser,
+} from "./linkedin.repository.js";
+import {
+  LinkedInAuthError,
+  type LinkedInLinkSuccess,
+  type LinkedInLoginSuccess,
+  type LinkedInTokenResponse,
+  type LinkedInUserInfo,
+} from "./linkedin.types.js";
+
+const LINKEDIN_TOKEN_URL = "https://www.linkedin.com/oauth/v2/accessToken";
+const LINKEDIN_USERINFO_URL = "https://api.linkedin.com/v2/userinfo";
+const SESSION_DURATION_MS = 60 * 60 * 1000;
+
+const exchangeCodeForTokens = async (code: string) => {
+  const response = await fetch(LINKEDIN_TOKEN_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      code,
+      client_id: env.LINKEDIN_CLIENT_ID,
+      client_secret: env.LINKEDIN_CLIENT_SECRET,
+      redirect_uri: env.LINKEDIN_CALLBACK_URL,
+      grant_type: "authorization_code",
+    }),
+  });
+
+  const data = (await response.json()) as LinkedInTokenResponse;
+
+  if (!response.ok || !data.access_token) {
+    throw new LinkedInAuthError(
+      data.error_description || "No se pudo obtener el token de LinkedIn.",
+      "LINKEDIN_AUTH_FAILED",
+      401,
+    );
+  }
+
+  return data;
+};
+
+const getLinkedInUserInfo = async (accessToken: string) => {
+  const response = await fetch(LINKEDIN_USERINFO_URL, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  const data = (await response.json()) as LinkedInUserInfo;
+
+  if (!response.ok || !data.email?.trim()) {
+    throw new LinkedInAuthError(
+      "No se pudo obtener el correo de la cuenta de LinkedIn.",
+      "LINKEDIN_AUTH_FAILED",
+      401,
+    );
+  }
+
+  return data;
+};
+
+const resolveLinkedInNames = (user: LinkedInUserInfo) => {
+  const nombre = user.given_name?.trim() || user.name?.split(" ")[0] || "Usuario";
+  const apellido =
+    user.family_name?.trim() ||
+    user.name?.split(" ").slice(1).join(" ") ||
+    "LinkedIn";
+
+  return { nombre, apellido };
+};
+
+const buildLinkedInSessionResponse = async (
+  user: {
+    id: number;
+    correo: string;
+    nombre: string;
+    apellido: string;
+    avatar?: string | null;
+  },
+  message: string,
+): Promise<LinkedInLoginSuccess> => {
+  const jwtPayload: JwtPayload = { id: user.id, correo: user.correo };
+  const token = generateToken(jwtPayload);
+  const fechaExpiracion = new Date(Date.now() + SESSION_DURATION_MS);
+
+  await createLinkedInSession({ token, usuarioId: user.id, fechaExpiracion });
+
+  return {
+    message,
+    token,
+    user: {
+      id: user.id,
+      correo: user.correo,
+      nombre: user.nombre,
+      apellido: user.apellido,
+      avatar: user.avatar,
+    },
+  };
+};
+
+export const loginWithLinkedInCodeService = async (
+  code: string,
+): Promise<LinkedInLoginSuccess> => {
+  if (!code?.trim()) {
+    throw new LinkedInAuthError(
+      "LinkedIn no devolvió un código válido.",
+      "LINKEDIN_AUTH_FAILED",
+      400,
+    );
+  }
+
+  const tokenData = await exchangeCodeForTokens(code);
+  const linkedinUser = await getLinkedInUserInfo(tokenData.access_token!);
+
+  const linkedinId = linkedinUser.sub?.trim();
+  const correo = linkedinUser.email?.trim().toLowerCase();
+
+  if (!linkedinId || !correo) {
+    throw new LinkedInAuthError(
+      "No se pudo obtener la información de la cuenta de LinkedIn.",
+      "LINKEDIN_AUTH_FAILED",
+      401,
+    );
+  }
+
+  // Caso 1: ya tiene linkedin vinculado → login directo
+  const userByLinkedInId = await findUserByLinkedInId(linkedinId);
+
+  if (userByLinkedInId) {
+    return await buildLinkedInSessionResponse(
+      userByLinkedInId,
+      "Inicio de sesión con LinkedIn exitoso",
+    );
+  }
+
+  // Caso 2: existe cuenta con ese correo → vincular y hacer login
+  const existingUserByEmail = await findUserByLinkedInEmail(correo);
+
+  if (existingUserByEmail) {
+    await linkLinkedInToUser(existingUserByEmail.id, linkedinId, correo);
+
+    return await buildLinkedInSessionResponse(
+      existingUserByEmail,
+      "LinkedIn vinculado e inicio de sesión exitoso",
+    );
+  }
+
+  // Caso 3: no existe cuenta → error (no registrado)
+  throw new LinkedInAuthError(
+    "No existe una cuenta registrada con este perfil de LinkedIn. Debes registrarte primero.",
+    "ACCOUNT_NOT_REGISTERED",
+    404,
+  );
+};
+
+export const linkLinkedInToCurrentUserByCodeService = async (
+  sessionToken: string,
+  code: string,
+): Promise<LinkedInLinkSuccess> => {
+  if (!sessionToken?.trim()) {
+    throw new LinkedInAuthError(
+      "No se encontró la sesión activa para vincular LinkedIn.",
+      "LINKEDIN_AUTH_FAILED",
+      401,
+    );
+  }
+
+  if (!code?.trim()) {
+    throw new LinkedInAuthError(
+      "LinkedIn no devolvió un código válido.",
+      "LINKEDIN_AUTH_FAILED",
+      400,
+    );
+  }
+
+  const session = await findUserByLinkedInSessionToken(sessionToken);
+
+  if (!session?.usuario) {
+    throw new LinkedInAuthError(
+      "Tu sesión ya no es válida. Vuelve a iniciar sesión en PropBol.",
+      "LINKEDIN_AUTH_FAILED",
+      401,
+    );
+  }
+
+  const tokenData = await exchangeCodeForTokens(code);
+  const linkedinUser = await getLinkedInUserInfo(tokenData.access_token!);
+
+  const linkedinId = linkedinUser.sub?.trim();
+  const correoProveedor = linkedinUser.email?.trim().toLowerCase() ?? null;
+
+  if (!linkedinId) {
+    throw new LinkedInAuthError(
+      "No se pudo obtener el identificador de LinkedIn.",
+      "LINKEDIN_AUTH_FAILED",
+      401,
+    );
+  }
+
+  const existingLinkByExternalId = await findLinkedInLinkByExternalId(linkedinId);
+
+  if (
+    existingLinkByExternalId &&
+    existingLinkByExternalId.usuarioId !== session.usuario.id
+  ) {
+    throw new LinkedInAuthError(
+      "Esta cuenta de LinkedIn ya está vinculada a otro usuario.",
+      "LINKEDIN_AUTH_FAILED",
+      409,
+    );
+  }
+
+  const existingLinkByUser = await findLinkedInLinkByUserId(session.usuario.id);
+
+  if (existingLinkByUser) {
+    if (existingLinkByUser.idExterno === linkedinId) {
+      return {
+        message: "Tu cuenta de LinkedIn ya estaba vinculada.",
+        provider: "linkedin",
+        linkedEmail: existingLinkByUser.correoProveedor ?? correoProveedor,
+      };
+    }
+
+    throw new LinkedInAuthError(
+      "Tu cuenta ya tiene otra cuenta de LinkedIn vinculada.",
+      "LINKEDIN_AUTH_FAILED",
+      409,
+    );
+  }
+
+  await createLinkedInLinkForUser({
+    usuarioId: session.usuario.id,
+    linkedinId,
+    correoProveedor,
+  });
+
+  return {
+    message: "LinkedIn fue vinculado correctamente.",
+    provider: "linkedin",
+    linkedEmail: correoProveedor,
+  };
+};
