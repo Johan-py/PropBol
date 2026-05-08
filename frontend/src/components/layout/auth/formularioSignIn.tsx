@@ -1028,10 +1028,23 @@ export default function LoginForm() {
              placeholder="Ingresa tu correo electrónico"
              value={magicLinkEmail}
              onChange={(e) => {
-             setMagicLinkEmail(e.target.value);
-             setMagicLinkError("");
-             setMagicLinkSuccess("");
-             }}
+                const value = e.target.value;
+
+                setMagicLinkEmail(value);
+                setMagicLinkSuccess("");
+
+                 if (!value.trim()) {
+                     setMagicLinkError("");
+                    return;
+                    }
+
+                  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) {
+                  setMagicLinkError("Formato de correo inválido");
+                  return;
+                 }
+
+                setMagicLinkError("");
+                }}
              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500"
               />
           </div>
