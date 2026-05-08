@@ -471,50 +471,67 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
             />
 
             <button
-              type="button"
-              onClick={async (e) => {
-                e.preventDefault()
+             type="button"
+             onClick={async (e) => {
+              e.preventDefault()
 
-                // Copiamos los filtros actuales de la URL en vez de destruirlos
-                const params = new URLSearchParams(searchParams?.toString() || '')
+              const params = new URLSearchParams(searchParams?.toString() || '')
+              const isActive = params.get('orden') === 'recomendados'
 
-                if (isRecomendadosActive) {
-                  // MODO: APAGAR
-                  sessionStorage.removeItem('propbol_modo_recomendados')
-                  sessionStorage.removeItem('propbol_recomendados')
+              if (isActive) {
+                  const savedFilters = sessionStorage.getItem('propbol_filtros_respaldo')
+              if (savedFilters) {
+                  const restoredParams = new URLSearchParams(savedFilters)
+                  restoredParams.delete('orden')
+                  router.push(`/busqueda_mapa?${restoredParams.toString()}`)
+                  sessionStorage.removeItem('propbol_filtros_respaldo')
+              } else {
                   params.delete('orden')
                   router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
-                  return // Nos detenemos aquí
-                }
+              }
+                sessionStorage.removeItem('propbol_modo_recomendados')
+                sessionStorage.removeItem('propbol_recomendados')
+                return
+              }
 
-                // MODO: ENCENDER
-                const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
-                if (token) {
-                  // Llamada a la API respetando los parámetros de búsqueda actuales (ej. si estaban en Cochabamba)
-                  const fetchParams = new URLSearchParams({ orden: 'recomendados' })
-                  const res = await fetch(`/api/inmuebles/recomendados?${fetchParams}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                  })
-                  const data = await res.json()
-                  if (data.success && data.data.length > 0) {
-                    sessionStorage.setItem('recomendaciones_resultado', JSON.stringify(data.data))
-                    sessionStorage.setItem('propbol_modo_recomendados', 'true')
-                    sessionStorage.setItem('propbol_recomendados', JSON.stringify(data.data))
-                  }
-                }
+                const token = localStorage.getItem('token')
+                if (!token) {
+                   console.warn('Usuario no autenticado')
+                  return
+              }
 
-                // Actualizamos la URL manteniendo el resto de filtros (zona, precio, etc.) y agregando orden=recomendados
-                params.set('orden', 'recomendados')
-                router.push(`/busqueda_mapa?${params.toString()}`)
+                sessionStorage.setItem('propbol_filtros_respaldo', params.toString())
+
+                const cleanParams = new URLSearchParams()
+                const modoInmueble = params.getAll('modoInmueble')
+                modoInmueble.forEach(m => cleanParams.append('modoInmueble', m))
+                cleanParams.set('orden', 'recomendados')
+
+                try {
+                 const res = await fetch(`/api/inmuebles/recomendados?${cleanParams.toString()}`, {
+                  headers: { Authorization: `Bearer ${token}` }
+                })
+                 const data = await res.json()
+                 if (data.success && data.data.length > 0) {
+                  sessionStorage.setItem('propbol_recomendados', JSON.stringify(data.data))
+                  sessionStorage.setItem('propbol_modo_recomendados', 'true')
+                }
+              } catch (error) {
+                console.error('Error obteniendo recomendaciones:', error)
+              }
+
+               router.push(`/busqueda_mapa?${cleanParams.toString()}`)
               }}
-              className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isRecomendadosActive
-                  ? 'bg-[#d97706] text-white border-[#d97706]'
-                  : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
-                }`}
+              className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${
+              searchParams?.get('orden') === 'recomendados'
+                 ? 'bg-[#d97706] text-white border-[#d97706]'
+                 : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+              }`}
             >
-              <Award className={`w-4 h-4 ${isRecomendadosActive ? 'text-white' : 'text-stone-500'}`} />
+              <Award className={`w-4 h-4 ${searchParams?.get('orden') === 'recomendados' ? 'text-white' : 'text-stone-500'}`} />
               <span>Recomendados</span>
-            </button>
+              </button>
+             
             <button
               type="button"
               onClick={(e) => {
