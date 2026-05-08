@@ -249,3 +249,84 @@ export const linkLinkedInToCurrentUserByCodeService = async (
     linkedEmail: correoProveedor,
   };
 };
+
+export const registerWithLinkedInCodeService = async (
+  code: string,
+): Promise<LinkedInLoginSuccess> => {
+  if (!code?.trim()) {
+    throw new LinkedInAuthError(
+      "LinkedIn no devolvió un código válido.",
+      "LINKEDIN_AUTH_FAILED",
+      400,
+    );
+  }
+
+  const tokenData = await exchangeCodeForTokens(code);
+  const linkedinUser = await getLinkedInUserInfo(tokenData.access_token!);
+
+  const linkedinId = linkedinUser.sub?.trim();
+  const correo = linkedinUser.email?.trim().toLowerCase();
+
+  if (!linkedinId || !correo) {
+    throw new LinkedInAuthError(
+      "No se pudo obtener la información de la cuenta de LinkedIn.",
+      "LINKEDIN_AUTH_FAILED",
+      401,
+    );
+  }
+
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(correo)) {
+    throw new LinkedInAuthError(
+      "No fue posible obtener un correo válido desde LinkedIn.",
+      "INVALID_EMAIL",
+      400,
+    );
+  }
+
+
+  const userByLinkedInId = await findUserByLinkedInId(linkedinId);
+
+  if (userByLinkedInId) {
+    throw new LinkedInAuthError(
+      "Esta cuenta de LinkedIn ya está registrada. Inicia sesión con LinkedIn desde la pantalla de login.",
+      "ACCOUNT_ALREADY_REGISTERED",
+      409,
+    );
+  }
+
+
+  const existingUserByEmail = await findUserByLinkedInEmail(correo);
+
+  if (existingUserByEmail) {
+    await linkLinkedInToUser(existingUserByEmail.id, linkedinId, correo);
+
+    return await buildLinkedInSessionResponse(
+      existingUserByEmail,
+      "LinkedIn vinculado e inicio de sesión exitoso",
+    );
+  }
+
+
+  const nombre = linkedinUser.given_name?.trim() ||
+    linkedinUser.name?.split(" ")[0] || "Usuario";
+  const apellido = linkedinUser.family_name?.trim() ||
+    linkedinUser.name?.split(" ").slice(1).join(" ") || "LinkedIn";
+
+  const createdUser = await createLinkedInUser(
+    {
+      nombre,
+      apellido,
+      correo,
+      password: `linkedin_${randomUUID()}`,
+    },
+    linkedinId,
+    correo,
+  );
+
+  return await buildLinkedInSessionResponse(
+    createdUser,
+    "Cuenta creada e inicio de sesión con LinkedIn exitoso",
+  );
+};
