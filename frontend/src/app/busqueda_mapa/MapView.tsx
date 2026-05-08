@@ -1,7 +1,7 @@
 'use client'
 
-import 'leaflet/dist/leaflet.css'
-import 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css' // MAPAS HU11
+//import 'leaflet/dist/leaflet.css'
+//import 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css' // MAPAS HU11
 import {
   MapContainer,
   TileLayer,

@@ -1,7 +1,5 @@
 'use client'
 
-import 'leaflet/dist/leaflet.css'
-import 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css' // MAPAS HU11
 import { MapContainer, TileLayer, Marker, Polygon, CircleMarker, useMapEvents } from 'react-leaflet'
 import { useState } from 'react'
 import L from 'leaflet'
