@@ -11,12 +11,6 @@ import {
 } from "react-leaflet"
 import type { LatLngExpression } from "leaflet"
 
-// Importar CSS condicionalmente solo en el cliente
-if (typeof window !== 'undefined') {
-    require('leaflet/dist/leaflet.css')
-    require('leaflet-gesture-handling/dist/leaflet-gesture-handling.css') // MAPAS HU11
-}
-
 // Importar L dinámicamente para evitar errores de SSR
 let L: any
 if (typeof window !== 'undefined') {

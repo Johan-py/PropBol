@@ -1,7 +1,5 @@
 'use client'
 
-import 'leaflet/dist/leaflet.css'
-import 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css' // MAPAS HU11
 import {
   MapContainer,
   TileLayer,
@@ -260,7 +258,7 @@ const vertexHandleIcon = L.divIcon({
       height: 12px;
       border-radius: 9999px;
       background: #ffffff;
-      border: 2px solid #ea580c;
+      border: 2px solid #16a34a;
       box-shadow: 0 1px 3px rgba(0,0,0,0.25);
     "></div>
   `,
@@ -398,7 +396,7 @@ export default function MapView({
           <>
             <Polyline
               positions={polygonPoints}
-              pathOptions={{ color: '#ea580c', weight: 3, dashArray: '5, 10' }}
+              pathOptions={{ color: '#16a34a', weight: 3, dashArray: '5, 10' }}
             />
             {polygonPoints.map((pt, index) => (
               <CircleMarker
@@ -406,7 +404,7 @@ export default function MapView({
                 center={pt}
                 radius={5}
                 pathOptions={{
-                  color: index === 0 ? '#ef4444' : '#ea580c',
+                  color: '#16a34a',
                   fillColor: 'white',
                   fillOpacity: 1
                 }}
@@ -425,9 +423,9 @@ export default function MapView({
           <Polygon
             positions={polygonPoints}
             pathOptions={{
-              color: '#ea580c',
-              fillColor: '#ea580c',
-              fillOpacity: 0.2,
+              color: '#16a34a',
+              fillColor: '#22c55e',
+              fillOpacity: 0.25,
               weight: 2
             }}
           />
@@ -438,9 +436,9 @@ export default function MapView({
             <Polygon
               positions={editablePolygonPoints}
               pathOptions={{
-                color: '#ea580c',
-                fillColor: '#ea580c',
-                fillOpacity: 0.2,
+                color: '#16a34a',
+                fillColor: '#22c55e',
+                fillOpacity: 0.25,
                 weight: 2,
                 dashArray: '6, 6'
               }}
@@ -468,9 +466,9 @@ export default function MapView({
             key={`drawn-${i}`}
             positions={poly}
             pathOptions={{
-              color: '#ea580c',
-              fillColor: '#ea580c',
-              fillOpacity: 0.15,
+              color: '#16a34a',
+              fillColor: '#22c55e',
+              fillOpacity: 0.2,
               weight: 2
             }}
           />

@@ -2,7 +2,8 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Polygon, Marker, useMap } from 'react-leaflet'
 import L from 'leaflet'
-import type { ZonaPredefinida } from '@/types/zona'
+import type { ZonaPredefinida, TipoZona } from '@/types/zona'
+import { ZONA_COLORS as COLORES } from '@/types/zona'
 
 const MIN_ZOOM_LABELS = 13
 const MAX_LABEL_CHARS = 32
@@ -232,7 +233,7 @@ function esValido(coords: unknown): coords is [number, number][] {
 }
 
 // criterio 20: word-wrap; criterio 8: cursor pointer; criterio 23: tabindex + keydown→click
-function labelIcon(nombre: string, isSelected: boolean, zoom: number): L.DivIcon {
+function labelIcon(nombre: string, isSelected: boolean, zoom: number, tipoZona: TipoZona = 'predefinida'): L.DivIcon {
   // Cuando está seleccionada, permitir más caracteres para el word wrap
   const maxChars = isSelected ? MAX_LABEL_CHARS_SELECTED * 1.3 : MAX_LABEL_CHARS
   const nombreVisible = truncarNombreEtiqueta(nombre, Math.round(maxChars))
@@ -247,7 +248,10 @@ function labelIcon(nombre: string, isSelected: boolean, zoom: number): L.DivIcon
   } = dimensionarEtiqueta(nombreVisible, zoom, isSelected)
   const textoHtml = htmlEtiquetaConWrap(nombreVisible, maxCharsPorLinea)
   const nombreCompletoEscapado = escaparHtml(nombre)
-  const color = isSelected ? '#ea580c' : '#1a1a1a'
+  
+  // Usar colores según el tipo de zona
+  const colorConfig = COLORES[tipoZona]
+  const color = isSelected ? colorConfig.labelColorSelected : colorConfig.labelColor
   const shadow = isSelected
     ? '0 0 4px rgba(255,255,255,0.9), 0 0 8px rgba(255,255,255,0.6)'
     : '0 1px 3px rgba(255,255,255,0.95), 0 -1px 3px rgba(255,255,255,0.95), 1px 0 3px rgba(255,255,255,0.95), -1px 0 3px rgba(255,255,255,0.95)'
@@ -307,6 +311,9 @@ function ZonaInteractiva({
   onZoneSelect: (id: number | null) => void
   onZoneCycle?: (direction: 1 | -1) => void
 }) {
+  // HU10: Determinar tipo de zona (predefinida o personalizada) basado en el ID
+  const tipoZona: TipoZona = zona.tipo || (zona.id < 0 ? 'personalizada' : 'predefinida')
+  const colorConfig = COLORES[tipoZona]
   const polygonRef = useRef<L.Polygon | null>(null)
   const center = centroide(zona.coordenadas)
 
@@ -360,11 +367,11 @@ function ZonaInteractiva({
         ref={polygonRef}
         positions={zona.coordenadas}
         pathOptions={{
-          color: selected ? '#ea580c' : '#64748b',
+          color: selected ? colorConfig.borderActive : colorConfig.borderInactive,
           weight: selected ? 2 : 1.8,
           dashArray: selected ? '6,6' : undefined,
-          fillColor: selected ? '#ea580c' : '#94a3b8',
-          fillOpacity: selected ? 0.25 : 0.10,
+          fillColor: selected ? colorConfig.fillActive : colorConfig.fillInactive,
+          fillOpacity: selected ? colorConfig.fillOpacityActive : colorConfig.fillOpacityInactive,
           lineJoin: 'round',
           lineCap: 'round'
         }}
@@ -414,7 +421,7 @@ function ZonaInteractiva({
       {zoom >= MIN_ZOOM_LABELS && (
         <Marker
           position={center}
-          icon={labelIcon(zona.nombre, selected, zoom)}
+          icon={labelIcon(zona.nombre, selected, zoom, tipoZona)}
           interactive
           keyboard={false}
           zIndexOffset={-100}
