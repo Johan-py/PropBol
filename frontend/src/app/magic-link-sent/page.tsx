@@ -8,6 +8,7 @@ export default function MagicLinkSentPage() {
     const [email, setEmail] = useState('')
     const [resent, setResent] = useState(false)
     const [cooldown, setCooldown] = useState(0)
+    const [hasResent, setHasResent] = useState(false)
 
     useEffect(() => {
     const pendingEmail = sessionStorage.getItem('magicLinkEmail')
@@ -29,19 +30,21 @@ export default function MagicLinkSentPage() {
     const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 
     try {
-        await fetch(`${API_URL}/api/auth/magic-link`, {
+        await fetch(`${API_URL}/api/auth/magic-link/request`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ correo: email }),
         })
         setResent(true)
+        setHasResent(true) // TASK 326: marcamos que ya reenvió
         setCooldown(60)
         setTimeout(() => setResent(false), 4000)
     } catch {
+      // silently fail — user can retry
     }
     }
 
-  const handleBack = () => {
+    const handleBack = () => {
     sessionStorage.removeItem('magicLinkEmail')
     router.replace('/sign-in')
     }
@@ -52,8 +55,10 @@ export default function MagicLinkSentPage() {
     <div className="flex min-h-screen items-center justify-center bg-[#f5f5f4] px-4 py-10">
         <div className="w-full max-w-sm">
 
+        {/* Card principal */}
         <div className="rounded-xl border border-[#e7e5e4] bg-white px-6 py-8 shadow-sm sm:px-8">
 
+          {/* Ícono de sobre */}
             <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-amber-50 ring-4 ring-amber-100">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -72,10 +77,12 @@ export default function MagicLinkSentPage() {
             </svg>
             </div>
 
+          {/* Título */}
             <h1 className="text-center text-2xl font-bold text-[#292524] sm:text-3xl">
             Revisa tu correo
             </h1>
 
+          {/* Subtítulo */}
             <p className="mt-3 text-center text-sm leading-relaxed text-[#78716c]">
             Te enviamos un enlace de acceso a{' '}
             <span className="break-all font-semibold text-[#292524]">{email}</span>.
@@ -83,8 +90,20 @@ export default function MagicLinkSentPage() {
             El enlace expira en <span className="font-semibold text-amber-600">15 minutos</span>.
             </p>
 
+          {/* TASK 326: aviso de enlace único — aparece solo cuando el usuario reenvió */}
+            {hasResent && (
+            <div className="mt-4 rounded-lg border border-blue-100 bg-blue-50 px-4 py-3">
+                <p className="text-center text-xs leading-relaxed text-blue-800">
+                <span className="font-semibold">Solo el enlace más reciente es válido.</span>{' '}
+                Los enlaces anteriores fueron desactivados automáticamente.
+                </p>
+            </div>
+            )}
+
+          {/* Separador */}
             <div className="my-6 border-t border-[#f0ede9]" />
 
+          {/* Pasos */}
             <ol className="space-y-3 text-sm text-[#57534e]">
             <li className="flex items-start gap-3">
                 <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-100 text-xs font-bold text-amber-700">
@@ -106,8 +125,10 @@ export default function MagicLinkSentPage() {
             </li>
             </ol>
 
+          {/* Separador */}
             <div className="my-6 border-t border-[#f0ede9]" />
 
+          {/* Botón abrir correo */}
             {domain && (
             <a
                 href={`https://${domain}`}
@@ -134,6 +155,7 @@ export default function MagicLinkSentPage() {
             </a>
             )}
 
+          {/* Reenviar */}
             <button
             type="button"
             onClick={handleResend}
@@ -147,6 +169,7 @@ export default function MagicLinkSentPage() {
                 : 'Reenviar enlace'}
             </button>
 
+          {/* Volver */}
             <button
             type="button"
             onClick={handleBack}
