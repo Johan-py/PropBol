@@ -494,34 +494,57 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                 return
               }
 
-                const token = localStorage.getItem('token')
-                if (!token) {
-                   console.warn('Usuario no autenticado')
-                  return
-              }
+              sessionStorage.setItem('propbol_filtros_respaldo', params.toString())
 
-                sessionStorage.setItem('propbol_filtros_respaldo', params.toString())
 
+               
                 const cleanParams = new URLSearchParams()
                 const modoInmueble = params.getAll('modoInmueble')
                 modoInmueble.forEach(m => cleanParams.append('modoInmueble', m))
                 cleanParams.set('orden', 'recomendados')
 
-                try {
-                 const res = await fetch(`/api/inmuebles/recomendados?${cleanParams.toString()}`, {
-                  headers: { Authorization: `Bearer ${token}` }
-                })
-                 const data = await res.json()
-                 if (data.success && data.data.length > 0) {
-                  sessionStorage.setItem('propbol_recomendados', JSON.stringify(data.data))
-                  sessionStorage.setItem('propbol_modo_recomendados', 'true')
-                }
-              } catch (error) {
-                console.error('Error obteniendo recomendaciones:', error)
-              }
-
-               router.push(`/busqueda_mapa?${cleanParams.toString()}`)
-              }}
+                
+                const token = localStorage.getItem('token')
+                if (token) {
+                   try {
+      const res = await fetch(`/api/inmuebles/recomendados?${cleanParams.toString()}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      const data = await res.json()
+      if (data.success && data.data.length > 0) {
+        sessionStorage.setItem('propbol_recomendados', JSON.stringify(data.data))
+        sessionStorage.setItem('propbol_modo_recomendados', 'true')
+      }
+    } catch (error) {
+      console.error('Error obteniendo recomendaciones:', error)
+      // Fallback silencioso: useProperties cargará los populares
+    }
+  } else {
+    // ── Visitante sin cuenta → más populares de su zona ────────────────
+    // No bloqueamos ni mostramos error. useProperties detectará
+    // propbol_modo_recomendados=true y cargará los populares.
+    // Opcionalmente pre-cargamos los populares para más rapidez:
+    try {
+      const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+      const res = await fetch(
+        `${API_BASE}/api/properties/inmuebles?fecha=mas-populares&${cleanParams.toString()}`
+      )
+      const data = await res.json()
+      if (data.ok && data.data?.length > 0) {
+        sessionStorage.setItem('propbol_recomendados', JSON.stringify(data.data))
+        sessionStorage.setItem('propbol_modo_recomendados', 'true')
+      }
+    } catch (error) {
+      console.error('Error cargando populares para visitante:', error)
+      // useProperties hará la carga normal como fallback
+    }
+  }
+ 
+  router.push(`/busqueda_mapa?${cleanParams.toString()}`)
+}}
+                
+                
+              
               className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${
               searchParams?.get('orden') === 'recomendados'
                  ? 'bg-[#d97706] text-white border-[#d97706]'
