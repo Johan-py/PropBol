@@ -1,9 +1,15 @@
 'use client'
 
 import 'leaflet/dist/leaflet.css'
+import 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css' // MAPAS HU11
 import { MapContainer, TileLayer, Marker, Polygon, CircleMarker, useMapEvents } from 'react-leaflet'
 import { useState } from 'react'
 import L from 'leaflet'
+// Importar CSS y L dinámicamente para evitar errores de SSR
+if (typeof window !== 'undefined') {
+  const { GestureHandling } = require('leaflet-gesture-handling');
+  L.Map.addInitHook('addHandler', 'gestureHandling', GestureHandling);
+}
 
 const pinIcon = L.divIcon({
   className: '',
@@ -48,7 +54,8 @@ function EventosMapa({
   modoDifuminadoActivo,
   setPinCoords,
   vertices,
-  setVertices
+  setVertices,
+  setMensajeLimite,
 }: any) {
   useMapEvents({
     click(e) {
@@ -60,6 +67,16 @@ function EventosMapa({
       }
 
       if (modoDifuminadoActivo) {
+        // Limitar máximo de puntos
+  if (vertices.length >= 10) {
+   setMensajeLimite(true)
+
+  setTimeout(() => {
+    setMensajeLimite(false)
+  }, 2000)
+
+  return
+  }
   const nuevoPunto: [number, number] = [
     e.latlng.lat,
     e.latlng.lng
@@ -109,13 +126,26 @@ export default function MapaPinSelector({
   modoPinActivo,
   modoDifuminadoActivo
 }: Props) {
+  const [mensajeLimite, setMensajeLimite] = useState(false)
  
   return (
+    <div className="relative">
     <MapContainer
       center={[-17.3895, -66.1568]}
       zoom={13}
       scrollWheelZoom
       style={{ height: '320px', width: '100%' }}
+      // Agregado: Control nativo del cursor y bloqueo de arrastre en modo dibujo MAPAS HU11
+      {...({ 
+        gestureHandling: true,
+        gestureHandlingOptions: {
+          text: {
+            touch: "Usa dos dedos para mover el mapa",
+            scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
+            scrollMac: "Usa \u2318 + scroll para hacer zoom en el mapa"
+          }
+        }
+      } as any)}
     >
       <TileLayer
         attribution="&copy; OpenStreetMap"
@@ -128,6 +158,7 @@ export default function MapaPinSelector({
         setPinCoords={setPinCoords}
         vertices={vertices}
         setVertices={setVertices}
+        setMensajeLimite={setMensajeLimite}
       />
 
      {pinCoords && (
@@ -188,6 +219,14 @@ export default function MapaPinSelector({
     }}
   />
 ))}
-    </MapContainer>
-  )
+   </MapContainer>
+
+{mensajeLimite && (
+ <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[9999] text-orange-500 text-sm font-medium">
+    Límite máximo de 10 puntos alcanzado
+  </div>
+)}
+
+</div>
+)
 }

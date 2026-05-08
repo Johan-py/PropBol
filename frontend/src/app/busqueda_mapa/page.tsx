@@ -1,5 +1,5 @@
 'use client'
-
+import { OfertaSidebar } from '@/components/filters/OfertaSidebar'
 import { CapacidadSidebar } from '@/components/filters/CapacidadSidebar'
 import MisZonasSidebar from '@/components/map/MisZonasSidebar'
 import { point, polygon } from '@turf/helpers'
@@ -30,6 +30,7 @@ import {
 import { useProperties } from '@/hooks/useProperties'
 import { useOrdenamiento } from '@/hooks/useOrdenamiento'
 import { useZonas } from '@/hooks/useZonas'
+import { useCompareStore } from '@/hooks/useCompareStore'
 
 // === COMPONENTES ===
 import FilterBar from '@/components/filters/FilterBar'
@@ -42,6 +43,7 @@ import { MenuOrdenamiento } from '@/components/busqueda/ordenamiento/MenuOrdenam
 import { ErrorState } from '@/components/ClusterSidebar'
 import SuperficieFilterSidebar from '@/components/filters/SuperficieFilterSidebar'
 import { UbicacionEspecificaPanel } from '@/components/filters/UbicacionEspecificaPanel';
+import ComparatorModal from '@/components/busqueda/ComparatorModal'
 
 // Carga dinámica del mapa (sin SSR)
 const MapView = nextDynamic(() => import('./MapView'), {
@@ -139,11 +141,14 @@ function BusquedaMapaContent() {
   const [isMisZonasOpen, setIsMisZonasOpen] = useState(false)
   const router = useRouter();
   const searchParams = useSearchParams();
+  const isRecomendadosActive = searchParams.get('orden') === 'recomendados'
   const filterResetKey = searchParams.toString();
   const minSuperficie = searchParams.get('minSuperficie')
   const maxSuperficie = searchParams.get('maxSuperficie')
   const tieneFiltrSuperficie = minSuperficie || maxSuperficie
   const [isScrolled, setIsScrolled] = useState(false)
+  const { isCompareMode, selectedIds, toggleProperty } = useCompareStore()
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const latParam = searchParams.get('lat')
   const lngParam = searchParams.get('lng')
@@ -155,6 +160,17 @@ function BusquedaMapaContent() {
 
   //estado para controlar la autenticación
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isOfertaOpen, setIsOfertaOpen] = useState(false)
+
+  const toggleOferta = () => {
+    setIsOfertaOpen(!isOfertaOpen)
+    if (!isOfertaOpen) {
+      setActiveSidebarView('oferta')
+      setIsSidebarOpen(true)
+    } else {
+      setActiveSidebarView('results')
+    }
+  }
 
   const toggleCapacidad = () => {
     setIsPriceFilterOpen(false)
@@ -202,7 +218,7 @@ function BusquedaMapaContent() {
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
   const [isMounted, setIsMounted] = useState(false)
   const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false)
-  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad' | 'ubicacion'>('results')
+  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad' | 'ubicacion' | 'oferta'>('results')
 
   useEffect(() => {
     const handleAbrirUbicacion = () => {
@@ -328,7 +344,11 @@ function BusquedaMapaContent() {
     setIsSavingNewZone(true)
     try {
       const ring = [...puntosBase, puntosBase[0]].map(([lat, lng]) => [lng, lat])
-      const nombreFinal = newZoneName.trim() || 'Nueva zona'
+
+      // Limpiamos la cadena dejando solo alfanuméricos, espacios y caracteres acentuados
+      let nombreLimpio = newZoneName.trim() || 'Nueva zona'
+      nombreLimpio = nombreLimpio.replace(/[^a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚ]/g, '')
+      const nombreFinal = nombreLimpio || 'Zona sin nombre'
 
       const response = await fetch(`${API_URL}/api/perfil/zonas`, {
         method: 'POST',
@@ -418,7 +438,11 @@ function BusquedaMapaContent() {
     setIsSavingEditedZone(true)
     try {
       const ring = [...editingPolygonPoints, editingPolygonPoints[0]].map(([lat, lng]) => [lng, lat])
-      const nombreFinal = editingZoneName.trim() || 'Nueva zona'
+
+      // Aplicamos la misma limpieza de caracteres alfanuméricos
+      let nombreLimpio = editingZoneName.trim() || 'Nueva zona'
+      nombreLimpio = nombreLimpio.replace(/[^a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚ]/g, '')
+      const nombreFinal = nombreLimpio || 'Zona sin nombre'
 
       const response = await fetch(`${API_URL}/api/perfil/zonas/${zoneId}`, {
         method: 'PUT',
@@ -731,13 +755,23 @@ function BusquedaMapaContent() {
             <div
               key={property.id}
               onClick={() => {
-                // HU4 - Mantiene la selección visual actual
-                setSelectedPropertyId(property.id)
+                if (isCompareMode) {
+                  toggleProperty(property.id);
+                } else {
+                  // HU4 - Mantiene la selección visual actual
+                  setSelectedPropertyId(property.id)
 
-                // HU4 - Conserva el comportamiento existente del listado móvil
-                onClickItem?.(property)
+                  // HU4 - Conserva el comportamiento existente del listado móvil
+                  onClickItem?.(property)
+                }
               }}
-              className="cursor-pointer transition-all duration-200 rounded-xl focus:outline-none focus:ring-0 focus:ring-offset-0"
+              className={`cursor-pointer transition-all duration-200 rounded-xl relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${viewMode === 'grid'
+                ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
+                : 'w-full py-1 hover:bg-stone-100'
+                } ${isCompareMode && selectedIds.includes(property.id)
+                  ? 'ring-4 ring-[#ea580c] scale-[0.98] shadow-lg bg-orange-50/30'
+                  : ''
+                }`}
             >
               {viewMode === 'grid' ? (
                 <PropertyCard
@@ -745,21 +779,35 @@ function BusquedaMapaContent() {
                   estado={property.type}
                   precioFormateado={property.precioFormateado || 'Consultar precio'}
                   descripcion={property.descripcion || property.title}
+                  ubicacionTexto={property.ubicacionTexto}
+                  categoriaTexto={property.categoriaTexto}
+                  accionTexto={property.accionTexto}
                   camas={property.nroCuartos ?? 0}
                   banos={property.nroBanos ?? 0}
                   metros={property.superficieM2 ?? 0}
                   // HU4 - Pasa la acción de abrir detalle al botón "Ver detalles" en vista grilla
-                  onViewDetails={() => abrirDetallePropiedad(property.id)}
+                  onViewDetails={() => {
+                    if (!isCompareMode) abrirDetallePropiedad(property.id)
+                  }}
                 />
               ) : (
                 <PropertyRow
                   title={property.title}
                   precioFormateado={property.precioFormateado || 'Consultar precio'}
                   size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
+                  ubicacionTexto={property.ubicacionTexto}
+                  categoriaTexto={property.categoriaTexto}
+                  accionTexto={property.accionTexto}
                   contactType="whatsapp"
-                  image=""
+                  image={
+                    property.thumbnailUrl ||
+                    property.imagen ||
+                    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
+                  }
                   // HU4 - Pasa la acción de abrir detalle al botón "Ver detalles" en vista tabla
-                  onViewDetails={() => abrirDetallePropiedad(property.id)}
+                  onViewDetails={() => {
+                    if (!isCompareMode) abrirDetallePropiedad(property.id)
+                  }}
                 />
               )}
             </div>
@@ -768,7 +816,6 @@ function BusquedaMapaContent() {
       )}
     </div>
   )
-
 
   const renderListPaginationFooter = () => {
     if (isClusterView) {
@@ -839,7 +886,11 @@ function BusquedaMapaContent() {
                   }}
                   onMapClick={(latlng) => {
                     if (isDrawingMode) {
-                      setCurrentPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
+                      if (currentPolygonPoints.length >= 15) {
+                        alert('Límite máximo de 15 vértices');
+                        return;
+                      }
+                      setCurrentPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]]);
                     }
                   }}
                   onPointClick={(index) => {
@@ -917,7 +968,11 @@ function BusquedaMapaContent() {
               }}
               onMapClick={(latlng) => {
                 if (isDrawingMode) {
-                  setCurrentPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
+                  if (currentPolygonPoints.length >= 15) {
+                    alert('Límite máximo de 15 vértices');
+                    return;
+                  }
+                  setCurrentPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]]);
                 }
               }}
               onPointClick={(index) => {
@@ -1044,6 +1099,9 @@ function BusquedaMapaContent() {
                         estado={pinnedProperty.type}
                         precioFormateado={pinnedProperty.precioFormateado || 'Consultar precio'}
                         descripcion={pinnedProperty.descripcion || pinnedProperty.title}
+                        ubicacionTexto={pinnedProperty.ubicacionTexto}
+                        categoriaTexto={pinnedProperty.categoriaTexto}
+                        accionTexto={pinnedProperty.accionTexto}
                         camas={pinnedProperty.nroCuartos ?? 0}
                         banos={pinnedProperty.nroBanos ?? 0}
                         metros={pinnedProperty.superficieM2 ?? 0}
@@ -1106,6 +1164,9 @@ function BusquedaMapaContent() {
         isSuperficieFilterActive={activeSidebarView === 'superficie' && isSidebarOpen}
 
         isZonaFilterActive={activeSidebarView === 'ubicacion' && isSidebarOpen}
+
+        isOfertaActive={isOfertaOpen}
+        onToggleOferta={toggleOferta}
       />
 
       <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200">
@@ -1125,58 +1186,67 @@ function BusquedaMapaContent() {
               }}
               totalResultados={displayedProperties.length}
             />
-          ) : isSidebarOpen && activeSidebarView === 'capacidad' ? (
-            <CapacidadSidebar
+
+          ) : isSidebarOpen && activeSidebarView === 'oferta' ? (
+            <OfertaSidebar
               isOpen={true}
               onClose={() => {
-                setActiveSidebarView('results')
-              }}
-              onApply={(dormitoriosMin, dormitoriosMax, banosMin, banosMax, tipoBano) => {
-                const params = new URLSearchParams(searchParams.toString())
-                params.set('dormitoriosMin', dormitoriosMin.toString())
-                params.set('dormitoriosMax', dormitoriosMax.toString())
-                params.set('banosMin', banosMin.toString())
-                params.set('banosMax', banosMax.toString())
-                params.set('tipoBano', tipoBano)
-                router.push(`/busqueda_mapa?${params.toString()}`)
+                setIsOfertaOpen(false)
                 setActiveSidebarView('results')
               }}
             />
+          ): isSidebarOpen && activeSidebarView === 'capacidad' ? (
+          <CapacidadSidebar
+            isOpen={true}
+            onClose={() => {
+              setActiveSidebarView('results')
+            }}
+            onApply={(dormitoriosMin, dormitoriosMax, banosMin, banosMax, tipoBano) => {
+              const params = new URLSearchParams(searchParams.toString())
+              params.set('dormitoriosMin', dormitoriosMin.toString())
+              params.set('dormitoriosMax', dormitoriosMax.toString())
+              params.set('banosMin', banosMin.toString())
+              params.set('banosMax', banosMax.toString())
+              params.set('tipoBano', tipoBano)
+              router.push(`/busqueda_mapa?${params.toString()}`)
+              setActiveSidebarView('results')
+            }}
+          />
           ) : isSidebarOpen && activeSidebarView === 'ubicacion' ? (
-            <div className="flex flex-col h-full w-full bg-white relative">
-              <UbicacionEspecificaPanel
-                onClose={() => setActiveSidebarView('results')}
-                onApply={(selecciones) => {
-                  // 1. Rescatamos los filtros actuales de la URL (precio, cuartos, tipo, etc)
-                  const params = new URLSearchParams(searchParams.toString());
+          <div className="flex flex-col h-full w-full bg-white relative">
+            <UbicacionEspecificaPanel
+              onClose={() => setActiveSidebarView('results')}
+              onApply={(selecciones) => {
+                // 1. Rescatamos los filtros actuales de la URL (precio, cuartos, tipo, etc)
+                const params = new URLSearchParams(searchParams.toString());
 
-                  // 2. Limpiamos ubicaciones previas para evitar duplicados
-                  params.delete('departamentoId');
-                  params.delete('provinciaId');
-                  params.delete('municipioId');
-                  params.delete('zonaId');
-                  params.delete('barrioId');
+                // 2. Limpiamos ubicaciones previas para evitar duplicados
+                params.delete('departamentoId');
+                params.delete('provinciaId');
+                params.delete('municipioId');
+                params.delete('zonaId');
+                params.delete('barrioId');
 
-                  // 3. Añadimos las nuevas selecciones de este panel
-                  if (selecciones.departamento !== 'todos') params.set('departamentoId', selecciones.departamento.toString());
-                  if (selecciones.provincia !== 'todos') params.set('provinciaId', selecciones.provincia.toString());
-                  if (selecciones.municipio !== 'todos') params.set('municipioId', selecciones.municipio.toString());
-                  if (selecciones.zona !== 'todos') params.set('zonaId', selecciones.zona.toString());
-                  if (selecciones.barrio !== 'todos') params.set('barrioId', selecciones.barrio.toString());
+                // 3. Añadimos las nuevas selecciones de este panel
+                if (selecciones.departamento !== 'todos') params.set('departamentoId', selecciones.departamento.toString());
+                if (selecciones.provincia !== 'todos') params.set('provinciaId', selecciones.provincia.toString());
+                if (selecciones.municipio !== 'todos') params.set('municipioId', selecciones.municipio.toString());
+                if (selecciones.zona !== 'todos') params.set('zonaId', selecciones.zona.toString());
+                if (selecciones.barrio !== 'todos') params.set('barrioId', selecciones.barrio.toString());
 
-                  // 4. Empujamos a la URL combinada y cerramos el panel para ver resultados
-                  router.push(`/busqueda_mapa?${params.toString()}`);
-                  setActiveSidebarView('results');
-                }}
-              />
-            </div>
-  ): isSidebarOpen && activeSidebarView === 'results' ? (
+                // 4. Empujamos a la URL combinada y cerramos el panel para ver resultados
+                router.push(`/busqueda_mapa?${params.toString()}`);
+                setActiveSidebarView('results');
+              }}
+            />
+          </div>
+          ) : isSidebarOpen && activeSidebarView === 'results' ? (
           // 🚀 CONTENEDOR PADRE SIN SCROLL
           <div className="flex flex-col h-full min-h-0 relative bg-stone-50">
-            
+
             {/* 🚀 CABECERA (Fuera del scroll = Cero rebotes) */}
             <div className="bg-white shrink-0 border-b border-stone-200 shadow-sm transition-all duration-300">
-              
+
               {/* BLOQUE 1: DESAPARECE CON EL SCROLL (Solo el título "Filtros") */}
               <div className={`px-4 transition-all duration-300 overflow-hidden ${isScrolled ? 'max-h-0 opacity-0' : 'max-h-[60px] opacity-100 pt-4'}`}>
                 <div className="flex justify-between items-center mb-2">
@@ -1197,16 +1267,18 @@ function BusquedaMapaContent() {
 
               {/* BLOQUE 2: SE COMPACTA Y MANTIENE (Resultados, Conteo, Controles) */}
               <div className={`px-4 pb-3 flex flex-col transition-all duration-300 ${isScrolled ? 'pt-3 gap-2' : 'gap-3'}`}>
-                
+
                 <div className="flex justify-between items-start">
                   <div className="flex flex-col">
                     {/* Título: Resultados de búsqueda (Se compacta de xl a base) */}
                     <h1 className={`font-semibold text-slate-900 transition-all duration-300 truncate ${isScrolled ? 'text-base' : 'text-xl'}`}>
                       {isClusterView
                         ? `${clusterProperties.length} propiedades en este clúster`
+                        : isRecomendadosActive 
+                        ? 'Recomendados para tí'
                         : 'Resultados de búsqueda'}
                     </h1>
-                    
+
                     {/* Subtítulo: N Propiedades (Se compacta de sm a xs) */}
                     <h2 className={`font-bold text-slate-900 transition-all duration-300 truncate flex items-center gap-2 ${isScrolled ? 'text-xs mt-0.5' : 'text-sm mt-1'}`}>
                       <div>
@@ -1234,8 +1306,14 @@ function BusquedaMapaContent() {
                         </button>
                       )}
                     </h2>
-                  </div>
-
+                  
+                    {/* Subtítulo adicional solo en modo recomendados */}
+                   {isRecomendadosActive && !isClusterView && (
+                     <p className={`text-gray-500 transition-all duration-300 ${isScrolled ? 'text-[11px]' : 'text-xs'}`}>
+                     Mostrando resultados personalizados según tu actividad reciente
+                    </p>
+                   )}
+                  </div> 
                   {/* Si el usuario bajó, mostramos el botón de cerrar la barra aquí para no perderlo */}
                   {isScrolled && (
                     <button
@@ -1253,24 +1331,22 @@ function BusquedaMapaContent() {
                       totalResultados={displayedProperties.length}
                       ordenActual={ordenActual}
                       onOrdenChange={cambiarOrden}
-                      isCompact={isScrolled} 
+                      isCompact={isScrolled}
                     />
                   </div>
-                  
+
                   <div className="flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90 origin-right ml-2 shrink-0">
                     <button
                       onClick={() => setViewMode('grid')}
-                      className={`p-1 rounded transition-colors ${
-                        viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-                      }`}
+                      className={`p-1 rounded transition-colors ${viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
+                        }`}
                     >
                       <LayoutGrid size={16} />
                     </button>
                     <button
                       onClick={() => setViewMode('list')}
-                      className={`p-1 rounded transition-colors ${
-                        viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-                      }`}
+                      className={`p-1 rounded transition-colors ${viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
+                        }`}
                     >
                       <ListIcon size={16} />
                     </button>
@@ -1315,11 +1391,10 @@ function BusquedaMapaContent() {
                 />
               ) : (
                 <div
-                  className={`gap-4 flex flex-col ${
-                    viewMode === 'list'
-                      ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-                      : ''
-                  }`}
+                  className={`gap-4 flex flex-col ${viewMode === 'list'
+                    ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
+                    : ''
+                    }`}
                 >
                   {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
                     <div
@@ -1327,13 +1402,22 @@ function BusquedaMapaContent() {
                       onMouseEnter={() => setHoveredId(property.id)}
                       onMouseLeave={() => setHoveredId(null)}
                       onClick={() => {
-                        setSelectedPropertyId(property.id)
+                        // NUEVA LÓGICA DE INTERCEPCIÓN
+                        if (isCompareMode) {
+                          toggleProperty(property.id);
+                        } else {
+                          setSelectedPropertyId(property.id);
+                        }
                       }}
-                      className={`cursor-pointer transition-all duration-200 rounded-xl relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${
-                        viewMode === 'grid'
-                          ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
-                          : 'w-full py-1 hover:bg-stone-100'
-                      }`}
+                      className={`cursor-pointer transition-all duration-200 rounded-xl relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${viewMode === 'grid'
+                        ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
+                        : 'w-full py-1 hover:bg-stone-100'
+                        } ${
+                        // Borde naranja si está seleccionado
+                        isCompareMode && selectedIds.includes(property.id)
+                          ? 'ring-4 ring-orange-500 scale-[0.98] shadow-lg'
+                          : ''
+                        }`}
                     >
                       {viewMode === 'grid' ? (
                         <PropertyCard
@@ -1345,23 +1429,33 @@ function BusquedaMapaContent() {
                           estado={property.type}
                           precioFormateado={property.precioFormateado || 'Consultar precio'}
                           descripcion={property.descripcion || property.title}
+                          ubicacionTexto={property.ubicacionTexto}
+                          categoriaTexto={property.categoriaTexto}
+                          accionTexto={property.accionTexto}
                           camas={property.nroCuartos ?? 0}
                           banos={property.nroBanos ?? 0}
                           metros={property.superficieM2 ?? 0}
-                          onViewDetails={() => abrirDetallePropiedad(property.id)}
+                          onViewDetails={() => {
+                            if (!isCompareMode) abrirDetallePropiedad(property.id)
+                          }}
                         />
                       ) : (
                         <PropertyRow
                           title={property.title}
                           precioFormateado={property.precioFormateado || 'Consultar precio'}
                           size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
+                          ubicacionTexto={property.ubicacionTexto}
+                          categoriaTexto={property.categoriaTexto}
+                          accionTexto={property.accionTexto}
                           contactType="whatsapp"
                           image={
                             property.thumbnailUrl ||
                             property.imagen ||
                             'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
                           }
-                          onViewDetails={() => abrirDetallePropiedad(property.id)}
+                          onViewDetails={() => {
+                            if (!isCompareMode) abrirDetallePropiedad(property.id)
+                          }}
                         />
                       )}
                     </div>
@@ -1372,11 +1466,32 @@ function BusquedaMapaContent() {
             </div>
           </div>
 
-                )  : isSidebarOpen && activeSidebarView === 'superficie' ? (
-                <div className="flex flex-col h-full min-h-0 bg-white">
-                  <SuperficieFilterSidebar onClose={() => setActiveSidebarView('results')} />
-                </div>
-              ) : null}
+          ) : isSidebarOpen && activeSidebarView === 'superficie' ? (
+          <div className="flex flex-col h-full min-h-0 bg-white">
+            <SuperficieFilterSidebar onClose={() => setActiveSidebarView('results')} />
+          </div>
+          ) : null}
+          {/* // Footer estático para Modo Comparación (Solo aparece si el modo está activo, independiente del filtro seleccionado) */}
+          {isCompareMode && (
+            <div className="absolute bottom-0 left-0 w-full bg-white border-t border-stone-200 p-4 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.1)] z-[100] flex justify-between items-center animate-in slide-in-from-bottom-5">
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold text-slate-800">
+                  Modo Comparación
+                </span>
+                <span className="text-xs text-stone-500">
+                  {selectedIds.length} de 4 seleccionados
+                </span>
+              </div>
+
+              <button
+                disabled={selectedIds.length < 2}
+                onClick={() => setIsModalOpen(true)}
+                className="px-6 py-2.5 bg-[#ea580c] text-white rounded-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#c2410c] transition-colors shadow-md"
+              >
+                Listo
+              </button>
+            </div>
+          )}
         </aside>
 
         {/* Área del mapa */}
@@ -1519,7 +1634,11 @@ function BusquedaMapaContent() {
               }}
               onMapClick={(latlng) => {
                 if (isDrawingMode) {
-                  setCurrentPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]])
+                  if (currentPolygonPoints.length >= 15) {
+                    alert('Límite máximo de 15 vértices');
+                    return;
+                  }
+                  setCurrentPolygonPoints((prev) => [...prev, [latlng.lat, latlng.lng]]);
                 }
               }}
               onPointClick={(index) => {
@@ -1569,6 +1688,11 @@ function BusquedaMapaContent() {
           }}
         />
       </main>
+      {/* MONTAJE DEL MODAL COMPARATIVO */}
+      <ComparatorModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   )
 }

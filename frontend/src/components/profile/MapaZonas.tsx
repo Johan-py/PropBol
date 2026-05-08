@@ -14,6 +14,7 @@ import type { LatLngExpression } from "leaflet"
 // Importar CSS condicionalmente solo en el cliente
 if (typeof window !== 'undefined') {
     require('leaflet/dist/leaflet.css')
+    require('leaflet-gesture-handling/dist/leaflet-gesture-handling.css') // MAPAS HU11
 }
 
 // Importar L dinámicamente para evitar errores de SSR
@@ -71,6 +72,9 @@ if (typeof window !== "undefined" && L) {
         iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
         shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
     })
+    // Agregar el plugin de gesture handling para móviles MAPAS HU11
+    const { GestureHandling } = require('leaflet-gesture-handling')
+    L.Map.addInitHook('addHandler', 'gestureHandling', GestureHandling)
 }
 
 function createPropiedadIcon(tipo: string): L.DivIcon {
@@ -229,6 +233,17 @@ export default function MapaZonas({
             zoomControl={true}
             style={{ height: "100%", width: "100%" }}
             className="z-0"
+            // Agregado: Control nativo del cursor y bloqueo de arrastre en modo dibujo MAPAS HU11
+            {...({ 
+              gestureHandling: true,
+              gestureHandlingOptions: {
+                text: {
+                  touch: "Usa dos dedos para mover el mapa",
+                  scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
+                  scrollMac: "Usa \u2318 + scroll para hacer zoom en el mapa"
+                }
+              }
+            } as any)}
         >
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
