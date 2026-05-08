@@ -54,6 +54,13 @@ export default function BlogSharePlaceholder() {
               <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
             </svg>
           </button>
+          <button className="flex items-center justify-center w-14 h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group">
+            <svg viewBox="0 0 24 24" className="w-6 h-6 opacity-90 group-hover:opacity-100 transition-opacity text-stone-800" fill="currentColor">
+              <circle cx="5" cy="12" r="1.8"></circle>
+              <circle cx="12" cy="12" r="1.8"></circle>
+              <circle cx="19" cy="12" r="1.8"></circle>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
