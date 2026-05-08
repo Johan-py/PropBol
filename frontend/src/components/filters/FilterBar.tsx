@@ -1,5 +1,5 @@
 'use client'
-
+import { OfertaButton } from '../busqueda/ofertas/OfertaButton'
 import { useEffect, useMemo, useState } from 'react'
 import { CapacidadButton } from '../busqueda/capacidad/CapacidadButton'
 import {
@@ -50,9 +50,11 @@ interface FilterBarProps {
   onOpenSuperficieFilter?: () => void
   isCapacidadActive?: boolean
   onToggleCapacidad?: () => void
-  isPriceFilterActive?: boolean   
+  isPriceFilterActive?: boolean
   isSuperficieFilterActive?: boolean
   isZonaFilterActive?: boolean
+  isOfertaActive?: boolean
+  onToggleOferta?: () => void
 }
 type LocationValue =
   | string
@@ -114,7 +116,7 @@ const trackSearchTelemetria = async (filtros: {
   }
 }
 
-export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad, isPriceFilterActive = false, isSuperficieFilterActive = false, isZonaFilterActive = false }: FilterBarProps) {
+export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad, isPriceFilterActive = false, isSuperficieFilterActive = false, isZonaFilterActive = false, isOfertaActive = false, onToggleOferta }: FilterBarProps) {
 
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -153,7 +155,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     { label: 'Terrenos', icon: Trees },
     { label: 'Espacios Cementerio', icon: Flower2 }
   ]
-  
+
   // =======================================================================
   // 1. GENERADOR DINÁMICO DE FILTROS ACTIVOS (Fila inferior removible)
   // =======================================================================
@@ -162,7 +164,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     if (!searchParams) return filters
 
     const params = new URLSearchParams(searchParams.toString())
-    
+
     // Helper para eliminar parámetros y navegar
     const removeParam = (keys: string[], customAction?: () => void) => {
       keys.forEach(k => params.delete(k))
@@ -179,16 +181,16 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
 
     // -- Modos (Venta, Alquiler, Anticrético) --
     const modos = params.getAll('modoInmueble')
-    modos.forEach(m => filters.push({ 
-      id: `modo-${m}`, 
-      label: m.charAt(0).toUpperCase() + m.slice(1).toLowerCase(), 
+    modos.forEach(m => filters.push({
+      id: `modo-${m}`,
+      label: m.charAt(0).toUpperCase() + m.slice(1).toLowerCase(),
       onRemove: () => {
         const newModos = modos.filter(modo => modo !== m)
         params.delete('modoInmueble')
         newModos.forEach(nm => params.append('modoInmueble', nm))
         setModosSeleccionados(newModos)
         router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
-      } 
+      }
     }))
 
     // -- Zona (Texto) --
@@ -224,7 +226,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     // -- Cuartos y Baños --
     const minD = params.get('dormitoriosMin'); const maxD = params.get('dormitoriosMax')
     if (minD || maxD) filters.push({ id: 'cuartos', label: `Cuartos: ${minD || 0} a ${maxD || '+'}`, onRemove: () => removeParam(['dormitoriosMin', 'dormitoriosMax']) })
-    
+
     const minB = params.get('banosMin'); const maxB = params.get('banosMax')
     if (minB || maxB) filters.push({ id: 'banos', label: `Baños: ${minB || 0} a ${maxB || '+'}`, onRemove: () => removeParam(['banosMin', 'banosMax']) })
 
@@ -235,7 +237,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     // -- Amenidades y Etiquetas (HU6) --
     const amenities = params.get('amenities')?.split(',').filter(Boolean) || []
     amenities.forEach(a => filters.push({
-      id: `amenity-${a}`, label: `Amenidad: ${AMENITIES_MAP[a] || a}`, 
+      id: `amenity-${a}`, label: `Amenidad: ${AMENITIES_MAP[a] || a}`,
       onRemove: () => {
         const newAm = amenities.filter(id => id !== a)
         if (newAm.length > 0) params.set('amenities', newAm.join(','))
@@ -246,7 +248,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
 
     const labels = params.get('labels')?.split(',').filter(Boolean) || []
     labels.forEach(l => filters.push({
-      id: `label-${l}`, label: `Etiqueta: ${LABELS_MAP[l] || l}`, 
+      id: `label-${l}`, label: `Etiqueta: ${LABELS_MAP[l] || l}`,
       onRemove: () => {
         const newLb = labels.filter(id => id !== l)
         if (newLb.length > 0) params.set('labels', newLb.join(','))
@@ -271,7 +273,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
   }, [searchParams, propertyTypes])
 
   const handleSearch = async (e?: React.FormEvent) => {
-    
+
     if (e) e.preventDefault()
     const urlParams = new URLSearchParams(window.location.search)
     const minPrice = urlParams.get('minPrice')
@@ -316,7 +318,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       tipoInmueble: nuevosFiltros.tipoInmueble,
       modoInmueble: nuevosFiltros.modoInmueble,
       query: nuevosFiltros.query,
-      zona: ubicacionTexto, 
+      zona: ubicacionTexto,
       precioMin: minPrice,
       precioMax: maxPrice,
       superficieMin: minSuperficie,
@@ -376,7 +378,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       setUbicacionTexto(val.nombre)
       if (val.locationId) {
         // Si tenemos locationId, VACIAMOS las coordenadas para que el backend busque en toda la zona
-        setCoords({}) 
+        setCoords({})
       } else {
         setCoords({ lat: val.lat, lng: val.lng })
       }
@@ -386,7 +388,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     }
   }
   const isRecomendadosActive = searchParams?.get('orden') === 'recomendados'
-  
+
 
   // FIX Z-INDEX MASIVO: Agregamos z-[99999] y !overflow-visible para aplastar al mapa
   const containerStyles =
@@ -395,16 +397,16 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       : 'bg-white shadow-lg rounded-[30px] p-6 flex flex-col gap-6 w-full max-w-[921px] relative z-[999999] !overflow-visible'
   return (
     <form className={containerStyles} onSubmit={handleSearch}>
-      
+
       {/* ========================================================= */}
       {/* LAYOUT PARA MAPA (Nuevo Diseño) */}
       {/* ========================================================= */}
       {variant === 'map' && (
         <div className="flex flex-col gap-3 w-full max-w-screen-2xl mx-auto">
-          
+
           {/* FILA 1: Tipo | Modos (Venta/Alquiler) | Ubicación | Buscar */}
           <div className="flex flex-wrap md:flex-nowrap items-center w-full gap-3 relative z-[100] !overflow-visible">
-            
+
             <div className="w-full md:w-48 xl:w-56 shrink-0 relative z-[100] !overflow-visible">
               <ComboBox label="" placeholder="Cualquier tipo" icon={Home} options={propertyTypes} onChange={(val) => setTipoInmueble(val)} value={tipoInmueble} />
             </div>
@@ -412,7 +414,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
             <div className="shrink-0 flex items-center h-[42px] bg-white border border-stone-200 rounded-xl px-2 shadow-sm relative z-[90]">
               <TransactionModeFilter modoSeleccionado={modosSeleccionados} onModoChange={setModosSeleccionados} />
             </div>
-           
+
             <div className="flex-1 min-w-[200px] relative z-[90] !overflow-visible">
               <LocationSearch value={ubicacionTexto} onChange={handleLocationChange} />
             </div>
@@ -452,7 +454,13 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
               <SlidersHorizontal className="w-4 h-4 text-stone-500" />
               <span>Más Filtros</span>
             </button>
-           
+
+            <OfertaButton
+              variant={variant}
+              isActive={isOfertaActive}
+              onClick={onToggleOferta}
+            />
+
             <button
               type="button"
               onClick={async (e) => {
@@ -485,31 +493,29 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                     sessionStorage.setItem('propbol_recomendados', JSON.stringify(data.data))
                   }
                 }
-                
+
                 // Actualizamos la URL manteniendo el resto de filtros (zona, precio, etc.) y agregando orden=recomendados
                 params.set('orden', 'recomendados')
                 router.push(`/busqueda_mapa?${params.toString()}`)
               }}
-              className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${
-                isRecomendadosActive
+              className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isRecomendadosActive
                   ? 'bg-[#d97706] text-white border-[#d97706]'
                   : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
-              }`}
+                }`}
             >
               <Award className={`w-4 h-4 ${isRecomendadosActive ? 'text-white' : 'text-stone-500'}`} />
               <span>Recomendados</span>
             </button>
             <button
               type="button"
-              onClick={(e) => { 
-                e.preventDefault(); 
-                toggleCompareMode(); 
+              onClick={(e) => {
+                e.preventDefault();
+                toggleCompareMode();
               }}
-              className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${
-                isCompareMode
+              className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isCompareMode
                   ? 'bg-[#d97706] text-white border-[#d97706]'
                   : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
-              }`}
+                }`}
             >
               <BarChart2 className={`w-4 h-4 ${isCompareMode ? 'text-white' : 'text-stone-500'}`} />
               <span>Comparar {isCompareMode && selectedIds.length > 0 ? `(${selectedIds.length})` : ''}</span>
@@ -520,13 +526,13 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
           {activeFilters.length > 0 && (
             <div className="flex flex-wrap items-center gap-2 bg-white/60 backdrop-blur-sm border border-stone-200 rounded-xl p-2.5 w-full shadow-inner min-h-[48px]">
               <span className="text-[11px] text-stone-500 font-bold uppercase tracking-wider ml-2 mr-1">Activos:</span>
-              
+
               {activeFilters.map(filter => (
                 <div key={filter.id} className="group flex items-center gap-1.5 bg-[#fdf3e7] border border-orange-200 text-orange-800 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all hover:bg-orange-100 animate-in fade-in zoom-in duration-200">
                   <span>{filter.label}</span>
-                  <button 
-                    type="button" 
-                    onClick={(e) => { e.preventDefault(); filter.onRemove() }} 
+                  <button
+                    type="button"
+                    onClick={(e) => { e.preventDefault(); filter.onRemove() }}
                     className="hover:bg-orange-200 rounded-full p-0.5 transition-colors focus:outline-none"
                     title={`Quitar filtro: ${filter.label}`}
                   >
@@ -535,25 +541,25 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                 </div>
               ))}
 
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={(e) => {
                   e.preventDefault()
-                  
+
                   // 1. Vaciamos todos los estados visuales por completo
                   setTipoInmueble('Cualquier tipo')
                   setModosSeleccionados([]) // Arreglo vacío para desmarcar todos los checkboxes
                   setUbicacionTexto('')
                   setCoords({})
-                  
+
                   // 2. Limpiamos la memoria del navegador para matar los filtros "fantasma"
                   sessionStorage.removeItem('propbol_global_filters')
                   sessionStorage.removeItem('propbol_modo_recomendados')
                   sessionStorage.removeItem('propbol_recomendados')
-                  
+
                   // 3. Reseteamos la URL a su estado más puro
                   router.push('/busqueda_mapa')
-                }} 
+                }}
                 className="text-xs font-bold text-stone-400 hover:text-stone-600 underline ml-auto mr-3 transition-colors"
               >
                 Limpiar todos
@@ -585,15 +591,15 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       )}
 
       {/* ===== MODAL HU6 ===== */}
-      <AdvancedFiltersModal 
+      <AdvancedFiltersModal
         isOpen={isAdvancedFiltersOpen}
         onClose={() => setIsAdvancedFiltersOpen(false)}
         onApply={(amenities, labels) => {
           const params = new URLSearchParams(searchParams?.toString() || '')
-          
+
           if (amenities.length > 0) params.set('amenities', amenities.join(','))
           else params.delete('amenities')
-          
+
           if (labels.length > 0) params.set('labels', labels.join(','))
           else params.delete('labels')
 
