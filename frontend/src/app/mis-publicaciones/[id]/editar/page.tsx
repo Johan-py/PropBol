@@ -2,11 +2,15 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import EditarMultimediaModal from '@/components/publicacion/EditarMultimediaModal'
 import {
   editarPublicacion,
   obtenerDetallePublicacion
 } from '@/services/publicacion.service'
-import type { EditarPublicacionPayload } from '@/types/publicacion'
+import type {
+  EditarPublicacionPayload,
+  PublicacionDetalle
+} from '@/types/publicacion'
 
 type FormState = {
   titulo: string
@@ -66,6 +70,10 @@ export default function EditarPublicacionPage() {
     ubicacion: ''
   })
 
+  const [detallePublicacion, setDetallePublicacion] =
+    useState<PublicacionDetalle | null>(null)
+
+  const [mostrarModalMultimedia, setMostrarModalMultimedia] = useState(false)
   const [originalForm, setOriginalForm] = useState<FormState | null>(null)
   const [fieldErrors, setFieldErrors] = useState<FormErrors>({})
   const [loading, setLoading] = useState(true)
@@ -89,6 +97,7 @@ export default function EditarPublicacionPage() {
           ubicacion: detalle.ubicacionTexto ?? ''
         }
 
+        setDetallePublicacion(detalle)
         setForm(formCargado)
         setOriginalForm(formCargado)
       } catch (err) {
@@ -332,9 +341,19 @@ export default function EditarPublicacionPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="mb-6 text-3xl font-bold text-black">
-        Editar publicación
-      </h1>
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-3xl font-bold text-black">
+          Editar publicación
+        </h1>
+
+        <button
+          type="button"
+          onClick={() => setMostrarModalMultimedia(true)}
+          className="rounded-lg border border-[#D97706] bg-white px-4 py-2 text-sm font-semibold text-[#D97706] transition hover:bg-orange-50"
+        >
+          Editar imágenes y video
+        </button>
+      </div>
 
       {error && (
         <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700">
@@ -486,6 +505,15 @@ export default function EditarPublicacionPage() {
           </button>
         </div>
       </form>
+
+      {detallePublicacion && (
+        <EditarMultimediaModal
+          open={mostrarModalMultimedia}
+          imagenesActuales={detallePublicacion.imagenes ?? []}
+          videoActual={detallePublicacion.videoUrl}
+          onClose={() => setMostrarModalMultimedia(false)}
+        />
+      )}
     </div>
   )
 }
