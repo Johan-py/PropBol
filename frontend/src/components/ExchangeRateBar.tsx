@@ -2,7 +2,7 @@ import { ArrowDownRight, ArrowUpRight, BadgeDollarSign, Info } from "lucide-reac
 
 interface ExchangeRateBarProps {
   officialRate: number;
-  referentialRate: number;
+  referentialRate: number | null;
   updatedAt: string;
   isLoading?: boolean;
 }
@@ -13,8 +13,8 @@ export default function ExchangeRateBar({
   updatedAt,
   isLoading = false,
 }: ExchangeRateBarProps) {
-  const isHigher = referentialRate > officialRate;
-  const isLower = referentialRate < officialRate;
+  const isHigher = referentialRate !== null && referentialRate > officialRate;
+  const isLower = referentialRate !== null && referentialRate < officialRate;
   const TrendIcon = isHigher ? ArrowUpRight : ArrowDownRight;
 
   if (isLoading) {
@@ -35,7 +35,11 @@ export default function ExchangeRateBar({
           <span className="flex items-center gap-2 font-medium"><BadgeDollarSign className="h-4 w-4 text-emerald-600" />Tipo de Cambio:</span>
           <span>Oficial: <strong className="text-stone-900">Bs {officialRate.toFixed(2)}</strong></span>
           <span className="hidden text-stone-300 sm:inline">|</span>
-          <span className="flex items-center gap-1 text-[#D97706]">Referencial: <strong>Bs {referentialRate.toFixed(2)}</strong>{(isHigher || isLower) && <TrendIcon className="h-4 w-4" />}</span>
+          <span className="flex items-center gap-1 text-[#D97706]">
+            Referencial:{" "}
+            <strong>{referentialRate === null ? "No disponible" : `Bs ${referentialRate.toFixed(2)}`}</strong>
+            {(isHigher || isLower) && <TrendIcon className="h-4 w-4" />}
+          </span>
         </div>
 
         <div className="flex items-center gap-2 text-xs text-stone-500 sm:text-sm">
