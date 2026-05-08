@@ -40,11 +40,19 @@ export default function BlogSharePlaceholder() {
             />
           </button>
           <button className="flex items-center justify-center w-14 h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/a/a6/Tiktok_icon.svg"
-              alt="TikTok"
-              className="w-8 h-8 opacity-90 group-hover:opacity-100 transition-opacity"
-            />
+            <div className="w-8 h-8 rounded-[7px] bg-black flex items-center justify-center opacity-90 group-hover:opacity-100 transition-opacity">
+              <img
+                src="https://cdn.simpleicons.org/tiktok/white"
+                alt="TikTok"
+                className="w-5 h-5"
+              />
+            </div>
+          </button>
+          <button className="flex items-center justify-center w-14 h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group">
+            <svg viewBox="0 0 24 24" className="w-[22px] h-[22px] opacity-90 group-hover:opacity-100 transition-opacity text-[#433527]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <rect width="14" height="14" x="8" y="8" rx="2.5" ry="2.5"></rect>
+              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+            </svg>
           </button>
         </div>
       </div>
