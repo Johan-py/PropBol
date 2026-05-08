@@ -16,7 +16,8 @@ import {
   Trees,
   Flower2,
   MapPin,
-  X
+  X,
+  Tag
 } from 'lucide-react'
 import { useSearchFilters } from '@/hooks/useSearchFilters'
 import { LocationSearch } from '../layout/LocationSearch'
@@ -55,6 +56,8 @@ interface FilterBarProps {
   isZonaFilterActive?: boolean
   isOfertaActive?: boolean
   onToggleOferta?: () => void
+  isEtiquetasFilterActive?: boolean
+  onOpenEtiquetasFilter?: () => void
 }
 type LocationValue =
   | string
@@ -116,7 +119,7 @@ const trackSearchTelemetria = async (filtros: {
   }
 }
 
-export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad, isPriceFilterActive = false, isSuperficieFilterActive = false, isZonaFilterActive = false, isOfertaActive = false, onToggleOferta }: FilterBarProps) {
+export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad, isPriceFilterActive = false, isSuperficieFilterActive = false, isZonaFilterActive = false, isOfertaActive = false, onToggleOferta, isEtiquetasFilterActive = false, onOpenEtiquetasFilter }: FilterBarProps) {
 
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -447,6 +450,12 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
               <Maximize className={`w-4 h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-500'}`} />
               <span>Metros</span>
               <ChevronDown className={`w-4 h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-400'}`} />
+            </button>
+
+            <button type="button" onClick={() => onOpenEtiquetasFilter?.()} className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isEtiquetasFilterActive ? 'bg-[#d97706] text-white border-[#d97706]' : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'}`}>
+              <Tag className={`w-4 h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-500'}`} />
+              <span>Etiquetas</span>
+              <ChevronDown className={`w-4 h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-400'}`} />
             </button>
 
             {/* Modal de Filtros Avanzados */}
