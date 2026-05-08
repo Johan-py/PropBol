@@ -347,7 +347,7 @@ export default function LoginForm() {
     e.preventDefault();
 
     const trimmedEmail = magicLinkEmail.trim().toLowerCase();
-
+    setMagicLinkEmail(trimmedEmail);
     setMagicLinkError("");
     setMagicLinkSuccess("");
 
