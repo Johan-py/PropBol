@@ -4,6 +4,7 @@ import { ChevronLeft } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import BlogCommentsSection from '@/components/blog/BlogCommentsSection'
 import MarkdownRenderer from '@/components/blog/MarkdownRenderer'
+import BlogSharePlaceholder from '@/components/blog/BlogSharePlaceholder'
 import { MOCK_USER_BLOGS } from '@/lib/mock/blogs.mock'
 import { getPublishedBlogById } from '@/services/blogs.service'
 import BackButton from "@/app/blogs/backButton"
@@ -77,6 +78,8 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
         <div className="rounded-[36px] bg-white/90 p-6 shadow-[0_24px_80px_-50px_rgba(41,37,36,0.45)] sm:p-8 lg:p-10">
           <MarkdownRenderer content={articleContent} />
         </div>
+
+        <BlogSharePlaceholder />
 
         <BlogCommentsSection blogId={params.id} />
 
