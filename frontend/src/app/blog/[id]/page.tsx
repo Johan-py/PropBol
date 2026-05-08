@@ -1,7 +1,6 @@
 import Image from "next/image"
-import Link from 'next/link'
-import { ChevronLeft } from 'lucide-react'
 import { notFound } from 'next/navigation'
+import BlogDetailSidebar from '@/components/blog/BlogDetailSidebar'
 import BlogCommentsSection from '@/components/blog/BlogCommentsSection'
 import MarkdownRenderer from '@/components/blog/MarkdownRenderer'
 import { MOCK_USER_BLOGS } from '@/lib/mock/blogs.mock'
@@ -73,17 +72,21 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
         </div>
       </header>
 
-      <main className="mx-auto mt-12 max-w-4xl px-4 sm:px-6 lg:px-8">
-        <div className="rounded-[36px] bg-white/90 p-6 shadow-[0_24px_80px_-50px_rgba(41,37,36,0.45)] sm:p-8 lg:p-10">
-          <MarkdownRenderer content={articleContent} />
-        </div>
+      <main className="mx-auto mt-12 max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start xl:grid-cols-[minmax(0,1fr)_360px]">
+          <div className="space-y-12">
+            <div className="rounded-[36px] bg-white/90 p-6 shadow-[0_24px_80px_-50px_rgba(41,37,36,0.45)] sm:p-8 lg:p-10">
+              <MarkdownRenderer content={articleContent} />
+            </div>
 
-        <BlogCommentsSection blogId={params.id} />
+            <BlogCommentsSection blogId={params.id} />
 
-        <div className="pt-12">
-          <div className="pt-12">
-            <BackButton />
+            <div className="pt-2">
+              <BackButton />
+            </div>
           </div>
+
+          <BlogDetailSidebar />
         </div>
       </main>
     </article>
