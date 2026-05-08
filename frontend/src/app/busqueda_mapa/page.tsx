@@ -141,6 +141,7 @@ function BusquedaMapaContent() {
   const [isMisZonasOpen, setIsMisZonasOpen] = useState(false)
   const router = useRouter();
   const searchParams = useSearchParams();
+  const isRecomendadosActive = searchParams.get('orden') === 'recomendados'
   const filterResetKey = searchParams.toString();
   const minSuperficie = searchParams.get('minSuperficie')
   const maxSuperficie = searchParams.get('maxSuperficie')
@@ -1273,6 +1274,8 @@ function BusquedaMapaContent() {
                     <h1 className={`font-semibold text-slate-900 transition-all duration-300 truncate ${isScrolled ? 'text-base' : 'text-xl'}`}>
                       {isClusterView
                         ? `${clusterProperties.length} propiedades en este clúster`
+                        : isRecomendadosActive 
+                        ? 'Recomendados para tí'
                         : 'Resultados de búsqueda'}
                     </h1>
 
@@ -1303,8 +1306,14 @@ function BusquedaMapaContent() {
                         </button>
                       )}
                     </h2>
-                  </div>
-
+                  
+                    {/* Subtítulo adicional solo en modo recomendados */}
+                   {isRecomendadosActive && !isClusterView && (
+                     <p className={`text-gray-500 transition-all duration-300 ${isScrolled ? 'text-[11px]' : 'text-xs'}`}>
+                     Mostrando resultados personalizados según tu actividad reciente
+                    </p>
+                   )}
+                  </div> 
                   {/* Si el usuario bajó, mostramos el botón de cerrar la barra aquí para no perderlo */}
                   {isScrolled && (
                     <button
