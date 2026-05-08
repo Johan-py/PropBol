@@ -428,7 +428,7 @@ export const listSocialLinksByUser = async (usuarioId: number) => {
       usuarioId,
       activo: true,
       proveedor: {
-        in: ["facebook", "discord", "google"],
+        in: ["facebook", "discord", "google", "linkedin"],
       },
     },
     select: {
@@ -483,7 +483,7 @@ export const countActiveSocialLinksByUser = async (usuarioId: number) => {
       usuarioId,
       activo: true,
       proveedor: {
-        in: ["facebook", "discord", "google"],
+        in: ["facebook", "discord", "google", "linkedin"],
       },
     },
   });

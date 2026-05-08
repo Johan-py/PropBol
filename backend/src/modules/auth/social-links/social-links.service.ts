@@ -5,7 +5,7 @@ import {
   listSocialLinksByUser,
 } from "../auth.repository.js";
 
-const SUPPORTED_PROVIDERS = ["facebook", "discord", "google"] as const;
+const SUPPORTED_PROVIDERS = ["facebook", "discord", "google", "linkedin"] as const;
 
 export const getSocialLinksService = async (usuarioId: number) => {
   const links = await listSocialLinksByUser(usuarioId);
@@ -13,6 +13,7 @@ export const getSocialLinksService = async (usuarioId: number) => {
   const facebook = links.find((item) => item.proveedor === "facebook");
   const discord = links.find((item) => item.proveedor === "discord");
   const google = links.find((item) => item.proveedor === "google");
+  const linkedin = links.find((item) => item.proveedor === "linkedin");
 
   return {
     facebook: {
@@ -26,6 +27,10 @@ export const getSocialLinksService = async (usuarioId: number) => {
     google: {
       linked: Boolean(google),
       linkedEmail: google?.correoProveedor ?? null,
+    },
+    linkedin: {
+      linked: Boolean(linkedin),
+      linkedEmail: linkedin?.correoProveedor ?? null,
     },
   };
 };
