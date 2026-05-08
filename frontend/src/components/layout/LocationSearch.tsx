@@ -185,24 +185,31 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     searchAll()
   }, [debouncedValue, API_BASE, MAPBOX_TOKEN])
 
-  const handleSelect = (place: MapboxFeature) => {
+const handleSelect = (place: MapboxFeature) => {
     const nombre = place.text
     setInputValue(nombre)
     saveToHistory(nombre)
     setIsOpen(false)
-    onChange({ nombre, lat: place.center[1] !== 0 ? place.center[1] : undefined, lng: place.center[0] !== 0 ? place.center[0] : undefined, locationId: place.locationId })
+    
     if (place.isLocal && place.locationId) {
+      // Es zona oficial de PropBol. Usamos locationId y NO enviamos coordenadas.
+      onChange({ nombre, locationId: place.locationId })
       registrarConsulta(place.locationId, nombre)
-      updateFilters({ locationId: place.locationId, query: nombre })
-    }else {
-    // Aseguramos que Mapbox también actualice los filtros con lat/lng
-    updateFilters({ 
-      query: nombre, 
-      lat: place.center[1], 
-      lng: place.center[0], 
-      locationId: undefined 
-    })
-  }
+      updateFilters({ locationId: place.locationId, query: nombre, lat: undefined, lng: undefined })
+    } else {
+      // Es una calle de Mapbox. Usamos coordenadas.
+      onChange({ 
+        nombre, 
+        lat: place.center[1] !== 0 ? place.center[1] : undefined, 
+        lng: place.center[0] !== 0 ? place.center[0] : undefined 
+      })
+      updateFilters({ 
+        query: nombre, 
+        lat: place.center[1], 
+        lng: place.center[0], 
+        locationId: undefined 
+      })
+    }
     setTimeout(() => containerRef.current?.closest('form')?.requestSubmit(), 100)
   }
 
@@ -248,13 +255,16 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
         }
       }
 
-      // 3. Pasar los datos completos (con coordenadas) al FilterBar
+      // 3. Pasar los datos completos (con coordenadas o locationId) al FilterBar
       if (bestMatch) {
-        onChange(bestMatch)
         if (isLocal && bestMatch.locationId) {
+          // Historial de zona oficial de PropBol (Sin coordenadas)
+          onChange({ nombre: bestMatch.nombre, locationId: bestMatch.locationId })
           registrarConsulta(bestMatch.locationId, bestMatch.nombre)
-          updateFilters({ locationId: bestMatch.locationId, query: bestMatch.nombre })
+          updateFilters({ locationId: bestMatch.locationId, query: bestMatch.nombre, lat: undefined, lng: undefined })
         } else {
+          // Historial de calle de Mapbox (Con coordenadas)
+          onChange({ nombre: bestMatch.nombre, lat: bestMatch.lat, lng: bestMatch.lng })
           updateFilters({
             query: bestMatch.nombre,
             lat: bestMatch.lat,
