@@ -62,7 +62,11 @@ import {
   StartGoogleRegisterController,
 } from "./modules/auth/google/google.controller.js";
 
-import { getLinkedInLinkUrlController } from "./modules/auth/linkedin/linkedin.controller.js";
+import {
+  startLinkedInLoginController,
+  linkedInCallbackController,
+  getLinkedInLinkUrlController,
+} from "./modules/auth/linkedin/linkedin.controller.js";
 
 import {
   discordCallbackController,
@@ -253,12 +257,9 @@ app.get(
 );
 app.get("/api/auth/discord/link-url", requireAuth, getDiscordLinkUrlController);
 app.get("/api/auth/google/link-url", requireAuth, getGoogleLinkUrlController);
+app.get("/api/auth/linkedin/login", startLinkedInLoginController);
+app.get("/api/auth/linkedin/callback", linkedInCallbackController);
 app.get("/api/auth/linkedin/link-url", requireAuth, getLinkedInLinkUrlController);
-app.get(
-  "/api/auth/linkedin/link-url",
-  requireAuth,
-  getLinkedInLinkUrlController,
-);
 //comentario
 
 // --------------------
