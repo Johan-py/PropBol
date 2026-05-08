@@ -9,6 +9,9 @@ export default function PropertyRow({
   title,
   precioFormateado,
   size,
+  ubicacionTexto,
+  categoriaTexto,
+  accionTexto,
   contactType,
   image,
   onViewDetails
@@ -16,6 +19,9 @@ export default function PropertyRow({
   title: string
   precioFormateado: string
   size: string
+  ubicacionTexto?: string
+  categoriaTexto?: string
+  accionTexto?: string
   contactType: string
   image: string
   onViewDetails?: () => void
@@ -23,7 +29,7 @@ export default function PropertyRow({
   const [isHovered, setIsHovered] = useState(false)
   return (
     <div
-      className="relative grid grid-cols-[40px_70px_minmax(0,1fr)_20px_50px] gap-2 px-3 py-2 items-center cursor-pointer transition-colors hover:bg-stone-50 rounded-lg"
+      className="relative grid grid-cols-[56px_120px_minmax(0,1fr)_28px_58px] gap-2 px-3 py-2 items-center cursor-pointer transition-colors hover:bg-stone-50 rounded-lg"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -33,20 +39,20 @@ export default function PropertyRow({
         </div>
       )}
       {/* FOTO */}
-      <div className="w-[40px] h-[40px] rounded-md overflow-hidden bg-gray-200">
+      <div className="w-[56px] h-[56px] rounded-md overflow-hidden bg-gray-200">
         <Image
           src={image}
           alt={title}
           className="w-full h-full object-cover"
-          width={40}
-          height={40}
+          width={56}
+          height={56}
         />
       </div>
 
       {/* PRECIO */}
       <span
         className={`font-semibold transition-all duration-300 ${
-          isHovered ? 'text-sm text-[#ea580c]' : 'text-[11px] text-gray-700'
+          isHovered ? 'text-base text-[#ea580c]' : 'text-xs text-gray-700'
         }`}
       >
         {precioFormateado}
@@ -54,8 +60,12 @@ export default function PropertyRow({
 
       {/* DETALLE */}
       <div className="flex flex-col overflow-hidden min-w-0">
-        <span className="text-[11px] font-medium text-gray-800 truncate">{title}</span>
-        <span className="text-[10px] text-gray-500">{size}</span>
+        <span className="text-xs font-semibold text-gray-800 truncate">{title}</span>
+        <span className="text-[11px] text-gray-600 truncate">{size}</span>
+        <span className="text-[11px] text-stone-500 line-clamp-1">{ubicacionTexto || 'Ubicación no especificada'}</span>
+        <span className="text-[11px] text-stone-500 line-clamp-1">
+          {`Categoría: ${categoriaTexto || '-'} · Acción: ${accionTexto || '-'}`}
+        </span>
       </div>
 
       {/* HU4 - Botón para abrir el detalle en vista tabla */}
