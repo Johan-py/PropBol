@@ -25,6 +25,13 @@ export default function BlogSharePlaceholder() {
               className="w-8 h-8 opacity-90 group-hover:opacity-100 transition-opacity"
             />
           </button>
+          <button className="flex items-center justify-center w-14 h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+              alt="WhatsApp"
+              className="w-8 h-8 opacity-90 group-hover:opacity-100 transition-opacity"
+            />
+          </button>
         </div>
       </div>
     </div>
