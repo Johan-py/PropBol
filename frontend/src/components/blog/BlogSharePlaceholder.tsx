@@ -10,11 +10,18 @@ export default function BlogSharePlaceholder() {
         <h3 className="text-xs font-bold uppercase tracking-[0.24em] text-[#a56400]">
           Compartir
         </h3>
-        <div className="flex items-center justify-start gap-4">
+        <div className="flex items-center justify-start gap-10">
           <button className="flex items-center justify-center w-14 h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
               alt="Gmail"
+              className="w-8 h-8 opacity-90 group-hover:opacity-100 transition-opacity"
+            />
+          </button>
+          <button className="flex items-center justify-center w-14 h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg"
+              alt="Instagram"
               className="w-8 h-8 opacity-90 group-hover:opacity-100 transition-opacity"
             />
           </button>
