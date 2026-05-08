@@ -97,6 +97,21 @@ type FacebookPopupMessage =
   | FacebookPopupSuccessMessage
   | FacebookPopupErrorMessage;
 
+type LinkedInPopupSuccessMessage = {
+  type: "propbol:linkedin-login-success";
+  message: string;
+  token: string;
+  user: { id: number; correo: string; nombre?: string; apellido?: string };
+};
+
+type LinkedInPopupErrorMessage = {
+  type: "propbol:linkedin-login-error";
+  code: string;
+  message: string;
+};
+
+type LinkedInPopupMessage = LinkedInPopupSuccessMessage | LinkedInPopupErrorMessage;
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const LOGIN_TIMEOUT_MS = 10000;
 const GOOGLE_LOGIN_TIMEOUT_MS = 2 * 60 * 1000;
@@ -258,6 +273,7 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
   const [isLoadingDiscord, setIsLoadingDiscord] = useState(false);
+  const [isLoadingLinkedIn, setIsLoadingLinkedIn] = useState(false);
   const [isLoadingFacebook, setIsLoadingFacebook] = useState(false);
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
@@ -504,6 +520,115 @@ export default function LoginForm() {
     window.addEventListener("message", handleMessage);
   };
 
+  const handleLinkedInLogin = () => {
+    clearClientSession();
+    setGoogleError("");
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    if (hasNoInternetConnection()) {
+      setGoogleError(NO_CONNECTION_MESSAGE);
+      return;
+    }
+
+    setIsLoadingLinkedIn(true);
+
+    const popupWidth = 500;
+    const popupHeight = 600;
+    const left = window.screenX + (window.outerWidth - popupWidth) / 2;
+    const top = window.screenY + (window.outerHeight - popupHeight) / 2;
+
+    const popupWindow = window.open(
+      `${API_URL}/api/auth/linkedin/login`,
+      "linkedin-login",
+      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`,
+    );
+
+    if (!popupWindow || popupWindow.closed || typeof popupWindow.closed === "undefined") {
+      setGoogleError("El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.");
+      setIsLoadingLinkedIn(false);
+      return;
+    }
+
+    const popup = popupWindow;
+    popup.focus();
+
+    const expectedOrigin = new URL(API_URL).origin;
+    let authWasResolved = false;
+    let checkPopupIntervalId = 0;
+    let linkedinTimeoutId = 0;
+
+    function cleanup(shouldStopLoading = true) {
+      window.removeEventListener("message", handleMessage);
+      window.clearInterval(checkPopupIntervalId);
+      window.clearTimeout(linkedinTimeoutId);
+      if (shouldStopLoading) setIsLoadingLinkedIn(false);
+    }
+
+    async function handleMessage(event: MessageEvent<LinkedInPopupMessage>) {
+      if (event.origin !== expectedOrigin) return;
+      const data = event.data;
+      if (!data || typeof data !== "object" || !("type" in data)) return;
+      if (
+        data.type !== "propbol:linkedin-login-success" &&
+        data.type !== "propbol:linkedin-login-error"
+      ) return;
+
+      authWasResolved = true;
+      cleanup(false);
+
+      if (data.type === "propbol:linkedin-login-success") {
+        try {
+          await finalizeValidatedSession(data.token, data.user);
+          setSuccessMessage(data.message || "Inicio de sesión con LinkedIn exitoso");
+          setGoogleError("");
+          setIsLoadingLinkedIn(false);
+          popup.close();
+          window.setTimeout(() => { redirectAfterSuccessfulLogin(); }, 1000);
+        } catch (error) {
+          clearClientSession();
+          setGoogleError(
+            error instanceof Error ? error.message : "No se pudo consolidar la sesión con LinkedIn.",
+          );
+          setIsLoadingLinkedIn(false);
+          popup.close();
+        }
+        return;
+      }
+
+      clearClientSession();
+      setGoogleError(data.message || "No se pudo iniciar sesión con LinkedIn.");
+      setIsLoadingLinkedIn(false);
+      popup.close();
+    }
+
+    checkPopupIntervalId = window.setInterval(() => {
+      if (!popup.closed) return;
+      cleanup();
+      if (!authWasResolved) {
+        clearClientSession();
+        if (hasNoInternetConnection()) {
+          setGoogleError(NO_CONNECTION_MESSAGE);
+          return;
+        }
+        setGoogleError("Cancelaste el inicio de sesión con LinkedIn. Puedes intentarlo nuevamente.");
+      }
+    }, 500);
+
+    linkedinTimeoutId = window.setTimeout(() => {
+      cleanup();
+      clearClientSession();
+      if (!popup.closed) popup.close();
+      setGoogleError(
+        hasNoInternetConnection()
+          ? NO_CONNECTION_MESSAGE
+          : "La autenticación con LinkedIn tardó demasiado. Por favor intenta nuevamente.",
+      );
+    }, GOOGLE_LOGIN_TIMEOUT_MS);
+
+    window.addEventListener("message", handleMessage);
+  };
+  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -1083,7 +1208,9 @@ export default function LoginForm() {
 
           <button
             type="button"
-            className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#0A66C2] px-4 py-3 text-[15px] font-bold text-white shadow-sm transition hover:bg-[#004182]"
+            onClick={handleLinkedInLogin}
+            disabled={isLoadingLinkedIn}
+            className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#0A66C2] px-4 py-3 text-[15px] font-bold text-white shadow-sm transition hover:bg-[#004182] disabled:cursor-not-allowed disabled:opacity-60"
           >
             <svg
               viewBox="0 0 24 24"
@@ -1092,7 +1219,7 @@ export default function LoginForm() {
             >
               <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
             </svg>
-            Continuar con LinkedIn
+            {isLoadingLinkedIn ? "Conectando con LinkedIn..." : "Continuar con LinkedIn"}
           </button>
         </div>
 
