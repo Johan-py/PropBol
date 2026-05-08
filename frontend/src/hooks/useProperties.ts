@@ -209,6 +209,59 @@ export function useProperties(): UsePropertiesResult {
       try {
         const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
         const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {}
+        if (!token) {
+          const modos = searchParams.getAll('modoInmueble')
+          const qs = new URLSearchParams()
+          qs.set('fecha', 'mas-populares')
+          modos.forEach(m => qs.append('modoInmueble', m))
+          const res = await fetch(`${API_URL}/api/properties/inmuebles?${qs.toString()}`)
+          if (!res.ok) throw new Error(`Error ${res.status}`)
+          const json = await res.json()
+          const selectedCurrency = (
+            (searchParams.get('currency') || 'USD').toUpperCase() === 'BOB' ? 'BOB' : 'USD'
+          ) as 'USD' | 'BOB'
+          if (!cancelled) {
+            const mappedData: PropertyMapPin[] = (json.data || [])
+              .filter((item: any) => {
+                const ubicacion = item.ubicacion ?? item.ubicacion_inmueble
+                const lat = Number(ubicacion?.latitud)
+                const lng = Number(ubicacion?.longitud)
+                return ubicacion && !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0
+              })
+              .map((item: any) => {
+                const ubicacion = item.ubicacion ?? item.ubicacion_inmueble
+                const basePrice = Number(item.precio)
+                const priceInUsd = String(item.currency || 'USD').toUpperCase() === 'BOB'
+                  ? basePrice / BOB_EXCHANGE_RATE : basePrice
+                const displayPrice = selectedCurrency === 'BOB'
+                  ? priceInUsd * BOB_EXCHANGE_RATE : priceInUsd
+                const formattedText = selectedCurrency === 'BOB'
+                  ? `Bs ${displayPrice.toLocaleString('es-BO')}`
+                  : `$${displayPrice.toLocaleString('en-US')} USD`
+                const publicaciones = item.publicaciones ?? item.publicacion ?? []
+                return {
+                  id: item.id.toString(),
+                  lat: Number(ubicacion.latitud),
+                  lng: Number(ubicacion.longitud),
+                  price: displayPrice,
+                  currency: selectedCurrency,
+                  precioFormateado: formattedText,
+                  type: (item.categoria?.toLowerCase().trim() || 'casa') as PropertyType,
+                  title: item.titulo,
+                  descripcion: item.descripcion ?? null,
+                  ubicacionTexto: construirUbicacionTexto(item),
+                  categoriaTexto: traducirCategoria(item.categoria),
+                  accionTexto: traducirAccion(item.tipoAccion),
+                  nroCuartos: item.nroCuartos ?? null,
+                  nroBanos: item.nroBanos ?? null,
+                  superficieM2: item.superficieM2 ? Number(item.superficieM2) : null,
+                  thumbnailUrl: publicaciones?.[0]?.multimedia?.[0]?.url ?? undefined,
+                }
+              })
+            setProperties(mappedData)
+          }
+          return
+        }
 
         // Intentamos respetar una "zona" textual si el usuario la está filtrando.
         const zona = searchParams.get('query') || undefined
