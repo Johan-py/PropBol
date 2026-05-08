@@ -9,6 +9,7 @@ import {
   enviarCorreoRecuperacionPassword,
 } from "../../lib/email.service.js";
 import { generateToken, type JwtPayload } from "../../utils/jwt.js";
+import { sendMagicLinkEmail } from "./magic-link-email.service.js";
 import {
   createPasswordRecovery,
   createSession,
@@ -94,6 +95,8 @@ const LOGIN_BLOCK_TIME_MS = 15 * 60 * 1000;
 
 const REGISTER_CODE_TTL_MINUTES = 5;
 const TWO_FACTOR_CODE_TTL_MINUTES = 5;
+const MAGIC_LINK_TTL_MINUTES = 15;
+const MAGIC_LINK_TTL_SECONDS = MAGIC_LINK_TTL_MINUTES * 60;
 
 // límite de solicitudes de recuperación
 const MAX_RECOVERY_REQUESTS = 3;
@@ -839,9 +842,37 @@ export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
     throw new AuthError("Esta cuenta está desactivada", 403);
   }
 
+  const magicToken = jwt.sign(
+    {
+      purpose: "magic-link-login",
+      userId: user.id,
+      correo: user.correo,
+      nonce: crypto.randomUUID(),
+    },
+    env.JWT_SECRET,
+    {
+      expiresIn: MAGIC_LINK_TTL_SECONDS,
+    },
+  );
+
+  const magicLink = `${env.FRONTEND_URL}/sign-in/magic-link?token=${magicToken}`;
+
+  const emailResult = await sendMagicLinkEmail({
+    emailDestino: user.correo,
+    nombreUsuario: user.nombre ?? undefined,
+    magicLink,
+    minutosExpiracion: MAGIC_LINK_TTL_MINUTES,
+  });
+
+  if (!emailResult.success) {
+    throw new AuthError(
+      "No se pudo enviar el link mágico. Intenta nuevamente.",
+      500,
+    );
+  }
+
   return {
-    message:
-      "Correo verificado correctamente. Luego se enviará el link mágico de acceso.",
+    message: "Te enviamos un link mágico a tu correo electrónico.",
   };
 };
 
