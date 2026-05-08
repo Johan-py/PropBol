@@ -322,15 +322,19 @@ export default function LoginForm() {
     setIsLoadingDiscord(false);
   };
 
-  const handleOpenMagicLinkForm = () => {
-    setMagicLinkEmail(correo);
-    setMagicLinkError("");
-    setMagicLinkSuccess("");
-    setErrorMessage("");
-    setSuccessMessage("");
-    setGoogleError("");
-    setShowMagicLinkForm(true);
-  };
+ const handleOpenMagicLinkForm = () => {
+  const loginEmail = correo.trim();
+
+  setMagicLinkEmail((currentMagicLinkEmail) =>
+    currentMagicLinkEmail.trim() ? currentMagicLinkEmail : loginEmail,
+  );
+  setMagicLinkError("");
+  setMagicLinkSuccess("");
+  setErrorMessage("");
+  setSuccessMessage("");
+  setGoogleError("");
+  setShowMagicLinkForm(true);
+};
 
   const handleBackToLogin = () => {
     setMagicLinkError("");
