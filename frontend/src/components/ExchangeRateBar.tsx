@@ -1,5 +1,3 @@
-"use client";
-
 import { ArrowDownRight, ArrowUpRight, BadgeDollarSign, Info } from "lucide-react";
 
 interface ExchangeRateBarProps {
@@ -41,8 +39,12 @@ export default function ExchangeRateBar({
         </div>
 
         <div className="flex items-center gap-2 text-xs text-stone-500 sm:text-sm">
-          <div className="group relative flex items-center">
-            <Info aria-label="Información sobre tipo de cambio" className="h-4 w-4" />
+          <div
+            className="group relative flex items-center"
+            aria-label="Información sobre tipo de cambio"
+            title="Información sobre tipo de cambio"
+          >
+            <Info className="h-4 w-4" />
             <div className="pointer-events-none absolute right-0 top-6 z-10 hidden w-64 rounded-2xl bg-stone-900 px-4 py-3 text-left text-xs leading-5 text-white shadow-xl group-hover:block group-focus-within:block">
               El tipo oficial es el valor regulado. El referencial refleja un valor de mercado actualizado.
             </div>
