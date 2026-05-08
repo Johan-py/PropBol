@@ -345,12 +345,16 @@ export default function LoginForm() {
 
   const handleMagicLinkSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+     if (isLoadingMagicLink) {
+    return;
+  }
 
     const trimmedEmail = magicLinkEmail.trim().toLowerCase();
     setMagicLinkEmail(trimmedEmail);
     setMagicLinkError("");
     setMagicLinkSuccess("");
-
+  
     if (!trimmedEmail) {
       setMagicLinkError("El correo es obligatorio");
       return;
