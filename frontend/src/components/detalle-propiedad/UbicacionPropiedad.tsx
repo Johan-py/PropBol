@@ -1,3 +1,6 @@
+'use client'
+import ComoLlegarButton from '@/components/galeria/ComoLlegarButton'
+
 
 interface Props {
   mapa: {
@@ -28,6 +31,8 @@ export default function UbicacionPropiedad({ mapa }: Props) {
           </div>
         )}
       </div>
+      {/* HU13 - Boton Como llegar */}
+      <ComoLlegarButton lat={mapa.latitud} lng={mapa.longitud} variant="grid" />
     </section>
   )
 }
