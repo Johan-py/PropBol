@@ -12,6 +12,7 @@ import {
   findUserByLinkedInSessionToken,
   linkLinkedInToUser,
   createLinkedInLinkForUser,
+  updateLinkedInLastUsage,
 } from "./linkedin.repository.js";
 import {
   LinkedInAuthError,
@@ -150,6 +151,8 @@ export const loginWithLinkedInCodeService = async (
         403,
       );
     }
+
+    await updateLinkedInLastUsage(userByLinkedInId.id, linkedinId);
 
     return await buildLinkedInSessionResponse(
       userByLinkedInId,
