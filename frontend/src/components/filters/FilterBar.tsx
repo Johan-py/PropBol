@@ -16,7 +16,8 @@ import {
   Trees,
   Flower2,
   MapPin,
-  X
+  X,
+  Tag
 } from 'lucide-react'
 import { useSearchFilters } from '@/hooks/useSearchFilters'
 import { LocationSearch } from '../layout/LocationSearch'
@@ -55,6 +56,8 @@ interface FilterBarProps {
   isZonaFilterActive?: boolean
   isOfertaActive?: boolean
   onToggleOferta?: () => void
+  isEtiquetasFilterActive?: boolean
+  onOpenEtiquetasFilter?: () => void
 }
 type LocationValue =
   | string
@@ -116,7 +119,7 @@ const trackSearchTelemetria = async (filtros: {
   }
 }
 
-export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad, isPriceFilterActive = false, isSuperficieFilterActive = false, isZonaFilterActive = false, isOfertaActive = false, onToggleOferta }: FilterBarProps) {
+export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad, isPriceFilterActive = false, isSuperficieFilterActive = false, isZonaFilterActive = false, isOfertaActive = false, onToggleOferta, isEtiquetasFilterActive = false, onOpenEtiquetasFilter }: FilterBarProps) {
 
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -449,6 +452,12 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
               <ChevronDown className={`w-4 h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-400'}`} />
             </button>
 
+            <button type="button" onClick={() => onOpenEtiquetasFilter?.()} className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isEtiquetasFilterActive ? 'bg-[#d97706] text-white border-[#d97706]' : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'}`}>
+              <Tag className={`w-4 h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-500'}`} />
+              <span>Etiquetas</span>
+              <ChevronDown className={`w-4 h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-400'}`} />
+            </button>
+
             {/* Modal de Filtros Avanzados */}
             <button type="button" onClick={() => setIsAdvancedFiltersOpen(true)} className="h-[38px] flex items-center gap-2 px-4 rounded-full bg-white border border-stone-200 text-stone-600 text-sm font-medium hover:border-[#d97706] shadow-sm transition-all focus:outline-none shrink-0">
               <SlidersHorizontal className="w-4 h-4 text-stone-500" />
@@ -462,50 +471,93 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
             />
 
             <button
-              type="button"
-              onClick={async (e) => {
-                e.preventDefault()
+             type="button"
+             onClick={async (e) => {
+              e.preventDefault()
 
-                // Copiamos los filtros actuales de la URL en vez de destruirlos
-                const params = new URLSearchParams(searchParams?.toString() || '')
+              const params = new URLSearchParams(searchParams?.toString() || '')
+              const isActive = params.get('orden') === 'recomendados'
 
-                if (isRecomendadosActive) {
-                  // MODO: APAGAR
-                  sessionStorage.removeItem('propbol_modo_recomendados')
-                  sessionStorage.removeItem('propbol_recomendados')
+              if (isActive) {
+                  const savedFilters = sessionStorage.getItem('propbol_filtros_respaldo')
+              if (savedFilters) {
+                  const restoredParams = new URLSearchParams(savedFilters)
+                  restoredParams.delete('orden')
+                  restoredParams.delete('ia')
+                  router.push(`/busqueda_mapa?${restoredParams.toString()}`)
+                  sessionStorage.removeItem('propbol_filtros_respaldo')
+              } else {
                   params.delete('orden')
+                  params.delete('ia')
                   router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
-                  return // Nos detenemos aquí
-                }
+              }
+                sessionStorage.removeItem('propbol_modo_recomendados')
+                sessionStorage.removeItem('propbol_recomendados')
+                return
+              }
 
-                // MODO: ENCENDER
-                const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+              sessionStorage.setItem('propbol_filtros_respaldo', params.toString())
+
+
+               
+                const cleanParams = new URLSearchParams()
+                const modoInmueble = params.getAll('modoInmueble')
+                modoInmueble.forEach(m => cleanParams.append('modoInmueble', m))
+                cleanParams.set('orden', 'recomendados')
+                cleanParams.set('ia', '1')
+
+                
+                const token = localStorage.getItem('token')
                 if (token) {
-                  // Llamada a la API respetando los parámetros de búsqueda actuales (ej. si estaban en Cochabamba)
-                  const fetchParams = new URLSearchParams({ orden: 'recomendados' })
-                  const res = await fetch(`/api/inmuebles/recomendados?${fetchParams}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                  })
-                  const data = await res.json()
-                  if (data.success && data.data.length > 0) {
-                    sessionStorage.setItem('recomendaciones_resultado', JSON.stringify(data.data))
-                    sessionStorage.setItem('propbol_modo_recomendados', 'true')
-                    sessionStorage.setItem('propbol_recomendados', JSON.stringify(data.data))
-                  }
-                }
-
-                // Actualizamos la URL manteniendo el resto de filtros (zona, precio, etc.) y agregando orden=recomendados
-                params.set('orden', 'recomendados')
-                router.push(`/busqueda_mapa?${params.toString()}`)
-              }}
-              className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isRecomendadosActive
-                  ? 'bg-[#d97706] text-white border-[#d97706]'
-                  : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
-                }`}
+                   try {
+      const res = await fetch(`/api/inmuebles/recomendados?${cleanParams.toString()}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      const data = await res.json()
+      if (data.success && data.data.length > 0) {
+        sessionStorage.setItem('propbol_recomendados', JSON.stringify(data.data))
+        sessionStorage.setItem('propbol_modo_recomendados', 'true')
+      }
+    } catch (error) {
+      console.error('Error obteniendo recomendaciones:', error)
+      // Fallback silencioso: useProperties cargará los populares
+    }
+  } else {
+    // ── Visitante sin cuenta → más populares de su zona ────────────────
+    // No bloqueamos ni mostramos error. useProperties detectará
+    // propbol_modo_recomendados=true y cargará los populares.
+    // Opcionalmente pre-cargamos los populares para más rapidez:
+    try {
+      const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+      const res = await fetch(
+        `${API_BASE}/api/properties/inmuebles?fecha=mas-populares&${cleanParams.toString()}`
+      )
+      const data = await res.json()
+      if (data.ok && data.data?.length > 0) {
+        sessionStorage.setItem('propbol_recomendados', JSON.stringify(data.data))
+        sessionStorage.setItem('propbol_modo_recomendados', 'true')
+      }
+    } catch (error) {
+      console.error('Error cargando populares para visitante:', error)
+      // useProperties hará la carga normal como fallback
+    }
+  }
+ 
+  router.push(`/busqueda_mapa?${cleanParams.toString()}`)
+}}
+                
+                
+              
+              className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${
+              searchParams?.get('orden') === 'recomendados'
+                 ? 'bg-[#d97706] text-white border-[#d97706]'
+                 : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+              }`}
             >
-              <Award className={`w-4 h-4 ${isRecomendadosActive ? 'text-white' : 'text-stone-500'}`} />
+              <Award className={`w-4 h-4 ${searchParams?.get('orden') === 'recomendados' ? 'text-white' : 'text-stone-500'}`} />
               <span>Recomendados</span>
-            </button>
+              </button>
+             
             <button
               type="button"
               onClick={(e) => {
