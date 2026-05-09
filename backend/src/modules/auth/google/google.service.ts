@@ -11,6 +11,7 @@ import {
   findUserByGoogleId,
   findUserByGoogleSessionToken,
   linkGoogleToUser,
+  updateGoogleLastUsage,
 } from "./google.repository.js";
 import {
   GoogleAuthError,
@@ -218,6 +219,8 @@ const authenticateWithGoogle = async (
   }
 
   if (userByGoogleId) {
+    await updateGoogleLastUsage(userByGoogleId.id, googleId);
+
     return await buildGoogleSessionResponse(
       userByGoogleId,
       "Inicio de sesión con Google exitoso",
