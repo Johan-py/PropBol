@@ -102,6 +102,19 @@ export default function BlogSharePlaceholder() {
                   className="flex items-center w-full gap-3 px-4 py-3 rounded-xl hover:bg-stone-50 text-stone-700 transition-colors group"
                   onClick={() => setIsDownloadOpen(false)}
                 >
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="9" y1="15" x2="15" y2="15"></line>
+                    </svg>
+                  </div>
+                  <span className="text-sm font-semibold">Descargar PDF</span>
+                </button>
+                <button
+                  className="flex items-center w-full gap-3 px-4 py-3 rounded-xl hover:bg-stone-50 text-stone-700 transition-colors group"
+                  onClick={() => setIsDownloadOpen(false)}
+                >
                   <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 group-hover:bg-blue-100 transition-colors">
                     <svg viewBox="0 0 24 24" className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
