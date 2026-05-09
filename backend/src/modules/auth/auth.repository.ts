@@ -263,6 +263,18 @@ export const findActive2FACodeByUserId = async (usuarioId: number) => {
   });
 };
 
+export const findAny2FACodeByUserIdAndHash = async (usuarioId: number, codigoHash: string) => {
+  return await prisma.codigo_2fa.findFirst({
+    where: {
+      usuarioId,
+      codigoHash,
+    },
+    orderBy: {
+      creadoEn: "desc",
+    },
+  });
+};
+
 export const mark2FACodeAsUsed = async (id: number) => {
   return await prisma.codigo_2fa.update({
     where: { id },

@@ -10,6 +10,7 @@ import {
   enviarCodigoActivacionCuenta,
 } from "../../lib/email.service.js";
 import { generateToken, type JwtPayload } from "../../utils/jwt.js";
+import { cache } from "../../lib/cache.service.js";
 import {
   createPasswordRecovery,
   createSession,
@@ -28,6 +29,7 @@ import {
   deactivate2FAByUserId,
   expire2FACode,
   findActive2FACodeByUserId,
+  findAny2FACodeByUserIdAndHash,
   increment2FACodeAttempts,
   mark2FACodeAsUsed,
   activateUser,
@@ -516,6 +518,9 @@ export const registerUser = async (payload: RegisterDTO) => {
   const codigo = generateRegisterCode();
   const nonce = crypto.randomUUID();
 
+  const codigoHash = hash2FACode(codigo);
+  cache.set(`last_reg_code_${normalized.correo}`, codigoHash, REGISTER_CODE_TTL_MINUTES * 60 * 1000);
+
   const verificationToken = generatePendingRegisterToken({
     purpose: "pending-register",
     nombre: normalized.nombre,
@@ -573,6 +578,16 @@ export const verifyRegisterCodeService = async (
     throw new Error("El código ingresado no es válido");
   }
 
+  const codigoHash = hash2FACode(codigo);
+  const lastCodeHash = cache.get<string>(`last_reg_code_${decoded.correo}`);
+
+  if (lastCodeHash && lastCodeHash !== codigoHash) {
+    throw new AuthError(
+      "El código ingresado ha sido reemplazado. Por favor, use el código del correo más reciente",
+      401,
+    );
+  }
+
   const existingUser = await findUserByCorreo(decoded.correo);
 
   if (existingUser) {
@@ -596,6 +611,9 @@ export const verifyRegisterCodeService = async (
 
     throw error;
   }
+
+  // Limpiar el caché tras registro exitoso
+  cache.delete(`last_reg_code_${decoded.correo}`);
 
   const jwtPayload: JwtPayload = {
     id: newUser.id,
@@ -1148,6 +1166,15 @@ export const activateAccountByCodeService = async (
   const codigoHash = hash2FACode(normalizedCode);
 
   if (codigoHash !== activeCode.codigoHash) {
+    const anyCode = await findAny2FACodeByUserIdAndHash(user.id, codigoHash);
+
+    if (anyCode) {
+      throw new AuthError(
+        "El código ingresado ha sido reemplazado. Por favor, use el código del correo más reciente",
+        401,
+      );
+    }
+
     await increment2FACodeAttempts(activeCode.id, activeCode.intentos ?? 0);
     throw new AuthError("El código es inválido", 401);
   }
