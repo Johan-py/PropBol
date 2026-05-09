@@ -1527,7 +1527,7 @@ export default function LoginForm() {
                 <input
                   type="text"
                   inputMode="numeric"
-                  maxLength={ACTIVATION_CODE_LENGTH}
+                  //maxLength={ACTIVATION_CODE_LENGTH}
                   value={activationCode}
                   onChange={(e) => {
                     const onlyNumbers = e.target.value
@@ -1536,6 +1536,18 @@ export default function LoginForm() {
 
                     setActivationCode(onlyNumbers);
                   }}
+
+                  onPaste={(e) => {
+                    e.preventDefault();
+
+                    const pastedText = e.clipboardData.getData("text");
+                    const onlyNumbers = pastedText
+                      .replace(/\D/g, "")
+                      .slice(0, ACTIVATION_CODE_LENGTH);
+
+                    setActivationCode(onlyNumbers);
+                  }}
+
                   onKeyDown={(event) => {
                     if (event.key !== "Enter") {
                       return;
