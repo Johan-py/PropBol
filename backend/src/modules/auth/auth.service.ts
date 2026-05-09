@@ -1179,10 +1179,52 @@ export const activateAccountByCodeService = async (
     throw new AuthError("El código es inválido", 401);
   }
 
-  await mark2FACodeAsUsed(activeCode.id);
-  await activateUser(user.id);
-
   return {
     message: "Cuenta activada correctamente. Ya puedes iniciar sesión.",
+  };
+};
+
+export const resendRegisterCodeService = async (verificationToken: string) => {
+  if (!verificationToken) {
+    throw new Error("El token de verificación es obligatorio");
+  }
+
+  const decoded = verifyPendingRegisterToken(verificationToken);
+
+  const codigo = generateRegisterCode();
+  const nonce = crypto.randomUUID();
+
+  const codigoHash = hash2FACode(codigo);
+  cache.set(`last_reg_code_${decoded.correo}`, codigoHash, REGISTER_CODE_TTL_MINUTES * 60 * 1000);
+
+  const newToken = generatePendingRegisterToken({
+    purpose: "pending-register",
+    nombre: decoded.nombre,
+    apellido: decoded.apellido,
+    correo: decoded.correo,
+    telefono: decoded.telefono,
+    nonce,
+    codeSignature: signRegisterCode({
+      codigo,
+      correo: decoded.correo,
+      nonce,
+    }),
+  });
+
+  const emailResult = await enviarCodigoRegistro({
+    emailDestino: decoded.correo,
+    codigo,
+    nombreUsuario: decoded.nombre,
+  });
+
+  if (!emailResult.success) {
+    throw new Error(
+      "No se pudo reenviar el código de verificación. Intenta nuevamente.",
+    );
+  }
+
+  return {
+    verificationToken: newToken,
+    expiresInMinutes: REGISTER_CODE_TTL_MINUTES,
   };
 };

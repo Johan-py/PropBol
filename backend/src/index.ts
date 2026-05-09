@@ -47,6 +47,7 @@ import {
   activateAccountByPasswordController,
   requestActivationCodeController,
   activateAccountByCodeController,
+  resendRegisterCodeController,
 } from './modules/auth/auth.controller.js'
 import { requireAuth } from './middleware/auth.middleware.js'
 
@@ -223,6 +224,7 @@ app.post("/api/auth/deactivate-2fa", requireAuth, deactivate2FAController);
 app.get("/api/auth/2fa-status", requireAuth, get2FAStatusController);
 app.post("/api/auth/logout", logoutController);
 app.post("/api/auth/verify-register", verifyRegisterCodeController);
+app.post("/api/auth/resend-register-code", resendRegisterCodeController);
 app.post("/api/auth/activate-by-password", activateAccountByPasswordController);
 app.post("/api/auth/request-activation-code", requestActivationCodeController);
 app.post("/api/auth/activate-by-code", activateAccountByCodeController);
@@ -234,6 +236,7 @@ app.post("/api/auth/register", registerController);
 app.post("/api/auth/login", loginController);
 app.post("/api/auth/logout", logoutController);
 app.post("/api/auth/verify-register", verifyRegisterCodeController);
+app.post("/api/auth/resend-register-code", resendRegisterCodeController);
 app.post("/api/auth/activate-by-password", activateAccountByPasswordController);
 app.post("/api/auth/request-activation-code", requestActivationCodeController);
 app.post("/api/auth/activate-by-code", activateAccountByCodeController);

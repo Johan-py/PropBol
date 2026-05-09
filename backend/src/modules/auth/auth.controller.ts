@@ -16,6 +16,7 @@ import {
   activateAccountByPasswordService,
   requestActivationCodeService,
   activateAccountByCodeService,
+  resendRegisterCodeService,
 } from './auth.service.js'
 
 type RegisterBody = {
