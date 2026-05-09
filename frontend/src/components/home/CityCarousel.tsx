@@ -146,7 +146,6 @@ export default function CityCarousel({ images, cityName }: Props) {
         sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
         className="object-cover transition-transform duration-500 md:group-hover:scale-[1.02]"
         onError={() => setImageError(true)}
-        unoptimized
       />
 
       {hasMultipleImages ? (
