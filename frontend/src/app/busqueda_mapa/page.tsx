@@ -45,6 +45,7 @@ import { ErrorState } from '@/components/ClusterSidebar'
 import SuperficieFilterSidebar from '@/components/filters/SuperficieFilterSidebar'
 import { UbicacionEspecificaPanel } from '@/components/filters/UbicacionEspecificaPanel';
 import ComparatorModal from '@/components/busqueda/ComparatorModal'
+import EtiquetasSidebar from '@/components/filters/EtiquetasSidebar'
 
 // Carga dinámica del mapa (sin SSR)
 const MapView = nextDynamic(() => import('./MapView'), {
@@ -181,6 +182,12 @@ function BusquedaMapaContent() {
     setActiveSidebarView(prev => prev === 'capacidad' ? 'results' : 'capacidad')
   }
 
+  const openEtiquetas = () => {
+    setIsPriceFilterOpen(false)
+    setIsSidebarOpen(true)
+    setActiveSidebarView(prev => prev === 'etiquetas' ? 'results' : 'etiquetas')
+  }
+
   const [misZonas, setMisZonas] = useState<ZonaUsuario[]>([])
   const [newZoneName, setNewZoneName] = useState('Nueva zona')
   const [isCreatingCustomZone, setIsCreatingCustomZone] = useState(false)
@@ -221,7 +228,7 @@ function BusquedaMapaContent() {
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
   const [isMounted, setIsMounted] = useState(false)
   const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false)
-  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad' | 'ubicacion' | 'oferta'>('results')
+  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad' | 'ubicacion' | 'oferta' | 'etiquetas'>('results')
 
   useEffect(() => {
     const handleAbrirUbicacion = () => {
@@ -1383,6 +1390,8 @@ function BusquedaMapaContent() {
 
         isOfertaActive={isOfertaOpen}
         onToggleOferta={toggleOferta}
+        isEtiquetasFilterActive={activeSidebarView === 'etiquetas' && isSidebarOpen} 
+        onOpenEtiquetasFilter={openEtiquetas}
       />
 
       <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200">
@@ -1428,6 +1437,13 @@ function BusquedaMapaContent() {
               setActiveSidebarView('results')
             }}
           />
+          ) : isSidebarOpen && activeSidebarView === 'etiquetas' ? (
+          <div className="flex flex-col h-full w-full bg-white relative">
+            <EtiquetasSidebar
+              isOpen={true}
+              onClose={() => setActiveSidebarView('results')}
+            />
+          </div>
           ) : isSidebarOpen && activeSidebarView === 'ubicacion' ? (
           <div className="flex flex-col h-full w-full bg-white relative">
             <UbicacionEspecificaPanel
