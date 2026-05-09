@@ -31,6 +31,7 @@ import { useProperties } from '@/hooks/useProperties'
 import { useOrdenamiento } from '@/hooks/useOrdenamiento'
 import { useZonas } from '@/hooks/useZonas'
 import { useCompareStore } from '@/hooks/useCompareStore'
+import { ZONA_COLORS } from '@/types/zona'
 
 // === COMPONENTES ===
 import FilterBar from '@/components/filters/FilterBar'
@@ -320,6 +321,7 @@ function BusquedaMapaContent() {
           coordenadas,
           activa: true,
           creadoEn: new Date().toISOString(),
+          color: ZONA_COLORS.personalizada.fillActive,
           tipo: 'personalizada' as const
         }
       })
