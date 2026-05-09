@@ -1017,6 +1017,148 @@ function BusquedaMapaContent() {
               activeClusterIds={activeClusterIds}
             />
           </div>
+
+          {/* ── BOTONES FLOTANTES DE ZONAS (portrait móvil) ──
+              z-[35] para quedar siempre sobre el bottom sheet (z-[30])
+              Centrados horizontalmente en la parte superior del mapa */}
+          <div className="absolute top-3 left-0 right-0 z-[35] flex flex-col items-center gap-2 pointer-events-none">
+
+            {/* Estado normal: Mis zonas + Dibujar zona */}
+            {!isDrawingMode && !editingZoneId && (
+              <div className="flex flex-row gap-2 pointer-events-auto">
+                <button
+                  onClick={() => {
+                    if (!isAuthenticated) {
+                      router.push('/sign-in')
+                    } else {
+                      setIsMisZonasOpen(true)
+                    }
+                  }}
+                  className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 active:bg-stone-100 transition-all text-sm font-semibold"
+                >
+                  Mis zonas
+                </button>
+                {drawnPolygons.length === 0 && (
+                  <button
+                    onClick={() => {
+                      resetDrawing()
+                      resetEditingZone()
+                      setIsCreatingCustomZone(false)
+                      setIsDrawingMode(true)
+                      setIsMisZonasOpen(false)
+                    }}
+                    className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 active:bg-stone-100 transition-all text-sm font-semibold"
+                  >
+                    Dibujar zona
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Estado: modo dibujo activo */}
+            {isDrawingMode && !editingZoneId && (
+              <div className="flex flex-row gap-2 pointer-events-auto">
+                <button
+                  onClick={() => {
+                    if (currentPolygonPoints.length < 3) {
+                      setDrawingError(true)
+                      setTimeout(() => setDrawingError(false), 3000)
+                    } else {
+                      setDrawnPolygons((prev) => [...prev, currentPolygonPoints])
+                      setCurrentPolygonPoints([])
+                      setDrawingError(false)
+                      setIsDrawingMode(false)
+                    }
+                  }}
+                  className="bg-[#ea580c] text-white px-4 py-2.5 rounded-lg shadow-md border border-orange-600 hover:bg-[#c2410c] active:bg-[#c2410c] transition-all text-sm font-semibold"
+                >
+                  Finalizar dibujo
+                </button>
+                <button
+                  onClick={resetDrawing}
+                  className="bg-white text-red-600 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-red-50 active:bg-red-50 transition-all text-sm font-semibold"
+                >
+                  Cancelar
+                </button>
+              </div>
+            )}
+
+            {/* Error de dibujo */}
+            {drawingError && (
+              <div className="bg-red-50 border border-red-300 text-red-600 px-3 py-2 rounded-lg text-xs font-medium shadow-md text-center pointer-events-none">
+                ⚠️ Debes marcar al menos 3 puntos para finalizar la zona.
+              </div>
+            )}
+
+            {/* Estado: polígono listo para guardar */}
+            {(drawnPolygons.length > 0 || currentPolygonPoints.length >= 3) && isCreatingCustomZone && !editingZoneId && (
+              <div className="flex flex-row gap-2 pointer-events-auto">
+                <button
+                  onClick={() => {
+                    if (!isAuthenticated) return router.push('/sign-in')
+                    setIsMisZonasOpen(true)
+                  }}
+                  className="bg-green-600 text-white px-4 py-2.5 rounded-lg shadow-md border border-green-700 hover:bg-green-700 active:bg-green-700 transition-all text-sm font-semibold"
+                >
+                  Guardar zona
+                </button>
+                {!isDrawingMode && (
+                  <button
+                    onClick={() => setIsDrawingMode(true)}
+                    className="bg-[#ea580c] text-white px-4 py-2.5 rounded-lg shadow-[0_4px_14px_rgba(234,88,12,0.4)] hover:bg-[#c2410c] active:bg-[#c2410c] transition-all text-sm font-semibold"
+                  >
+                    Añadir dibujo
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Estado: hay polígono dibujado pero no en modo crear */}
+            {!isCreatingCustomZone && !isDrawingMode && drawnPolygons.length > 0 && !editingZoneId && (
+              <div className="flex flex-row gap-2 pointer-events-auto">
+                <button
+                  onClick={() => setIsDrawingMode(true)}
+                  className="bg-[#ea580c] text-white px-4 py-2.5 rounded-lg shadow-[0_4px_14px_rgba(234,88,12,0.4)] hover:bg-[#c2410c] active:bg-[#c2410c] transition-all text-sm font-semibold"
+                >
+                  Añadir dibujo
+                </button>
+              </div>
+            )}
+
+            {/* Estado: edición de zona existente */}
+            {editingZoneId && (
+              <div className="flex flex-row gap-2 pointer-events-auto">
+                <button
+                  onClick={saveEditedZone}
+                  disabled={isSavingEditedZone}
+                  className="bg-green-600 text-white px-4 py-2.5 rounded-lg shadow-md border border-green-700 hover:bg-green-700 active:bg-green-700 transition-all text-sm font-semibold disabled:opacity-50"
+                >
+                  {isSavingEditedZone ? 'Guardando...' : 'Guardar cambios'}
+                </button>
+                <button
+                  onClick={cancelEditZone}
+                  className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 active:bg-stone-100 transition-all text-sm font-semibold"
+                >
+                  Cancelar
+                </button>
+              </div>
+            )}
+
+            {/* Borrar dibujo (visible cuando hay puntos o polígonos sin estar editando) */}
+            {(drawnPolygons.length > 0 || currentPolygonPoints.length > 0) && !editingZoneId && (
+              <div className="flex flex-row gap-2 pointer-events-auto">
+                <button
+                  onClick={resetDrawing}
+                  className="bg-white text-stone-700 px-4 py-2.5 rounded-lg shadow-md border border-stone-200 hover:bg-stone-50 active:bg-stone-100 transition-all text-sm font-semibold"
+                >
+                  Borrar dibujo
+                </button>
+              </div>
+            )}
+          </div>
+          {/* ── FIN BOTONES FLOTANTES ── */}
+
+          {/* Botón "Ver lista" cuando el sheet está oculto */}
           {sheetState === 'hidden' && (
             <button
               onClick={() => setSheetState('peek')}
