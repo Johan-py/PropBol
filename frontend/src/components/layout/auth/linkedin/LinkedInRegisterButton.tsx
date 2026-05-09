@@ -121,10 +121,12 @@ export default function LinkedInRegisterButton({
       popup.close();
     }
 
+    let wasTimeout = false;
+
     checkIntervalId = window.setInterval(() => {
       if (!popup.closed) return;
       cleanup();
-      if (!authWasResolved) {
+      if (!authWasResolved && !wasTimeout) {
         onError(
           "Cancelaste el registro con LinkedIn. Puedes intentarlo nuevamente.",
         );
@@ -132,11 +134,12 @@ export default function LinkedInRegisterButton({
     }, 500);
 
     timeoutId = window.setTimeout(() => {
+      wasTimeout = true;
       cleanup();
       if (!popup.closed) popup.close();
       if (!authWasResolved) {
         onError(
-          "La autenticación con LinkedIn tardó demasiado. Por favor intenta nuevamente.",
+          "El tiempo de autorización con LinkedIn expiró. Por favor, inténtalo nuevamente.",
         );
       }
     }, LINKEDIN_TIMEOUT_MS);

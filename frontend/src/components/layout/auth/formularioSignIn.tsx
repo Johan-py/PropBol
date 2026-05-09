@@ -606,10 +606,12 @@ export default function LoginForm() {
       popup.close();
     }
 
+    let wasTimeout = false;
+
     checkPopupIntervalId = window.setInterval(() => {
       if (!popup.closed) return;
       cleanup();
-      if (!authWasResolved) {
+      if (!authWasResolved && !wasTimeout) {
         clearClientSession();
         if (hasNoInternetConnection()) {
           setGoogleError(NO_CONNECTION_MESSAGE);
@@ -620,14 +622,17 @@ export default function LoginForm() {
     }, 500);
 
     linkedinTimeoutId = window.setTimeout(() => {
+      wasTimeout = true;
       cleanup();
       clearClientSession();
       if (!popup.closed) popup.close();
-      setGoogleError(
-        hasNoInternetConnection()
-          ? NO_CONNECTION_MESSAGE
-          : "La autenticación con LinkedIn tardó demasiado. Por favor intenta nuevamente.",
-      );
+      if (!authWasResolved) {
+        setGoogleError(
+          hasNoInternetConnection()
+            ? NO_CONNECTION_MESSAGE
+            : "El tiempo de autorización con LinkedIn expiró. Por favor, inténtalo nuevamente.",
+        );
+      }
     }, GOOGLE_LOGIN_TIMEOUT_MS);
 
     window.addEventListener("message", handleMessage);
