@@ -261,6 +261,7 @@ app.get("/api/auth/google/link-url", requireAuth, getGoogleLinkUrlController);
 app.get("/api/auth/linkedin/login", startLinkedInLoginController);
 app.get("/api/auth/linkedin/callback", linkedInCallbackController);
 app.get("/api/auth/linkedin/link-url", requireAuth, getLinkedInLinkUrlController);
+app.get("/api/auth/linkedin/register", startLinkedInRegisterController);
 //comentario
 
 // --------------------
