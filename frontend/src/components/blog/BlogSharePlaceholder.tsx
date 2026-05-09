@@ -25,7 +25,7 @@ export default function BlogSharePlaceholder() {
           Compartir
         </h3>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-6">
-          <div className="flex flex-wrap items-center justify-start gap-4 sm:gap-5 md:gap-6">
+          <div className="flex flex-wrap items-center justify-start gap-3 sm:gap-4">
             <button className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
@@ -79,10 +79,10 @@ export default function BlogSharePlaceholder() {
           </div>
 
           {/* MENÚ DE DESCARGA */}
-          <div className="relative" ref={menuRef}>
-            <button
+          <div className="relative w-full sm:w-44" ref={menuRef}>
+            <button 
               onClick={() => setIsDownloadOpen(!isDownloadOpen)}
-              className={`flex items-center justify-center gap-2 px-5 h-12 rounded-xl border transition-all duration-200 group whitespace-nowrap shrink-0 ${isDownloadOpen ? 'bg-stone-900 border-stone-900 text-white' : 'border-stone-200 hover:bg-stone-50 text-[#433527]'}`}
+              className={`flex items-center justify-center gap-2 w-full h-12 rounded-xl border transition-all duration-200 group whitespace-nowrap shrink-0 ${isDownloadOpen ? 'bg-stone-900 border-stone-900 text-white' : 'border-stone-200 hover:bg-stone-50 text-[#433527]'}`}
             >
               <svg viewBox="0 0 24 24" className={`w-[18px] h-[18px] ${isDownloadOpen ? 'text-stone-100' : 'text-[#433527]'}`} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -97,32 +97,32 @@ export default function BlogSharePlaceholder() {
 
             {/* DROPDOWN */}
             {isDownloadOpen && (
-              <div className="absolute right-0 top-full mt-3 w-48 bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.12)] border border-stone-100 p-2 z-50 animate-in fade-in zoom-in duration-200 origin-top-right">
-                <button
-                  className="flex items-center w-full gap-3 px-4 py-3 rounded-xl hover:bg-stone-50 text-stone-700 transition-colors group"
+              <div className="absolute right-0 top-full mt-3 w-full bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.12)] border border-stone-100 p-2 z-50 animate-in fade-in zoom-in duration-200 origin-top-right">
+                <button 
+                  className="flex items-center w-full gap-3 px-3 py-3 rounded-xl hover:bg-stone-50 text-stone-700 transition-colors group"
                   onClick={() => setIsDownloadOpen(false)}
                 >
-                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors shrink-0">
                     <svg viewBox="0 0 24 24" className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                       <polyline points="14 2 14 8 20 8"></polyline>
                       <line x1="9" y1="15" x2="15" y2="15"></line>
                     </svg>
                   </div>
-                  <span className="text-sm font-semibold">Descargar PDF</span>
+                  <span className="text-sm font-semibold whitespace-nowrap">Descargar PDF</span>
                 </button>
-                <button
-                  className="flex items-center w-full gap-3 px-4 py-3 rounded-xl hover:bg-stone-50 text-stone-700 transition-colors group"
+                <button 
+                  className="flex items-center w-full gap-3 px-3 py-3 rounded-xl hover:bg-stone-50 text-stone-700 transition-colors group"
                   onClick={() => setIsDownloadOpen(false)}
                 >
-                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 group-hover:bg-blue-100 transition-colors">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 group-hover:bg-blue-100 transition-colors shrink-0">
                     <svg viewBox="0 0 24 24" className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                       <circle cx="8.5" cy="8.5" r="1.5"></circle>
                       <polyline points="21 15 16 10 5 21"></polyline>
                     </svg>
                   </div>
-                  <span className="text-sm font-semibold">Descargar Imagen</span>
+                  <span className="text-sm font-semibold whitespace-nowrap">Descargar Imagen</span>
                 </button>
               </div>
             )}
