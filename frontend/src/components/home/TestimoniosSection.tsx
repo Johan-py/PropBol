@@ -111,11 +111,11 @@ export default function TestimoniosSection() {
   const totalDots = maxIndex + 1
 
   return (
-    // FIX commit2: py y px ajustados por breakpoint
-    <section className="bg-white py-10 md:py-14 lg:py-16 w-full">
+    // FIX commit3: overflow-hidden en section evita scroll horizontal en 390px
+    <section className="bg-white py-10 md:py-14 lg:py-16 w-full overflow-hidden">
       <div className="max-w-[1100px] mx-auto px-4 sm:px-6 md:px-8">
 
-        {/* Título — tamaño escala en todos los breakpoints */}
+        {/* Título */}
         <div className="text-center mb-6 md:mb-8">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-stone-900 mb-1 leading-snug">
             Historias reales de{' '}
@@ -126,13 +126,13 @@ export default function TestimoniosSection() {
           </p>
         </div>
 
-        {/* Filtros — tamaño de texto y padding responsive */}
-        <div className="flex flex-wrap justify-center gap-2 mb-6 md:mb-8">
+        {/* FIX commit3: whitespace-nowrap en botones para evitar saltos de línea internos */}
+        <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mb-6 md:mb-8">
           {CIUDADES.map((ciudad) => (
             <button
               key={ciudad}
               onClick={() => handleCiudad(ciudad)}
-              className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-medium border transition-all duration-200 ${
+              className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-medium border transition-all duration-200 whitespace-nowrap ${
                 ciudadActiva === ciudad
                   ? 'bg-amber-600 text-white border-amber-600'
                   : 'bg-white text-stone-600 border-stone-300 hover:border-amber-400 hover:text-amber-600'
@@ -154,7 +154,6 @@ export default function TestimoniosSection() {
           </div>
         ) : (
           <>
-            {/* FIX commit2: flechas más pequeñas en mobile */}
             <div className="relative flex items-center gap-1 sm:gap-2 md:gap-4">
               <button
                 onClick={handlePrev}
@@ -164,8 +163,8 @@ export default function TestimoniosSection() {
                 <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
 
-              {/* Tarjetas visibles */}
-              <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* FIX commit3: min-w-0 evita que el grid desborde su contenedor flex */}
+              <div className="flex-1 min-w-0 grid grid-cols-1 md:grid-cols-2 gap-4">
                 {visibleTestimonios.map((t) => (
                   <TarjetaTestimonio
                     key={t.id}
@@ -223,39 +222,38 @@ function TarjetaTestimonio({
   onLike: (t: Testimonio) => void
 }) {
   return (
-    <div className="rounded-2xl border border-stone-100 shadow-md p-5 md:p-6 bg-white flex flex-col justify-between min-h-[200px]">
-      {/* FIX commit2: mb reducido en mobile */}
-      <p className="text-stone-600 italic text-center text-sm leading-relaxed mb-5">
+    // FIX commit3: min-w-0 + overflow-hidden evitan que texto largo rompa el layout
+    <div className="rounded-2xl border border-stone-100 shadow-md p-5 md:p-6 bg-white flex flex-col justify-between min-h-[200px] min-w-0 overflow-hidden">
+      {/* FIX commit3: break-words para testimonios con palabras muy largas */}
+      <p className="text-stone-600 italic text-center text-sm leading-relaxed mb-5 break-words">
         "{testimonio.comentario}"
       </p>
 
-      {/* FIX commit2: gap reducido en mobile */}
       <div className="flex items-center justify-between gap-3">
-        {/* Avatar + info — tamaños responsive */}
-        <div className="flex items-center gap-2 md:gap-3">
+        {/* FIX commit3: min-w-0 para que truncate funcione en nombres largos */}
+        <div className="flex items-center gap-2 md:gap-3 min-w-0">
           <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-amber-600 flex items-center justify-center shrink-0">
             <span className="text-white text-xs md:text-sm font-bold">
               {testimonio.usuario.iniciales}
             </span>
           </div>
-          <div>
-            <p className="text-xs md:text-sm font-semibold text-stone-800 leading-tight">
+          <div className="min-w-0">
+            <p className="text-xs md:text-sm font-semibold text-stone-800 leading-tight truncate">
               {testimonio.usuario.nombre} {testimonio.usuario.apellido}
             </p>
             {(testimonio.ciudad || testimonio.zona) && (
-              <p className="text-[11px] text-stone-400">
+              <p className="text-[11px] text-stone-400 truncate">
                 {[testimonio.ciudad, testimonio.zona].filter(Boolean).join(' – ')}
               </p>
             )}
             {testimonio.categoria && (
-              <span className="inline-block mt-1 text-[9px] md:text-[10px] font-semibold tracking-wide text-stone-500 border border-stone-200 rounded px-2 py-0.5 uppercase">
+              <span className="inline-block mt-1 text-[9px] md:text-[10px] font-semibold tracking-wide text-stone-500 border border-stone-200 rounded px-2 py-0.5 uppercase max-w-full truncate">
                 {testimonio.categoria}
               </span>
             )}
           </div>
         </div>
 
-        {/* Like — tamaños responsive */}
         <button
           onClick={() => onLike(testimonio)}
           disabled={!isLoggedIn || likingId === testimonio.id}
