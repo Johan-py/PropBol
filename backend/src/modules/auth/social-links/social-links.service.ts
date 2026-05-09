@@ -19,18 +19,22 @@ export const getSocialLinksService = async (usuarioId: number) => {
     facebook: {
       linked: Boolean(facebook),
       linkedEmail: facebook?.correoProveedor ?? null,
+      linkedAt: facebook?.vinculadoEn ?? null,
     },
     discord: {
       linked: Boolean(discord),
       linkedEmail: discord?.correoProveedor ?? null,
+      linkedAt: discord?.vinculadoEn ?? null,
     },
     google: {
       linked: Boolean(google),
       linkedEmail: google?.correoProveedor ?? null,
+      linkedAt: google?.vinculadoEn ?? null,
     },
     linkedin: {
       linked: Boolean(linkedin),
       linkedEmail: linkedin?.correoProveedor ?? null,
+      linkedAt: linkedin?.vinculadoEn ?? null,
     },
   };
 };

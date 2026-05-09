@@ -391,6 +391,7 @@ export const createSocialLink = async ({
         usuarioId,
         correoProveedor: correoProveedor ?? null,
         activo: true,
+        vinculadoEn: new Date(),
       },
     });
   }
@@ -402,6 +403,7 @@ export const createSocialLink = async ({
       idExterno,
       correoProveedor: correoProveedor ?? null,
       activo: true,
+      vinculadoEn: new Date(),
     },
   });
 };

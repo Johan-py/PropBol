@@ -13,6 +13,7 @@ type LinkedAccount = {
   description: string;
   status: AccountStatus;
   linkedEmail: string;
+  linkedAt?: string;
   color: string;
   icon?: ReactNode;
   letter?: string;
@@ -22,18 +23,22 @@ type SocialLinksResponse = {
   facebook: {
     linked: boolean;
     linkedEmail: string | null;
+    linkedAt: string | null;
   };
   discord: {
     linked: boolean;
     linkedEmail: string | null;
+    linkedAt: string | null;
   };
   google: {
     linked: boolean;
     linkedEmail: string | null;
+    linkedAt: string | null;
   };
   linkedin: {
     linked: boolean;
     linkedEmail: string | null;
+    linkedAt: string | null;
   };
 };
 
@@ -97,6 +102,27 @@ const initialAccounts: LinkedAccount[] = [
 },
 ];
 
+const formatLinkedAt = (value?: string) => {
+  if (!value) return "";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Fecha no disponible";
+  }
+
+  return new Intl.DateTimeFormat("es-BO", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+    timeZone: "America/La_Paz",
+  }).format(date);
+};
+
 type SocialCardProps = {
   account: LinkedAccount;
   actionLoadingId: string | null;
@@ -150,6 +176,11 @@ function SocialCard({
                 {account.linkedEmail
                   ? `Cuenta asociada: ${account.linkedEmail}`
                   : "Cuenta vinculada correctamente."}
+              </p>
+            )}
+            {isLinked && account.id === "linkedin" && account.linkedAt && (
+              <p className="mt-1 text-sm text-neutral-500">
+                Fecha de vinculación: {formatLinkedAt(account.linkedAt)}
               </p>
             )}
 
@@ -279,6 +310,7 @@ export default function LinkedAccountsSection() {
             ...account,
             status: providerData.linked ? "vinculado" : "no-vinculado",
             linkedEmail: providerData.linkedEmail ?? "",
+            linkedAt: providerData.linkedAt ?? "",
           };
         }),
       );
