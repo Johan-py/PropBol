@@ -44,3 +44,16 @@ export const unlinkSocialProviderController = async (
 
   return res.status(200).json(result);
 };
+
+export const getLinkedInOriginalEmailController = async (req: Request, res: Response) => {
+  const usuarioId = req.user?.id;
+
+  if (!usuarioId) {
+    return res.status(401).json({ message: "No autorizado." });
+  }
+
+  const { getLinkedInOriginalEmail } = await import("./social-links.service.js");
+  const email = await getLinkedInOriginalEmail(usuarioId);
+
+  return res.status(200).json({ linkedinOriginalEmail: email });
+};

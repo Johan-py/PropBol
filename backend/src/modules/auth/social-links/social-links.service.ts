@@ -75,3 +75,9 @@ export const unlinkSocialProviderService = async (
     provider,
   };
 };
+
+export const getLinkedInOriginalEmail = async (usuarioId: number) => {
+  const link = await findSocialLinkByUserAndProvider(usuarioId, "linkedin");
+  if (!link) return null;
+  return link.correoProveedor ?? null;
+};

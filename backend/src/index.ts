@@ -91,6 +91,7 @@ import {
 import {
   getSocialLinksController,
   unlinkSocialProviderController,
+  getLinkedInOriginalEmailController,
 } from "./modules/auth/social-links/social-links.controller.js";
 
 import securityRoutes from "./routes/security.routes.js";
@@ -248,6 +249,7 @@ app.get("/api/auth/facebook/login", startFacebookLoginController);
 app.get("/api/auth/facebook/register", startFacebookRegisterController);
 app.get("/api/auth/facebook/callback", facebookCallbackController);
 app.get("/api/auth/social-links", requireAuth, getSocialLinksController);
+app.get("/api/auth/linkedin/original-email", requireAuth, getLinkedInOriginalEmailController);
 app.delete(
   "/api/auth/social-links/:provider",
   requireAuth,
