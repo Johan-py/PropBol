@@ -27,6 +27,10 @@ export class RecomendacionesService {
 
   async getRecomendacionesGlobales(params: RecomendacionesParams): Promise<InmuebleConScore[]> {
     const { usuarioId, limit = 20, excludeIds = [], zonaForzada } = params
+    if (!usuarioId) {
+    const zonaAEvaluar = zonaForzada || 'Cochabamba'
+    return this.getRecomendacionesPorPopularidad(zonaAEvaluar, limit)
+  }
     const cacheKey = `recomendaciones_globales_usuario_${usuarioId}_limit_${limit}_zona_${zonaForzada || 'none'}`
     const cached = cache.get<InmuebleConScore[]>(cacheKey)
     if (cached) {
@@ -185,4 +189,14 @@ export class RecomendacionesService {
     resultado.sort((a, b) => b.score - a.score)
     return resultado
   }
+  async getRecomendacionesGlobalesML(params: RecomendacionesParams): Promise<InmuebleConScore[]> {
+  const { usuarioId, limit, zonaForzada } = params
+  if (!usuarioId) {
+    const zona = zonaForzada || 'Cochabamba'
+    return this.getRecomendacionesPorPopularidad(zona, limit)
+  }
+  // Aquí irá la lógica ML (ml-matrix) para usuarios logueados
+  // Por ahora, puedes llamar a getRecomendacionesGlobales o a un placeholder
+  return this.getRecomendacionesGlobales(params)
+}
 }
