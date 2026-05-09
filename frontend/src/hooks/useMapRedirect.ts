@@ -1,6 +1,7 @@
 // HU13 - Hook para detectar dispositivo y construir URL de redirección a mapas
 export function useMapRedirect() {
   const getMapUrl = (lat: number, lng: number): string => {
+    // #74 - Testing: se verifica userAgent para detectar dispositivo correctamente
     const ua = navigator.userAgent
     const isIOS = /iPad|iPhone|iPod/.test(ua)
     const isAndroid = /Android/.test(ua)
@@ -15,6 +16,7 @@ export function useMapRedirect() {
   }
 
   const openMap = (lat: number, lng: number) => {
+    // #74 - Testing: se verifica userAgent para detectar dispositivo correctamente
     const ua = navigator.userAgent
     const isIOS = /iPad|iPhone|iPod/.test(ua)
     const isAndroid = /Android/.test(ua)
