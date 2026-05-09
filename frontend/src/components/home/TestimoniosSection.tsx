@@ -12,6 +12,19 @@ export default function TestimoniosSection() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [loading, setLoading] = useState(true)
   const [likingId, setLikingId] = useState<number | null>(null)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  // Sincronizar estado de sesión con localStorage
+  useEffect(() => {
+    const checkSession = () => setIsLoggedIn(!!localStorage.getItem('token'))
+    checkSession()
+    window.addEventListener('propbol:login', checkSession)
+    window.addEventListener('propbol:session-changed', checkSession)
+    return () => {
+      window.removeEventListener('propbol:login', checkSession)
+      window.removeEventListener('propbol:session-changed', checkSession)
+    }
+  }, [])
 
   const cargarTestimonios = useCallback(async (ciudad: string) => {
     setLoading(true)
@@ -70,7 +83,6 @@ export default function TestimoniosSection() {
   }
 
   const testimonio = testimonios[currentIndex]
-  const isLoggedIn = typeof window !== 'undefined' && !!localStorage.getItem('token')
 
   return (
     <section className="bg-white py-12 md:py-16 w-full">
