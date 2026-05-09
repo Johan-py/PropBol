@@ -1716,10 +1716,16 @@ useEffect(() => {
                 />
               ) : (
                 <div
-                  className={`gap-4 flex flex-col ${viewMode === 'list'
-                    ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-                    : ''
-                    }`}
+                  className={`${
+                    viewMode === 'list'
+                      ? 'gap-4 flex flex-col'
+                      : 'grid items-stretch auto-rows-fr gap-4 [grid-template-columns:repeat(auto-fill,minmax(var(--card-min-width),1fr))]'
+                  } ${
+                    viewMode === 'list'
+                      ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
+                      : ''
+                  }`}
+                  style={viewMode === 'grid' ? ({ ['--card-min-width' as string]: `${desktopGridMinWidth}px` }) : undefined}
                 >
                   {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
                     <div
@@ -1735,7 +1741,7 @@ useEffect(() => {
                         }
                       }}
                       className={`cursor-pointer transition-all duration-200 rounded-xl relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${viewMode === 'grid'
-                        ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
+                        ? 'h-full'
                         : 'w-full py-1 hover:bg-stone-100'
                         } ${
                         // Borde naranja si está seleccionado
