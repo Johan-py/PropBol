@@ -153,20 +153,151 @@ export default function MisZonasSidebar({
                         <Check size={16} />
                       </button>
                       <button
-                        onClick={onCancelDraftZone}
+                        onClick={onCancelEditZone}
                         className="p-1.5 text-rose-500 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors disabled:opacity-50"
-                        title="Cancelar"
-                        disabled={isSavingDraftZone}
+                        title="Cancelar edición"
+                        disabled={isSavingEditZone}
                       >
                         <X size={16} />
                       </button>
                     </li>
-                  )}
-                </ul>
-              )}
-            </>
-          )}
+                  ) : (
+                    <li
+                      key={zona.id}
+                      onClick={() => onZoneSelect?.(Number(zona.id))}
+                      className="flex items-center justify-between p-3 bg-stone-50 border border-stone-100 rounded-lg cursor-pointer hover:border-orange-200 hover:-translate-y-1 hover:shadow-md active:translate-y-0 active:shadow-sm transition-all duration-200 group"
+                    >
+                      <span className="text-sm font-medium text-stone-700 truncate pr-2">
+                        {zona.nombre}
+                      </span>
+                      <div className="flex items-center gap-1 opacity-100">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            onEditZone(zona.id)
+                          }}
+                          className="p-1.5 text-stone-400 hover:text-orange-500 hover:bg-orange-50 rounded-md transition-colors"
+                          title="Editar zona"
+                        >
+                          <Pencil size={16} />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            onDeleteZone(zona.id)
+                          }}
+                          className="p-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                          title="Eliminar zona"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </li>
+                  )
+                )}
+
+                {isDraftZoneVisible && (
+                  <li className="flex items-center gap-2 p-2.5 bg-stone-50 border border-stone-200 rounded-xl shadow-sm">
+                    <input
+                      value={draftZoneName}
+                      onChange={(e) => onDraftZoneNameChange?.(e.target.value)}
+                      placeholder="Nueva zona"
+                      maxLength={100}
+                      className="min-w-0 flex-1 text-sm text-stone-700 placeholder:text-stone-400 placeholder:italic bg-transparent outline-none"
+                      disabled={isSavingDraftZone}
+                    />
+                    <button
+                      onClick={onConfirmDraftZone}
+                      className="p-1.5 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-md transition-colors disabled:opacity-50"
+                      title="Guardar zona"
+                      disabled={isSavingDraftZone}
+                    >
+                      <Check size={16} />
+                    </button>
+                    <button
+                      onClick={onCancelDraftZone}
+                      className="p-1.5 text-rose-500 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors disabled:opacity-50"
+                      title="Cancelar"
+                      disabled={isSavingDraftZone}
+                    >
+                      <X size={16} />
+                    </button>
+                  </li>
+                )}
+              </ul>
+            )}
+          </>
+        )}
+      </div>
+    </>
+  )
+
+  // ─── MÓVIL: bottom sheet ──────────────────────────────────────────────────────
+  if (isMobile) {
+    return (
+      <>
+        {/* Overlay semitransparente */}
+        {isOpen && (
+          <div
+            className="fixed inset-0 bg-black/30 z-[1050] transition-opacity"
+            onClick={onClose}
+          />
+        )}
+
+        {/* Sheet que sube desde abajo */}
+        <div
+          className="fixed left-0 right-0 bottom-0 z-[1100] bg-white rounded-t-2xl shadow-[0_-4px_32px_rgba(0,0,0,0.18)] flex flex-col transform transition-transform duration-300 ease-in-out"
+          style={{
+            maxHeight: '80dvh',
+            transform: isOpen ? 'translateY(0)' : 'translateY(100%)',
+          }}
+        >
+          {/* Handle + cabecera */}
+          <div className="shrink-0 flex flex-col items-center pt-3 pb-2 border-b border-stone-200">
+            <div className="w-10 h-1.5 bg-stone-300 rounded-full mb-3" />
+            <div className="flex items-center justify-between w-full px-4">
+              <h2 className="text-base font-semibold text-slate-800">Mis zonas</h2>
+              <button
+                onClick={onClose}
+                className="p-1.5 text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-full transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+          </div>
+
+          {inner}
         </div>
+      </>
+    )
+  }
+
+  // ─── DESKTOP: panel lateral ───────────────────────────────────────────────────
+  return (
+    <>
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/20 z-[1050] md:hidden transition-opacity"
+          onClick={onClose}
+        />
+      )}
+
+      <aside
+        className={`absolute top-0 right-0 h-full w-full sm:w-80 bg-white shadow-2xl z-[1100] transform transition-transform duration-300 ease-in-out flex flex-col border-l border-stone-200 ${
+          isOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        <div className="flex items-center justify-between px-4 pt-4 pb-2 shrink-0">
+          <h2 className="text-lg text-slate-800">Mis zonas</h2>
+          <button
+            onClick={onClose}
+            className="p-1.5 text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-full transition-colors"
+          >
+            <ChevronRight size={20} />
+          </button>
+        </div>
+
+        {inner}
       </aside>
     </>
   )
