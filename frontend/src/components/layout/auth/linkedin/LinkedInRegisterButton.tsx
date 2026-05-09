@@ -108,6 +108,14 @@ export default function LinkedInRegisterButton({
         return;
       }
 
+      if (data.type === "propbol:linkedin-login-error" && data.code === "LINKEDIN_REVOKED") {
+        popup.close();
+        setIsLoading(false);
+        onError("Tu autorización con LinkedIn fue revocada. Se abrirá nuevamente para que la restaures.");
+        setTimeout(() => handleClick(), 1200);
+        return;
+      }
+
       onError(data.message || "No se pudo completar el registro con LinkedIn.");
       setIsLoading(false);
       popup.close();

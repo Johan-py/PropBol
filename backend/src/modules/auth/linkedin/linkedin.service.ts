@@ -75,6 +75,14 @@ const getLinkedInUserInfo = async (accessToken: string) => {
 
   const data = (await response.json()) as LinkedInUserInfo;
 
+  if (response.status === 401 || response.status === 403) {
+    throw new LinkedInAuthError(
+      "PropBol ya no tiene acceso a tu cuenta de LinkedIn. Por favor, autoriza nuevamente.",
+      "LINKEDIN_REVOKED",
+      401,
+    );
+  }
+
   if (!response.ok || !data.email?.trim()) {
     throw new LinkedInAuthError(
       "No se pudo obtener el correo de la cuenta de LinkedIn.",
