@@ -1,9 +1,7 @@
 'use client'
 
-import 'leaflet/dist/leaflet.css'
-import 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css' // MAPAS HU11
 import {
-  MapContainer,
+  MapContainer as BaseMapContainer,
   TileLayer,
   Marker,
   Popup,
@@ -24,6 +22,19 @@ import ZonasOverlay from '@/components/map/ZonasOverlay'
 
 import type { PropertyMapPin } from '@/types/property'
 import type { ZonaPredefinida } from '@/types/zona'
+
+interface GestureMapProps extends React.ComponentProps<typeof BaseMapContainer> {
+  gestureHandling?: boolean;
+  gestureHandlingOptions?: {
+    text: {
+      touch: string;
+      scroll: string;
+      scrollMac: string;
+    };
+  };
+}
+
+const MapContainer = BaseMapContainer as React.ComponentType<GestureMapProps>;
 
 // Fix íconos default de Leaflet en Next.js (guard SSR)
 if (typeof window !== 'undefined') {
@@ -351,19 +362,17 @@ export default function MapView({
         zoomControl={false}
         touchZoom={true}
         dragging={true}
+        scrollWheelZoom={true}
         style={{ height: '100%', width: '100%' }}
         className={`z-0 ${isDrawingMode && !isPolygonClosed ? '[&.leaflet-container]:cursor-crosshair [&_.leaflet-interactive]:cursor-crosshair' : ''}`}
-        // Agregado: Control nativo del cursor y bloqueo de arrastre en modo dibujo MAPAS HU11
-        {...({ 
-          gestureHandling: true,
-          gestureHandlingOptions: {
-            text: {
-              touch: "Usa dos dedos para mover el mapa",
-              scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
-              scrollMac: "Usa \u2318 + scroll para hacer zoom en el mapa"
-            }
+        gestureHandling={typeof window !== 'undefined' && L ? L.Browser.mobile : false}
+        gestureHandlingOptions={{
+          text: {
+            touch: "Usa dos dedos para mover el mapa",
+            scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
+            scrollMac: "Usa ⌘ + scroll para hacer zoom en el mapa"
           }
-        } as any)} //FIN AGREGADO MAPAS HU11
+        }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
