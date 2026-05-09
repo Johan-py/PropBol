@@ -1,19 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { 
-  Star, 
-  Plus, 
-  Search, 
-  Pencil, 
-  Trash2, 
-  MoreVertical, 
-  CheckCircle2, 
-  XCircle 
-} from 'lucide-react'
+import {  Star, List, Plus, Search, Pencil, Trash2, MoreVertical, CheckCircle2, XCircle } from 'lucide-react'
+import Link from 'next/link'
 import Image from 'next/image'
 
-// Tipado basado en tus criterios de aceptación
 interface Testimonio {
   id: number
   nombreUsuario: string
@@ -31,12 +22,9 @@ export default function AdminTestimoniosPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [filter, setFilter] = useState('')
 
-  // Simulación de carga de datos (Criterio 1)
   useEffect(() => {
     const fetchTestimonios = async () => {
       try {
-        // Aquí iría tu llamada a la API real
-        // const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/testimonios`)
         setIsLoading(false)
       } catch (error) {
         console.error('Error:', error)
@@ -62,7 +50,7 @@ export default function AdminTestimoniosPage() {
           
           <button 
             className="flex items-center justify-center gap-2 bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-xl transition-all font-semibold shadow-sm"
-            onClick={() => {/* Lógica para abrir modal de creación - Criterio 2 */}}
+            onClick={() => {/* Lógica para abrir modal de creación */}}
           >
             <Plus className="h-5 w-5" />
             Nuevo Testimonio
@@ -86,7 +74,11 @@ export default function AdminTestimoniosPage() {
           </div>
         </div>
 
-        {/* Listado de Testimonios (Criterio 1) */}
+        {/* Listado de Testimonios */}
+        <div className="flex items-center gap-3 mb-4">
+          <List className="h-5 w-5 text-amber-600" />
+          <h2 className="text-lg font-semibold text-stone-900 font-montserrat">Testimonios Creados</h2>
+        </div>
         <div className="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -138,7 +130,7 @@ export default function AdminTestimoniosPage() {
                       </p>
                     </td>
                     <td className="px-6 py-4">
-                      {/* Toggle de Estado (Criterio 6) */}
+                      {/* Toggle de Estado */}
                       <button 
                         onClick={() => {/* Lógica toggle */}}
                         className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all ${
