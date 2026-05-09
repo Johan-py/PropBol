@@ -111,27 +111,28 @@ export default function TestimoniosSection() {
   const totalDots = maxIndex + 1
 
   return (
-    <section className="bg-white py-12 md:py-16 w-full">
-      <div className="max-w-[1100px] mx-auto px-4">
+    // FIX commit2: py y px ajustados por breakpoint
+    <section className="bg-white py-10 md:py-14 lg:py-16 w-full">
+      <div className="max-w-[1100px] mx-auto px-4 sm:px-6 md:px-8">
 
-        {/* Título */}
-        <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-stone-900 mb-1">
+        {/* Título — tamaño escala en todos los breakpoints */}
+        <div className="text-center mb-6 md:mb-8">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-stone-900 mb-1 leading-snug">
             Historias reales de{' '}
             <span className="text-amber-600">Bolivia</span>
           </h2>
-          <p className="text-xs tracking-widest text-stone-400 uppercase font-medium">
+          <p className="text-[10px] sm:text-xs tracking-widest text-stone-400 uppercase font-medium">
             Lo que dicen nuestros usuarios
           </p>
         </div>
 
-        {/* Filtros de ciudad */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
+        {/* Filtros — tamaño de texto y padding responsive */}
+        <div className="flex flex-wrap justify-center gap-2 mb-6 md:mb-8">
           {CIUDADES.map((ciudad) => (
             <button
               key={ciudad}
               onClick={() => handleCiudad(ciudad)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-200 ${
+              className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-medium border transition-all duration-200 ${
                 ciudadActiva === ciudad
                   ? 'bg-amber-600 text-white border-amber-600'
                   : 'bg-white text-stone-600 border-stone-300 hover:border-amber-400 hover:text-amber-600'
@@ -149,18 +150,18 @@ export default function TestimoniosSection() {
           </div>
         ) : testimonios.length === 0 ? (
           <div className="text-center py-16 text-stone-400">
-            <p className="text-base">No hay testimonios disponibles para esta ciudad.</p>
+            <p className="text-sm sm:text-base">No hay testimonios disponibles para esta ciudad.</p>
           </div>
         ) : (
           <>
-            <div className="relative flex items-center gap-2 md:gap-4">
-              {/* Flecha izquierda */}
+            {/* FIX commit2: flechas más pequeñas en mobile */}
+            <div className="relative flex items-center gap-1 sm:gap-2 md:gap-4">
               <button
                 onClick={handlePrev}
                 disabled={testimonios.length <= visibleCount}
-                className="shrink-0 w-9 h-9 flex items-center justify-center rounded-full border border-stone-200 text-stone-400 hover:text-amber-600 hover:border-amber-400 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                className="shrink-0 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full border border-stone-200 text-stone-400 hover:text-amber-600 hover:border-amber-400 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                <ChevronLeft className="w-5 h-5" />
+                <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
 
               {/* Tarjetas visibles */}
@@ -176,13 +177,12 @@ export default function TestimoniosSection() {
                 ))}
               </div>
 
-              {/* Flecha derecha */}
               <button
                 onClick={handleNext}
                 disabled={testimonios.length <= visibleCount}
-                className="shrink-0 w-9 h-9 flex items-center justify-center rounded-full border border-stone-200 text-stone-400 hover:text-amber-600 hover:border-amber-400 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+                className="shrink-0 w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-full border border-stone-200 text-stone-400 hover:text-amber-600 hover:border-amber-400 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
             </div>
 
@@ -223,50 +223,50 @@ function TarjetaTestimonio({
   onLike: (t: Testimonio) => void
 }) {
   return (
-    <div className="rounded-2xl border border-stone-100 shadow-md p-6 bg-white flex flex-col justify-between min-h-[200px]">
-      {/* Texto testimonio */}
-      <p className="text-stone-600 italic text-center text-sm leading-relaxed mb-6">
+    <div className="rounded-2xl border border-stone-100 shadow-md p-5 md:p-6 bg-white flex flex-col justify-between min-h-[200px]">
+      {/* FIX commit2: mb reducido en mobile */}
+      <p className="text-stone-600 italic text-center text-sm leading-relaxed mb-5">
         "{testimonio.comentario}"
       </p>
 
-      {/* Footer tarjeta */}
-      <div className="flex items-center justify-between gap-4">
-        {/* Avatar + info */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-amber-600 flex items-center justify-center shrink-0">
-            <span className="text-white text-sm font-bold">
+      {/* FIX commit2: gap reducido en mobile */}
+      <div className="flex items-center justify-between gap-3">
+        {/* Avatar + info — tamaños responsive */}
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-amber-600 flex items-center justify-center shrink-0">
+            <span className="text-white text-xs md:text-sm font-bold">
               {testimonio.usuario.iniciales}
             </span>
           </div>
           <div>
-            <p className="text-sm font-semibold text-stone-800 leading-tight">
+            <p className="text-xs md:text-sm font-semibold text-stone-800 leading-tight">
               {testimonio.usuario.nombre} {testimonio.usuario.apellido}
             </p>
             {(testimonio.ciudad || testimonio.zona) && (
-              <p className="text-xs text-stone-400">
+              <p className="text-[11px] text-stone-400">
                 {[testimonio.ciudad, testimonio.zona].filter(Boolean).join(' – ')}
               </p>
             )}
             {testimonio.categoria && (
-              <span className="inline-block mt-1 text-[10px] font-semibold tracking-wide text-stone-500 border border-stone-200 rounded px-2 py-0.5 uppercase">
+              <span className="inline-block mt-1 text-[9px] md:text-[10px] font-semibold tracking-wide text-stone-500 border border-stone-200 rounded px-2 py-0.5 uppercase">
                 {testimonio.categoria}
               </span>
             )}
           </div>
         </div>
 
-        {/* Like */}
+        {/* Like — tamaños responsive */}
         <button
           onClick={() => onLike(testimonio)}
           disabled={!isLoggedIn || likingId === testimonio.id}
           title={!isLoggedIn ? 'Inicia sesión para dar like' : ''}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm font-medium transition-all shrink-0 ${
+          className={`flex items-center gap-1 md:gap-1.5 px-2.5 md:px-3 py-1.5 rounded-full border text-xs md:text-sm font-medium transition-all shrink-0 ${
             testimonio.meGusta
               ? 'bg-amber-50 border-amber-400 text-amber-600'
               : 'border-stone-200 text-stone-400 hover:border-amber-400 hover:text-amber-600'
           } ${!isLoggedIn ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
         >
-          <ThumbsUp className={`w-4 h-4 ${testimonio.meGusta ? 'fill-amber-500 text-amber-500' : ''}`} />
+          <ThumbsUp className={`w-3.5 h-3.5 md:w-4 md:h-4 ${testimonio.meGusta ? 'fill-amber-500 text-amber-500' : ''}`} />
           <span>{testimonio.totalLikes}</span>
         </button>
       </div>
