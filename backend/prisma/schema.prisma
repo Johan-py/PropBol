@@ -73,6 +73,7 @@ model Usuario {
   verificacion_pago                     verificacion_pago[]
   visitor                               Visitor[]
   zona_usuario                          zona_usuario[]
+  tutorialPublicacion                   TutorialPublicacionUsuario?
 
   @@index([correo], map: "idx_usuario_correo")
   @@index([rolId], map: "idx_usuario_rol")
@@ -811,6 +812,18 @@ model testimonio_like {
   usuario       Usuario    @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@unique([testimonio_id, usuario_id], map: "uq_testimonio_like")
+}
+
+model TutorialPublicacionUsuario {
+  id            Int       @id @default(autoincrement())
+  usuarioId     Int       @unique @map("usuario_id")
+  confirmado    Boolean   @default(false)
+  vistoEn       DateTime? @map("visto_en") @db.Timestamp(6)
+  confirmadoEn  DateTime? @map("confirmado_en") @db.Timestamp(6)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@map("tutorial_publicacion_usuario")
 }
 
 enum Genero {
