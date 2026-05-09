@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { env } from "../../../config/env.js";
 import { generateToken, type JwtPayload } from "../../../utils/jwt.js";
+import { enviarCorreoBienvenidaLinkedIn } from "../../../lib/email.service.js";
 import {
   createLinkedInSession,
   createLinkedInUser,
@@ -355,6 +356,18 @@ export const registerWithLinkedInCodeService = async (
     linkedinId,
     correo,
   );
+
+  const emailResult = await enviarCorreoBienvenidaLinkedIn({
+    emailDestino: createdUser.correo,
+    nombreUsuario: createdUser.nombre,
+  });
+
+  if (!emailResult.success) {
+    console.error(
+      "No se pudo enviar el correo de bienvenida LinkedIn:",
+      emailResult.error,
+    );
+  }
 
   return await buildLinkedInSessionResponse(
     createdUser,
