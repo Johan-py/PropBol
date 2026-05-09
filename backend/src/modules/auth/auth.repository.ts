@@ -72,9 +72,9 @@ export const createUser = async (data: CreateUserInput) => {
       },
       include: {
         telefonos: true,
-        rol: true
-      }
-    })
+        rol: true,
+      },
+    });
   } catch (error) {
     if (isUniqueConstraintError(error)) {
       throw new Error(getUniqueConstraintMessage(error));
@@ -98,10 +98,10 @@ export const findUser = async (correo: string) => {
       activo: true,
       two_factor_activo: true,
       controlador: true,
-      rol: true
-    }
-  })
-}
+      rol: true,
+    },
+  });
+};
 export const findUserByCorreo = async (correo: string) => {
   return await prisma.usuario.findUnique({
     where: { correo },
@@ -467,15 +467,15 @@ export const invalidateOtherUserSessions = async (
       token: { not: currentToken },
       estado: true,
     },
-    data: { estado: false }
-  })
-}
+    data: { estado: false },
+  });
+};
 export const completeTourByUserId = async (id: number) => {
   return await prisma.usuario.update({
     where: { id },
-    data: { controlador: true }
-  })
-}
+    data: { controlador: true },
+  });
+};
 
 export const countActiveSocialLinksByUser = async (usuarioId: number) => {
   return await prisma.autenticacion_social.count({
@@ -485,6 +485,28 @@ export const countActiveSocialLinksByUser = async (usuarioId: number) => {
       proveedor: {
         in: ["facebook", "discord", "google"],
       },
+    },
+  });
+};
+export const createMagicLink = async ({
+  usuarioId,
+  tokenHash,
+  correo,
+  expiraEn,
+}: {
+  usuarioId: number;
+  tokenHash: string;
+  correo: string;
+  expiraEn: Date;
+}) => {
+  return await prisma.magic_link.create({
+    data: {
+      usuario_id: usuarioId,
+      token_hash: tokenHash,
+      correo,
+      expira_en: expiraEn,
+      activo: true,
+      intentos_reenvio: 0,
     },
   });
 };

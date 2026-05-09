@@ -83,11 +83,11 @@ export const sendMagicLinkEmail = async ({
                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 600px; background-color: #ffffff; border-radius: 18px; overflow: hidden; box-shadow: 0 8px 24px rgba(41, 37, 36, 0.10);">
                       
                       <tr>
-                        <td style="background: linear-gradient(135deg, #f97316, #d97706); padding: 28px 24px; text-align: center;">
+                        <td style="background-color: #ff5a00; padding: 28px 24px; text-align: center;">
                           <h1 style="margin: 0; color: #ffffff; font-size: 26px; font-weight: 800; line-height: 1.3;">
                             Acceso sin contraseña
                           </h1>
-                          <p style="margin: 10px 0 0; color: #ffedd5; font-size: 14px; line-height: 1.5;">
+                          <p style="margin: 10px 0 0; color: #ffffff; font-size: 14px; line-height: 1.5;">
                             Ingresa a tu cuenta de PropBol usando un enlace seguro.
                           </p>
                         </td>
@@ -109,7 +109,7 @@ export const sendMagicLinkEmail = async ({
                             <tr>
                               <td align="center">
                                 <a href="${safeMagicLink}"
-                                  style="display: inline-block; background-color: #f97316; color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 700; padding: 14px 32px; border-radius: 10px; box-shadow: 0 6px 14px rgba(249, 115, 22, 0.28);">
+                                  style="display: inline-block; background-color: #ff5a00; color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 700; padding: 14px 32px; border-radius: 10px; box-shadow: 0 6px 14px rgba(255, 90, 0, 0.35);"
                                   Ingresar a PropBol
                                 </a>
                               </td>
@@ -128,7 +128,7 @@ export const sendMagicLinkEmail = async ({
                             Si el botón no funciona, copia y pega este enlace en tu navegador:
                           </p>
 
-                          <p style="margin: 0; word-break: break-all; color: #d97706; font-size: 12px; line-height: 1.6;">
+                          <p style="margin: 0; word-break: break-all; color: #ff5a00; font-size: 12px; line-height: 1.6;">
                             ${safeMagicLink}
                           </p>
 

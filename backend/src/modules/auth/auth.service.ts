@@ -28,6 +28,7 @@ import {
   deactivate2FAByUserId,
   expire2FACode,
   findActive2FACodeByUserId,
+  createMagicLink,
   increment2FACodeAttempts,
   mark2FACodeAsUsed,
 } from "./auth.repository.js";
@@ -222,6 +223,10 @@ const generate2FACode = () => {
 
 const hash2FACode = (codigo: string) => {
   return crypto.createHash("sha256").update(codigo).digest("hex");
+};
+
+const hashMagicLinkToken = (token: string) => {
+  return crypto.createHash("sha256").update(token).digest("hex");
 };
 
 const signRegisterCode = ({
@@ -842,6 +847,8 @@ export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
     throw new AuthError("Esta cuenta está desactivada", 403);
   }
 
+  const expiraEn = new Date(Date.now() + MAGIC_LINK_TTL_MINUTES * 60 * 1000);
+
   const magicToken = jwt.sign(
     {
       purpose: "magic-link-login",
@@ -854,6 +861,15 @@ export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
       expiresIn: MAGIC_LINK_TTL_SECONDS,
     },
   );
+
+  const tokenHash = hashMagicLinkToken(magicToken);
+
+  await createMagicLink({
+    usuarioId: user.id,
+    tokenHash,
+    correo: user.correo,
+    expiraEn,
+  });
 
   const magicLink = `${env.FRONTEND_URL}/sign-in/magic-link?token=${magicToken}`;
 
