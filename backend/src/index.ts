@@ -87,6 +87,7 @@ import {
 } from "./modules/auth/social-links/social-links.controller.js";
 
 import securityRoutes from "./routes/security.routes.js";
+import propiedadRoutes from "./routes/propiedad.routes.js";
 // --------------------
 // LEGACY
 // --------------------
@@ -179,6 +180,7 @@ app.use("/api/security", securityRoutes);
 app.use("/api/favorites", favoritesRoutes);
 app.use("/api/telemetria", telemetriaRoutes);
 app.use("/api/recomendaciones", recomendacionesRoutes);
+app.use("/api/propiedad", propiedadRoutes);
 app.use("/api/publicaciones", publicacionRoutes);
 app.use("/api/publicaciones", multimediaRoutes);
 app.use("/api/perfil", correoverificacionRoutes);
@@ -293,6 +295,7 @@ app.get("/health", (_req, res) => {
 app.get("/api/properties/search", propertiesController.search);
 app.get("/api/inmuebles", propertiesController.getAll);
 app.get("/api/properties/inmuebles", propertiesController.getAll);
+app.use("/api/propiedad", propiedadRoutes);
 
 // --------------------
 // NOTIFICACIONES

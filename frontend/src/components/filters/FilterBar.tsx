@@ -151,13 +151,43 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     }
   }, [])
 
-  const propertyTypes = [
+  const propertyTypes = useMemo(() => [
     { label: 'Casas', icon: Home },
     { label: 'Departamentos', icon: Building },
     { label: 'Cuartos', icon: Bed },
     { label: 'Terrenos', icon: Trees },
     { label: 'Espacios Cementerio', icon: Flower2 }
-  ]
+  ], [])
+
+  // NUEVO: Sincronización reactiva desde la URL (Query Params)
+  useEffect(() => {
+    if (!searchParams) return
+
+    // Restaurar Tipo de Inmueble
+    const urlTipo = searchParams.get('tipoInmueble')
+    if (urlTipo && urlTipo !== 'CUALQUIER TIPO') {
+      const match = propertyTypes.find(pt => pt.label.toUpperCase() === urlTipo.toUpperCase())
+      if (match) setTipoInmueble(match.label)
+    } else {
+      setTipoInmueble('Cualquier tipo')
+    }
+
+    // Restaurar Modos (Venta/Alquiler)
+    const urlModos = searchParams.getAll('modoInmueble')
+    if (urlModos.length > 0) {
+      setModosSeleccionados(urlModos)
+    } else {
+      setModosSeleccionados(['VENTA']) // Default
+    }
+
+    // Restaurar Ubicación/Texto Libre
+    const urlQuery = searchParams.get('query')
+    if (urlQuery) {
+      setUbicacionTexto(urlQuery)
+    } else {
+      setUbicacionTexto('')
+    }
+  }, [searchParams, propertyTypes])
 
   // =======================================================================
   // 1. GENERADOR DINÁMICO DE FILTROS ACTIVOS (Fila inferior removible)
@@ -278,7 +308,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
   const handleSearch = async (e?: React.FormEvent) => {
 
     if (e) e.preventDefault()
-    const urlParams = new URLSearchParams(window.location.search)
+    const urlParams = new URLSearchParams(searchParams?.toString() || '')
     const minPrice = urlParams.get('minPrice')
     const maxPrice = urlParams.get('maxPrice')
     const minSuperficie = urlParams.get('minSuperficie')
@@ -343,16 +373,6 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     params.delete('lng')
     params.delete('radius')
     params.delete('orden')
-    try {
-      const merged = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}') as {
-        locationId?: string | number
-      }
-      if (merged.locationId != null && merged.locationId !== '') {
-        params.set('locationId', String(merged.locationId))
-      }
-    } catch {
-      /* ignore */
-    }
 
     modosSeleccionados.forEach((modo) => params.append('modoInmueble', modo))
     if (tipoFinal) params.set('tipoInmueble', tipoFinal)
