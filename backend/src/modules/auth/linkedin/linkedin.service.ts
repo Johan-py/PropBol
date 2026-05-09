@@ -37,6 +37,14 @@ const exchangeCodeForTokens = async (code: string) => {
     }),
   });
 
+  if (response.status === 429) {
+    throw new LinkedInAuthError(
+      "LinkedIn está experimentando un alto volumen de solicitudes. Por favor, intenta nuevamente en unos momentos.",
+      "LINKEDIN_RATE_LIMIT",
+      429,
+    );
+  }
+
   const data = (await response.json()) as LinkedInTokenResponse;
 
   if (!response.ok || !data.access_token) {
@@ -55,6 +63,14 @@ const getLinkedInUserInfo = async (accessToken: string) => {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 
+  if (response.status === 429) {
+    throw new LinkedInAuthError(
+      "LinkedIn está experimentando un alto volumen de solicitudes. Por favor, intenta nuevamente en unos momentos.",
+      "LINKEDIN_RATE_LIMIT",
+      429,
+    );
+  }
+
   const data = (await response.json()) as LinkedInUserInfo;
 
   if (!response.ok || !data.email?.trim()) {
@@ -66,16 +82,6 @@ const getLinkedInUserInfo = async (accessToken: string) => {
   }
 
   return data;
-};
-
-const resolveLinkedInNames = (user: LinkedInUserInfo) => {
-  const nombre = user.given_name?.trim() || user.name?.split(" ")[0] || "Usuario";
-  const apellido =
-    user.family_name?.trim() ||
-    user.name?.split(" ").slice(1).join(" ") ||
-    "LinkedIn";
-
-  return { nombre, apellido };
 };
 
 const buildLinkedInSessionResponse = async (
@@ -206,7 +212,8 @@ export const linkLinkedInToCurrentUserByCodeService = async (
     );
   }
 
-  const existingLinkByExternalId = await findLinkedInLinkByExternalId(linkedinId);
+  const existingLinkByExternalId =
+    await findLinkedInLinkByExternalId(linkedinId);
 
   if (
     existingLinkByExternalId &&
@@ -275,7 +282,6 @@ export const registerWithLinkedInCodeService = async (
     );
   }
 
-
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(correo)) {
     throw new LinkedInAuthError(
@@ -284,7 +290,6 @@ export const registerWithLinkedInCodeService = async (
       400,
     );
   }
-
 
   const userByLinkedInId = await findUserByLinkedInId(linkedinId);
 
@@ -295,7 +300,6 @@ export const registerWithLinkedInCodeService = async (
       409,
     );
   }
-
 
   const existingUserByEmail = await findUserByLinkedInEmail(correo);
 
@@ -308,11 +312,14 @@ export const registerWithLinkedInCodeService = async (
     );
   }
 
-
-  const nombre = linkedinUser.given_name?.trim() ||
-    linkedinUser.name?.split(" ")[0] || "Usuario";
-  const apellido = linkedinUser.family_name?.trim() ||
-    linkedinUser.name?.split(" ").slice(1).join(" ") || "LinkedIn";
+  const nombre =
+    linkedinUser.given_name?.trim() ||
+    linkedinUser.name?.split(" ")[0] ||
+    "Usuario";
+  const apellido =
+    linkedinUser.family_name?.trim() ||
+    linkedinUser.name?.split(" ").slice(1).join(" ") ||
+    "LinkedIn";
 
   const createdUser = await createLinkedInUser(
     {
