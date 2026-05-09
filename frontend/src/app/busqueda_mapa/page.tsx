@@ -46,6 +46,7 @@ import SuperficieFilterSidebar from '@/components/filters/SuperficieFilterSideba
 import { UbicacionEspecificaPanel } from '@/components/filters/UbicacionEspecificaPanel';
 import ComparatorModal from '@/components/busqueda/ComparatorModal'
 import EtiquetasSidebar from '@/components/filters/EtiquetasSidebar'
+import { useSearchFilters, BusquedaModo } from '@/hooks/useSearchFilters'
 
 // Carga dinámica del mapa (sin SSR)
 const MapView = nextDynamic(() => import('./MapView'), {
@@ -147,6 +148,11 @@ function BusquedaMapaContent() {
   const searchParams = useSearchParams();
   const isRecomendadosActive = searchParams.get('orden') === 'recomendados'
   const filterResetKey = searchParams.toString();
+  
+const { getBusquedaModo, cambiarAModoGeneral } = useSearchFilters()
+const busquedaModo: BusquedaModo = getBusquedaModo(
+  new URLSearchParams(searchParams.toString())
+)
   const minSuperficie = searchParams.get('minSuperficie')
   const maxSuperficie = searchParams.get('maxSuperficie')
   const tieneFiltrSuperficie = minSuperficie || maxSuperficie
@@ -1510,6 +1516,27 @@ function BusquedaMapaContent() {
                         ? 'Recomendados para tí'
                         : 'Resultados de búsqueda'}
                     </h1>
+                    {/* AC 1 & 8 — Toggle modo búsqueda */}
+                     <button
+                onClick={() => {
+               if (busquedaModo === 'especifica') {
+               cambiarAModoGeneral(router, new URLSearchParams(searchParams.toString()))
+          } else {
+               setIsPriceFilterOpen(false)
+                setIsSidebarOpen(true)
+      setActiveSidebarView('ubicacion')
+              }
+                  }}
+              className={`self-start text-xs px-2.5 py-1 rounded-full border transition-all mt-1 mb-2 ${
+    busquedaModo === 'especifica'
+      ? 'bg-orange-50 border-orange-300 text-orange-600 font-medium hover:bg-orange-100'
+      : 'bg-stone-100 border-stone-200 text-stone-500 hover:border-stone-300'
+             }`}
+              >
+             {busquedaModo === 'especifica'
+                ? '📍 Ubicación específica · cambiar a todo Bolivia'
+                  : '🌍 Todo Bolivia · buscar en zona específica'}
+               </button>
 
                     {/* Subtítulo: N Propiedades (Se compacta de sm a xs) */}
                     <h2 className={`font-bold text-slate-900 transition-all duration-300 truncate flex items-center gap-2 ${isScrolled ? 'text-xs mt-0.5' : 'text-sm mt-1'}`}>
