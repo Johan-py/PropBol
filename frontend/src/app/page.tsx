@@ -5,6 +5,7 @@ import { getCities } from '@/services/city.service'
 import dynamic from 'next/dynamic'
 import VisualFiltersSection from '@/components/VisualFilters/VisualFiltersSection'
 import HomeBlogsSection from '@/components/home/HomeBlogsSection'
+import TestimoniosSection from '@/components/home/TestimoniosSection'
 
 const TourGuiado = dynamic(() => import('@/components/ui/TourGuiado'), { ssr: false })
 
@@ -74,7 +75,7 @@ export default async function Home() {
             <ExploreSection />
           </section>
 
-          {/* TU SECCIÓN DE FILTROS VISUALES */}
+          {/* FILTROS VISUALES */}
           <section className="w-full">
             <VisualFiltersSection />
           </section>
@@ -85,6 +86,11 @@ export default async function Home() {
 
           <section className="w-full">
             <HomeBlogsSection />
+          </section>
+
+          {/* TESTIMONIOS */}
+          <section className="w-full">
+            <TestimoniosSection />
           </section>
         </div>
       </div>
