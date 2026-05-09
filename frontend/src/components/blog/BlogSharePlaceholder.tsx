@@ -79,26 +79,31 @@ export default function BlogSharePlaceholder() {
           </div>
 
           {/* MENÚ DE DESCARGA */}
-          <div className="relative w-full sm:w-44" ref={menuRef}>
-            <button 
+          <div className="relative w-full sm:w-56" ref={menuRef}>
+            <button
               onClick={() => setIsDownloadOpen(!isDownloadOpen)}
-              className={`flex items-center justify-center gap-2 w-full h-12 rounded-xl border transition-all duration-200 group whitespace-nowrap shrink-0 ${isDownloadOpen ? 'bg-stone-900 border-stone-900 text-white' : 'border-stone-200 hover:bg-stone-50 text-[#433527]'}`}
+              className={`flex items-center justify-between gap-3 w-full h-12 px-5 rounded-xl border transition-all duration-300 group whitespace-nowrap shrink-0 ${isDownloadOpen
+                ? 'bg-stone-900 border-stone-900 text-white shadow-lg shadow-stone-200'
+                : 'border-stone-200 hover:border-stone-400 hover:bg-stone-50 text-[#433527]'
+                }`}
             >
-              <svg viewBox="0 0 24 24" className={`w-[18px] h-[18px] ${isDownloadOpen ? 'text-stone-100' : 'text-[#433527]'}`} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-              <span className={`text-xs font-bold tracking-[0.08em] ${isDownloadOpen ? 'text-white' : 'text-[#433527]'}`}>DESCARGAR</span>
-              <svg viewBox="0 0 24 24" className={`w-4 h-4 transition-transform duration-200 ${isDownloadOpen ? 'rotate-180 text-white' : 'text-[#433527]'}`} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <div className="flex items-center gap-2">
+                <svg viewBox="0 0 24 24" className={`w-[18px] h-[18px] ${isDownloadOpen ? 'text-stone-100' : 'text-[#433527]'}`} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span className="text-xs font-bold tracking-[0.1em]">DESCARGAR</span>
+              </div>
+              <svg viewBox="0 0 24 24" className={`w-4 h-4 transition-transform duration-300 ${isDownloadOpen ? 'rotate-180 text-white' : 'text-stone-400 group-hover:text-stone-600'}`} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="6 9 12 15 18 9"></polyline>
               </svg>
             </button>
 
             {/* DROPDOWN */}
             {isDownloadOpen && (
-              <div className="absolute right-0 top-full mt-3 w-full bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.12)] border border-stone-100 p-2 z-50 animate-in fade-in zoom-in duration-200 origin-top-right">
-                <button 
+              <div className="absolute right-0 top-full mt-2.5 w-full bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-stone-100 p-2 z-50 animate-in fade-in zoom-in slide-in-from-top-2 duration-300 origin-top">
+                <button
                   className="flex items-center w-full gap-3 px-3 py-3 rounded-xl hover:bg-stone-50 text-stone-700 transition-colors group"
                   onClick={() => setIsDownloadOpen(false)}
                 >
@@ -111,7 +116,8 @@ export default function BlogSharePlaceholder() {
                   </div>
                   <span className="text-sm font-semibold whitespace-nowrap">Descargar PDF</span>
                 </button>
-                <button 
+
+                <button
                   className="flex items-center w-full gap-3 px-3 py-3 rounded-xl hover:bg-stone-50 text-stone-700 transition-colors group"
                   onClick={() => setIsDownloadOpen(false)}
                 >
