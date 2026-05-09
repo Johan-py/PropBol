@@ -1186,6 +1186,9 @@ export const activateAccountByCodeService = async (
     throw new AuthError("El código es inválido", 401);
   }
 
+  await mark2FACodeAsUsed(activeCode.id);
+  await activateUser(user.id);
+
   return {
     message: "Cuenta activada correctamente. Ya puedes iniciar sesión.",
   };
