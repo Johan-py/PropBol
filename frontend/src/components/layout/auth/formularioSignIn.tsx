@@ -285,6 +285,8 @@ export default function LoginForm() {
   const [isActivating, setIsActivating] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
 
+  const activationModalRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (timeLeft > 0) {
@@ -728,18 +730,61 @@ export default function LoginForm() {
       return;
     }
 
-    const handleEscapeKey = (event: KeyboardEvent) => {
+    const modal = activationModalRef.current;
+
+    const getFocusableElements = () => {
+      if (!modal) {
+        return [];
+      }
+
+      return Array.from(
+        modal.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), input:not([disabled]), a[href], textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+    };
+
+    const focusableElements = getFocusableElements();
+    focusableElements[0]?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         closeActivationModal();
+        return;
+      }
+
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      const elements = getFocusableElements();
+
+      if (elements.length === 0) {
+        event.preventDefault();
+        return;
+      }
+
+      const firstElement = elements[0];
+      const lastElement = elements[elements.length - 1];
+
+      if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+        return;
+      }
+
+      if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
       }
     };
 
-    window.addEventListener("keydown", handleEscapeKey);
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener("keydown", handleEscapeKey);
+      window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [showActivationModal]);
+  }, [showActivationModal, activationStep, isActivating]);
 
   const handleRequestActivationCode = async () => {
     setActivationError("");
@@ -1371,6 +1416,7 @@ export default function LoginForm() {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           {activationStep === "password" && (
             <div 
+              ref={activationModalRef}
               onClick={(event) => event.stopPropagation()}
               className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
               <h2 className="text-xl font-bold text-gray-900">
@@ -1461,6 +1507,7 @@ export default function LoginForm() {
 
           {activationStep === "code" && (
             <div 
+              ref={activationModalRef}
               onClick={(event) => event.stopPropagation()}
               className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
               <h2 className="text-xl font-bold text-gray-900">
@@ -1568,6 +1615,7 @@ export default function LoginForm() {
 
           {activationStep === "options" && (
             <div 
+              ref={activationModalRef}
               onClick={(event) => event.stopPropagation()}
               className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
               <button
