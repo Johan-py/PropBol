@@ -46,6 +46,7 @@ import SuperficieFilterSidebar from '@/components/filters/SuperficieFilterSideba
 import { UbicacionEspecificaPanel } from '@/components/filters/UbicacionEspecificaPanel';
 import ComparatorModal from '@/components/busqueda/ComparatorModal'
 import EtiquetasSidebar from '@/components/filters/EtiquetasSidebar'
+import { useSearchFilters, BusquedaModo } from '@/hooks/useSearchFilters'
 
 // Carga dinámica del mapa (sin SSR)
 const MapView = nextDynamic(() => import('./MapView'), {
@@ -92,7 +93,10 @@ type SheetState = 'hidden' | 'peek' | 'full'
 
 const LIST_PAGE_SIZES = [10, 20, 50, 100] as const;
 const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
-
+const GRID_MIN_CARD_WIDTH = 260
+const SIDEBAR_MIN_WIDTH = 320
+const SIDEBAR_MAX_WIDTH = 1200
+const MAP_MIN_WIDTH = 320
 interface ZonaUsuario {
   id: number
   nombre: string
@@ -147,6 +151,11 @@ function BusquedaMapaContent() {
   const searchParams = useSearchParams();
   const isRecomendadosActive = searchParams.get('orden') === 'recomendados'
   const filterResetKey = searchParams.toString();
+  
+const { getBusquedaModo, cambiarAModoGeneral } = useSearchFilters()
+const busquedaModo: BusquedaModo = getBusquedaModo(
+  new URLSearchParams(searchParams.toString())
+)
   const minSuperficie = searchParams.get('minSuperficie')
   const maxSuperficie = searchParams.get('maxSuperficie')
   const tieneFiltrSuperficie = minSuperficie || maxSuperficie
@@ -196,7 +205,9 @@ function BusquedaMapaContent() {
   const [editingZoneName, setEditingZoneName] = useState('')
   const [editingPolygonPoints, setEditingPolygonPoints] = useState<[number, number][]>([])
   const [isSavingEditedZone, setIsSavingEditedZone] = useState(false)
-
+  const [sidebarWidth, setSidebarWidth] = useState<number>(450)
+  const [viewportWidth, setViewportWidth] = useState<number>(0)
+  const isResizingRef = useRef(false)
 
   useEffect(() => {
     const syncAuthFromStorage = () => {
@@ -277,7 +288,35 @@ function BusquedaMapaContent() {
 
   useEffect(() => {
     setIsMounted(true)
+      setViewportWidth(window.innerWidth)
   }, [])
+
+  useEffect(() => {
+    const onResize = () => setViewportWidth(window.innerWidth)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
+  // Persistencia del ancho del sidebar en desktop
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('propbol:sidebarWidth')
+      if (saved) {
+        const n = Number(saved)
+        if (Number.isFinite(n) && n >= SIDEBAR_MIN_WIDTH && n <= SIDEBAR_MAX_WIDTH) setSidebarWidth(n)
+      }
+    } catch {
+      // ignore
+    }
+  }, [])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('propbol:sidebarWidth', String(sidebarWidth))
+    } catch {
+      // ignore
+    }
+  }, [sidebarWidth])
 
   // === 2. EXTRACCIÓN DE DATOS BASE Y ZONAS (develop) ===
   const { properties, isLoading, error } = useProperties()
@@ -605,6 +644,23 @@ function BusquedaMapaContent() {
     return inmueblesOrdenados.slice(start, start + listPageSize);
   }, [inmueblesOrdenados, listSafePage, listPageSize, listTotal]);
 
+// Limpia clusters y paginación cuando cambia la zona geográfica
+const ubicacionKey = [
+  searchParams.get('departamentoId'),
+  searchParams.get('provinciaId'),
+  searchParams.get('municipioId'),
+  searchParams.get('zonaId'),
+  searchParams.get('barrioId'),
+  searchParams.get('lat'),
+  searchParams.get('lng'),
+].join('|')
+
+useEffect(() => {
+  setIsClusterView(false)
+  setClusterProperties([])
+  setActiveClusterIds([])
+  setListPage(1)
+}, [ubicacionKey])
   useEffect(() => {
     setListPage(1);
   }, [filterResetKey, drawnPolygons]);
@@ -627,6 +683,21 @@ function BusquedaMapaContent() {
   const [clusterProperties, setClusterProperties] = useState<any[]>([])
   const [isClusterView, setIsClusterView] = useState(false)
   const [activeClusterIds, setActiveClusterIds] = useState<string[]>([])
+
+  const effectiveSidebarWidth = useMemo(() => {
+    if (!isMounted || viewportWidth <= 0) return sidebarWidth
+    const maxByViewport = Math.max(SIDEBAR_MIN_WIDTH, viewportWidth - MAP_MIN_WIDTH)
+    return Math.min(sidebarWidth, maxByViewport)
+  }, [isMounted, sidebarWidth, viewportWidth])
+
+  const desktopGridMinWidth = useMemo(() => {
+    const estimatedContentWidth = Math.max(0, effectiveSidebarWidth - 48)
+    if (estimatedContentWidth < 600) return GRID_MIN_CARD_WIDTH
+
+    // Cuando hay espacio para 2 columnas, reducimos el mínimo para evitar que se quede en una sola.
+    const maxMinWidthForTwoCols = Math.floor((estimatedContentWidth - 16) / 2)
+    return Math.max(220, Math.min(GRID_MIN_CARD_WIDTH, maxMinWidthForTwoCols))
+  }, [effectiveSidebarWidth])
 
   const dragStartY = useRef<number | null>(null)
   const dragStartState = useRef<SheetState>('peek')
@@ -653,7 +724,7 @@ function BusquedaMapaContent() {
   useEffect(() => {
     const t = setTimeout(() => window.dispatchEvent(new Event('resize')), 310)
     return () => clearTimeout(t)
-  }, [isSidebarOpen, sheetState])
+  }, [isSidebarOpen, sheetState, effectiveSidebarWidth])
 
   function handleClusterClick(props: any[]) {
     setClusterProperties(props)
@@ -1397,8 +1468,9 @@ function BusquedaMapaContent() {
       <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200">
         {/* Panel lateral colapsable */}
         <aside
-          className={`bg-white border-r border-stone-200 flex flex-col z-10 transition-all duration-300 min-h-0 overflow-hidden ${isSidebarOpen ? 'w-full md:w-[450px] h-[65dvh] md:h-full' : 'w-0'
+          className={`bg-white border-r border-stone-200 flex flex-col z-10 transition-[width] duration-200 min-h-0 overflow-hidden ${isSidebarOpen ? 'w-full md:h-full h-[65dvh]' : 'w-0'
             }`}
+          style={isSidebarOpen ? { width: isMounted ? effectiveSidebarWidth : 450 } : { width: 0 }}
         >
           {/* ✅ MODIFICADO: ternario que alterna entre filtro de precio y resultados */}
           {isPriceFilterOpen ? (
@@ -1510,6 +1582,27 @@ function BusquedaMapaContent() {
                         ? 'Recomendados para tí'
                         : 'Resultados de búsqueda'}
                     </h1>
+                    {/* AC 1 & 8 — Toggle modo búsqueda */}
+                     <button
+                onClick={() => {
+               if (busquedaModo === 'especifica') {
+               cambiarAModoGeneral(router, new URLSearchParams(searchParams.toString()))
+          } else {
+               setIsPriceFilterOpen(false)
+                setIsSidebarOpen(true)
+      setActiveSidebarView('ubicacion')
+              }
+                  }}
+              className={`self-start text-xs px-2.5 py-1 rounded-full border transition-all mt-1 mb-2 ${
+    busquedaModo === 'especifica'
+      ? 'bg-orange-50 border-orange-300 text-orange-600 font-medium hover:bg-orange-100'
+      : 'bg-stone-100 border-stone-200 text-stone-500 hover:border-stone-300'
+             }`}
+              >
+             {busquedaModo === 'especifica'
+                ? '📍 Ubicación específica · cambiar a todo Bolivia'
+                  : '🌍 Todo Bolivia · buscar en zona específica'}
+               </button>
 
                     {/* Subtítulo: N Propiedades (Se compacta de sm a xs) */}
                     <h2 className={`font-bold text-slate-900 transition-all duration-300 truncate flex items-center gap-2 ${isScrolled ? 'text-xs mt-0.5' : 'text-sm mt-1'}`}>
@@ -1623,10 +1716,16 @@ function BusquedaMapaContent() {
                 />
               ) : (
                 <div
-                  className={`gap-4 flex flex-col ${viewMode === 'list'
-                    ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-                    : ''
-                    }`}
+                  className={`${
+                    viewMode === 'list'
+                      ? 'gap-4 flex flex-col'
+                      : 'grid items-stretch auto-rows-fr gap-4 [grid-template-columns:repeat(auto-fill,minmax(var(--card-min-width),1fr))]'
+                  } ${
+                    viewMode === 'list'
+                      ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
+                      : ''
+                  }`}
+                  style={viewMode === 'grid' ? ({ ['--card-min-width' as string]: `${desktopGridMinWidth}px` }) : undefined}
                 >
                   {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
                     <div
@@ -1642,7 +1741,7 @@ function BusquedaMapaContent() {
                         }
                       }}
                       className={`cursor-pointer transition-all duration-200 rounded-xl relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${viewMode === 'grid'
-                        ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
+                        ? 'h-full'
                         : 'w-full py-1 hover:bg-stone-100'
                         } ${
                         // Borde naranja si está seleccionado
@@ -1725,6 +1824,36 @@ function BusquedaMapaContent() {
             </div>
           )}
         </aside>
+
+        {/* Divider resizable (solo desktop con sidebar abierto) */}
+        {isSidebarOpen && (
+          <div
+            className="hidden md:block w-1 bg-stone-200 hover:bg-orange-300 active:bg-orange-400 cursor-col-resize relative z-20"
+            onMouseDown={(e) => {
+              e.preventDefault()
+              isResizingRef.current = true
+              const startX = e.clientX
+              const startW = effectiveSidebarWidth
+
+              const onMove = (ev: MouseEvent) => {
+                if (!isResizingRef.current) return
+                const dx = ev.clientX - startX
+                const dynamicMax = Math.min(SIDEBAR_MAX_WIDTH, Math.max(SIDEBAR_MIN_WIDTH, window.innerWidth - MAP_MIN_WIDTH))
+                const next = Math.min(dynamicMax, Math.max(SIDEBAR_MIN_WIDTH, startW + dx))
+                setSidebarWidth(next)
+                window.dispatchEvent(new Event('resize'))
+              }
+              const onUp = () => {
+                isResizingRef.current = false
+                window.removeEventListener('mousemove', onMove)
+                window.removeEventListener('mouseup', onUp)
+              }
+              window.addEventListener('mousemove', onMove)
+              window.addEventListener('mouseup', onUp)
+            }}
+            title="Arrastra para ajustar el layout"
+          />
+        )}
 
         {/* Área del mapa */}
         <section className="relative bg-stone-200 w-full h-[35dvh] md:flex-1 md:h-auto min-w-0">
