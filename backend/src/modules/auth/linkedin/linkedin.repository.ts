@@ -91,7 +91,7 @@ export const createLinkedInSession = async ({
   usuarioId: number;
   fechaExpiracion: Date;
 }) => {
-  return await createSession({ token, usuarioId, fechaExpiracion });
+  return await createSession({ token, usuarioId, fechaExpiracion, metodo_auth: "linkedin" });
 };
 
 export const findLinkedInLinkByExternalId = async (linkedinId: string) => {

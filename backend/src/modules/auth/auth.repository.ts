@@ -124,10 +124,12 @@ export const createSession = async ({
   token,
   usuarioId,
   fechaExpiracion,
+  metodo_auth,
 }: {
   token: string;
   usuarioId: number;
   fechaExpiracion: Date;
+  metodo_auth?: string;
 }) => {
   return await prisma.sesion.create({
     data: {
@@ -135,6 +137,7 @@ export const createSession = async ({
       usuarioId,
       fechaExpiracion,
       estado: true,
+      metodo_auth: metodo_auth ?? "email",
     },
   });
 };
