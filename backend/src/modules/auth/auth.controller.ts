@@ -456,3 +456,26 @@ export const activateAccountByCodeController = async (
     return res.status(400).json({ message });
   }
 };
+
+export const resendRegisterCodeController = async (req: Request, res: Response) => {
+  try {
+    const { verificationToken } = req.body;
+    const result = await resendRegisterCodeService(verificationToken);
+
+    return res.status(200).json({
+      message: "Te enviamos un nuevo código de verificación.",
+      ...result,
+    });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
+    const message =
+      error instanceof Error ? error.message : "Error al reenviar el código";
+
+    return res.status(400).json({ message });
+  }
+};
