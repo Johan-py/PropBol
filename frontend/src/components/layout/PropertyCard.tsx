@@ -141,6 +141,11 @@ export default function PropertyCard({
           <ComoLlegarButton lat={lat} lng={lng} variant="grid" />
         </div>
 
+        {/* HU13 - Botón ¿Cómo llegar? */}
+        <div className="mt-1 w-full">
+          <ComoLlegarButton lat={lat} lng={lng} variant="grid" />
+        </div>
+
         {/* 4. Botón de ver detalles (HU4 - Nuevo botón para abrir el detalle en una nueva pestaña) */}
         <div className="mt-2 w-full">
           <ActionButton
