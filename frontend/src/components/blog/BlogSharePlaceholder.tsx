@@ -11,6 +11,17 @@ export default function BlogSharePlaceholder({ title }: BlogShareProps) {
   const getTitle = () => title || (typeof document !== 'undefined' ? document.title : 'Blog PropBol');
 
   const shareToGmail = () => { window.open(`https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent(getTitle())}&body=${encodeURIComponent('¡Hola! Te comparto este artículo que me pareció interesante:\n\n' + getUrl())}`, '_blank') };
+  const shareToInstagram = async () => {
+    try {
+      await navigator.clipboard.writeText(getUrl());
+      alert('¡Enlace copiado al portapapeles! Ahora puedes pegarlo en tu publicación o historia de Instagram.');
+      window.open('https://www.instagram.com/', '_blank');
+    } catch (err) {
+      console.error('Error al copiar el enlace:', err);
+      window.open('https://www.instagram.com/', '_blank');
+    }
+  };
+
   // Cerrar menú al hacer clic fuera del modal peee
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -38,7 +49,7 @@ export default function BlogSharePlaceholder({ title }: BlogShareProps) {
                 className="w-7 h-7 sm:w-8 sm:h-8 opacity-90 group-hover:opacity-100 transition-opacity"
               />
             </button>
-            <button className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0">
+            <button onClick={shareToInstagram} className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir en Instagram">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg"
                 alt="Instagram"
