@@ -25,6 +25,15 @@ export default function TestimoniosSection() {
     cargarTestimonios(ciudadActiva)
   }, [ciudadActiva, cargarTestimonios])
 
+  // Autoplay — avanza cada 5 segundos
+  useEffect(() => {
+    if (testimonios.length <= 1) return
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev === testimonios.length - 1 ? 0 : prev + 1))
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [testimonios.length])
+
   const handleCiudad = (ciudad: string) => {
     setCiudadActiva(ciudad)
   }
