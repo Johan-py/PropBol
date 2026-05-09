@@ -61,6 +61,7 @@ export const createLinkedInUser = async (
         idExterno: linkedinId,
         correoProveedor,
         activo: true,
+        ultimo_uso_en: new Date(),
       },
     });
 
@@ -120,4 +121,21 @@ export const createLinkedInLinkForUser = async ({
 
 export const findUserByLinkedInSessionToken = async (sessionToken: string) => {
   return await findUserByActiveSessionTokenForSocialLink(sessionToken);
+};
+
+export const updateLinkedInLastUsage = async (
+  usuarioId: number,
+  linkedinId: string,
+) => {
+  return await prisma.autenticacion_social.updateMany({
+    where: {
+      usuarioId,
+      proveedor: "linkedin",
+      idExterno: linkedinId,
+      activo: true,
+    },
+    data: {
+      ultimo_uso_en: new Date(),
+    },
+  });
 };
