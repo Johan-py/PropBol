@@ -5,6 +5,7 @@ import { getCities } from '@/services/city.service'
 import dynamic from 'next/dynamic'
 import VisualFiltersSection from '@/components/VisualFilters/VisualFiltersSection'
 import HomeBlogsSection from '@/components/home/HomeBlogsSection'
+import HomeExchangeSection from '@/components/home/HomeExchangeSection'
 
 const TourGuiado = dynamic(() => import('@/components/ui/TourGuiado'), { ssr: false })
 
@@ -66,6 +67,8 @@ export default async function Home() {
           <p className="text-gray-600">No hay banners disponibles</p>
         </div>
       )}
+
+      <HomeExchangeSection />
 
       <div className="w-full max-w-[1600px] mx-auto px-0 md:px-4 py-4">
         <div className="flex flex-col gap-0">

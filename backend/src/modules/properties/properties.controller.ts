@@ -41,11 +41,15 @@ export const propertiesController = {
       //HU6
       const parsedAmenities = amenities ? String(amenities).split(',').map(Number).filter(n => !isNaN(n)) : undefined;
       const parsedLabels = labels ? String(labels).split(',').map(Number).filter(n => !isNaN(n)) : undefined;
-
+      // NUEVA CAPA DE SEGURIDAD: Validar longitud del texto
+      let queryValidado = query as string;
+      if (queryValidado && queryValidado.trim().length < 3) {
+        queryValidado = ''; // Ignoramos silenciosamente para no romper los demás filtros
+      }
       const filtros: FiltrosBusqueda = {
         tipoInmueble: tipoInmueble as string | string[],
         modoInmueble: modoInmueble as string | string[],
-        query: query as string,
+        query: queryValidado, // Usamos la variable validada
         locationId: locationId ? Number(locationId) : undefined,
 
         departamentoId: departamentoId as string,
@@ -95,13 +99,18 @@ export const propertiesController = {
     try {
       // Capturamos lo que envía el usePropertySearch del frontend
       const { locationId, categoria, tipoAccion, search, lat, lng, radius } = req.query
+      // NUEVA CAPA DE SEGURIDAD
+      let searchValidado = search as string;
+      if (searchValidado && searchValidado.trim().length < 3) {
+        searchValidado = ''; 
+      }
 
       const filtros: FiltrosBusqueda = {
         // Mapeamos los nombres del frontend a los que espera el service/repository
         locationId: locationId ? Number(locationId) : undefined,
         tipoInmueble: categoria as string,
         modoInmueble: tipoAccion as string,
-        query: search as string,
+        query: searchValidado, // Usamos la variable validada
         lat: lat ? Number(lat) : undefined,
         lng: lng ? Number(lng) : undefined,
         radius: radius ? Number(radius) : 1
@@ -115,8 +124,44 @@ export const propertiesController = {
       console.error('Error en búsqueda:', error)
       res.status(500).json({ ok: false, error: 'Error en la búsqueda avanzada' })
     }
+  },
+  // NUEVO MÉTODO COMPARADOR: compare
+  compare: async (req: Request, res: Response) => {
+    try {
+      const { ids } = req.body;
+
+      if (!ids || !Array.isArray(ids) || ids.length === 0) {
+        return res.status(400).json({ 
+          ok: false, 
+          message: 'Se requiere un arreglo de IDs válidos para comparar.' 
+        });
+      }
+
+      if (ids.length > 4) {
+        return res.status(400).json({ 
+          ok: false, 
+          message: 'El límite máximo es de 4 propiedades.' 
+        });
+      }
+
+      // Convertimos el array de strings a números para Prisma
+      const idsNumericos = ids.map(id => Number(id)).filter(id => !isNaN(id));
+
+      const inmuebles = await propertiesService.getForComparison(idsNumericos);
+
+      // Ordenar para que el modal muestre las propiedades en el mismo orden que se hizo clic
+      const sortedInmuebles = inmuebles.sort(
+        (a, b) => idsNumericos.indexOf(a.id) - idsNumericos.indexOf(b.id)
+      );
+
+      res.json({ ok: true, data: sortedInmuebles });
+    } catch (error) {
+      console.error('Error en compare:', error);
+      res.status(500).json({ ok: false, error: 'Error al obtener propiedades para comparar' });
+    }
   }
 }
 
 export const search = propertiesController.search
 export const getAll = propertiesController.getAll
+export const compare = propertiesController.compare
