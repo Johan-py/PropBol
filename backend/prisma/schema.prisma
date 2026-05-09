@@ -824,6 +824,40 @@ model TutorialPublicacionUsuario {
   vistoEn      DateTime? @map("visto_en") @db.Timestamp(6)
   confirmadoEn DateTime? @map("confirmado_en") @db.Timestamp(6)
   usuario      Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+model testimonio {
+  id              Int               @id @default(autoincrement())
+  comentario      String
+  calificacion    Int?
+  visible         Boolean?          @default(true)
+  eliminado       Boolean?          @default(false)
+  fecha_creacion  DateTime?         @default(now()) @db.Timestamp(6)
+  usuario_id      Int
+  ciudad          String?           @db.VarChar(100)
+  zona            String?           @db.VarChar(100)
+  categoria       String?           @db.VarChar(255)
+  usuario         Usuario           @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  testimonio_like testimonio_like[]
+}
+
+model testimonio_like {
+  id            Int        @id @default(autoincrement())
+  testimonio_id Int
+  usuario_id    Int
+  creado_en     DateTime?  @default(now()) @db.Timestamp(6)
+  testimonio    testimonio @relation(fields: [testimonio_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  usuario       Usuario    @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([testimonio_id, usuario_id], map: "uq_testimonio_like")
+}
+
+model TutorialPublicacionUsuario {
+  id            Int       @id @default(autoincrement())
+  usuarioId     Int       @unique @map("usuario_id")
+  confirmado    Boolean   @default(false)
+  vistoEn       DateTime? @map("visto_en") @db.Timestamp(6)
+  confirmadoEn  DateTime? @map("confirmado_en") @db.Timestamp(6)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("tutorial_publicacion_usuario")
 }
