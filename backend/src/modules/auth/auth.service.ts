@@ -31,6 +31,9 @@ import {
   createMagicLink,
   increment2FACodeAttempts,
   mark2FACodeAsUsed,
+  findMagicLinkByTokenHash,
+  markMagicLinkAsUsed,
+  deactivateMagicLink,
 } from "./auth.repository.js";
 
 type LoginDTO = {
@@ -75,6 +78,17 @@ type LoginAttemptState = {
 
 type RequestMagicLinkDTO = {
   correo: string;
+};
+
+type LoginWithMagicLinkDTO = {
+  token: string;
+};
+
+type MagicLinkJwtPayload = jwt.JwtPayload & {
+  purpose?: string;
+  userId?: number;
+  correo?: string;
+  nonce?: string;
 };
 
 export class AuthError extends Error {
@@ -871,7 +885,7 @@ export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
     expiraEn,
   });
 
-  const magicLink = `${env.FRONTEND_URL}/sign-in/magic-link?token=${magicToken}`;
+  const magicLink = `${env.FRONTEND_URL}/magic-link-sent?token=${magicToken}`;
 
   const emailResult = await sendMagicLinkEmail({
     emailDestino: user.correo,
@@ -889,6 +903,110 @@ export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
 
   return {
     message: "Te enviamos un link mágico a tu correo electrónico.",
+  };
+};
+
+const verifyMagicLinkToken = (token: string) => {
+  try {
+    const decoded = jwt.verify(token, env.JWT_SECRET) as MagicLinkJwtPayload;
+
+    if (
+      decoded.purpose !== "magic-link-login" ||
+      typeof decoded.userId !== "number" ||
+      !decoded.correo
+    ) {
+      throw new AuthError("El Magic Link no es válido", 401);
+    }
+
+    return decoded;
+  } catch {
+    throw new AuthError("El Magic Link es inválido o expiró", 401);
+  }
+};
+
+export const loginWithMagicLinkService = async ({
+  token,
+}: LoginWithMagicLinkDTO) => {
+  const magicToken = token?.trim();
+
+  if (!magicToken) {
+    throw new AuthError("El token es obligatorio", 400);
+  }
+
+  const decoded = verifyMagicLinkToken(magicToken);
+  const tokenHash = hashMagicLinkToken(magicToken);
+
+  const magicLink = await findMagicLinkByTokenHash(tokenHash);
+
+  if (!magicLink) {
+    throw new AuthError(
+      "El Magic Link no es válido o ya fue reemplazado por uno nuevo.",
+      401,
+    );
+  }
+
+  if (magicLink.activo === false || magicLink.usado_en) {
+    throw new AuthError("Este Magic Link ya fue utilizado.", 401);
+  }
+
+  if (magicLink.invalidado_en) {
+    throw new AuthError(
+      "Este Magic Link fue invalidado porque se solicitó uno nuevo.",
+      401,
+    );
+  }
+
+  if (magicLink.expira_en.getTime() < Date.now()) {
+    await deactivateMagicLink(magicLink.id);
+
+    throw new AuthError("Este Magic Link ha expirado.", 401);
+  }
+
+  if (
+    magicLink.usuario_id !== decoded.userId ||
+    magicLink.correo !== decoded.correo
+  ) {
+    throw new AuthError("El Magic Link no corresponde al usuario.", 401);
+  }
+
+  const user = await findUserById(decoded.userId);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  if (user.activo === false) {
+    throw new AuthError("Esta cuenta está desactivada", 403);
+  }
+
+  await markMagicLinkAsUsed(magicLink.id);
+
+  const sessionPayload: JwtPayload = {
+    id: user.id,
+    correo: user.correo,
+  };
+
+  const sessionToken = generateToken(sessionPayload);
+  const fechaExpiracion = new Date(Date.now() + 60 * 60 * 1000);
+
+  await createSession({
+    token: sessionToken,
+    usuarioId: user.id,
+    fechaExpiracion,
+    metodoAuth: "magic_link",
+  });
+
+  return {
+    user: {
+      id: user.id,
+      correo: user.correo,
+      nombre: user.nombre,
+      apellido: user.apellido,
+      avatar: user.avatar,
+      rol: user.rol,
+      controlador: user.controlador,
+    },
+    token: sessionToken,
   };
 };
 

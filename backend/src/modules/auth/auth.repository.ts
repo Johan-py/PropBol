@@ -124,10 +124,12 @@ export const createSession = async ({
   token,
   usuarioId,
   fechaExpiracion,
+  metodoAuth = "email",
 }: {
   token: string;
   usuarioId: number;
   fechaExpiracion: Date;
+  metodoAuth?: string;
 }) => {
   return await prisma.sesion.create({
     data: {
@@ -135,6 +137,7 @@ export const createSession = async ({
       usuarioId,
       fechaExpiracion,
       estado: true,
+      metodo_auth: metodoAuth,
     },
   });
 };
@@ -509,4 +512,51 @@ export const createMagicLink = async ({
       intentos_reenvio: 0,
     },
   });
+};
+type MagicLinkRecord = {
+  id: number;
+  usuario_id: number;
+  token_hash: string;
+  correo: string;
+  expira_en: Date;
+  usado_en: Date | null;
+  activo: boolean | null;
+  invalidado_en: Date | null;
+};
+
+export const findMagicLinkByTokenHash = async (tokenHash: string) => {
+  const rows = await prisma.$queryRaw<MagicLinkRecord[]>`
+    SELECT
+      id,
+      usuario_id,
+      token_hash,
+      correo,
+      expira_en,
+      usado_en,
+      activo,
+      invalidado_en
+    FROM magic_link
+    WHERE token_hash = ${tokenHash}
+    LIMIT 1
+  `;
+
+  return rows[0] ?? null;
+};
+
+export const markMagicLinkAsUsed = async (id: number) => {
+  return await prisma.$executeRaw`
+    UPDATE magic_link
+    SET 
+      usado_en = NOW(),
+      activo = false
+    WHERE id = ${id}
+  `;
+};
+
+export const deactivateMagicLink = async (id: number) => {
+  return await prisma.$executeRaw`
+    UPDATE magic_link
+    SET activo = false
+    WHERE id = ${id}
+  `;
 };

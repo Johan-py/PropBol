@@ -14,6 +14,7 @@ import {
   verifyRegisterCodeService,
   resend2FAService,
   requestMagicLinkService,
+  loginWithMagicLinkService,
 } from "./auth.service.js";
 
 type RegisterBody = {
@@ -42,6 +43,10 @@ type VerifyPasswordBody = {
 
 type RequestMagicLinkBody = {
   correo: string;
+};
+
+type LoginWithMagicLinkBody = {
+  token: string;
 };
 
 const isDuplicateEmailError = (message: string) => {
@@ -416,6 +421,33 @@ export const resetPasswordController = async (req: Request, res: Response) => {
       error instanceof Error
         ? error.message
         : "Error al restablecer contraseña";
+    return res.status(400).json({ message });
+  }
+};
+
+export const loginWithMagicLinkController = async (
+  req: Request<unknown, unknown, LoginWithMagicLinkBody>,
+  res: Response,
+) => {
+  try {
+    const result = await loginWithMagicLinkService(req.body);
+
+    return res.status(200).json({
+      message: "Inicio de sesión con Magic Link exitoso",
+      ...result,
+    });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Error al iniciar sesión con Magic Link";
+
     return res.status(400).json({ message });
   }
 };
