@@ -90,7 +90,7 @@ export const propertiesRepository = {
     // 3. Filtro de Ubicación (EL CEREBRO JERÁRQUICO)
     if (filtros.lat && filtros.lng) {
       // Búsqueda geoespacial por latitud/longitud con un radio (en km)
-    } else if (filtros.query && filtros.query.trim() !== "") {
+    } else if (filtros.query && filtros.query.trim().length >= 3) { // NUEVO: Refuerzo de >= 3 caracteres
       // Fallback original: Búsqueda estricta por texto
       const texto = filtros.query.trim();
 

@@ -7,6 +7,7 @@ const router = Router();
 
 // Aplicamos requireAuth: solo usuarios logueados verán su historial
 router.get('/vistas-recientes', requireAuth, getHistorialVistas);
-router.post('/comparar', requireAuth, compare);
+// Ruta para comparar propiedades públicamente accesible, sin requireAuth
+router.post('/comparar', compare);
 
 export default router;
