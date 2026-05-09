@@ -101,104 +101,54 @@ export default function MisZonasSidebar({
               }`}
             />
           </button>
+        </div>
+      </div>
 
-          {!isAuthenticated ? (
-            <div className="flex flex-col items-center justify-center h-full text-center text-stone-500 gap-3 mt-8">
-              <MapIcon className="w-12 h-12 text-stone-300" />
-              <p className="text-sm">
-                Crea una cuenta para guardar tus zonas de búsqueda personalizadas.
-              </p>
-            </div>
-          ) : (
-            <>
-              {/* Lista de zonas guardadas */}
-              {zonas.length === 0 && !isDraftZoneVisible ? (
-                <div className="text-center text-sm text-stone-400 mt-10">
-                  No tienes zonas guardadas.
-                </div>
-              ) : (
-                <ul className="flex flex-col gap-2 mt-2">
-                  {zonas.map((zona) => (
-                    editingZoneId === zona.id ? (
-                      <li
-                        key={zona.id}
-                        className="flex items-center gap-2 p-2.5 bg-stone-50 border border-stone-200 rounded-xl shadow-sm"
-                      >
-                        <input
-                          value={editingZoneName}
-                          onChange={(event) => onEditingZoneNameChange?.(event.target.value)}
-                          placeholder="Nueva zona"
-                          maxLength={100}
-                          className="min-w-0 flex-1 text-sm text-stone-700 placeholder:text-stone-400 placeholder:italic bg-transparent outline-none"
-                          disabled={isSavingEditZone}
-                        />
-                        <button
-                          onClick={onConfirmEditZone}
-                          className="p-1.5 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-md transition-colors disabled:opacity-50"
-                          title="Guardar cambios"
-                          disabled={isSavingEditZone}
-                        >
-                          <Check size={16} />
-                        </button>
-                        <button
-                          onClick={onCancelEditZone}
-                          className="p-1.5 text-rose-500 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors disabled:opacity-50"
-                          title="Cancelar edición"
-                          disabled={isSavingEditZone}
-                        >
-                          <X size={16} />
-                        </button>
-                      </li>
-                    ) : (
-                      <li
-                        key={zona.id}
-                        onClick={() => onZoneSelect?.(Number(zona.id))}
-                        className="flex items-center justify-between p-3 bg-stone-50 border border-stone-100 rounded-lg cursor-pointer hover:border-orange-200 hover:-translate-y-1 hover:shadow-md active:translate-y-0 active:shadow-sm transition-all duration-200 group"
-                      >
-                        <span className="text-sm font-medium text-stone-700 truncate pr-2">
-                          {zona.nombre}
-                        </span>
-                        <div className="flex items-center gap-1 opacity-100">
-                          <button
-                            onClick={(event) => {
-                              event.stopPropagation()
-                              onEditZone(zona.id)
-                            }}
-                            className="p-1.5 text-stone-400 hover:text-orange-500 hover:bg-orange-50 rounded-md transition-colors"
-                            title="Editar zona"
-                          >
-                            <Pencil size={16} />
-                          </button>
-                          <button
-                            onClick={(event) => {
-                              event.stopPropagation()
-                              onDeleteZone(zona.id)
-                            }}
-                            className="p-1.5 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
-                            title="Eliminar zona"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </li>
-                    )
-                  ))}
+      {/* Contenido principal condicionado por la autenticación */}
+      <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
 
-                  {isDraftZoneVisible && (
-                    <li className="flex items-center gap-2 p-2.5 bg-stone-50 border border-stone-200 rounded-xl shadow-sm">
+        <button
+          onClick={onAddZone}
+          className="w-full flex items-center justify-center gap-2 py-2 text-orange-600 hover:text-orange-700 active:text-orange-800 transition-colors font-semibold text-sm"
+        >
+          <Plus size={18} />
+          Añadir nueva Zona
+        </button>
+
+        {!isAuthenticated ? (
+          <div className="flex flex-col items-center justify-center h-full text-center text-stone-500 gap-3 mt-8">
+            <MapIcon className="w-12 h-12 text-stone-300" />
+            <p className="text-sm">
+              Crea una cuenta para guardar tus zonas de búsqueda personalizadas.
+            </p>
+          </div>
+        ) : (
+          <>
+            {zonas.length === 0 && !isDraftZoneVisible ? (
+              <div className="text-center text-sm text-stone-400 mt-10">
+                No tienes zonas guardadas.
+              </div>
+            ) : (
+              <ul className="flex flex-col gap-2 mt-2">
+                {zonas.map((zona) =>
+                  editingZoneId === zona.id ? (
+                    <li
+                      key={zona.id}
+                      className="flex items-center gap-2 p-2.5 bg-stone-50 border border-stone-200 rounded-xl shadow-sm"
+                    >
                       <input
-                        value={draftZoneName}
-                        onChange={(event) => onDraftZoneNameChange?.(event.target.value)}
+                        value={editingZoneName}
+                        onChange={(e) => onEditingZoneNameChange?.(e.target.value)}
                         placeholder="Nueva zona"
                         maxLength={100}
                         className="min-w-0 flex-1 text-sm text-stone-700 placeholder:text-stone-400 placeholder:italic bg-transparent outline-none"
-                        disabled={isSavingDraftZone}
+                        disabled={isSavingEditZone}
                       />
                       <button
-                        onClick={onConfirmDraftZone}
+                        onClick={onConfirmEditZone}
                         className="p-1.5 text-green-600 hover:text-green-700 hover:bg-green-50 rounded-md transition-colors disabled:opacity-50"
-                        title="Guardar zona"
-                        disabled={isSavingDraftZone}
+                        title="Guardar cambios"
+                        disabled={isSavingEditZone}
                       >
                         <Check size={16} />
                       </button>
