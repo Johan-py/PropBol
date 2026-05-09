@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import {
-    MapContainer,
+    MapContainer as BaseMapContainer,
     TileLayer,
     Marker,
     Popup,
@@ -16,6 +16,19 @@ let L: any
 if (typeof window !== 'undefined') {
     L = require('leaflet')
 }
+
+interface GestureMapProps extends React.ComponentProps<typeof BaseMapContainer> {
+  gestureHandling?: boolean;
+  gestureHandlingOptions?: {
+    text: {
+      touch: string;
+      scroll: string;
+      scrollMac: string;
+    };
+  };
+}
+
+const MapContainer = BaseMapContainer as React.ComponentType<GestureMapProps>;
 
 interface Zona {
     id: number
@@ -225,19 +238,17 @@ export default function MapaZonas({
             center={center}
             zoom={13}
             zoomControl={true}
+            scrollWheelZoom={true}
             style={{ height: "100%", width: "100%" }}
             className="z-0"
-            // Agregado: Control nativo del cursor y bloqueo de arrastre en modo dibujo MAPAS HU11
-            {...({ 
-              gestureHandling: true,
-              gestureHandlingOptions: {
-                text: {
-                  touch: "Usa dos dedos para mover el mapa",
-                  scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
-                  scrollMac: "Usa \u2318 + scroll para hacer zoom en el mapa"
-                }
+            gestureHandling={typeof window !== 'undefined' && L ? L.Browser.mobile : false}
+            gestureHandlingOptions={{
+              text: {
+                touch: "Usa dos dedos para mover el mapa",
+                scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
+                scrollMac: "Usa ⌘ + scroll para hacer zoom en el mapa"
               }
-            } as any)}
+            }}
         >
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
