@@ -117,6 +117,9 @@ const FACEBOOK_TIMEOUT_MESSAGE =
   "La autenticación con Facebook tardó demasiado. Por favor intenta nuevamente.";
 
 const DEACTIVATED_ACCOUNT_MESSAGE = "Esta cuenta está desactivada";
+const ACTIVATION_CONNECTION_ERROR_MESSAGE =
+  "Ocurrió un problema de conexión. Por favor, inténtelo de nuevo más tarde";
+const ACTIVATION_REQUEST_TIMEOUT_MS = 10000;
 
 const clearClientSession = () => {
   localStorage.removeItem("token");
@@ -666,6 +669,20 @@ export default function LoginForm() {
       return;
     }
 
+    if (isActivating) {
+      return;
+    }
+
+    if (!navigator.onLine) {
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => {
+      controller.abort();
+    }, ACTIVATION_REQUEST_TIMEOUT_MS);
+
     setActivationError("");
     setIsActivating(true);
 
@@ -677,9 +694,15 @@ export default function LoginForm() {
           correo: activationEmail,
           password: trimmedPassword,
         }),
+        signal: controller.signal,
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
+
+      if (response.status >= 500) {
+        setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+        return;
+      }
 
       if (!response.ok) {
         setActivationError(data.message || "Error al activar la cuenta");
@@ -692,12 +715,9 @@ export default function LoginForm() {
       closeActivationModal();
       router.push("/sign-in");
     } catch (error) {
-      setActivationError(
-        error instanceof Error
-          ? error.message
-          : "Error al conectar con el servidor",
-      );
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
     } finally {
+      window.clearTimeout(timeoutId);
       setIsActivating(false);
     }
   };
@@ -759,6 +779,20 @@ export default function LoginForm() {
       return;
     }
 
+    if (isActivating) {
+      return;
+    }
+
+    if (!navigator.onLine) {
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => {
+      controller.abort();
+    }, ACTIVATION_REQUEST_TIMEOUT_MS);
+
     setActivationError("");
     setIsActivating(true);
 
@@ -770,9 +804,15 @@ export default function LoginForm() {
           correo: activationEmail,
           codigo: trimmedCode,
         }),
+        signal: controller.signal,
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
+
+      if (response.status >= 500) {
+        setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+        return;
+      }
 
       if (!response.ok) {
         setActivationError(data.message || "Error al activar la cuenta");
@@ -785,12 +825,9 @@ export default function LoginForm() {
       closeActivationModal();
       router.push("/sign-in");
     } catch (error) {
-      setActivationError(
-        error instanceof Error
-          ? error.message
-          : "Error al conectar con el servidor",
-      );
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
     } finally {
+      window.clearTimeout(timeoutId);
       setIsActivating(false);
     }
   };

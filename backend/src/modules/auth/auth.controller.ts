@@ -402,10 +402,11 @@ export const activateAccountByPasswordController = async (req: Request, res: Res
       });
     }
 
-    const message =
-      error instanceof Error ? error.message : "Error al activar la cuenta";
+    console.error("Error inesperado al activar cuenta por contraseña:", error);
 
-    return res.status(400).json({ message });
+    return res.status(500).json({
+      message: "Error interno del servidor",
+    });
   }
 };
 
@@ -425,12 +426,11 @@ export const requestActivationCodeController = async (
       });
     }
 
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Error al solicitar código de activación";
+    console.error("Error inesperado al solicitar código de activación:", error);
 
-    return res.status(400).json({ message });
+    return res.status(500).json({
+      message: "Error interno del servidor",
+    });
   }
 };
 
@@ -450,10 +450,11 @@ export const activateAccountByCodeController = async (
       });
     }
 
-    const message =
-      error instanceof Error ? error.message : "Error al activar la cuenta";
+    console.error("Error inesperado al activar cuenta por código:", error);
 
-    return res.status(400).json({ message });
+    return res.status(500).json({
+      message: "Error interno del servidor",
+    });
   }
 };
 
