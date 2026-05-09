@@ -133,6 +133,7 @@ export function MenuOrdenamiento({
   const [orden, setOrden] = useState<EstadoOrdenamiento>(ordenActual)
   const [dropdownAbierto, setDropdownAbierto] = useState<'fecha' | 'metricas' | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
+  const procesandoRef = useRef(false)
 
   // criterioActivo viene DENTRO de orden ahora — es la fuente de verdad única
   const criterioActivo: CriterioActivo = orden.criterioActivo
@@ -152,9 +153,16 @@ export function MenuOrdenamiento({
   }
 
   function aplicar(parcial: Partial<EstadoOrdenamiento>) {
+    if(procesandoRef.current) return
+    procesandoRef.current = true
+
     const nuevoOrden: EstadoOrdenamiento = { ...orden, ...parcial }
     setOrden(nuevoOrden)
     onOrdenChange?.(nuevoOrden)
+
+    setTimeout(() => {
+      procesandoRef.current = false
+    }, 300)
   }
 
   // ── Seleccionar FECHA ──────────────────────────────────────────────────────
