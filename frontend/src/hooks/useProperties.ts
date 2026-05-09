@@ -118,6 +118,10 @@ export function useProperties(): UsePropertiesResult {
     console.log('🔄 useProperties disparado:', searchParamsStr)
 
     async function fetchNormalSearch() {
+      // Configuramos el temporizador de 1 segundo
+      const loaderTimer = setTimeout(() => {
+        if (!cancelled) setIsLoading(true);
+      }, 1000);
       try {
         const res = await fetch(
           `${API_URL}/api/properties/inmuebles?${searchParamsStr}`,
@@ -201,11 +205,16 @@ export function useProperties(): UsePropertiesResult {
               : "Error al conectar con PropBol",
           );
       } finally {
+        // Limpiamos el temporizador si fue rápido
+        clearTimeout(loaderTimer);
         if (!cancelled) setIsLoading(false);
       }
     }
 
     async function fetchRecomendados() {
+      const loaderTimer = setTimeout(() => {
+         if (!cancelled) setIsLoading(true);
+      }, 1000);
       try {
         const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
         const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {}
@@ -334,13 +343,12 @@ export function useProperties(): UsePropertiesResult {
           await fetchNormalSearch()
         }
       } finally {
+        clearTimeout(loaderTimer);
         if (!cancelled) setIsLoading(false)
       }
     }
 
     async function fetchProperties() {
-      // Evitar loaders agresivos cuando ya hay resultados en pantalla
-      if (properties.length === 0) setIsLoading(true)
       setError(null)
 
       // ✅ Modo recomendados (persistente por URL)
