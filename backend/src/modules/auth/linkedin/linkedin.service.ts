@@ -142,6 +142,14 @@ export const loginWithLinkedInCodeService = async (
   const userByLinkedInId = await findUserByLinkedInId(linkedinId);
 
   if (userByLinkedInId) {
+    if (userByLinkedInId.activo === false) {
+      throw new LinkedInAuthError(
+        "Esta cuenta está desactivada",
+        "ACCOUNT_DEACTIVATED",
+        403,
+      );
+    }
+
     return await buildLinkedInSessionResponse(
       userByLinkedInId,
       "Inicio de sesión con LinkedIn exitoso",
@@ -152,6 +160,14 @@ export const loginWithLinkedInCodeService = async (
   const existingUserByEmail = await findUserByLinkedInEmail(correo);
 
   if (existingUserByEmail) {
+    if (existingUserByEmail.activo === false) {
+      throw new LinkedInAuthError(
+        "Esta cuenta está desactivada",
+        "ACCOUNT_DEACTIVATED",
+        403,
+      );
+    }
+
     await linkLinkedInToUser(existingUserByEmail.id, linkedinId, correo);
 
     return await buildLinkedInSessionResponse(
@@ -304,6 +320,14 @@ export const registerWithLinkedInCodeService = async (
   const existingUserByEmail = await findUserByLinkedInEmail(correo);
 
   if (existingUserByEmail) {
+    if (existingUserByEmail.activo === false) {
+      throw new LinkedInAuthError(
+        "Esta cuenta está desactivada",
+        "ACCOUNT_DEACTIVATED",
+        403,
+      );
+    }
+
     await linkLinkedInToUser(existingUserByEmail.id, linkedinId, correo);
 
     return await buildLinkedInSessionResponse(
