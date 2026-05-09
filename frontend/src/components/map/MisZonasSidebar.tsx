@@ -34,9 +34,10 @@ interface MisZonasSidebarProps {
   onShowPredefinidas?: (show: boolean) => void
   showPersonalizadas?: boolean
   onShowPersonalizadas?: (show: boolean) => void
+  /** En móvil se renderiza como bottom sheet en vez de panel lateral */
+  isMobile?: boolean
 }
 
-// Asegúrate de que tenga "export default function"
 export default function MisZonasSidebar({
   isOpen,
   onClose,
@@ -63,75 +64,42 @@ export default function MisZonasSidebar({
   onShowPredefinidas,
   showPersonalizadas = true,
   onShowPersonalizadas,
+  isMobile = false,
 }: MisZonasSidebarProps) {
-  return (
-    <>
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/20 z-[1050] md:hidden transition-opacity"
-          onClick={onClose}
-        />
-      )}
 
-      <aside
-        className={`absolute top-0 right-0 h-full w-full sm:w-80 bg-white shadow-2xl z-[1100] transform transition-transform duration-300 ease-in-out flex flex-col border-l border-stone-200 ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
-        <div className="flex items-center justify-between px-4 pt-4 pb-2">
-          <h2 className="text-lg text-slate-800">Mis zonas</h2>
+  // ─── Contenido interior compartido ───────────────────────────────────────────
+  const inner = (
+    <>
+      {/* Toggles de visibilidad de zonas */}
+      <div className="px-4 py-3 border-b border-stone-200 space-y-3 shrink-0">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-stone-700">Zonas predefinidas</span>
           <button
-            onClick={onClose}
-            className="p-1.5 text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-full transition-colors"
+            onClick={() => onShowPredefinidas?.(!showPredefinidas)}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+              showPredefinidas ? 'bg-amber-500' : 'bg-stone-300'
+            }`}
           >
-            <ChevronRight size={20} />
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-lg transition-transform ${
+                showPredefinidas ? 'translate-x-6' : 'translate-x-1'
+              }`}
+            />
           </button>
         </div>
-
-        {/* Toggles de visibilidad de zonas */}
-        <div className="px-4 py-3 border-b border-stone-200 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-stone-700">Zonas predefinidas</span>
-            <button
-              onClick={() => onShowPredefinidas?.(!showPredefinidas)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                showPredefinidas ? 'bg-amber-500' : 'bg-stone-300'
-              }`}
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-lg transition-transform ${
-                  showPredefinidas ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
-            </button>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-stone-700">Mis zonas</span>
-            <button
-              onClick={() => onShowPersonalizadas?.(!showPersonalizadas)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                showPersonalizadas ? 'bg-green-500' : 'bg-stone-300'
-              }`}
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-lg transition-transform ${
-                  showPersonalizadas ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
-            </button>
-          </div>
-        </div>
-
-        {/* Contenido principal condicionado por la autenticación */}
-        <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
-          
-          {/* El botón ahora siempre es visible */}
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-stone-700">Mis zonas</span>
           <button
-            onClick={onAddZone}
-            className="w-full flex items-center justify-center gap-2 py-2 text-orange-600 hover:text-orange-700 transition-colors font-semibold text-sm"
+            onClick={() => onShowPersonalizadas?.(!showPersonalizadas)}
+            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+              showPersonalizadas ? 'bg-green-500' : 'bg-stone-300'
+            }`}
           >
-            <Plus size={18} />
-            Añadir nueva Zona
+            <span
+              className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-lg transition-transform ${
+                showPersonalizadas ? 'translate-x-6' : 'translate-x-1'
+              }`}
+            />
           </button>
 
           {!isAuthenticated ? (
