@@ -263,9 +263,12 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     const minB = params.get('banosMin'); const maxB = params.get('banosMax')
     if (minB || maxB) filters.push({ id: 'banos', label: `Baños: ${minB || 0} a ${maxB || '+'}`, onRemove: () => removeParam(['banosMin', 'banosMax']) })
 
-    const bc = params.get('banoCompartido')
-    if (bc === 'true') filters.push({ id: 'bc', label: 'Con baño compartido', onRemove: () => removeParam(['banoCompartido']) })
-    else if (bc === 'false') filters.push({ id: 'bc', label: 'Sin baño compartido', onRemove: () => removeParam(['banoCompartido']) })
+    const tipoBanoParam = params.get('tipoBano')
+    if (tipoBanoParam === 'privado') {
+      filters.push({ id: 'tb', label: 'Baño privado', onRemove: () => removeParam(['tipoBano']) })
+    } else if (tipoBanoParam === 'compartido') {
+      filters.push({ id: 'tb', label: 'Baño compartido', onRemove: () => removeParam(['tipoBano']) })
+    }
 
     // -- Amenidades y Etiquetas (HU6) --
     const amenities = params.get('amenities')?.split(',').filter(Boolean) || []
@@ -317,7 +320,9 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     const maxDorm = urlParams.get('dormitoriosMax')
     const minBanos = urlParams.get('banosMin')
     const maxBanos = urlParams.get('banosMax')
-    const banoCompartido = urlParams.get('banoCompartido')
+    const tipoBanoVal = urlParams.get('tipoBano')
+    const banoCompartido =
+      tipoBanoVal === 'compartido' ? true : tipoBanoVal === 'privado' ? false : undefined
     const tipoMap: Record<string, string> = {
       Casas: 'CASA',
       Departamentos: 'DEPARTAMENTO',
@@ -345,7 +350,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       dormitoriosMax: maxDorm || undefined,
       banosMin: minBanos || undefined,
       banosMax: maxBanos || undefined,
-      banoCompartido: banoCompartido === 'true' ? true : banoCompartido === 'false' ? false : undefined
+      banoCompartido
     }
     await trackSearchTelemetria({
       tipoInmueble: nuevosFiltros.tipoInmueble,
@@ -360,7 +365,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       dormitoriosMax: maxDorm,
       banosMin: minBanos,
       banosMax: maxBanos,
-      banoCompartido: banoCompartido === 'true' ? true : banoCompartido === 'false' ? false : null
+      banoCompartido: banoCompartido === true ? true : banoCompartido === false ? false : null
     })
     updateFilters(nuevosFiltros)
 

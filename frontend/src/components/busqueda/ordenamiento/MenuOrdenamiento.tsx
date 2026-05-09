@@ -16,6 +16,8 @@ interface MenuOrdenamientoProps {
   onOrdenChange?: (orden: EstadoOrdenamiento) => void
   totalResultados: number
   isCompact?: boolean
+  /** Panel lateral mapa: sin márgenes inferiores que generen hueco; compacta espaciado */
+  embeddedInPanel?: boolean
 }
 
 interface DropdownProps {
@@ -128,7 +130,8 @@ export function MenuOrdenamiento({
   ordenActual = ORDENAMIENTO_DEFAULT,
   onOrdenChange,
   totalResultados,
-  isCompact = false
+  isCompact = false,
+  embeddedInPanel = false
 }: MenuOrdenamientoProps) {
   const [orden, setOrden] = useState<EstadoOrdenamiento>(ordenActual)
   const [dropdownAbierto, setDropdownAbierto] = useState<'fecha' | 'metricas' | null>(null)
@@ -211,10 +214,14 @@ export function MenuOrdenamiento({
   const fechaApagada = criterioActivo === 'precio' || criterioActivo === 'superficie'
   const metricasApagada = criterioActivo === 'fecha'
 
+  const panelClasses = embeddedInPanel
+    ? `${isCompact ? 'gap-1 mb-0' : 'gap-2 mb-0'}`
+    : `${isCompact ? 'gap-2 mb-0' : 'gap-4 mb-6'}`
+
   return (
-    <div ref={menuRef} className={`flex flex-col transition-all duration-300 ${isCompact ? 'gap-2 mb-0' : 'gap-4 mb-6'}`}>
+    <div ref={menuRef} className={`flex w-fit max-w-full flex-col transition-all duration-300 ${panelClasses}`}>
       {/* Contenedor principal animado */}
-      <div className={`flex flex-col transition-all duration-300 ${isCompact ? 'gap-0' : 'gap-3'}`}>
+      <div className={`flex flex-col transition-all duration-300 ${isCompact ? 'gap-0' : embeddedInPanel ? 'gap-2' : 'gap-3'}`}>
         
         {/* Título: Ordenar por (Se oculta al hacer scroll) */}
         <div className={`flex items-center gap-2 transition-all duration-300 overflow-hidden ${isCompact ? 'max-h-0 opacity-0 m-0' : 'max-h-10 opacity-100'}`}>
@@ -222,7 +229,7 @@ export function MenuOrdenamiento({
           <span className="text-sm font-semibold text-gray-600">Ordenar por:</span>
         </div>
 
-        <div className="flex flex-row gap-4 items-end">
+        <div className="flex flex-row flex-wrap gap-3 items-end">
           {/* Dropdown Fecha */}
           <div className={`flex flex-col transition-all duration-200 ${fechaApagada ? 'opacity-40 pointer-events-none' : ''} ${isCompact ? 'gap-0' : 'gap-1.5'}`}>
             <div className={`transition-all duration-300 overflow-hidden ${isCompact ? 'max-h-0 opacity-0' : 'max-h-6 opacity-100'}`}>
