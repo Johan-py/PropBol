@@ -22,6 +22,11 @@ export default function BlogSharePlaceholder({ title }: BlogShareProps) {
     }
   };
 
+  const shareToWhatsApp = () => {
+    const text = encodeURIComponent(`¡Hola! Te comparto este artículo que me pareció interesante:\n\n${getTitle()}\n${getUrl()}`);
+    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+  };
+
   // Cerrar menú al hacer clic fuera del modal peee
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -56,7 +61,7 @@ export default function BlogSharePlaceholder({ title }: BlogShareProps) {
                 className="w-7 h-7 sm:w-8 sm:h-8 opacity-90 group-hover:opacity-100 transition-opacity"
               />
             </button>
-            <button className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0">
+            <button onClick={shareToWhatsApp} className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir por WhatsApp">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
                 alt="WhatsApp"
