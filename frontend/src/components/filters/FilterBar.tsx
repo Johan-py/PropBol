@@ -483,10 +483,12 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
               if (savedFilters) {
                   const restoredParams = new URLSearchParams(savedFilters)
                   restoredParams.delete('orden')
+                  restoredParams.delete('ia')
                   router.push(`/busqueda_mapa?${restoredParams.toString()}`)
                   sessionStorage.removeItem('propbol_filtros_respaldo')
               } else {
                   params.delete('orden')
+                  params.delete('ia')
                   router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
               }
                 sessionStorage.removeItem('propbol_modo_recomendados')
@@ -502,6 +504,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                 const modoInmueble = params.getAll('modoInmueble')
                 modoInmueble.forEach(m => cleanParams.append('modoInmueble', m))
                 cleanParams.set('orden', 'recomendados')
+                cleanParams.set('ia', '1')
 
                 
                 const token = localStorage.getItem('token')
