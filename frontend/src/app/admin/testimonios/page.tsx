@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import {  Star, List, Plus, Search, Pencil, Trash2, MoreVertical, CheckCircle2, XCircle } from 'lucide-react'
+import {  Star, List, MessageCircle, Plus, Search, Pencil, Trash2, MoreVertical, CheckCircle2, XCircle } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -80,16 +80,14 @@ export default function AdminTestimoniosPage() {
           <h2 className="text-lg font-semibold text-stone-900 font-montserrat">Testimonios Creados</h2>
         </div>
         <div className="bg-white rounded-2xl shadow-sm border border-stone-100 overflow-hidden">
+          <div className="flex items-center justify-between gap-3 px-6 py-4 bg-stone-50 border-b border-stone-100">
+            <div className="flex items-center gap-2 text-sm font-semibold text-stone-900 font-montserrat">
+              <MessageCircle className="h-4 w-4 text-amber-600" />
+              <span>{testimonios.length} testimonios</span>
+            </div>
+            <span className="rounded-full bg-amber-50 text-amber-700 px-3 py-1 text-xs font-semibold">{testimonios.length} total</span>
+          </div>
           <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-stone-50 border-b border-stone-100">
-                <th className="px-6 py-4 text-sm font-semibold text-stone-700 font-montserrat">Autor</th>
-                <th className="px-6 py-4 text-sm font-semibold text-stone-700 font-montserrat">Ubicación / Categoría</th>
-                <th className="px-6 py-4 text-sm font-semibold text-stone-700 font-montserrat">Contenido</th>
-                <th className="px-6 py-4 text-sm font-semibold text-stone-700 font-montserrat">Estado</th>
-                <th className="px-6 py-4 text-sm font-semibold text-stone-700 font-montserrat text-right">Acciones</th>
-              </tr>
-            </thead>
             <tbody className="divide-y divide-stone-50">
               {isLoading ? (
                 // Skeleton loading similar al Dashboard
