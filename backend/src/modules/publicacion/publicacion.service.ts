@@ -6,8 +6,13 @@ import {
   eliminarLogicamentePublicacionRepository,
   buscarDetallePublicacionPorIdRepository,
   confirmarPublicacionRepository,
-  buscarDetallePublicacionPorInmuebleIdRepository
+  buscarDetallePublicacionPorInmuebleIdRepository,
+  eliminarMultimediaPorIdsRepository,
+  eliminarVideosDePublicacionRepository,
+  crearMultimediaRepository,
+  buscarMultimediaPublicacionRepository
 } from './publicacion.repository.js'
+import { cloudinary } from '../../config/cloudinary.js'
 
 type TipoAccionPermitido = 'VENTA' | 'ALQUILER' | 'ANTICRETO'
 
@@ -387,12 +392,18 @@ export const obtenerDetallePublicacionService = async (publicacionId: number) =>
     ubicacionTexto: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
     descripcion:
       publicacion.descripcion || publicacion.inmueble.descripcion || 'Sin descripción disponible',
-    imagenes: publicacion.multimedia.map((item) => ({
-      id: item.id,
-      url: item.url,
-      tipo: item.tipo,
-      pesoMb: item.pesoMb ? Number(item.pesoMb) : null
-    })),
+    imagenes: publicacion.multimedia
+      .filter((item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN)
+      .map((item) => ({
+        id: item.id,
+        url: item.url,
+        tipo: item.tipo,
+        pesoMb: item.pesoMb ? Number(item.pesoMb) : null
+      })),
+    videoUrl:
+      publicacion.multimedia.find(
+        (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_VIDEO
+      )?.url ?? null,
     detalles: {
       habitaciones: publicacion.inmueble.nroCuartos ?? null,
       banos: publicacion.inmueble.nroBanos ?? null,
@@ -445,12 +456,18 @@ export const obtenerDetallePublicacionPorInmuebleService = async (inmuebleId: nu
     ubicacionTexto: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
     descripcion:
       publicacion.descripcion || publicacion.inmueble.descripcion || 'Sin descripción disponible',
-    imagenes: publicacion.multimedia.map((item) => ({
-      id: item.id,
-      url: item.url,
-      tipo: item.tipo,
-      pesoMb: item.pesoMb ? Number(item.pesoMb) : null
-    })),
+    imagenes: publicacion.multimedia
+      .filter((item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN)
+      .map((item) => ({
+        id: item.id,
+        url: item.url,
+        tipo: item.tipo,
+        pesoMb: item.pesoMb ? Number(item.pesoMb) : null
+      })),
+    videoUrl:
+      publicacion.multimedia.find(
+        (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_VIDEO
+      )?.url ?? null,
     detalles: {
       habitaciones: publicacion.inmueble.nroCuartos ?? null,
       banos: publicacion.inmueble.nroBanos ?? null,
@@ -478,6 +495,7 @@ export const obtenerDetallePublicacionPorInmuebleService = async (inmuebleId: nu
     }
   }
 }
+
 export const confirmarPublicacionService = async (
   publicacionId: number,
   usuarioSolicitanteId: number
@@ -515,5 +533,166 @@ export const confirmarPublicacionService = async (
     estado: publicacionConfirmada.estado,
     fechaPublicacion: publicacionConfirmada.fechaPublicacion,
     multimediaTotal: publicacionConfirmada.multimedia.length
+  }
+}
+
+type EditarMultimediaInput = {
+  imagenesAEliminar?: unknown
+  videoUrl?: unknown
+}
+
+const esVideoPermitido = (url: string) => {
+  const valor = url.trim()
+
+  if (!valor) return true
+
+  return (
+    valor.includes('youtube.com') ||
+    valor.includes('youtu.be') ||
+    valor.includes('vimeo.com')
+  )
+}
+
+const parseImagenesAEliminar = (valor: unknown): number[] => {
+  if (!valor) return []
+
+  if (Array.isArray(valor)) {
+    return valor
+      .map((item) => Number(item))
+      .filter((item) => !Number.isNaN(item) && item > 0)
+  }
+
+  if (typeof valor === 'string') {
+    try {
+      const parsed = JSON.parse(valor)
+
+      if (Array.isArray(parsed)) {
+        return parsed
+          .map((item) => Number(item))
+          .filter((item) => !Number.isNaN(item) && item > 0)
+      }
+    } catch {
+      const numero = Number(valor)
+      return !Number.isNaN(numero) && numero > 0 ? [numero] : []
+    }
+  }
+
+  return []
+}
+
+const subirImagenACloudinary = async (
+  file: Express.Multer.File
+): Promise<string> => {
+  const base64 = file.buffer.toString('base64')
+  const dataUri = `data:${file.mimetype};base64,${base64}`
+
+  const resultado = await cloudinary.uploader.upload(dataUri, {
+    folder: 'propbol/publicaciones',
+    resource_type: 'image'
+  })
+
+  return resultado.secure_url
+}
+
+export const editarMultimediaPublicacionService = async (
+  publicacionId: number,
+  usuarioSolicitanteId: number,
+  data: EditarMultimediaInput,
+  archivos: Express.Multer.File[]
+) => {
+  if (Number.isNaN(publicacionId) || publicacionId <= 0) {
+    throw new Error('ID_INVALIDO')
+  }
+
+  if (Number.isNaN(usuarioSolicitanteId) || usuarioSolicitanteId <= 0) {
+    throw new Error('USUARIO_INVALIDO')
+  }
+
+  const publicacion = await buscarPublicacionPorIdRepository(publicacionId)
+
+  if (!publicacion) {
+    throw new Error('PUBLICACION_NO_EXISTE')
+  }
+
+  if (publicacion.usuarioId !== usuarioSolicitanteId) {
+    throw new Error('NO_AUTORIZADO')
+  }
+
+  if (publicacion.estado === ESTADO_PUBLICACION_ELIMINADA) {
+    throw new Error('PUBLICACION_YA_ELIMINADA')
+  }
+
+  const imagenesAEliminar = parseImagenesAEliminar(data.imagenesAEliminar)
+  const videoUrl = normalizarTexto(data.videoUrl)
+
+  if (!esVideoPermitido(videoUrl)) {
+    throw new Error('VIDEO_INVALIDO')
+  }
+
+  const imagenesActuales = publicacion.multimedia.filter(
+    (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN
+  )
+
+  const totalImagenesDespues =
+    imagenesActuales.length - imagenesAEliminar.length + archivos.length
+
+  if (totalImagenesDespues <= 0) {
+    throw new Error('MINIMO_UNA_IMAGEN')
+  }
+
+  if (totalImagenesDespues > 10) {
+    throw new Error('LIMITE_IMAGENES')
+  }
+
+  await eliminarMultimediaPorIdsRepository(publicacionId, imagenesAEliminar)
+
+  const nuevasImagenes = await Promise.all(
+    archivos.map(async (file) => {
+      const url = await subirImagenACloudinary(file)
+
+      return {
+        url,
+        tipo: 'IMAGEN' as const,
+        pesoMb: Number((file.size / 1024 / 1024).toFixed(2)),
+        publicacionId
+      }
+    })
+  )
+
+  await crearMultimediaRepository(nuevasImagenes)
+
+  await eliminarVideosDePublicacionRepository(publicacionId)
+
+  if (videoUrl) {
+    await crearMultimediaRepository([
+      {
+        url: videoUrl,
+        tipo: 'VIDEO',
+        pesoMb: null,
+        publicacionId
+      }
+    ])
+  }
+
+  const multimediaActualizada =
+    await buscarMultimediaPublicacionRepository(publicacionId)
+
+  const imagenes = multimediaActualizada.filter(
+    (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN
+  )
+
+  const videos = multimediaActualizada.filter(
+    (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_VIDEO
+  )
+
+  return {
+    id: publicacionId,
+    imagenes: imagenes.map((item) => ({
+      id: item.id,
+      url: item.url,
+      tipo: item.tipo,
+      pesoMb: item.pesoMb ? Number(item.pesoMb) : null
+    })),
+    videoUrl: videos[0]?.url ?? null
   }
 }

@@ -506,14 +506,20 @@ export default function EditarPublicacionPage() {
         </div>
       </form>
 
-      {detallePublicacion && (
-        <EditarMultimediaModal
-          open={mostrarModalMultimedia}
-          imagenesActuales={detallePublicacion.imagenes ?? []}
-          videoActual={detallePublicacion.videoUrl}
-          onClose={() => setMostrarModalMultimedia(false)}
-        />
-      )}
-    </div>
+    {detallePublicacion && (
+  <EditarMultimediaModal
+    open={mostrarModalMultimedia}
+    publicacionId={publicacionId}
+    imagenesActuales={detallePublicacion.imagenes ?? []}
+    videoActual={detallePublicacion.videoUrl}
+    onClose={() => setMostrarModalMultimedia(false)}
+    onSaved={async () => {
+      const detalleActualizado = await obtenerDetallePublicacion(publicacionId)
+      setDetallePublicacion(detalleActualizado)
+      router.refresh()
+    }}
+  />
+)} 
+ </div>
   )
 }

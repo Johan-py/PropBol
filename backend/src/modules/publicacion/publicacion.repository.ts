@@ -377,6 +377,7 @@ export const buscarDetallePublicacionPorInmuebleIdRepository = async (inmuebleId
     }
   })
 }
+
 export const confirmarPublicacionRepository = async (publicacionId: number) => {
   return prisma.publicacion.update({
     where: { id: publicacionId },
@@ -390,6 +391,63 @@ export const confirmarPublicacionRepository = async (publicacionId: number) => {
           ubicacion: true
         }
       }
+    }
+  })
+}
+
+type NuevaMultimediaInput = {
+  url: string
+  tipo: 'IMAGEN' | 'VIDEO'
+  pesoMb?: number | null
+  publicacionId: number
+}
+
+export const eliminarMultimediaPorIdsRepository = async (
+  publicacionId: number,
+  multimediaIds: number[]
+) => {
+  if (multimediaIds.length === 0) return { count: 0 }
+
+  return prisma.multimedia.deleteMany({
+    where: {
+      id: {
+        in: multimediaIds
+      },
+      publicacionId
+    }
+  })
+}
+
+export const eliminarVideosDePublicacionRepository = async (
+  publicacionId: number
+) => {
+  return prisma.multimedia.deleteMany({
+    where: {
+      publicacionId,
+      tipo: 'VIDEO'
+    }
+  })
+}
+
+export const crearMultimediaRepository = async (
+  data: NuevaMultimediaInput[]
+) => {
+  if (data.length === 0) return { count: 0 }
+
+  return prisma.multimedia.createMany({
+    data
+  })
+}
+
+export const buscarMultimediaPublicacionRepository = async (
+  publicacionId: number
+) => {
+  return prisma.multimedia.findMany({
+    where: {
+      publicacionId
+    },
+    orderBy: {
+      id: 'asc'
     }
   })
 }
