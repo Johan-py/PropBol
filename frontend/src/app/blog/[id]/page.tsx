@@ -80,7 +80,7 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
               <MarkdownRenderer content={articleContent} />
             </div>
 
-            <BlogSharePlaceholder />
+            <BlogSharePlaceholder title={title} />
 
             <BlogCommentsSection blogId={params.id} />
 
