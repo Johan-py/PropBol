@@ -64,6 +64,7 @@ import {
 
 import {
   startLinkedInLoginController,
+  startLinkedInRegisterController,
   linkedInCallbackController,
   getLinkedInLinkUrlController,
 } from "./modules/auth/linkedin/linkedin.controller.js";

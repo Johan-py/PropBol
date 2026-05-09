@@ -3,6 +3,7 @@ import { env } from "../../../config/env.js";
 import {
   linkLinkedInToCurrentUserByCodeService,
   loginWithLinkedInCodeService,
+  registerWithLinkedInCodeService,
 } from "./linkedin.service.js";
 import { LinkedInAuthError, type LinkedInStatePayload } from "./linkedin.types.js";
 
@@ -11,7 +12,7 @@ const encodeState = (value: LinkedInStatePayload) =>
 
 const decodeState = (raw: string | undefined): LinkedInStatePayload | null => {
   if (!raw?.trim()) return null;
-  if (raw === "login") return { mode: "login" };
+  if (raw === "login" || raw === "register") return { mode: raw };
 
   try {
     const parsed = JSON.parse(
@@ -26,11 +27,11 @@ const decodeState = (raw: string | undefined): LinkedInStatePayload | null => {
   }
 };
 
-const buildLinkedInAuthUrl = (mode: "login" | "link", sessionToken?: string) => {
+const buildLinkedInAuthUrl = (mode: "login" | "register" | "link", sessionToken?: string) => {
   const state =
     mode === "link"
       ? encodeState({ mode: "link", sessionToken: sessionToken ?? "" })
-      : "login";
+      : mode;
 
   return (
     "https://www.linkedin.com/oauth/v2/authorization?" +
@@ -84,6 +85,13 @@ const sendPopupResponse = (
 
 export const startLinkedInLoginController = (_req: Request, res: Response) => {
   return res.redirect(buildLinkedInAuthUrl("login"));
+};
+
+export const startLinkedInRegisterController = (
+  _req: Request,
+  res: Response,
+) => {
+  return res.redirect(buildLinkedInAuthUrl("register"));
 };
 
 export const getLinkedInLinkUrlController = (req: Request, res: Response) => {
@@ -157,7 +165,12 @@ export const linkedInCallbackController = async (req: Request, res: Response) =>
       });
     }
 
-    const result = await loginWithLinkedInCodeService(code);
+    const mode = state?.mode === "register" ? "register" : "login";
+
+    const result =
+      mode === "register"
+        ? await registerWithLinkedInCodeService(code)
+        : await loginWithLinkedInCodeService(code);
 
     return sendPopupResponse(res, {
       type: "propbol:linkedin-login-success",

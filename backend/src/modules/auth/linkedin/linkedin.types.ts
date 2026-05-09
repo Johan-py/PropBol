@@ -11,7 +11,7 @@ export class LinkedInAuthError extends Error {
 }
 
 export type LinkedInStatePayload = {
-  mode: "login" | "link";
+  mode: "login" | "register" | "link";
   sessionToken?: string;
 };
 
