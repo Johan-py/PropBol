@@ -6,6 +6,13 @@ import { getTestimonios, toggleLikeTestimonio, type Testimonio } from '@/service
 
 const CIUDADES = ['Todos', 'La Paz', 'Santa Cruz', 'Cochabamba', 'Sucre', 'Tarija', 'Potosí', 'Oruro', 'Beni', 'Pando']
 
+// Cuántas tarjetas mostrar según el ancho de pantalla
+const getVisibleCount = () => {
+  if (typeof window === 'undefined') return 1
+  if (window.innerWidth >= 768) return 2
+  return 1
+}
+
 export default function TestimoniosSection() {
   const [ciudadActiva, setCiudadActiva] = useState('Todos')
   const [testimonios, setTestimonios] = useState<Testimonio[]>([])
@@ -13,6 +20,7 @@ export default function TestimoniosSection() {
   const [loading, setLoading] = useState(true)
   const [likingId, setLikingId] = useState<number | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [visibleCount, setVisibleCount] = useState(1)
 
   // Sincronizar estado de sesión con localStorage
   useEffect(() => {
@@ -24,6 +32,14 @@ export default function TestimoniosSection() {
       window.removeEventListener('propbol:login', checkSession)
       window.removeEventListener('propbol:session-changed', checkSession)
     }
+  }, [])
+
+  // Detectar breakpoint al montar y en resize
+  useEffect(() => {
+    const update = () => setVisibleCount(getVisibleCount())
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
   }, [])
 
   const cargarTestimonios = useCallback(async (ciudad: string) => {
@@ -40,32 +56,39 @@ export default function TestimoniosSection() {
 
   // Autoplay — avanza cada 5 segundos
   useEffect(() => {
-    if (testimonios.length <= 1) return
+    if (testimonios.length <= visibleCount) return
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev === testimonios.length - 1 ? 0 : prev + 1))
+      setCurrentIndex((prev) => {
+        const maxIndex = testimonios.length - visibleCount
+        return prev >= maxIndex ? 0 : prev + 1
+      })
     }, 5000)
     return () => clearInterval(interval)
-  }, [testimonios.length])
+  }, [testimonios.length, visibleCount])
 
   const handleCiudad = (ciudad: string) => {
     setCiudadActiva(ciudad)
   }
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev === 0 ? testimonios.length - 1 : prev - 1))
+    setCurrentIndex((prev) => {
+      const maxIndex = testimonios.length - visibleCount
+      return prev === 0 ? maxIndex : prev - 1
+    })
   }
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev === testimonios.length - 1 ? 0 : prev + 1))
+    setCurrentIndex((prev) => {
+      const maxIndex = testimonios.length - visibleCount
+      return prev >= maxIndex ? 0 : prev + 1
+    })
   }
 
   const handleLike = async (testimonio: Testimonio) => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
     if (!token) return
-
     if (likingId === testimonio.id) return
     setLikingId(testimonio.id)
-
     try {
       const result = await toggleLikeTestimonio(testimonio.id)
       setTestimonios((prev) =>
@@ -82,11 +105,14 @@ export default function TestimoniosSection() {
     }
   }
 
-  const testimonio = testimonios[currentIndex]
+  // Tarjetas visibles en este momento
+  const visibleTestimonios = testimonios.slice(currentIndex, currentIndex + visibleCount)
+  const maxIndex = Math.max(0, testimonios.length - visibleCount)
+  const totalDots = maxIndex + 1
 
   return (
     <section className="bg-white py-12 md:py-16 w-full">
-      <div className="max-w-[900px] mx-auto px-4">
+      <div className="max-w-[1100px] mx-auto px-4">
 
         {/* Título */}
         <div className="text-center mb-8">
@@ -131,66 +157,29 @@ export default function TestimoniosSection() {
               {/* Flecha izquierda */}
               <button
                 onClick={handlePrev}
-                disabled={testimonios.length <= 1}
+                disabled={testimonios.length <= visibleCount}
                 className="shrink-0 w-9 h-9 flex items-center justify-center rounded-full border border-stone-200 text-stone-400 hover:text-amber-600 hover:border-amber-400 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
 
-              {/* Tarjeta */}
-              <div className="flex-1 rounded-2xl border border-stone-100 shadow-md p-6 md:p-8 bg-white min-h-[180px]">
-                {/* Texto testimonio */}
-                <p className="text-stone-600 italic text-center text-sm md:text-base leading-relaxed mb-6">
-                  "{testimonio.comentario}"
-                </p>
-
-                {/* Footer tarjeta */}
-                <div className="flex items-center justify-between gap-4">
-                  {/* Avatar + info */}
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-amber-600 flex items-center justify-center shrink-0">
-                      <span className="text-white text-sm font-bold">
-                        {testimonio.usuario.iniciales}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-stone-800 leading-tight">
-                        {testimonio.usuario.nombre} {testimonio.usuario.apellido}
-                      </p>
-                      {(testimonio.ciudad || testimonio.zona) && (
-                        <p className="text-xs text-stone-400">
-                          {[testimonio.ciudad, testimonio.zona].filter(Boolean).join(' – ')}
-                        </p>
-                      )}
-                      {testimonio.categoria && (
-                        <span className="inline-block mt-1 text-[10px] font-semibold tracking-wide text-stone-500 border border-stone-200 rounded px-2 py-0.5 uppercase">
-                          {testimonio.categoria}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Like */}
-                  <button
-                    onClick={() => handleLike(testimonio)}
-                    disabled={!isLoggedIn || likingId === testimonio.id}
-                    title={!isLoggedIn ? 'Inicia sesión para dar like' : ''}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm font-medium transition-all ${
-                      testimonio.meGusta
-                        ? 'bg-amber-50 border-amber-400 text-amber-600'
-                        : 'border-stone-200 text-stone-400 hover:border-amber-400 hover:text-amber-600'
-                    } ${!isLoggedIn ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
-                  >
-                    <ThumbsUp className={`w-4 h-4 ${testimonio.meGusta ? 'fill-amber-500 text-amber-500' : ''}`} />
-                    <span>{testimonio.totalLikes}</span>
-                  </button>
-                </div>
+              {/* Tarjetas visibles */}
+              <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+                {visibleTestimonios.map((t) => (
+                  <TarjetaTestimonio
+                    key={t.id}
+                    testimonio={t}
+                    isLoggedIn={isLoggedIn}
+                    likingId={likingId}
+                    onLike={handleLike}
+                  />
+                ))}
               </div>
 
               {/* Flecha derecha */}
               <button
                 onClick={handleNext}
-                disabled={testimonios.length <= 1}
+                disabled={testimonios.length <= visibleCount}
                 className="shrink-0 w-9 h-9 flex items-center justify-center rounded-full border border-stone-200 text-stone-400 hover:text-amber-600 hover:border-amber-400 transition-all disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <ChevronRight className="w-5 h-5" />
@@ -198,9 +187,9 @@ export default function TestimoniosSection() {
             </div>
 
             {/* Dots */}
-            {testimonios.length > 1 && (
+            {totalDots > 1 && (
               <div className="flex justify-center gap-2 mt-6">
-                {testimonios.map((_, i) => (
+                {Array.from({ length: totalDots }).map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setCurrentIndex(i)}
@@ -217,5 +206,70 @@ export default function TestimoniosSection() {
         )}
       </div>
     </section>
+  )
+}
+
+// ─── Subcomponente tarjeta ───────────────────────────────────────────────────
+
+function TarjetaTestimonio({
+  testimonio,
+  isLoggedIn,
+  likingId,
+  onLike,
+}: {
+  testimonio: Testimonio
+  isLoggedIn: boolean
+  likingId: number | null
+  onLike: (t: Testimonio) => void
+}) {
+  return (
+    <div className="rounded-2xl border border-stone-100 shadow-md p-6 bg-white flex flex-col justify-between min-h-[200px]">
+      {/* Texto testimonio */}
+      <p className="text-stone-600 italic text-center text-sm leading-relaxed mb-6">
+        "{testimonio.comentario}"
+      </p>
+
+      {/* Footer tarjeta */}
+      <div className="flex items-center justify-between gap-4">
+        {/* Avatar + info */}
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-amber-600 flex items-center justify-center shrink-0">
+            <span className="text-white text-sm font-bold">
+              {testimonio.usuario.iniciales}
+            </span>
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-stone-800 leading-tight">
+              {testimonio.usuario.nombre} {testimonio.usuario.apellido}
+            </p>
+            {(testimonio.ciudad || testimonio.zona) && (
+              <p className="text-xs text-stone-400">
+                {[testimonio.ciudad, testimonio.zona].filter(Boolean).join(' – ')}
+              </p>
+            )}
+            {testimonio.categoria && (
+              <span className="inline-block mt-1 text-[10px] font-semibold tracking-wide text-stone-500 border border-stone-200 rounded px-2 py-0.5 uppercase">
+                {testimonio.categoria}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Like */}
+        <button
+          onClick={() => onLike(testimonio)}
+          disabled={!isLoggedIn || likingId === testimonio.id}
+          title={!isLoggedIn ? 'Inicia sesión para dar like' : ''}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm font-medium transition-all shrink-0 ${
+            testimonio.meGusta
+              ? 'bg-amber-50 border-amber-400 text-amber-600'
+              : 'border-stone-200 text-stone-400 hover:border-amber-400 hover:text-amber-600'
+          } ${!isLoggedIn ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+        >
+          <ThumbsUp className={`w-4 h-4 ${testimonio.meGusta ? 'fill-amber-500 text-amber-500' : ''}`} />
+          <span>{testimonio.totalLikes}</span>
+        </button>
+      </div>
+    </div>
   )
 }
