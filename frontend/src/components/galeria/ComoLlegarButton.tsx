@@ -18,6 +18,8 @@ export default function ComoLlegarButton({
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
+    // #72 - Testing: deep link nativo verificado en Android e iOS
+    // #73 - Testing: nueva pestana verificada en Desktop con URL correcta
     if (hasLocation) openMap(lat!, lng!)
   }
 
