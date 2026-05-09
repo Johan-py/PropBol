@@ -120,6 +120,7 @@ const DEACTIVATED_ACCOUNT_MESSAGE = "Esta cuenta está desactivada";
 const ACTIVATION_CONNECTION_ERROR_MESSAGE =
   "Ocurrió un problema de conexión. Por favor, inténtelo de nuevo más tarde";
 const ACTIVATION_REQUEST_TIMEOUT_MS = 10000;
+const ACTIVATION_CODE_LENGTH = 6;
 
 const clearClientSession = () => {
   localStorage.removeItem("token");
@@ -776,6 +777,11 @@ export default function LoginForm() {
 
     if (!trimmedCode) {
       setActivationError("El código es obligatorio");
+      return;
+    }
+
+    if (!/^\d{6}$/.test(trimmedCode)) {
+      setActivationError("El código debe tener exactamente 6 dígitos numéricos");
       return;
     }
 
@@ -1473,8 +1479,16 @@ export default function LoginForm() {
 
                 <input
                   type="text"
+                  inputMode="numeric"
+                  maxLength={ACTIVATION_CODE_LENGTH}
                   value={activationCode}
-                  onChange={(e) => setActivationCode(e.target.value)}
+                  onChange={(e) => {
+                    const onlyNumbers = e.target.value
+                      .replace(/\D/g, "")
+                      .slice(0, ACTIVATION_CODE_LENGTH);
+
+                    setActivationCode(onlyNumbers);
+                  }}
                   onKeyDown={(event) => {
                     if (event.key !== "Enter") {
                       return;
@@ -1482,7 +1496,10 @@ export default function LoginForm() {
 
                     event.preventDefault();
 
-                    if (!isActivating && activationCode.trim()) {
+                    if (
+                      !isActivating &&
+                      activationCode.length === ACTIVATION_CODE_LENGTH
+                    ) {
                       handleActivateByCode();
                     }
                   }}

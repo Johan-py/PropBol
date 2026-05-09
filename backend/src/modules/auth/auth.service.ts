@@ -1142,6 +1142,13 @@ export const activateAccountByCodeService = async (
     throw new AuthError("Correo y código son obligatorios", 400);
   }
 
+  if (!/^\d{6}$/.test(normalizedCode)) {
+    throw new AuthError(
+      "El código debe tener exactamente 6 dígitos numéricos",
+      400,
+    );
+  }
+
   const user = await findUserByCorreo(normalizedCorreo);
 
   if (!user) {
