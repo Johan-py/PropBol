@@ -1,7 +1,7 @@
 // frontend/src/components/filters/OfertaSidebar.tsx
 'use client'
 
-import { X } from 'lucide-react'
+import { X, Flame, TrendingDown, Sparkles, Target, Gavel } from 'lucide-react'
 import { useState } from 'react'
 
 interface OfertaSidebarProps {
@@ -9,16 +9,35 @@ interface OfertaSidebarProps {
   onClose: () => void
 }
 
+type EtiquetaOferta = 'urgente' | 'negociable' | 'nueva' | 'oportunidad' | 'remate'
+
+const ETIQUETAS: { id: EtiquetaOferta; label: string; icon: React.ElementType }[] = [
+  { id: 'urgente', label: 'Urgente', icon: Flame },
+  { id: 'negociable', label: 'Negociable', icon: TrendingDown },
+  { id: 'nueva', label: 'Nueva', icon: Sparkles },
+  { id: 'oportunidad', label: 'Oportunidad', icon: Target },
+  { id: 'remate', label: 'Remate', icon: Gavel }
+]
+
 export function OfertaSidebar({ isOpen, onClose }: OfertaSidebarProps) {
   const [soloOfertas, setSoloOfertas] = useState(true)
+  const [etiquetasSeleccionadas, setEtiquetasSeleccionadas] = useState<EtiquetaOferta[]>([])
+
+  const toggleEtiqueta = (id: EtiquetaOferta) => {
+    setEtiquetasSeleccionadas(prev =>
+      prev.includes(id)
+        ? prev.filter(e => e !== id)
+        : [...prev, id]
+    )
+  }
 
   if (!isOpen) return null
 
   return (
     <div className="flex flex-col h-full min-h-0 bg-white">
-      {/* Header - SIN borde abajo */}
+      {/* Header */}
       <div className="p-4 relative flex items-center justify-center shrink-0">
-        <h3 className="font-bold text-sm text-black uppercase tracking-wide text-center">
+        <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide text-center pb-0">
           OFERTAS
         </h3>
         <button
@@ -30,11 +49,11 @@ export function OfertaSidebar({ isOpen, onClose }: OfertaSidebarProps) {
       </div>
 
       {/* Contenido */}
-      <div className="flex-1 overflow-y-auto px-5 pt-1 space-y-5">
+      <div className="flex-1 overflow-y-auto px-5 pt-2 space-y-5">
         
         {/* Checkbox: Solo propiedades con precio reducido */}
         <div>
-          <label className="flex items-center gap-4 text-sm text-stone-750 font-normal cursor-pointer ">
+          <label className="flex items-center gap-3 text-sm text-stone-800 font-normal cursor-pointer">
             <div className="relative inline-flex shadow-sm">
               <input
                 type="checkbox"
@@ -66,31 +85,58 @@ export function OfertaSidebar({ isOpen, onClose }: OfertaSidebarProps) {
           </label>
         </div>
 
-        <div>
-        <h3 className= "font-bold text-xs text-black uppercase tracking-wide">
-          Etiquetas de Ofertas
-        </h3>
-      </div>
+        {/* Etiquetas de oferta - COMO BOTONES MÁS GRANDES Y CENTRADOS */}
+        <div className="space-y-4">
+          <p className="text-xs font-bold text-gray-900 uppercase tracking-wide">
+            Etiquetas de oferta
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            {ETIQUETAS.map(({ id, label, icon: Icon }) => {
+              const isSelected = etiquetasSeleccionadas.includes(id)
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => toggleEtiqueta(id)}
+                  className={`
+                    flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium tracking-wid transition-all
+                    ${isSelected
+                      ? 'bg-[#d97706] text-white'
+                      : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+                    }
+                  `}
+                >
+                  <Icon className={`w-4 h-4 ${isSelected ? 'text-white' : 'text-stone-700'}`} />
+                  <span>{label}</span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
 
       </div>
 
-      
-
-      {/* Botones */}
-      <div className="p-4 border-t border-stone-100 shrink-0 flex gap-3">
+      {/* Botones - Estilo CapacidadSidebar */}
+      <div className="shrink-0 px-4 pb-4 pt-2 bg-white border-t border-stone-100 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
         <button
-          onClick={() => setSoloOfertas(false)}
-          className="flex-1 py-2.5 text-gray-500 text-sm underline underline-offset-4 hover:text-gray-700 transition-colors"
+          onClick={() => {
+            setSoloOfertas(true)
+            setEtiquetasSeleccionadas([])
+          }}
+          className="w-full mb-3 text-gray-700 text-xs underline underline-offset-4 hover:text-gray-900 transition-colors"
         >
-          Limpiar filtro
+          Limpiar Filtros
         </button>
         <button
           onClick={() => {
-            console.log('Aplicar filtro:', soloOfertas)
+            console.log('Aplicar filtro:', {
+              soloOfertas,
+              etiquetas: etiquetasSeleccionadas
+            })
           }}
-          className="flex-1 py-2.5 text-white bg-[#d97706] rounded-lg hover:bg-[#b95e00] transition-colors font-medium"
+          className="w-full py-2.5 text-white bg-[#d97706] rounded-lg hover:bg-[#b95e00] transition-colors font-medium shadow-md active:scale-95"
         >
-          Aplicar filtro
+          Aplicar
         </button>
       </div>
     </div>
