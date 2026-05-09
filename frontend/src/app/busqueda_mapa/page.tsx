@@ -782,6 +782,8 @@ function BusquedaMapaContent() {
                   ubicacionTexto={property.ubicacionTexto}
                   categoriaTexto={property.categoriaTexto}
                   accionTexto={property.accionTexto}
+                  lat={property.lat}
+                  lng={property.lng}
                   camas={property.nroCuartos ?? 0}
                   banos={property.nroBanos ?? 0}
                   metros={property.superficieM2 ?? 0}
@@ -798,6 +800,8 @@ function BusquedaMapaContent() {
                   ubicacionTexto={property.ubicacionTexto}
                   categoriaTexto={property.categoriaTexto}
                   accionTexto={property.accionTexto}
+                  lat={property.lat}
+                  lng={property.lng}
                   contactType="whatsapp"
                   image={
                     property.thumbnailUrl ||
@@ -1432,7 +1436,9 @@ function BusquedaMapaContent() {
                           ubicacionTexto={property.ubicacionTexto}
                           categoriaTexto={property.categoriaTexto}
                           accionTexto={property.accionTexto}
-                          camas={property.nroCuartos ?? 0}
+                          lat={property.lat}
+                  lng={property.lng}
+                  camas={property.nroCuartos ?? 0}
                           banos={property.nroBanos ?? 0}
                           metros={property.superficieM2 ?? 0}
                           onViewDetails={() => {
@@ -1447,7 +1453,9 @@ function BusquedaMapaContent() {
                           ubicacionTexto={property.ubicacionTexto}
                           categoriaTexto={property.categoriaTexto}
                           accionTexto={property.accionTexto}
-                          contactType="whatsapp"
+                          lat={property.lat}
+                  lng={property.lng}
+                  contactType="whatsapp"
                           image={
                             property.thumbnailUrl ||
                             property.imagen ||
