@@ -142,6 +142,11 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
         setSuggestions([])
         return
       }
+    // NUEVA LÓGICA DE LOADER (AC: 1000ms)
+    // Iniciamos un temporizador. El loader solo será 'true' si pasan 1000ms.
+    const loaderTimer = setTimeout(() => {
+      setIsLoading(true);
+    }, 1000);
       setIsLoading(true)
       try {
         const resLocal = await fetch(`${API_BASE}/api/locations/search?q=${encodeURIComponent(debouncedValue)}`)
@@ -182,7 +187,11 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
         const mapboxResults = dataMapbox.features || []
         setSuggestions([...localResults, ...osmResults, ...mapboxResults])
       } catch (e) { console.error(e) }
-      finally { setIsLoading(false) }
+      finally {
+        // Si el servidor respondió en menos de 1000ms, esto cancela el temporizador y el loader NUNCA se muestra.
+        clearTimeout(loaderTimer); 
+        setIsLoading(false);
+      }
     }
     searchAll()
   }, [debouncedValue, API_BASE, MAPBOX_TOKEN])
