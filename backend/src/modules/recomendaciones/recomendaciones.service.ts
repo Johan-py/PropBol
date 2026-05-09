@@ -25,7 +25,7 @@ export class RecomendacionesService {
     }))
   }
 
-  async getRecomendacionesGlobales(params: RecomendacionesParams): Promise<InmuebleConScore[]> {
+  async getRecomendacionesGlobales(params: RecomendacionesParams & {ia?: boolean}): Promise<InmuebleConScore[]> {
     const { usuarioId, limit = 20, excludeIds = [], zonaForzada } = params
     if (!usuarioId) {
     const zonaAEvaluar = zonaForzada || 'Cochabamba'
