@@ -90,7 +90,7 @@ export const propertiesRepository = {
     // 3. Filtro de Ubicación (EL CEREBRO JERÁRQUICO)
     if (filtros.lat && filtros.lng) {
       // Búsqueda geoespacial por latitud/longitud con un radio (en km)
-    } else if (filtros.query && filtros.query.trim() !== "") {
+    } else if (filtros.query && filtros.query.trim().length >= 3) { // NUEVO: Refuerzo de >= 3 caracteres
       // Fallback original: Búsqueda estricta por texto
       const texto = filtros.query.trim();
 
@@ -395,4 +395,28 @@ export const propertiesRepository = {
 
     return resultados;
   },
+  // NUEVO MÉTODO PARA EL COMPARADOR
+  async getByIds(ids: number[]) {
+    const inmuebles = await prisma.inmueble.findMany({
+      where: {
+        id: { in: ids },
+        estado: "ACTIVO",
+      },
+      // Incluimos exactamente lo necesario para la matriz comparativa
+      include: {
+        publicaciones: {
+          where: { estado: "ACTIVA" },
+          include: { multimedia: true },
+        },
+        inmueble_etiqueta: {
+          include: { etiqueta: true },
+        },
+        inmueble_amenidad: {
+          include: { amenidad: true }
+        }
+      },
+    });
+
+    return inmuebles;
+  }
 };
