@@ -7,6 +7,7 @@ import {
   findUserByFacebookEmail,
   findUserByFacebookId,
   linkFacebookToUser,
+  updateFacebookLastUsage,
 } from "./facebook.repository.js";
 import {
   FacebookAuthError,
@@ -215,6 +216,8 @@ const authenticateWithFacebook = async (
   }
 
   if (userByFacebookId) {
+    await updateFacebookLastUsage(userByFacebookId.id, facebookId);
+
     return await buildFacebookSessionResponse(
       userByFacebookId,
       "Inicio de sesión con Facebook exitoso",
