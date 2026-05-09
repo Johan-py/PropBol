@@ -143,6 +143,7 @@ function BusquedaMapaContent() {
   const [showPersonalizadas, setShowPersonalizadas] = useState(true)
   const router = useRouter();
   const searchParams = useSearchParams();
+  const isRecomendadosActive = searchParams.get('orden') === 'recomendados'
   const filterResetKey = searchParams.toString();
   const minSuperficie = searchParams.get('minSuperficie')
   const maxSuperficie = searchParams.get('maxSuperficie')
@@ -967,6 +968,7 @@ function BusquedaMapaContent() {
           </div>
         </div>
         <div className="flex-1 relative overflow-hidden">
+          {/* Mapa de fondo */}
           <div className="absolute inset-0">
             <MapView
               properties={inmueblesOrdenados}
@@ -1030,6 +1032,8 @@ function BusquedaMapaContent() {
               <ChevronUp size={16} className="text-stone-400" />
             </button>
           )}
+
+          {/* Bottom sheet de propiedades */}
           {sheetState !== 'hidden' && (
             <div
               className="absolute left-0 right-0 bottom-0 z-[30] bg-white rounded-t-2xl shadow-[0_-4px_24px_rgba(0,0,0,0.12)] flex flex-col"
@@ -1045,7 +1049,7 @@ function BusquedaMapaContent() {
                 style={{ zIndex: 10, position: 'relative' }}
               >
                 <div
-                  className="w-10 h-1.5 bg-stone-300 hover:bg-orange-400 rounded-full mb-3 transition-colors"
+                  className="w-10 h-1.5 bg-stone-300 hover:bg-orange-400 rounded-full mb-3 transition-colors mx-auto mt-3"
                   onClick={() => setSheetState((s) => (s === 'full' ? 'peek' : 'full'))}
                 />
                 <div className="flex items-center justify-between w-full px-4 pb-2">
@@ -1158,6 +1162,48 @@ function BusquedaMapaContent() {
               </div>
             </div>
           )}
+
+          {/* MisZonasSidebar en móvil: bottom sheet propio, sobre todo */}
+          <MisZonasSidebar
+            isMobile
+            isOpen={isMisZonasOpen}
+            onClose={() => setIsMisZonasOpen(false)}
+            isAuthenticated={isAuthenticated}
+            zonas={zonasSidebar}
+            editingZoneId={editingZoneId}
+            editingZoneName={editingZoneName}
+            isSavingEditZone={isSavingEditedZone}
+            onEditingZoneNameChange={setEditingZoneName}
+            onConfirmEditZone={saveEditedZone}
+            onCancelEditZone={cancelEditZone}
+            isDraftZoneVisible={isAuthenticated && isCreatingCustomZone && (currentPolygonPoints.length >= 3 || drawnPolygons.length > 0)}
+            draftZoneName={newZoneName}
+            isSavingDraftZone={isSavingNewZone}
+            onDraftZoneNameChange={setNewZoneName}
+            onConfirmDraftZone={saveDraftZone}
+            onCancelDraftZone={cancelDraftZone}
+            onAddZone={() => {
+              setIsMisZonasOpen(false)
+              resetEditingZone()
+              setNewZoneName('Nueva zona')
+              setIsCreatingCustomZone(true)
+              setIsDrawingMode(true)
+              setCurrentPolygonPoints([])
+              setDrawnPolygons([])
+            }}
+            onEditZone={startEditZone}
+            onDeleteZone={deleteZone}
+            onZoneSelect={(id) => {
+              const zoneId = Number(id)
+              if (Number.isNaN(zoneId)) return
+              setSelectedZoneId(-zoneId)
+              setIsMisZonasOpen(false)
+            }}
+            showPredefinidas={showPredefinidas}
+            onShowPredefinidas={setShowPredefinidas}
+            showPersonalizadas={showPersonalizadas}
+            onShowPersonalizadas={setShowPersonalizadas}
+          />
         </div>
       </div>
     )
@@ -1300,6 +1346,8 @@ function BusquedaMapaContent() {
                     <h1 className={`font-semibold text-slate-900 transition-all duration-300 truncate ${isScrolled ? 'text-base' : 'text-xl'}`}>
                       {isClusterView
                         ? `${clusterProperties.length} propiedades en este clúster`
+                        : isRecomendadosActive 
+                        ? 'Recomendados para tí'
                         : 'Resultados de búsqueda'}
                     </h1>
 
@@ -1330,8 +1378,14 @@ function BusquedaMapaContent() {
                         </button>
                       )}
                     </h2>
-                  </div>
-
+                  
+                    {/* Subtítulo adicional solo en modo recomendados */}
+                   {isRecomendadosActive && !isClusterView && (
+                     <p className={`text-gray-500 transition-all duration-300 ${isScrolled ? 'text-[11px]' : 'text-xs'}`}>
+                     Mostrando resultados personalizados según tu actividad reciente
+                    </p>
+                   )}
+                  </div> 
                   {/* Si el usuario bajó, mostramos el botón de cerrar la barra aquí para no perderlo */}
                   {isScrolled && (
                     <button
