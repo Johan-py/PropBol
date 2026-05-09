@@ -580,6 +580,10 @@ export default function LoginForm() {
       if (data.type === "propbol:linkedin-login-success") {
         try {
           await finalizeValidatedSession(data.token, data.user);
+          localStorage.setItem(
+            "welcome_message",
+            `¡Bienvenido, ${data.user.nombre ?? ""}! Has iniciado sesión con LinkedIn.`
+          );
           setSuccessMessage(data.message || "Inicio de sesión con LinkedIn exitoso");
           setGoogleError("");
           setIsLoadingLinkedIn(false);

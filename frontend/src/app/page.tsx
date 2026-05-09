@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic'
 import VisualFiltersSection from '@/components/VisualFilters/VisualFiltersSection'
 import HomeBlogsSection from '@/components/home/HomeBlogsSection'
 import HomeExchangeSection from '@/components/home/HomeExchangeSection'
+import WelcomeToast from '@/components/home/WelcomeToast'
 
 const TourGuiado = dynamic(() => import('@/components/ui/TourGuiado'), { ssr: false })
 
@@ -58,6 +59,7 @@ export default async function Home() {
   });
   return (
     <main className="flex min-h-screen flex-col items-center bg-gray-50">
+      <WelcomeToast />
       <TourGuiado />
 
       {banners.length > 0 ? (
