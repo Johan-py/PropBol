@@ -5,21 +5,20 @@ import { prisma } from '../../lib/prisma.client.js'
 // Cada inmueble se representa como 5 números entre 0 y 1.
 export interface FeatureVector {
   inmuebleId: number
-  vector: number[]  // [precio, superficie, cuartos, banos, categoria]
+  vector: number[] // [precio, superficie, cuartos, banos, categoria]
 }
 
 // Categorías mapeadas a números
 const CATEGORIA_MAP: Record<string, number> = {
-  CASA:              0.2,
-  DEPARTAMENTO:      0.4,
-  CUARTO:            0.6,
-  TERRENO:           0.8,
-  OFICINA:           0.9,
-  TERRENO_MORTUORIO: 1.0,
+  CASA: 0.2,
+  DEPARTAMENTO: 0.4,
+  CUARTO: 0.6,
+  TERRENO: 0.8,
+  OFICINA: 0.9,
+  TERRENO_MORTUORIO: 1.0
 }
 
 export class FeaturesService {
-
   // ── Normalizar un valor entre 0 y 1 ─────────────────────────────────────────
   private normalizar(valor: number, min: number, max: number): number {
     if (max === min) return 0
@@ -36,7 +35,7 @@ export class FeaturesService {
       this.normalizar(Number(inmueble.superficieM2 || 0), stats.minSup, stats.maxSup),
       this.normalizar(Number(inmueble.nroCuartos || 0), 0, 10),
       this.normalizar(Number(inmueble.nroBanos || 0), 0, 5),
-      CATEGORIA_MAP[String(inmueble.categoria || 'CASA').toUpperCase()] ?? 0.2,
+      CATEGORIA_MAP[String(inmueble.categoria || 'CASA').toUpperCase()] ?? 0.2
     ]
   }
 
@@ -56,13 +55,13 @@ export class FeaturesService {
     const stats = await prisma.inmueble.aggregate({
       where: { estado: 'ACTIVO' },
       _min: { precio: true, superficieM2: true },
-      _max: { precio: true, superficieM2: true },
+      _max: { precio: true, superficieM2: true }
     })
     return {
       minPrecio: Number(stats._min.precio || 0),
       maxPrecio: Number(stats._max.precio || 1000000),
-      minSup:    Number(stats._min.superficieM2 || 0),
-      maxSup:    Number(stats._max.superficieM2 || 1000),
+      minSup: Number(stats._min.superficieM2 || 0),
+      maxSup: Number(stats._max.superficieM2 || 1000)
     }
   }
 
@@ -74,7 +73,7 @@ export class FeaturesService {
       where: { usuarioId },
       include: { inmueble: true },
       orderBy: { vistaEn: 'desc' },
-      take: 20,
+      take: 20
     })
 
     // Tomar favoritos
@@ -82,20 +81,20 @@ export class FeaturesService {
       where: { usuarioId },
       include: { inmueble: true },
       orderBy: { agregadoEn: 'desc' },
-      take: 10,
+      take: 10
     })
 
     const inmuebles = [
-      ...favoritos.map(f => ({ ...f.inmueble, peso: 2 })), // favoritos pesan doble
-      ...vistas.map(v => ({ ...v.inmueble, peso: 1 })),
+      ...favoritos.map((f) => ({ ...f.inmueble, peso: 2 })), // favoritos pesan doble
+      ...vistas.map((v) => ({ ...v.inmueble, peso: 1 }))
     ]
 
     if (inmuebles.length === 0) return null
 
     // Calcular vector promedio ponderado
-    const vectores = inmuebles.map(i => ({
+    const vectores = inmuebles.map((i) => ({
       vector: this.construirVector(i, stats),
-      peso: i.peso,
+      peso: i.peso
     }))
 
     const pesoTotal = vectores.reduce((sum, v) => sum + v.peso, 0)
@@ -123,45 +122,43 @@ export class FeaturesService {
 
     const vistasIds = await prisma.propiedad_vista.findMany({
       where: { usuarioId },
-      select: { inmuebleId: true },
+      select: { inmuebleId: true }
     })
-    const idsExcluir = new Set(vistasIds.map(v => v.inmuebleId))
+    const idsExcluir = new Set(vistasIds.map((v) => v.inmuebleId))
 
     const candidatos = await prisma.inmueble.findMany({
       where: {
         estado: 'ACTIVO',
-        id: { notIn: Array.from(idsExcluir) },
+        id: { notIn: Array.from(idsExcluir) }
       },
       include: { ubicacion: true },
-      take: 200, 
+      take: 200
     })
 
     // Calcular similitud de coseno para cada candidato
-    const conScore = candidatos.map(inmueble => {
+    const conScore = candidatos.map((inmueble) => {
       const vectorInmueble = this.construirVector(inmueble, stats)
       const score = this.similitudCoseno(perfilUsuario, vectorInmueble)
       return {
         ...inmueble,
         score: Math.round(score * 100) / 100,
-        razones: this.generarRazones(perfilUsuario, vectorInmueble, inmueble),
+        razones: this.generarRazones(perfilUsuario, vectorInmueble, inmueble)
       }
     })
 
     // Ordenar por score y devolver top N
-    return conScore
-      .sort((a, b) => b.score - a.score)
-      .slice(0, limit)
+    return conScore.sort((a, b) => b.score - a.score).slice(0, limit)
   }
 
   // ── Generar razones legibles del score ─────────────────
   private generarRazones(perfil: number[], vector: number[], inmueble: any): string[] {
     const razones: string[] = []
     const dims = [
-      { nombre: 'Precio',      idx: 0 },
-      { nombre: 'Superficie',  idx: 1 },
+      { nombre: 'Precio', idx: 0 },
+      { nombre: 'Superficie', idx: 1 },
       { nombre: 'Dormitorios', idx: 2 },
-      { nombre: 'Baños',       idx: 3 },
-      { nombre: 'Categoría',   idx: 4 },
+      { nombre: 'Baños', idx: 3 },
+      { nombre: 'Categoría', idx: 4 }
     ]
     for (const dim of dims) {
       const diff = Math.abs(perfil[dim.idx] - vector[dim.idx])
