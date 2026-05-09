@@ -644,6 +644,23 @@ const busquedaModo: BusquedaModo = getBusquedaModo(
     return inmueblesOrdenados.slice(start, start + listPageSize);
   }, [inmueblesOrdenados, listSafePage, listPageSize, listTotal]);
 
+// Limpia clusters y paginación cuando cambia la zona geográfica
+const ubicacionKey = [
+  searchParams.get('departamentoId'),
+  searchParams.get('provinciaId'),
+  searchParams.get('municipioId'),
+  searchParams.get('zonaId'),
+  searchParams.get('barrioId'),
+  searchParams.get('lat'),
+  searchParams.get('lng'),
+].join('|')
+
+useEffect(() => {
+  setIsClusterView(false)
+  setClusterProperties([])
+  setActiveClusterIds([])
+  setListPage(1)
+}, [ubicacionKey])
   useEffect(() => {
     setListPage(1);
   }, [filterResetKey, drawnPolygons]);
