@@ -502,6 +502,7 @@ export const invalidateActiveMagicLinksByUserId = async (usuarioId: number) => {
     WHERE usuario_id = ${usuarioId}
       AND activo = true
       AND usado_en IS NULL
+      AND invalidado_en IS NULL
   `;
 };
 
@@ -572,17 +573,5 @@ export const deactivateMagicLink = async (id: number) => {
     UPDATE magic_link
     SET activo = false
     WHERE id = ${id}
-  `;
-};
-export const invalidateActiveMagicLinksByUserId = async (usuarioId: number) => {
-  return await prisma.$executeRaw`
-    UPDATE magic_link
-    SET
-      activo = false,
-      invalidado_en = NOW()
-    WHERE usuario_id = ${usuarioId}
-      AND activo = true
-      AND usado_en IS NULL
-      AND invalidado_en IS NULL
   `;
 };
