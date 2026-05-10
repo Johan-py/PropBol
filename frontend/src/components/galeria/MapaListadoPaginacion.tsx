@@ -43,8 +43,8 @@ export default function MapaListadoPaginacion({
   const to = disabled ? 0 : Math.min(safePage * pageSize, total);
 
   return (
-    <div className="shrink-0 border-t border-stone-100 bg-stone-50 px-3 py-2 flex flex-col gap-2">
-      <div className="flex flex-wrap items-center justify-between gap-2">
+    <div className="shrink-0 border-t border-stone-100 bg-stone-50 px-3 py-2 flex flex-col items-center gap-2">
+      <div className="flex flex-wrap items-center justify-center gap-3">
         <label className="flex items-center gap-2 text-xs text-stone-600">
           <span className="whitespace-nowrap">Por página</span>
           <select
@@ -112,7 +112,7 @@ export default function MapaListadoPaginacion({
           </div>
         ) : null}
       </div>
-      <p className="text-[11px] text-stone-500 text-center sm:text-left">
+      <p className="text-[11px] text-stone-500 text-center">
         {disabled
           ? "Sin inmuebles en esta búsqueda — la paginación se activará al haber resultados."
           : `Mostrando ${from}–${to} de ${total}`}
@@ -121,8 +121,8 @@ export default function MapaListadoPaginacion({
         <p className="text-[11px] text-stone-400 text-center">No hay más resultados para mostrar.</p>
       )}
       {disabled && hint ? (
-        <p className="text-[11px] text-red-600/90 text-center sm:text-left break-words">{hint}</p>
-      ) : null}
+        <p className="text-[11px] text-red-600/90 text-center break-words">{hint}</p>
+) : null}
     </div>
   );
 }

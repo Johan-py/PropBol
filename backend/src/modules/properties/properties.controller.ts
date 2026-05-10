@@ -32,7 +32,8 @@ export const propertiesController = {
         lng,
         radius,
         amenities, 
-        labels
+        labels,
+        soloOfertas
       } = req.query
 
       let banoCompartido: boolean | undefined = undefined
@@ -41,11 +42,15 @@ export const propertiesController = {
       //HU6
       const parsedAmenities = amenities ? String(amenities).split(',').map(Number).filter(n => !isNaN(n)) : undefined;
       const parsedLabels = labels ? String(labels).split(',').map(Number).filter(n => !isNaN(n)) : undefined;
-
+      // NUEVA CAPA DE SEGURIDAD: Validar longitud del texto
+      let queryValidado = query as string;
+      if (queryValidado && queryValidado.trim().length < 3) {
+        queryValidado = ''; // Ignoramos silenciosamente para no romper los demás filtros
+      }
       const filtros: FiltrosBusqueda = {
         tipoInmueble: tipoInmueble as string | string[],
         modoInmueble: modoInmueble as string | string[],
-        query: query as string,
+        query: queryValidado, // Usamos la variable validada
         locationId: locationId ? Number(locationId) : undefined,
 
         departamentoId: departamentoId as string,
@@ -76,6 +81,7 @@ export const propertiesController = {
         //HU6
         amenities: parsedAmenities,
         labels: parsedLabels,
+        soloOfertas: soloOfertas === 'true'
       }
 
       const orden = {
@@ -95,13 +101,18 @@ export const propertiesController = {
     try {
       // Capturamos lo que envía el usePropertySearch del frontend
       const { locationId, categoria, tipoAccion, search, lat, lng, radius } = req.query
+      // NUEVA CAPA DE SEGURIDAD
+      let searchValidado = search as string;
+      if (searchValidado && searchValidado.trim().length < 3) {
+        searchValidado = ''; 
+      }
 
       const filtros: FiltrosBusqueda = {
         // Mapeamos los nombres del frontend a los que espera el service/repository
         locationId: locationId ? Number(locationId) : undefined,
         tipoInmueble: categoria as string,
         modoInmueble: tipoAccion as string,
-        query: search as string,
+        query: searchValidado, // Usamos la variable validada
         lat: lat ? Number(lat) : undefined,
         lng: lng ? Number(lng) : undefined,
         radius: radius ? Number(radius) : 1
