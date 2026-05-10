@@ -11,6 +11,7 @@ interface RawPropertyItem {
   titulo: string;
   descripcion?: string;
   precio: string | number;
+  precio_anterior?: string | number; 
   categoria?: string;
   currency?: string;
   moneda?: string;
@@ -179,6 +180,8 @@ export function useProperties(): UsePropertiesResult {
                 price: displayPrice,
                 currency: selectedCurrency,
                 precioFormateado: formattedText,
+                precio: Number(item.precio),                               
+                precio_anterior: item.precio_anterior ? Number(item.precio_anterior) : null,
                 type: (item.categoria?.toLowerCase().trim() ||
                   "casa") as PropertyType,
                 title: item.titulo,
@@ -213,7 +216,7 @@ export function useProperties(): UsePropertiesResult {
 
     async function fetchRecomendados() {
       const loaderTimer = setTimeout(() => {
-         if (!cancelled) setIsLoading(true);
+        if (!cancelled) setIsLoading(true);
       }, 1000);
       try {
         const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
@@ -255,6 +258,8 @@ export function useProperties(): UsePropertiesResult {
                   price: displayPrice,
                   currency: selectedCurrency,
                   precioFormateado: formattedText,
+                  precio: Number(item.precio),
+                  precio_anterior: item.precio_anterior ? Number(item.precio_anterior) : null,
                   type: (item.categoria?.toLowerCase().trim() || 'casa') as PropertyType,
                   title: item.titulo,
                   descripcion: item.descripcion ?? null,
@@ -321,6 +326,8 @@ export function useProperties(): UsePropertiesResult {
               price: displayPrice,
               currency: selectedCurrency,
               precioFormateado: formattedText,
+              precio: Number(item.precio),                                   
+              precio_anterior: item.precio_anterior ? Number(item.precio_anterior) : null,  
               type: (item.categoria?.toLowerCase().trim() || 'casa') as any,
               title: item.titulo,
               descripcion: item.descripcion ?? null,
