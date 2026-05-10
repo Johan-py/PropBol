@@ -113,6 +113,8 @@ const REGISTER_CODE_TTL_MINUTES = 5;
 const TWO_FACTOR_CODE_TTL_MINUTES = 5;
 const MAGIC_LINK_TTL_MINUTES = 15;
 const MAGIC_LINK_TTL_SECONDS = MAGIC_LINK_TTL_MINUTES * 60;
+const MAGIC_LINK_RESEND_COOLDOWN_MS = 60 * 1000;
+const magicLinkLastSentAt = new Map<string, number>();
 const MAX_MAGIC_LINK_REQUESTS = 3;
 const MAGIC_LINK_IN_PROGRESS_RETRY_SECONDS = 10;
 const magicLinkRequestsInProgress = new Set<string>();
@@ -248,6 +250,32 @@ const hash2FACode = (codigo: string) => {
 
 const hashMagicLinkToken = (token: string) => {
   return crypto.createHash("sha256").update(token).digest("hex");
+};
+
+const validateMagicLinkResendCooldown = (correo: string) => {
+  const lastSentAt = magicLinkLastSentAt.get(correo);
+
+  if (!lastSentAt) {
+    return;
+  }
+
+  const elapsedMs = Date.now() - lastSentAt;
+
+  if (elapsedMs < MAGIC_LINK_RESEND_COOLDOWN_MS) {
+    const retryAfterSeconds = Math.ceil(
+      (MAGIC_LINK_RESEND_COOLDOWN_MS - elapsedMs) / 1000,
+    );
+
+    throw new AuthError(
+      `Debes esperar ${retryAfterSeconds} segundo(s) antes de solicitar otro Magic Link.`,
+      429,
+      retryAfterSeconds,
+    );
+  }
+};
+
+const registerMagicLinkSent = (correo: string) => {
+  magicLinkLastSentAt.set(correo, Date.now());
 };
 
 const validateMagicLinkRequestLimit = (correo: string) => {
@@ -901,6 +929,7 @@ export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
   }
 
   magicLinkRequestsInProgress.add(correo);
+  validateMagicLinkResendCooldown(correo);
 
   try {
     validateMagicLinkRequestLimit(correo);
@@ -946,7 +975,7 @@ export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
         500,
       );
     }
-
+    registerMagicLinkSent(correo);
     return {
       message: "Te enviamos un link mágico a tu correo electrónico.",
     };
