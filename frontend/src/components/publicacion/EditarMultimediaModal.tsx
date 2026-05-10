@@ -161,10 +161,10 @@ export default function EditarMultimediaModal({
       setError('')
 
       const apiUrl = getApiUrl()
-      const token = getToken()
+const token = getToken()
 
-      const response = await fetch(
-        `${apiUrl}/api/publicaciones/${publicacionId}/multimedia`,
+const response = await fetch(
+  `${apiUrl}/api/publicaciones/${publicacionId}/multimedia`,
         {
           method: 'PUT',
           headers: {
