@@ -58,26 +58,26 @@ export default function VistasRecientesPage() {
     const [filteredProperties, setFilteredProperties] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // --- NUEVOS ESTADOS PARA EL FILTRO DE CALENDARIO ---
+    // --- ESTADOS PARA EL FILTRO DE CALENDARIO ---
     const [showCalendar, setShowCalendar] = useState(false);
     const hoy = new Date(2026, 4, 9); // Referencia actual: 9 de Mayo 2026
     const [currentDate, setCurrentDate] = useState(new Date(2026, 4, 1));
     const [rangeStart, setRangeStart] = useState<Date | null>(null);
     const [rangeEnd, setRangeEnd] = useState<Date | null>(null);
 
-    // --- CONFIGURACIÓN DE PAGINACIÓN ---
+    // --- CONFIGURACIÓN DE PAGINACIÓN (CAMBIADO A 10) ---
     const [currentPage, setCurrentPage] = useState(1);
-    const propertiesPerPage = 8;
+    const propertiesPerPage = 10;
 
     const totalPages = useMemo(() => {
         return Math.ceil(filteredProperties.length / propertiesPerPage);
-    }, [filteredProperties]);
+    }, [filteredProperties, propertiesPerPage]);
 
     const currentProperties = useMemo(() => {
         const lastIndex = currentPage * propertiesPerPage;
         const firstIndex = lastIndex - propertiesPerPage;
         return filteredProperties.slice(firstIndex, lastIndex);
-    }, [currentPage, filteredProperties]);
+    }, [currentPage, filteredProperties, propertiesPerPage]);
 
     const fetchHistorial = async () => {
         const token = localStorage.getItem('token');
@@ -240,7 +240,7 @@ export default function VistasRecientesPage() {
                     </div>
                 </div>
 
-                {/* MODAL DEL CALENDARIO PERSONALIZADO */}
+                {/* CALENDARIO */}
                 {showCalendar && (
                     <div className="absolute top-16 right-0 z-50 bg-[#FDF9F0] border-2 border-[#F3C291] rounded-2xl shadow-xl p-8 w-[650px] animate-in fade-in zoom-in duration-200">
                         <button
@@ -270,7 +270,8 @@ export default function VistasRecientesPage() {
                     </div>
                 )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 min-h-[600px]">
+                {/* GRID DE CARDS (AJUSTADO PARA 10) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 min-h-[600px]">
                     {currentProperties.length > 0 ? (
                         currentProperties.map((prop: any) => (
                             <PropertyCard
@@ -286,6 +287,7 @@ export default function VistasRecientesPage() {
                     )}
                 </div>
 
+                {/* PAGINACIÓN */}
                 {totalPages > 1 && (
                     <div className="flex justify-center items-center mt-12 mb-10 gap-2">
                         <button
