@@ -27,6 +27,17 @@ export default function BlogSharePlaceholder({ title }: BlogShareProps) {
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
   };
 
+  const shareToFacebook = async () => {
+    const text = `¡Hola! Te comparto este artículo que me pareció interesante:\n\n${getTitle()}\n${getUrl()}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      alert('¡Mensaje y enlace copiados al portapapeles! \n\nFacebook no permite autocompletar el texto, pero puedes pegarlo (Ctrl+V) en tu publicación.');
+    } catch (err) {
+      console.error('Error al copiar:', err);
+    }
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getUrl())}`, '_blank');
+  };
+
   // Cerrar menú al hacer clic fuera del modal peee
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -68,7 +79,7 @@ export default function BlogSharePlaceholder({ title }: BlogShareProps) {
                 className="w-7 h-7 sm:w-8 sm:h-8 opacity-90 group-hover:opacity-100 transition-opacity"
               />
             </button>
-            <button className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0">
+            <button onClick={shareToFacebook} className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir en Facebook">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg"
                 alt="Facebook"
