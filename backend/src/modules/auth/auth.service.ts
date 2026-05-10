@@ -113,12 +113,6 @@ const REGISTER_CODE_TTL_MINUTES = 5;
 const TWO_FACTOR_CODE_TTL_MINUTES = 5;
 const MAGIC_LINK_TTL_MINUTES = 15;
 const MAGIC_LINK_TTL_SECONDS = MAGIC_LINK_TTL_MINUTES * 60;
-const MAX_MAGIC_LINK_REQUESTS = 3;
-const MAGIC_LINK_IN_PROGRESS_RETRY_SECONDS = 10;
-const magicLinkRequestsInProgress = new Set<string>();
-
-const MAGIC_LINK_REQUEST_WINDOW_MS = 5 * 60 * 1000;
-const magicLinkRequests = new Map<string, number[]>();
 
 // límite de solicitudes de recuperación
 const MAX_RECOVERY_REQUESTS = 3;
@@ -248,30 +242,6 @@ const hash2FACode = (codigo: string) => {
 
 const hashMagicLinkToken = (token: string) => {
   return crypto.createHash("sha256").update(token).digest("hex");
-};
-
-const validateMagicLinkRequestLimit = (correo: string) => {
-  const now = Date.now();
-
-  const recentRequests = (magicLinkRequests.get(correo) ?? []).filter(
-    (timestamp) => now - timestamp < MAGIC_LINK_REQUEST_WINDOW_MS,
-  );
-
-  if (recentRequests.length >= MAX_MAGIC_LINK_REQUESTS) {
-    const oldestRequest = Math.min(...recentRequests);
-    const retryAfterSeconds = Math.ceil(
-      (MAGIC_LINK_REQUEST_WINDOW_MS - (now - oldestRequest)) / 1000,
-    );
-
-    throw new AuthError(
-      "Has solicitado demasiados Magic Links. Intenta nuevamente en unos minutos.",
-      429,
-      retryAfterSeconds,
-    );
-  }
-
-  recentRequests.push(now);
-  magicLinkRequests.set(correo, recentRequests);
 };
 
 const signRegisterCode = ({
@@ -927,69 +897,16 @@ export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
     minutosExpiracion: MAGIC_LINK_TTL_MINUTES,
   });
 
-  if (magicLinkRequestsInProgress.has(correo)) {
+  if (!emailResult.success) {
     throw new AuthError(
-      "Ya se está procesando una solicitud de Magic Link para este correo. Espera unos segundos e intenta nuevamente.",
-      429,
-      MAGIC_LINK_IN_PROGRESS_RETRY_SECONDS,
+      "No se pudo enviar el link mágico. Intenta nuevamente.",
+      500,
     );
   }
 
-  magicLinkRequestsInProgress.add(correo);
-
-  try {
-    validateMagicLinkRequestLimit(correo);
-
-    const expiraEn = new Date(
-      Date.now() + MAGIC_LINK_TTL_MINUTES * 60 * 1000,
-    );
-
-    const magicToken = jwt.sign(
-      {
-        purpose: "magic-link-login",
-        userId: user.id,
-        correo: user.correo,
-        nonce: crypto.randomUUID(),
-      },
-      env.JWT_SECRET,
-      {
-        expiresIn: MAGIC_LINK_TTL_SECONDS,
-      },
-    );
-
-    const tokenHash = hashMagicLinkToken(magicToken);
-
-    await invalidateActiveMagicLinksByUserId(user.id);
-
-    await createMagicLink({
-      usuarioId: user.id,
-      tokenHash,
-      correo: user.correo,
-      expiraEn,
-    });
-
-    const magicLink = `${env.FRONTEND_URL}/magic-link-sent?token=${magicToken}`;
-
-    const emailResult = await sendMagicLinkEmail({
-      emailDestino: user.correo,
-      nombreUsuario: user.nombre ?? undefined,
-      magicLink,
-      minutosExpiracion: MAGIC_LINK_TTL_MINUTES,
-    });
-
-    if (!emailResult.success) {
-      throw new AuthError(
-        "No se pudo enviar el link mágico. Intenta nuevamente.",
-        500,
-      );
-    }
-
-    return {
-      message: "Te enviamos un link mágico a tu correo electrónico.",
-    };
-  } finally {
-    magicLinkRequestsInProgress.delete(correo);
-  }
+  return {
+    message: "Te enviamos un link mágico a tu correo electrónico.",
+  };
 };
 
 const verifyMagicLinkToken = (token: string) => {
