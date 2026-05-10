@@ -62,6 +62,23 @@ export const useSearchFilters = () => {
     router.push(`/busqueda_mapa?${newParams.toString()}`)
     window.dispatchEvent(new Event('filterUpdate'))
   }
+  // AC 3, 4, 6, 10
+  const clearAllFilters = (
+    router: ReturnType<typeof useRouter>,
+    currentParams: URLSearchParams
+  ) => {
+    sessionStorage.removeItem(FILTER_KEY)
+    sessionStorage.removeItem('propbol_modo_recomendados')
+    sessionStorage.removeItem('propbol_recomendados')
+    const newParams = new URLSearchParams(currentParams.toString())
+    FILTROS_URL_KEYS.forEach((key) => newParams.delete(key))
+    router.push(`/busqueda_mapa?${newParams.toString()}`)
+    window.dispatchEvent(new Event('filterUpdate'))
+  }
+
+  const getActiveFilterCount = (searchParams: URLSearchParams): number => {
+    return FILTROS_URL_KEYS.filter((key) => searchParams.has(key)).length
+  }
 
 
   return {
@@ -69,5 +86,7 @@ export const useSearchFilters = () => {
     getBusquedaModo,
     cambiarAModoGeneral,
     removeFilter,
+    clearAllFilters,      
+    getActiveFilterCount,
   }
 }
