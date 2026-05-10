@@ -114,6 +114,9 @@ const TWO_FACTOR_CODE_TTL_MINUTES = 5;
 const MAGIC_LINK_TTL_MINUTES = 15;
 const MAGIC_LINK_TTL_SECONDS = MAGIC_LINK_TTL_MINUTES * 60;
 const MAX_MAGIC_LINK_REQUESTS = 3;
+const MAGIC_LINK_IN_PROGRESS_RETRY_SECONDS = 10;
+const magicLinkRequestsInProgress = new Set<string>();
+
 const MAGIC_LINK_REQUEST_WINDOW_MS = 5 * 60 * 1000;
 const magicLinkRequests = new Map<string, number[]>();
 
@@ -889,53 +892,69 @@ export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
     throw new AuthError("Esta cuenta está desactivada", 403);
   }
 
- validateMagicLinkRequestLimit(correo);
- 
-  const expiraEn = new Date(Date.now() + MAGIC_LINK_TTL_MINUTES * 60 * 1000);
-
-  const magicToken = jwt.sign(
-    {
-      purpose: "magic-link-login",
-      userId: user.id,
-      correo: user.correo,
-      nonce: crypto.randomUUID(),
-    },
-    env.JWT_SECRET,
-    {
-      expiresIn: MAGIC_LINK_TTL_SECONDS,
-    },
-  );
-
-  const tokenHash = hashMagicLinkToken(magicToken);
-   
-  await invalidateActiveMagicLinksByUserId(user.id);
-
-  await createMagicLink({
-    usuarioId: user.id,
-    tokenHash,
-    correo: user.correo,
-    expiraEn,
-  });
-
-  const magicLink = `${env.FRONTEND_URL}/magic-link-sent?token=${magicToken}`;
-
-  const emailResult = await sendMagicLinkEmail({
-    emailDestino: user.correo,
-    nombreUsuario: user.nombre ?? undefined,
-    magicLink,
-    minutosExpiracion: MAGIC_LINK_TTL_MINUTES,
-  });
-
-  if (!emailResult.success) {
+  if (magicLinkRequestsInProgress.has(correo)) {
     throw new AuthError(
-      "No se pudo enviar el link mágico. Intenta nuevamente.",
-      500,
+      "Ya se está procesando una solicitud de Magic Link para este correo. Espera unos segundos e intenta nuevamente.",
+      429,
+      MAGIC_LINK_IN_PROGRESS_RETRY_SECONDS,
     );
   }
 
-  return {
-    message: "Te enviamos un link mágico a tu correo electrónico.",
-  };
+  magicLinkRequestsInProgress.add(correo);
+
+  try {
+    validateMagicLinkRequestLimit(correo);
+
+    const expiraEn = new Date(
+      Date.now() + MAGIC_LINK_TTL_MINUTES * 60 * 1000,
+    );
+
+    const magicToken = jwt.sign(
+      {
+        purpose: "magic-link-login",
+        userId: user.id,
+        correo: user.correo,
+        nonce: crypto.randomUUID(),
+      },
+      env.JWT_SECRET,
+      {
+        expiresIn: MAGIC_LINK_TTL_SECONDS,
+      },
+    );
+
+    const tokenHash = hashMagicLinkToken(magicToken);
+
+    await invalidateActiveMagicLinksByUserId(user.id);
+
+    await createMagicLink({
+      usuarioId: user.id,
+      tokenHash,
+      correo: user.correo,
+      expiraEn,
+    });
+
+    const magicLink = `${env.FRONTEND_URL}/magic-link-sent?token=${magicToken}`;
+
+    const emailResult = await sendMagicLinkEmail({
+      emailDestino: user.correo,
+      nombreUsuario: user.nombre ?? undefined,
+      magicLink,
+      minutosExpiracion: MAGIC_LINK_TTL_MINUTES,
+    });
+
+    if (!emailResult.success) {
+      throw new AuthError(
+        "No se pudo enviar el link mágico. Intenta nuevamente.",
+        500,
+      );
+    }
+
+    return {
+      message: "Te enviamos un link mágico a tu correo electrónico.",
+    };
+  } finally {
+    magicLinkRequestsInProgress.delete(correo);
+  }
 };
 
 const verifyMagicLinkToken = (token: string) => {
