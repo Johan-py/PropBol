@@ -51,10 +51,23 @@ export const useSearchFilters = () => {
     router.push(`/busqueda_mapa?${newParams.toString()}`)
     window.dispatchEvent(new Event('filterUpdate'))
   }
+   const removeFilter = (
+    router: ReturnType<typeof useRouter>,
+    currentParams: URLSearchParams,
+    keys: string | string[]
+  ) => {
+    const newParams = new URLSearchParams(currentParams.toString())
+    const toDelete = Array.isArray(keys) ? keys : [keys]
+    toDelete.forEach((k) => newParams.delete(k))
+    router.push(`/busqueda_mapa?${newParams.toString()}`)
+    window.dispatchEvent(new Event('filterUpdate'))
+  }
+
 
   return {
     updateFilters,
     getBusquedaModo,
     cambiarAModoGeneral,
+    removeFilter,
   }
 }
