@@ -180,14 +180,12 @@ export const loginWithLinkedInCodeService = async (
       );
     }
 
-    await linkLinkedInToUser(existingUserByEmail.id, linkedinId, correo);
-
-    return await buildLinkedInSessionResponse(
-      existingUserByEmail,
-      "LinkedIn vinculado e inicio de sesión exitoso",
+    throw new LinkedInAuthError(
+      "No existe una cuenta asociada a LinkedIn. Inicia sesión con otro método y vincula LinkedIn desde Seguridad.",
+      "LINKEDIN_NOT_LINKED",
+      404,
     );
   }
-
   // Caso 3: no existe cuenta → error (no registrado)
   throw new LinkedInAuthError(
     "No existe una cuenta registrada con este perfil de LinkedIn. Debes registrarte primero.",
