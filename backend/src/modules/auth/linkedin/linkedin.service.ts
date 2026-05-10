@@ -3,6 +3,7 @@ import { env } from "../../../config/env.js";
 import { generateToken, type JwtPayload } from "../../../utils/jwt.js";
 import { enviarCorreoBienvenidaLinkedIn } from "../../../lib/email.service.js";
 import {
+  createLinkedInLinkForUser,
   createLinkedInSession,
   createLinkedInUser,
   findLinkedInLinkByExternalId,
@@ -11,7 +12,6 @@ import {
   findUserByLinkedInId,
   findUserByLinkedInSessionToken,
   linkLinkedInToUser,
-  createLinkedInLinkForUser,
   updateLinkedInLastUsage,
 } from "./linkedin.repository.js";
 import {
@@ -21,10 +21,31 @@ import {
   type LinkedInTokenResponse,
   type LinkedInUserInfo,
 } from "./linkedin.types.js";
+import { encryptLinkedInAccessToken } from "./linkedin-token-crypto.js";
 
 const LINKEDIN_TOKEN_URL = "https://www.linkedin.com/oauth/v2/accessToken";
 const LINKEDIN_USERINFO_URL = "https://api.linkedin.com/v2/userinfo";
 const SESSION_DURATION_MS = 60 * 60 * 1000;
+
+const buildLinkedInTokenStorage = (tokenData: LinkedInTokenResponse) => {
+  if (!tokenData.access_token) {
+    throw new LinkedInAuthError(
+      "No se pudo obtener el token de acceso de LinkedIn.",
+      "LINKEDIN_AUTH_FAILED",
+      401,
+    );
+  }
+
+  const tokenExpiresAt =
+    typeof tokenData.expires_in === "number"
+      ? new Date(Date.now() + tokenData.expires_in * 1000)
+      : null;
+
+  return {
+    encryptedAccessToken: encryptLinkedInAccessToken(tokenData.access_token),
+    tokenExpiresAt,
+  };
+};
 
 const exchangeCodeForTokens = async (code: string) => {
   const response = await fetch(LINKEDIN_TOKEN_URL, {
@@ -136,6 +157,7 @@ export const loginWithLinkedInCodeService = async (
 
   const tokenData = await exchangeCodeForTokens(code);
   const linkedinUser = await getLinkedInUserInfo(tokenData.access_token!);
+  const tokenStorage = buildLinkedInTokenStorage(tokenData);
 
   const linkedinId = linkedinUser.sub?.trim();
   const correo = linkedinUser.email?.trim().toLowerCase();
@@ -148,7 +170,6 @@ export const loginWithLinkedInCodeService = async (
     );
   }
 
-  // Caso 1: ya tiene linkedin vinculado → login directo
   const userByLinkedInId = await findUserByLinkedInId(linkedinId);
 
   if (userByLinkedInId) {
@@ -160,7 +181,11 @@ export const loginWithLinkedInCodeService = async (
       );
     }
 
-    await updateLinkedInLastUsage(userByLinkedInId.id, linkedinId);
+    await updateLinkedInLastUsage(
+      userByLinkedInId.id,
+      linkedinId,
+      tokenStorage,
+    );
 
     return await buildLinkedInSessionResponse(
       userByLinkedInId,
@@ -168,7 +193,6 @@ export const loginWithLinkedInCodeService = async (
     );
   }
 
-  // Caso 2: existe cuenta con ese correo → vincular y hacer login
   const existingUserByEmail = await findUserByLinkedInEmail(correo);
 
   if (existingUserByEmail) {
@@ -186,7 +210,7 @@ export const loginWithLinkedInCodeService = async (
       404,
     );
   }
-  // Caso 3: no existe cuenta → error (no registrado)
+
   throw new LinkedInAuthError(
     "No existe una cuenta registrada con este perfil de LinkedIn. Debes registrarte primero.",
     "ACCOUNT_NOT_REGISTERED",
@@ -226,6 +250,7 @@ export const linkLinkedInToCurrentUserByCodeService = async (
 
   const tokenData = await exchangeCodeForTokens(code);
   const linkedinUser = await getLinkedInUserInfo(tokenData.access_token!);
+  const tokenStorage = buildLinkedInTokenStorage(tokenData);
 
   const linkedinId = linkedinUser.sub?.trim();
   const correoProveedor = linkedinUser.email?.trim().toLowerCase() ?? null;
@@ -274,6 +299,7 @@ export const linkLinkedInToCurrentUserByCodeService = async (
     usuarioId: session.usuario.id,
     linkedinId,
     correoProveedor,
+    tokenStorage,
   });
 
   return {
@@ -296,6 +322,7 @@ export const registerWithLinkedInCodeService = async (
 
   const tokenData = await exchangeCodeForTokens(code);
   const linkedinUser = await getLinkedInUserInfo(tokenData.access_token!);
+  const tokenStorage = buildLinkedInTokenStorage(tokenData);
 
   const linkedinId = linkedinUser.sub?.trim();
   const correo = linkedinUser.email?.trim().toLowerCase();
@@ -338,7 +365,12 @@ export const registerWithLinkedInCodeService = async (
       );
     }
 
-    await linkLinkedInToUser(existingUserByEmail.id, linkedinId, correo);
+    await linkLinkedInToUser(
+      existingUserByEmail.id,
+      linkedinId,
+      correo,
+      tokenStorage,
+    );
 
     return await buildLinkedInSessionResponse(
       existingUserByEmail,
@@ -350,13 +382,13 @@ export const registerWithLinkedInCodeService = async (
     linkedinUser.given_name?.trim() ||
     linkedinUser.name?.split(" ")[0] ||
     "Usuario";
+
   const apellido =
     linkedinUser.family_name?.trim() ||
     linkedinUser.name?.split(" ").slice(1).join(" ") ||
     "LinkedIn";
 
   const avatar = linkedinUser.picture?.trim() || null;
-
 
   const createdUser = await createLinkedInUser(
     {
@@ -368,6 +400,7 @@ export const registerWithLinkedInCodeService = async (
     },
     linkedinId,
     correo,
+    tokenStorage,
   );
 
   const emailResult = await enviarCorreoBienvenidaLinkedIn({
