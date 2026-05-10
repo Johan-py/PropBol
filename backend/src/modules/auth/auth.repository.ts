@@ -495,3 +495,19 @@ export const countActiveSocialLinksByUser = async (usuarioId: number) => {
     },
   });
 };
+
+export const invalidateSessionsByAuthMethod = async (
+  usuarioId: number,
+  metodo_auth: string,
+) => {
+  return prisma.sesion.updateMany({
+    where: {
+      usuarioId,
+      metodo_auth,
+      estado: true,
+    },
+    data: {
+      estado: false,
+    },
+  });
+};

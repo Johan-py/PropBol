@@ -3,6 +3,7 @@ import {
   deactivateSocialLinkByUserAndProvider,
   findSocialLinkByUserAndProvider,
   listSocialLinksByUser,
+  invalidateSessionsByAuthMethod,
 } from "../auth.repository.js";
 
 const SUPPORTED_PROVIDERS = ["facebook", "discord", "google", "linkedin"] as const;
@@ -19,22 +20,18 @@ export const getSocialLinksService = async (usuarioId: number) => {
     facebook: {
       linked: Boolean(facebook),
       linkedEmail: facebook?.correoProveedor ?? null,
-      linkedAt: facebook?.vinculadoEn ?? null,
     },
     discord: {
       linked: Boolean(discord),
       linkedEmail: discord?.correoProveedor ?? null,
-      linkedAt: discord?.vinculadoEn ?? null,
     },
     google: {
       linked: Boolean(google),
       linkedEmail: google?.correoProveedor ?? null,
-      linkedAt: google?.vinculadoEn ?? null,
     },
     linkedin: {
       linked: Boolean(linkedin),
       linkedEmail: linkedin?.correoProveedor ?? null,
-      linkedAt: linkedin?.vinculadoEn ?? null,
     },
   };
 };
@@ -70,14 +67,12 @@ export const unlinkSocialProviderService = async (
 
   await deactivateSocialLinkByUserAndProvider(usuarioId, provider);
 
+  if (provider === "linkedin") {
+    await invalidateSessionsByAuthMethod(usuarioId, "linkedin");
+  }
+
   return {
     message: "La red social fue desvinculada correctamente.",
     provider,
   };
-};
-
-export const getLinkedInOriginalEmail = async (usuarioId: number) => {
-  const link = await findSocialLinkByUserAndProvider(usuarioId, "linkedin");
-  if (!link) return null;
-  return link.correoProveedor ?? null;
 };
