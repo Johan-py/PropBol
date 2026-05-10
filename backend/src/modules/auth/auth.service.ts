@@ -892,41 +892,6 @@ export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
     throw new AuthError("Esta cuenta está desactivada", 403);
   }
 
-  const expiraEn = new Date(Date.now() + MAGIC_LINK_TTL_MINUTES * 60 * 1000);
-
-  const magicToken = jwt.sign(
-    {
-      purpose: "magic-link-login",
-      userId: user.id,
-      correo: user.correo,
-      nonce: crypto.randomUUID(),
-    },
-    env.JWT_SECRET,
-    {
-      expiresIn: MAGIC_LINK_TTL_SECONDS,
-    },
-  );
-
-  const tokenHash = hashMagicLinkToken(magicToken);
-
-  await invalidateActiveMagicLinksByUserId(user.id);
-
-  await createMagicLink({
-    usuarioId: user.id,
-    tokenHash,
-    correo: user.correo,
-    expiraEn,
-  });
-
-  const magicLink = `${env.FRONTEND_URL}/magic-link-sent?token=${magicToken}`;
-
-  const emailResult = await sendMagicLinkEmail({
-    emailDestino: user.correo,
-    nombreUsuario: user.nombre ?? undefined,
-    magicLink,
-    minutosExpiracion: MAGIC_LINK_TTL_MINUTES,
-  });
-
   if (magicLinkRequestsInProgress.has(correo)) {
     throw new AuthError(
       "Ya se está procesando una solicitud de Magic Link para este correo. Espera unos segundos e intenta nuevamente.",
@@ -940,9 +905,7 @@ export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
   try {
     validateMagicLinkRequestLimit(correo);
 
-    const expiraEn = new Date(
-      Date.now() + MAGIC_LINK_TTL_MINUTES * 60 * 1000,
-    );
+    const expiraEn = new Date(Date.now() + MAGIC_LINK_TTL_MINUTES * 60 * 1000);
 
     const magicToken = jwt.sign(
       {
@@ -1065,7 +1028,11 @@ export const loginWithMagicLinkService = async ({
     throw new AuthError("Esta cuenta está desactivada", 403);
   }
 
-  await markMagicLinkAsUsed(magicLink.id);
+  const wasMarkedAsUsed = await markMagicLinkAsUsed(magicLink.id);
+
+  if (!wasMarkedAsUsed) {
+    throw new AuthError("Este Magic Link ya fue utilizado.", 401);
+  }
 
   const sessionPayload: JwtPayload = {
     id: user.id,

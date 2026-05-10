@@ -559,13 +559,18 @@ export const findMagicLinkByTokenHash = async (tokenHash: string) => {
 };
 
 export const markMagicLinkAsUsed = async (id: number) => {
-  return await prisma.$executeRaw`
+  const affectedRows = await prisma.$executeRaw`
     UPDATE magic_link
-    SET 
+    SET
       usado_en = NOW(),
       activo = false
     WHERE id = ${id}
+      AND activo = true
+      AND usado_en IS NULL
+      AND invalidado_en IS NULL
   `;
+
+  return affectedRows > 0;
 };
 
 export const deactivateMagicLink = async (id: number) => {
