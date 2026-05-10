@@ -178,11 +178,12 @@ function BusquedaMapaContent() {
     const newState = !isOfertaOpen
     setIsOfertaOpen(newState)
 
+    // Actualizar URL
     const params = new URLSearchParams(searchParams.toString())
     if (newState) {
-      params.set('ofertas', 'true')
+      params.set('soloOfertas', 'true')
     } else {
-      params.delete('ofertas')
+      params.delete('soloOfertas')
     }
     router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
   }
