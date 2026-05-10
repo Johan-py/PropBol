@@ -14,7 +14,6 @@ type LinkedInRegisterSuccessPayload = {
     correo: string;
     nombre?: string;
     apellido?: string;
-    avatar?: string | null;
   };
 };
 

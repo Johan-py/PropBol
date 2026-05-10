@@ -112,7 +112,7 @@ function FieldLabel({
 
 const saveSession = (payload: {
   token: string;
-  user: { id: number; correo: string; nombre?: string; apellido?: string; avatar?: string | null };
+  user: { id: number; correo: string; nombre?: string; apellido?: string };
 }) => {
   const userName =
     payload.user.nombre && payload.user.apellido
@@ -126,7 +126,7 @@ const saveSession = (payload: {
   );
   localStorage.setItem("nombre", userName);
   localStorage.setItem("correo", payload.user.correo);
-  localStorage.setItem("avatar", payload.user.avatar ?? "");
+  localStorage.setItem("avatar", "");
   localStorage.setItem(
     "propbol_session_expires",
     String(Date.now() + SESSION_DURATION_MS),
