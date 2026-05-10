@@ -47,6 +47,8 @@ import { UbicacionEspecificaPanel } from '@/components/filters/UbicacionEspecifi
 import ComparatorModal from '@/components/busqueda/ComparatorModal'
 import EtiquetasSidebar from '@/components/filters/EtiquetasSidebar'
 import { useSearchFilters, BusquedaModo } from '@/hooks/useSearchFilters'
+import { useFiltrosActivos } from '@/hooks/useFiltrosActivos'
+import { ActiveFilterTags } from '@/components/filters/ActiveFilterTags'
 
 // Carga dinámica del mapa (sin SSR)
 const MapView = nextDynamic(() => import('./MapView'), {
@@ -154,7 +156,16 @@ function BusquedaMapaContent() {
   const isRecomendadosActive = searchParams.get('orden') === 'recomendados'
   const filterResetKey = searchParams.toString();
 
-  const { getBusquedaModo, cambiarAModoGeneral } = useSearchFilters()
+  const { getBusquedaModo, cambiarAModoGeneral, clearAllFilters } = useSearchFilters()
+  const filtrosActivos = useFiltrosActivos()
+
+  const handleClearAllFilters = () => {
+  clearAllFilters(router, new URLSearchParams(searchParams.toString()))
+  setIsClusterView(false)
+  setClusterProperties([])
+  setActiveClusterIds([])
+  setListPage(1)
+     }
   const busquedaModo: BusquedaModo = getBusquedaModo(
     new URLSearchParams(searchParams.toString())
   )
@@ -1298,6 +1309,16 @@ function BusquedaMapaContent() {
                     </span>
                     <span className="text-gray-500 font-normal">propiedades</span>
                   </span>
+                 
+                     {/* AC 4, 6, 10 — Pills de filtros activos móvil */}
+                      {filtrosActivos.length > 0 && (
+                        <div className="px-4 pt-1">
+                        <ActiveFilterTags
+                         filtros={filtrosActivos}
+                       onClearAll={handleClearAllFilters}
+                            />
+                  </div>
+                           )}
                   {isClusterView && (
                     <button
                       onClick={() => {
@@ -1627,6 +1648,11 @@ function BusquedaMapaContent() {
                                 : 'propiedades encontradas'}
                             </span>
                           </div>
+                          {/* AC 4, 6, 10 — Pills de filtros activos desktop */}
+                        <ActiveFilterTags
+                           filtros={filtrosActivos}
+                            onClearAll={handleClearAllFilters}
+                                 />
                           {isClusterView && (
                             <button
                               type="button"
