@@ -357,12 +357,16 @@ export const registerWithLinkedInCodeService = async (
     linkedinUser.name?.split(" ").slice(1).join(" ") ||
     "LinkedIn";
 
+  const avatar = linkedinUser.picture?.trim() || null;
+
+
   const createdUser = await createLinkedInUser(
     {
       nombre,
       apellido,
       correo,
       password: `linkedin_${randomUUID()}`,
+      avatar,
     },
     linkedinId,
     correo,

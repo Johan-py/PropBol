@@ -13,6 +13,7 @@ type CreateLinkedInUserInput = {
   apellido: string;
   correo: string;
   password: string;
+  avatar?: string | null;
 };
 
 export const findUserByLinkedInId = async (linkedinId: string) => {
@@ -51,6 +52,7 @@ export const createLinkedInUser = async (
         correo: data.correo,
         password: data.password,
         rolId: rol.id,
+        avatar: data.avatar ?? null,
       },
     });
 
