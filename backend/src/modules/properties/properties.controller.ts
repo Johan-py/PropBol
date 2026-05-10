@@ -32,7 +32,8 @@ export const propertiesController = {
         lng,
         radius,
         amenities, 
-        labels
+        labels,
+        soloOfertas
       } = req.query
 
       let banoCompartido: boolean | undefined = undefined
@@ -80,6 +81,7 @@ export const propertiesController = {
         //HU6
         amenities: parsedAmenities,
         labels: parsedLabels,
+        soloOfertas: soloOfertas === 'true'
       }
 
       const orden = {
