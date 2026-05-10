@@ -1,5 +1,5 @@
 'use client'
-
+import { OfertaSidebar } from '@/components/filters/OfertaSidebar'
 import { CapacidadSidebar } from '@/components/filters/CapacidadSidebar'
 import MisZonasSidebar from '@/components/map/MisZonasSidebar'
 import { point, polygon } from '@turf/helpers'
@@ -94,6 +94,8 @@ type SheetState = 'hidden' | 'peek' | 'full'
 const LIST_PAGE_SIZES = [10, 20, 50, 100] as const;
 const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
 const GRID_MIN_CARD_WIDTH = 260
+/** Ancho máximo de tarjeta en vista grid cuando hay una sola columna (HU layout dinámico AC 18) */
+const GRID_MAX_CARD_WIDTH = 420
 const SIDEBAR_MIN_WIDTH = 320
 const SIDEBAR_MAX_WIDTH = 1200
 const MAP_MIN_WIDTH = 320
@@ -151,11 +153,11 @@ function BusquedaMapaContent() {
   const searchParams = useSearchParams();
   const isRecomendadosActive = searchParams.get('orden') === 'recomendados'
   const filterResetKey = searchParams.toString();
-
-  const { getBusquedaModo, cambiarAModoGeneral } = useSearchFilters()
-  const busquedaModo: BusquedaModo = getBusquedaModo(
-    new URLSearchParams(searchParams.toString())
-  )
+  
+const { getBusquedaModo, cambiarAModoGeneral } = useSearchFilters()
+const busquedaModo: BusquedaModo = getBusquedaModo(
+  new URLSearchParams(searchParams.toString())
+)
   const minSuperficie = searchParams.get('minSuperficie')
   const maxSuperficie = searchParams.get('maxSuperficie')
   const tieneFiltrSuperficie = minSuperficie || maxSuperficie
@@ -176,18 +178,15 @@ function BusquedaMapaContent() {
   const [isOfertaOpen, setIsOfertaOpen] = useState(false)
 
   const toggleOferta = () => {
-    const newState = !isOfertaOpen
-    setIsOfertaOpen(newState)
-
-    // Actualizar URL
-    const params = new URLSearchParams(searchParams.toString())
-    if (newState) {
-      params.set('soloOfertas', 'true')
+    setIsOfertaOpen(!isOfertaOpen)
+    if (!isOfertaOpen) {
+      setActiveSidebarView('oferta')
+      setIsSidebarOpen(true)
     } else {
-      params.delete('soloOfertas')
+      setActiveSidebarView('results')
     }
-    router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
   }
+
   const toggleCapacidad = () => {
     setIsPriceFilterOpen(false)
     setIsSidebarOpen(true)
@@ -242,7 +241,7 @@ function BusquedaMapaContent() {
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
   const [isMounted, setIsMounted] = useState(false)
   const [isPriceFilterOpen, setIsPriceFilterOpen] = useState(false)
-  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad' | 'ubicacion' | 'etiquetas'>('results')
+  const [activeSidebarView, setActiveSidebarView] = useState<'results' | 'superficie' | 'capacidad' | 'ubicacion' | 'oferta' | 'etiquetas'>('results')
 
   useEffect(() => {
     const handleAbrirUbicacion = () => {
@@ -291,7 +290,7 @@ function BusquedaMapaContent() {
 
   useEffect(() => {
     setIsMounted(true)
-    setViewportWidth(window.innerWidth)
+      setViewportWidth(window.innerWidth)
   }, [])
 
   useEffect(() => {
@@ -300,10 +299,10 @@ function BusquedaMapaContent() {
     return () => window.removeEventListener('resize', onResize)
   }, [])
 
-  // Persistencia del ancho del sidebar en desktop
+  // Persistencia del ancho del sidebar en desktop (sesión de pestaña — HU layout dinámico AC 10)
   useEffect(() => {
     try {
-      const saved = localStorage.getItem('propbol:sidebarWidth')
+      const saved = sessionStorage.getItem('propbol:sidebarWidth')
       if (saved) {
         const n = Number(saved)
         if (Number.isFinite(n) && n >= SIDEBAR_MIN_WIDTH && n <= SIDEBAR_MAX_WIDTH) setSidebarWidth(n)
@@ -315,7 +314,7 @@ function BusquedaMapaContent() {
 
   useEffect(() => {
     try {
-      localStorage.setItem('propbol:sidebarWidth', String(sidebarWidth))
+      sessionStorage.setItem('propbol:sidebarWidth', String(sidebarWidth))
     } catch {
       // ignore
     }
@@ -647,23 +646,23 @@ function BusquedaMapaContent() {
     return inmueblesOrdenados.slice(start, start + listPageSize);
   }, [inmueblesOrdenados, listSafePage, listPageSize, listTotal]);
 
-  // Limpia clusters y paginación cuando cambia la zona geográfica
-  const ubicacionKey = [
-    searchParams.get('departamentoId'),
-    searchParams.get('provinciaId'),
-    searchParams.get('municipioId'),
-    searchParams.get('zonaId'),
-    searchParams.get('barrioId'),
-    searchParams.get('lat'),
-    searchParams.get('lng'),
-  ].join('|')
+// Limpia clusters y paginación cuando cambia la zona geográfica
+const ubicacionKey = [
+  searchParams.get('departamentoId'),
+  searchParams.get('provinciaId'),
+  searchParams.get('municipioId'),
+  searchParams.get('zonaId'),
+  searchParams.get('barrioId'),
+  searchParams.get('lat'),
+  searchParams.get('lng'),
+].join('|')
 
-  useEffect(() => {
-    setIsClusterView(false)
-    setClusterProperties([])
-    setActiveClusterIds([])
-    setListPage(1)
-  }, [ubicacionKey])
+useEffect(() => {
+  setIsClusterView(false)
+  setClusterProperties([])
+  setActiveClusterIds([])
+  setListPage(1)
+}, [ubicacionKey])
   useEffect(() => {
     setListPage(1);
   }, [filterResetKey, drawnPolygons]);
@@ -701,6 +700,9 @@ function BusquedaMapaContent() {
     const maxMinWidthForTwoCols = Math.floor((estimatedContentWidth - 16) / 2)
     return Math.max(220, Math.min(GRID_MIN_CARD_WIDTH, maxMinWidthForTwoCols))
   }, [effectiveSidebarWidth])
+
+  /** Encabezado 2 columnas (títulos | orden+vista) según ancho del panel lateral, no del viewport */
+  const resultsHeaderSideBySide = effectiveSidebarWidth >= 420
 
   const dragStartY = useRef<number | null>(null)
   const dragStartState = useRef<SheetState>('peek')
@@ -835,8 +837,8 @@ function BusquedaMapaContent() {
     onClickItem?: (p: any) => void;
     listScrollRef: Ref<HTMLDivElement>;
   }) => (
-    <div ref={listScrollRef} className="flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar">
-      {isLoading ? (
+    <div ref={listScrollRef} className="relative flex-1 overflow-y-auto p-4 bg-stone-50 no-scrollbar">
+      {isLoading && displayedProperties.length === 0 ? (
         <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2">
           <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />{' '}
           Actualizando...
@@ -1464,7 +1466,7 @@ function BusquedaMapaContent() {
 
         isOfertaActive={isOfertaOpen}
         onToggleOferta={toggleOferta}
-        isEtiquetasFilterActive={activeSidebarView === 'etiquetas' && isSidebarOpen}
+        isEtiquetasFilterActive={activeSidebarView === 'etiquetas' && isSidebarOpen} 
         onOpenEtiquetasFilter={openEtiquetas}
       />
 
@@ -1487,99 +1489,107 @@ function BusquedaMapaContent() {
               totalResultados={displayedProperties.length}
             />
 
-          ) : isSidebarOpen && activeSidebarView === 'capacidad' ? (
-            <CapacidadSidebar
+          ) : isSidebarOpen && activeSidebarView === 'oferta' ? (
+            <OfertaSidebar
               isOpen={true}
               onClose={() => {
-                setActiveSidebarView('results')
-              }}
-              onApply={(dormitoriosMin, dormitoriosMax, banosMin, banosMax, tipoBano) => {
-                const params = new URLSearchParams(searchParams.toString())
-                params.set('dormitoriosMin', dormitoriosMin.toString())
-                params.set('dormitoriosMax', dormitoriosMax.toString())
-                params.set('banosMin', banosMin.toString())
-                params.set('banosMax', banosMax.toString())
-                params.set('tipoBano', tipoBano)
-                router.push(`/busqueda_mapa?${params.toString()}`)
+                setIsOfertaOpen(false)
                 setActiveSidebarView('results')
               }}
             />
+          ): isSidebarOpen && activeSidebarView === 'capacidad' ? (
+          <CapacidadSidebar
+            isOpen={true}
+            onClose={() => {
+              setActiveSidebarView('results')
+            }}
+            onApply={(dormitoriosMin, dormitoriosMax, banosMin, banosMax, tipoBano) => {
+              const params = new URLSearchParams(searchParams.toString())
+              params.set('dormitoriosMin', dormitoriosMin.toString())
+              params.set('dormitoriosMax', dormitoriosMax.toString())
+              params.set('banosMin', banosMin.toString())
+              params.set('banosMax', banosMax.toString())
+              params.set('tipoBano', tipoBano)
+              router.push(`/busqueda_mapa?${params.toString()}`)
+              setActiveSidebarView('results')
+            }}
+          />
           ) : isSidebarOpen && activeSidebarView === 'etiquetas' ? (
-            <div className="flex flex-col h-full w-full bg-white relative">
-              <EtiquetasSidebar
-                isOpen={true}
-                onClose={() => setActiveSidebarView('results')}
-              />
-            </div>
+          <div className="flex flex-col h-full w-full bg-white relative">
+            <EtiquetasSidebar
+              isOpen={true}
+              onClose={() => setActiveSidebarView('results')}
+            />
+          </div>
           ) : isSidebarOpen && activeSidebarView === 'ubicacion' ? (
-            <div className="flex flex-col h-full w-full bg-white relative">
-              <UbicacionEspecificaPanel
-                onClose={() => setActiveSidebarView('results')}
-                onApply={(selecciones) => {
-                  // 1. Rescatamos los filtros actuales de la URL (precio, cuartos, tipo, etc)
-                  const params = new URLSearchParams(searchParams.toString());
+          <div className="flex flex-col h-full w-full bg-white relative">
+            <UbicacionEspecificaPanel
+              onClose={() => setActiveSidebarView('results')}
+              onApply={(selecciones) => {
+                // 1. Rescatamos los filtros actuales de la URL (precio, cuartos, tipo, etc)
+                const params = new URLSearchParams(searchParams.toString());
 
-                  // 2. Limpiamos ubicaciones previas para evitar duplicados
-                  params.delete('departamentoId');
-                  params.delete('provinciaId');
-                  params.delete('municipioId');
-                  params.delete('zonaId');
-                  params.delete('barrioId');
+                // 2. Limpiamos ubicaciones previas para evitar duplicados
+                params.delete('departamentoId');
+                params.delete('provinciaId');
+                params.delete('municipioId');
+                params.delete('zonaId');
+                params.delete('barrioId');
 
-                  // 3. Añadimos las nuevas selecciones de este panel
-                  if (selecciones.departamento !== 'todos') params.set('departamentoId', selecciones.departamento.toString());
-                  if (selecciones.provincia !== 'todos') params.set('provinciaId', selecciones.provincia.toString());
-                  if (selecciones.municipio !== 'todos') params.set('municipioId', selecciones.municipio.toString());
-                  if (selecciones.zona !== 'todos') params.set('zonaId', selecciones.zona.toString());
-                  if (selecciones.barrio !== 'todos') params.set('barrioId', selecciones.barrio.toString());
+                // 3. Añadimos las nuevas selecciones de este panel
+                if (selecciones.departamento !== 'todos') params.set('departamentoId', selecciones.departamento.toString());
+                if (selecciones.provincia !== 'todos') params.set('provinciaId', selecciones.provincia.toString());
+                if (selecciones.municipio !== 'todos') params.set('municipioId', selecciones.municipio.toString());
+                if (selecciones.zona !== 'todos') params.set('zonaId', selecciones.zona.toString());
+                if (selecciones.barrio !== 'todos') params.set('barrioId', selecciones.barrio.toString());
 
-                  // 4. Empujamos a la URL combinada y cerramos el panel para ver resultados
-                  router.push(`/busqueda_mapa?${params.toString()}`);
-                  setActiveSidebarView('results');
-                }}
-              />
-            </div>
+                // 4. Empujamos a la URL combinada y cerramos el panel para ver resultados
+                router.push(`/busqueda_mapa?${params.toString()}`);
+                setActiveSidebarView('results');
+              }}
+            />
+          </div>
           ) : isSidebarOpen && activeSidebarView === 'results' ? (
-            // 🚀 CONTENEDOR PADRE SIN SCROLL
-            <div className="flex flex-col h-full min-h-0 relative bg-stone-50">
+          // 🚀 CONTENEDOR PADRE SIN SCROLL
+          <div className="flex flex-col h-full min-h-0 relative bg-stone-50">
 
-              {/* 🚀 CABECERA (Fuera del scroll = Cero rebotes) */}
-              <div className="bg-white shrink-0 border-b border-stone-200 shadow-sm transition-all duration-300">
+            {/* 🚀 CABECERA (Fuera del scroll = Cero rebotes) */}
+            <div className="bg-white shrink-0 border-b border-stone-200 shadow-sm transition-all duration-300">
 
-                {/* BLOQUE 1: DESAPARECE CON EL SCROLL (Solo el título "Filtros") */}
-                <div className={`px-4 transition-all duration-300 overflow-hidden ${isScrolled ? 'max-h-0 opacity-0' : 'max-h-[60px] opacity-100 pt-4'}`}>
-                  <div className="flex justify-between items-center mb-2">
-                    <div className="flex items-center gap-1">
-                      <Filter className="w-4 h-4 text-orange-500" />
-                      <h1 className="text-base font-semibold text-slate-800 uppercase tracking-wide">
-                        Filtros
-                      </h1>
-                    </div>
-                    <button
-                      onClick={() => setIsSidebarOpen(false)}
-                      className="p-1 hover:bg-stone-100 rounded-full transition-colors text-stone-400 shrink-0"
-                    >
-                      <ChevronLeft size={20} />
-                    </button>
+              {/* BLOQUE 1: DESAPARECE CON EL SCROLL (Solo el título "Filtros") */}
+              <div className={`px-4 transition-all duration-300 overflow-hidden ${isScrolled ? 'max-h-0 opacity-0' : 'max-h-[60px] opacity-100 pt-4'}`}>
+                <div className="flex justify-between items-center mb-2">
+                  <div className="flex items-center gap-1">
+                    <Filter className="w-4 h-4 text-orange-500" />
+                    <h1 className="text-base font-semibold text-slate-800 uppercase tracking-wide">
+                      Filtros
+                    </h1>
                   </div>
+                  <button
+                    onClick={() => setIsSidebarOpen(false)}
+                    className="p-1 hover:bg-stone-100 rounded-full transition-colors text-stone-400 shrink-0"
+                  >
+                    <ChevronLeft size={20} />
+                  </button>
                 </div>
+              </div>
 
-                {/* BLOQUE 2: SE COMPACTA Y MANTIENE (Resultados, Conteo, Controles) */}
-                <div className={`px-4 pb-3 flex flex-col transition-all duration-300 ${isScrolled ? 'pt-3 gap-2' : 'gap-3'}`}>
-
-                  <div className="flex justify-between items-start">
-                    <div className="flex flex-col">
-                      {/* Título: Resultados de búsqueda (Se compacta de xl a base) */}
+              {/* BLOQUE 2: títulos + orden+vista: grid evita hueco enorme al ensanchar el panel */}
+              <div className={`px-4 pb-3 flex flex-col transition-all duration-300 ${isScrolled ? 'pt-3 gap-2' : 'gap-3'}`}>
+                <div
+                  className={`grid items-start gap-x-4 gap-y-3 ${
+                    resultsHeaderSideBySide ? 'grid-cols-[minmax(0,1fr)_auto]' : 'grid-cols-1'
+                  }`}
+                >
+                  <div className="flex min-w-0 justify-between gap-2">
+                    <div className="flex min-w-0 flex-col">
                       <h1 className={`font-semibold text-slate-900 transition-all duration-300 truncate ${isScrolled ? 'text-base' : 'text-xl'}`}>
                         {isClusterView
                           ? `${clusterProperties.length} propiedades en este clúster`
                           : isRecomendadosActive
                             ? 'Recomendados para tí'
-                            : isOfertaOpen
-                            ? 'Propiedades con precio reducido para ti'
                             : 'Resultados de búsqueda'}
                       </h1>
-                      {/* AC 1 & 8 — Toggle modo búsqueda */}
                       <button
                         onClick={() => {
                           if (busquedaModo === 'especifica') {
@@ -1590,17 +1600,16 @@ function BusquedaMapaContent() {
                             setActiveSidebarView('ubicacion')
                           }
                         }}
-                        className={`self-start text-xs px-2.5 py-1 rounded-full border transition-all mt-1 mb-2 ${busquedaModo === 'especifica'
+                        className={`self-start text-xs px-2.5 py-1 rounded-full border transition-all mt-1 mb-2 ${
+                          busquedaModo === 'especifica'
                             ? 'bg-orange-50 border-orange-300 text-orange-600 font-medium hover:bg-orange-100'
                             : 'bg-stone-100 border-stone-200 text-stone-500 hover:border-stone-300'
-                          }`}
+                        }`}
                       >
                         {busquedaModo === 'especifica'
                           ? '📍 Ubicación específica · cambiar a todo Bolivia'
                           : '🌍 Todo Bolivia · buscar en zona específica'}
                       </button>
-
-                      {/* Subtítulo: N Propiedades (Se compacta de sm a xs) */}
                       <h2 className={`font-bold text-slate-900 transition-all duration-300 truncate flex items-center gap-2 ${isScrolled ? 'text-xs mt-0.5' : 'text-sm mt-1'}`}>
                         <div>
                           <span className="text-orange-500">
@@ -1616,6 +1625,7 @@ function BusquedaMapaContent() {
                         </div>
                         {isClusterView && (
                           <button
+                            type="button"
                             onClick={() => {
                               setIsClusterView(false)
                               setClusterProperties([])
@@ -1627,174 +1637,203 @@ function BusquedaMapaContent() {
                           </button>
                         )}
                       </h2>
-
-                      {/* Subtítulo adicional solo en modo recomendados */}
                       {isRecomendadosActive && !isClusterView && (
                         <p className={`text-gray-500 transition-all duration-300 ${isScrolled ? 'text-[11px]' : 'text-xs'}`}>
                           Mostrando resultados personalizados según tu actividad reciente
                         </p>
                       )}
                     </div>
-                    {/* Si el usuario bajó, mostramos el botón de cerrar la barra aquí para no perderlo */}
                     {isScrolled && (
                       <button
+                        type="button"
                         onClick={() => setIsSidebarOpen(false)}
-                        className="p-1 hover:bg-stone-100 rounded-full transition-colors text-stone-400 shrink-0 mt-1"
+                        className="p-1 hover:bg-stone-100 rounded-full transition-colors text-stone-400 shrink-0 self-start"
                       >
                         <ChevronLeft size={20} />
                       </button>
                     )}
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="flex-1">
+                  <div
+                    className={`flex w-full flex-col gap-2 ${
+                      resultsHeaderSideBySide ? 'w-auto max-w-full shrink-0 items-end' : ''
+                    }`}
+                  >
+                    <div
+                      className={`flex w-full flex-wrap items-end gap-x-2 gap-y-2 ${
+                        resultsHeaderSideBySide
+                          ? 'w-auto max-w-[22rem] justify-end'
+                          : 'justify-start'
+                      }`}
+                    >
                       <MenuOrdenamiento
                         totalResultados={displayedProperties.length}
                         ordenActual={ordenActual}
                         onOrdenChange={cambiarOrden}
                         isCompact={isScrolled}
+                        embeddedInPanel
                       />
-                    </div>
-
-                    <div className="flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90 origin-right ml-2 shrink-0">
-                      <button
-                        onClick={() => setViewMode('grid')}
-                        className={`p-1 rounded transition-colors ${viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-                          }`}
-                      >
-                        <LayoutGrid size={16} />
-                      </button>
-                      <button
-                        onClick={() => setViewMode('list')}
-                        className={`p-1 rounded transition-colors ${viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-                          }`}
-                      >
-                        <ListIcon size={16} />
-                      </button>
+                      <div className="flex shrink-0 bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90 origin-right">
+                        <button
+                          type="button"
+                          onClick={() => setViewMode('grid')}
+                          className={`p-1 rounded transition-colors ${viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
+                            }`}
+                        >
+                          <LayoutGrid size={16} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setViewMode('list')}
+                          className={`p-1 rounded transition-colors ${viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
+                            }`}
+                        >
+                          <ListIcon size={16} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-
-              {/* 🚀 LISTA (Tiene su propio scroll independiente) */}
-              <div
-                ref={listScrollRef as Ref<HTMLDivElement>}
-                className="flex-1 overflow-y-auto custom-scrollbar p-4"
-                onScroll={(e) => {
-                  const scrollTop = (e.target as HTMLDivElement).scrollTop;
-                  if (!isScrolled && scrollTop > 60) setIsScrolled(true);
-                  if (isScrolled && scrollTop < 10) setIsScrolled(false);
-                }}
-                onMouseEnter={() => setIsHoveringList(true)}
-                onMouseLeave={() => {
-                  setIsHoveringList(false)
-                  setSelectedPropertyId(null)
-                  setHoveredId(null)
-                }}
-              >
-                {isLoading ? (
-                  <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse min-h-[300px]">
-                    <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
-                    Actualizando resultados...
-                  </div>
-                ) : displayedProperties.length === 0 ? (
-                  <EmptyState
-                    titulo={
-                      tieneFiltrSuperficie
-                        ? 'Sin resultados por superficie'
-                        : 'No hay propiedades existentes'
-                    }
-                    mensaje={
-                      tieneFiltrSuperficie
-                        ? 'No se encontraron propiedades dentro del rango de superficie seleccionado.'
-                        : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
-                    }
-                  />
-                ) : (
-                  <div
-                    className={`${viewMode === 'list'
-                        ? 'gap-4 flex flex-col'
-                        : 'grid items-stretch auto-rows-fr gap-4 [grid-template-columns:repeat(auto-fill,minmax(var(--card-min-width),1fr))]'
-                      } ${viewMode === 'list'
-                        ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-                        : ''
-                      }`}
-                    style={viewMode === 'grid' ? ({ ['--card-min-width' as string]: `${desktopGridMinWidth}px` }) : undefined}
-                  >
-                    {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
-                      <div
-                        key={property.id}
-                        onMouseEnter={() => setHoveredId(property.id)}
-                        onMouseLeave={() => setHoveredId(null)}
-                        onClick={() => {
-                          // NUEVA LÓGICA DE INTERCEPCIÓN
-                          if (isCompareMode) {
-                            toggleProperty(property.id);
-                          } else {
-                            setSelectedPropertyId(property.id);
-                          }
-                        }}
-                        className={`cursor-pointer transition-all duration-200 rounded-xl relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${viewMode === 'grid'
-                          ? 'h-full'
-                          : 'w-full py-1 hover:bg-stone-100'
-                          } ${
-                          // Borde naranja si está seleccionado
-                          isCompareMode && selectedIds.includes(property.id)
-                            ? 'ring-4 ring-orange-500 scale-[0.98] shadow-lg'
-                            : ''
-                          }`}
-                      >
-                        {viewMode === 'grid' ? (
-                          <PropertyCard
-                            imagen={
-                              property.thumbnailUrl ||
-                              property.imagen ||
-                              'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
-                            }
-                            estado={property.type}
-                            precioFormateado={property.precioFormateado || 'Consultar precio'}
-                            descripcion={property.descripcion || property.title}
-                            ubicacionTexto={property.ubicacionTexto}
-                            categoriaTexto={property.categoriaTexto}
-                            accionTexto={property.accionTexto}
-                            camas={property.nroCuartos ?? 0}
-                            banos={property.nroBanos ?? 0}
-                            metros={property.superficieM2 ?? 0}
-                            onViewDetails={() => {
-                              if (!isCompareMode) abrirDetallePropiedad(property.id)
-                            }}
-                          />
-                        ) : (
-                          <PropertyRow
-                            title={property.title}
-                            precioFormateado={property.precioFormateado || 'Consultar precio'}
-                            size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
-                            ubicacionTexto={property.ubicacionTexto}
-                            categoriaTexto={property.categoriaTexto}
-                            accionTexto={property.accionTexto}
-                            contactType="whatsapp"
-                            image={
-                              property.thumbnailUrl ||
-                              property.imagen ||
-                              'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
-                            }
-                            onViewDetails={() => {
-                              if (!isCompareMode) abrirDetallePropiedad(property.id)
-                            }}
-                          />
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-                {renderListPaginationFooter()}
-              </div>
             </div>
+
+            {/* 🚀 LISTA (Tiene su propio scroll independiente) */}
+            <div
+              ref={listScrollRef as Ref<HTMLDivElement>}
+              className="relative flex-1 overflow-y-auto custom-scrollbar p-4"
+              onScroll={(e) => {
+                const scrollTop = (e.target as HTMLDivElement).scrollTop;
+                if (!isScrolled && scrollTop > 72) setIsScrolled(true);
+                if (isScrolled && scrollTop < 20) setIsScrolled(false);
+              }}
+              onMouseEnter={() => setIsHoveringList(true)}
+              onMouseLeave={() => {
+                setIsHoveringList(false)
+                setSelectedPropertyId(null)
+                setHoveredId(null)
+              }}
+            >
+              {isLoading && displayedProperties.length === 0 ? (
+                <div className="flex flex-col justify-center items-center h-full text-stone-400 text-sm gap-2 animate-pulse min-h-[300px]">
+                  <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+                  Actualizando resultados...
+                </div>
+              ) : displayedProperties.length === 0 ? (
+                <EmptyState
+                  titulo={
+                    tieneFiltrSuperficie
+                      ? 'Sin resultados por superficie'
+                      : 'No hay propiedades existentes'
+                  }
+                  mensaje={
+                    tieneFiltrSuperficie
+                      ? 'No se encontraron propiedades dentro del rango de superficie seleccionado.'
+                      : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
+                  }
+                />
+              ) : (
+                <div
+                  className={`${
+                    viewMode === 'list'
+                      ? 'gap-4 flex flex-col'
+                      : 'grid items-stretch auto-rows-fr gap-4 [grid-template-columns:repeat(auto-fill,minmax(var(--card-min-width),1fr))]'
+                  } ${
+                    viewMode === 'list'
+                      ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
+                      : ''
+                  }`}
+                  style={viewMode === 'grid' ? ({ ['--card-min-width' as string]: `${desktopGridMinWidth}px` }) : undefined}
+                >
+                  {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
+                    <div
+                      key={property.id}
+                      onMouseEnter={() => setHoveredId(property.id)}
+                      onMouseLeave={() => setHoveredId(null)}
+                      style={
+                        viewMode === 'grid'
+                          ? { maxWidth: `min(100%, ${GRID_MAX_CARD_WIDTH}px)` }
+                          : undefined
+                      }
+                      onClick={() => {
+                        // NUEVA LÓGICA DE INTERCEPCIÓN
+                        if (isCompareMode) {
+                          toggleProperty(property.id);
+                        } else {
+                          setSelectedPropertyId(property.id);
+                        }
+                      }}
+                      className={`cursor-pointer transition-all duration-200 rounded-xl relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${viewMode === 'grid'
+                        ? 'h-full w-full justify-self-center'
+                        : 'w-full py-1 hover:bg-stone-100'
+                        } ${
+                        // Borde naranja si está seleccionado
+                        isCompareMode && selectedIds.includes(property.id)
+                          ? 'ring-4 ring-orange-500 scale-[0.98] shadow-lg'
+                          : ''
+                        }`}
+                    >
+                      {viewMode === 'grid' ? (
+                        <PropertyCard
+                          imagen={
+                            property.thumbnailUrl ||
+                            property.imagen ||
+                            'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
+                          }
+                          estado={property.type}
+                          precioFormateado={property.precioFormateado || 'Consultar precio'}
+                          descripcion={property.descripcion || property.title}
+                          ubicacionTexto={property.ubicacionTexto}
+                          categoriaTexto={property.categoriaTexto}
+                          accionTexto={property.accionTexto}
+                          camas={property.nroCuartos ?? 0}
+                          banos={property.nroBanos ?? 0}
+                          metros={property.superficieM2 ?? 0}
+                          onViewDetails={() => {
+                            if (!isCompareMode) abrirDetallePropiedad(property.id)
+                          }}
+                        />
+                      ) : (
+                        <PropertyRow
+                          title={property.title}
+                          precioFormateado={property.precioFormateado || 'Consultar precio'}
+                          size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
+                          ubicacionTexto={property.ubicacionTexto}
+                          categoriaTexto={property.categoriaTexto}
+                          accionTexto={property.accionTexto}
+                          contactType="whatsapp"
+                          image={
+                            property.thumbnailUrl ||
+                            property.imagen ||
+                            'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
+                          }
+                          onViewDetails={() => {
+                            if (!isCompareMode) abrirDetallePropiedad(property.id)
+                          }}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+              {renderListPaginationFooter()}
+              {isLoading && displayedProperties.length > 0 ? (
+                <div
+                  className="pointer-events-none absolute inset-x-0 top-0 z-10 flex justify-center pt-3 bg-gradient-to-b from-white/90 to-transparent pb-16"
+                  aria-hidden
+                >
+                  <span className="flex items-center gap-2 rounded-full border border-stone-200 bg-white/95 px-3 py-1.5 text-[11px] font-medium text-stone-600 shadow-sm">
+                    <span className="inline-block size-3.5 animate-spin rounded-full border-2 border-orange-500 border-t-transparent" />
+                    Actualizando…
+                  </span>
+                </div>
+              ) : null}
+            </div>
+          </div>
 
           ) : isSidebarOpen && activeSidebarView === 'superficie' ? (
-            <div className="flex flex-col h-full min-h-0 bg-white">
-              <SuperficieFilterSidebar onClose={() => setActiveSidebarView('results')} />
-            </div>
+          <div className="flex flex-col h-full min-h-0 bg-white">
+            <SuperficieFilterSidebar onClose={() => setActiveSidebarView('results')} />
+          </div>
           ) : null}
           {/* // Footer estático para Modo Comparación (Solo aparece si el modo está activo, independiente del filtro seleccionado) */}
           {isCompareMode && (
