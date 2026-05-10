@@ -511,3 +511,23 @@ export const invalidateSessionsByAuthMethod = async (
     },
   });
 };
+
+export const invalidateOtherSessionsByAuthMethod = async (
+  usuarioId: number,
+  metodo_auth: string,
+  currentToken: string,
+) => {
+  return prisma.sesion.updateMany({
+    where: {
+      usuarioId,
+      metodo_auth,
+      estado: true,
+      token: {
+        not: currentToken,
+      },
+    },
+    data: {
+      estado: false,
+    },
+  });
+};

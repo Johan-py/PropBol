@@ -39,8 +39,22 @@ export const unlinkSocialProviderController = async (
       message: "Proveedor inválido.",
     });
   }
+  const authHeader = req.headers.authorization;
+  const currentToken = authHeader?.startsWith("Bearer ")
+    ? authHeader.split(" ")[1]
+    : null;
 
-  const result = await unlinkSocialProviderService(usuarioId, provider);
+  if (!currentToken) {
+    return res.status(401).json({
+      message: "Token no proporcionado.",
+    });
+  }
+  
+  const result = await unlinkSocialProviderService(
+  usuarioId,
+  provider,
+  currentToken,
+);
 
   return res.status(200).json(result);
 };

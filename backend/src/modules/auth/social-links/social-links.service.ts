@@ -3,7 +3,7 @@ import {
   deactivateSocialLinkByUserAndProvider,
   findSocialLinkByUserAndProvider,
   listSocialLinksByUser,
-  invalidateSessionsByAuthMethod,
+  invalidateOtherSessionsByAuthMethod,
 } from "../auth.repository.js";
 
 const SUPPORTED_PROVIDERS = ["facebook", "discord", "google", "linkedin"] as const;
@@ -39,6 +39,7 @@ export const getSocialLinksService = async (usuarioId: number) => {
 export const unlinkSocialProviderService = async (
   usuarioId: number,
   provider: string,
+  currentToken: string,
 ) => {
   if (
     !SUPPORTED_PROVIDERS.includes(
@@ -68,8 +69,8 @@ export const unlinkSocialProviderService = async (
   await deactivateSocialLinkByUserAndProvider(usuarioId, provider);
 
   if (provider === "linkedin") {
-    await invalidateSessionsByAuthMethod(usuarioId, "linkedin");
-  }
+  await invalidateOtherSessionsByAuthMethod(usuarioId, "linkedin", currentToken);
+}
 
   return {
     message: "La red social fue desvinculada correctamente.",
