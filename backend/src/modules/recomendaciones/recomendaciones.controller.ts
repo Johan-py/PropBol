@@ -7,6 +7,7 @@ const recomendacionesService = new RecomendacionesService()
 export const getRecomendacionesGlobales = async (req: Request, res: Response) => {
   try {
     const usuarioId = (req as any).usuario?.id
+
     if (!usuarioId) {
       return res.status(401).json({ success: false, error: 'Usuario no autenticado' })
     }
@@ -29,25 +30,25 @@ export const getRecomendacionesGlobales = async (req: Request, res: Response) =>
 export const getInmueblesRecomendados = async (req: Request, res: Response) => {
   try {
     const usuarioId = (req as any).usuario?.id
-    console.log('usuarioId recibido:', usuarioId) //  pruebas
-    console.log('orden:', req.query.orden)
-    const orden = (req.query.orden as string) || 'relevancia'
+    console.log('usuarioId recibido en recomendaciones:', usuarioId) //pruebas 
+    
     const zona = req.query.zona as string | undefined
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 50
+    const ia = req.query.ia === '1'
 
     let resultados: any[] = []
 
-    if (orden === 'recomendados' && usuarioId) {
+    if (usuarioId) {
+      // CA 5, 6, 7: Si hay sesión, buscamos recomendaciones personalizadas por afinidad
       resultados = await recomendacionesService.getRecomendacionesGlobales({
         usuarioId,
         limit,
-        zonaForzada: zona
+        zonaForzada: zona,
+        ia
       })
-    } else if (orden === 'recomendados' && !usuarioId) {
-      const zonaABuscar = zona || 'Cochabamba'
-      resultados = await recomendacionesService.getRecomendacionesPorPopularidad(zonaABuscar, limit)
     } else {
-      resultados = []
+      const zonaBuscar = zona || 'Cochabamba' 
+      resultados = await recomendacionesService.getRecomendacionesPorPopularidad(zonaBuscar, limit)
     }
 
     res.status(200).json({ success: true, data: resultados })

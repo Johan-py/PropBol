@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import {
-    MapContainer,
+    MapContainer as BaseMapContainer,
     TileLayer,
     Marker,
     Popup,
@@ -11,16 +11,24 @@ import {
 } from "react-leaflet"
 import type { LatLngExpression } from "leaflet"
 
-// Importar CSS condicionalmente solo en el cliente
-if (typeof window !== 'undefined') {
-    require('leaflet/dist/leaflet.css')
-}
-
 // Importar L dinámicamente para evitar errores de SSR
 let L: any
 if (typeof window !== 'undefined') {
     L = require('leaflet')
 }
+
+interface GestureMapProps extends React.ComponentProps<typeof BaseMapContainer> {
+  gestureHandling?: boolean;
+  gestureHandlingOptions?: {
+    text: {
+      touch: string;
+      scroll: string;
+      scrollMac: string;
+    };
+  };
+}
+
+const MapContainer = BaseMapContainer as React.ComponentType<GestureMapProps>;
 
 interface Zona {
     id: number
@@ -71,6 +79,9 @@ if (typeof window !== "undefined" && L) {
         iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
         shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
     })
+    // Agregar el plugin de gesture handling para móviles MAPAS HU11
+    const { GestureHandling } = require('leaflet-gesture-handling')
+    L.Map.addInitHook('addHandler', 'gestureHandling', GestureHandling)
 }
 
 function createPropiedadIcon(tipo: string): L.DivIcon {
@@ -227,8 +238,17 @@ export default function MapaZonas({
             center={center}
             zoom={13}
             zoomControl={true}
+            scrollWheelZoom={true}
             style={{ height: "100%", width: "100%" }}
             className="z-0"
+            gestureHandling={typeof window !== 'undefined' && L ? L.Browser.mobile : false}
+            gestureHandlingOptions={{
+              text: {
+                touch: "Usa dos dedos para mover el mapa",
+                scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
+                scrollMac: "Usa ⌘ + scroll para hacer zoom en el mapa"
+              }
+            }}
         >
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'

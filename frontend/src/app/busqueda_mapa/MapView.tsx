@@ -1,8 +1,7 @@
 'use client'
 
-import 'leaflet/dist/leaflet.css'
 import {
-  MapContainer,
+  MapContainer as BaseMapContainer,
   TileLayer,
   Marker,
   Popup,
@@ -24,6 +23,19 @@ import ZonasOverlay from '@/components/map/ZonasOverlay'
 import type { PropertyMapPin } from '@/types/property'
 import type { ZonaPredefinida } from '@/types/zona'
 
+interface GestureMapProps extends React.ComponentProps<typeof BaseMapContainer> {
+  gestureHandling?: boolean;
+  gestureHandlingOptions?: {
+    text: {
+      touch: string;
+      scroll: string;
+      scrollMac: string;
+    };
+  };
+}
+
+const MapContainer = BaseMapContainer as React.ComponentType<GestureMapProps>;
+
 // Fix íconos default de Leaflet en Next.js (guard SSR)
 if (typeof window !== 'undefined') {
   delete (L.Icon.Default.prototype as any)._getIconUrl
@@ -31,6 +43,9 @@ if (typeof window !== 'undefined') {
     iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
     shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png'
   })
+  //Agregamos el plugin de gesture handling para moviles MAPAS HU11
+  const { GestureHandling } = require('leaflet-gesture-handling')
+  L.Map.addInitHook('addHandler', 'gestureHandling', GestureHandling)
 }
 
 const PIN_FILL: Record<PropertyMapPin['type'], string> = {
@@ -256,7 +271,7 @@ const vertexHandleIcon = L.divIcon({
       height: 12px;
       border-radius: 9999px;
       background: #ffffff;
-      border: 2px solid #ea580c;
+      border: 2px solid #16a34a;
       box-shadow: 0 1px 3px rgba(0,0,0,0.25);
     "></div>
   `,
@@ -347,8 +362,17 @@ export default function MapView({
         zoomControl={false}
         touchZoom={true}
         dragging={true}
+        scrollWheelZoom={true}
         style={{ height: '100%', width: '100%' }}
         className={`z-0 ${isDrawingMode && !isPolygonClosed ? '[&.leaflet-container]:cursor-crosshair [&_.leaflet-interactive]:cursor-crosshair' : ''}`}
+        gestureHandling={typeof window !== 'undefined' && L ? L.Browser.mobile : false}
+        gestureHandlingOptions={{
+          text: {
+            touch: "Usa dos dedos para mover el mapa",
+            scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
+            scrollMac: "Usa ⌘ + scroll para hacer zoom en el mapa"
+          }
+        }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -383,7 +407,7 @@ export default function MapView({
           <>
             <Polyline
               positions={polygonPoints}
-              pathOptions={{ color: '#ea580c', weight: 3, dashArray: '5, 10' }}
+              pathOptions={{ color: '#16a34a', weight: 3, dashArray: '5, 10' }}
             />
             {polygonPoints.map((pt, index) => (
               <CircleMarker
@@ -391,7 +415,7 @@ export default function MapView({
                 center={pt}
                 radius={5}
                 pathOptions={{
-                  color: index === 0 ? '#ef4444' : '#ea580c',
+                  color: '#16a34a',
                   fillColor: 'white',
                   fillOpacity: 1
                 }}
@@ -410,9 +434,9 @@ export default function MapView({
           <Polygon
             positions={polygonPoints}
             pathOptions={{
-              color: '#ea580c',
-              fillColor: '#ea580c',
-              fillOpacity: 0.2,
+              color: '#16a34a',
+              fillColor: '#22c55e',
+              fillOpacity: 0.25,
               weight: 2
             }}
           />
@@ -423,9 +447,9 @@ export default function MapView({
             <Polygon
               positions={editablePolygonPoints}
               pathOptions={{
-                color: '#ea580c',
-                fillColor: '#ea580c',
-                fillOpacity: 0.2,
+                color: '#16a34a',
+                fillColor: '#22c55e',
+                fillOpacity: 0.25,
                 weight: 2,
                 dashArray: '6, 6'
               }}
@@ -453,9 +477,9 @@ export default function MapView({
             key={`drawn-${i}`}
             positions={poly}
             pathOptions={{
-              color: '#ea580c',
-              fillColor: '#ea580c',
-              fillOpacity: 0.15,
+              color: '#16a34a',
+              fillColor: '#22c55e',
+              fillOpacity: 0.2,
               weight: 2
             }}
           />

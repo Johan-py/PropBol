@@ -685,6 +685,7 @@ export default function MiRegistroPage() {
                       value={datos.titulo}
                       onChange={manejarCambio}
                       maxLength={80}
+                      placeholder="Ej: Casa amplia en venta ubicada en zona céntrica"
                       className={`w-full p-3 rounded-xl border bg-white/70 ${
                         errorTitulo ? 'border-red-500' : 'border-gray-200'
                       }`}
@@ -914,6 +915,8 @@ export default function MiRegistroPage() {
                       onClick={() => {
                         setModoPinActivo(true)
                         setModoDifuminadoActivo(false)
+                        // borra polígono anterior
+                           setVertices([])
                       }}
                       className={`px-4 py-2 rounded-full text-sm ${
                         modoPinActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
@@ -927,6 +930,8 @@ export default function MiRegistroPage() {
                       onClick={() => {
                         setModoDifuminadoActivo(true)
                         setModoPinActivo(false)
+                        // borra pin anterior
+                           setPinCoords(null)
                       }}
                       className={`px-4 py-2 rounded-full text-sm ${
                         modoDifuminadoActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'

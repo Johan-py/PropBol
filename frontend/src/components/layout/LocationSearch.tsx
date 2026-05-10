@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { MapPin, Loader2, X, History, Search } from 'lucide-react'
 import { usePopularidad } from '@/hooks/usePopularidad'
 import { useSearchFilters } from '@/hooks/useSearchFilters'
-import { useDebounce } from 'use-debounce'
+import { useDebounce } from '@/hooks/useDebounce'
 
 interface MapboxFeature {
   id: string;
@@ -34,7 +34,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
   const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
   const [inputValue, setInputValue] = useState(value || '')
-  const [debouncedValue] = useDebounce(inputValue, 400)
+  const debouncedValue = useDebounce(inputValue, 400)
   const [suggestions, setSuggestions] = useState<MapboxFeature[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
@@ -138,10 +138,15 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
 
   useEffect(() => {
     const searchAll = async () => {
-      if (!debouncedValue || debouncedValue.length < 2) {
+      if (!debouncedValue || debouncedValue.length < 3) {
         setSuggestions([])
         return
       }
+    // NUEVA LÓGICA DE LOADER (AC: 1000ms)
+    // Iniciamos un temporizador. El loader solo será 'true' si pasan 1000ms.
+    const loaderTimer = setTimeout(() => {
+      setIsLoading(true);
+    }, 1000);
       setIsLoading(true)
       try {
         const resLocal = await fetch(`${API_BASE}/api/locations/search?q=${encodeURIComponent(debouncedValue)}`)
@@ -161,7 +166,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
         const matchInterseccion = debouncedValue.match(/(.+?)\s+y\s+(.+)/i);
         let osmResults: MapboxFeature[] = []
         if (matchInterseccion) {
-          const bbox = "-17.519,-66.368,-17.288,-65.986";
+          const bbox = "-22.9068,-69.6445,-9.6806,-57.4539";
           const queryOSM = `[out:json][timeout:5];way["name"~"${matchInterseccion[1]}", i](${bbox})->.w1;way["name"~"${matchInterseccion[2]}", i](${bbox})->.w2;node(w.w1)(w.w2);out center;`;
           const resOSM = await fetch("https://overpass-api.de/api/interpreter", {
             method: "POST",
@@ -175,25 +180,46 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             center: [el.lon, el.lat]
           }))
         }
-        const resMapbox = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(debouncedValue)}.json?access_token=${MAPBOX_TOKEN}&country=bo&bbox=-66.368,-17.519,-65.986,-17.288&language=es`)
+        const resMapbox = await fetch(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(debouncedValue)}.json?access_token=${MAPBOX_TOKEN}&country=bo&language=es&autocomplete=true&types=address,neighborhood,locality,poi`
+        )
         const dataMapbox = await resMapbox.json()
         const mapboxResults = dataMapbox.features || []
         setSuggestions([...localResults, ...osmResults, ...mapboxResults])
       } catch (e) { console.error(e) }
-      finally { setIsLoading(false) }
+      finally {
+        // Si el servidor respondió en menos de 1000ms, esto cancela el temporizador y el loader NUNCA se muestra.
+        clearTimeout(loaderTimer); 
+        setIsLoading(false);
+      }
     }
     searchAll()
   }, [debouncedValue, API_BASE, MAPBOX_TOKEN])
 
-  const handleSelect = (place: MapboxFeature) => {
+const handleSelect = (place: MapboxFeature) => {
     const nombre = place.text
     setInputValue(nombre)
     saveToHistory(nombre)
     setIsOpen(false)
-    onChange({ nombre, lat: place.center[1] !== 0 ? place.center[1] : undefined, lng: place.center[0] !== 0 ? place.center[0] : undefined, locationId: place.locationId })
+    
     if (place.isLocal && place.locationId) {
+      // Es zona oficial de PropBol. Usamos locationId y NO enviamos coordenadas.
+      onChange({ nombre, locationId: place.locationId })
       registrarConsulta(place.locationId, nombre)
-      updateFilters({ locationId: place.locationId, query: nombre })
+      updateFilters({ locationId: place.locationId, query: nombre, lat: undefined, lng: undefined })
+    } else {
+      // Es una calle de Mapbox. Usamos coordenadas.
+      onChange({ 
+        nombre, 
+        lat: place.center[1] !== 0 ? place.center[1] : undefined, 
+        lng: place.center[0] !== 0 ? place.center[0] : undefined 
+      })
+      updateFilters({ 
+        query: nombre, 
+        lat: place.center[1], 
+        lng: place.center[0], 
+        locationId: undefined 
+      })
     }
     setTimeout(() => containerRef.current?.closest('form')?.requestSubmit(), 100)
   }
@@ -206,10 +232,78 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  // Geocodifica el término del historial antes de buscar
+  const handleHistorySelect = async (term: string) => {
+    setInputValue(term)
+    setIsOpen(false) // Ocultamos el dropdown visualmente para UX fluida
+
+    try {
+      let isLocal = false
+      let bestMatch: any = null
+
+      // 1. Intentar con backend local
+      const resLocal = await fetch(`${API_BASE}/api/locations/search?q=${encodeURIComponent(term)}`)
+      if (resLocal.ok) {
+        const dataLocal = await resLocal.json()
+        if (dataLocal.length > 0) {
+          const loc = dataLocal[0]
+          bestMatch = { nombre: loc.nombre, locationId: loc.id }
+          isLocal = true
+        }
+      }
+
+      // 2. Si no es local, intentar con Mapbox
+      if (!bestMatch) {
+        const resMapbox = await fetch(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(debouncedValue)}.json?access_token=${MAPBOX_TOKEN}&country=bo&language=es&autocomplete=true&types=address,neighborhood,locality,poi`
+        )
+        const dataMapbox = await resMapbox.json()
+        if (dataMapbox.features && dataMapbox.features.length > 0) {
+          const place = dataMapbox.features[0]
+          bestMatch = {
+            nombre: place.text,
+            lat: place.center[1],
+            lng: place.center[0]
+          }
+        }
+      }
+
+      // 3. Pasar los datos completos (con coordenadas o locationId) al FilterBar
+      if (bestMatch) {
+        if (isLocal && bestMatch.locationId) {
+          // Historial de zona oficial de PropBol (Sin coordenadas)
+          onChange({ nombre: bestMatch.nombre, locationId: bestMatch.locationId })
+          registrarConsulta(bestMatch.locationId, bestMatch.nombre)
+          updateFilters({ locationId: bestMatch.locationId, query: bestMatch.nombre, lat: undefined, lng: undefined })
+        } else {
+          // Historial de calle de Mapbox (Con coordenadas)
+          onChange({ nombre: bestMatch.nombre, lat: bestMatch.lat, lng: bestMatch.lng })
+          updateFilters({
+            query: bestMatch.nombre,
+            lat: bestMatch.lat,
+            lng: bestMatch.lng,
+            locationId: undefined
+          })
+        }
+      } else {
+        onChange(term) // Fallback de seguridad
+      }
+
+      // 4. Forzar la búsqueda
+      setTimeout(() => containerRef.current?.closest('form')?.requestSubmit(), 100)
+
+    } catch (error) {
+      console.error("Error al recuperar coordenadas del historial:", error)
+      onChange(term)
+      setTimeout(() => containerRef.current?.closest('form')?.requestSubmit(), 100)
+    }
+  }
+
   return (
     <div className="w-full relative" ref={containerRef}>
-      <div className={`h-[40px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${isOpen ? 'border-orange-500 ring-1 ring-orange-500' : 'border-stone-200 hover:border-orange-500'}`}>
-        <MapPin className={`w-5 h-5 flex-shrink-0 ${inputValue ? 'text-orange-500' : 'text-stone-400'}`} />
+      <div className={`h-[40px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${isOpen ? 'border-[#d97706] ring-1 ring-[#d97706]' : 'border-stone-200 hover:border-[#d97706]'}`}>
+        <MapPin className={`w-5 h-5 flex-shrink-0 ${inputValue ? 'text-[#d97706]' : 'text-stone-400'}`} />
+        
         <div className="relative flex-1 flex items-center w-full h-full min-w-0">
           <input
             type="text"
@@ -248,7 +342,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
               </div>
               {(showAll ? history : history.slice(0, 5)).map((item, idx) => (
                 <div key={`hist-${idx}`} className="group flex items-center justify-between hover:bg-orange-50 border-b border-stone-50 last:border-0">
-                  <button type="button" onClick={() => { setInputValue(item); onChange(item); setIsOpen(false); }} className="flex-1 px-4 py-3 flex items-center gap-3 text-left">
+                  <button type="button" onClick={() => handleHistorySelect(item)} className="flex-1 px-4 py-3 flex items-center gap-3 text-left">
                     <History className="w-3.5 h-3.5 text-stone-400" />
                     <div className="flex items-center justify-between w-full pr-2">
                       <span className="text-sm text-stone-600">{item}</span>
@@ -270,7 +364,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             </div>
           )}
 
-          {inputValue.length >= 2 && (
+          {inputValue.length >= 3 && (
             <div className="max-h-[300px] overflow-y-auto overscroll-contain">
               {isLoading ? (
                 <div className="px-4 py-6 text-center flex flex-col items-center gap-2">

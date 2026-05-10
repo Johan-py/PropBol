@@ -19,7 +19,8 @@ export default function TransactionModeFilter({
       {modos.map((modo) => (
         <label
           key={modo.id}
-          className="flex items-center gap-2 text-sm text-stone-900 font-medium cursor-pointer"
+          // Añadimos 'group' aquí para detectar el hover general
+          className="group flex items-center gap-2 text-sm text-stone-900 font-medium cursor-pointer"
         >
           <div className="relative inline-flex shadow-sm">
             <input
@@ -35,7 +36,8 @@ export default function TransactionModeFilter({
                 }
               }}
               className={`
-                w-[28px] h-[18px] rounded border cursor-pointer appearance-none
+                w-[28px] h-[18px] rounded border cursor-pointer appearance-none transition-colors
+                group-hover:border-[#d97706] /* 🚀 Borde naranja al pasar el mouse por encima */
                 ${
                   modoSeleccionado.includes(modo.id)
                     ? 'bg-[#d97706] border-[#d97706]'
