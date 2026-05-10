@@ -113,6 +113,9 @@ const REGISTER_CODE_TTL_MINUTES = 5;
 const TWO_FACTOR_CODE_TTL_MINUTES = 5;
 const MAGIC_LINK_TTL_MINUTES = 15;
 const MAGIC_LINK_TTL_SECONDS = MAGIC_LINK_TTL_MINUTES * 60;
+const MAX_MAGIC_LINK_REQUESTS = 3;
+const MAGIC_LINK_REQUEST_WINDOW_MS = 5 * 60 * 1000;
+const magicLinkRequests = new Map<string, number[]>();
 
 // límite de solicitudes de recuperación
 const MAX_RECOVERY_REQUESTS = 3;
@@ -242,6 +245,30 @@ const hash2FACode = (codigo: string) => {
 
 const hashMagicLinkToken = (token: string) => {
   return crypto.createHash("sha256").update(token).digest("hex");
+};
+
+const validateMagicLinkRequestLimit = (correo: string) => {
+  const now = Date.now();
+
+  const recentRequests = (magicLinkRequests.get(correo) ?? []).filter(
+    (timestamp) => now - timestamp < MAGIC_LINK_REQUEST_WINDOW_MS,
+  );
+
+  if (recentRequests.length >= MAX_MAGIC_LINK_REQUESTS) {
+    const oldestRequest = Math.min(...recentRequests);
+    const retryAfterSeconds = Math.ceil(
+      (MAGIC_LINK_REQUEST_WINDOW_MS - (now - oldestRequest)) / 1000,
+    );
+
+    throw new AuthError(
+      "Has solicitado demasiados Magic Links. Intenta nuevamente en unos minutos.",
+      429,
+      retryAfterSeconds,
+    );
+  }
+
+  recentRequests.push(now);
+  magicLinkRequests.set(correo, recentRequests);
 };
 
 const signRegisterCode = ({
@@ -862,6 +889,8 @@ export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
     throw new AuthError("Esta cuenta está desactivada", 403);
   }
 
+ validateMagicLinkRequestLimit(correo);
+ 
   const expiraEn = new Date(Date.now() + MAGIC_LINK_TTL_MINUTES * 60 * 1000);
 
   const magicToken = jwt.sign(
