@@ -34,6 +34,7 @@ import {
   findMagicLinkByTokenHash,
   markMagicLinkAsUsed,
   deactivateMagicLink,
+  invalidateActiveMagicLinksByUserId,
 } from "./auth.repository.js";
 
 type LoginDTO = {
@@ -877,6 +878,8 @@ export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
   );
 
   const tokenHash = hashMagicLinkToken(magicToken);
+   
+  await invalidateActiveMagicLinksByUserId(user.id);
 
   await createMagicLink({
     usuarioId: user.id,
