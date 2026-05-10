@@ -30,7 +30,7 @@ export interface FiltrosBusqueda {
   radius?: number;
   amenities?: number[];
   labels?: number[];
-  soloOfertas?: boolean;
+  soloOfertas?: boolean; // NUEVO: Filtro para mostrar solo ofertas (precio actual < precio anterior)
 }
 
 // Helper para limpiar las variaciones de Anticrético
