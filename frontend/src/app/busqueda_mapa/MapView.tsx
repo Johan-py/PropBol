@@ -142,11 +142,20 @@ function MapClickHandler({ onMapClick, isDrawingMode }: {
   }, [isDrawingMode, map])
 
 useEffect(() => {
+  let lastClickTime = 0
+
   const handleClick = (e: L.LeafletMouseEvent) => {
+    const now = Date.now()
+    const timeSinceLast = now - lastClickTime
+    lastClickTime = now
+
+    // Si dos toques llegan en menos de 350ms es doble toque → dejar que Leaflet haga zoom
+    if (timeSinceLast < 350) return
+
     onMapClick(e.latlng)
   }
-  map.on('click', handleClick)
 
+  map.on('click', handleClick)
   return () => {
     map.off('click', handleClick)
   }
@@ -350,6 +359,7 @@ export default function MapView({
         zoom={zoom}
         zoomControl={false}
         touchZoom={true}
+        doubleClickZoom={true}
         dragging={true}
         style={{ height: '100%', width: '100%' }}
         className={`z-0 ${isDrawingMode && !isPolygonClosed ? '[&.leaflet-container]:cursor-crosshair [&_.leaflet-interactive]:cursor-crosshair' : ''}`}
