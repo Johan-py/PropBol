@@ -133,13 +133,54 @@ function MapClickHandler({ onMapClick, isDrawingMode }: {
   // AÑADIDO: Control nativo del cursor y bloqueo de arrastre (Criterios 2 y 20)
   useEffect(() => {
     if (isDrawingMode) {
-      map.dragging.disable() // Bloquea el movimiento del mapa
-      map.getContainer().style.cursor = 'crosshair' // Fuerza la cruz
+      map.dragging.disable()
+      map.getContainer().style.cursor = 'crosshair'
     } else {
-      map.dragging.enable() // Restaura el movimiento
-      map.getContainer().style.cursor = '' // Restaura la manito
+      map.dragging.enable()
+      map.getContainer().style.cursor = ''
     }
   }, [isDrawingMode, map])
+
+  // Doble toque con dos dedos para alejar zoom
+  useEffect(() => {
+    let lastTwoFingerTapTime = 0
+    let maxTouchCount = 0
+
+    const handleTouchStart = (e: TouchEvent) => {
+      // Registramos el máximo de dedos usados en este gesto
+      if (e.touches.length > maxTouchCount) {
+        maxTouchCount = e.touches.length
+      }
+    }
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      // Solo procesamos cuando se levantan TODOS los dedos
+      if (e.touches.length !== 0) return
+
+      // Verificamos que en algún momento hubo 2 dedos
+      if (maxTouchCount === 2) {
+        const now = Date.now()
+        const timeSinceLast = now - lastTwoFingerTapTime
+        lastTwoFingerTapTime = now
+
+        if (timeSinceLast < 350) {
+          map.zoomOut(1)
+        }
+      }
+
+      // Reiniciamos el contador para el próximo gesto
+      maxTouchCount = 0
+    }
+
+    const container = map.getContainer()
+    container.addEventListener('touchstart', handleTouchStart)
+    container.addEventListener('touchend', handleTouchEnd)
+
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart)
+      container.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [map])
 
 useEffect(() => {
   let lastClickTime = 0
