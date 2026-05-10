@@ -491,6 +491,20 @@ export const countActiveSocialLinksByUser = async (usuarioId: number) => {
     },
   });
 };
+
+export const invalidateActiveMagicLinksByUserId = async (usuarioId: number) => {
+  return await prisma.$executeRaw`
+    UPDATE magic_link
+    SET
+      activo = false,
+      invalidado_en = NOW(),
+      ultimo_reenvio_en = NOW()
+    WHERE usuario_id = ${usuarioId}
+      AND activo = true
+      AND usado_en IS NULL
+  `;
+};
+
 export const createMagicLink = async ({
   usuarioId,
   tokenHash,

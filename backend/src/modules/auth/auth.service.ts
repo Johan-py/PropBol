@@ -32,6 +32,7 @@ import {
   increment2FACodeAttempts,
   mark2FACodeAsUsed,
   findMagicLinkByTokenHash,
+  invalidateActiveMagicLinksByUserId,
   markMagicLinkAsUsed,
   deactivateMagicLink,
 } from "./auth.repository.js";
@@ -877,6 +878,8 @@ export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
   );
 
   const tokenHash = hashMagicLinkToken(magicToken);
+
+  await invalidateActiveMagicLinksByUserId(user.id);
 
   await createMagicLink({
     usuarioId: user.id,
