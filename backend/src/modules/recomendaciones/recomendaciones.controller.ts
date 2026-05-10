@@ -7,6 +7,7 @@ const recomendacionesService = new RecomendacionesService()
 export const getRecomendacionesGlobales = async (req: Request, res: Response) => {
   try {
     const usuarioId = (req as any).usuario?.id
+
     if (!usuarioId) {
       return res.status(401).json({ success: false, error: 'Usuario no autenticado' })
     }
@@ -33,6 +34,7 @@ export const getInmueblesRecomendados = async (req: Request, res: Response) => {
     
     const zona = req.query.zona as string | undefined
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 50
+    const ia = req.query.ia === '1'
 
     let resultados: any[] = []
 
@@ -41,7 +43,8 @@ export const getInmueblesRecomendados = async (req: Request, res: Response) => {
       resultados = await recomendacionesService.getRecomendacionesGlobales({
         usuarioId,
         limit,
-        zonaForzada: zona
+        zonaForzada: zona,
+        ia
       })
     } else {
       const zonaBuscar = zona || 'Cochabamba' 

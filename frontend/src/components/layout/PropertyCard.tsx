@@ -5,6 +5,7 @@ import { BedDouble, Bath, Maximize2, ImageOff, MapPin } from 'lucide-react'
 import ContactButton from '../galeria/ContactButton' // <-- Tu botón modular importado
 import ActionButton from '../galeria/ActionButton' // <-- Botón de ver detalles (opcional, lo puedes usar o no dependiendo de tu diseño)
 import { useState } from 'react'
+import ComoLlegarButton from '../galeria/ComoLlegarButton'
 
 type PropsTarjeta = {
   imagen?: string
@@ -17,6 +18,8 @@ type PropsTarjeta = {
   camas: number
   banos: number
   metros: number
+  lat?: number | null
+  lng?: number | null
   onViewDetails?: () => void
 }
 
@@ -40,6 +43,8 @@ export default function PropertyCard({
   camas,
   banos,
   metros,
+  lat,
+  lng,
   onViewDetails
 }: PropsTarjeta) {
   const [isHovered, setIsHovered] = useState(false)
@@ -130,6 +135,10 @@ export default function PropertyCard({
         {/* 3. Botón de contacto modular */}
         <div className="mt-1 w-full">
           <ContactButton type="whatsapp" variant="grid" />
+        </div>
+        {/* HU13 - Botón de redirección a mapas */}
+        <div className="mt-1 w-full flex gap-2">
+          <ComoLlegarButton lat={lat} lng={lng} variant="grid" />
         </div>
 
         {/* 4. Botón de ver detalles (HU4 - Nuevo botón para abrir el detalle en una nueva pestaña) */}

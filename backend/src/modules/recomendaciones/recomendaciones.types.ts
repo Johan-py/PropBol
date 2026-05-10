@@ -28,7 +28,7 @@ export interface PreferenciasUsuario {
 }
 
 export interface RecomendacionesParams {
-  usuarioId: number
+  usuarioId?: number
   limit?: number
   excludeIds?: number[] // Inmuebles a excluir
   zonaForzada?: string // Para forzar 60% de una zona
