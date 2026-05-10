@@ -95,6 +95,7 @@ import authRoutes from "./routes/auth.routes.js";
 import publicacionesRoutes from "./routes/publicaciones.js";
 import { authMiddleware } from "./middleware/authMiddleware.js";
 import blogsRoutes from "./modules/blogs/blogs.routes.js";
+import testimoniosRoutes from "./modules/testimonios/testimonios.routes.js";
 // --------------------
 // LEGACY
 // --------------------
@@ -195,6 +196,7 @@ app.use("/api/favorites", favoritesRoutes);
 app.use("/api/telemetria", telemetriaRoutes);
 app.use("/api/recomendaciones", recomendacionesRoutes);
 app.use("/api/blogs", blogsRoutes);
+app.use("/api/testimonios", testimoniosRoutes);
 app.use("/api/telemetria", telemetriaRouter);
 
 app.use("/api/transacciones", transaccionesRoutes);
