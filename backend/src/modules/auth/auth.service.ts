@@ -984,6 +984,10 @@ export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
   }
 };
 
+export const resendMagicLinkService = async (payload: RequestMagicLinkDTO) => {
+  return await requestMagicLinkService(payload);
+};
+
 const verifyMagicLinkToken = (token: string) => {
   try {
     const decoded = jwt.verify(token, env.JWT_SECRET) as MagicLinkJwtPayload;

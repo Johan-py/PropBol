@@ -15,6 +15,7 @@ import {
   resend2FAService,
   requestMagicLinkService,
   loginWithMagicLinkService,
+  resendMagicLinkService,
 } from "./auth.service.js";
 
 type RegisterBody = {
@@ -390,6 +391,38 @@ export const requestMagicLinkController = async (
 
     const message =
       error instanceof Error ? error.message : "Error al solicitar link mágico";
+
+    return res.status(400).json({ message });
+  }
+};
+
+export const resendMagicLinkController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+  const result = await resendMagicLinkService(req.body);
+  const { message: _message, ...responseData } = result;
+
+  return res.status(200).json({
+    message: "Te reenviamos un link mágico a tu correo electrónico.",
+    ...responseData,
+  });
+} catch (error)  {
+    if (error instanceof AuthError) {
+      if (error.retryAfterSeconds) {
+        res.setHeader("Retry-After", String(error.retryAfterSeconds));
+      }
+
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Error al reenviar link mágico";
 
     return res.status(400).json({ message });
   }
