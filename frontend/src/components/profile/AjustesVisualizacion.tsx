@@ -19,7 +19,6 @@ const THEME_STORAGE_KEY = "propbol-theme";
 const ACCESSIBILITY_STORAGE_KEY = "propbol-accessibility";
 
 const THEME_CLASSES = ["propbol-theme-light", "propbol-theme-dark"];
-
 const ACCESSIBILITY_CLASSES = [
     "propbol-accessibility-none",
     "propbol-accessibility-deuteranopia",
@@ -71,9 +70,7 @@ function VisualOptionCard({
 
                 <div>
                     <h3 className="font-semibold text-gray-900">{title}</h3>
-                    <p className="mt-1 text-sm leading-6 text-gray-500">
-                        {description}
-                    </p>
+                    <p className="mt-1 text-sm leading-6 text-gray-500">{description}</p>
                 </div>
             </div>
         </button>
@@ -118,14 +115,6 @@ export default function AjustesVisualizacion() {
     ) => {
         setAccessibility(selectedAccessibility);
         localStorage.setItem(ACCESSIBILITY_STORAGE_KEY, selectedAccessibility);
-    };
-
-    const handleResetPreferences = () => {
-        setTheme("light");
-        setAccessibility("none");
-
-        localStorage.setItem(THEME_STORAGE_KEY, "light");
-        localStorage.setItem(ACCESSIBILITY_STORAGE_KEY, "none");
     };
 
     return (
@@ -205,42 +194,6 @@ export default function AjustesVisualizacion() {
                             />
                         </div>
                     </section>
-
-                    <div className="mt-8 rounded-2xl border border-orange-200 bg-orange-50 p-5">
-                        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                            <div>
-                                <h2 className="text-lg font-semibold text-gray-900">
-                                    Preferencias visuales
-                                </h2>
-
-                                <p className="mt-1 text-sm leading-6 text-gray-600">
-                                    Tus cambios se guardan automáticamente en este navegador.
-                                </p>
-
-                                <div className="mt-3 flex flex-col gap-1 text-sm text-gray-700">
-                                    <p>
-                                        <span className="font-semibold">Tema seleccionado:</span>{" "}
-                                        {theme === "dark" ? "Modo oscuro" : "Modo claro"}
-                                    </p>
-
-                                    <p>
-                                        <span className="font-semibold">Accesibilidad:</span>{" "}
-                                        {accessibility === "deuteranopia"
-                                            ? "Deuteranopia"
-                                            : "Sin filtro"}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <button
-                                type="button"
-                                onClick={handleResetPreferences}
-                                className="rounded-xl border border-orange-500 px-5 py-3 text-sm font-semibold text-orange-600 transition hover:bg-orange-100"
-                            >
-                                Restablecer ajustes
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </section>
         </main>
