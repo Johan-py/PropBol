@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import {
-    MapContainer,
+    MapContainer as BaseMapContainer,
     TileLayer,
     Marker,
     Popup,
@@ -11,16 +11,24 @@ import {
 } from "react-leaflet"
 import type { LatLngExpression } from "leaflet"
 
-// Importar CSS condicionalmente solo en el cliente
-if (typeof window !== 'undefined') {
-    require('leaflet/dist/leaflet.css')
-}
-
 // Importar L dinámicamente para evitar errores de SSR
 let L: any
 if (typeof window !== 'undefined') {
     L = require('leaflet')
 }
+
+interface GestureMapProps extends React.ComponentProps<typeof BaseMapContainer> {
+  gestureHandling?: boolean;
+  gestureHandlingOptions?: {
+    text: {
+      touch: string;
+      scroll: string;
+      scrollMac: string;
+    };
+  };
+}
+
+const MapContainer = BaseMapContainer as React.ComponentType<GestureMapProps>;
 
 interface Zona {
     id: number
@@ -71,6 +79,9 @@ if (typeof window !== "undefined" && L) {
         iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
         shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
     })
+    // Agregar el plugin de gesture handling para móviles MAPAS HU11
+    const { GestureHandling } = require('leaflet-gesture-handling')
+    L.Map.addInitHook('addHandler', 'gestureHandling', GestureHandling)
 }
 
 function createPropiedadIcon(tipo: string): L.DivIcon {
@@ -181,6 +192,118 @@ export default function MapaZonas({
         )
     }
 
+    function DobleToque() {
+        const map = useMap()
+
+        useEffect(() => {
+            let lastClickTime = 0
+
+            const handleClick = (e: any) => {
+                const now = Date.now()
+                const timeSinceLast = now - lastClickTime
+                lastClickTime = now
+
+                if (timeSinceLast < 350) {
+                    map.zoomIn(1, { animate: true })
+                }
+            }
+
+            map.on('click', handleClick)
+            return () => {
+                map.off('click', handleClick)
+            }
+        }, [map])
+
+        // Doble toque y arrastre para zoom continuo (one-finger zoom)
+        useEffect(() => {
+            let lastTapTime = 0
+            let isDragging = false
+            let startY = 0
+            let startZoom = 0
+
+            const handleTouchStart = (e: TouchEvent) => {
+                if (e.touches.length !== 1) return
+
+                const now = Date.now()
+                const timeSinceLast = now - lastTapTime
+
+                if (timeSinceLast < 350) {
+                    isDragging = true
+                    startY = e.touches[0].clientY
+                    startZoom = map.getZoom()
+                    e.preventDefault()
+                }
+
+                lastTapTime = now
+            }
+
+            const handleTouchMove = (e: TouchEvent) => {
+                if (!isDragging || e.touches.length !== 1) return
+
+                const currentY = e.touches[0].clientY
+                const deltaY = startY - currentY
+
+                const zoomDelta = deltaY / 50
+                map.setZoom(startZoom + zoomDelta, { animate: false })
+                e.preventDefault()
+            }
+
+            const handleTouchEnd = () => {
+                isDragging = false
+            }
+
+            const container = map.getContainer()
+            container.addEventListener('touchstart', handleTouchStart, { passive: false })
+            container.addEventListener('touchmove', handleTouchMove, { passive: false })
+            container.addEventListener('touchend', handleTouchEnd)
+
+            return () => {
+                container.removeEventListener('touchstart', handleTouchStart)
+                container.removeEventListener('touchmove', handleTouchMove)
+                container.removeEventListener('touchend', handleTouchEnd)
+            }
+        }, [map])
+
+        // Doble toque con dos dedos para alejar zoom
+        useEffect(() => {
+            let lastTwoFingerTapTime = 0
+            let maxTouchCount = 0
+
+            const handleTouchStart = (e: TouchEvent) => {
+                if (e.touches.length > maxTouchCount) {
+                    maxTouchCount = e.touches.length
+                }
+            }
+
+            const handleTouchEnd = (e: TouchEvent) => {
+                if (e.touches.length !== 0) return
+
+                if (maxTouchCount === 2) {
+                    const now = Date.now()
+                    const timeSinceLast = now - lastTwoFingerTapTime
+                    lastTwoFingerTapTime = now
+
+                    if (timeSinceLast < 350) {
+                        map.zoomOut(1)
+                    }
+                }
+
+                maxTouchCount = 0
+            }
+
+            const container = map.getContainer()
+            container.addEventListener('touchstart', handleTouchStart)
+            container.addEventListener('touchend', handleTouchEnd)
+
+            return () => {
+                container.removeEventListener('touchstart', handleTouchStart)
+                container.removeEventListener('touchend', handleTouchEnd)
+            }
+        }, [map])
+
+        return null
+    }
+
     function CentrarZona({
         zonas,
         zonaSeleccionadaId,
@@ -227,14 +350,24 @@ export default function MapaZonas({
             center={center}
             zoom={13}
             zoomControl={true}
+            scrollWheelZoom={true}
             style={{ height: "100%", width: "100%" }}
             className="z-0"
+            gestureHandling={typeof window !== 'undefined' && L ? L.Browser.mobile : false}
+            gestureHandlingOptions={{
+              text: {
+                touch: "Usa dos dedos para mover el mapa",
+                scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
+                scrollMac: "Usa ⌘ + scroll para hacer zoom en el mapa"
+              }
+            }}
         >
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <CentrarZona zonas={zonas} zonaSeleccionadaId={zonaSeleccionadaId} />
+            <DobleToque />
 
 
             {/* Dibujar TODAS las zonas en el mapa */}

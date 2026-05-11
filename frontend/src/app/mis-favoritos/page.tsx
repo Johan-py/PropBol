@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Star, Heart } from "lucide-react";
+import { Star, Heart, MapPin } from "lucide-react";
 
 type Inmueble = {
   id: number;
@@ -47,6 +47,14 @@ export default function MisFavoritos() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [removingId, setRemovingId] = useState<number | null>(null);
+
+  const [confirmModal, setConfirmModal] = useState<{
+  open: boolean;
+  inmuebleId: number | null;
+    }>({
+  open: false,
+  inmuebleId: null,
+});
 
   const fetchFavoritos = async (pageNum: number) => {
     const token = localStorage.getItem("token");
@@ -117,6 +125,13 @@ export default function MisFavoritos() {
       setRemovingId(null);
     }
   };
+
+  const confirmRemove = async () => {
+  if (confirmModal.inmuebleId !== null) {
+    await removeFavorite(confirmModal.inmuebleId);
+    setConfirmModal({ open: false, inmuebleId: null });
+  }
+ };
 
   const getImagenUrl = (inmueble: Inmueble): string => {
     // Usar el nuevo campo imagen_principal
@@ -220,7 +235,7 @@ export default function MisFavoritos() {
                     <div className="p-4">
                       {/* PRECIO */}
                       <p className="text-[#E87B00] font-bold text-xl">
-                        ${inmueble.precio?.toLocaleString() || "0"} USD
+                        ${new Intl.NumberFormat('en-US').format(inmueble.precio || 0)} USD
                       </p>
 
                       {/* TÍTULO */}
@@ -230,7 +245,8 @@ export default function MisFavoritos() {
 
                       {/* UBICACIÓN */}
                       <p className="text-gray-500 text-xs mt-1 flex items-center gap-1">
-                        📍 {ciudad}
+                        <MapPin size={14} className="text-gray-400" />
+                           {ciudad}
                       </p>
 
                       {/* CARACTERÍSTICAS */}
@@ -253,7 +269,7 @@ export default function MisFavoritos() {
                       <div className="mt-4 flex gap-2 items-center">
                         {/* Botón estrella para quitar de favoritos */}
                         <button
-                          onClick={() => removeFavorite(inmueble.id)}
+                          onClick={() => setConfirmModal({ open: true, inmuebleId: inmueble.id })}
                           disabled={removingId === inmueble.id}
                           className="bg-[#E87B00] p-2.5 rounded-lg hover:bg-orange-600 transition-all duration-200 disabled:opacity-50 flex items-center justify-center min-w-[42px] group/star"
                           title="Quitar de favoritos"
@@ -268,7 +284,7 @@ export default function MisFavoritos() {
 
                         {/* Botón Ver Detalle */}
                         <button
-                          onClick={() => verDetalle(inmueble.id)}  // 👈 Cambiar esta línea
+                          onClick={() => verDetalle(inmueble.id)}
                           className="flex-1 bg-[#E87B00] text-white py-2.5 rounded-lg text-sm font-bold hover:bg-orange-600 transition-colors flex items-center justify-center gap-2"
                         >
                           Ver Detalle
@@ -329,6 +345,41 @@ export default function MisFavoritos() {
           </>
         )}
       </div>
+            {/* MODAL DE CONFIRMACIÓN */}
+  {confirmModal.open && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="bg-white rounded-xl p-6 w-[90%] max-w-sm shadow-xl">
+      
+      <h2 className="text-lg font-bold text-gray-900">
+        ¿Eliminar de favoritos?
+      </h2>
+
+      <p className="text-sm text-gray-600 mt-2">
+        Esta propiedad se quitará de tu lista de favoritos.
+      </p>
+
+      <div className="mt-6 flex gap-3 justify-end">
+        {/* Cancelar */}
+        <button
+          onClick={() =>
+            setConfirmModal({ open: false, inmuebleId: null })
+          }
+          className="px-4 py-2 text-sm rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100"
+        >
+          Cancelar
+        </button>
+
+        {/* Confirmar */}
+        <button
+          onClick={confirmRemove}
+          className="px-4 py-2 text-sm rounded-lg bg-red-500 text-white hover:bg-red-600"
+        >
+          Sí, eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </main>
   );
 }
