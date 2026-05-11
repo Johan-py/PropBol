@@ -336,3 +336,76 @@
 .animate-fade {
   animation: fade-in 0.6s ease-in-out;
 }
+
+/* ================================
+   HU13 - Ajustes de Visualización
+   Modo oscuro y accesibilidad
+   Alcance limitado a la vista HU13
+================================ */
+
+html.propbol-theme-dark .propbol-visual-settings-page {
+  background-color: #0f172a !important;
+  color: #e5e7eb !important;
+}
+
+html.propbol-theme-dark .propbol-visual-settings-page .bg-white {
+  background-color: #1e293b !important;
+}
+
+html.propbol-theme-dark .propbol-visual-settings-page .bg-\[\#f8f6f1\] {
+  background-color: #0f172a !important;
+}
+
+html.propbol-theme-dark .propbol-visual-settings-page .bg-orange-50 {
+  background-color: rgba(249, 115, 22, 0.12) !important;
+}
+
+html.propbol-theme-dark .propbol-visual-settings-page .bg-gray-50 {
+  background-color: #111827 !important;
+}
+
+html.propbol-theme-dark .propbol-visual-settings-page .bg-amber-50 {
+  background-color: rgba(245, 158, 11, 0.14) !important;
+}
+
+html.propbol-theme-dark .propbol-visual-settings-page .text-gray-900,
+html.propbol-theme-dark .propbol-visual-settings-page .text-gray-800,
+html.propbol-theme-dark .propbol-visual-settings-page .text-gray-700 {
+  color: #f8fafc !important;
+}
+
+html.propbol-theme-dark .propbol-visual-settings-page .text-gray-600,
+html.propbol-theme-dark .propbol-visual-settings-page .text-gray-500 {
+  color: #cbd5e1 !important;
+}
+
+html.propbol-theme-dark .propbol-visual-settings-page .border-gray-200 {
+  border-color: #334155 !important;
+}
+
+html.propbol-theme-dark .propbol-visual-settings-page .border-gray-300 {
+  border-color: #475569 !important;
+}
+
+html.propbol-theme-dark .propbol-visual-settings-page .ring-gray-100 {
+  --tw-ring-color: rgba(51, 65, 85, 0.8) !important;
+}
+
+html.propbol-theme-dark .propbol-visual-settings-page .shadow-sm {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Modo claro explícito */
+html.propbol-theme-light .propbol-visual-settings-page {
+  filter: none;
+}
+
+/* Accesibilidad: Deuteranopia solo en la vista HU13 */
+html.propbol-accessibility-deuteranopia .propbol-visual-settings-page {
+  filter: saturate(0.85) hue-rotate(-12deg) contrast(1.08);
+}
+
+/* Sin filtro de accesibilidad */
+html.propbol-accessibility-none .propbol-visual-settings-page {
+  filter: none;
+}
