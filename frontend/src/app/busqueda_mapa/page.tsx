@@ -947,6 +947,8 @@ function BusquedaMapaContent() {
                   onViewDetails={() => {
                     if (!isCompareMode) abrirDetallePropiedad(property.id)
                   }}
+                  lat={property.lat}
+                  lng={property.lng}
                 />
               )}
             </div>
@@ -1843,6 +1845,8 @@ function BusquedaMapaContent() {
                             onViewDetails={() => {
                               if (!isCompareMode) abrirDetallePropiedad(property.id)
                             }}
+                            lat={property.lat}
+                            lng={property.lng}
                           />
                         )}
                       </div>
