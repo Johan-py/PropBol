@@ -918,6 +918,8 @@ function BusquedaMapaContent() {
                   ubicacionTexto={property.ubicacionTexto}
                   categoriaTexto={property.categoriaTexto}
                   accionTexto={property.accionTexto}
+                  lat={property.lat}
+                  lng={property.lng}
                   camas={property.nroCuartos ?? 0}
                   banos={property.nroBanos ?? 0}
                   metros={property.superficieM2 ?? 0}
@@ -937,6 +939,8 @@ function BusquedaMapaContent() {
                   ubicacionTexto={property.ubicacionTexto}
                   categoriaTexto={property.categoriaTexto}
                   accionTexto={property.accionTexto}
+                  lat={property.lat}
+                  lng={property.lng}
                   contactType="whatsapp"
                   image={
                     property.thumbnailUrl ||
@@ -1398,6 +1402,8 @@ function BusquedaMapaContent() {
                         ubicacionTexto={pinnedProperty.ubicacionTexto}
                         categoriaTexto={pinnedProperty.categoriaTexto}
                         accionTexto={pinnedProperty.accionTexto}
+                        lat={pinnedProperty.lat}
+                        lng={pinnedProperty.lng}
                         camas={pinnedProperty.nroCuartos ?? 0}
                         banos={pinnedProperty.nroBanos ?? 0}
                         metros={pinnedProperty.superficieM2 ?? 0}
