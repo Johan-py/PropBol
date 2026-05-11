@@ -19,12 +19,12 @@ export class FeaturesService {
    * @param limit Número máximo de resultados
    * @returns Lista de inmuebles con score y razones
    */
-  async recomendar(usuarioId: number, limit: number = 20): Promise<InmuebleConScore[]> {
+  async recomendar(usuarioId: number, limit: number = 20, filtrosActivos?: { modoInmueble?: string []; query?: string }): Promise<InmuebleConScore[]> {
     try {
       // 1. Obtener el historial de interacciones del usuario
       const historial = await prisma.propiedad_vista.findMany({
         where: { usuarioId: usuarioId },
-        select: { inmuebleId: true },
+        select: { inmuebleId: true, vistaEn: true },
         orderBy: { vistaEn: 'desc' },
         take: 50 // últimas 50 vistas
       })
@@ -35,10 +35,14 @@ export class FeaturesService {
       })
 
       // Combinar interacciones (dar más peso a favoritos)
+  
       const interacciones = new Map<number, number>() // inmuebleId -> peso
+      const ahora = new Date()
       for (const v of historial) {
-        interacciones.set(v.inmuebleId, (interacciones.get(v.inmuebleId) || 0) + 1)
-      }
+        const horasDiff = (ahora.getTime() - new Date(v.vistaEn).getTime()) / (1000 * 3600)
+        const pesoRecencia = horasDiff < 1 ? 8 : horasDiff < 24 ? 4 : horasDiff < 168 ? 2 : 1
+        interacciones.set(v.inmuebleId, (interacciones.get(v.inmuebleId) || 0) + pesoRecencia)
+    }
       for (const f of favoritos) {
         interacciones.set(f.inmuebleId, (interacciones.get(f.inmuebleId) || 0) + 5) // favoritos suman más
       }
@@ -54,7 +58,7 @@ export class FeaturesService {
       // Para evitar hacer cálculos pesados, tomamos propiedades de las mismas categorías/zona
       const propiedadesSimilares = await this.obtenerInmueblesCandidatos(
         inmueblesInteractuados,
-        limit * 3
+        limit * 3, filtrosActivos
       )
 
       if (propiedadesSimilares.length === 0) {
@@ -96,7 +100,7 @@ export class FeaturesService {
             !razones.includes(`Similar a "${this.obtenerTitulo(idInteractuado)}"`)
           ) {
             razones.push(
-              `Similar a "${this.obtenerTitulo(idInteractuado)}" (${(similitud * 100).toFixed(0)}% coincidencia)`
+              `Basado en propiedad vista anteriormente (${(similitud * 100).toFixed(0)} % similitud)`
             )
             razonesMap.set(propiedadesSimilares[i].id, razones)
           }
@@ -133,7 +137,8 @@ export class FeaturesService {
    */
   private async obtenerInmueblesCandidatos(
     idsInteractuados: number[],
-    limite: number
+    limite: number,
+    filtrosActivos?: { modoInmueble?: string[], query?: string }
   ): Promise<any[]> {
     // Estrategia simple: obtener propiedades de las mismas categorías y zonas
     const interactuados = await prisma.inmueble.findMany({
@@ -147,12 +152,27 @@ export class FeaturesService {
       )
     ]
 
+    const where: any = {
+      id: { notIn: idsInteractuados },
+      categoria: { in: categorias },
+      estado: 'ACTIVO'
+    }
+
+    if (filtrosActivos?.modoInmueble && filtrosActivos.modoInmueble.length > 0) {
+      where.tipoAccion = { in: filtrosActivos.modoInmueble }
+    }
+
+    if (filtrosActivos?.query && filtrosActivos.query.trim() !== '') {
+      const texto = filtrosActivos.query.trim()
+      where.OR = [
+        { ubicacion: { zona: { contains: texto, mode: 'insensitive' } } },
+        { ubicacion: { direccion: { contains: texto, mode: 'insensitive' } } },
+        { titulo: { contains: texto, mode: 'insensitive' } },
+      ]
+    }
+
     const candidatos = await prisma.inmueble.findMany({
-      where: {
-        id: { notIn: idsInteractuados },
-        categoria: { in: categorias },
-        estado: 'ACTIVO'
-      },
+      where,
       take: limite,
       include: { ubicacion: true }
     })
