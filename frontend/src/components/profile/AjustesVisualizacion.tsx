@@ -19,6 +19,7 @@ const THEME_STORAGE_KEY = "propbol-theme";
 const ACCESSIBILITY_STORAGE_KEY = "propbol-accessibility";
 
 const THEME_CLASSES = ["propbol-theme-light", "propbol-theme-dark"];
+
 const ACCESSIBILITY_CLASSES = [
     "propbol-accessibility-none",
     "propbol-accessibility-deuteranopia",
@@ -119,6 +120,14 @@ export default function AjustesVisualizacion() {
         localStorage.setItem(ACCESSIBILITY_STORAGE_KEY, selectedAccessibility);
     };
 
+    const handleResetPreferences = () => {
+        setTheme("light");
+        setAccessibility("none");
+
+        localStorage.setItem(THEME_STORAGE_KEY, "light");
+        localStorage.setItem(ACCESSIBILITY_STORAGE_KEY, "none");
+    };
+
     return (
         <main className="propbol-visual-settings-page min-h-screen bg-[#f8f6f1] px-4 py-8 text-gray-900">
             <section className="mx-auto w-full max-w-5xl">
@@ -197,14 +206,40 @@ export default function AjustesVisualizacion() {
                         </div>
                     </section>
 
-                    <div className="mt-8 rounded-xl border border-dashed border-orange-300 bg-orange-50 p-5">
-                        <p className="text-sm font-medium text-orange-700">
-                            Subtarea 8 completada: clases globales aplicadas.
-                        </p>
-                        <p className="mt-1 text-sm text-orange-600">
-                            En la siguiente subtarea agregaremos estilos globales para que el
-                            modo oscuro y la accesibilidad cambien visualmente la interfaz.
-                        </p>
+                    <div className="mt-8 rounded-2xl border border-orange-200 bg-orange-50 p-5">
+                        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                            <div>
+                                <h2 className="text-lg font-semibold text-gray-900">
+                                    Preferencias visuales
+                                </h2>
+
+                                <p className="mt-1 text-sm leading-6 text-gray-600">
+                                    Tus cambios se guardan automáticamente en este navegador.
+                                </p>
+
+                                <div className="mt-3 flex flex-col gap-1 text-sm text-gray-700">
+                                    <p>
+                                        <span className="font-semibold">Tema seleccionado:</span>{" "}
+                                        {theme === "dark" ? "Modo oscuro" : "Modo claro"}
+                                    </p>
+
+                                    <p>
+                                        <span className="font-semibold">Accesibilidad:</span>{" "}
+                                        {accessibility === "deuteranopia"
+                                            ? "Deuteranopia"
+                                            : "Sin filtro"}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={handleResetPreferences}
+                                className="rounded-xl border border-orange-500 px-5 py-3 text-sm font-semibold text-orange-600 transition hover:bg-orange-100"
+                            >
+                                Restablecer ajustes
+                            </button>
+                        </div>
                     </div>
                 </div>
             </section>
