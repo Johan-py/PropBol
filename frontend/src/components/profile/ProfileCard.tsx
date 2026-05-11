@@ -561,9 +561,9 @@ function ProfileCardContent() {
   }
 
   return (
-    <div 
-      id="personal-data-form" 
-      className="bg-[#fdf6e6] border border-[#e5dfd7] p-5 md:p-8 rounded-xl flex flex-col md:flex-row gap-8 md:gap-10 items-center md:items-start transition-all duration-700 shadow-sm"
+    <div
+      id="personal-data-form"
+      className="propbol-profile-card bg-[#fdf6e6] border border-[#e5dfd7] p-5 md:p-8 rounded-xl flex flex-col md:flex-row gap-8 md:gap-10 items-center md:items-start transition-all duration-700 shadow-sm"
     >
       {/* PERFIL */}
       <div className="flex flex-col items-center justify-center w-full md:w-1/3 md:mt-4">
