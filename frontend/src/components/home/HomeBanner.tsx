@@ -24,6 +24,7 @@ export const HomeBanner = ({ url, title, subtitle }: BannerProps) => {
         fill
         className="object-cover object-top md:object-center"
         priority
+        unoptimized
       />
 
       {/* overlay */}

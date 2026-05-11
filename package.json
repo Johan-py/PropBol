@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "cors": "^2.8.6",
+    "leaflet-gesture-handling": "^1.2.2",
     "tailwind": "^4.0.0"
   },
   "engines": {
