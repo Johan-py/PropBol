@@ -118,6 +118,7 @@ import plansRoutes from "./modules/plans/plans.routes.js";
 import historialBusquedaRoutes from "./modules/perfil/historialBusqueda.routes.js";
 import whatsappRoutes from "./modules/whatsapp/whatsapp.routes.js";
 import { getAdminTestimonios } from "./modules/testimonios/adminTestimonios.controller.js";
+import poisRoutes from "./modules/pois/pois.routes.js";
 
 import "./jobs/suscripcion.job.js";
 
@@ -207,6 +208,7 @@ app.use("/api/suscripciones", suscripcionesRoutes);
 app.use("/api/planes", plansRoutes);
 app.use("/api/whatsapp", whatsappRoutes);
 app.use("/api/locations", locationRoutes);
+app.use("/api/pois", poisRoutes);
 
 // --------------------
 // MOCK / TEST

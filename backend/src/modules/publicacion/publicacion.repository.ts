@@ -283,6 +283,15 @@ export const buscarDetallePublicacionPorIdRepository = async (publicacionId: num
                 }
               }
             }
+          },
+          puntosInteres: {
+            select: {
+              id: true,
+              nombre: true,
+              latitud: true,
+              longitud: true
+            },
+            orderBy: { id: 'asc' }
           }
         }
       },
@@ -360,6 +369,15 @@ export const buscarDetallePublicacionPorInmuebleIdRepository = async (inmuebleId
                 }
               }
             }
+          },
+          puntosInteres: {
+            select: {
+              id: true,
+              nombre: true,
+              latitud: true,
+              longitud: true
+            },
+            orderBy: { id: 'asc' }
           }
         }
       },

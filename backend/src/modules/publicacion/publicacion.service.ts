@@ -411,6 +411,12 @@ export const obtenerDetallePublicacionService = async (publicacionId: number) =>
         : null,
       direccion: publicacion.inmueble.ubicacion?.direccion || null
     },
+    puntosInteres: (publicacion.inmueble as any).puntosInteres?.map((poi: any) => ({
+      id: poi.id,
+      nombre: poi.nombre,
+      latitud: Number(poi.latitud),
+      longitud: Number(poi.longitud)
+    })) ?? [],
     contacto: {
       nombre: `${publicacion.usuario.nombre} ${publicacion.usuario.apellido}`,
       correo: publicacion.usuario.correo ?? null,
@@ -469,6 +475,12 @@ export const obtenerDetallePublicacionPorInmuebleService = async (inmuebleId: nu
         : null,
       direccion: publicacion.inmueble.ubicacion?.direccion || null
     },
+    puntosInteres: (publicacion.inmueble as any).puntosInteres?.map((poi: any) => ({
+      id: poi.id,
+      nombre: poi.nombre,
+      latitud: Number(poi.latitud),
+      longitud: Number(poi.longitud)
+    })) ?? [],
     contacto: {
       nombre: `${publicacion.usuario.nombre} ${publicacion.usuario.apellido}`,
       correo: publicacion.usuario.correo ?? null,
