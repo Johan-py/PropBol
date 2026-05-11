@@ -11,20 +11,19 @@ export default function BlogSharePlaceholder({ title }: BlogShareProps) {
   const getTitle = () => title || (typeof document !== 'undefined' ? document.title : 'Blog PropBol');
 
   const shareToGmail = () => { window.open(`https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent(getTitle())}&body=${encodeURIComponent('¡Hola! Te comparto este artículo que me pareció interesante:\n\n' + getUrl())}`, '_blank') };
-  const shareToInstagram = async () => {
-    try {
-      await navigator.clipboard.writeText(getUrl());
-      alert('¡Enlace copiado al portapapeles! Ahora puedes pegarlo en tu publicación o historia de Instagram.');
-      window.open('https://www.instagram.com/', '_blank');
-    } catch (err) {
-      console.error('Error al copiar el enlace:', err);
-      window.open('https://www.instagram.com/', '_blank');
-    }
-  };
 
   const shareToWhatsApp = () => {
     const text = encodeURIComponent(`¡Hola! Te comparto este artículo que me pareció interesante:\n\n${getTitle()}\n${getUrl()}`);
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+  };
+
+  const shareToLinkedIn = () => {
+    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(getUrl())}`, '_blank');
+  };
+
+  const shareToX = () => {
+    const text = encodeURIComponent(`¡Hola! Te comparto este artículo que me pareció interesante de PropBol:\n\n${getTitle()}\n`);
+    window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(getUrl())}&text=${text}`, '_blank');
   };
 
   const shareToFacebook = () => {
@@ -60,13 +59,6 @@ export default function BlogSharePlaceholder({ title }: BlogShareProps) {
                 className="w-7 h-7 sm:w-8 sm:h-8 opacity-90 group-hover:opacity-100 transition-opacity"
               />
             </button>
-            <button onClick={shareToInstagram} className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir en Instagram">
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/9/95/Instagram_logo_2022.svg"
-                alt="Instagram"
-                className="w-7 h-7 sm:w-8 sm:h-8 opacity-90 group-hover:opacity-100 transition-opacity"
-              />
-            </button>
             <button onClick={shareToWhatsApp} className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir por WhatsApp">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
@@ -81,26 +73,31 @@ export default function BlogSharePlaceholder({ title }: BlogShareProps) {
                 className="w-7 h-7 sm:w-8 sm:h-8 opacity-90 group-hover:opacity-100 transition-opacity"
               />
             </button>
-            <button className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-[7px] bg-black flex items-center justify-center opacity-90 group-hover:opacity-100 transition-opacity">
-                <img
-                  src="https://cdn.simpleicons.org/tiktok/white"
-                  alt="TikTok"
-                  className="w-4 h-4 sm:w-5 sm:h-5"
-                />
-              </div>
+            <button onClick={shareToX} className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir en X (Twitter)">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg"
+                alt="X"
+                className="w-6 h-6 sm:w-7 sm:h-7 opacity-90 group-hover:opacity-100 transition-opacity"
+              />
             </button>
-            <button className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0">
+            <button onClick={shareToLinkedIn} className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir en LinkedIn">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png"
+                alt="LinkedIn"
+                className="w-7 h-7 sm:w-8 sm:h-8 opacity-90 group-hover:opacity-100 transition-opacity"
+              />
+            </button>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(getUrl());
+                alert('¡Enlace copiado al portapapeles!');
+              }}
+              className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0"
+              title="Copiar enlace"
+            >
               <svg viewBox="0 0 24 24" className="w-5 h-5 sm:w-[22px] sm:h-[22px] opacity-90 group-hover:opacity-100 transition-opacity text-[#433527]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <rect width="14" height="14" x="8" y="8" rx="2.5" ry="2.5"></rect>
                 <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
-              </svg>
-            </button>
-            <button className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0">
-              <svg viewBox="0 0 24 24" className="w-5 h-5 sm:w-6 sm:h-6 opacity-90 group-hover:opacity-100 transition-opacity text-stone-800" fill="currentColor">
-                <circle cx="5" cy="12" r="1.8"></circle>
-                <circle cx="12" cy="12" r="1.8"></circle>
-                <circle cx="19" cy="12" r="1.8"></circle>
               </svg>
             </button>
           </div>
@@ -132,7 +129,10 @@ export default function BlogSharePlaceholder({ title }: BlogShareProps) {
               <div className="absolute right-0 top-full mt-2.5 w-full bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-stone-100 p-2 z-50 animate-in fade-in zoom-in slide-in-from-top-2 duration-300 origin-top">
                 <button
                   className="flex items-center w-full gap-3 px-3 py-3 rounded-xl hover:bg-stone-50 text-stone-700 transition-colors group"
-                  onClick={() => setIsDownloadOpen(false)}
+                  onClick={() => {
+                    setIsDownloadOpen(false);
+                    alert('La descarga en PDF estará disponible próximamente.');
+                  }}
                 >
                   <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors shrink-0">
                     <svg viewBox="0 0 24 24" className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -142,20 +142,6 @@ export default function BlogSharePlaceholder({ title }: BlogShareProps) {
                     </svg>
                   </div>
                   <span className="text-sm font-semibold whitespace-nowrap">Descargar PDF</span>
-                </button>
-
-                <button
-                  className="flex items-center w-full gap-3 px-3 py-3 rounded-xl hover:bg-stone-50 text-stone-700 transition-colors group"
-                  onClick={() => setIsDownloadOpen(false)}
-                >
-                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 group-hover:bg-blue-100 transition-colors shrink-0">
-                    <svg viewBox="0 0 24 24" className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                      <polyline points="21 15 16 10 5 21"></polyline>
-                    </svg>
-                  </div>
-                  <span className="text-sm font-semibold whitespace-nowrap">Descargar Imagen</span>
                 </button>
               </div>
             )}
