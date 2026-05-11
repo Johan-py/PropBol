@@ -60,7 +60,19 @@ export default function ActiveSessions() {
                   <input
                     type="checkbox"
                     disabled={session.status === 'Sesión actual'}
-                 />
+                    className={`w-5 h-5 ${
+                    session.status === 'Sesión actual'
+                    ? 'cursor-not-allowed accent-red-500 opacity-60'
+                    : 'cursor-pointer'
+                  }`}
+                   />
+
+                  {session.status === 'Sesión actual' && (
+                    <p className="text-xs text-red-500 mt-2 text-center">
+                    No se puede cerrar esta sesión
+                  </p>
+                  )}
+                 
 
                 </div>
               </div>
