@@ -829,18 +829,6 @@ model TutorialPublicacionUsuario {
   @@map("tutorial_publicacion_usuario")
 }
 
-model TutorialPublicacionUsuario {
-  id            Int       @id @default(autoincrement())
-  usuarioId     Int       @unique @map("usuario_id")
-  confirmado    Boolean   @default(false)
-  vistoEn       DateTime? @map("visto_en") @db.Timestamp(6)
-  confirmadoEn  DateTime? @map("confirmado_en") @db.Timestamp(6)
-
-  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@map("tutorial_publicacion_usuario")
-}
-
 enum Genero {
   MASCULINO
   FEMENINO
