@@ -40,6 +40,15 @@ export default function ActiveSessions() {
                 <p>Estado</p>
                 <p>Acción</p>
                 </div>
+              <div className="space-y-3">
+
+                 {sessions.map((session) => (
+                    <div key={session.id}>
+              </div>
+              ))}
+
+            </div>
+                
         </div>
 
       </div>
