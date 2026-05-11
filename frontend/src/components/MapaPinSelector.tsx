@@ -146,6 +146,43 @@ function EventosMapa({
     }
   }, [map])
 
+  // Doble toque con dos dedos para alejar zoom
+  useEffect(() => {
+    let lastTwoFingerTapTime = 0
+    let maxTouchCount = 0
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length > maxTouchCount) {
+        maxTouchCount = e.touches.length
+      }
+    }
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (e.touches.length !== 0) return
+
+      if (maxTouchCount === 2) {
+        const now = Date.now()
+        const timeSinceLast = now - lastTwoFingerTapTime
+        lastTwoFingerTapTime = now
+
+        if (timeSinceLast < 350) {
+          map.zoomOut(1)
+        }
+      }
+
+      maxTouchCount = 0
+    }
+
+    const container = map.getContainer()
+    container.addEventListener('touchstart', handleTouchStart)
+    container.addEventListener('touchend', handleTouchEnd)
+
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart)
+      container.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [map])
+
   return null
 }
 
