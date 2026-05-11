@@ -192,6 +192,31 @@ export default function MapaZonas({
         )
     }
 
+    function DobleToque() {
+        const map = useMap()
+
+        useEffect(() => {
+            let lastClickTime = 0
+
+            const handleClick = (e: any) => {
+                const now = Date.now()
+                const timeSinceLast = now - lastClickTime
+                lastClickTime = now
+
+                if (timeSinceLast < 350) {
+                    map.zoomIn(1, { animate: true })
+                }
+            }
+
+            map.on('click', handleClick)
+            return () => {
+                map.off('click', handleClick)
+            }
+        }, [map])
+
+        return null
+    }
+
     function CentrarZona({
         zonas,
         zonaSeleccionadaId,
@@ -255,6 +280,7 @@ export default function MapaZonas({
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <CentrarZona zonas={zonas} zonaSeleccionadaId={zonaSeleccionadaId} />
+            <DobleToque />
 
 
             {/* Dibujar TODAS las zonas en el mapa */}
