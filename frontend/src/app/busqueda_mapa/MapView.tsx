@@ -144,20 +144,122 @@ function MapClickHandler({ onMapClick, isDrawingMode }: {
   // AÑADIDO: Control nativo del cursor y bloqueo de arrastre (Criterios 2 y 20)
   useEffect(() => {
     if (isDrawingMode) {
-      map.dragging.disable() // Bloquea el movimiento del mapa
-      map.getContainer().style.cursor = 'crosshair' // Fuerza la cruz
+      map.dragging.disable()
+      map.getContainer().style.cursor = 'crosshair'
     } else {
-      map.dragging.enable() // Restaura el movimiento
-      map.getContainer().style.cursor = '' // Restaura la manito
+      map.dragging.enable()
+      map.getContainer().style.cursor = ''
     }
   }, [isDrawingMode, map])
 
+  // Doble toque y arrastre para zoom (one-finger zoom)
+  useEffect(() => {
+    let lastTapTime = 0
+    let isDragging = false
+    let startY = 0
+    let startZoom = 0
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length !== 1) return
+
+      const now = Date.now()
+      const timeSinceLast = now - lastTapTime
+
+      if (timeSinceLast < 350) {
+        // Segundo toque rápido → iniciar modo arrastre
+        isDragging = true
+        startY = e.touches[0].clientY
+        startZoom = map.getZoom()
+        e.preventDefault()
+      }
+
+      lastTapTime = now
+    }
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging || e.touches.length !== 1) return
+
+      const currentY = e.touches[0].clientY
+      const deltaY = startY - currentY
+
+      // Cada 50px de movimiento = 1 nivel de zoom
+      const zoomDelta = deltaY / 50
+      map.setZoom(startZoom + zoomDelta, { animate: false })
+      e.preventDefault()
+    }
+
+    const handleTouchEnd = () => {
+      isDragging = false
+    }
+
+    const container = map.getContainer()
+    container.addEventListener('touchstart', handleTouchStart, { passive: false })
+    container.addEventListener('touchmove', handleTouchMove, { passive: false })
+    container.addEventListener('touchend', handleTouchEnd)
+
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart)
+      container.removeEventListener('touchmove', handleTouchMove)
+      container.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [map])
+
+  // Doble toque con dos dedos para alejar zoom
+  useEffect(() => {
+    let lastTwoFingerTapTime = 0
+    let maxTouchCount = 0
+
+    const handleTouchStart = (e: TouchEvent) => {
+      // Registramos el máximo de dedos usados en este gesto
+      if (e.touches.length > maxTouchCount) {
+        maxTouchCount = e.touches.length
+      }
+    }
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      // Solo procesamos cuando se levantan TODOS los dedos
+      if (e.touches.length !== 0) return
+
+      // Verificamos que en algún momento hubo 2 dedos
+      if (maxTouchCount === 2) {
+        const now = Date.now()
+        const timeSinceLast = now - lastTwoFingerTapTime
+        lastTwoFingerTapTime = now
+
+        if (timeSinceLast < 350) {
+          map.zoomOut(1)
+        }
+      }
+
+      // Reiniciamos el contador para el próximo gesto
+      maxTouchCount = 0
+    }
+
+    const container = map.getContainer()
+    container.addEventListener('touchstart', handleTouchStart)
+    container.addEventListener('touchend', handleTouchEnd)
+
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart)
+      container.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [map])
+
 useEffect(() => {
+  let lastClickTime = 0
+
   const handleClick = (e: L.LeafletMouseEvent) => {
+    const now = Date.now()
+    const timeSinceLast = now - lastClickTime
+    lastClickTime = now
+
+    // Si dos toques llegan en menos de 350ms es doble toque → dejar que Leaflet haga zoom
+    if (timeSinceLast < 350) return
+
     onMapClick(e.latlng)
   }
-  map.on('click', handleClick)
 
+  map.on('click', handleClick)
   return () => {
     map.off('click', handleClick)
   }
@@ -361,6 +463,7 @@ export default function MapView({
         zoom={zoom}
         zoomControl={false}
         touchZoom={true}
+        doubleClickZoom={true}
         dragging={true}
         scrollWheelZoom={true}
         style={{ height: '100%', width: '100%' }}
