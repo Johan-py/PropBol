@@ -30,6 +30,10 @@ export default function ActiveSessions() {
                3 sesiones activas
             </p>
         </div>
+        {/* Tabla/Card */}
+        <div className="bg-[#F4F4F4] rounded-2xl p-8">
+        </div>
+
       </div>
     </div>
 
