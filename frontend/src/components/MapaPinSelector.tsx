@@ -1,9 +1,26 @@
 'use client'
 
-import 'leaflet/dist/leaflet.css'
-import { MapContainer, TileLayer, Marker, Polygon, CircleMarker, useMapEvents } from 'react-leaflet'
-import { useState } from 'react'
+import { MapContainer as BaseMapContainer, TileLayer, Marker, Polygon, CircleMarker, useMapEvents } from 'react-leaflet'
+import { useState, useEffect } from 'react'
 import L from 'leaflet'
+// Importar CSS y L dinámicamente para evitar errores de SSR
+if (typeof window !== 'undefined') {
+  const { GestureHandling } = require('leaflet-gesture-handling');
+  L.Map.addInitHook('addHandler', 'gestureHandling', GestureHandling);
+}
+
+interface GestureMapProps extends React.ComponentProps<typeof BaseMapContainer> {
+  gestureHandling?: boolean;
+  gestureHandlingOptions?: {
+    text: {
+      touch: string;
+      scroll: string;
+      scrollMac: string;
+    };
+  };
+}
+
+const MapContainer = BaseMapContainer as React.ComponentType<GestureMapProps>;
 
 const pinIcon = L.divIcon({
   className: '',
@@ -48,9 +65,10 @@ function EventosMapa({
   modoDifuminadoActivo,
   setPinCoords,
   vertices,
-  setVertices
+  setVertices,
+  setMensajeLimite,
 }: any) {
-  useMapEvents({
+  const map = useMapEvents({
     click(e) {
       if (modoPinActivo) {
         setPinCoords({
@@ -60,6 +78,16 @@ function EventosMapa({
       }
 
       if (modoDifuminadoActivo) {
+        // Limitar máximo de puntos
+  if (vertices.length >= 10) {
+   setMensajeLimite(true)
+
+  setTimeout(() => {
+    setMensajeLimite(false)
+  }, 2000)
+
+  return
+  }
   const nuevoPunto: [number, number] = [
     e.latlng.lat,
     e.latlng.lng
@@ -98,6 +126,113 @@ function EventosMapa({
 }
   })
 
+  // Doble toque con un dedo para acercar zoom
+  useEffect(() => {
+    let lastClickTime = 0
+
+    const handleClick = (e: L.LeafletMouseEvent) => {
+      const now = Date.now()
+      const timeSinceLast = now - lastClickTime
+      lastClickTime = now
+
+      if (timeSinceLast < 350) {
+        map.zoomIn(1, { animate: true })
+      }
+    }
+
+    map.on('click', handleClick)
+    return () => {
+      map.off('click', handleClick)
+    }
+  }, [map])
+
+  // Doble toque y arrastre para zoom continuo (one-finger zoom)
+  useEffect(() => {
+    let lastTapTime = 0
+    let isDragging = false
+    let startY = 0
+    let startZoom = 0
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length !== 1) return
+
+      const now = Date.now()
+      const timeSinceLast = now - lastTapTime
+
+      if (timeSinceLast < 350) {
+        isDragging = true
+        startY = e.touches[0].clientY
+        startZoom = map.getZoom()
+        e.preventDefault()
+      }
+
+      lastTapTime = now
+    }
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging || e.touches.length !== 1) return
+
+      const currentY = e.touches[0].clientY
+      const deltaY = startY - currentY
+
+      const zoomDelta = deltaY / 50
+      map.setZoom(startZoom + zoomDelta, { animate: false })
+      e.preventDefault()
+    }
+
+    const handleTouchEnd = () => {
+      isDragging = false
+    }
+
+    const container = map.getContainer()
+    container.addEventListener('touchstart', handleTouchStart, { passive: false })
+    container.addEventListener('touchmove', handleTouchMove, { passive: false })
+    container.addEventListener('touchend', handleTouchEnd)
+
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart)
+      container.removeEventListener('touchmove', handleTouchMove)
+      container.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [map])
+
+  // Doble toque con dos dedos para alejar zoom
+  useEffect(() => {
+    let lastTwoFingerTapTime = 0
+    let maxTouchCount = 0
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length > maxTouchCount) {
+        maxTouchCount = e.touches.length
+      }
+    }
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (e.touches.length !== 0) return
+
+      if (maxTouchCount === 2) {
+        const now = Date.now()
+        const timeSinceLast = now - lastTwoFingerTapTime
+        lastTwoFingerTapTime = now
+
+        if (timeSinceLast < 350) {
+          map.zoomOut(1)
+        }
+      }
+
+      maxTouchCount = 0
+    }
+
+    const container = map.getContainer()
+    container.addEventListener('touchstart', handleTouchStart)
+    container.addEventListener('touchend', handleTouchEnd)
+
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart)
+      container.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [map])
+
   return null
 }
 
@@ -109,13 +244,23 @@ export default function MapaPinSelector({
   modoPinActivo,
   modoDifuminadoActivo
 }: Props) {
+  const [mensajeLimite, setMensajeLimite] = useState(false)
  
   return (
+    <div className="relative">
     <MapContainer
       center={[-17.3895, -66.1568]}
       zoom={13}
-      scrollWheelZoom
+      scrollWheelZoom={true}
       style={{ height: '320px', width: '100%' }}
+      gestureHandling={typeof window !== 'undefined' && L ? L.Browser.mobile : false}
+      gestureHandlingOptions={{
+        text: {
+          touch: "Usa dos dedos para mover el mapa",
+          scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
+          scrollMac: "Usa ⌘ + scroll para hacer zoom en el mapa"
+        }
+      }}
     >
       <TileLayer
         attribution="&copy; OpenStreetMap"
@@ -128,6 +273,7 @@ export default function MapaPinSelector({
         setPinCoords={setPinCoords}
         vertices={vertices}
         setVertices={setVertices}
+        setMensajeLimite={setMensajeLimite}
       />
 
      {pinCoords && (
@@ -188,6 +334,14 @@ export default function MapaPinSelector({
     }}
   />
 ))}
-    </MapContainer>
-  )
+   </MapContainer>
+
+{mensajeLimite && (
+ <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[9999] text-orange-500 text-sm font-medium">
+    Límite máximo de 10 puntos alcanzado
+  </div>
+)}
+
+</div>
+)
 }

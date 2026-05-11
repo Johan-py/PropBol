@@ -29,10 +29,12 @@
     "@typescript-eslint/parser": "^8.57.1",
     "concurrently": "^9.2.1",
     "eslint": "^10.1.0",
-    "prettier": "^3.8.3"
+    "prettier": "^3.8.3",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "cors": "^2.8.6",
+    "leaflet-gesture-handling": "^1.2.2",
     "tailwind": "^4.0.0"
   },
   "engines": {
