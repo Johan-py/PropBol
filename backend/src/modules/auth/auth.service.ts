@@ -32,6 +32,7 @@ import {
   increment2FACodeAttempts,
   mark2FACodeAsUsed,
   findMagicLinkByTokenHash,
+  invalidateAllUserSessions,
   invalidateActiveMagicLinksByUserId,
   markMagicLinkAsUsed,
   deactivateMagicLink,
@@ -1078,6 +1079,8 @@ export const loginWithMagicLinkService = async ({
   if (!wasMarkedAsUsed) {
     throw new AuthError("Este Magic Link ya fue utilizado.", 401);
   }
+
+  await invalidateAllUserSessions(user.id);
 
   const sessionPayload: JwtPayload = {
     id: user.id,
