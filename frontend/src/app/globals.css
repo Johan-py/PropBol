@@ -627,3 +627,51 @@ html.propbol-theme-dark nav a[href="/registro-inmueble"] {
   background-color: #e68b25 !important;
   color: #ffffff !important;
 }
+
+/* ================================
+   HU13 - Corrección menú de usuario en modo oscuro
+================================ */
+
+/* Menús desplegables dentro del navbar: usuario y notificaciones */
+html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] {
+  background-color: #1e293b !important;
+  color: #e5e7eb !important;
+  border-color: #334155 !important;
+}
+
+/* Textos dentro del menú desplegable */
+html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] h1,
+html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] h2,
+html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] h3,
+html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] p,
+html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] span,
+html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] a,
+html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] button {
+  color: #e5e7eb !important;
+}
+
+/* Textos secundarios dentro del menú */
+html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] .text-gray-500,
+html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] .text-gray-600,
+html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] .text-gray-700 {
+  color: #cbd5e1 !important;
+}
+
+/* Líneas divisorias del menú */
+html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] .border-gray-200,
+html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] .border-stone-200 {
+  border-color: #334155 !important;
+}
+
+/* Hover de opciones del menú */
+html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] a:hover,
+html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] button:hover {
+  background-color: #334155 !important;
+}
+
+/* Botón cerrar sesión dentro del menú */
+html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] button[class*="bg-orange"],
+html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] button[class*="bg-[#E68B25]"] {
+  background-color: #e68b25 !important;
+  color: #ffffff !important;
+}
