@@ -14,6 +14,7 @@ type LinkedAccount = {
   status: AccountStatus;
   linkedEmail: string;
   linkedAt?: string;
+  requiresReauthorization?: boolean;
   color: string;
   icon?: ReactNode;
   letter?: string;
@@ -24,21 +25,25 @@ type SocialLinksResponse = {
     linked: boolean;
     linkedEmail: string | null;
     linkedAt: string | null;
+    requiresReauthorization?: boolean;
   };
   discord: {
     linked: boolean;
     linkedEmail: string | null;
     linkedAt: string | null;
+    requiresReauthorization?: boolean;
   };
   google: {
     linked: boolean;
     linkedEmail: string | null;
     linkedAt: string | null;
+    requiresReauthorization?: boolean;
   };
   linkedin: {
     linked: boolean;
     linkedEmail: string | null;
     linkedAt: string | null;
+    requiresReauthorization?: boolean;
   };
 };
 
@@ -89,17 +94,16 @@ const initialAccounts: LinkedAccount[] = [
     color: "bg-indigo-600",
     icon: <DiscordIcon />,
   },
-
   {
-  id: "linkedin",
-  platform: "LinkedIn",
-  description:
-    "Vincula tu cuenta de LinkedIn para iniciar sesión con un solo clic.",
-  status: "no-vinculado",
-  linkedEmail: "",
-  color: "bg-[#0A66C2]",
-  icon: <LinkedInIcon />,
-},
+    id: "linkedin",
+    platform: "LinkedIn",
+    description:
+      "Vincula tu cuenta de LinkedIn para iniciar sesión con un solo clic.",
+    status: "no-vinculado",
+    linkedEmail: "",
+    color: "bg-[#0A66C2]",
+    icon: <LinkedInIcon />,
+  },
 ];
 
 const formatLinkedAt = (value?: string) => {
@@ -140,6 +144,10 @@ function SocialCard({
 }: SocialCardProps) {
   const isProcessing = actionLoadingId === account.id;
   const isLinked = account.status === "vinculado";
+  const requiresRenewal =
+    isLinked &&
+    account.id === "linkedin" &&
+    account.requiresReauthorization === true;
 
   return (
     <article className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
@@ -171,6 +179,7 @@ function SocialCard({
                 {isLinked ? "Vinculado" : "No vinculado"}
               </span>
             </p>
+
             {isLinked && (
               <p className="mt-1 text-sm text-neutral-500">
                 {account.linkedEmail
@@ -178,13 +187,21 @@ function SocialCard({
                   : "Cuenta vinculada correctamente."}
               </p>
             )}
+
             {isLinked && account.id === "linkedin" && account.linkedAt && (
               <p className="mt-1 text-sm text-neutral-500">
                 Fecha de vinculación: {formatLinkedAt(account.linkedAt)}
               </p>
             )}
 
-            {isLinked && disableUnlink && (
+            {requiresRenewal && (
+              <p className="mt-2 text-sm font-medium text-amber-600">
+                Tu autorización de LinkedIn expiró. Renueva el acceso para
+                mantener la vinculación activa.
+              </p>
+            )}
+
+            {isLinked && disableUnlink && !requiresRenewal && (
               <p className="mt-2 text-sm font-medium text-amber-600">
                 Debes mantener al menos una red vinculada activa.
               </p>
@@ -194,24 +211,32 @@ function SocialCard({
 
         <button
           onClick={() =>
-            isLinked ? onOpenUnlinkModal(account.id) : onLink(account.id)
+            requiresRenewal
+              ? onLink(account.id)
+              : isLinked
+                ? onOpenUnlinkModal(account.id)
+                : onLink(account.id)
           }
-          disabled={isProcessing || (isLinked && disableUnlink)}
+          disabled={isProcessing || (isLinked && disableUnlink && !requiresRenewal)}
           className={`inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition disabled:cursor-not-allowed disabled:opacity-50 ${
-            isLinked
-              ? "bg-red-500 hover:bg-red-600"
-              : account.id === "facebook"
-                ? "bg-[#1877F2] hover:brightness-95"
-                : account.id === "discord" || account.id === "google"
-                  ? "bg-[#5865F2] hover:brightness-95"
-                  : "bg-[#5865F2] hover:brightness-95"
+            requiresRenewal
+              ? "bg-[#0A66C2] hover:brightness-95"
+              : isLinked
+                ? "bg-red-500 hover:bg-red-600"
+                : account.id === "facebook"
+                  ? "bg-[#1877F2] hover:brightness-95"
+                  : account.id === "discord" || account.id === "google"
+                    ? "bg-[#5865F2] hover:brightness-95"
+                    : "bg-[#5865F2] hover:brightness-95"
           }`}
         >
           {isProcessing
             ? "Procesando..."
-            : isLinked
-              ? "Desvincular"
-              : "Vincular"}
+            : requiresRenewal
+              ? "Renovar autorización"
+              : isLinked
+                ? "Desvincular"
+                : "Vincular"}
         </button>
       </div>
     </article>
@@ -311,6 +336,8 @@ export default function LinkedAccountsSection() {
             status: providerData.linked ? "vinculado" : "no-vinculado",
             linkedEmail: providerData.linkedEmail ?? "",
             linkedAt: providerData.linkedAt ?? "",
+            requiresReauthorization:
+              providerData.requiresReauthorization ?? false,
           };
         }),
       );
@@ -342,7 +369,14 @@ export default function LinkedAccountsSection() {
 
     if (!current) return;
 
-    if (current.status === "vinculado") {
+    const isRenewal =
+      current.id === "linkedin" &&
+      current.status === "vinculado" &&
+      current.requiresReauthorization === true;
+
+    const actionLabel = isRenewal ? "renovación" : "vinculación";
+
+    if (current.status === "vinculado" && !isRenewal) {
       setErrorMessage(`${current.platform} ya está vinculada.`);
       return;
     }
@@ -364,7 +398,7 @@ export default function LinkedAccountsSection() {
       if (!response.ok || !data.url) {
         throw new Error(
           data.message ||
-            `No se pudo iniciar la vinculación con ${current.platform}.`,
+            `No se pudo iniciar la ${actionLabel} con ${current.platform}.`,
         );
       }
 
@@ -429,7 +463,8 @@ export default function LinkedAccountsSection() {
         }
 
         setErrorMessage(
-          event.data.message || `No se pudo vincular ${current.platform}.`,
+          event.data.message ||
+            `No se pudo completar la ${actionLabel} con ${current.platform}.`,
         );
         popup.close();
       };
@@ -440,7 +475,9 @@ export default function LinkedAccountsSection() {
         cleanup();
 
         if (!flowResolved) {
-          setErrorMessage(`Cancelaste la vinculación con ${current.platform}.`);
+          setErrorMessage(
+            `Cancelaste la ${actionLabel} con ${current.platform}.`,
+          );
         }
       }, 500);
 
@@ -452,7 +489,7 @@ export default function LinkedAccountsSection() {
 
           if (!flowResolved) {
             setErrorMessage(
-              `La vinculación con ${current.platform} tardó demasiado. Intenta nuevamente.`,
+              `La ${actionLabel} con ${current.platform} tardó demasiado. Intenta nuevamente.`,
             );
           }
         },
@@ -465,7 +502,7 @@ export default function LinkedAccountsSection() {
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : `No se pudo vincular ${current.platform}.`,
+          : `No se pudo completar la ${actionLabel} con ${current.platform}.`,
       );
     }
   };

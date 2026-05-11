@@ -281,10 +281,17 @@ export const linkLinkedInToCurrentUserByCodeService = async (
 
   if (existingLinkByUser) {
     if (existingLinkByUser.idExterno === linkedinId) {
+      await linkLinkedInToUser(
+        session.usuario.id,
+        linkedinId,
+        correoProveedor ?? "",
+        tokenStorage,
+      );
+
       return {
-        message: "Tu cuenta de LinkedIn ya estaba vinculada.",
+        message: "Autorización de LinkedIn renovada correctamente.",
         provider: "linkedin",
-        linkedEmail: existingLinkByUser.correoProveedor ?? correoProveedor,
+        linkedEmail: correoProveedor ?? existingLinkByUser.correoProveedor,
       };
     }
 

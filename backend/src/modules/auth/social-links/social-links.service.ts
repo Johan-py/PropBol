@@ -16,22 +16,38 @@ export const getSocialLinksService = async (usuarioId: number) => {
   const google = links.find((item) => item.proveedor === "google");
   const linkedin = links.find((item) => item.proveedor === "linkedin");
 
+  const linkedInTokenExpiresAt = linkedin?.token_expira_en
+  ? new Date(linkedin.token_expira_en)
+  : null;
+
+  const isLinkedInTokenExpired =
+    linkedInTokenExpiresAt !== null &&
+    linkedInTokenExpiresAt.getTime() <= Date.now();
+
   return {
     facebook: {
       linked: Boolean(facebook),
       linkedEmail: facebook?.correoProveedor ?? null,
+      linkedAt: facebook?.vinculadoEn?.toISOString() ?? null,
+      requiresReauthorization: false,
     },
     discord: {
       linked: Boolean(discord),
       linkedEmail: discord?.correoProveedor ?? null,
+      linkedAt: discord?.vinculadoEn?.toISOString() ?? null,
+      requiresReauthorization: false,
     },
     google: {
       linked: Boolean(google),
       linkedEmail: google?.correoProveedor ?? null,
+      linkedAt: google?.vinculadoEn?.toISOString() ?? null,
+      requiresReauthorization: false,
     },
     linkedin: {
       linked: Boolean(linkedin),
       linkedEmail: linkedin?.correoProveedor ?? null,
+      linkedAt: linkedin?.vinculadoEn?.toISOString() ?? null,
+      requiresReauthorization: isLinkedInTokenExpired,
     },
   };
 };

@@ -443,6 +443,7 @@ export const listSocialLinksByUser = async (usuarioId: number) => {
       correoProveedor: true,
       idExterno: true,
       vinculadoEn: true,
+      token_expira_en: true,
     },
   });
 };
