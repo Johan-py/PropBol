@@ -19,7 +19,11 @@ export class FeaturesService {
    * @param limit Número máximo de resultados
    * @returns Lista de inmuebles con score y razones
    */
-  async recomendar(usuarioId: number, limit: number = 20, filtrosActivos?: { modoInmueble?: string []; query?: string }): Promise<InmuebleConScore[]> {
+  async recomendar(
+    usuarioId: number,
+    limit: number = 20,
+    filtrosActivos?: { modoInmueble?: string[]; query?: string }
+  ): Promise<InmuebleConScore[]> {
     try {
       // 1. Obtener el historial de interacciones del usuario
       const historial = await prisma.propiedad_vista.findMany({
@@ -35,14 +39,14 @@ export class FeaturesService {
       })
 
       // Combinar interacciones (dar más peso a favoritos)
-  
+
       const interacciones = new Map<number, number>() // inmuebleId -> peso
       const ahora = new Date()
       for (const v of historial) {
         const horasDiff = (ahora.getTime() - new Date(v.vistaEn).getTime()) / (1000 * 3600)
         const pesoRecencia = horasDiff < 1 ? 8 : horasDiff < 24 ? 4 : horasDiff < 168 ? 2 : 1
         interacciones.set(v.inmuebleId, (interacciones.get(v.inmuebleId) || 0) + pesoRecencia)
-    }
+      }
       for (const f of favoritos) {
         interacciones.set(f.inmuebleId, (interacciones.get(f.inmuebleId) || 0) + 5) // favoritos suman más
       }
@@ -58,7 +62,8 @@ export class FeaturesService {
       // Para evitar hacer cálculos pesados, tomamos propiedades de las mismas categorías/zona
       const propiedadesSimilares = await this.obtenerInmueblesCandidatos(
         inmueblesInteractuados,
-        limit * 3, filtrosActivos
+        limit * 3,
+        filtrosActivos
       )
 
       if (propiedadesSimilares.length === 0) {
@@ -138,7 +143,7 @@ export class FeaturesService {
   private async obtenerInmueblesCandidatos(
     idsInteractuados: number[],
     limite: number,
-    filtrosActivos?: { modoInmueble?: string[], query?: string }
+    filtrosActivos?: { modoInmueble?: string[]; query?: string }
   ): Promise<any[]> {
     // Estrategia simple: obtener propiedades de las mismas categorías y zonas
     const interactuados = await prisma.inmueble.findMany({
@@ -167,7 +172,7 @@ export class FeaturesService {
       where.OR = [
         { ubicacion: { zona: { contains: texto, mode: 'insensitive' } } },
         { ubicacion: { direccion: { contains: texto, mode: 'insensitive' } } },
-        { titulo: { contains: texto, mode: 'insensitive' } },
+        { titulo: { contains: texto, mode: 'insensitive' } }
       ]
     }
 
