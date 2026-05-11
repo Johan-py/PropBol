@@ -179,7 +179,7 @@ export default function PropertyCard({
           <ContactButton type="whatsapp" variant="grid" />
         </div>
         {/* HU13 - Botón de redirección a mapas */}
-        <div className="mt-1 w-full flex gap-2">
+        <div className="mt-1 w-full flex gap-2 max-w-full overflow-hidden">
           <ComoLlegarButton lat={lat} lng={lng} variant="grid" />
         </div>
 
