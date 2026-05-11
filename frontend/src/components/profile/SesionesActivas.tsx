@@ -18,9 +18,12 @@ export default function ActiveSessions() {
 ];
 
   return (
-    <div className="min-h-screen bg-[#EAEAEA] p-4">
+    <div className="propbol-active-sessions-page min-h-screen bg-[#EAEAEA] p-4">
+      {/* HU13: clase agregada para adaptar sesiones activas al modo oscuro sin tocar la lógica */}
+
       {/* Contenedor principal */}
-      <div className="bg-[#D9D9D9] rounded-sm p-6">
+     <div className="bg-[#D9D9D9] rounded-sm p-6">
+    
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-black">
