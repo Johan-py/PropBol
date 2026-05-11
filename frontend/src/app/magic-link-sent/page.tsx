@@ -1,113 +1,121 @@
-'use client'
+"use client";
 
-import { Suspense, useEffect, useRef, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { buildSessionUser, USER_STORAGE_KEY } from '@/lib/session'
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 
 type MagicLinkLoginResponse = {
-  message?: string
-  token?: string
+  message?: string;
+  token?: string;
   user?: {
-    id: number
-    correo: string
-    nombre?: string
-    apellido?: string
-    avatar?: string | null
-    rol?: string | { nombre: string }
-    controlador?: boolean | null
-  }
-}
+    id: number;
+    correo: string;
+    nombre?: string;
+    apellido?: string;
+    avatar?: string | null;
+    rol?: string | { nombre: string };
+    controlador?: boolean | null;
+  };
+};
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
-const SESSION_DURATION_MS = 60 * 60 * 1000
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+const SESSION_DURATION_MS = 60 * 60 * 1000;
 
 const saveMagicLinkSession = (
   token: string,
-  user: NonNullable<MagicLinkLoginResponse['user']>
+  user: NonNullable<MagicLinkLoginResponse["user"]>,
 ) => {
-  localStorage.setItem('token', token)
+  localStorage.setItem("token", token);
 
-  const sessionUser = buildSessionUser(user)
+  const sessionUser = buildSessionUser(user);
 
-  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(sessionUser))
-  localStorage.setItem('nombre', sessionUser.name)
-  localStorage.setItem('correo', sessionUser.email)
-  localStorage.setItem('avatar', sessionUser.avatar ?? '')
-  localStorage.setItem('controlador', String(sessionUser.controlador ?? false))
+  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(sessionUser));
+  localStorage.setItem("nombre", sessionUser.name);
+  localStorage.setItem("correo", sessionUser.email);
+  localStorage.setItem("avatar", sessionUser.avatar ?? "");
+  localStorage.setItem("controlador", String(sessionUser.controlador ?? false));
   localStorage.setItem(
-    'propbol_session_expires',
-    String(Date.now() + SESSION_DURATION_MS)
-  )
+    "propbol_session_expires",
+    String(Date.now() + SESSION_DURATION_MS),
+  );
 
-  window.dispatchEvent(new Event('propbol:login'))
-  window.dispatchEvent(new Event('propbol:session-changed'))
-  window.dispatchEvent(new Event('auth-state-changed'))
-  window.dispatchEvent(new Event('propbol:token-guardado'))
-}
+  window.dispatchEvent(new Event("propbol:login"));
+  window.dispatchEvent(new Event("propbol:session-changed"));
+  window.dispatchEvent(new Event("auth-state-changed"));
+  window.dispatchEvent(new Event("propbol:token-guardado"));
+};
 
 function MagicLinkAccessContent() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const token = searchParams.get('token')
-  const hasProcessedTokenRef = useRef(false)
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+  const hasProcessedTokenRef = useRef(false);
 
-  const [status, setStatus] = useState<'loading' | 'success' | 'error'>(
-    'loading'
-  )
+  const [status, setStatus] = useState<"loading" | "success" | "error">(
+    "loading",
+  );
 
   const [message, setMessage] = useState(
-    'Estamos verificando tu link mágico. Espera un momento, por favor.'
-  )
+    "Estamos verificando tu link mágico. Espera un momento, por favor.",
+  );
+
+  const [isExpiredLink, setIsExpiredLink] = useState(false);
 
   useEffect(() => {
     if (!token) {
-      setStatus('error')
-      setMessage('El enlace no contiene un token válido.')
-      return
+      setStatus("error");
+      setMessage("El enlace no contiene un token válido.");
+      setIsExpiredLink(false);
+      return;
     }
 
-    if (hasProcessedTokenRef.current) return
-    hasProcessedTokenRef.current = true
+    if (hasProcessedTokenRef.current) return;
+    hasProcessedTokenRef.current = true;
 
     const loginWithMagicLink = async () => {
       try {
         const response = await fetch(`${API_URL}/api/auth/magic-link/login`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({ token })
-        })
+          body: JSON.stringify({ token }),
+        });
 
-        const data = (await response.json()) as MagicLinkLoginResponse
+        const data = (await response.json()) as MagicLinkLoginResponse;
 
         if (!response.ok || !data.token || !data.user) {
-          setStatus('error')
-          setMessage(
-            data.message || 'No se pudo validar tu acceso con Magic Link.'
-          )
-          return
+          const errorMessage =
+            data.message || "No se pudo validar tu acceso con Magic Link.";
+
+          setStatus("error");
+          setMessage(errorMessage);
+          setIsExpiredLink(errorMessage.toLowerCase().includes("expir"));
+
+          return;
         }
 
-        saveMagicLinkSession(data.token, data.user)
-        sessionStorage.removeItem('magicLinkEmail')
+        saveMagicLinkSession(data.token, data.user);
+        sessionStorage.removeItem("magicLinkEmail");
 
-        setStatus('success')
+        setStatus("success");
         setMessage(
-          'Tu acceso fue validado correctamente. Serás redirigido a PropBol.'
-        )
+          "Tu acceso fue validado correctamente. Serás redirigido a PropBol.",
+        );
+        setIsExpiredLink(false);
 
         window.setTimeout(() => {
-          router.replace('/')
-        }, 1800)
+          router.replace("/");
+        }, 1800);
       } catch {
-        setStatus('error')
-        setMessage('No se pudo conectar con el servidor.')
+        setStatus("error");
+        setMessage("No se pudo conectar con el servidor.");
+        setIsExpiredLink(false);
       }
-    }
+    };
 
-    loginWithMagicLink()
-  }, [router, token])
+    loginWithMagicLink();
+  }, [router, token]);
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-white px-4">
@@ -123,20 +131,20 @@ function MagicLinkAccessContent() {
         </p>
 
         <div className="mt-8 flex justify-center">
-          {status === 'loading' ? (
+          {status === "loading" ? (
             <div className="h-12 w-12 animate-spin rounded-full border-4 border-orange-100 border-t-orange-500" />
           ) : (
             <div
               className={`flex h-14 w-14 items-center justify-center rounded-full ${
-                status === 'success' ? 'bg-green-100' : 'bg-red-100'
+                status === "success" ? "bg-green-100" : "bg-red-100"
               }`}
             >
               <span
                 className={`text-3xl font-bold ${
-                  status === 'success' ? 'text-green-600' : 'text-red-600'
+                  status === "success" ? "text-green-600" : "text-red-600"
                 }`}
               >
-                {status === 'success' ? '✓' : '!'}
+                {status === "success" ? "✓" : "!"}
               </span>
             </div>
           )}
@@ -144,7 +152,7 @@ function MagicLinkAccessContent() {
 
         <div className="my-9 border-t border-[#e5e7eb]" />
 
-        {status === 'loading' && (
+        {status === "loading" && (
           <>
             <h2 className="text-xl font-extrabold text-orange-500">
               Validando enlace
@@ -156,7 +164,7 @@ function MagicLinkAccessContent() {
           </>
         )}
 
-        {status === 'success' && (
+        {status === "success" && (
           <>
             <h2 className="text-xl font-extrabold text-green-600">
               Inicio de sesión exitoso
@@ -172,10 +180,12 @@ function MagicLinkAccessContent() {
           </>
         )}
 
-        {status === 'error' && (
+        {status === "error" && (
           <>
             <h2 className="text-xl font-extrabold text-red-600">
-              No se pudo iniciar sesión
+              {isExpiredLink
+                ? "Magic Link expirado"
+                : "No se pudo iniciar sesión"}
             </h2>
 
             <p className="mt-3 text-sm font-semibold leading-relaxed text-[#9ca3af]">
@@ -184,16 +194,18 @@ function MagicLinkAccessContent() {
 
             <button
               type="button"
-              onClick={() => router.replace('/sign-in')}
+              onClick={() => router.replace("/sign-in")}
               className="mt-8 w-full rounded-md bg-orange-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-600"
             >
-              Volver al inicio de sesión
+              {isExpiredLink
+                ? "Solicitar un nuevo Magic Link"
+                : "Volver al inicio de sesión"}
             </button>
           </>
         )}
       </section>
     </main>
-  )
+  );
 }
 
 export default function MagicLinkSentPage() {
@@ -201,5 +213,5 @@ export default function MagicLinkSentPage() {
     <Suspense fallback={null}>
       <MagicLinkAccessContent />
     </Suspense>
-  )
+  );
 }

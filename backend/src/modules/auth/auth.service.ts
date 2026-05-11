@@ -1001,8 +1001,12 @@ const verifyMagicLinkToken = (token: string) => {
     }
 
     return decoded;
-  } catch {
-    throw new AuthError("El Magic Link es inválido o expiró", 401);
+  } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      throw new AuthError("Este Magic Link ha expirado.", 401);
+    }
+
+    throw new AuthError("El Magic Link no es válido.", 401);
   }
 };
 
