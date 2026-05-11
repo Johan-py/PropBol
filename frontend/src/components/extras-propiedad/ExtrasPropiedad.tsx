@@ -130,24 +130,35 @@ export default function ExtrasPropiedad({
 
   if (!mostrarPanel) return null;
 
-  return (
-    <div className="mt-4 rounded-2xl border border-neutral-300 bg-[#f5ede2] p-6">
-      <h3 className="mb-4 text-xl font-bold text-neutral-900">
-        Añadir parámetros personalizados
-      </h3>
+ return (
+  <div className="space-y-6 p-6">
+    {/* TITULO */}
+    <div>
+      <h2 className="text-[46px] font-bold text-[#101828]">
+        Tags o Etiquetas
+      </h2>
 
-      <label className="mb-2 block text-sm font-semibold text-neutral-800">
-        Nuevo parámetro:
+      <p className="mt-4 max-w-4xl text-[22px] leading-9 text-[#667085]">
+        Agrega palabras clave para que los clientes encuentren tu inmueble
+        más fácilmente mediante búsquedas y filtros.
+      </p>
+    </div>
+
+    {/* INPUT */}
+    <div>
+      <label className="mb-4 block text-[22px] font-semibold text-[#101828]">
+        Nuevo tag
       </label>
 
-      <div className="relative mb-3 flex flex-col gap-3 md:flex-row">
-        <div className="relative w-full">
+      <div className="flex flex-col gap-4 xl:flex-row">
+        <div className="flex-1">
           <input
             type="text"
             value={nuevoParametro}
             maxLength={MAX_CARACTERES}
             onChange={(e) => {
               setNuevoParametro(e.target.value);
+
               if (error) setError("");
             }}
             onKeyDown={(e) => {
@@ -156,70 +167,87 @@ export default function ExtrasPropiedad({
                 agregarOActualizarParametro();
               }
             }}
-            placeholder="Ej: balcón, terraza, vista panorámica..."
-            className="w-full rounded-xl border border-neutral-300 bg-white px-4 py-3 outline-none focus:border-orange-400"
+            placeholder="Ej: piscina, garaje, terraza"
+            className="h-[74px] w-full rounded-2xl border border-[#D0D5DD] bg-white px-6 text-[20px] outline-none transition focus:border-orange-400"
           />
 
-          <p className="mt-1 text-xs text-neutral-500">
-            {nuevoParametro.length}/{MAX_CARACTERES} caracteres
+          <p className="mt-4 text-[16px] text-[#667085]">
+            Presiona Enter o haz clic en "Agregar" para añadir el tag.
           </p>
-
-          {sugerencias.length > 0 && (
-            <div className="absolute left-0 right-0 top-[52px] z-20 max-h-56 overflow-y-auto rounded-xl border border-neutral-200 bg-white shadow-lg">
-              {sugerencias.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => seleccionarSugerencia(item.nombre)}
-                  className="block w-full px-4 py-3 text-left text-sm text-neutral-800 hover:bg-orange-50"
-                >
-                  <span className="font-semibold">{item.nombre}</span>
-                  {item.descripcion && (
-                    <span className="block text-xs text-neutral-500">
-                      {item.descripcion}
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-          )}
         </div>
 
         <button
           type="button"
           onClick={agregarOActualizarParametro}
-          className="rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white hover:bg-orange-600"
+          className="flex h-[74px] min-w-[210px] items-center justify-center gap-3 rounded-2xl bg-[#ff7a00] px-8 text-[24px] font-semibold text-white transition hover:bg-orange-600"
         >
-          {indiceEdicion !== null ? "Actualizar" : "+ Agregar"}
+          <span className="text-4xl">+</span>
+
+          {indiceEdicion !== null ? "Actualizar" : "Agregar"}
         </button>
       </div>
 
       {error && (
-        <p className="mb-4 text-sm font-medium text-red-600">{error}</p>
+        <p className="mt-5 text-base font-medium text-red-600">
+          {error}
+        </p>
       )}
+    </div>
 
-      <h4 className="mb-3 text-base font-semibold text-neutral-900">
-        Parámetros añadidos:
-      </h4>
+    {/* SUGERENCIAS */}
+    <div>
+      <h3 className="mb-5 text-[24px] font-bold text-[#101828]">
+        Sugerencias
+      </h3>
 
-      <div className="mb-6 flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-4">
+        {[
+          "piscina",
+          "garaje",
+          "terraza",
+          "pet friendly",
+          "amoblado",
+          "vista panorámica",
+          "seguridad 24/7",
+          "jardín",
+        ].map((item) => (
+          <button
+            key={item}
+            type="button"
+            onClick={() => seleccionarSugerencia(item)}
+            className="rounded-full border border-[#D0D5DD] bg-white px-6 py-3 text-[18px] font-medium text-[#344054] transition hover:border-orange-400 hover:text-orange-500"
+          >
+            {item}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {/* TAGS */}
+    <div>
+      <h3 className="mb-5 text-[28px] font-bold text-[#101828]">
+        Tags añadidos ({parametros.length}/15)
+      </h3>
+
+      <div className="flex flex-wrap gap-4">
         {parametros.length === 0 ? (
-          <p className="text-sm text-neutral-600">
-            Aún no se añadieron parámetros.
+          <p className="text-[18px] text-[#667085]">
+            Aún no se añadieron tags.
           </p>
         ) : (
           parametros.map((parametro, index) => (
             <div
               key={`${parametro}-${index}`}
-              className="flex items-center gap-2 rounded-full bg-black px-4 py-2 text-sm text-white"
+              className="flex items-center gap-3 rounded-full bg-black px-6 py-3 text-white"
             >
-              <span>{parametro}</span>
+              <span className="text-[18px] font-medium">
+                {parametro}
+              </span>
 
               <button
                 type="button"
                 onClick={() => editarParametro(index)}
                 className="text-orange-400"
-                title="Editar"
               >
                 ✎
               </button>
@@ -227,33 +255,127 @@ export default function ExtrasPropiedad({
               <button
                 type="button"
                 onClick={() => eliminarParametro(index)}
-                className="text-orange-400"
-                title="Eliminar"
+                className="text-[24px] text-orange-400"
               >
-                ✖
+                ×
               </button>
             </div>
           ))
         )}
       </div>
 
-      <div className="flex justify-center gap-6 border-t border-neutral-400 pt-6">
-        <button
-          type="button"
-          onClick={cerrarPanel}
-          className="rounded-full bg-gray-300 px-8 py-2 font-medium text-neutral-800"
-        >
-          Cancelar
-        </button>
+      <p className="mt-5 text-[17px] text-[#667085]">
+        Puedes agregar hasta 15 tags. Cada tag debe tener entre 3 y 30 caracteres.
+      </p>
+    </div>
+
+    {/* PARAMETROS */}
+    <div className="border-t border-[#EAECF0] pt-10">
+      <h2 className="mb-3 text-[38px] font-bold text-[#101828]">
+        Parámetros personalizados (opcionales)
+      </h2>
+
+      <p className="mb-6 text-[20px] text-[#667085]">
+        Agrega características adicionales que hacen única tu propiedad.
+      </p>
+
+      <div className="flex flex-col gap-4 xl:flex-row">
+        <input
+          type="text"
+          placeholder="Ej: balcón, terraza vista panorámica, baño privado"
+          className="h-[74px] flex-1 rounded-2xl border border-[#D0D5DD] bg-white px-6 text-[20px] outline-none focus:border-orange-400"
+        />
 
         <button
           type="button"
-          onClick={guardarParametros}
-          className="rounded-full bg-orange-500 px-8 py-2 font-semibold text-white hover:bg-orange-600"
+          className="flex h-[74px] min-w-[210px] items-center justify-center gap-3 rounded-2xl bg-[#ff7a00] px-8 text-[24px] font-semibold text-white hover:bg-orange-600"
         >
-          Guardar
+          <span className="text-4xl">+</span>
+          Agregar
         </button>
       </div>
+
+      {/* SUGERENCIAS */}
+      <div className="mt-8 flex flex-wrap gap-4">
+        {[
+          "seguridad 24h",
+          "ascensor",
+          "baño privado",
+          "aire acondicionado",
+          "balcón",
+          "terraza vista panorámica",
+          "área de parrilla",
+          "sistema de alarma",
+        ].map((item) => (
+          <button
+            key={item}
+            type="button"
+            className="rounded-full border border-[#D0D5DD] bg-white px-6 py-3 text-[18px] font-medium text-[#344054]"
+          >
+            {item}
+          </button>
+        ))}
+      </div>
+
+      {/* PARAMETROS AÑADIDOS */}
+      <div className="mt-8">
+        <h3 className="mb-5 text-[28px] font-bold text-[#101828]">
+          Parámetros añadidos ({parametros.length}/10)
+        </h3>
+
+        <div className="flex flex-wrap gap-4">
+          {parametros.map((parametro, index) => (
+            <div
+              key={`${parametro}-${index}`}
+              className="flex items-center gap-3 rounded-full bg-[#E76F51] px-6 py-3 text-white"
+            >
+              <span className="text-[18px] font-semibold">
+                {parametro}
+              </span>
+
+              <button
+                type="button"
+                onClick={() => eliminarParametro(index)}
+                className="text-[24px]"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <p className="mt-5 text-[17px] text-[#667085]">
+          Puedes agregar hasta 10 parámetros. Cada parámetro debe tener entre 3 y 60 caracteres.
+        </p>
+      </div>
     </div>
-  );
+
+    {/* BOTONES */}
+    <div className="flex justify-end gap-5 border-t border-[#EAECF0] pt-10">
+      <button
+        type="button"
+        onClick={cerrarPanel}
+        className="h-[60px] rounded-full bg-[#D0D5DD] px-12 text-[20px] font-medium text-[#344054]"
+      >
+        Cancelar
+      </button>
+
+      <button
+        type="button"
+        onClick={guardarParametros}
+        className="h-[60px] rounded-full border border-[#D0D5DD] bg-white px-12 text-[20px] font-medium text-[#344054]"
+      >
+        Atrás
+      </button>
+
+      <button
+        type="button"
+        onClick={guardarParametros}
+        className="h-[60px] rounded-full bg-[#ff7a00] px-14 text-[20px] font-semibold text-white hover:bg-orange-600"
+      >
+        Siguiente
+      </button>
+    </div>
+  </div>
+);
 }

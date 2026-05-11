@@ -239,25 +239,33 @@ function ParametrosPageContent() {
     }
   };
 
-  return (
-    <main className="min-h-screen bg-[#f5efe7] p-8 relative">
-      <div className="mx-auto max-w-3xl rounded-3xl bg-white p-8 shadow-md">
-        <h1 className="mb-6 text-2xl font-bold text-gray-900">
+ return (
+  <main className="min-h-screen bg-[#f5efe7] px-6 py-8">
+    <div className="mx-auto max-w-[1000px] rounded-[32px] border border-[#ECECEC] bg-white p-2 shadow-sm">
+      {/* HEADER */}
+      <div className="mb-10">
+        <h1 className="text-[56px] font-bold leading-tight text-[#101828]">
           Parámetros personalizados
         </h1>
 
-        <p className="mb-6 text-gray-600">
-          Aquí puedes agregar o editar parámetros personalizados para tu inmueble.
+        <p className="mt-4 text-[22px] text-[#667085]">
+          Agrega características adicionales que hacen única tu propiedad.
         </p>
+      </div>
 
-        {mensaje && (
-          <p className="mb-4 rounded-xl bg-orange-50 px-4 py-3 text-sm text-orange-700">
-            {mensaje}
-          </p>
-        )}
+      {/* MENSAJE */}
+      {mensaje && (
+        <div className="mb-8 rounded-2xl border border-orange-200 bg-orange-50 px-5 py-4 text-base text-orange-700">
+          {mensaje}
+        </div>
+      )}
 
+      {/* CONTENIDO */}
+      <div className="rounded-[32px] border border-[#ECECEC] bg-white">
         {cargando ? (
-          <p className="text-gray-600">Cargando parámetros...</p>
+          <div className="p-10 text-lg text-gray-600">
+            Cargando parámetros...
+          </div>
         ) : (
           <ExtrasPropiedad
             valoresIniciales={parametrosGuardados}
@@ -266,25 +274,30 @@ function ParametrosPageContent() {
             onCancelar={volverSegunOrigen}
           />
         )}
-
-        {guardando && !mostrarModalExito && (
-          <p className="mt-4 text-sm text-gray-600">Guardando parámetros...</p>
-        )}
       </div>
 
-      {mostrarModalExito && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/10 px-4">
-          <div className="w-full max-w-md rounded-[28px] bg-white px-8 py-10 text-center shadow-2xl">
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-orange-500 text-5xl font-bold text-white">
-              ✓
-            </div>
-
-            <p className="text-xl font-bold text-[#1f1f1f]">
-              Parámetros personalizados guardados con éxito!
-            </p>
-          </div>
-        </div>
+      {/* GUARDANDO */}
+      {guardando && !mostrarModalExito && (
+        <p className="mt-6 text-base text-gray-600">
+          Guardando parámetros...
+        </p>
       )}
-    </main>
-  );
+    </div>
+
+    {/* MODAL */}
+    {mostrarModalExito && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 px-4 backdrop-blur-sm">
+        <div className="w-full max-w-md rounded-[32px] bg-white px-8 py-10 text-center shadow-2xl">
+          <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-orange-500 text-5xl font-bold text-white">
+            ✓
+          </div>
+
+          <p className="text-2xl font-bold text-[#101828]">
+            ¡Parámetros guardados correctamente!
+          </p>
+        </div>
+      </div>
+    )}
+  </main>
+);
 }
