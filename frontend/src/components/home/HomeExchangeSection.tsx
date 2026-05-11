@@ -1,17 +1,12 @@
-import ExchangeRateBar from "@/components/ExchangeRateBar";
+"use client";
 
-const mockExchangeRate = {
-  officialRate: 6.96,
-  referentialRate: 11.5,
-  updatedAt: "4/5/2026",
-};
+import { ExchangeRateBar } from "@/components/ExchangeRateBar";
+import { useExchangeRate } from "@/hooks/useExchangeRate";
 
 export default function HomeExchangeSection() {
+  const exchangeRateState = useExchangeRate();
+
   return (
-    <ExchangeRateBar
-      officialRate={mockExchangeRate.officialRate}
-      referentialRate={mockExchangeRate.referentialRate}
-      updatedAt={mockExchangeRate.updatedAt}
-    />
+    <ExchangeRateBar {...exchangeRateState} />
   );
 }
