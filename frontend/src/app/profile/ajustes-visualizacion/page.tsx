@@ -1,4 +1,3 @@
-
 export default function AjustesVisualizacionPage() {
     return (
         <main className="min-h-screen bg-[#f8f6f1] px-4 py-8 text-gray-900">
@@ -15,13 +14,66 @@ export default function AjustesVisualizacionPage() {
                         accesibilidad visual para mejorar tu experiencia de navegación.
                     </p>
 
+                    <section className="mt-8">
+                        <div className="mb-4">
+                            <h2 className="text-xl font-semibold text-gray-900">
+                                Modo de apariencia
+                            </h2>
+                            <p className="mt-1 text-sm text-gray-500">
+                                Elige el tema visual que prefieras.
+                            </p>
+                        </div>
+
+                        <div className="grid gap-4 md:grid-cols-2">
+                            <article className="rounded-2xl border border-orange-500 bg-orange-50 p-5 shadow-sm">
+                                <div className="mb-4 flex h-24 items-center justify-center rounded-xl bg-white">
+                                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-orange-100 text-3xl">
+                                        ☀️
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start gap-3">
+                                    <span className="mt-1 h-4 w-4 rounded-full border border-orange-500 bg-orange-500" />
+
+                                    <div>
+                                        <h3 className="font-semibold text-gray-900">Modo claro</h3>
+                                        <p className="mt-1 text-sm leading-6 text-gray-500">
+                                            Interfaz con fondo claro, ideal para ambientes bien
+                                            iluminados durante el día.
+                                        </p>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <article className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition hover:border-orange-300">
+                                <div className="mb-4 flex h-24 items-center justify-center rounded-xl bg-gray-900">
+                                    <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-800 text-3xl">
+                                        🌙
+                                    </div>
+                                </div>
+
+                                <div className="flex items-start gap-3">
+                                    <span className="mt-1 h-4 w-4 rounded-full border border-gray-300 bg-white" />
+
+                                    <div>
+                                        <h3 className="font-semibold text-gray-900">Modo oscuro</h3>
+                                        <p className="mt-1 text-sm leading-6 text-gray-500">
+                                            Interfaz con fondo oscuro, ideal para reducir el cansancio
+                                            visual en ambientes con poca luz.
+                                        </p>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+
                     <div className="mt-8 rounded-xl border border-dashed border-orange-300 bg-orange-50 p-5">
                         <p className="text-sm font-medium text-orange-700">
-                            Vista base HU13 creada correctamente.
+                            Subtarea 2 completada: opciones de modo claro y modo oscuro.
                         </p>
                         <p className="mt-1 text-sm text-orange-600">
-                            En las siguientes subtareas agregaremos modo claro, modo oscuro y
-                            accesibilidad para daltonismo.
+                            En la siguiente subtarea agregaremos las opciones de accesibilidad
+                            para daltonismo.
                         </p>
                     </div>
                 </div>
