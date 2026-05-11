@@ -337,843 +337,224 @@
   animation: fade-in 0.6s ease-in-out;
 }
 
-/* ================================
-   HU13 - Ajustes de Visualización
-   Modo oscuro y accesibilidad
-   Alcance limitado a la vista HU13
-================================ */
+/* ==================================================
+   PROPBOL - Modo oscuro global
+    / preparado para componentes nuevos
+================================================== */
 
-html.propbol-theme-dark .propbol-visual-settings-page {
-  background-color: #0f172a !important;
-  color: #e5e7eb !important;
+html.propbol-theme-dark {
+  color-scheme: dark;
+  --pb-bg: #000000;
+  --pb-surface: #050505;
+  --pb-surface-2: #0b0b0b;
+  --pb-input: #111111;
+  --pb-border: #222222;
+  --pb-border-2: #333333;
+  --pb-text: #ffffff;
+  --pb-muted: #cbd5e1;
+  --pb-accent: #e68b25;
 }
 
-html.propbol-theme-dark .propbol-visual-settings-page .bg-white {
-  background-color: #1e293b !important;
-}
-
-html.propbol-theme-dark .propbol-visual-settings-page .bg-\[\#f8f6f1\] {
-  background-color: #0f172a !important;
-}
-
-html.propbol-theme-dark .propbol-visual-settings-page .bg-orange-50 {
-  background-color: rgba(249, 115, 22, 0.12) !important;
-}
-
-html.propbol-theme-dark .propbol-visual-settings-page .bg-gray-50 {
-  background-color: #111827 !important;
-}
-
-html.propbol-theme-dark .propbol-visual-settings-page .bg-amber-50 {
-  background-color: rgba(245, 158, 11, 0.14) !important;
-}
-
-html.propbol-theme-dark .propbol-visual-settings-page .text-gray-900,
-html.propbol-theme-dark .propbol-visual-settings-page .text-gray-800,
-html.propbol-theme-dark .propbol-visual-settings-page .text-gray-700 {
-  color: #f8fafc !important;
-}
-
-html.propbol-theme-dark .propbol-visual-settings-page .text-gray-600,
-html.propbol-theme-dark .propbol-visual-settings-page .text-gray-500 {
-  color: #cbd5e1 !important;
-}
-
-html.propbol-theme-dark .propbol-visual-settings-page .border-gray-200 {
-  border-color: #334155 !important;
-}
-
-html.propbol-theme-dark .propbol-visual-settings-page .border-gray-300 {
-  border-color: #475569 !important;
-}
-
-html.propbol-theme-dark .propbol-visual-settings-page .ring-gray-100 {
-  --tw-ring-color: rgba(51, 65, 85, 0.8) !important;
-}
-
-html.propbol-theme-dark .propbol-visual-settings-page .shadow-sm {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35) !important;
-}
-
-/* Modo claro explícito */
-html.propbol-theme-light .propbol-visual-settings-page {
-  filter: none;
-}
-
-/* Accesibilidad: Deuteranopia solo en la vista HU13 */
-html.propbol-accessibility-deuteranopia .propbol-visual-settings-page {
-  filter: saturate(0.85) hue-rotate(-12deg) contrast(1.08);
-}
-
-/* Sin filtro de accesibilidad */
-html.propbol-accessibility-none .propbol-visual-settings-page {
-  filter: none;
-}
-
-/* ================================
-   HU13 - Modo oscuro general del sitio
-   Activado desde el botón general del Navbar
-================================ */
-
-/* Fondo base del sitio */
-html.propbol-theme-dark body {
-  background-color: #0f172a !important;
-  color: #e5e7eb !important;
-}
-
-/* Contenido principal */
-html.propbol-theme-dark main {
-  background-color: #0f172a !important;
-  color: #e5e7eb !important;
-}
-
-/* Secciones generales */
-html.propbol-theme-dark main section,
-html.propbol-theme-dark main article {
-  color: #e5e7eb !important;
-}
-
-/* Contenedores y tarjetas claras */
-html.propbol-theme-dark main .bg-white {
-  background-color: #1e293b !important;
-}
-
-html.propbol-theme-dark main .bg-gray-50,
-html.propbol-theme-dark main .bg-slate-50,
-html.propbol-theme-dark main .bg-stone-50,
-html.propbol-theme-dark main .bg-\[\#f8f6f1\] {
-  background-color: #0f172a !important;
-}
-
-/* Tarjetas secundarias */
-html.propbol-theme-dark main .bg-card,
-html.propbol-theme-dark main .bg-muted {
-  background-color: #1e293b !important;
-}
-
-/* Textos principales */
-html.propbol-theme-dark main .text-gray-900,
-html.propbol-theme-dark main .text-gray-800,
-html.propbol-theme-dark main .text-stone-900,
-html.propbol-theme-dark main .text-stone-800,
-html.propbol-theme-dark main .text-title {
-  color: #f8fafc !important;
-}
-
-/* Textos secundarios */
-html.propbol-theme-dark main .text-gray-700,
-html.propbol-theme-dark main .text-gray-600,
-html.propbol-theme-dark main .text-gray-500,
-html.propbol-theme-dark main .text-stone-700,
-html.propbol-theme-dark main .text-stone-600,
-html.propbol-theme-dark main .text-stone-500,
-html.propbol-theme-dark main .text-secondary {
-  color: #cbd5e1 !important;
-}
-
-/* Bordes */
-html.propbol-theme-dark main .border-gray-100,
-html.propbol-theme-dark main .border-gray-200,
-html.propbol-theme-dark main .border-stone-100,
-html.propbol-theme-dark main .border-stone-200,
-html.propbol-theme-dark main .border-muted {
-  border-color: #334155 !important;
-}
-
-/* Sombras */
-html.propbol-theme-dark main .shadow,
-html.propbol-theme-dark main .shadow-sm,
-html.propbol-theme-dark main .shadow-md,
-html.propbol-theme-dark main .shadow-lg {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
-}
-
-/* Inputs, selects y textarea */
-html.propbol-theme-dark main input,
-html.propbol-theme-dark main select,
-html.propbol-theme-dark main textarea {
-  background-color: #0f172a !important;
-  color: #e5e7eb !important;
-  border-color: #334155 !important;
-}
-
-html.propbol-theme-dark main input::placeholder,
-html.propbol-theme-dark main textarea::placeholder {
-  color: #94a3b8 !important;
-}
-
-/* Navbar en modo oscuro */
-html.propbol-theme-dark nav {
-  background-color: #0f172a !important;
-  color: #e5e7eb !important;
-  border-color: #334155 !important;
-}
-
-html.propbol-theme-dark nav a,
-html.propbol-theme-dark nav button,
-html.propbol-theme-dark nav span {
-  color: #e5e7eb !important;
-}
-
-/* Mantener contraste del botón naranja del navbar */
-html.propbol-theme-dark nav a[href="/registro-inmueble"] {
-  color: #ffffff !important;
-}
-
-/* ================================
-   HU13 - Corrección modo oscuro general
-   Footer y zonas fuera de main
-================================ */
-
-html.propbol-theme-dark footer {
-  background-color: #0f172a !important;
-  color: #e5e7eb !important;
-  border-color: #334155 !important;
-}
-
-html.propbol-theme-dark footer .bg-white,
-html.propbol-theme-dark footer .bg-gray-50,
-html.propbol-theme-dark footer .bg-slate-50,
-html.propbol-theme-dark footer .bg-stone-50 {
-  background-color: #0f172a !important;
-}
-
-html.propbol-theme-dark footer h1,
-html.propbol-theme-dark footer h2,
-html.propbol-theme-dark footer h3,
-html.propbol-theme-dark footer h4,
-html.propbol-theme-dark footer p,
-html.propbol-theme-dark footer span,
-html.propbol-theme-dark footer a,
-html.propbol-theme-dark footer li {
-  color: #e5e7eb !important;
-}
-
-html.propbol-theme-dark footer .text-gray-900,
-html.propbol-theme-dark footer .text-gray-800,
-html.propbol-theme-dark footer .text-stone-900,
-html.propbol-theme-dark footer .text-stone-800 {
-  color: #f8fafc !important;
-}
-
-html.propbol-theme-dark footer .text-gray-700,
-html.propbol-theme-dark footer .text-gray-600,
-html.propbol-theme-dark footer .text-gray-500,
-html.propbol-theme-dark footer .text-stone-700,
-html.propbol-theme-dark footer .text-stone-600,
-html.propbol-theme-dark footer .text-stone-500 {
-  color: #cbd5e1 !important;
-}
-
-html.propbol-theme-dark footer .border-gray-100,
-html.propbol-theme-dark footer .border-gray-200,
-html.propbol-theme-dark footer .border-stone-100,
-html.propbol-theme-dark footer .border-stone-200,
-html.propbol-theme-dark footer.border-t,
-html.propbol-theme-dark footer .border-t {
-  border-color: #334155 !important;
-}
-
-html.propbol-theme-dark footer .border-t {
-  border-top-color: #334155 !important;
-}
-
-/* ================================
-   HU13 - Corrección final de contraste
-   Botón de tema y franja informativa
-================================ */
-
-/* Corrige contraste del botón Modo claro / Modo oscuro en navbar */
-html.propbol-theme-dark nav button {
-  border-color: #334155 !important;
-}
-
-html.propbol-theme-dark nav button[aria-label*="modo"] {
-  background-color: #1e293b !important;
-  color: #e5e7eb !important;
-  border-color: #475569 !important;
-}
-
-html.propbol-theme-dark nav button[aria-label*="modo"] span,
-html.propbol-theme-dark nav button[aria-label*="modo"] svg {
-  color: #e5e7eb !important;
-  stroke: #e5e7eb !important;
-}
-
-/* Corrige bloques blancos que estén fuera de main, como Tipo de Cambio */
-html.propbol-theme-dark body .bg-white {
-  background-color: #1e293b !important;
-  color: #e5e7eb !important;
-}
-
-html.propbol-theme-dark body .text-gray-900,
-html.propbol-theme-dark body .text-gray-800,
-html.propbol-theme-dark body .text-stone-900,
-html.propbol-theme-dark body .text-stone-800 {
-  color: #f8fafc !important;
-}
-
-html.propbol-theme-dark body .text-gray-700,
-html.propbol-theme-dark body .text-gray-600,
-html.propbol-theme-dark body .text-gray-500,
-html.propbol-theme-dark body .text-stone-700,
-html.propbol-theme-dark body .text-stone-600,
-html.propbol-theme-dark body .text-stone-500 {
-  color: #cbd5e1 !important;
-}
-
-/* Mantener el botón naranja legible */
-html.propbol-theme-dark nav a[href="/registro-inmueble"] {
-  background-color: #e68b25 !important;
-  color: #ffffff !important;
-}
-
-/* ================================
-   HU13 - Corrección menú de usuario en modo oscuro
-================================ */
-
-/* Menús desplegables dentro del navbar: usuario y notificaciones */
-html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] {
-  background-color: #1e293b !important;
-  color: #e5e7eb !important;
-  border-color: #334155 !important;
-}
-
-/* Textos dentro del menú desplegable */
-html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] h1,
-html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] h2,
-html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] h3,
-html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] p,
-html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] span,
-html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] a,
-html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] button {
-  color: #e5e7eb !important;
-}
-
-/* Textos secundarios dentro del menú */
-html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] .text-gray-500,
-html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] .text-gray-600,
-html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] .text-gray-700 {
-  color: #cbd5e1 !important;
-}
-
-/* Líneas divisorias del menú */
-html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] .border-gray-200,
-html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] .border-stone-200 {
-  border-color: #334155 !important;
-}
-
-/* Hover de opciones del menú */
-html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] a:hover,
-html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] button:hover {
-  background-color: #334155 !important;
-}
-
-/* Botón cerrar sesión dentro del menú */
-html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] button[class*="bg-orange"],
-html.propbol-theme-dark nav [class*="absolute"][class*="right-0"] button[class*="bg-[#E68B25]"] {
-  background-color: #e68b25 !important;
-  color: #ffffff !important;
-}
-
-/* ================================
-   HU13 - Refuerzo visual de Deuteranopia
-   Aplica el cambio a las vistas previas superiores e inferiores
-================================ */
-
-html.propbol-accessibility-deuteranopia .propbol-visual-settings-page {
-  filter: none;
-}
-
-html.propbol-accessibility-deuteranopia .propbol-visual-settings-page .visual-option-preview {
-  filter: saturate(0.65) hue-rotate(-18deg) contrast(1.18);
-}
-
-html.propbol-accessibility-deuteranopia .propbol-visual-settings-page button[aria-pressed="true"] {
-  border-color: #f97316 !important;
-  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.18) !important;
-}
-
-html.propbol-accessibility-deuteranopia .propbol-visual-settings-page .bg-orange-50 {
-  background-color: rgba(249, 115, 22, 0.16) !important;
-}
-
-html.propbol-accessibility-deuteranopia .propbol-visual-settings-page .bg-amber-50 {
-  background-color: rgba(245, 158, 11, 0.18) !important;
-}
-
-/* ================================
-   HU13 - Accesibilidad global Deuteranopia
-   Aplica el filtro visual a toda la interfaz
-================================ */
-
-/* Sin filtro */
+/* Reset modo claro / accesibilidad */
+html.propbol-theme-light,
 html.propbol-accessibility-none body {
   filter: none !important;
 }
 
-/* Deuteranopia: ajuste global visible */
 html.propbol-accessibility-deuteranopia body {
   filter: saturate(0.75) hue-rotate(-18deg) contrast(1.12) !important;
 }
 
-/* Refuerzo visual en tarjetas seleccionadas */
-html.propbol-accessibility-deuteranopia .propbol-visual-settings-page button[aria-pressed="true"] {
-  border-color: #f97316 !important;
-  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.22) !important;
-}
-
-/* Evita que las vistas previas se filtren doble */
-html.propbol-accessibility-deuteranopia .propbol-visual-settings-page .visual-option-preview {
+html.propbol-accessibility-deuteranopia .propbol-visual-settings-page,
+html.propbol-accessibility-deuteranopia .visual-option-preview {
   filter: none !important;
 }
 
-/* ================================
-   HU13 - Corrección de contraste
-   ProfileCard y SesionesActivas
-   No modifica lógica, solo estilos en modo oscuro
-================================ */
-
-/* Corrige fondos claros del perfil */
-html.propbol-theme-dark main .bg-orange-50,
-html.propbol-theme-dark main .bg-amber-50,
-html.propbol-theme-dark main .bg-yellow-50,
-html.propbol-theme-dark main .bg-stone-50,
-html.propbol-theme-dark main .bg-stone-100,
-html.propbol-theme-dark main .bg-gray-100,
-html.propbol-theme-dark main .bg-gray-200,
-html.propbol-theme-dark main .bg-neutral-100,
-html.propbol-theme-dark main .bg-neutral-200 {
-  background-color: #1e293b !important;
-  color: #e5e7eb !important;
+/* Fondo general */
+html.propbol-theme-dark,
+html.propbol-theme-dark body,
+html.propbol-theme-dark main,
+html.propbol-theme-dark nav,
+html.propbol-theme-dark footer,
+html.propbol-theme-dark .propbol-visual-settings-page,
+html.propbol-theme-dark .propbol-sesiones-activas,
+html.propbol-theme-dark .propbol-active-sessions-page {
+  background: var(--pb-bg) !important;
+  color: var(--pb-text) !important;
+  border-color: var(--pb-border) !important;
 }
 
-/* Corrige cajas internas claras */
-html.propbol-theme-dark main .bg-white {
-  background-color: #1e293b !important;
-  color: #e5e7eb !important;
+/* Convierte fondos claros, azules y grises a negro */
+html.propbol-theme-dark body :where([class*="bg-white"],
+  [class*="bg-gray"],
+  [class*="bg-slate"],
+  [class*="bg-neutral"],
+  [class*="bg-zinc"],
+  [class*="bg-stone"],
+  [class*="bg-card"],
+  [class*="bg-muted"],
+  [class*="bg-amber-50"],
+  [class*="bg-yellow-50"],
+  [class*="bg-orange-50"],
+  [class*="bg-[#0"],
+  [class*="bg-[#1"],
+  [class*="bg-[#2"],
+  [class*="bg-[#F"],
+  [class*="bg-[#f"],
+  [class*="bg-[#D"],
+  [class*="bg-[#d"],
+  [class*="bg-[#E7"],
+  [class*="bg-[#e7"]) {
+  background: var(--pb-surface) !important;
+  background-image: none !important;
+  color: var(--pb-text) !important;
 }
 
-/* Corrige textos oscuros que en modo dark deben verse claros */
-html.propbol-theme-dark main .text-stone-900,
-html.propbol-theme-dark main .text-stone-800,
-html.propbol-theme-dark main .text-stone-700,
-html.propbol-theme-dark main .text-gray-900,
-html.propbol-theme-dark main .text-gray-800,
-html.propbol-theme-dark main .text-gray-700,
-html.propbol-theme-dark main .text-black {
-  color: #f8fafc !important;
+/* Cards, formularios y bloques internos */
+html.propbol-theme-dark body :where(section,
+  article,
+  aside,
+  form,
+  table,
+  thead,
+  tbody,
+  tr,
+  td,
+  th,
+  .propbol-profile-card,
+  #personal-data-form,
+  .propbol-sesiones-activas > div,
+  .propbol-active-sessions-page > div) {
+  color: var(--pb-text) !important;
+  border-color: var(--pb-border) !important;
 }
 
-/* Corrige textos secundarios */
-html.propbol-theme-dark main .text-stone-600,
-html.propbol-theme-dark main .text-stone-500,
-html.propbol-theme-dark main .text-gray-600,
-html.propbol-theme-dark main .text-gray-500 {
-  color: #cbd5e1 !important;
+/* Dropdowns, popups, menús y ventanas flotantes */
+html.propbol-theme-dark :where(nav [class*="absolute"],
+  nav [class*="fixed"],
+  [role="menu"],
+  [role="dialog"],
+  [data-radix-popper-content-wrapper] > *,
+  .dropdown-menu,
+  .popover,
+  .popover-content,
+  .notification-panel,
+  .user-menu,
+  .menu-content) {
+  background: var(--pb-surface) !important;
+  background-image: none !important;
+  color: var(--pb-text) !important;
+  border: 1px solid var(--pb-border) !important;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.85) !important;
+  outline: none !important;
+  --tw-ring-color: transparent !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
 }
 
-/* Corrige inputs, selects y textarea del perfil */
-html.propbol-theme-dark main input,
-html.propbol-theme-dark main select,
-html.propbol-theme-dark main textarea {
-  background-color: #111827 !important;
-  color: #f8fafc !important;
-  border-color: #475569 !important;
+/* Elementos internos de popups */
+html.propbol-theme-dark :where(nav [class*="absolute"] *,
+  nav [class*="fixed"] *,
+  [role="menu"] *,
+  [role="dialog"] *) {
+  color: var(--pb-text) !important;
+  border-color: var(--pb-border) !important;
 }
 
-html.propbol-theme-dark main input::placeholder,
-html.propbol-theme-dark main textarea::placeholder {
-  color: #94a3b8 !important;
-}
-
-/* Corrige filas y tablas de sesiones activas */
-html.propbol-theme-dark main table,
-html.propbol-theme-dark main thead,
-html.propbol-theme-dark main tbody,
-html.propbol-theme-dark main tr,
-html.propbol-theme-dark main td,
-html.propbol-theme-dark main th {
-  color: #f8fafc !important;
-}
-
-/* Corrige bordes claros */
-html.propbol-theme-dark main .border-gray-100,
-html.propbol-theme-dark main .border-gray-200,
-html.propbol-theme-dark main .border-stone-100,
-html.propbol-theme-dark main .border-stone-200 {
-  border-color: #334155 !important;
-}
-
-/* Mantiene botones naranjas legibles */
-html.propbol-theme-dark main .bg-orange-500,
-html.propbol-theme-dark main .bg-orange-600,
-html.propbol-theme-dark main .bg-\[\#E68B25\] {
-  background-color: #e68b25 !important;
-  color: #ffffff !important;
-}
-
-/* Botones deshabilitados */
-html.propbol-theme-dark main button:disabled {
-  background-color: #475569 !important;
-  color: #cbd5e1 !important;
-  opacity: 0.75;
-}
-
-/* ================================
-   HU13 - Corrección final modo oscuro
-   Perfil y sesiones activas
-   No toca lógica ni componentes
-================================ */
-
-/* Fondos claros específicos que no estaban cambiando */
-html.propbol-theme-dark main .bg-gray-100,
-html.propbol-theme-dark main .bg-gray-200,
-html.propbol-theme-dark main .bg-gray-300,
-html.propbol-theme-dark main .bg-stone-100,
-html.propbol-theme-dark main .bg-stone-200,
-html.propbol-theme-dark main .bg-neutral-100,
-html.propbol-theme-dark main .bg-neutral-200,
-html.propbol-theme-dark main .bg-zinc-100,
-html.propbol-theme-dark main .bg-zinc-200,
-html.propbol-theme-dark main .bg-amber-50,
-html.propbol-theme-dark main .bg-yellow-50,
-html.propbol-theme-dark main .bg-orange-50,
-html.propbol-theme-dark main .bg-\[\#fff8e7\],
-html.propbol-theme-dark main .bg-\[\#FFF8E7\],
-html.propbol-theme-dark main .bg-\[\#fff7e6\],
-html.propbol-theme-dark main .bg-\[\#FFF7E6\],
-html.propbol-theme-dark main .bg-\[\#fdf5e6\],
-html.propbol-theme-dark main .bg-\[\#FDF5E6\],
-html.propbol-theme-dark main .bg-\[\#fdf6e3\],
-html.propbol-theme-dark main .bg-\[\#FDF6E3\],
-html.propbol-theme-dark main .bg-\[\#faf3e0\],
-html.propbol-theme-dark main .bg-\[\#FAF3E0\],
-html.propbol-theme-dark main .bg-\[\#fffaf0\],
-html.propbol-theme-dark main .bg-\[\#FFFaf0\],
-html.propbol-theme-dark main .bg-\[\#fffbeb\],
-html.propbol-theme-dark main .bg-\[\#FFFBEB\] {
-  background-color: #1e293b !important;
-  color: #f8fafc !important;
-}
-
-/* Textos que quedaban negros o con poco contraste */
-html.propbol-theme-dark main .text-black,
-html.propbol-theme-dark main .text-gray-950,
-html.propbol-theme-dark main .text-gray-900,
-html.propbol-theme-dark main .text-gray-800,
-html.propbol-theme-dark main .text-stone-950,
-html.propbol-theme-dark main .text-stone-900,
-html.propbol-theme-dark main .text-stone-800,
-html.propbol-theme-dark main .text-neutral-950,
-html.propbol-theme-dark main .text-neutral-900,
-html.propbol-theme-dark main .text-neutral-800 {
-  color: #f8fafc !important;
+/* Textos */
+html.propbol-theme-dark body :where(h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  label,
+  p,
+  span,
+  a,
+  li,
+  button,
+  [class*="text-black"],
+  [class*="text-gray"],
+  [class*="text-slate"],
+  [class*="text-neutral"],
+  [class*="text-zinc"],
+  [class*="text-stone"]) {
+  color: var(--pb-text) !important;
 }
 
 /* Textos secundarios */
-html.propbol-theme-dark main .text-gray-700,
-html.propbol-theme-dark main .text-gray-600,
-html.propbol-theme-dark main .text-gray-500,
-html.propbol-theme-dark main .text-stone-700,
-html.propbol-theme-dark main .text-stone-600,
-html.propbol-theme-dark main .text-stone-500,
-html.propbol-theme-dark main .text-neutral-700,
-html.propbol-theme-dark main .text-neutral-600,
-html.propbol-theme-dark main .text-neutral-500 {
-  color: #cbd5e1 !important;
+html.propbol-theme-dark body :where(small,
+  input::placeholder,
+  textarea::placeholder,
+  [class*="placeholder"],
+  [class*="text-secondary"]) {
+  color: var(--pb-muted) !important;
 }
 
-/* Formularios del perfil */
-html.propbol-theme-dark main input,
-html.propbol-theme-dark main select,
-html.propbol-theme-dark main textarea {
-  background-color: #111827 !important;
-  color: #f8fafc !important;
-  border-color: #334155 !important;
+/* Inputs */
+html.propbol-theme-dark body :where(input,
+  select,
+  textarea) {
+  background: var(--pb-input) !important;
+  color: var(--pb-text) !important;
+  border-color: var(--pb-border-2) !important;
 }
 
-html.propbol-theme-dark main input::placeholder,
-html.propbol-theme-dark main textarea::placeholder {
-  color: #94a3b8 !important;
+/* Bordes y sombras */
+html.propbol-theme-dark body :where([class*="border-gray"],
+  [class*="border-slate"],
+  [class*="border-neutral"],
+  [class*="border-zinc"],
+  [class*="border-stone"],
+  [class*="border-muted"],
+  [class*="ring-"]) {
+  border-color: var(--pb-border) !important;
+  --tw-ring-color: transparent !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
 }
 
-/* Tablas de sesiones activas */
-html.propbol-theme-dark main table,
-html.propbol-theme-dark main thead,
-html.propbol-theme-dark main tbody,
-html.propbol-theme-dark main tr,
-html.propbol-theme-dark main td,
-html.propbol-theme-dark main th {
-  color: #f8fafc !important;
-  border-color: #334155 !important;
+html.propbol-theme-dark body :where([class*="shadow"],
+  [class*="drop-shadow"]) {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.75) !important;
 }
 
-html.propbol-theme-dark main tbody tr {
-  background-color: #1e293b !important;
+/* Botones principales naranjas */
+html.propbol-theme-dark body :where([class*="bg-orange-500"],
+  [class*="bg-orange-600"],
+  [class*="bg-[#E68B25]"],
+  [class*="bg-[#e68b25]"],
+  [class*="bg-[#E8962F]"],
+  [class*="bg-[#e8962f]"]) {
+  background: var(--pb-accent) !important;
+  color: #ffffff !important;
+  border-color: var(--pb-accent) !important;
 }
 
-/* Contenedores blancos internos */
-html.propbol-theme-dark main .bg-white {
-  background-color: #1e293b !important;
-  color: #f8fafc !important;
+/* Hover general */
+html.propbol-theme-dark body :where(a:hover,
+  button:hover,
+  [role="menuitem"]:hover) {
+  background-color: var(--pb-surface-2) !important;
 }
 
-/* Botones deshabilitados */
-html.propbol-theme-dark main button:disabled {
-  background-color: #475569 !important;
-  color: #cbd5e1 !important;
+/* Botón deshabilitado */
+html.propbol-theme-dark body button:disabled {
+  background: #222222 !important;
+  color: var(--pb-muted) !important;
   opacity: 0.8 !important;
 }
 
-/* ================================
-   HU13 - Corrección global real
-   Aplica modo oscuro aunque la página no use <main>
-================================ */
 
-html.propbol-theme-dark body {
-  background-color: #020617 !important;
-  color: #f8fafc !important;
-}
 
-/* Fondos claros generales en cualquier parte del body */
-html.propbol-theme-dark body .bg-white,
-html.propbol-theme-dark body .bg-gray-50,
-html.propbol-theme-dark body .bg-gray-100,
-html.propbol-theme-dark body .bg-gray-200,
-html.propbol-theme-dark body .bg-stone-50,
-html.propbol-theme-dark body .bg-stone-100,
-html.propbol-theme-dark body .bg-stone-200,
-html.propbol-theme-dark body .bg-neutral-50,
-html.propbol-theme-dark body .bg-neutral-100,
-html.propbol-theme-dark body .bg-neutral-200,
-html.propbol-theme-dark body .bg-zinc-50,
-html.propbol-theme-dark body .bg-zinc-100,
-html.propbol-theme-dark body .bg-zinc-200,
-html.propbol-theme-dark body .bg-amber-50,
-html.propbol-theme-dark body .bg-yellow-50,
-html.propbol-theme-dark body .bg-orange-50,
-html.propbol-theme-dark body .bg-\[\#f8f6f1\],
-html.propbol-theme-dark body .bg-\[\#F8F6F1\],
-html.propbol-theme-dark body .bg-\[\#fff8e7\],
-html.propbol-theme-dark body .bg-\[\#FFF8E7\],
-html.propbol-theme-dark body .bg-\[\#fff7e6\],
-html.propbol-theme-dark body .bg-\[\#FFF7E6\],
-html.propbol-theme-dark body .bg-\[\#fdf5e6\],
-html.propbol-theme-dark body .bg-\[\#FDF5E6\],
-html.propbol-theme-dark body .bg-\[\#fdf6e3\],
-html.propbol-theme-dark body .bg-\[\#FDF6E3\],
-html.propbol-theme-dark body .bg-\[\#faf3e0\],
-html.propbol-theme-dark body .bg-\[\#FAF3E0\],
-html.propbol-theme-dark body .bg-\[\#fffaf0\],
-html.propbol-theme-dark body .bg-\[\#FFFAF0\],
-html.propbol-theme-dark body .bg-\[\#fffbeb\],
-html.propbol-theme-dark body .bg-\[\#FFFBEB\] {
-  background-color: #1e293b !important;
-  color: #f8fafc !important;
-}
-
-/* Textos oscuros generales */
-html.propbol-theme-dark body .text-black,
-html.propbol-theme-dark body .text-gray-950,
-html.propbol-theme-dark body .text-gray-900,
-html.propbol-theme-dark body .text-gray-800,
-html.propbol-theme-dark body .text-gray-700,
-html.propbol-theme-dark body .text-stone-950,
-html.propbol-theme-dark body .text-stone-900,
-html.propbol-theme-dark body .text-stone-800,
-html.propbol-theme-dark body .text-stone-700,
-html.propbol-theme-dark body .text-neutral-950,
-html.propbol-theme-dark body .text-neutral-900,
-html.propbol-theme-dark body .text-neutral-800,
-html.propbol-theme-dark body .text-neutral-700 {
-  color: #f8fafc !important;
-}
-
-/* Textos secundarios */
-html.propbol-theme-dark body .text-gray-600,
-html.propbol-theme-dark body .text-gray-500,
-html.propbol-theme-dark body .text-gray-400,
-html.propbol-theme-dark body .text-stone-600,
-html.propbol-theme-dark body .text-stone-500,
-html.propbol-theme-dark body .text-neutral-600,
-html.propbol-theme-dark body .text-neutral-500 {
-  color: #cbd5e1 !important;
-}
-
-/* Bordes */
-html.propbol-theme-dark body .border-gray-100,
-html.propbol-theme-dark body .border-gray-200,
-html.propbol-theme-dark body .border-gray-300,
-html.propbol-theme-dark body .border-stone-100,
-html.propbol-theme-dark body .border-stone-200,
-html.propbol-theme-dark body .border-neutral-100,
-html.propbol-theme-dark body .border-neutral-200 {
-  border-color: #334155 !important;
-}
-
-/* Inputs y selects */
-html.propbol-theme-dark body input,
-html.propbol-theme-dark body select,
-html.propbol-theme-dark body textarea {
-  background-color: #111827 !important;
-  color: #f8fafc !important;
-  border-color: #334155 !important;
-}
-
-html.propbol-theme-dark body input::placeholder,
-html.propbol-theme-dark body textarea::placeholder {
-  color: #94a3b8 !important;
-}
-
-/* Filas, tablas y tarjetas internas */
-html.propbol-theme-dark body table,
-html.propbol-theme-dark body thead,
-html.propbol-theme-dark body tbody,
-html.propbol-theme-dark body tr,
-html.propbol-theme-dark body td,
-html.propbol-theme-dark body th {
-  color: #f8fafc !important;
-  border-color: #334155 !important;
-}
-
-html.propbol-theme-dark body tbody tr {
-  background-color: #1e293b !important;
-}
-
-/* Botones deshabilitados */
-html.propbol-theme-dark body button:disabled {
-  background-color: #475569 !important;
-  color: #cbd5e1 !important;
-  opacity: 0.85 !important;
-}
-
-html.propbol-theme-dark .propbol-sesiones-activas {
-  background-color: #0f172a !important;
-  color: #f8fafc !important;
-}
-
-html.propbol-theme-dark .propbol-sesiones-activas {
-  background-color: #0f172a !important;
-  color: #f8fafc !important;
-}
-
-html.propbol-theme-dark .propbol-sesiones-activas [class*="bg-[#D9D9D9]"],
-html.propbol-theme-dark .propbol-sesiones-activas [class*="bg-[#F4F4F4]"],
-html.propbol-theme-dark .propbol-sesiones-activas [class*="bg-[#E7DFD7]"] {
-  background-color: #1e293b !important;
-  color: #f8fafc !important;
-}
-
-html.propbol-theme-dark .propbol-sesiones-activas [class*="text-black"] {
-  color: #f8fafc !important;
-}
-
-/* ================================
-   HU13 - Corrección mínima perfil y sesiones
-================================ */
-
-/* Mi cuenta / Datos personales */
-html.propbol-theme-dark .propbol-profile-card {
-  background-color: #1e293b !important;
-  color: #f8fafc !important;
-  border-color: #334155 !important;
-}
-
-html.propbol-theme-dark .propbol-profile-card * {
-  color: inherit;
-}
-
-html.propbol-theme-dark .propbol-profile-card input,
-html.propbol-theme-dark .propbol-profile-card select,
-html.propbol-theme-dark .propbol-profile-card textarea {
-  background-color: #0f172a !important;
-  color: #f8fafc !important;
-  border-color: #475569 !important;
-}
-
-/* Sesiones activas */
-html.propbol-theme-dark .propbol-sesiones-activas {
-  background-color: #0f172a !important;
-  color: #f8fafc !important;
-}
-
-html.propbol-theme-dark .propbol-sesiones-activas>div,
-html.propbol-theme-dark .propbol-sesiones-activas>div>div:nth-child(2),
-html.propbol-theme-dark .propbol-sesiones-activas .space-y-3>div {
-  background-color: #1e293b !important;
-  color: #f8fafc !important;
-}
-
-html.propbol-theme-dark .propbol-sesiones-activas h1,
-html.propbol-theme-dark .propbol-sesiones-activas p {
-  color: #f8fafc !important;
-}
-
-/* Mantener naranja el encabezado de la tabla */
-html.propbol-theme-dark .propbol-sesiones-activas .bg-\[\#E8962F\] {
-  background-color: #e8962f !important;
+/* panel superior de mis publicaciones */
+html.propbol-theme-dark .rounded-2xl,
+html.propbol-theme-dark .rounded-xl,
+html.propbol-theme-dark [class*="from-white"],
+html.propbol-theme-dark [class*="from-gray"],
+html.propbol-theme-dark [class*="to-white"],
+html.propbol-theme-dark [class*="to-gray"] {
+  background: #000000 !important;
+  background-image: none !important;
   color: #ffffff !important;
-}
-
-/* ================================
-   HU13 FIX - Perfil / Mi cuenta
-   Corrige contraste sin tocar lógica
-================================ */
-
-html.propbol-theme-dark #personal-data-form {
-  background-color: #1e293b !important;
-  border-color: #334155 !important;
-  color: #e5e7eb !important;
-}
-
-html.propbol-theme-dark #personal-data-form h2,
-html.propbol-theme-dark #personal-data-form label,
-html.propbol-theme-dark #personal-data-form p,
-html.propbol-theme-dark #personal-data-form span {
-  color: #e5e7eb !important;
-}
-
-html.propbol-theme-dark #personal-data-form input,
-html.propbol-theme-dark #personal-data-form select {
-  background-color: #0f172a !important;
-  color: #f8fafc !important;
-  border-color: #334155 !important;
-}
-
-html.propbol-theme-dark #personal-data-form button {
-  color: #f8fafc !important;
-}
-
-/* ================================
-   HU13 - Corrección modo oscuro
-   Vista: Sesiones activas
-   Alcance limitado para no afectar otros módulos
-================================ */
-
-html.propbol-theme-dark .propbol-active-sessions-page {
-  background-color: #0f172a !important;
-  color: #e5e7eb !important;
-}
-
-html.propbol-theme-dark .propbol-active-sessions-page .bg-\[\#EAEAEA\],
-html.propbol-theme-dark .propbol-active-sessions-page .bg-\[\#D9D9D9\] {
-  background-color: #0f172a !important;
-}
-
-html.propbol-theme-dark .propbol-active-sessions-page .bg-\[\#F4F4F4\] {
-  background-color: #1e293b !important;
-}
-
-html.propbol-theme-dark .propbol-active-sessions-page .bg-\[\#E7DFD7\] {
-  background-color: #253044 !important;
-}
-
-html.propbol-theme-dark .propbol-active-sessions-page .text-black {
-  color: #f8fafc !important;
-}
-
-html.propbol-theme-dark .propbol-active-sessions-page .bg-\[\#CFCFCF\] {
-  background-color: #334155 !important;
-  color: #e5e7eb !important;
+  border-color: #222222 !important;
 }
