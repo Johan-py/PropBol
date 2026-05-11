@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type ThemeOption = "light" | "dark";
 type AccessibilityOption = "none" | "deuteranopia";
@@ -17,6 +17,16 @@ type VisualOptionCardProps = {
 
 const THEME_STORAGE_KEY = "propbol-theme";
 const ACCESSIBILITY_STORAGE_KEY = "propbol-accessibility";
+
+function isThemeOption(value: string | null): value is ThemeOption {
+    return value === "light" || value === "dark";
+}
+
+function isAccessibilityOption(
+    value: string | null
+): value is AccessibilityOption {
+    return value === "none" || value === "deuteranopia";
+}
 
 function VisualOptionCard({
     title,
@@ -67,6 +77,19 @@ export default function AjustesVisualizacion() {
     const [theme, setTheme] = useState<ThemeOption>("light");
     const [accessibility, setAccessibility] =
         useState<AccessibilityOption>("none");
+
+    useEffect(() => {
+        const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+        const savedAccessibility = localStorage.getItem(ACCESSIBILITY_STORAGE_KEY);
+
+        if (isThemeOption(savedTheme)) {
+            setTheme(savedTheme);
+        }
+
+        if (isAccessibilityOption(savedAccessibility)) {
+            setAccessibility(savedAccessibility);
+        }
+    }, []);
 
     const handleThemeChange = (selectedTheme: ThemeOption) => {
         setTheme(selectedTheme);
@@ -160,11 +183,11 @@ export default function AjustesVisualizacion() {
 
                     <div className="mt-8 rounded-xl border border-dashed border-orange-300 bg-orange-50 p-5">
                         <p className="text-sm font-medium text-orange-700">
-                            Subtarea 6 completada: preferencias guardadas en el navegador.
+                            Subtarea 7 completada: preferencias cargadas automáticamente.
                         </p>
                         <p className="mt-1 text-sm text-orange-600">
-                            En la siguiente subtarea cargaremos automáticamente las
-                            preferencias guardadas al entrar nuevamente a la página.
+                            En la siguiente subtarea aplicaremos clases globales para que el
+                            modo oscuro y la accesibilidad afecten visualmente la interfaz.
                         </p>
                     </div>
                 </div>
