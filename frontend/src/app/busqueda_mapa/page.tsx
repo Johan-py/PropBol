@@ -869,14 +869,18 @@ function BusquedaMapaContent() {
       ) : displayedProperties.length === 0 ? (
         <EmptyState
           titulo={
-            tieneFiltrSuperficie
-              ? 'Sin resultados por superficie'
-              : 'No hay propiedades existentes'
+            isOfertaOpen
+              ? 'No hay ofertas disponibles'
+              : tieneFiltrSuperficie
+                ? 'Sin resultados por superficie'
+                : 'No hay propiedades existentes'
           }
           mensaje={
-            tieneFiltrSuperficie
-              ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
-              : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
+            isOfertaOpen
+              ? 'No se encontraron propiedades con descuento. Prueba desactivando el filtro "ofertas"'
+              : tieneFiltrSuperficie
+                ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
+                : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
           }
         />
       ) : (
@@ -907,7 +911,7 @@ function BusquedaMapaContent() {
                   ? 'ring-4 ring-[#ea580c] scale-[0.98] shadow-lg bg-orange-50/30'
                   : ''
                 }`}
-                
+
             >
               {viewMode === 'grid' ? (
                 <PropertyCard
@@ -1757,14 +1761,18 @@ function BusquedaMapaContent() {
                 ) : displayedProperties.length === 0 ? (
                   <EmptyState
                     titulo={
-                      tieneFiltrSuperficie
-                        ? 'Sin resultados por superficie'
-                        : 'No hay propiedades existentes'
+                      isOfertaOpen
+                        ? 'No hay ofertas disponibles'
+                        : tieneFiltrSuperficie
+                          ? 'Sin resultados por superficie'
+                          : 'No hay propiedades existentes'
                     }
                     mensaje={
-                      tieneFiltrSuperficie
-                        ? 'No se encontraron propiedades dentro del rango de superficie seleccionado.'
-                        : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
+                      isOfertaOpen
+                        ? 'No se encontraron propiedades con descuento. Prueba desactivando el filtro "ofertas"'
+                        : tieneFiltrSuperficie
+                          ? 'No se encontraron propiedades dentro del rango de superficie seleccionado.'
+                          : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
                     }
                   />
                 ) : (
