@@ -37,7 +37,7 @@ export const ExchangeRateBar = (props: ExchangeRateState) => {
         {LABELS.official} {officialRate.toFixed(2)}
       </span>
       <span className="text-stone-300">|</span>
-      <span className="text-amber-600 font-medium">
+      <span className="text-amber-700 font-medium">
         {LABELS.referential} {refDisplay} {showIcon && trendIcon}
       </span>
       {!isError && updatedAt && (
