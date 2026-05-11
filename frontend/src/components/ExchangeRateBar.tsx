@@ -30,7 +30,7 @@ export const ExchangeRateBar = (props: ExchangeRateState) => {
   const refDisplay = referentialRate ? `Bs ${referentialRate.toFixed(2)}` : LABELS.notAvailable
 
   return (
-    <div className="flex flex-wrap items-center gap-2 text-sm text-stone-600">
+    <div className="flex flex-wrap items-center gap-2 text-sm text-stone-600" aria-live="polite">
       <span className="font-semibold text-stone-500">$ {LABELS.title}</span>
       <span>
         {LABELS.official} {officialRate.toFixed(2)}
