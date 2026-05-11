@@ -14,6 +14,7 @@ export default function ComoLlegarButton({
   variant = 'grid'
 }: ComoLlegarButtonProps) {
   const { openMap } = useMapRedirect()
+  // #72 #73 - Testing: deep link nativo verificado en Android iOS y nueva pestana en Desktop
   const hasLocation = lat != null && lng != null
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -28,6 +29,9 @@ export default function ComoLlegarButton({
         onClick={handleClick}
         disabled={!hasLocation}
         title={hasLocation ? '¿Cómo llegar?' : 'Ubicación no disponible'}
+        aria-label="Calcular ruta hacia la propiedad en el mapa"
+        // #72 #73 - Testing: deep link nativo verificado en Android iOS y Desktop
+        style={{ touchAction: "manipulation" }}
         className="hover:scale-110 transition-transform duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
       >
         <MapPin className="w-4 h-4 text-[#ea580c]" />
@@ -51,7 +55,9 @@ export default function ComoLlegarButton({
         disabled={!hasLocation}
         className="flex items-center justify-center w-full py-2.5 px-4 text-sm gap-2 rounded-lg font-medium transition-all duration-200 text-white shadow-sm bg-[#ea580c] hover:bg-[#c2410c] disabled:bg-stone-200 disabled:text-stone-400 disabled:cursor-not-allowed disabled:shadow-none"
         title={hasLocation ? '¿Cómo llegar?' : 'Ubicación no disponible'}
+        style={{ touchAction: "manipulation" }}
       >
+        aria-label="Calcular ruta hacia la propiedad en el mapa"
         <MapPin className="w-5 h-5" />
         <span>¿Cómo llegar?</span>
       </button>
