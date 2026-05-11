@@ -36,8 +36,9 @@ export class RecomendacionesService {
     }
 
     if (ia) {
-  console.log(`[ML] Solicitando recomendaciones con ML para usuario ${usuarioId}`);
-
+   console.log(`[ML] Solicitando recomendaciones con ML para usuario ${usuarioId}`)
+   console.log(`[ML] Filtros recibidos:`, JSON.stringify(filtros))
+  const inicio = Date.now()
   const resultadosML = await featuresService.recomendar(
     Number(usuarioId), // 1er argumento: usuarioId
     limit,             // 2do argumento: limit
@@ -48,7 +49,18 @@ export class RecomendacionesService {
       query: filtros.query,
     }
   );
+  const tiempoML = Date.now() - inicio
 
+  console.log(`[ML] Tiempo de scoring: ${tiempoML}ms`)
+  console.log(`[ML] Resultados obtenidos: ${resultadosML.length}`)
+   if (resultadosML.length > 0) {
+    console.log(`[ML] Top 3 scores:`, resultadosML.slice(0, 3).map(r => ({
+      id: r.id,
+      titulo: r.titulo,
+      score: r.score,
+      razones: r.razones
+    })))
+  }
   if (resultadosML && resultadosML.length > 0) {
     return resultadosML;
   }
