@@ -33,7 +33,7 @@ export default function UbicacionPropiedad({ mapa }: Props) {
       </div>
         {/* HU13 #71 - Boton Como llegar en detalle de publicacion seccion ubicacion */}
       <div className="mt-3 w-full min-h-[44px] flex items-center">
-        <ComoLlegarButton lat={mapa.latitud} lng={mapa.longitud} variant="grid" />
+        <ComoLlegarButton lat={mapa.latitud} lng={mapa.longitud} variant="grid" aria-label="Calcular ruta hacia esta propiedad" />
       </div>
     </section>
   )
