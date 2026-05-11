@@ -19,7 +19,17 @@ export default function ActiveSessions() {
 
   return (
     <div className="min-h-screen bg-[#EAEAEA] p-4">
+      {/* Contenedor principal */}
       <div className="bg-[#D9D9D9] rounded-sm p-6">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-black">
+               Gestión de Sesiones Activas
+          </h1>
+             <p className="text-lg text-black mt-2">
+               3 sesiones activas
+            </p>
+        </div>
       </div>
     </div>
 
