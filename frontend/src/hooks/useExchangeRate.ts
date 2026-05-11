@@ -10,6 +10,11 @@ export type ExchangeRateState = {
   isError: boolean
 }
 
+/**
+ * Hook personalizado para obtener el tipo de cambio oficial y referencial.
+ * Maneja el estado de carga y errores para el componente ExchangeRateBar.
+ * @returns {ExchangeRateState} El estado actual del tipo de cambio.
+ */
 export const useExchangeRate = (): ExchangeRateState => {
   const [state, setState] = useState<ExchangeRateState>({
     officialRate: 6.96,
