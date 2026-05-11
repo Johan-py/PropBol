@@ -15,6 +15,9 @@ type VisualOptionCardProps = {
     onClick: () => void;
 };
 
+const THEME_STORAGE_KEY = "propbol-theme";
+const ACCESSIBILITY_STORAGE_KEY = "propbol-accessibility";
+
 function VisualOptionCard({
     title,
     description,
@@ -26,6 +29,7 @@ function VisualOptionCard({
     return (
         <button
             type="button"
+            aria-pressed={selected}
             onClick={onClick}
             className={`rounded-2xl border p-5 text-left shadow-sm transition hover:border-orange-300 ${selected
                     ? "border-orange-500 bg-orange-50"
@@ -64,6 +68,18 @@ export default function AjustesVisualizacion() {
     const [accessibility, setAccessibility] =
         useState<AccessibilityOption>("none");
 
+    const handleThemeChange = (selectedTheme: ThemeOption) => {
+        setTheme(selectedTheme);
+        localStorage.setItem(THEME_STORAGE_KEY, selectedTheme);
+    };
+
+    const handleAccessibilityChange = (
+        selectedAccessibility: AccessibilityOption
+    ) => {
+        setAccessibility(selectedAccessibility);
+        localStorage.setItem(ACCESSIBILITY_STORAGE_KEY, selectedAccessibility);
+    };
+
     return (
         <main className="min-h-screen bg-[#f8f6f1] px-4 py-8 text-gray-900">
             <section className="mx-auto w-full max-w-5xl">
@@ -96,7 +112,7 @@ export default function AjustesVisualizacion() {
                                 icon="☀️"
                                 previewClassName="bg-white"
                                 selected={theme === "light"}
-                                onClick={() => setTheme("light")}
+                                onClick={() => handleThemeChange("light")}
                             />
 
                             <VisualOptionCard
@@ -105,7 +121,7 @@ export default function AjustesVisualizacion() {
                                 icon="🌙"
                                 previewClassName="bg-gray-900"
                                 selected={theme === "dark"}
-                                onClick={() => setTheme("dark")}
+                                onClick={() => handleThemeChange("dark")}
                             />
                         </div>
                     </section>
@@ -128,7 +144,7 @@ export default function AjustesVisualizacion() {
                                 icon="👁️"
                                 previewClassName="bg-white"
                                 selected={accessibility === "none"}
-                                onClick={() => setAccessibility("none")}
+                                onClick={() => handleAccessibilityChange("none")}
                             />
 
                             <VisualOptionCard
@@ -137,18 +153,18 @@ export default function AjustesVisualizacion() {
                                 icon="🎨"
                                 previewClassName="bg-amber-50"
                                 selected={accessibility === "deuteranopia"}
-                                onClick={() => setAccessibility("deuteranopia")}
+                                onClick={() => handleAccessibilityChange("deuteranopia")}
                             />
                         </div>
                     </section>
 
                     <div className="mt-8 rounded-xl border border-dashed border-orange-300 bg-orange-50 p-5">
                         <p className="text-sm font-medium text-orange-700">
-                            Subtarea 5 completada: selección visual de preferencias.
+                            Subtarea 6 completada: preferencias guardadas en el navegador.
                         </p>
                         <p className="mt-1 text-sm text-orange-600">
-                            En la siguiente subtarea guardaremos las preferencias en el
-                            navegador.
+                            En la siguiente subtarea cargaremos automáticamente las
+                            preferencias guardadas al entrar nuevamente a la página.
                         </p>
                     </div>
                 </div>
