@@ -362,6 +362,61 @@ export default function Navbar() {
       }, 600);
     }
   };
+  const handlePublicarInmueble = async () => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    router.push("/sign-in");
+    return;
+  }
+
+  try {
+    // Obtener usuario autenticado
+    const meResponse = await fetch(`${API_URL}/api/auth/me`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const meData = await meResponse.json();
+
+    if (!meResponse.ok || !meData.user?.id) {
+      console.error("No se pudo obtener usuario autenticado");
+      router.push("/sign-in");
+      return;
+    }
+
+    const userId = meData.user.id;
+
+    // Validar límite de publicaciones
+    const limiteResponse = await fetch(
+      `${API_URL}/api/publicaciones/validar-limite/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    const limiteData = await limiteResponse.json();
+
+    // Si ya agotó publicaciones gratuitas
+    if (
+      limiteData.message === "LIMIT_REACHED" ||
+      limiteData.restantes <= 0
+    ) {
+      router.push("/Cobros-Limite");
+      return;
+    }
+
+    // Si aún puede publicar
+    router.push("/registro-inmueble");
+    } catch (error) {
+       console.error("Error validando publicaciones:", error);
+    }
+    };
 
   return (
     <>
@@ -374,13 +429,14 @@ export default function Navbar() {
             </div>
  
             <div className="flex items-center gap-4">
-              <Link
+              <button
                 id="tour-publicar-home"
-                href="/registro-inmueble"
+                type="button"
+                onClick={handlePublicarInmueble}
                 className="hidden md:block rounded-md bg-[#E68B25] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-amber-700"
               >
-                Publica tu inmueble
-              </Link>
+               Publica tu inmueble
+              </button>
  
               <div className="relative" ref={notificationPanelRef}>
                 <button
@@ -699,14 +755,17 @@ export default function Navbar() {
               {/* FIX: agregado id="tour-publicar-home-mobile" que faltaba.
                   Sin este id, el tour no podía encontrar el elemento al
                   retroceder desde "tour-notificaciones" al paso anterior. */}
-              <Link
+              <button
                 id="tour-publicar-home-mobile"
-                href="/registro-inmueble"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"
+                type="button"
+                onClick={async () => {
+                  setIsMobileMenuOpen(false);
+                  await handlePublicarInmueble();
+                 }}
+                className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10 text-left"
               >
                 Publica tu inmueble
-              </Link>
+              </button>
  
               <div id="tour-propiedades-mobile" className="flex flex-col">
                 <button

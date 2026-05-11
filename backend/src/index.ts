@@ -89,6 +89,7 @@ import {
 
 import securityRoutes from "./routes/security.routes.js";
 import propiedadRoutes from "./routes/propiedad.routes.js";
+import { validarPublicacionesFree } from "./controllers/publicacionesController.js";
 // --------------------
 // LEGACY
 // --------------------
@@ -166,6 +167,11 @@ app.use('/api/auth-legacy', authRoutes)
 app.get('/api/users/:id/publicaciones/free', authMiddleware, (_req, res) => {
   res.json({ restantes: 2 })
 })
+app.get(
+  '/api/publicaciones/validar-limite/:id',
+  authMiddleware,
+  validarPublicacionesFree
+)
 app.use('/api/publicaciones-legacy', publicacionesRoutes)
 
 // --------------------
