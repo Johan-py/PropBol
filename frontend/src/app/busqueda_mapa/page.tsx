@@ -47,6 +47,8 @@ import { UbicacionEspecificaPanel } from '@/components/filters/UbicacionEspecifi
 import ComparatorModal from '@/components/busqueda/ComparatorModal'
 import EtiquetasSidebar from '@/components/filters/EtiquetasSidebar'
 import { useSearchFilters, BusquedaModo } from '@/hooks/useSearchFilters'
+import { useFiltrosActivos } from '@/hooks/useFiltrosActivos'
+import { ActiveFilterTags } from '@/components/filters/ActiveFilterTags'
 
 // Carga dinámica del mapa (sin SSR)
 const MapView = nextDynamic(() => import('./MapView'), {
@@ -154,7 +156,16 @@ function BusquedaMapaContent() {
   const isRecomendadosActive = searchParams.get('orden') === 'recomendados'
   const filterResetKey = searchParams.toString();
 
-  const { getBusquedaModo, cambiarAModoGeneral } = useSearchFilters()
+  const { getBusquedaModo, cambiarAModoGeneral, clearAllFilters } = useSearchFilters()
+  const filtrosActivos = useFiltrosActivos()
+
+  const handleClearAllFilters = () => {
+    clearAllFilters(router, new URLSearchParams(searchParams.toString()))
+    setIsClusterView(false)
+    setClusterProperties([])
+    setActiveClusterIds([])
+    setListPage(1)
+  }
   const busquedaModo: BusquedaModo = getBusquedaModo(
     new URLSearchParams(searchParams.toString())
   )
@@ -896,6 +907,7 @@ function BusquedaMapaContent() {
                   ? 'ring-4 ring-[#ea580c] scale-[0.98] shadow-lg bg-orange-50/30'
                   : ''
                 }`}
+                
             >
               {viewMode === 'grid' ? (
                 <PropertyCard
@@ -913,6 +925,9 @@ function BusquedaMapaContent() {
                   onViewDetails={() => {
                     if (!isCompareMode) abrirDetallePropiedad(property.id)
                   }}
+
+                  precio={property.precio ? Number(property.precio) : undefined}
+                  precio_anterior={property.precio_anterior ? Number(property.precio_anterior) : undefined}
                 />
               ) : (
                 <PropertyRow
@@ -932,6 +947,8 @@ function BusquedaMapaContent() {
                   onViewDetails={() => {
                     if (!isCompareMode) abrirDetallePropiedad(property.id)
                   }}
+                  lat={property.lat}
+                  lng={property.lng}
                 />
               )}
             </div>
@@ -1298,6 +1315,16 @@ function BusquedaMapaContent() {
                     </span>
                     <span className="text-gray-500 font-normal">propiedades</span>
                   </span>
+
+                  {/* AC 4, 6, 10 — Pills de filtros activos móvil */}
+                  {filtrosActivos.length > 0 && (
+                    <div className="px-4 pt-1">
+                      <ActiveFilterTags
+                        filtros={filtrosActivos}
+                        onClearAll={handleClearAllFilters}
+                      />
+                    </div>
+                  )}
                   {isClusterView && (
                     <button
                       onClick={() => {
@@ -1374,6 +1401,8 @@ function BusquedaMapaContent() {
                         camas={pinnedProperty.nroCuartos ?? 0}
                         banos={pinnedProperty.nroBanos ?? 0}
                         metros={pinnedProperty.superficieM2 ?? 0}
+                        precio={pinnedProperty.precio ? Number(pinnedProperty.precio) : undefined}
+                        precio_anterior={pinnedProperty.precio_anterior ? Number(pinnedProperty.precio_anterior) : undefined}
                       />
                     </div>
                   </div>
@@ -1606,8 +1635,8 @@ function BusquedaMapaContent() {
                             }
                           }}
                           className={`self-start text-xs px-2.5 py-1 rounded-full border transition-all mt-1 mb-2 ${busquedaModo === 'especifica'
-                              ? 'bg-orange-50 border-orange-300 text-orange-600 font-medium hover:bg-orange-100'
-                              : 'bg-stone-100 border-stone-200 text-stone-500 hover:border-stone-300'
+                            ? 'bg-orange-50 border-orange-300 text-orange-600 font-medium hover:bg-orange-100'
+                            : 'bg-stone-100 border-stone-200 text-stone-500 hover:border-stone-300'
                             }`}
                         >
                           {busquedaModo === 'especifica'
@@ -1627,6 +1656,11 @@ function BusquedaMapaContent() {
                                 : 'propiedades encontradas'}
                             </span>
                           </div>
+                          {/* AC 4, 6, 10 — Pills de filtros activos desktop */}
+                          <ActiveFilterTags
+                            filtros={filtrosActivos}
+                            onClearAll={handleClearAllFilters}
+                          />
                           {isClusterView && (
                             <button
                               type="button"
@@ -1664,8 +1698,8 @@ function BusquedaMapaContent() {
                     >
                       <div
                         className={`flex w-full flex-wrap items-end gap-x-2 gap-y-2 ${resultsHeaderSideBySide
-                            ? 'w-auto max-w-[22rem] justify-end'
-                            : 'justify-start'
+                          ? 'w-auto max-w-[22rem] justify-end'
+                          : 'justify-start'
                           }`}
                       >
                         <MenuOrdenamiento
@@ -1736,8 +1770,8 @@ function BusquedaMapaContent() {
                 ) : (
                   <div
                     className={`${viewMode === 'list'
-                        ? 'gap-4 flex flex-col'
-                        : 'grid items-stretch auto-rows-fr gap-4 [grid-template-columns:repeat(auto-fill,minmax(var(--card-min-width),1fr))]'
+                      ? 'gap-4 flex flex-col'
+                      : 'grid items-stretch auto-rows-fr gap-4 [grid-template-columns:repeat(auto-fill,minmax(var(--card-min-width),1fr))]'
                       } ${viewMode === 'list'
                         ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
                         : ''
@@ -1791,6 +1825,8 @@ function BusquedaMapaContent() {
                             onViewDetails={() => {
                               if (!isCompareMode) abrirDetallePropiedad(property.id)
                             }}
+                            precio={property.precio ? Number(property.precio) : undefined}
+                            precio_anterior={property.precio_anterior ? Number(property.precio_anterior) : undefined}
                           />
                         ) : (
                           <PropertyRow
@@ -1809,6 +1845,8 @@ function BusquedaMapaContent() {
                             onViewDetails={() => {
                               if (!isCompareMode) abrirDetallePropiedad(property.id)
                             }}
+                            lat={property.lat}
+                            lng={property.lng}
                           />
                         )}
                       </div>
