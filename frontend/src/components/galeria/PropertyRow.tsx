@@ -3,6 +3,7 @@ import ContactButton from './ContactButton' // <-- Importas tu componente
 import ActionButton from './ActionButton' // <-- Importas tu componente HU4 - Botón de ver detalles (opcional, lo puedes usar o no dependiendo de tu diseño)
 import Image from 'next/image'
 import { useState } from 'react'
+import ComoLlegarButton from './ComoLlegarButton'
 import { MapPin } from 'lucide-react'
 
 export default function PropertyRow({
@@ -14,6 +15,8 @@ export default function PropertyRow({
   accionTexto,
   contactType,
   image,
+  lat,
+  lng,
   onViewDetails
 }: {
   title: string
@@ -24,12 +27,14 @@ export default function PropertyRow({
   accionTexto?: string
   contactType: string
   image: string
+  lat?: number | null
+  lng?: number | null
   onViewDetails?: () => void
 }) {
   const [isHovered, setIsHovered] = useState(false)
   return (
     <div
-      className="relative grid grid-cols-[56px_120px_minmax(0,1fr)_28px_58px] gap-2 px-3 py-2 items-center cursor-pointer transition-colors hover:bg-stone-50 rounded-lg"
+      className="relative grid grid-cols-[56px_120px_minmax(0,1fr)_28px_28px_58px] gap-2 px-3 py-2 items-center cursor-pointer transition-colors hover:bg-stone-50 rounded-lg"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -81,6 +86,10 @@ export default function PropertyRow({
       </div>
 
       {/* CONTACTO: Aquí entra tu magia limpia y modular */}
+      {/* HU13 - Botón de redirección a mapas */}
+      <div className="flex justify-center">
+        <ComoLlegarButton lat={lat} lng={lng} variant="table" />
+      </div>
       <div className="flex justify-center">
         <ContactButton type={contactType} variant="table" />
       </div>

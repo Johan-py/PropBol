@@ -73,6 +73,7 @@ import multimediaRoutes from "./modules/multimedia/multimedia.routes.js";
 import publicacionRoutes from "./modules/publicacion/publicacion.routes.js";
 import router from "./modules/registro-publicacion/publicacion.routes.js";
 import parametrosRoutes from "./modules/parametros-publicacion/parametros.routes.js";
+import tutorialPublicacionRoutes from "./modules/tutorial-publicacion/tutorial-publicacion.routes.js";
 
 import {
   facebookCallbackController,
@@ -116,6 +117,7 @@ import suscripcionesRoutes from "./modules/suscripciones/suscripciones.routes.js
 import plansRoutes from "./modules/plans/plans.routes.js";
 import historialBusquedaRoutes from "./modules/perfil/historialBusqueda.routes.js";
 import whatsappRoutes from "./modules/whatsapp/whatsapp.routes.js";
+import { getAdminTestimonios } from "./modules/testimonios/adminTestimonios.controller.js";
 
 import "./jobs/suscripcion.job.js";
 
@@ -171,6 +173,7 @@ app.use('/api/publicaciones-legacy', publicacionesRoutes)
 // --------------------
 app.use("/api/publicaciones", publicacionRoutes);
 app.use("/api/publicaciones", multimediaRoutes);
+app.use("/api/publicaciones/tutorial", tutorialPublicacionRoutes);
 app.use("/api/perfil", correoverificacionRoutes);
 app.use("/api/perfil/usuario", perfilRoutes);
 app.use("/api/perfil/zonas", zonaRoutes);
@@ -331,6 +334,11 @@ app.post("/api/publicaciones", (req, res) => {
   const nuevaPublicacion = req.body;
   res.json({ message: "Publicación creada", publicacion: nuevaPublicacion });
 });
+
+// --------------------
+// TESTIMONIOSADMIN
+// --------------------
+app.get("/api/admin/testimonios", getAdminTestimonios);
 
 // --------------------
 // LEVANTAR SERVIDOR
