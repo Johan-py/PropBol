@@ -1,171 +1,252 @@
-import { Matrix } from 'ml-matrix'
+import { Matrix, SVD } from 'ml-matrix'
 import { prisma } from '../../lib/prisma.client.js'
 
-// ── Vector de características de un inmueble ──────────────────────────────────
-// Cada inmueble se representa como 5 números entre 0 y 1.
-export interface FeatureVector {
-  inmuebleId: number
-  vector: number[] // [precio, superficie, cuartos, banos, categoria]
-}
-
-// Categorías mapeadas a números
-const CATEGORIA_MAP: Record<string, number> = {
-  CASA: 0.2,
-  DEPARTAMENTO: 0.4,
-  CUARTO: 0.6,
-  TERRENO: 0.8,
-  OFICINA: 0.9,
-  TERRENO_MORTUORIO: 1.0
+interface InmuebleConScore {
+  id: number
+  titulo: string
+  precio: number
+  superficieM2: number | null
+  categoria: string | null
+  ubicacion: any
+  score: number
+  razones: string[]
 }
 
 export class FeaturesService {
-  // ── Normalizar un valor entre 0 y 1 ─────────────────────────────────────────
-  private normalizar(valor: number, min: number, max: number): number {
-    if (max === min) return 0
-    return Math.max(0, Math.min(1, (valor - min) / (max - min)))
-  }
+  /**
+   * Recomienda inmuebles para un usuario usando similitud de coseno
+   * @param usuarioId ID del usuario
+   * @param limit Número máximo de resultados
+   * @returns Lista de inmuebles con score y razones
+   */
+  async recomendar(usuarioId: number, limit: number = 20): Promise<InmuebleConScore[]> {
+    try {
+      // 1. Obtener el historial de interacciones del usuario
+      const historial = await prisma.propiedad_vista.findMany({
+        where: { usuarioId: usuarioId },
+        select: { inmuebleId: true },
+        orderBy: { vistaEn: 'desc' },
+        take: 50 // últimas 50 vistas
+      })
 
-  // ── Construir vector de un inmueble ──────────────────────────────────────────
-  construirVector(
-    inmueble: any,
-    stats: { minPrecio: number; maxPrecio: number; minSup: number; maxSup: number }
-  ): number[] {
-    return [
-      this.normalizar(Number(inmueble.precio || 0), stats.minPrecio, stats.maxPrecio),
-      this.normalizar(Number(inmueble.superficieM2 || 0), stats.minSup, stats.maxSup),
-      this.normalizar(Number(inmueble.nroCuartos || 0), 0, 10),
-      this.normalizar(Number(inmueble.nroBanos || 0), 0, 5),
-      CATEGORIA_MAP[String(inmueble.categoria || 'CASA').toUpperCase()] ?? 0.2
-    ]
-  }
+      const favoritos = await prisma.favorito.findMany({
+        where: { usuarioId: usuarioId },
+        select: { inmuebleId: true }
+      })
 
-  // ── Similitud de coseno entre dos vectores ───────────────────────────────────
-  // Devuelve un número entre 0 (nada similar) y 1 (idénticos)
-  similitudCoseno(a: number[], b: number[]): number {
-    if (a.length !== b.length) return 0
-    const dotProduct = a.reduce((sum, val, i) => sum + val * b[i], 0)
-    const magnitudA = Math.sqrt(a.reduce((sum, val) => sum + val * val, 0))
-    const magnitudB = Math.sqrt(b.reduce((sum, val) => sum + val * val, 0))
-    if (magnitudA === 0 || magnitudB === 0) return 0
-    return dotProduct / (magnitudA * magnitudB)
-  }
-
-  // ── Obtener estadísticas globales para normalización ─────────────────────────
-  async obtenerStats() {
-    const stats = await prisma.inmueble.aggregate({
-      where: { estado: 'ACTIVO' },
-      _min: { precio: true, superficieM2: true },
-      _max: { precio: true, superficieM2: true }
-    })
-    return {
-      minPrecio: Number(stats._min.precio || 0),
-      maxPrecio: Number(stats._max.precio || 1000000),
-      minSup: Number(stats._min.superficieM2 || 0),
-      maxSup: Number(stats._max.superficieM2 || 1000)
-    }
-  }
-
-  // ── Calcular el vector de preferencias del usuario ───────────────────────────
-  // Es el PROMEDIO de los vectores de los inmuebles que vio/favoritó
-  async calcularPerfilUsuario(usuarioId: number, stats: any): Promise<number[] | null> {
-    // Tomar los últimos 20 inmuebles visitados
-    const vistas = await prisma.propiedad_vista.findMany({
-      where: { usuarioId },
-      include: { inmueble: true },
-      orderBy: { vistaEn: 'desc' },
-      take: 20
-    })
-
-    // Tomar favoritos
-    const favoritos = await prisma.favorito.findMany({
-      where: { usuarioId },
-      include: { inmueble: true },
-      orderBy: { agregadoEn: 'desc' },
-      take: 10
-    })
-
-    const inmuebles = [
-      ...favoritos.map((f) => ({ ...f.inmueble, peso: 2 })), // favoritos pesan doble
-      ...vistas.map((v) => ({ ...v.inmueble, peso: 1 }))
-    ]
-
-    if (inmuebles.length === 0) return null
-
-    // Calcular vector promedio ponderado
-    const vectores = inmuebles.map((i) => ({
-      vector: this.construirVector(i, stats),
-      peso: i.peso
-    }))
-
-    const pesoTotal = vectores.reduce((sum, v) => sum + v.peso, 0)
-    const perfilVector = [0, 0, 0, 0, 0]
-
-    for (const { vector, peso } of vectores) {
-      for (let i = 0; i < 5; i++) {
-        perfilVector[i] += (vector[i] * peso) / pesoTotal
+      // Combinar interacciones (dar más peso a favoritos)
+      const interacciones = new Map<number, number>() // inmuebleId -> peso
+      for (const v of historial) {
+        interacciones.set(v.inmuebleId, (interacciones.get(v.inmuebleId) || 0) + 1)
       }
-    }
+      for (const f of favoritos) {
+        interacciones.set(f.inmuebleId, (interacciones.get(f.inmuebleId) || 0) + 5) // favoritos suman más
+      }
 
-    return perfilVector
+      if (interacciones.size === 0) {
+        // Sin historial: fallback a populares
+        return this.fallbackPopulares(limit)
+      }
+
+      const inmueblesInteractuados = Array.from(interacciones.keys())
+
+      // 2. Obtener candidatos (inmuebles similares a los interactuados)
+      // Para evitar hacer cálculos pesados, tomamos propiedades de las mismas categorías/zona
+      const propiedadesSimilares = await this.obtenerInmueblesCandidatos(
+        inmueblesInteractuados,
+        limit * 3
+      )
+
+      if (propiedadesSimilares.length === 0) {
+        return this.fallbackPopulares(limit)
+      }
+
+      // 3. Construir matriz de características para calcular similitud
+      //    Cada fila es un inmueble, cada columna es una característica (categoría, precio, superficie, zona)
+      const caracteristicas = this.extraerCaracteristicas(propiedadesSimilares)
+      const matriz = new Matrix(caracteristicas)
+
+      // 4. Normalizar la matriz (importante para coseno)
+      const matrizNorm = this.normalizarMatriz(matriz)
+
+      // 5. Para cada inmueble interactuado, calcular similitud con los candidatos
+      //    y acumular scores
+      const scores = new Map<number, number>()
+      const razonesMap = new Map<number, string[]>()
+
+      for (const idInteractuado of inmueblesInteractuados) {
+        const idxInteractuado = propiedadesSimilares.findIndex((p) => p.id === idInteractuado)
+        if (idxInteractuado === -1) continue
+
+        const vectorInteractuado = matrizNorm.getRow(idxInteractuado)
+
+        for (let i = 0; i < propiedadesSimilares.length; i++) {
+          if (propiedadesSimilares[i].id === idInteractuado) continue // no recomendar el mismo
+
+          const vectorCandidato = matrizNorm.getRow(i)
+          const similitud = this.coseno(vectorInteractuado, vectorCandidato)
+          const peso = interacciones.get(idInteractuado) || 1
+          const scoreActual = scores.get(propiedadesSimilares[i].id) || 0
+          scores.set(propiedadesSimilares[i].id, scoreActual + similitud * peso)
+
+          // Acumular razones (solo las más significativas, evitar duplicados)
+          const razones = razonesMap.get(propiedadesSimilares[i].id) || []
+          if (
+            similitud > 0.3 &&
+            !razones.includes(`Similar a "${this.obtenerTitulo(idInteractuado)}"`)
+          ) {
+            razones.push(
+              `Similar a "${this.obtenerTitulo(idInteractuado)}" (${(similitud * 100).toFixed(0)}% coincidencia)`
+            )
+            razonesMap.set(propiedadesSimilares[i].id, razones)
+          }
+        }
+      }
+
+      // 6. Ordenar por score y devolver top limit
+      const resultados = Array.from(scores.entries())
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, limit)
+        .map(([id, score]) => {
+          const propiedad = propiedadesSimilares.find((p) => p.id === id)!
+          return {
+            id: propiedad.id,
+            titulo: propiedad.titulo,
+            precio: Number(propiedad.precio),
+            superficieM2: propiedad.superficieM2,
+            categoria: propiedad.categoria,
+            ubicacion: propiedad.ubicacion,
+            score: Math.round(score * 100) / 100,
+            razones: razonesMap.get(id) || ['Recomendado automático']
+          }
+        })
+
+      return resultados
+    } catch (error) {
+      console.error('Error en featuresService.recomendar:', error)
+      return this.fallbackPopulares(limit)
+    }
   }
 
-  // ── Recomendar inmuebles por similitud de coseno ─────────────────────────────
-  // Compara el perfil del usuario contra todos los inmuebles disponibles
-  // y devuelve los más similares ordenados por score
-  async recomendar(usuarioId: number, limit: number = 20): Promise<any[]> {
-    const stats = await this.obtenerStats()
-
-    const perfilUsuario = await this.calcularPerfilUsuario(usuarioId, stats)
-
-    // Si no tiene historial, devolver null (el servicio usará populares como fallback)
-    if (!perfilUsuario) return []
-
-    const vistasIds = await prisma.propiedad_vista.findMany({
-      where: { usuarioId },
-      select: { inmuebleId: true }
+  /**
+   * Obtiene inmuebles candidatos (similares a los que el usuario ya ha interactuado)
+   */
+  private async obtenerInmueblesCandidatos(
+    idsInteractuados: number[],
+    limite: number
+  ): Promise<any[]> {
+    // Estrategia simple: obtener propiedades de las mismas categorías y zonas
+    const interactuados = await prisma.inmueble.findMany({
+      where: { id: { in: idsInteractuados } },
+      select: { categoria: true, ubicacion: true }
     })
-    const idsExcluir = new Set(vistasIds.map((v) => v.inmuebleId))
+
+    const categorias = [
+      ...new Set(
+        interactuados.map((i) => i.categoria).filter((c): c is NonNullable<typeof c> => c !== null)
+      )
+    ]
 
     const candidatos = await prisma.inmueble.findMany({
       where: {
-        estado: 'ACTIVO',
-        id: { notIn: Array.from(idsExcluir) }
+        id: { notIn: idsInteractuados },
+        categoria: { in: categorias },
+        estado: 'ACTIVO'
       },
-      include: { ubicacion: true },
-      take: 200
+      take: limite,
+      include: { ubicacion: true }
     })
 
-    // Calcular similitud de coseno para cada candidato
-    const conScore = candidatos.map((inmueble) => {
-      const vectorInmueble = this.construirVector(inmueble, stats)
-      const score = this.similitudCoseno(perfilUsuario, vectorInmueble)
-      return {
-        ...inmueble,
-        score: Math.round(score * 100) / 100,
-        razones: this.generarRazones(perfilUsuario, vectorInmueble, inmueble)
-      }
-    })
-
-    // Ordenar por score y devolver top N
-    return conScore.sort((a, b) => b.score - a.score).slice(0, limit)
+    return candidatos
   }
 
-  // ── Generar razones legibles del score ─────────────────
-  private generarRazones(perfil: number[], vector: number[], inmueble: any): string[] {
-    const razones: string[] = []
-    const dims = [
-      { nombre: 'Precio', idx: 0 },
-      { nombre: 'Superficie', idx: 1 },
-      { nombre: 'Dormitorios', idx: 2 },
-      { nombre: 'Baños', idx: 3 },
-      { nombre: 'Categoría', idx: 4 }
-    ]
-    for (const dim of dims) {
-      const diff = Math.abs(perfil[dim.idx] - vector[dim.idx])
-      if (diff < 0.15) razones.push(`✓ ${dim.nombre} similar a tus preferencias`)
+  /**
+   * Extrae vectores de características numéricas para cada inmueble
+   */
+  private extraerCaracteristicas(inmuebles: any[]): number[][] {
+    // Mapear categorías a números
+    const categoriasMap = new Map<string, number>([
+      ['CASA', 1],
+      ['DEPARTAMENTO', 2],
+      ['TERRENO', 3],
+      ['CUARTO', 4],
+      ['TERRENO_MORTUORIO', 5]
+    ])
+
+    // Normalizar precios y superficies (valores de ejemplo, ajusta según tus rangos)
+    const maxPrice = Math.max(...inmuebles.map((p) => Number(p.precio) || 0))
+    const maxSuperficie = Math.max(...inmuebles.map((p) => Number(p.superficieM2) || 0))
+
+    return inmuebles.map((inm) => {
+      const precioNorm = Number(inm.precio) / (maxPrice || 1)
+      const superficieNorm = (Number(inm.superficieM2) || 0) / (maxSuperficie || 1)
+      const categoriaVal = categoriasMap.get(inm.categoria || '') || 0
+      // Puedes agregar más características: zona (hash), número de cuartos, baños, etc.
+      return [categoriaVal, precioNorm, superficieNorm]
+    })
+  }
+
+  /**
+   * Normaliza una matriz (filas a vector unitario)
+   */
+  private normalizarMatriz(matriz: Matrix): Matrix {
+    const normalized = Matrix.zeros(matriz.rows, matriz.columns)
+    for (let i = 0; i < matriz.rows; i++) {
+      const row = matriz.getRow(i)
+      const norm = Math.hypot(...row)
+      if (norm > 0) {
+        for (let j = 0; j < matriz.columns; j++) {
+          normalized.set(i, j, row[j] / norm)
+        }
+      }
     }
-    if (razones.length === 0) razones.push('Recomendado por tendencia general')
-    return razones
+    return normalized
+  }
+
+  /**
+   * Calcula la similitud del coseno entre dos vectores
+   */
+  private coseno(vecA: number[], vecB: number[]): number {
+    let dot = 0,
+      magA = 0,
+      magB = 0
+    for (let i = 0; i < vecA.length; i++) {
+      dot += vecA[i] * vecB[i]
+      magA += vecA[i] ** 2
+      magB += vecB[i] ** 2
+    }
+    if (magA === 0 || magB === 0) return 0
+    return dot / (Math.sqrt(magA) * Math.sqrt(magB))
+  }
+
+  /**
+   * Obtiene el título de un inmueble por su ID (para las razones)
+   */
+  private async obtenerTitulo(id: number): Promise<string> {
+    const inm = await prisma.inmueble.findUnique({ where: { id }, select: { titulo: true } })
+    return inm?.titulo || `propiedad ${id}`
+  }
+
+  /**
+   * Fallback: recomendar propiedades populares
+   */
+  private async fallbackPopulares(limit: number): Promise<InmuebleConScore[]> {
+    const fechaPublicacion = await prisma.inmueble.findMany({
+      where: { estado: 'ACTIVO' },
+      orderBy: { fechaPublicacion: 'desc' }, // asumiendo campo popularidad
+      take: limit,
+      include: { ubicacion: true }
+    })
+    return fechaPublicacion.map((p) => ({
+      id: p.id,
+      titulo: p.titulo,
+      precio: Number(p.precio),
+      superficieM2: p.superficieM2 ? Number(p.superficieM2) : null,
+      categoria: p.categoria,
+      ubicacion: p.ubicacion,
+      score: 50,
+      razones: ['Popularidad general']
+    }))
   }
 }
 
