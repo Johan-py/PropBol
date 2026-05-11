@@ -143,6 +143,23 @@ export default function BlogSharePlaceholder({ title }: BlogShareProps) {
                   </div>
                   <span className="text-sm font-semibold whitespace-nowrap">Descargar PDF</span>
                 </button>
+
+                <button
+                  className="flex items-center w-full gap-3 px-3 py-3 rounded-xl hover:bg-stone-50 text-stone-700 transition-colors group"
+                  onClick={() => {
+                    setIsDownloadOpen(false);
+                    alert('La descarga como imagen estará disponible próximamente.');
+                  }}
+                >
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 group-hover:bg-blue-100 transition-colors shrink-0">
+                    <svg viewBox="0 0 24 24" className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                  </div>
+                  <span className="text-sm font-semibold whitespace-nowrap">Descargar Imagen</span>
+                </button>
               </div>
             )}
           </div>
