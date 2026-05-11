@@ -26,8 +26,9 @@ export const ExchangeRateBar = (props: ExchangeRateState) => {
   const showIcon = referentialRate !== null && referentialRate !== officialRate
   const trendIcon = referentialRate && referentialRate > officialRate ? '↗' : '↘'
 
-  // T8 (a): Fallback visual si es null
-  const refDisplay = referentialRate ? `Bs ${referentialRate.toFixed(2)}` : LABELS.notAvailable
+  // T8 (a): Manejo estricto del estado de error y fallback
+  const refDisplay =
+    isError || !referentialRate ? LABELS.notAvailable : `Bs ${referentialRate.toFixed(2)}`
 
   return (
     <div className="flex flex-wrap items-center gap-2 text-sm text-stone-600" aria-live="polite">
