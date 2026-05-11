@@ -55,6 +55,14 @@ export default function ActiveSessions() {
 
                 {/* Estado */}
                 <p>{session.status}</p>
+                <div className="flex flex-col items-center">
+
+                  <input
+                    type="checkbox"
+                    disabled={session.status === 'Sesión actual'}
+                 />
+
+                </div>
               </div>
               ))}
 
