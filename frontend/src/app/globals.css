@@ -409,3 +409,221 @@ html.propbol-accessibility-deuteranopia .propbol-visual-settings-page {
 html.propbol-accessibility-none .propbol-visual-settings-page {
   filter: none;
 }
+
+/* ================================
+   HU13 - Modo oscuro general del sitio
+   Activado desde el botón general del Navbar
+================================ */
+
+/* Fondo base del sitio */
+html.propbol-theme-dark body {
+  background-color: #0f172a !important;
+  color: #e5e7eb !important;
+}
+
+/* Contenido principal */
+html.propbol-theme-dark main {
+  background-color: #0f172a !important;
+  color: #e5e7eb !important;
+}
+
+/* Secciones generales */
+html.propbol-theme-dark main section,
+html.propbol-theme-dark main article {
+  color: #e5e7eb !important;
+}
+
+/* Contenedores y tarjetas claras */
+html.propbol-theme-dark main .bg-white {
+  background-color: #1e293b !important;
+}
+
+html.propbol-theme-dark main .bg-gray-50,
+html.propbol-theme-dark main .bg-slate-50,
+html.propbol-theme-dark main .bg-stone-50,
+html.propbol-theme-dark main .bg-\[\#f8f6f1\] {
+  background-color: #0f172a !important;
+}
+
+/* Tarjetas secundarias */
+html.propbol-theme-dark main .bg-card,
+html.propbol-theme-dark main .bg-muted {
+  background-color: #1e293b !important;
+}
+
+/* Textos principales */
+html.propbol-theme-dark main .text-gray-900,
+html.propbol-theme-dark main .text-gray-800,
+html.propbol-theme-dark main .text-stone-900,
+html.propbol-theme-dark main .text-stone-800,
+html.propbol-theme-dark main .text-title {
+  color: #f8fafc !important;
+}
+
+/* Textos secundarios */
+html.propbol-theme-dark main .text-gray-700,
+html.propbol-theme-dark main .text-gray-600,
+html.propbol-theme-dark main .text-gray-500,
+html.propbol-theme-dark main .text-stone-700,
+html.propbol-theme-dark main .text-stone-600,
+html.propbol-theme-dark main .text-stone-500,
+html.propbol-theme-dark main .text-secondary {
+  color: #cbd5e1 !important;
+}
+
+/* Bordes */
+html.propbol-theme-dark main .border-gray-100,
+html.propbol-theme-dark main .border-gray-200,
+html.propbol-theme-dark main .border-stone-100,
+html.propbol-theme-dark main .border-stone-200,
+html.propbol-theme-dark main .border-muted {
+  border-color: #334155 !important;
+}
+
+/* Sombras */
+html.propbol-theme-dark main .shadow,
+html.propbol-theme-dark main .shadow-sm,
+html.propbol-theme-dark main .shadow-md,
+html.propbol-theme-dark main .shadow-lg {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Inputs, selects y textarea */
+html.propbol-theme-dark main input,
+html.propbol-theme-dark main select,
+html.propbol-theme-dark main textarea {
+  background-color: #0f172a !important;
+  color: #e5e7eb !important;
+  border-color: #334155 !important;
+}
+
+html.propbol-theme-dark main input::placeholder,
+html.propbol-theme-dark main textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Navbar en modo oscuro */
+html.propbol-theme-dark nav {
+  background-color: #0f172a !important;
+  color: #e5e7eb !important;
+  border-color: #334155 !important;
+}
+
+html.propbol-theme-dark nav a,
+html.propbol-theme-dark nav button,
+html.propbol-theme-dark nav span {
+  color: #e5e7eb !important;
+}
+
+/* Mantener contraste del botón naranja del navbar */
+html.propbol-theme-dark nav a[href="/registro-inmueble"] {
+  color: #ffffff !important;
+}
+
+/* ================================
+   HU13 - Corrección modo oscuro general
+   Footer y zonas fuera de main
+================================ */
+
+html.propbol-theme-dark footer {
+  background-color: #0f172a !important;
+  color: #e5e7eb !important;
+  border-color: #334155 !important;
+}
+
+html.propbol-theme-dark footer .bg-white,
+html.propbol-theme-dark footer .bg-gray-50,
+html.propbol-theme-dark footer .bg-slate-50,
+html.propbol-theme-dark footer .bg-stone-50 {
+  background-color: #0f172a !important;
+}
+
+html.propbol-theme-dark footer h1,
+html.propbol-theme-dark footer h2,
+html.propbol-theme-dark footer h3,
+html.propbol-theme-dark footer h4,
+html.propbol-theme-dark footer p,
+html.propbol-theme-dark footer span,
+html.propbol-theme-dark footer a,
+html.propbol-theme-dark footer li {
+  color: #e5e7eb !important;
+}
+
+html.propbol-theme-dark footer .text-gray-900,
+html.propbol-theme-dark footer .text-gray-800,
+html.propbol-theme-dark footer .text-stone-900,
+html.propbol-theme-dark footer .text-stone-800 {
+  color: #f8fafc !important;
+}
+
+html.propbol-theme-dark footer .text-gray-700,
+html.propbol-theme-dark footer .text-gray-600,
+html.propbol-theme-dark footer .text-gray-500,
+html.propbol-theme-dark footer .text-stone-700,
+html.propbol-theme-dark footer .text-stone-600,
+html.propbol-theme-dark footer .text-stone-500 {
+  color: #cbd5e1 !important;
+}
+
+html.propbol-theme-dark footer .border-gray-100,
+html.propbol-theme-dark footer .border-gray-200,
+html.propbol-theme-dark footer .border-stone-100,
+html.propbol-theme-dark footer .border-stone-200,
+html.propbol-theme-dark footer.border-t,
+html.propbol-theme-dark footer .border-t {
+  border-color: #334155 !important;
+}
+
+html.propbol-theme-dark footer .border-t {
+  border-top-color: #334155 !important;
+}
+
+/* ================================
+   HU13 - Corrección final de contraste
+   Botón de tema y franja informativa
+================================ */
+
+/* Corrige contraste del botón Modo claro / Modo oscuro en navbar */
+html.propbol-theme-dark nav button {
+  border-color: #334155 !important;
+}
+
+html.propbol-theme-dark nav button[aria-label*="modo"] {
+  background-color: #1e293b !important;
+  color: #e5e7eb !important;
+  border-color: #475569 !important;
+}
+
+html.propbol-theme-dark nav button[aria-label*="modo"] span,
+html.propbol-theme-dark nav button[aria-label*="modo"] svg {
+  color: #e5e7eb !important;
+  stroke: #e5e7eb !important;
+}
+
+/* Corrige bloques blancos que estén fuera de main, como Tipo de Cambio */
+html.propbol-theme-dark body .bg-white {
+  background-color: #1e293b !important;
+  color: #e5e7eb !important;
+}
+
+html.propbol-theme-dark body .text-gray-900,
+html.propbol-theme-dark body .text-gray-800,
+html.propbol-theme-dark body .text-stone-900,
+html.propbol-theme-dark body .text-stone-800 {
+  color: #f8fafc !important;
+}
+
+html.propbol-theme-dark body .text-gray-700,
+html.propbol-theme-dark body .text-gray-600,
+html.propbol-theme-dark body .text-gray-500,
+html.propbol-theme-dark body .text-stone-700,
+html.propbol-theme-dark body .text-stone-600,
+html.propbol-theme-dark body .text-stone-500 {
+  color: #cbd5e1 !important;
+}
+
+/* Mantener el botón naranja legible */
+html.propbol-theme-dark nav a[href="/registro-inmueble"] {
+  background-color: #e68b25 !important;
+  color: #ffffff !important;
+}
