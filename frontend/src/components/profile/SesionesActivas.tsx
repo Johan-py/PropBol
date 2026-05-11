@@ -81,7 +81,17 @@ export default function ActiveSessions() {
             </div>
                 
         </div>
+        <div className="flex flex-col items-end mt-10 gap-5 max-w-5xl mx-auto">
 
+         <button className="bg-[#CFCFCF] hover:bg-[#BDBDBD] transition px-8 py-3 rounded-lg text-lg font-medium">
+                 Seleccionar todas
+        </button>
+
+         <button className="bg-[#EC7467] hover:bg-[#df6557] text-white transition px-12 py-3 rounded-lg text-xl font-bold">
+                 Cerrar Sesión
+        </button>
+
+        </div>
       </div>
     </div>
 
