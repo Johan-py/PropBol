@@ -53,7 +53,7 @@ function VisualOptionCard({
                 }`}
         >
             <div
-                className={`mb-4 flex h-24 items-center justify-center rounded-xl ${previewClassName}`}
+                className={`visual-option-preview mb-4 flex h-24 items-center justify-center rounded-xl ${previewClassName}`}
             >
                 <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/70 text-3xl">
                     {icon}
@@ -96,6 +96,33 @@ export default function AjustesVisualizacion() {
     }, []);
 
     useEffect(() => {
+        const handleThemeChangeFromNavbar = (event: Event) => {
+            const customEvent = event as CustomEvent<ThemeOption>;
+
+            if (isThemeOption(customEvent.detail)) {
+                setTheme(customEvent.detail);
+            }
+        };
+
+        const handleStorageChange = (event: StorageEvent) => {
+            if (event.key === THEME_STORAGE_KEY && isThemeOption(event.newValue)) {
+                setTheme(event.newValue);
+            }
+        };
+
+        window.addEventListener("propbol-theme-change", handleThemeChangeFromNavbar);
+        window.addEventListener("storage", handleStorageChange);
+
+        return () => {
+            window.removeEventListener(
+                "propbol-theme-change",
+                handleThemeChangeFromNavbar
+            );
+            window.removeEventListener("storage", handleStorageChange);
+        };
+    }, []);
+
+    useEffect(() => {
         const root = document.documentElement;
 
         root.classList.remove(...THEME_CLASSES);
@@ -108,6 +135,12 @@ export default function AjustesVisualizacion() {
     const handleThemeChange = (selectedTheme: ThemeOption) => {
         setTheme(selectedTheme);
         localStorage.setItem(THEME_STORAGE_KEY, selectedTheme);
+
+        window.dispatchEvent(
+            new CustomEvent("propbol-theme-change", {
+                detail: selectedTheme,
+            })
+        );
     };
 
     const handleAccessibilityChange = (

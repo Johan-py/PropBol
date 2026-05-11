@@ -13,11 +13,19 @@ function isThemeOption(value: string | null): value is ThemeOption {
     return value === "light" || value === "dark";
 }
 
-function applyThemeClass(selectedTheme: ThemeOption) {
+function applyTheme(theme: ThemeOption) {
     const root = document.documentElement;
 
     root.classList.remove(...THEME_CLASSES);
-    root.classList.add(`propbol-theme-${selectedTheme}`);
+    root.classList.add(`propbol-theme-${theme}`);
+
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
+
+    window.dispatchEvent(
+        new CustomEvent("propbol-theme-change", {
+            detail: theme,
+        })
+    );
 }
 
 export default function ThemeToggleButton() {
@@ -28,19 +36,43 @@ export default function ThemeToggleButton() {
 
         if (isThemeOption(savedTheme)) {
             setTheme(savedTheme);
-            applyThemeClass(savedTheme);
+            applyTheme(savedTheme);
             return;
         }
 
-        applyThemeClass("light");
+        applyTheme("light");
+    }, []);
+
+    useEffect(() => {
+        const handleThemeChange = (event: Event) => {
+            const customEvent = event as CustomEvent<ThemeOption>;
+
+            if (isThemeOption(customEvent.detail)) {
+                setTheme(customEvent.detail);
+            }
+        };
+
+        const handleStorageChange = (event: StorageEvent) => {
+            if (event.key === THEME_STORAGE_KEY && isThemeOption(event.newValue)) {
+                setTheme(event.newValue);
+                applyTheme(event.newValue);
+            }
+        };
+
+        window.addEventListener("propbol-theme-change", handleThemeChange);
+        window.addEventListener("storage", handleStorageChange);
+
+        return () => {
+            window.removeEventListener("propbol-theme-change", handleThemeChange);
+            window.removeEventListener("storage", handleStorageChange);
+        };
     }, []);
 
     const handleToggleTheme = () => {
         const nextTheme: ThemeOption = theme === "dark" ? "light" : "dark";
 
         setTheme(nextTheme);
-        localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
-        applyThemeClass(nextTheme);
+        applyTheme(nextTheme);
     };
 
     const isDarkMode = theme === "dark";
@@ -49,10 +81,12 @@ export default function ThemeToggleButton() {
         <button
             type="button"
             onClick={handleToggleTheme}
-            aria-label={isDarkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
-            className="inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-orange-300 hover:bg-orange-50 hover:text-orange-600"
+            aria-label={
+                isDarkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"
+            }
+            className="flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-orange-400 hover:text-orange-600"
         >
-            {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
 
             <span>{isDarkMode ? "Modo claro" : "Modo oscuro"}</span>
         </button>
