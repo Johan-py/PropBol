@@ -1,7 +1,7 @@
 'use client'
 
 import { MapContainer as BaseMapContainer, TileLayer, Marker, Polygon, CircleMarker, useMapEvents } from 'react-leaflet'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import L from 'leaflet'
 // Importar CSS y L dinámicamente para evitar errores de SSR
 if (typeof window !== 'undefined') {
@@ -68,7 +68,7 @@ function EventosMapa({
   setVertices,
   setMensajeLimite,
 }: any) {
-  useMapEvents({
+  const map = useMapEvents({
     click(e) {
       if (modoPinActivo) {
         setPinCoords({
@@ -125,6 +125,26 @@ function EventosMapa({
 }
 }
   })
+
+  // Doble toque con un dedo para acercar zoom
+  useEffect(() => {
+    let lastClickTime = 0
+
+    const handleClick = (e: L.LeafletMouseEvent) => {
+      const now = Date.now()
+      const timeSinceLast = now - lastClickTime
+      lastClickTime = now
+
+      if (timeSinceLast < 350) {
+        map.zoomIn(1, { animate: true })
+      }
+    }
+
+    map.on('click', handleClick)
+    return () => {
+      map.off('click', handleClick)
+    }
+  }, [map])
 
   return null
 }
