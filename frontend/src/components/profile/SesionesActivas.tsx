@@ -32,6 +32,14 @@ export default function ActiveSessions() {
         </div>
         {/* Tabla/Card */}
         <div className="bg-[#F4F4F4] rounded-2xl p-8">
+
+           {/* Header tabla */}
+          <div className="max-w-5xl mx-auto grid grid-cols-4 bg-[#E8962F] text-white font-bold rounded-lg py-4 px-6 mb-4 text-center text-lg">
+                <p>ID</p>
+                <p>Última actividad</p>
+                <p>Estado</p>
+                <p>Acción</p>
+                </div>
         </div>
 
       </div>
