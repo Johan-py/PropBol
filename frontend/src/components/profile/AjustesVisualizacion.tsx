@@ -18,6 +18,12 @@ type VisualOptionCardProps = {
 const THEME_STORAGE_KEY = "propbol-theme";
 const ACCESSIBILITY_STORAGE_KEY = "propbol-accessibility";
 
+const THEME_CLASSES = ["propbol-theme-light", "propbol-theme-dark"];
+const ACCESSIBILITY_CLASSES = [
+    "propbol-accessibility-none",
+    "propbol-accessibility-deuteranopia",
+];
+
 function isThemeOption(value: string | null): value is ThemeOption {
     return value === "light" || value === "dark";
 }
@@ -90,6 +96,16 @@ export default function AjustesVisualizacion() {
             setAccessibility(savedAccessibility);
         }
     }, []);
+
+    useEffect(() => {
+        const root = document.documentElement;
+
+        root.classList.remove(...THEME_CLASSES);
+        root.classList.add(`propbol-theme-${theme}`);
+
+        root.classList.remove(...ACCESSIBILITY_CLASSES);
+        root.classList.add(`propbol-accessibility-${accessibility}`);
+    }, [theme, accessibility]);
 
     const handleThemeChange = (selectedTheme: ThemeOption) => {
         setTheme(selectedTheme);
@@ -183,11 +199,11 @@ export default function AjustesVisualizacion() {
 
                     <div className="mt-8 rounded-xl border border-dashed border-orange-300 bg-orange-50 p-5">
                         <p className="text-sm font-medium text-orange-700">
-                            Subtarea 7 completada: preferencias cargadas automáticamente.
+                            Subtarea 8 completada: clases globales aplicadas.
                         </p>
                         <p className="mt-1 text-sm text-orange-600">
-                            En la siguiente subtarea aplicaremos clases globales para que el
-                            modo oscuro y la accesibilidad afecten visualmente la interfaz.
+                            En la siguiente subtarea agregaremos estilos globales para que el
+                            modo oscuro y la accesibilidad cambien visualmente la interfaz.
                         </p>
                     </div>
                 </div>
