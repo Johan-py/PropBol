@@ -997,13 +997,21 @@ const verifyMagicLinkToken = (token: string) => {
       typeof decoded.userId !== "number" ||
       !decoded.correo
     ) {
-      throw new AuthError("El Magic Link no es válido", 401);
+      throw new AuthError("El Magic Link fue alterado o no es válido.", 401);
     }
 
     return decoded;
   } catch (error) {
+    if (error instanceof AuthError) {
+      throw error;
+    }
+
     if (error instanceof jwt.TokenExpiredError) {
       throw new AuthError("Este Magic Link ha expirado.", 401);
+    }
+
+    if (error instanceof jwt.JsonWebTokenError) {
+      throw new AuthError("El Magic Link fue alterado o no es válido.", 401);
     }
 
     throw new AuthError("El Magic Link no es válido.", 401);
@@ -1026,7 +1034,7 @@ export const loginWithMagicLinkService = async ({
 
   if (!magicLink) {
     throw new AuthError(
-      "El Magic Link no es válido o ya fue reemplazado por uno nuevo.",
+      "El Magic Link fue alterado, no existe o ya no es válido.",
       401,
     );
   }

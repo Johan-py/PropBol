@@ -60,12 +60,14 @@ function MagicLinkAccessContent() {
   );
 
   const [isExpiredLink, setIsExpiredLink] = useState(false);
+  const [isInvalidLink, setIsInvalidLink] = useState(false);
 
   useEffect(() => {
     if (!token) {
       setStatus("error");
       setMessage("El enlace no contiene un token válido.");
       setIsExpiredLink(false);
+      setIsInvalidLink(true);
       return;
     }
 
@@ -88,9 +90,17 @@ function MagicLinkAccessContent() {
           const errorMessage =
             data.message || "No se pudo validar tu acceso con Magic Link.";
 
+          const normalizedError = errorMessage.toLowerCase();
+
           setStatus("error");
           setMessage(errorMessage);
-          setIsExpiredLink(errorMessage.toLowerCase().includes("expir"));
+          setIsExpiredLink(normalizedError.includes("expir"));
+          setIsInvalidLink(
+            normalizedError.includes("alterado") ||
+              normalizedError.includes("no es válido") ||
+              normalizedError.includes("inválido") ||
+              normalizedError.includes("invalido"),
+          );
 
           return;
         }
@@ -103,6 +113,7 @@ function MagicLinkAccessContent() {
           "Tu acceso fue validado correctamente. Serás redirigido a PropBol.",
         );
         setIsExpiredLink(false);
+        setIsInvalidLink(false);
 
         window.setTimeout(() => {
           router.replace("/");
@@ -111,6 +122,7 @@ function MagicLinkAccessContent() {
         setStatus("error");
         setMessage("No se pudo conectar con el servidor.");
         setIsExpiredLink(false);
+        setIsInvalidLink(false);
       }
     };
 
@@ -185,7 +197,9 @@ function MagicLinkAccessContent() {
             <h2 className="text-xl font-extrabold text-red-600">
               {isExpiredLink
                 ? "Magic Link expirado"
-                : "No se pudo iniciar sesión"}
+                : isInvalidLink
+                  ? "Magic Link inválido"
+                  : "No se pudo iniciar sesión"}
             </h2>
 
             <p className="mt-3 text-sm font-semibold leading-relaxed text-[#9ca3af]">
