@@ -49,7 +49,7 @@ export const useExchangeRate = (): ExchangeRateState => {
           isLoading: false,
           isError: false
         })
-      }, 1000) // Le ponemos 1 segundo de retraso para que veas el Skeleton de carga
+      }, 1500) // Le ponemos 1 segundo de retraso para que veas el Skeleton de carga
     }
 
     fetchRates()
