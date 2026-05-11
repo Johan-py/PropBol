@@ -66,13 +66,14 @@ model Usuario {
   suscripciones_activas                 suscripciones_activas[]
   telefonos                             Telefono[]
   telefono_telefono_usuario_idTousuario Telefono[]              @relation("telefono_usuario_idTousuario")
-  testimonio                            testimonio[]
-  testimonio_like                       testimonio_like[]
+  testimonios                           Testimonio[]
+  testimonioLikes                       TestimonioLike[]
   transacciones                         transacciones[]
   rol                                   Rol?                    @relation(fields: [rolId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   verificacion_pago                     verificacion_pago[]
   visitor                               Visitor[]
   zona_usuario                          zona_usuario[]
+  tutorialPublicacion                   TutorialPublicacionUsuario?
 
   @@index([correo], map: "idx_usuario_correo")
   @@index([rolId], map: "idx_usuario_rol")
@@ -767,6 +768,35 @@ model zona_geografica {
   @@unique([nombre, municipio_id], map: "zona_geografica_nombre_municipio_unique")
 }
 
+model Testimonio {
+  id             Int              @id @default(autoincrement())
+  comentario     String
+  calificacion   Int?
+  visible        Boolean?         @default(true)
+  eliminado      Boolean?         @default(false)
+  fecha_creacion DateTime?        @default(now()) @db.Timestamp(6)
+  usuarioId      Int              @map("usuario_id")
+  ciudad         String?          @db.VarChar(100)
+  zona           String?          @db.VarChar(100)
+  categoria      String?          @db.VarChar(255)
+  usuario        Usuario          @relation(fields: [usuarioId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  likes          TestimonioLike[]
+
+  @@map("testimonio")
+}
+
+model TestimonioLike {
+  id           Int        @id @default(autoincrement())
+  testimonioId Int        @map("testimonio_id")
+  usuarioId    Int        @map("usuario_id")
+  creado_en    DateTime?  @default(now()) @db.Timestamp(6)
+  testimonio   Testimonio @relation(fields: [testimonioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  usuario      Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([testimonioId, usuarioId], map: "uq_testimonio_like")
+  @@map("testimonio_like")
+}
+
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model magic_link {
   id                Int       @id @default(autoincrement())
@@ -787,30 +817,16 @@ model magic_link {
   @@index([usuario_id, activo], map: "idx_magic_link_usuario_activo")
 }
 
-model testimonio {
-  id              Int               @id @default(autoincrement())
-  comentario      String
-  calificacion    Int?
-  visible         Boolean?          @default(true)
-  eliminado       Boolean?          @default(false)
-  fecha_creacion  DateTime?         @default(now()) @db.Timestamp(6)
-  usuario_id      Int
-  ciudad          String?           @db.VarChar(100)
-  zona            String?           @db.VarChar(100)
-  categoria       String?           @db.VarChar(255)
-  usuario         Usuario           @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  testimonio_like testimonio_like[]
-}
+model TutorialPublicacionUsuario {
+  id            Int       @id @default(autoincrement())
+  usuarioId     Int       @unique @map("usuario_id")
+  confirmado    Boolean   @default(false)
+  vistoEn       DateTime? @map("visto_en") @db.Timestamp(6)
+  confirmadoEn  DateTime? @map("confirmado_en") @db.Timestamp(6)
 
-model testimonio_like {
-  id            Int        @id @default(autoincrement())
-  testimonio_id Int
-  usuario_id    Int
-  creado_en     DateTime?  @default(now()) @db.Timestamp(6)
-  testimonio    testimonio @relation(fields: [testimonio_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  usuario       Usuario    @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@unique([testimonio_id, usuario_id], map: "uq_testimonio_like")
+  @@map("tutorial_publicacion_usuario")
 }
 
 enum Genero {

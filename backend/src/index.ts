@@ -73,6 +73,7 @@ import multimediaRoutes from "./modules/multimedia/multimedia.routes.js";
 import publicacionRoutes from "./modules/publicacion/publicacion.routes.js";
 import router from "./modules/registro-publicacion/publicacion.routes.js";
 import parametrosRoutes from "./modules/parametros-publicacion/parametros.routes.js";
+import tutorialPublicacionRoutes from "./modules/tutorial-publicacion/tutorial-publicacion.routes.js";
 
 import {
   facebookCallbackController,
@@ -95,6 +96,7 @@ import authRoutes from "./routes/auth.routes.js";
 import publicacionesRoutes from "./routes/publicaciones.js";
 import { authMiddleware } from "./middleware/authMiddleware.js";
 import blogsRoutes from "./modules/blogs/blogs.routes.js";
+import testimoniosRoutes from "./modules/testimonios/testimonios.routes.js";
 // --------------------
 // LEGACY
 // --------------------
@@ -170,6 +172,7 @@ app.use('/api/publicaciones-legacy', publicacionesRoutes)
 // --------------------
 app.use("/api/publicaciones", publicacionRoutes);
 app.use("/api/publicaciones", multimediaRoutes);
+app.use("/api/publicaciones/tutorial", tutorialPublicacionRoutes);
 app.use("/api/perfil", correoverificacionRoutes);
 app.use("/api/perfil/usuario", perfilRoutes);
 app.use("/api/perfil/zonas", zonaRoutes);
@@ -195,6 +198,7 @@ app.use("/api/favorites", favoritesRoutes);
 app.use("/api/telemetria", telemetriaRoutes);
 app.use("/api/recomendaciones", recomendacionesRoutes);
 app.use("/api/blogs", blogsRoutes);
+app.use("/api/testimonios", testimoniosRoutes);
 app.use("/api/telemetria", telemetriaRouter);
 
 app.use("/api/transacciones", transaccionesRoutes);
