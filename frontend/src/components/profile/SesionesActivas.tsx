@@ -46,6 +46,15 @@ export default function ActiveSessions() {
                     <div 
                    key={session.id}
                    className="max-w-5xl mx-auto grid grid-cols-4 items-center bg-[#E7DFD7] rounded-lg py-5 px-6 text-center text-lg">
+                    
+                    {/* ID */}
+                <p>{session.id}.</p>
+
+                {/* Última actividad */}
+                <p>{session.activity}</p>
+
+                {/* Estado */}
+                <p>{session.status}</p>
               </div>
               ))}
 
