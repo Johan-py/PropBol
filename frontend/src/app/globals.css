@@ -544,8 +544,6 @@ html.propbol-theme-dark body button:disabled {
   opacity: 0.8 !important;
 }
 
-
-
 /* panel superior de mis publicaciones */
 html.propbol-theme-dark .rounded-2xl,
 html.propbol-theme-dark .rounded-xl,
@@ -557,4 +555,75 @@ html.propbol-theme-dark [class*="to-gray"] {
   background-image: none !important;
   color: #ffffff !important;
   border-color: #222222 !important;
+}
+
+/* Botón principal del popup de bienvenida/login */
+html.propbol-theme-dark nav [class*="absolute"] button:not([aria-label]),
+html.propbol-theme-dark nav [class*="fixed"] button:not([aria-label]) {
+  background: var(--pb-accent) !important;
+  color: #ffffff !important;
+  border-color: var(--pb-accent) !important;
+}
+
+html.propbol-theme-dark nav [class*="absolute"] button:not([aria-label]) *,
+html.propbol-theme-dark nav [class*="fixed"] button:not([aria-label]) * {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* Alertas de éxito en modo oscuro */
+html.propbol-theme-dark :where(.bg-green-50,
+  .bg-green-100,
+  .bg-emerald-50,
+  .bg-emerald-100,
+  .bg-lime-50,
+  .bg-lime-100,
+  [class*="bg-[#dcfce7"],
+  [class*="bg-[#DCFCE7"]) {
+  background: rgba(22, 101, 52, 0.22) !important;
+  color: #86efac !important;
+  border: 1px solid rgba(34, 197, 94, 0.35) !important;
+}
+
+html.propbol-theme-dark :where(.bg-green-50,
+  .bg-green-100,
+  .bg-emerald-50,
+  .bg-emerald-100,
+  .bg-lime-50,
+  .bg-lime-100,
+  [class*="bg-[#dcfce7"],
+  [class*="bg-[#DCFCE7"]) * {
+  color: #86efac !important;
+}
+
+/* =====================================
+   Alertas de error en modo oscuro
+===================================== */
+
+html.propbol-theme-dark :where(.bg-red-50,
+  .bg-red-100,
+  .bg-rose-50,
+  .bg-rose-100,
+  .bg-pink-50,
+  .bg-pink-100,
+  [class*="bg-[#fee2e2"],
+  [class*="bg-[#FEE2E2"],
+  [class*="bg-[#fef2f2"],
+  [class*="bg-[#FEF2F2"]) {
+  background: rgba(127, 29, 29, 0.22) !important;
+  color: #fca5a5 !important;
+  border: 1px solid rgba(239, 68, 68, 0.35) !important;
+}
+
+html.propbol-theme-dark :where(.bg-red-50,
+  .bg-red-100,
+  .bg-rose-50,
+  .bg-rose-100,
+  .bg-pink-50,
+  .bg-pink-100,
+  [class*="bg-[#fee2e2"],
+  [class*="bg-[#FEE2E2"],
+  [class*="bg-[#fef2f2"],
+  [class*="bg-[#FEF2F2"]) * {
+  color: #fca5a5 !important;
 }
