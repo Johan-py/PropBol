@@ -27,15 +27,10 @@ export default function BlogSharePlaceholder({ title }: BlogShareProps) {
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
   };
 
-  const shareToFacebook = async () => {
-    const text = `¡Hola! Te comparto este artículo que me pareció interesante:\n\n${getTitle()}\n${getUrl()}`;
-    try {
-      await navigator.clipboard.writeText(text);
-      alert('¡Mensaje y enlace copiados al portapapeles! \n\nFacebook no permite autocompletar el texto, pero puedes pegarlo (Ctrl+V) en tu publicación.');
-    } catch (err) {
-      console.error('Error al copiar:', err);
-    }
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(getUrl())}`, '_blank');
+  const shareToFacebook = () => {
+    const url = getUrl();
+    const quote = `${getTitle()} | Lee más en PropBol`;
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(quote)}`, '_blank');
   };
 
   // Cerrar menú al hacer clic fuera del modal peee

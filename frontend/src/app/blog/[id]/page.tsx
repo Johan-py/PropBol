@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { notFound } from 'next/navigation'
+import { Metadata } from 'next'
 import BlogDetailSidebar from '@/components/blog/BlogDetailSidebar'
 import BlogCommentsSection from '@/components/blog/BlogCommentsSection'
 import MarkdownRenderer from '@/components/blog/MarkdownRenderer'
@@ -7,6 +8,28 @@ import BlogSharePlaceholder from '@/components/blog/BlogSharePlaceholder'
 import { MOCK_USER_BLOGS } from '@/lib/mock/blogs.mock'
 import { getPublishedBlogById } from '@/services/blogs.service'
 import BackButton from "@/app/blogs/backButton"
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const publicBlog = await getPublishedBlogById(params.id)
+  const userBlog = MOCK_USER_BLOGS.find((blog) => blog.id === params.id)
+
+  if (!publicBlog && !userBlog) return {}
+
+  const title = publicBlog?.title ?? userBlog?.titulo ?? 'Blog PropBol'
+  const description = `${publicBlog?.excerpt ?? userBlog?.resumen ?? 'Descubre más sobre el mercado inmobiliario en PropBol.'} | Lee el artículo completo en PropBol.`
+  const imageUrl = publicBlog?.imageUrl ?? userBlog?.imagenUrl ?? '/placeholder-blog.jpg'
+
+  return {
+    title: `${title} | PropBol Blog`,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [imageUrl],
+      type: 'article',
+    },
+  }
+}
 
 const formatPublishedDate = (value: string) =>
   new Date(value).toLocaleDateString('es-BO', {
