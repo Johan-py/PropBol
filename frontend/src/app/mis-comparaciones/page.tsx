@@ -141,7 +141,7 @@ export default function MisComparacionesPage() {
         }
     };
 
-    // ✅ Función para agrupar comparaciones por categoría (versión simplificada)
+    // ✅ Función para agrupar comparaciones por categoría 
     const comparacionesAgrupadas = () => {
         const grouped: Record<string, Comparacion[]> = {
             'DEPARTAMENTO': [],

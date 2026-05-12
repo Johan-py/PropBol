@@ -118,6 +118,7 @@ Thumbs.db
 backend/prisma/*.db
 backend/prisma/*.db-journal
 backend/prisma/migrations/README.md
+backend/src/generated/prisma/
 
 # Respaldo de archivos de configuración (los que creamos hoy)
 *.backup
