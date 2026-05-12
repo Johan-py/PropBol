@@ -1,12 +1,12 @@
 // routes/comparacionRoutes.ts
-import { Router } from "express";
-import { comparacionController } from "./comparacion.controller.js";
-import { validarJWT } from "../../middleware/validarJWT.js";
+import { Router } from 'express'
+import { comparacionController } from './comparacion.controller.js'
+import { validarJWT } from '../../middleware/validarJWT.js'
 
-const router = Router();
+const router = Router()
 
 // Rutas que requieren autenticación obligatoria
-router.use(validarJWT);
+router.use(validarJWT)
 
 // ============================================
 // RUTAS PRINCIPALES
@@ -15,10 +15,10 @@ router.use(validarJWT);
 /**
  * GET /
  * Obtiene todas las comparaciones del usuario autenticado
- * 
+ *
  * @headers
  * Authorization: Bearer <token>
- * 
+ *
  * @response 200 - OK
  * [
  *   {
@@ -38,27 +38,27 @@ router.use(validarJWT);
  *     ]
  *   }
  * ]
- * 
+ *
  * @response 401 - Unauthorized
  * {
  *   "message": "Token no proporcionado"
  * }
- * 
+ *
  * @response 500 - Internal Server Error
  * {
  *   "error": "Error interno del servidor"
  * }
  */
-router.get("/", comparacionController.getComparaciones);
+router.get('/', comparacionController.getComparaciones)
 
 /**
  * GET /resumen
  * Obtiene un resumen de las comparaciones agrupadas por categoría
  * Útil para el dashboard y estadísticas
- * 
+ *
  * @headers
  * Authorization: Bearer <token>
- * 
+ *
  * @response 200 - OK
  * {
  *   "historial": {
@@ -95,29 +95,29 @@ router.get("/", comparacionController.getComparaciones);
  *   },
  *   "ultimaActualizacion": "2026-05-10T15:30:00.000Z"
  * }
- * 
+ *
  * @response 401 - Unauthorized
  * {
  *   "message": "Token no proporcionado"
  * }
- * 
+ *
  * @response 500 - Internal Server Error
  * {
  *   "error": "Error interno del servidor"
  * }
  */
-router.get("/resumen", comparacionController.getResumenComparaciones);
+router.get('/resumen', comparacionController.getResumenComparaciones)
 
 /**
  * GET /:id
  * Obtiene una comparación específica por su ID
- * 
+ *
  * @headers
  * Authorization: Bearer <token>
- * 
+ *
  * @params
  * id - ID de la comparación (número)
- * 
+ *
  * @response 200 - OK
  * {
  *   "id": 1,
@@ -147,38 +147,38 @@ router.get("/resumen", comparacionController.getResumenComparaciones);
  *     }
  *   ]
  * }
- * 
+ *
  * @response 401 - Unauthorized
  * {
  *   "message": "Token no proporcionado"
  * }
- * 
+ *
  * @response 404 - Not Found
  * {
  *   "error": "Comparación no encontrada"
  * }
- * 
+ *
  * @response 500 - Internal Server Error
  * {
  *   "error": "Error interno del servidor"
  * }
  */
-router.get("/:id", comparacionController.getComparacionById);
+router.get('/:id', comparacionController.getComparacionById)
 
 /**
  * POST /
  * Crea una nueva comparación con las propiedades seleccionadas
- * 
+ *
  * @headers
  * Authorization: Bearer <token>
  * Content-Type: application/json
- * 
+ *
  * @body
  * {
  *   "nombre": "Comparación Departamentos Centro", // Opcional
  *   "inmueblesIds": [10, 15, 20] // Requerido, mínimo 2 IDs
  * }
- * 
+ *
  * @response 201 - Created
  * {
  *   "id": 3,
@@ -210,61 +210,61 @@ router.get("/:id", comparacionController.getComparacionById);
  *     }
  *   ]
  * }
- * 
+ *
  * @response 400 - Bad Request
  * {
  *   "error": "Se necesitan al menos 2 propiedades para comparar"
  * }
- * 
+ *
  * O
- * 
+ *
  * {
  *   "error": "Una o más propiedades no existen"
  * }
- * 
+ *
  * @response 401 - Unauthorized
  * {
  *   "message": "Token no proporcionado"
  * }
- * 
+ *
  * @response 500 - Internal Server Error
  * {
  *   "error": "Error interno del servidor"
  * }
  */
-router.post("/", comparacionController.crearComparacion);
+router.post('/', comparacionController.crearComparacion)
 
 /**
  * DELETE /:id
  * Elimina una comparación existente
- * 
+ *
  * @headers
  * Authorization: Bearer <token>
- * 
+ *
  * @params
  * id - ID de la comparación a eliminar (número)
- * 
+ *
  * @response 200 - OK
  * {
  *   "message": "Comparación eliminada exitosamente"
  * }
- * 
+ *
  * @response 401 - Unauthorized
  * {
  *   "message": "Token no proporcionado"
  * }
- * 
+ *
  * @response 404 - Not Found
  * {
  *   "error": "Comparación no encontrada"
  * }
- * 
+ *
  * @response 500 - Internal Server Error
  * {
  *   "error": "Error interno del servidor"
  * }
  */
-router.delete("/:id", comparacionController.eliminarComparacion);
+router.delete('/:id', comparacionController.eliminarComparacion)
 
 // ============================================
 // RUTAS PARA MANEJAR PROPIEDADES
@@ -273,19 +273,19 @@ router.delete("/:id", comparacionController.eliminarComparacion);
 /**
  * POST /:id/propiedades
  * Agrega una nueva propiedad a una comparación existente
- * 
+ *
  * @headers
  * Authorization: Bearer <token>
  * Content-Type: application/json
- * 
+ *
  * @params
  * id - ID de la comparación (número)
- * 
+ *
  * @body
  * {
  *   "inmuebleId": 25 // ID de la propiedad a agregar
  * }
- * 
+ *
  * @response 200 - OK
  * {
  *   "id": 7,
@@ -300,61 +300,61 @@ router.delete("/:id", comparacionController.eliminarComparacion);
  *     "categoria": "DEPARTAMENTO"
  *   }
  * }
- * 
+ *
  * @response 400 - Bad Request
  * {
  *   "error": "La propiedad ya está en esta comparación"
  * }
- * 
+ *
  * @response 401 - Unauthorized
  * {
  *   "message": "Token no proporcionado"
  * }
- * 
+ *
  * @response 404 - Not Found
  * {
  *   "error": "Comparación no encontrada"
  * }
- * 
+ *
  * @response 500 - Internal Server Error
  * {
  *   "error": "Error interno del servidor"
  * }
  */
-router.post("/:id/propiedades", comparacionController.agregarPropiedad);
+router.post('/:id/propiedades', comparacionController.agregarPropiedad)
 
 /**
  * DELETE /:id/propiedades/:propiedadId
  * Elimina una propiedad específica de una comparación
- * 
+ *
  * @headers
  * Authorization: Bearer <token>
- * 
+ *
  * @params
  * id - ID de la comparación (número)
  * propiedadId - ID de la propiedad a eliminar (número)
- * 
+ *
  * @response 200 - OK
  * {
  *   "message": "Propiedad eliminada de la comparación"
  * }
- * 
+ *
  * @response 401 - Unauthorized
  * {
  *   "message": "Token no proporcionado"
  * }
- * 
+ *
  * @response 404 - Not Found
  * {
  *   "error": "Comparación no encontrada"
  * }
- * 
+ *
  * @response 500 - Internal Server Error
  * {
  *   "error": "Error interno del servidor"
  * }
  */
-router.delete("/:id/propiedades/:propiedadId", comparacionController.eliminarPropiedad);
+router.delete('/:id/propiedades/:propiedadId', comparacionController.eliminarPropiedad)
 
 // ============================================
 // RUTAS DE FILTRADO
@@ -363,13 +363,13 @@ router.delete("/:id/propiedades/:propiedadId", comparacionController.eliminarPro
 /**
  * GET /categoria/:categoria
  * Obtiene las comparaciones filtradas por categoría de propiedad
- * 
+ *
  * @headers
  * Authorization: Bearer <token>
- * 
+ *
  * @params
  * categoria - Categoría de la propiedad (CASA, DEPARTAMENTO, TERRENO, OFICINA, CUARTO)
- * 
+ *
  * @response 200 - OK
  * [
  *   {
@@ -392,22 +392,22 @@ router.delete("/:id/propiedades/:propiedadId", comparacionController.eliminarPro
  *     ]
  *   }
  * ]
- * 
+ *
  * @response 401 - Unauthorized
  * {
  *   "message": "Token no proporcionado"
  * }
- * 
+ *
  * @response 500 - Internal Server Error
  * {
  *   "error": "Error interno del servidor"
  * }
- * 
+ *
  * @example
  * GET /api/comparaciones/categoria/DEPARTAMENTO
  * GET /api/comparaciones/categoria/CASA
  * GET /api/comparaciones/categoria/TERRENO
  */
-router.get("/categoria/:categoria", comparacionController.getComparacionesPorCategoria);
+router.get('/categoria/:categoria', comparacionController.getComparacionesPorCategoria)
 
-export default router;
+export default router
