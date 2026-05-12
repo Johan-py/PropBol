@@ -41,6 +41,7 @@ import EtiquetasSidebar from '@/components/filters/EtiquetasSidebar'
 import { useSearchFilters, BusquedaModo } from '@/hooks/useSearchFilters'
 import { useFiltrosActivos } from '@/hooks/useFiltrosActivos'
 import { ActiveFilterTags } from '@/components/filters/ActiveFilterTags'
+import CompareFooter from '@/components/busqueda/CompareFooter'
 
 // Carga dinámica del mapa (sin SSR)
 const MapView = nextDynamic(() => import('./MapView'), {
@@ -1014,7 +1015,7 @@ function BusquedaMapaContent() {
     if (isLandscape) {
       return (
         <div className="flex flex-col bg-white overflow-hidden" style={{ height: '100dvh' }}>
-          <div className="shrink-0" style={{ zIndex: 1002, position: 'relative' }}>
+          <div className="shrink-0 relative z-40">
             <FilterBar
               variant="map"
               onSearch={(f) => console.log('🔍 Filtros:', f)}
@@ -1098,7 +1099,7 @@ function BusquedaMapaContent() {
     // ────────────────────────────────────────────────────────────────────────────
     return (
       <div className="flex flex-col overflow-hidden bg-white" style={{ height: '100dvh' }}>
-        <div className="shrink-0 overflow-x-auto" style={{ zIndex: 1002, position: 'relative' }}>
+        <div className="shrink-0 overflow-x-auto relative z-40">
           <div className="min-w-max">
             <FilterBar
               variant="map"
@@ -1956,25 +1957,6 @@ function BusquedaMapaContent() {
               <SuperficieFilterSidebar onClose={() => setActiveSidebarView('results')} />
             </div>
           ) : null}
-          {/* // Footer estático para Modo Comparación (Solo aparece si el modo está activo, independiente del filtro seleccionado) */}
-          {isCompareMode && (
-            <div className="absolute bottom-0 left-0 w-full bg-white border-t border-stone-200 p-4 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.1)] z-[100] flex justify-between items-center animate-in slide-in-from-bottom-5">
-              <div className="flex flex-col">
-                <span className="text-sm font-semibold text-slate-800">Modo Comparación</span>
-                <span className="text-xs text-stone-500">
-                  {selectedIds.length} de 4 seleccionados
-                </span>
-              </div>
-
-              <button
-                disabled={selectedIds.length < 2}
-                onClick={() => setIsModalOpen(true)}
-                className="px-6 py-2.5 bg-[#ea580c] text-white rounded-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#c2410c] transition-colors shadow-md"
-              >
-                Listo
-              </button>
-            </div>
-          )}
         </aside>
 
         {/* Divider resizable (solo desktop con sidebar abierto) */}
@@ -2215,7 +2197,12 @@ function BusquedaMapaContent() {
         />
       </main>
       {/* MONTAJE DEL MODAL COMPARATIVO */}
-      <ComparatorModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <CompareFooter onOpenModal={() => setIsModalOpen(true)} />
+      
+      <ComparatorModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </div>
   )
 }
