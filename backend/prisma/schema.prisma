@@ -226,16 +226,24 @@ model Publicacion {
   estado                EstadoPublicacion?      @default(ACTIVA) @map("estado")
   fechaPublicacion      DateTime?               @default(now()) @map("fecha_publicacion") @db.Timestamp(6)
   usuarioId             Int                     @map("usuario_id")
+  promoted              Boolean                 @default(false)
+  promotedAt            DateTime?               @map("promoted_at") @db.Timestamp(6)
+  promotedExpiresAt     DateTime?               @map("promoted_expires_at") @db.Timestamp(6)
+  paymentIntentId       String?                 @map("payment_intent_id") 
   inmuebleId            Int                     @map("inmueble_id")
+  planPublicidadId      Int?                    @map("plan_publicidad_id")
   multimedia            Multimedia[]
   inmueble              Inmueble                @relation(fields: [inmuebleId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "publicacion_inmueble_fk")
   usuario               Usuario                 @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "publicacion_usuario_fk")
+  plan_publicidad       plan_publicidad?        @relation(fields: [planPublicidadId], references: [id], onDelete: SetNull)
   publicacion_parametro publicacion_parametro[]
-
+  
   @@index([estado], map: "idx_publicacion_estado")
   @@index([inmuebleId], map: "idx_publicacion_inmueble")
   @@index([usuarioId], map: "idx_publicacion_usuario")
+  @@index([promoted], map: "idx_publicacion_promoted") 
   @@map("publicacion")
+
 }
 
 model Multimedia {
@@ -828,6 +836,20 @@ model TutorialPublicacionUsuario {
 
   @@map("tutorial_publicacion_usuario")
 }
+
+model plan_publicidad {
+  id                     Int      @id @default(autoincrement())
+  nombre_plan            String   @db.VarChar(255)
+  descripcion_plan       String   @db.VarChar(500)
+  precio_plan            Float
+  duracion_plan_dias     Int
+  nro_publicaciones_plan Int
+
+  publicaciones          Publicacion[]
+
+  @@map("plan_publicidad")
+}
+
 
 enum Genero {
   MASCULINO

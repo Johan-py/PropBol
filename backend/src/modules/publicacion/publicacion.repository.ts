@@ -393,3 +393,79 @@ export const confirmarPublicacionRepository = async (publicacionId: number) => {
     }
   })
 }
+
+export const activarPublicidadRepository = async (
+  publicacionId: number,
+  usuarioId: number,
+  paymentIntentId?: string
+) => {
+  const expiresAt = new Date()
+  expiresAt.setDate(expiresAt.getDate() + 30) // 30 días de duración
+
+  return prisma.publicacion.update({
+    where: {
+      id: publicacionId,
+      usuarioId: usuarioId
+    },
+    data: {
+      promoted: true,
+      promotedAt: new Date(),
+      promotedExpiresAt: expiresAt,
+      paymentIntentId: paymentIntentId || null
+    }
+  })
+}
+
+export const cancelarPublicidadRepository = async (
+  publicacionId: number,
+  usuarioId: number
+) => {
+  return prisma.publicacion.update({
+    where: {
+      id: publicacionId,
+      usuarioId: usuarioId
+    },
+    data: {
+      promoted: false,
+      promotedAt: null,
+      promotedExpiresAt: null
+    }
+  })
+}
+
+export const buscarPublicacionPorIdSimpleRepository = async (id: number) => {
+  return prisma.publicacion.findUnique({
+    where: { id },
+    include: {
+      inmueble: true,
+      usuario: {
+        select: {
+          id: true,
+          nombre: true,
+          apellido: true,
+          correo: true
+        }
+      }
+    }
+  })
+}
+
+export const verificarPublicidadActivaRepository = async (publicacionId: number) => {
+  const publicacion = await prisma.publicacion.findUnique({
+    where: { id: publicacionId },
+    select: { promoted: true, promotedExpiresAt: true }
+  })
+
+  if (!publicacion) return false
+
+  if (publicacion.promoted && publicacion.promotedExpiresAt && publicacion.promotedExpiresAt < new Date()) {
+    await prisma.publicacion.update({
+      where: { id: publicacionId },
+      data: { promoted: false, promotedAt: null, promotedExpiresAt: null }
+    })
+    return false
+  }
+
+  return publicacion.promoted
+}
+

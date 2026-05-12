@@ -52,3 +52,39 @@ export async function obtenerTransaccion(transaccionId: number) {
     include: { plan_suscripcion: true },
   });
 }
+
+
+export const obtenerPlanesPublicidad = async () => {
+  return prisma.plan_publicidad.findMany({
+    where: { activo: true },
+    orderBy: { precio_plan: 'asc' }
+  })
+}
+
+
+export const obtenerPlanPublicidadPorId = async (id: number) => {
+  return prisma.plan_publicidad.findUnique({
+    where: { id }
+  })
+}
+
+
+export const verificarPublicidadActiva = async (publicacionId: number) => {
+  const publicacion = await prisma.publicacion.findUnique({
+    where: { id: publicacionId },
+    select: { promoted: true, promotedExpiresAt: true }
+  })
+
+  if (!publicacion) return false
+
+  
+  if (publicacion.promoted && publicacion.promotedExpiresAt && publicacion.promotedExpiresAt < new Date()) {
+    await prisma.publicacion.update({
+      where: { id: publicacionId },
+      data: { promoted: false, promotedAt: null, promotedExpiresAt: null }
+    })
+    return false
+  }
+
+  return publicacion.promoted
+}

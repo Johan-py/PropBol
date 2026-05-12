@@ -165,7 +165,7 @@ export const confirmarPago = async (req: Request, res: Response) => {
 
     const transaccion = await prisma.transacciones.findUnique({
       where: { id: transaccionId },
-      select: { estado: true, id_usuario: true, id_suscripcion: true, metodo_pago: true },
+      select: { estado: true, id_usuario: true, id_suscripcion: true, metodo_pago: true, metadata: true },
     })
 
     if (!transaccion) {
@@ -179,6 +179,15 @@ export const confirmarPago = async (req: Request, res: Response) => {
     const suscripcionVigente = await suscripcionesService.obtenerSuscripcionActiva(
       transaccion.id_usuario
     )
+     const metadata = transaccion.metadata as any
+    const esPublicidad = metadata?.tipo === 'PUBLICIDAD'
+
+    // Si es suscripción (no publicidad), verificar que no tenga una activa
+    if (!esPublicidad) {
+      const suscripcionVigente = await suscripcionesService.obtenerSuscripcionActiva(
+        transaccion.id_usuario
+      )
+
     if (suscripcionVigente) {
       const planVigente = suscripcionVigente.plan_suscripcion?.nombre_plan ?? 'activa'
       const fechaFin = suscripcionVigente.fecha_fin.toISOString().slice(0, 10)
@@ -186,14 +195,15 @@ export const confirmarPago = async (req: Request, res: Response) => {
         error: `El usuario ya tiene una suscripción ${planVigente} vigente hasta ${fechaFin}`,
       })
     }
-
+   } 
     const ahora = new Date()
 
     await prisma.transacciones.update({
       where: { id: transaccionId },
       data: { estado: 'COMPLETADO', fecha_completado: ahora },
     })
-
+     // Si es suscripción, crear suscripción activa
+    if (!esPublicidad) {
     const esAnual = transaccion.metodo_pago === 'QR_BANCARIO_ANUAL'
     const diasSuscripcion = esAnual ? 365 : 30
 
@@ -207,7 +217,23 @@ export const confirmarPago = async (req: Request, res: Response) => {
         estado: 'ACTIVA',
       },
     })
+    } else {
+      // ACTIVAR PUBLICIDAD DESPUÉS DE PAGO EXITOSO
+      const publicacionId = metadata.publicacionId
+      const duracionDias = metadata.duracionDias || 30
+      const fechaExpiracion = new Date()
+      fechaExpiracion.setDate(fechaExpiracion.getDate() + duracionDias)
 
+      await prisma.publicacion.update({
+        where: { id: publicacionId },
+        data: {
+          promoted: true,
+          promotedAt: ahora,
+          promotedExpiresAt: fechaExpiracion,
+          paymentIntentId: metadata.paymentIntentId || null
+        }
+      })
+    }
     const comprobanteEnviado = await emitirComprobante(transaccionId)
 
     return res.status(200).json({
@@ -216,6 +242,144 @@ export const confirmarPago = async (req: Request, res: Response) => {
         : 'Pago confirmado, fallo al enviar comprobante',
     })
   } catch (error) {
+    return res.status(500).json({ error: toMessage(error) })
+  }
+}
+
+export const crearPagoPublicidad = async (req: AuthRequest, res: Response) => {
+  try {
+    const usuarioId = req.user?.id
+    const { publicacionId, planPublicidadId } = req.body
+
+    if (!usuarioId) {
+      return res.status(401).json({ error: 'No autenticado' })
+    }
+
+    if (!publicacionId || !planPublicidadId) {
+      return res.status(400).json({ error: 'Faltan datos: publicacionId y planPublicidadId' })
+    }
+
+    const plan = await prisma.plan_publicidad.findUnique({
+      where: { id: parseInt(planPublicidadId) }
+    })
+
+    if (!plan) {
+      return res.status(404).json({ error: 'Plan de publicidad no encontrado' })
+    }
+
+   
+    const publicacion = await prisma.publicacion.findFirst({
+      where: { id: publicacionId, usuarioId }
+    })
+
+    if (!publicacion) {
+      return res.status(404).json({ error: 'Publicación no encontrada' })
+    }
+
+    if (publicacion.promoted) {
+      return res.status(400).json({ error: 'La propiedad ya está publicitada' })
+    }
+   
+    const subtotal = plan.precio_plan
+    const ivaPorcentaje = 13
+    const ivaMonto = subtotal * (ivaPorcentaje / 100)
+    const total = subtotal + ivaMonto
+
+   
+    const transaccion = await prisma.transacciones.create({
+      data: {
+        id_usuario: usuarioId,
+        id_suscripcion: null,
+        subtotal: subtotal,
+        iva_porcentaje: ivaPorcentaje,
+        iva_monto: ivaMonto,
+        total: total,
+        metodo_pago: 'QR_BANCARIO',
+        estado: 'PENDIENTE',
+        verificacion_requerida: true,
+        metadata: {
+          tipo: 'PUBLICIDAD',
+          publicacionId: publicacionId,
+          publicacionTitulo: publicacion.titulo,
+          duracionDias: plan.duracion_plan_dias,
+          planPublicidadId: plan.id,
+          planNombre: plan.nombre_plan
+        }
+      }
+    })
+
+    const checkoutUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/pago-publicidad?transaccion=${transaccion.id}`
+
+    return res.status(201).json({
+      ok: true,
+      data: {
+        transaccionId: transaccion.id,
+        checkoutUrl: checkoutUrl,
+        monto: total,
+        moneda: 'BOB',
+        duracionDias: plan.duracion_plan_dias,
+        referencia: `PUB-${transaccion.id}`
+      },
+      message: 'Transacción creada, proceder al pago'
+    })
+  } catch (error) {
+    console.error('Error al crear pago de publicidad:', error)
+    return res.status(500).json({ error: toMessage(error) })
+  }
+}
+
+export const webhookPublicidad = async (req: Request, res: Response) => {
+  try {
+    const { transaccionId, paymentIntentId, status } = req.body
+
+    if (!transaccionId || !paymentIntentId) {
+      return res.status(400).json({ error: 'Datos inválidos' })
+    }
+
+    const transaccion = await prisma.transacciones.findUnique({
+      where: { id: transaccionId }
+    })
+
+    if (!transaccion) {
+      return res.status(404).json({ error: 'Transacción no encontrada' })
+    }
+
+    if (transaccion.estado === 'COMPLETADO') {
+      return res.status(200).json({ message: 'Transacción ya estaba completada' })
+    }
+
+    if (status === 'success') {
+      const ahora = new Date()
+
+      await prisma.transacciones.update({
+        where: { id: transaccionId },
+        data: {
+          estado: 'COMPLETADO',
+          fecha_completado: ahora,
+          payment_intent_id: paymentIntentId
+        }
+      })
+
+      const metadata = transaccion.metadata as any
+      if (metadata?.tipo === 'PUBLICIDAD') {
+        const fechaExpiracion = new Date()
+        fechaExpiracion.setDate(fechaExpiracion.getDate() + (metadata.duracionDias || 30))
+
+        await prisma.publicacion.update({
+          where: { id: metadata.publicacionId },
+          data: {
+            promoted: true,
+            promotedAt: ahora,
+            promotedExpiresAt: fechaExpiracion,
+            paymentIntentId: paymentIntentId
+          }
+        })
+      }
+    }
+
+    return res.json({ ok: true, message: 'Webhook procesado correctamente' })
+  } catch (error) {
+    console.error('Error en webhook de publicidad:', error)
     return res.status(500).json({ error: toMessage(error) })
   }
 }

@@ -6,7 +6,11 @@ import {
   obtenerResumenFinalService,
   obtenerDetallePublicacionService,
   obtenerDetallePublicacionPorInmuebleService,
-  confirmarPublicacionService
+  confirmarPublicacionService,
+  iniciarPublicidadService,
+  confirmarPublicidadService,
+  cancelarPublicidadService,
+  obtenerEstadoPublicidadService
 } from './publicacion.service.js'
 
 interface AuthRequest extends Request {
@@ -380,6 +384,227 @@ export const confirmarPublicacionController = async (req: AuthRequest, res: Resp
     return res.status(500).json({
       ok: false,
       message: 'No se pudo confirmar la publicación'
+    })
+  }
+}
+export const iniciarPublicidadController = async (req: AuthRequest, res: Response) => {
+  const publicacionId = Number(req.params.id)
+  const usuarioId = req.user?.id
+
+  try {
+    const resultado = await iniciarPublicidadService(publicacionId, Number(usuarioId))
+
+    return res.status(200).json({
+      ok: true,
+      checkoutUrl: resultado.checkoutUrl,
+      message: 'Redirigiendo al pago...'
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      switch (error.message) {
+        case 'ID_INVALIDO':
+          return res.status(400).json({
+            ok: false,
+            message: 'El id de la publicación es inválido'
+          })
+        case 'USUARIO_INVALIDO':
+          return res.status(401).json({
+            ok: false,
+            message: 'Usuario no autenticado'
+          })
+        case 'PUBLICACION_NO_EXISTE':
+          return res.status(404).json({
+            ok: false,
+            message: 'La publicación no existe'
+          })
+        case 'NO_AUTORIZADO':
+          return res.status(403).json({
+            ok: false,
+            message: 'No puede publicitar publicaciones de otros usuarios'
+          })
+        case 'PUBLICACION_YA_ELIMINADA':
+          return res.status(409).json({
+            ok: false,
+            message: 'La publicación ya fue eliminada'
+          })
+        case 'PUBLICACION_YA_PUBLICITADA':
+          return res.status(400).json({
+            ok: false,
+            message: 'La propiedad ya está publicitada'
+          })
+      }
+    }
+
+    console.error('Error al iniciar publicidad:', error)
+    return res.status(500).json({
+      ok: false,
+      message: 'Error al iniciar publicidad'
+    })
+  }
+}
+
+/**
+ * HU-11: Confirmar pago y activar publicidad
+ * POST /api/publicaciones/:id/publicitar/confirmar
+ * (Este endpoint puede ser llamado por webhook de pagos o confirmación manual)
+ */
+export const confirmarPublicidadController = async (req: AuthRequest, res: Response) => {
+  const publicacionId = Number(req.params.id)
+  const usuarioId = req.user?.id
+  const { paymentIntentId } = req.body
+
+  if (!paymentIntentId) {
+    return res.status(400).json({
+      ok: false,
+      message: 'Se requiere el ID del pago'
+    })
+  }
+
+  try {
+    const resultado = await confirmarPublicidadService(
+      publicacionId,
+      Number(usuarioId),
+      paymentIntentId
+    )
+
+    return res.status(200).json({
+      ok: true,
+      data: resultado,
+      message: 'Publicidad activada correctamente'
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      switch (error.message) {
+        case 'ID_INVALIDO':
+          return res.status(400).json({
+            ok: false,
+            message: 'El id de la publicación es inválido'
+          })
+        case 'USUARIO_INVALIDO':
+          return res.status(401).json({
+            ok: false,
+            message: 'Usuario no autenticado'
+          })
+        case 'PUBLICACION_NO_EXISTE':
+          return res.status(404).json({
+            ok: false,
+            message: 'La publicación no existe'
+          })
+        case 'NO_AUTORIZADO':
+          return res.status(403).json({
+            ok: false,
+            message: 'No puede publicitar publicaciones de otros usuarios'
+          })
+        case 'PUBLICACION_YA_ELIMINADA':
+          return res.status(409).json({
+            ok: false,
+            message: 'La publicación ya fue eliminada'
+          })
+      }
+    }
+
+    console.error('Error al confirmar publicidad:', error)
+    return res.status(500).json({
+      ok: false,
+      message: 'Error al confirmar publicidad'
+    })
+  }
+}
+
+/**
+ * HU-11: Cancelar publicidad
+ * DELETE /api/publicaciones/:id/publicitar/cancelar
+ */
+export const cancelarPublicidadController = async (req: AuthRequest, res: Response) => {
+  const publicacionId = Number(req.params.id)
+  const usuarioId = req.user?.id
+
+  try {
+    const resultado = await cancelarPublicidadService(publicacionId, Number(usuarioId))
+
+    return res.status(200).json({
+      ok: true,
+      data: resultado,
+      message: 'Publicidad cancelada correctamente'
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      switch (error.message) {
+        case 'ID_INVALIDO':
+          return res.status(400).json({
+            ok: false,
+            message: 'El id de la publicación es inválido'
+          })
+        case 'USUARIO_INVALIDO':
+          return res.status(401).json({
+            ok: false,
+            message: 'Usuario no autenticado'
+          })
+        case 'PUBLICACION_NO_EXISTE':
+          return res.status(404).json({
+            ok: false,
+            message: 'La publicación no existe'
+          })
+        case 'NO_AUTORIZADO':
+          return res.status(403).json({
+            ok: false,
+            message: 'No puede cancelar publicidad de otros usuarios'
+          })
+        case 'PUBLICACION_YA_ELIMINADA':
+          return res.status(409).json({
+            ok: false,
+            message: 'La publicación ya fue eliminada'
+          })
+        case 'PUBLICACION_NO_PUBLICITADA':
+          return res.status(400).json({
+            ok: false,
+            message: 'La publicación no está publicitada'
+          })
+      }
+    }
+
+    console.error('Error al cancelar publicidad:', error)
+    return res.status(500).json({
+      ok: false,
+      message: 'Error al cancelar publicidad'
+    })
+  }
+}
+
+/**
+ * HU-11: Obtener estado de publicidad
+ * GET /api/publicaciones/:id/publicitar/estado
+ */
+export const obtenerEstadoPublicidadController = async (req: AuthRequest, res: Response) => {
+  const publicacionId = Number(req.params.id)
+
+  try {
+    const resultado = await obtenerEstadoPublicidadService(publicacionId)
+
+    return res.status(200).json({
+      ok: true,
+      data: resultado
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      switch (error.message) {
+        case 'ID_INVALIDO':
+          return res.status(400).json({
+            ok: false,
+            message: 'El id de la publicación es inválido'
+          })
+        case 'PUBLICACION_NO_EXISTE':
+          return res.status(404).json({
+            ok: false,
+            message: 'La publicación no existe'
+          })
+      }
+    }
+
+    console.error('Error al obtener estado de publicidad:', error)
+    return res.status(500).json({
+      ok: false,
+      message: 'Error al obtener estado de publicidad'
     })
   }
 }

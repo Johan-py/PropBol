@@ -6,7 +6,11 @@ import {
   eliminarLogicamentePublicacionRepository,
   buscarDetallePublicacionPorIdRepository,
   confirmarPublicacionRepository,
-  buscarDetallePublicacionPorInmuebleIdRepository
+  buscarDetallePublicacionPorInmuebleIdRepository,
+  activarPublicidadRepository,
+  cancelarPublicidadRepository,
+  buscarPublicacionPorIdSimpleRepository,
+  verificarPublicidadActivaRepository
 } from './publicacion.repository.js'
 
 type TipoAccionPermitido = 'VENTA' | 'ALQUILER' | 'ANTICRETO'
@@ -516,4 +520,171 @@ export const confirmarPublicacionService = async (
     fechaPublicacion: publicacionConfirmada.fechaPublicacion,
     multimediaTotal: publicacionConfirmada.multimedia.length
   }
+}
+
+export const iniciarPublicidadService = async (
+  publicacionId: number,
+  usuarioId: number
+): Promise<{ checkoutUrl: string }> => {
+  if (Number.isNaN(publicacionId) || publicacionId <= 0) {
+    throw new Error('ID_INVALIDO')
+  }
+
+  if (Number.isNaN(usuarioId) || usuarioId <= 0) {
+    throw new Error('USUARIO_INVALIDO')
+  }
+
+  const publicacion = await buscarPublicacionPorIdRepository(publicacionId)
+
+  if (!publicacion) {
+    throw new Error('PUBLICACION_NO_EXISTE')
+  }
+
+  if (publicacion.usuarioId !== usuarioId) {
+    throw new Error('NO_AUTORIZADO')
+  }
+
+  if (publicacion.estado === 'ELIMINADA') {
+    throw new Error('PUBLICACION_YA_ELIMINADA')
+  }
+
+  
+  const yaPublicitada = await verificarPublicidadActivaRepository(publicacionId)
+  if (yaPublicitada) {
+    throw new Error('PUBLICACION_YA_PUBLICITADA')
+  }
+
+ 
+  // SIMULACIÓN (reemplazar con integración real)
+  const checkoutUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/pago?publicacion=${publicacionId}&monto=9.99`
+
+  return { checkoutUrl }
+}
+
+export const confirmarPublicidadService = async (
+  publicacionId: number,
+  usuarioId: number,
+  paymentIntentId: string
+) => {
+  if (Number.isNaN(publicacionId) || publicacionId <= 0) {
+    throw new Error('ID_INVALIDO')
+  }
+
+  if (Number.isNaN(usuarioId) || usuarioId <= 0) {
+    throw new Error('USUARIO_INVALIDO')
+  }
+
+  const publicacion = await buscarPublicacionPorIdRepository(publicacionId)
+
+  if (!publicacion) {
+    throw new Error('PUBLICACION_NO_EXISTE')
+  }
+
+  if (publicacion.usuarioId !== usuarioId) {
+    throw new Error('NO_AUTORIZADO')
+  }
+
+  if (publicacion.estado === 'ELIMINADA') {
+    throw new Error('PUBLICACION_YA_ELIMINADA')
+  }
+
+  const publicacionActualizada = await activarPublicidadRepository(
+    publicacionId,
+    usuarioId,
+    paymentIntentId
+  )
+
+  return {
+    id: publicacionActualizada.id,
+    promoted: publicacionActualizada.promoted,
+    promotedAt: publicacionActualizada.promotedAt,
+    promotedExpiresAt: publicacionActualizada.promotedExpiresAt,
+    message: 'Publicidad activada correctamente por 30 días'
+  }
+}
+
+
+export const cancelarPublicidadService = async (
+  publicacionId: number,
+  usuarioId: number
+) => {
+  if (Number.isNaN(publicacionId) || publicacionId <= 0) {
+    throw new Error('ID_INVALIDO')
+  }
+
+  if (Number.isNaN(usuarioId) || usuarioId <= 0) {
+    throw new Error('USUARIO_INVALIDO')
+  }
+
+  const publicacion = await buscarPublicacionPorIdRepository(publicacionId)
+
+  if (!publicacion) {
+    throw new Error('PUBLICACION_NO_EXISTE')
+  }
+
+  if (publicacion.usuarioId !== usuarioId) {
+    throw new Error('NO_AUTORIZADO')
+  }
+
+  if (publicacion.estado === 'ELIMINADA') {
+    throw new Error('PUBLICACION_YA_ELIMINADA')
+  }
+
+  if (!publicacion.promoted) {
+    throw new Error('PUBLICACION_NO_PUBLICITADA')
+  }
+
+  const publicacionActualizada = await cancelarPublicidadRepository(publicacionId, usuarioId)
+
+  return {
+    id: publicacionActualizada.id,
+    promoted: false,
+    message: 'Publicidad cancelada correctamente'
+  }
+}
+
+export const obtenerEstadoPublicidadService = async (publicacionId: number) => {
+  if (Number.isNaN(publicacionId) || publicacionId <= 0) {
+    throw new Error('ID_INVALIDO')
+  }
+
+  const publicacion = await buscarPublicacionPorIdSimpleRepository(publicacionId)
+
+  if (!publicacion) {
+    throw new Error('PUBLICACION_NO_EXISTE')
+  }
+
+  const activa = await verificarPublicidadActivaRepository(publicacionId)
+
+  return {
+    id: publicacion.id,
+    promoted: activa,
+    promotedAt: activa ? publicacion.promotedAt : null,
+    promotedExpiresAt: activa ? publicacion.promotedExpiresAt : null
+  }
+}
+
+export const listarMisPublicacionesService = async (usuarioId: number) => {
+  if (Number.isNaN(usuarioId) || usuarioId <= 0) {
+    throw new Error('USUARIO_INVALIDO')
+  }
+
+  const publicaciones = await buscarPublicacionesPorUsuarioRepository(usuarioId)
+
+  type PublicacionesPorUsuario = Awaited<ReturnType<typeof buscarPublicacionesPorUsuarioRepository>>
+
+  return publicaciones.map((publicacion: PublicacionesPorUsuario[number]) => ({
+    id: publicacion.id,
+    titulo: publicacion.titulo,
+    precio: Number(publicacion.inmueble.precio),
+    ubicacion: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
+    nroBanos: publicacion.inmueble.nroBanos,
+    nroCuartos: publicacion.inmueble.nroCuartos,
+    superficieM2:
+      publicacion.inmueble.superficieM2 !== null && publicacion.inmueble.superficieM2 !== undefined
+        ? Number(publicacion.inmueble.superficieM2)
+        : null,
+    imagenUrl: obtenerPrimeraImagenUrl(publicacion.multimedia),
+    promoted: publicacion.promoted ?? false  // NUEVO CAMPO
+  }))
 }
