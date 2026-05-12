@@ -284,13 +284,6 @@ export default function MapaPinSelector({
       scrollWheelZoom={true}
       style={{ height: '320px', width: '100%' }}
       gestureHandling={typeof window !== 'undefined' && L ? L.Browser.mobile : false}
-      gestureHandlingOptions={{
-        text: {
-          touch: "Usa dos dedos para mover el mapa",
-          scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
-          scrollMac: "Usa ⌘ + scroll para hacer zoom en el mapa"
-        }
-      }}
     >
       <TileLayer
         attribution="&copy; OpenStreetMap"

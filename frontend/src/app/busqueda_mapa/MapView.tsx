@@ -517,13 +517,6 @@ export default function MapView({
         style={{ height: '100%', width: '100%' }}
         className={`z-0 ${isDrawingMode && !isPolygonClosed ? '[&.leaflet-container]:cursor-crosshair [&_.leaflet-interactive]:cursor-crosshair' : ''}`}
         gestureHandling={typeof window !== 'undefined' && L ? L.Browser.mobile : false}
-        gestureHandlingOptions={{
-          text: {
-            touch: "Usa dos dedos para mover el mapa",
-            scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
-            scrollMac: "Usa ⌘ + scroll para hacer zoom en el mapa"
-          }
-        }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
