@@ -72,9 +72,9 @@ export const createUser = async (data: CreateUserInput) => {
       },
       include: {
         telefonos: true,
-        rol: true
-      }
-    })
+        rol: true,
+      },
+    });
   } catch (error) {
     if (isUniqueConstraintError(error)) {
       throw new Error(getUniqueConstraintMessage(error));
@@ -98,10 +98,10 @@ export const findUser = async (correo: string) => {
       activo: true,
       two_factor_activo: true,
       controlador: true,
-      rol: true
-    }
-  })
-}
+      rol: true,
+    },
+  });
+};
 export const findUserByCorreo = async (correo: string) => {
   return await prisma.usuario.findUnique({
     where: { correo },
@@ -124,10 +124,12 @@ export const createSession = async ({
   token,
   usuarioId,
   fechaExpiracion,
+  metodo_auth,
 }: {
   token: string;
   usuarioId: number;
   fechaExpiracion: Date;
+  metodo_auth?: string;
 }) => {
   return await prisma.sesion.create({
     data: {
@@ -135,6 +137,7 @@ export const createSession = async ({
       usuarioId,
       fechaExpiracion,
       estado: true,
+      metodo_auth: metodo_auth ?? "email",
     },
   });
 };
@@ -391,6 +394,8 @@ export const createSocialLink = async ({
         usuarioId,
         correoProveedor: correoProveedor ?? null,
         activo: true,
+        vinculadoEn: new Date(),
+        ultimo_uso_en: new Date(),
       },
     });
   }
@@ -402,6 +407,8 @@ export const createSocialLink = async ({
       idExterno,
       correoProveedor: correoProveedor ?? null,
       activo: true,
+      vinculadoEn: new Date(),
+      ultimo_uso_en: new Date(),
     },
   });
 };
@@ -428,7 +435,7 @@ export const listSocialLinksByUser = async (usuarioId: number) => {
       usuarioId,
       activo: true,
       proveedor: {
-        in: ["facebook", "discord", "google"],
+        in: ["facebook", "discord", "google", "linkedin"],
       },
     },
     select: {
@@ -436,6 +443,7 @@ export const listSocialLinksByUser = async (usuarioId: number) => {
       correoProveedor: true,
       idExterno: true,
       vinculadoEn: true,
+      token_expira_en: true,
     },
   });
 };
@@ -467,15 +475,15 @@ export const invalidateOtherUserSessions = async (
       token: { not: currentToken },
       estado: true,
     },
-    data: { estado: false }
-  })
-}
+    data: { estado: false },
+  });
+};
 export const completeTourByUserId = async (id: number) => {
   return await prisma.usuario.update({
     where: { id },
-    data: { controlador: true }
-  })
-}
+    data: { controlador: true },
+  });
+};
 
 export const countActiveSocialLinksByUser = async (usuarioId: number) => {
   return await prisma.autenticacion_social.count({
@@ -483,8 +491,44 @@ export const countActiveSocialLinksByUser = async (usuarioId: number) => {
       usuarioId,
       activo: true,
       proveedor: {
-        in: ["facebook", "discord", "google"],
+        in: ["facebook", "discord", "google", "linkedin"],
       },
+    },
+  });
+};
+
+export const invalidateSessionsByAuthMethod = async (
+  usuarioId: number,
+  metodo_auth: string,
+) => {
+  return prisma.sesion.updateMany({
+    where: {
+      usuarioId,
+      metodo_auth,
+      estado: true,
+    },
+    data: {
+      estado: false,
+    },
+  });
+};
+
+export const invalidateOtherSessionsByAuthMethod = async (
+  usuarioId: number,
+  metodo_auth: string,
+  currentToken: string,
+) => {
+  return prisma.sesion.updateMany({
+    where: {
+      usuarioId,
+      metodo_auth,
+      estado: true,
+      token: {
+        not: currentToken,
+      },
+    },
+    data: {
+      estado: false,
     },
   });
 };

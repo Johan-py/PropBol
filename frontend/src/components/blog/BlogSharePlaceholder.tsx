@@ -9,6 +9,7 @@ interface BlogShareProps {
   imageUrl?: string;
   description?: string;
 }
+
 // Componente para colocar las opciones de compartir del blog
 export default function BlogSharePlaceholder({
   title,
@@ -212,15 +213,14 @@ export default function BlogSharePlaceholder({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-
   return (
     <div className="mt-8 w-full rounded-2xl bg-white p-6 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-stone-100 min-h-[120px] transition-all duration-300">
       <div className="flex flex-col gap-6">
         <h3 className="text-xs font-bold uppercase tracking-[0.24em] text-[#a56400]">
           Compartir
         </h3>
-        <div className="flex items-center justify-between w-full">
-          <div className="flex items-center justify-start gap-4 sm:gap-5 md:gap-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-6">
+          <div className="flex flex-wrap items-center justify-start gap-3 sm:gap-4 md:gap-6">
             <button onClick={shareToGmail} className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir por Gmail">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"

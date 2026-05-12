@@ -11,7 +11,7 @@ export interface FiltrosBusqueda {
   municipioId?: string | number;
   zonaId?: string | number;
   barrioId?: string | number;
-  fecha?: "mas-recientes" | "mas-populares" | "mas-antiguos";
+  fecha?: "mas-recientes" | "mas-populares" | "mas-antiguos" | "mayor-descuento";
   precio?: "menor-a-mayor" | "mayor-a-menor";
   superficie?: "menor-a-mayor" | "mayor-a-menor";
   minPrice?: number | null;
@@ -30,6 +30,7 @@ export interface FiltrosBusqueda {
   radius?: number;
   amenities?: number[];
   labels?: number[];
+  soloOfertas?: boolean; // NUEVO: Filtro para mostrar solo ofertas (precio actual < precio anterior)
 }
 
 // Helper para limpiar las variaciones de Anticrético
@@ -90,7 +91,7 @@ export const propertiesRepository = {
     // 3. Filtro de Ubicación (EL CEREBRO JERÁRQUICO)
     if (filtros.lat && filtros.lng) {
       // Búsqueda geoespacial por latitud/longitud con un radio (en km)
-    } else if (filtros.query && filtros.query.trim() !== "") {
+    } else if (filtros.query && filtros.query.trim().length >= 3) { // NUEVO: Refuerzo de >= 3 caracteres
       // Fallback original: Búsqueda estricta por texto
       const texto = filtros.query.trim();
 
@@ -290,6 +291,13 @@ export const propertiesRepository = {
       ];
     }
 
+    if (filtros.soloOfertas === true) {
+      where.precio = {
+        ...((where.precio as object) ?? {}),
+        lt: prisma.inmueble.fields.precio_anterior
+      };
+    }
+
     // ── ORDER BY ───────────────────────────────────────────────────────────
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const orderBy: any[] = [];
@@ -307,8 +315,13 @@ export const propertiesRepository = {
       orderBy.push({ fechaPublicacion: "desc" });
     } else if (filtros.fecha === "mas-antiguos") {
       orderBy.push({ fechaPublicacion: "asc" });
-    } else if (filtros.fecha === "mas-populares") {
-      orderBy.push({ fechaPublicacion: "desc" }); // fallback mientras se ordena en memoria
+    } else if (filtros.fecha === "mas-populares") {// fallback mientras se ordena en memoria
+      orderBy.push({ fechaPublicacion: "desc" });
+    } else if (filtros.fecha === "mayor-descuento") {
+      orderBy.push({
+        precio_anterior: "desc"
+      });
+
     }
 
     orderBy.push({ id: "asc" }); // Desempate default
@@ -345,37 +358,37 @@ export const propertiesRepository = {
       },
     });
 
-    const resultados = (filtros.lat && filtros.lng) 
+    const resultados = (filtros.lat && filtros.lng)
       ? inmuebles.filter((inmueble) => {
-          const u = inmueble.ubicacion;
-          if (!u || !u.latitud || !u.longitud) return false;
+        const u = inmueble.ubicacion;
+        if (!u || !u.latitud || !u.longitud) return false;
 
-          const lat = Number(u.latitud);
-          const lng = Number(u.longitud);
+        const lat = Number(u.latitud);
+        const lng = Number(u.longitud);
 
-          // Ignorar coordenadas inválidas
-          if (isNaN(lat) || isNaN(lng) || (lat === 0 && lng === 0)) return false;
+        // Ignorar coordenadas inválidas
+        if (isNaN(lat) || isNaN(lng) || (lat === 0 && lng === 0)) return false;
 
-          const centerLat = Number(filtros.lat);
-          const centerLng = Number(filtros.lng);
-          const radiusKm = filtros.radius || 1; // 1 km por defecto (igual que en el mapa)
+        const centerLat = Number(filtros.lat);
+        const centerLng = Number(filtros.lng);
+        const radiusKm = filtros.radius || 1; // 1 km por defecto (igual que en el mapa)
 
-          // Fórmula matemática para calcular distancia exacta en esfera (Tierra)
-          const R = 6371; // Radio de la Tierra en km
-          const dLat = ((lat - centerLat) * Math.PI) / 180;
-          const dLng = ((lng - centerLng) * Math.PI) / 180;
-          const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos((centerLat * Math.PI) / 180) *
-              Math.cos((lat * Math.PI) / 180) *
-              Math.sin(dLng / 2) *
-              Math.sin(dLng / 2);
-          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-          const distancia = R * c;
+        // Fórmula matemática para calcular distancia exacta en esfera (Tierra)
+        const R = 6371; // Radio de la Tierra en km
+        const dLat = ((lat - centerLat) * Math.PI) / 180;
+        const dLng = ((lng - centerLng) * Math.PI) / 180;
+        const a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos((centerLat * Math.PI) / 180) *
+          Math.cos((lat * Math.PI) / 180) *
+          Math.sin(dLng / 2) *
+          Math.sin(dLng / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distancia = R * c;
 
-          // Solo retorna true si la propiedad está estrictamente dentro del radio
-          return distancia <= radiusKm;
-        })
+        // Solo retorna true si la propiedad está estrictamente dentro del radio
+        return distancia <= radiusKm;
+      })
       : inmuebles;
 
     if (filtros.fecha === "mas-populares") {

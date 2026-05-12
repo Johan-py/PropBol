@@ -54,6 +54,7 @@ import locationSearchHandler from "./api/locations/search.js";
 import { getZonasController } from "./modules/zonas/zonas.controller.js";
 import correoverificacionRoutes from "./modules/perfil/correoverificacion.routes.js";
 import perfilRoutes from "./modules/perfil/perfil.routes.js";
+import comparacionRoutes from "./modules/perfil/comparacion.routes.js";
 
 import {
   googleCallbackController,
@@ -61,6 +62,13 @@ import {
   StratGoogleLoginController,
   StartGoogleRegisterController,
 } from "./modules/auth/google/google.controller.js";
+
+import {
+  startLinkedInLoginController,
+  startLinkedInRegisterController,
+  linkedInCallbackController,
+  getLinkedInLinkUrlController,
+} from "./modules/auth/linkedin/linkedin.controller.js";
 
 import {
   discordCallbackController,
@@ -73,6 +81,7 @@ import multimediaRoutes from "./modules/multimedia/multimedia.routes.js";
 import publicacionRoutes from "./modules/publicacion/publicacion.routes.js";
 import router from "./modules/registro-publicacion/publicacion.routes.js";
 import parametrosRoutes from "./modules/parametros-publicacion/parametros.routes.js";
+import tutorialPublicacionRoutes from "./modules/tutorial-publicacion/tutorial-publicacion.routes.js";
 
 import {
   facebookCallbackController,
@@ -84,9 +93,11 @@ import {
 import {
   getSocialLinksController,
   unlinkSocialProviderController,
+  getLinkedInOriginalEmailController,
 } from "./modules/auth/social-links/social-links.controller.js";
 
 import securityRoutes from "./routes/security.routes.js";
+import propiedadRoutes from "./routes/propiedad.routes.js";
 // --------------------
 // LEGACY
 // --------------------
@@ -94,6 +105,7 @@ import authRoutes from "./routes/auth.routes.js";
 import publicacionesRoutes from "./routes/publicaciones.js";
 import { authMiddleware } from "./middleware/authMiddleware.js";
 import blogsRoutes from "./modules/blogs/blogs.routes.js";
+import testimoniosRoutes from "./modules/testimonios/testimonios.routes.js";
 // --------------------
 // LEGACY
 // --------------------
@@ -114,6 +126,8 @@ import suscripcionesRoutes from "./modules/suscripciones/suscripciones.routes.js
 import plansRoutes from "./modules/plans/plans.routes.js";
 import historialBusquedaRoutes from "./modules/perfil/historialBusqueda.routes.js";
 import whatsappRoutes from "./modules/whatsapp/whatsapp.routes.js";
+import { getAdminTestimonios } from "./modules/testimonios/adminTestimonios.controller.js";
+import sesionRoutes from "./modules/perfil/sesion.routes.js";
 
 import "./jobs/suscripcion.job.js";
 
@@ -169,6 +183,7 @@ app.use('/api/publicaciones-legacy', publicacionesRoutes)
 // --------------------
 app.use("/api/publicaciones", publicacionRoutes);
 app.use("/api/publicaciones", multimediaRoutes);
+app.use("/api/publicaciones/tutorial", tutorialPublicacionRoutes);
 app.use("/api/perfil", correoverificacionRoutes);
 app.use("/api/perfil/usuario", perfilRoutes);
 app.use("/api/perfil/zonas", zonaRoutes);
@@ -179,6 +194,7 @@ app.use("/api/security", securityRoutes);
 app.use("/api/favorites", favoritesRoutes);
 app.use("/api/telemetria", telemetriaRoutes);
 app.use("/api/recomendaciones", recomendacionesRoutes);
+app.use("/api/propiedad", propiedadRoutes);
 app.use("/api/publicaciones", publicacionRoutes);
 app.use("/api/publicaciones", multimediaRoutes);
 app.use("/api/perfil", correoverificacionRoutes);
@@ -193,7 +209,10 @@ app.use("/api/favorites", favoritesRoutes);
 app.use("/api/telemetria", telemetriaRoutes);
 app.use("/api/recomendaciones", recomendacionesRoutes);
 app.use("/api/blogs", blogsRoutes);
+app.use("/api/testimonios", testimoniosRoutes);
 app.use("/api/telemetria", telemetriaRouter);
+app.use("/api/comparaciones", comparacionRoutes);
+app.use("/api/sesiones", sesionRoutes);
 
 app.use("/api/transacciones", transaccionesRoutes);
 app.use("/api/suscripciones", suscripcionesRoutes);
@@ -239,6 +258,7 @@ app.get("/api/auth/facebook/login", startFacebookLoginController);
 app.get("/api/auth/facebook/register", startFacebookRegisterController);
 app.get("/api/auth/facebook/callback", facebookCallbackController);
 app.get("/api/auth/social-links", requireAuth, getSocialLinksController);
+app.get("/api/auth/linkedin/original-email", requireAuth, getLinkedInOriginalEmailController);
 app.delete(
   "/api/auth/social-links/:provider",
   requireAuth,
@@ -251,6 +271,10 @@ app.get(
 );
 app.get("/api/auth/discord/link-url", requireAuth, getDiscordLinkUrlController);
 app.get("/api/auth/google/link-url", requireAuth, getGoogleLinkUrlController);
+app.get("/api/auth/linkedin/login", startLinkedInLoginController);
+app.get("/api/auth/linkedin/callback", linkedInCallbackController);
+app.get("/api/auth/linkedin/link-url", requireAuth, getLinkedInLinkUrlController);
+app.get("/api/auth/linkedin/register", startLinkedInRegisterController);
 //comentario
 
 // --------------------
@@ -293,6 +317,7 @@ app.get("/health", (_req, res) => {
 app.get("/api/properties/search", propertiesController.search);
 app.get("/api/inmuebles", propertiesController.getAll);
 app.get("/api/properties/inmuebles", propertiesController.getAll);
+app.use("/api/propiedad", propiedadRoutes);
 
 // --------------------
 // NOTIFICACIONES
@@ -326,6 +351,11 @@ app.post("/api/publicaciones", (req, res) => {
   const nuevaPublicacion = req.body;
   res.json({ message: "Publicación creada", publicacion: nuevaPublicacion });
 });
+
+// --------------------
+// TESTIMONIOSADMIN
+// --------------------
+app.get("/api/admin/testimonios", getAdminTestimonios);
 
 // --------------------
 // LEVANTAR SERVIDOR
