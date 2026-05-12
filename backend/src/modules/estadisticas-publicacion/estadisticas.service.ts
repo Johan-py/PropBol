@@ -10,6 +10,14 @@ type RegistrarVistaParams = {
   userAgent?: string
 }
 
+type RegistrarVistaPorInmuebleParams = {
+  inmuebleId: number
+  usuarioId?: number
+  visitorToken?: string
+  ip: string
+  userAgent?: string
+}
+
 type RegistrarCompartidoParams = {
   publicacionId: number
   usuarioId: number
@@ -130,10 +138,10 @@ export class EstadisticasPublicacionService {
         }
       })
 
-      /**
-       * Esto actualiza la sección "Mis propiedades vistas".
-       * Solo se guarda cuando el usuario está logueado.
-       */
+      /*
+        Esto actualiza la sección "Mis propiedades vistas".
+        Solo se guarda cuando el usuario está logueado.
+      */
       if (usuarioId) {
         await tx.propiedad_vista.upsert({
           where: {
@@ -164,6 +172,36 @@ export class EstadisticasPublicacionService {
       visitorToken: visitor.token,
       mensaje: 'Visualización registrada correctamente.'
     }
+  }
+
+  static async registrarVistaPorInmueble({
+    inmuebleId,
+    usuarioId,
+    visitorToken,
+    ip,
+    userAgent
+  }: RegistrarVistaPorInmuebleParams) {
+    const publicacion = await prisma.publicacion.findFirst({
+      where: {
+        inmuebleId,
+        estado: EstadoPublicacion.ACTIVA
+      },
+      select: {
+        id: true
+      }
+    })
+
+    if (!publicacion) {
+      throw new Error('PUBLICACION_NO_EXISTE')
+    }
+
+    return this.registrarVista({
+      publicacionId: publicacion.id,
+      usuarioId,
+      visitorToken,
+      ip,
+      userAgent
+    })
   }
 
   static async registrarCompartido({ publicacionId, usuarioId, medio }: RegistrarCompartidoParams) {

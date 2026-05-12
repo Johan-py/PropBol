@@ -12,6 +12,12 @@ router.post(
 )
 
 router.post(
+  '/inmuebles/:inmuebleId/vistas',
+  optionalAuth,
+  EstadisticasPublicacionController.registrarVistaPorInmueble
+)
+
+router.post(
   '/publicaciones/:publicacionId/compartidos',
   requireAuth,
   EstadisticasPublicacionController.registrarCompartido

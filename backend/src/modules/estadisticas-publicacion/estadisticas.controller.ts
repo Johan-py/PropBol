@@ -87,6 +87,57 @@ export class EstadisticasPublicacionController {
     }
   }
 
+  static async registrarVistaPorInmueble(req: AuthRequest, res: Response) {
+    try {
+      const inmuebleId = Number(req.params.inmuebleId)
+
+      if (Number.isNaN(inmuebleId)) {
+        return res.status(400).json({
+          ok: false,
+          mensaje: 'El id del inmueble no es válido.'
+        })
+      }
+
+      const usuarioId = req.user?.id
+      const visitorToken = obtenerVisitorToken(req)
+      const ip = obtenerIp(req)
+      const userAgent = req.headers['user-agent']
+
+      const resultado = await EstadisticasPublicacionService.registrarVistaPorInmueble({
+        inmuebleId,
+        usuarioId,
+        visitorToken,
+        ip,
+        userAgent
+      })
+
+      if (resultado.visitorToken) {
+        res.cookie('visitor_token', resultado.visitorToken, {
+          httpOnly: true,
+          sameSite: 'lax',
+          maxAge: 1000 * 60 * 60 * 24 * 365
+        })
+      }
+
+      return res.status(200).json({
+        ok: true,
+        ...resultado
+      })
+    } catch (error) {
+      if (error instanceof Error && error.message === 'PUBLICACION_NO_EXISTE') {
+        return res.status(404).json({
+          ok: false,
+          mensaje: 'No existe una publicación activa para este inmueble.'
+        })
+      }
+
+      return res.status(500).json({
+        ok: false,
+        mensaje: 'Error al registrar la visualización.'
+      })
+    }
+  }
+
   static async registrarCompartido(req: AuthRequest, res: Response) {
     try {
       const publicacionId = Number(req.params.publicacionId)
