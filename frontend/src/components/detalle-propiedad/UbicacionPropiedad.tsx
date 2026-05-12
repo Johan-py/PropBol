@@ -1,7 +1,6 @@
 'use client'
 import ComoLlegarButton from '@/components/galeria/ComoLlegarButton'
 
-
 interface Props {
   mapa: {
     latitud: number | null
@@ -31,9 +30,14 @@ export default function UbicacionPropiedad({ mapa }: Props) {
           </div>
         )}
       </div>
-        {/* HU13 #71 - Boton Como llegar en detalle de publicacion seccion ubicacion */}
+      {/* HU13 #71 - Boton Como llegar en detalle de publicacion seccion ubicacion */}
       <div className="mt-3 w-full min-h-[44px] flex items-center">
-        <ComoLlegarButton lat={mapa.latitud} lng={mapa.longitud} variant="grid" aria-label="Calcular ruta hacia esta propiedad" />
+        <ComoLlegarButton
+          lat={mapa.latitud}
+          lng={mapa.longitud}
+          variant="grid"
+          aria-label="Calcular ruta hacia esta propiedad"
+        />
       </div>
     </section>
   )

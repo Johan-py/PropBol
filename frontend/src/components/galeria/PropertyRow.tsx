@@ -67,7 +67,9 @@ export default function PropertyRow({
       <div className="flex flex-col overflow-hidden min-w-0">
         <span className="text-xs font-semibold text-gray-800 truncate">{title}</span>
         <span className="text-[11px] text-gray-600 truncate">{size}</span>
-        <span className="text-[11px] text-stone-500 line-clamp-1">{ubicacionTexto || 'Ubicación no especificada'}</span>
+        <span className="text-[11px] text-stone-500 line-clamp-1">
+          {ubicacionTexto || 'Ubicación no especificada'}
+        </span>
         <span className="text-[11px] text-stone-500 line-clamp-1">
           {`Categoría: ${categoriaTexto || '-'} · Acción: ${accionTexto || '-'}`}
         </span>

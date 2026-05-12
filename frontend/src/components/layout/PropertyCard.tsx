@@ -31,7 +31,9 @@ const COLOR_GRIS_PLACEHOLDER = 'bg-gray-200'
 function formatMetros(value: number): string {
   if (!Number.isFinite(value)) return '—'
   const rounded = Math.round(value * 100) / 100
-  return Number.isInteger(rounded) ? String(rounded) : rounded.toLocaleString('es-BO', { maximumFractionDigits: 2 })
+  return Number.isInteger(rounded)
+    ? String(rounded)
+    : rounded.toLocaleString('es-BO', { maximumFractionDigits: 2 })
 }
 
 export default function PropertyCard({
@@ -54,19 +56,19 @@ export default function PropertyCard({
   const [isHovered, setIsHovered] = useState(false)
 
   // Calcular oferta HU6
-  const precioNum = Number(precio);
-  const precioAnteriorNum = Number(precio_anterior);
-  const esOferta = precioAnteriorNum && precioNum && precioNum < precioAnteriorNum;
+  const precioNum = Number(precio)
+  const precioAnteriorNum = Number(precio_anterior)
+  const esOferta = precioAnteriorNum && precioNum && precioNum < precioAnteriorNum
   const porcentajeDescuento = esOferta
     ? Math.round(((precioAnteriorNum - precioNum) / precioAnteriorNum) * 100)
-    : 0;
+    : 0
 
-  console.log("📊 Datos oferta:", { precio, precio_anterior, esOferta });
+  console.log('📊 Datos oferta:', { precio, precio_anterior, esOferta })
 
   const formatPrice = (value?: number) => {
-    if (!value) return "";
-    return value.toLocaleString("es-BO");
-  };
+    if (!value) return ''
+    return value.toLocaleString('es-BO')
+  }
 
   const metrosLabel = formatMetros(metros)
   return (
@@ -90,13 +92,10 @@ export default function PropertyCard({
             alt={descripcion}
             sizes="(max-w-7xl) 30vw"
             className="object-cover group-hover:scale-105 transition-transform duration-500"
-
             onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              target.src = "/placeholder-house.jpg";
+              const target = e.target as HTMLImageElement
+              target.src = '/placeholder-house.jpg'
             }}
-
-
           />
         ) : (
           /* Icono de cámara tachada si no hay foto para que no se vea feo */
@@ -119,22 +118,22 @@ export default function PropertyCard({
       </div>
 
       <div className="p-3 flex flex-col gap-2 flex-1">
-        <h2
-          className="font-extrabold text-gray-950 tracking-tight text-xl md:text-2xl line-clamp-1 min-h-[2rem] md:min-h-[2.25rem]"
-        >
+        <h2 className="font-extrabold text-gray-950 tracking-tight text-xl md:text-2xl line-clamp-1 min-h-[2rem] md:min-h-[2.25rem]">
           {esOferta ? (
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-orange-600">${formatPrice(precio)} USD</span>
-              <span className="text-sm text-gray-400 line-through">${formatPrice(precio_anterior)} USD</span>
+              <span className="text-sm text-gray-400 line-through">
+                ${formatPrice(precio_anterior)} USD
+              </span>
             </div>
           ) : (
             precioFormateado
           )}
-
-
         </h2>
 
-        <p className="text-sm text-gray-900 line-clamp-2 font-medium leading-snug min-h-[2.5rem]">{descripcion}</p>
+        <p className="text-sm text-gray-900 line-clamp-2 font-medium leading-snug min-h-[2.5rem]">
+          {descripcion}
+        </p>
 
         <div className="rounded-xl border border-stone-200 bg-stone-50/90 p-2.5 min-h-[74px]">
           <p className="text-xs text-stone-700 font-medium line-clamp-2">
@@ -195,7 +194,6 @@ export default function PropertyCard({
             }}
           />
         </div>
-
       </div>
     </div>
   )
