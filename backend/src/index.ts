@@ -127,6 +127,7 @@ import plansRoutes from "./modules/plans/plans.routes.js";
 import historialBusquedaRoutes from "./modules/perfil/historialBusqueda.routes.js";
 import whatsappRoutes from "./modules/whatsapp/whatsapp.routes.js";
 import { getAdminTestimonios } from "./modules/testimonios/adminTestimonios.controller.js";
+import sesionRoutes from "./modules/perfil/sesion.routes.js";
 
 import "./jobs/suscripcion.job.js";
 
@@ -211,6 +212,7 @@ app.use("/api/blogs", blogsRoutes);
 app.use("/api/testimonios", testimoniosRoutes);
 app.use("/api/telemetria", telemetriaRouter);
 app.use("/api/comparaciones", comparacionRoutes);
+app.use("/api/sesiones", sesionRoutes);
 
 app.use("/api/transacciones", transaccionesRoutes);
 app.use("/api/suscripciones", suscripcionesRoutes);
