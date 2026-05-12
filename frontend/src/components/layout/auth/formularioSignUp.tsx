@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import { validateEmail, validatePassword } from "@/lib/validators/auth";
 import GoogleRegisterButton from "@/components/layout/auth/google/GoogleRegisterButton";
 import FacebookRegisterButton from "@/components/layout/auth/facebook/FacebookRegisterButton";
-
+import LinkedInRegisterButton from "@/components/layout/auth/linkedin/LinkedInRegisterButton";
 type FormData = {
   email: string;
   firstName: string;
@@ -112,7 +112,7 @@ function FieldLabel({
 
 const saveSession = (payload: {
   token: string;
-  user: { id: number; correo: string; nombre?: string; apellido?: string };
+  user: { id: number; correo: string; nombre?: string; apellido?: string; avatar?: string | null };
 }) => {
   const userName =
     payload.user.nombre && payload.user.apellido
@@ -126,7 +126,7 @@ const saveSession = (payload: {
   );
   localStorage.setItem("nombre", userName);
   localStorage.setItem("correo", payload.user.correo);
-  localStorage.setItem("avatar", "");
+  localStorage.setItem("avatar", payload.user.avatar ?? "");
   localStorage.setItem(
     "propbol_session_expires",
     String(Date.now() + SESSION_DURATION_MS),
@@ -761,6 +761,24 @@ export default function SignUpForm() {
   onError={setServerError}
   disabled={isSubmitting}
 />
+
+            <LinkedInRegisterButton
+              onSuccess={async (payload) => {
+                setServerError("");
+                try {
+                  saveSession({
+                    token: payload.token,
+                    user: payload.user,
+                  });
+                  router.replace("/");
+                } catch {
+                  setServerError("No se pudo guardar la sesión iniciada con LinkedIn.");
+                }
+              }}
+              onError={setServerError}
+              disabled={isSubmitting}
+            />
+
             <button
               type="button"
               onClick={handleCancel}
