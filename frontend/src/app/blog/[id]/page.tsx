@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { notFound } from 'next/navigation'
+import { Metadata } from 'next'
 import BlogDetailSidebar from '@/components/blog/BlogDetailSidebar'
 import BlogCommentsSection from '@/components/blog/BlogCommentsSection'
 import MarkdownRenderer from '@/components/blog/MarkdownRenderer'
@@ -7,6 +8,28 @@ import BlogSharePlaceholder from '@/components/blog/BlogSharePlaceholder'
 import { MOCK_USER_BLOGS } from '@/lib/mock/blogs.mock'
 import { getPublishedBlogById } from '@/services/blogs.service'
 import BackButton from "@/app/blogs/backButton"
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const publicBlog = await getPublishedBlogById(params.id)
+  const userBlog = MOCK_USER_BLOGS.find((blog) => blog.id === params.id)
+
+  if (!publicBlog && !userBlog) return {}
+
+  const title = publicBlog?.title ?? userBlog?.titulo ?? 'Blog PropBol'
+  const description = `${publicBlog?.excerpt ?? userBlog?.resumen ?? 'Descubre más sobre el mercado inmobiliario en PropBol.'} | Lee el artículo completo en PropBol.`
+  const imageUrl = publicBlog?.imageUrl ?? userBlog?.imagenUrl ?? '/placeholder-blog.jpg'
+
+  return {
+    title: `${title} | PropBol Blog`,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [imageUrl],
+      type: 'article',
+    },
+  }
+}
 
 const formatPublishedDate = (value: string) =>
   new Date(value).toLocaleDateString('es-BO', {
@@ -74,22 +97,34 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
       </header>
 
       <main className="mx-auto mt-12 max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="blog-grid-container grid gap-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start xl:grid-cols-[minmax(0,1fr)_360px]">
           <div className="space-y-12">
             <div className="rounded-[36px] bg-white/90 p-6 shadow-[0_24px_80px_-50px_rgba(41,37,36,0.45)] sm:p-8 lg:p-10">
               <MarkdownRenderer content={articleContent} />
             </div>
 
-            <BlogSharePlaceholder />
+            <div className="no-capture">
+              <BlogSharePlaceholder 
+                title={title} 
+                author={authorName}
+                category={publicBlog?.category || 'General'}
+                imageUrl={imageUrl}
+                description={articleContent}
+              />
+            </div>
 
-            <BlogCommentsSection blogId={params.id} />
+            <div className="no-capture">
+              <BlogCommentsSection blogId={params.id} />
+            </div>
 
-            <div className="pt-2">
+            <div className="pt-2 no-capture">
               <BackButton />
             </div>
           </div>
 
-          <BlogDetailSidebar />
+          <div className="no-capture">
+            <BlogDetailSidebar />
+          </div>
         </div>
       </main>
     </article>
