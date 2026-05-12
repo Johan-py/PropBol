@@ -1014,7 +1014,7 @@ function BusquedaMapaContent() {
     if (isLandscape) {
       return (
         <div className="flex flex-col bg-white overflow-hidden" style={{ height: '100dvh' }}>
-          <div className="shrink-0" style={{ zIndex: 1002, position: 'relative' }}>
+          <div className="shrink-0 relative z-40">
             <FilterBar
               variant="map"
               onSearch={(f) => console.log('🔍 Filtros:', f)}
@@ -1098,7 +1098,7 @@ function BusquedaMapaContent() {
     // ────────────────────────────────────────────────────────────────────────────
     return (
       <div className="flex flex-col overflow-hidden bg-white" style={{ height: '100dvh' }}>
-        <div className="shrink-0 overflow-x-auto" style={{ zIndex: 1002, position: 'relative' }}>
+        <div className="shrink-0 overflow-x-auto relative z-40">
           <div className="min-w-max">
             <FilterBar
               variant="map"
