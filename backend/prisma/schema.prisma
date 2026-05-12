@@ -503,6 +503,8 @@ model comparacion {
   activo              Boolean               @default(true)
   usuario             Usuario               @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   detalle_comparacion detalle_comparacion[]
+
+  @@index([usuarioId, activo], map: "idx_comparacion_usuario_activo")
 }
 
 model detalle_comparacion {

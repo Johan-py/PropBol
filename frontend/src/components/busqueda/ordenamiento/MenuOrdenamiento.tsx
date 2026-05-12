@@ -51,10 +51,9 @@ function Dropdown({ label, isOpen, onToggle, disabled = false, children }: Dropd
         aria-expanded={isOpen}
         className={`flex items-center gap-1.5 px-2 py-1.5 text-xs font-normal
           border rounded-lg shadow-sm transition-colors duration-150 w-[120px] truncate
-          ${
-            disabled
-              ? 'bg-gray-50 border-gray-100 text-gray-300 cursor-not-allowed opacity-60'
-              : 'bg-white border-gray-200 text-gray-700 hover:border-orange-300 hover:text-orange-500'
+          ${disabled
+            ? 'bg-gray-50 border-gray-100 text-gray-300 cursor-not-allowed opacity-60'
+            : 'bg-white border-gray-200 text-gray-700 hover:border-orange-300 hover:text-orange-500'
           }`}
       >
         {label}
@@ -83,10 +82,9 @@ function DropdownItem({ label, isSelected, onClick }: DropdownItemProps) {
       type="button"
       onClick={onClick}
       className={`w-full text-left px-4 py-2.5 text-xs transition-colors duration-150
-        ${
-          isSelected
-            ? 'bg-orange-500 text-white font-medium'
-            : 'text-gray-700 hover:bg-orange-50 hover:text-orange-500'
+        ${isSelected
+          ? 'bg-orange-500 text-white font-medium'
+          : 'text-gray-700 hover:bg-orange-50 hover:text-orange-500'
         }`}
     >
       {label}
@@ -110,12 +108,11 @@ function SeccionMetrica({ titulo, valor, onChange, isActive }: SeccionMetricaPro
             type="button"
             onClick={() => onChange(opt.value)}
             className={`w-full text-left text-xs py-1.5 px-2 rounded transition-colors duration-150 whitespace-nowrap
-              ${
-                isActive && valor === opt.value
-                  ? 'text-orange-500 font-medium bg-orange-50'
-                  : isActive
-                    ? 'text-gray-700 hover:text-orange-500 hover:bg-orange-50'
-                    : 'text-gray-300 hover:text-orange-400 hover:bg-orange-50'
+              ${isActive && valor === opt.value
+                ? 'text-orange-500 font-medium bg-orange-50'
+                : isActive
+                  ? 'text-gray-700 hover:text-orange-500 hover:bg-orange-50'
+                  : 'text-gray-300 hover:text-orange-400 hover:bg-orange-50'
               }`}
           >
             {opt.label}
@@ -156,7 +153,7 @@ export function MenuOrdenamiento({
   }
 
   function aplicar(parcial: Partial<EstadoOrdenamiento>) {
-    if(procesandoRef.current) return
+    if (procesandoRef.current) return
     procesandoRef.current = true
 
     const nuevoOrden: EstadoOrdenamiento = { ...orden, ...parcial }
@@ -170,14 +167,14 @@ export function MenuOrdenamiento({
 
   // ── Seleccionar FECHA ──────────────────────────────────────────────────────
   function seleccionarFecha(valor: EstadoOrdenamiento['fecha']) {
-  aplicar({
-    fecha: valor,
-    precio: ORDENAMIENTO_DEFAULT.precio,
-    superficie: ORDENAMIENTO_DEFAULT.superficie,
-    criterioActivo: valor === 'mas-recomendados' ? 'recomendados' : 'fecha',
-  })
-  setDropdownAbierto(null)
-}
+    aplicar({
+      fecha: valor,
+      precio: ORDENAMIENTO_DEFAULT.precio,
+      superficie: ORDENAMIENTO_DEFAULT.superficie,
+      criterioActivo: valor === 'mas-recomendados' ? 'recomendados' : 'fecha',
+    })
+    setDropdownAbierto(null)
+  }
 
   // ── Seleccionar PRECIO ─────────────────────────────────────────────────────
   function seleccionarPrecio(valor: OrdenDireccion) {
@@ -222,7 +219,7 @@ export function MenuOrdenamiento({
     <div ref={menuRef} className={`flex w-fit max-w-full flex-col transition-all duration-300 ${panelClasses}`}>
       {/* Contenedor principal animado */}
       <div className={`flex flex-col transition-all duration-300 ${isCompact ? 'gap-0' : embeddedInPanel ? 'gap-2' : 'gap-3'}`}>
-        
+
         {/* Título: Ordenar por (Se oculta al hacer scroll) */}
         <div className={`flex items-center gap-2 transition-all duration-300 overflow-hidden ${isCompact ? 'max-h-0 opacity-0 m-0' : 'max-h-10 opacity-100'}`}>
           <ArrowUpDown className="w-4 h-4 text-gray-400" strokeWidth={2} />
@@ -254,9 +251,9 @@ export function MenuOrdenamiento({
 
           {/* Dropdown Métricas */}
           <div className={`flex flex-col transition-all duration-200 ${metricasApagada ? 'opacity-40 pointer-events-none' : ''} ${isCompact ? 'gap-0' : 'gap-1.5'}`}>
-             <div className={`transition-all duration-300 overflow-hidden ${isCompact ? 'max-h-0 opacity-0' : 'max-h-6 opacity-100'}`}>
-               <span className="text-xs text-gray-400 font-medium">Métricas:</span>
-             </div>
+            <div className={`transition-all duration-300 overflow-hidden ${isCompact ? 'max-h-0 opacity-0' : 'max-h-6 opacity-100'}`}>
+              <span className="text-xs text-gray-400 font-medium">Métricas:</span>
+            </div>
             <Dropdown
               label={labelMetricas}
               isOpen={dropdownAbierto === 'metricas'}

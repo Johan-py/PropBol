@@ -175,11 +175,11 @@ export default function PropertyCard({
         </div>
 
         {/* 3. Botón de contacto modular */}
-        <div className="mt-1 w-full">
+        <div className="mt-1 w-full min-h-[44px] flex items-center">
           <ContactButton type="whatsapp" variant="grid" />
         </div>
-        {/* HU13 - Botón de redirección a mapas */}
-        <div className="mt-1 w-full flex gap-2">
+        {/* HU13 #68 #69 - Botón ¿Cómo llegar? visible sin scroll horizontal, con estado deshabilitado y tooltip */}
+        <div className="mt-1 w-full min-h-[44px] flex items-center">
           <ComoLlegarButton lat={lat} lng={lng} variant="grid" />
         </div>
 
