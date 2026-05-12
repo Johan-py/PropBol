@@ -455,3 +455,60 @@ export const enviarAvisoCambioPassword = async ({
     textContent: `${saludo}\n\nTe informamos que la contraseña de tu cuenta en PropBol ha sido actualizada correctamente.\n\nSi no realizaste este cambio, por favor contacta a soporte de inmediato.`,
   });
 };
+
+export const enviarCorreoBienvenidaLinkedIn = async ({
+  emailDestino,
+  nombreUsuario,
+}: {
+  emailDestino: string;
+  nombreUsuario?: string;
+}): Promise<EmailSendResult> => {
+  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : "Hola,";
+
+  return sendBrevoEmail({
+    to: emailDestino,
+    subject: "Bienvenido a PropBol",
+    htmlContent: `
+      <!DOCTYPE html>
+      <html>
+        <head><meta charset="UTF-8"/></head>
+        <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
+          <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:10px;overflow:hidden;">
+            <div style="background:#d97706;padding:20px;text-align:center;">
+              <h1 style="color:#fff;margin:0;font-size:24px;">Bienvenido a PropBol</h1>
+            </div>
+
+            <div style="padding:30px;">
+              <p style="font-size:16px;color:#333;">${saludo}</p>
+              <p style="font-size:16px;color:#333;">
+                Tu cuenta fue creada exitosamente mediante LinkedIn.
+              </p>
+              <p style="font-size:16px;color:#333;">
+                Ya puedes iniciar sesión y acceder a las funcionalidades de PropBol.
+              </p>
+
+              <div style="background:#fffbeb;border-left:4px solid #d97706;padding:12px;margin:20px 0;">
+                <p style="margin:0;font-size:13px;color:#78350f;">
+                  Si no realizaste este registro, por favor ignora este mensaje o contacta con soporte.
+                </p>
+              </div>
+            </div>
+
+            <div style="background:#f9fafb;padding:20px;text-align:center;border-top:1px solid #e5e7eb;">
+              <p style="font-size:12px;color:#9ca3af;margin:0;">
+                © 2026 PropBol Inmobiliaria · Todos los derechos reservados
+              </p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `,
+    textContent: `${saludo}
+
+Tu cuenta fue creada exitosamente mediante LinkedIn.
+
+Ya puedes iniciar sesión y acceder a PropBol.
+
+Si no realizaste este registro, ignora este mensaje o contacta con soporte.`,
+  });
+};

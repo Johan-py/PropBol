@@ -128,3 +128,20 @@ export const createGoogleLinkForUser = async ({
 export const findUserByGoogleSessionToken = async (sessionToken: string) => {
   return await findUserByActiveSessionTokenForSocialLink(sessionToken);
 };
+
+export const updateGoogleLastUsage = async (
+  usuarioId: number,
+  googleId: string,
+) => {
+  return await prisma.autenticacion_social.updateMany({
+    where: {
+      usuarioId,
+      proveedor: "google",
+      idExterno: googleId,
+      activo: true,
+    },
+    data: {
+      ultimo_uso_en: new Date(),
+    },
+  });
+};

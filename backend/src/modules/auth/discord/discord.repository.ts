@@ -118,3 +118,20 @@ export const createDiscordLinkForUser = async ({
 export const findUserByDiscordSessionToken = async (sessionToken: string) => {
   return await findUserByActiveSessionTokenForSocialLink(sessionToken);
 };
+
+export const updateDiscordLastUsage = async (
+  usuarioId: number,
+  discordId: string,
+) => {
+  return await prisma.autenticacion_social.updateMany({
+    where: {
+      usuarioId,
+      proveedor: "discord",
+      idExterno: discordId,
+      activo: true,
+    },
+    data: {
+      ultimo_uso_en: new Date(),
+    },
+  });
+};

@@ -291,17 +291,10 @@ export const propertiesRepository = {
       ];
     }
 
-    // HU6 - Filtro solo ofertas (precio actual < precio anterior)
-    //if (filtros.soloOfertas === true) {
-    //where.precio = {
-    //  ...((where.precio as object) ?? {}),
-    // lt: prisma.inmueble.fields.precio_anterior  // precio_actual < precio_anterior
-    // };
-    //}
-    // HU6 - Filtro solo ofertas
     if (filtros.soloOfertas === true) {
-      where.precio_anterior = {
-        not: null,
+      where.precio = {
+        ...((where.precio as object) ?? {}),
+        lt: prisma.inmueble.fields.precio_anterior
       };
     }
 

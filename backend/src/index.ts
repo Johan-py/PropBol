@@ -54,6 +54,7 @@ import locationSearchHandler from "./api/locations/search.js";
 import { getZonasController } from "./modules/zonas/zonas.controller.js";
 import correoverificacionRoutes from "./modules/perfil/correoverificacion.routes.js";
 import perfilRoutes from "./modules/perfil/perfil.routes.js";
+import comparacionRoutes from "./modules/perfil/comparacion.routes.js";
 
 import {
   googleCallbackController,
@@ -61,6 +62,13 @@ import {
   StratGoogleLoginController,
   StartGoogleRegisterController,
 } from "./modules/auth/google/google.controller.js";
+
+import {
+  startLinkedInLoginController,
+  startLinkedInRegisterController,
+  linkedInCallbackController,
+  getLinkedInLinkUrlController,
+} from "./modules/auth/linkedin/linkedin.controller.js";
 
 import {
   discordCallbackController,
@@ -85,6 +93,7 @@ import {
 import {
   getSocialLinksController,
   unlinkSocialProviderController,
+  getLinkedInOriginalEmailController,
 } from "./modules/auth/social-links/social-links.controller.js";
 
 import securityRoutes from "./routes/security.routes.js";
@@ -118,6 +127,7 @@ import plansRoutes from "./modules/plans/plans.routes.js";
 import historialBusquedaRoutes from "./modules/perfil/historialBusqueda.routes.js";
 import whatsappRoutes from "./modules/whatsapp/whatsapp.routes.js";
 import { getAdminTestimonios } from "./modules/testimonios/adminTestimonios.controller.js";
+import sesionRoutes from "./modules/perfil/sesion.routes.js";
 
 import "./jobs/suscripcion.job.js";
 
@@ -201,6 +211,8 @@ app.use("/api/recomendaciones", recomendacionesRoutes);
 app.use("/api/blogs", blogsRoutes);
 app.use("/api/testimonios", testimoniosRoutes);
 app.use("/api/telemetria", telemetriaRouter);
+app.use("/api/comparaciones", comparacionRoutes);
+app.use("/api/sesiones", sesionRoutes);
 
 app.use("/api/transacciones", transaccionesRoutes);
 app.use("/api/suscripciones", suscripcionesRoutes);
@@ -246,6 +258,7 @@ app.get("/api/auth/facebook/login", startFacebookLoginController);
 app.get("/api/auth/facebook/register", startFacebookRegisterController);
 app.get("/api/auth/facebook/callback", facebookCallbackController);
 app.get("/api/auth/social-links", requireAuth, getSocialLinksController);
+app.get("/api/auth/linkedin/original-email", requireAuth, getLinkedInOriginalEmailController);
 app.delete(
   "/api/auth/social-links/:provider",
   requireAuth,
@@ -258,6 +271,10 @@ app.get(
 );
 app.get("/api/auth/discord/link-url", requireAuth, getDiscordLinkUrlController);
 app.get("/api/auth/google/link-url", requireAuth, getGoogleLinkUrlController);
+app.get("/api/auth/linkedin/login", startLinkedInLoginController);
+app.get("/api/auth/linkedin/callback", linkedInCallbackController);
+app.get("/api/auth/linkedin/link-url", requireAuth, getLinkedInLinkUrlController);
+app.get("/api/auth/linkedin/register", startLinkedInRegisterController);
 //comentario
 
 // --------------------
