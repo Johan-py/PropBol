@@ -157,12 +157,24 @@ export class FeaturesService {
       )
     ]
 
+    console.log('[ML] IDs interactuados:', idsInteractuados)
+    console.log('[ML] Categorías encontradas:', categorias) 
+
     const where: any = {
       id: { notIn: idsInteractuados },
       categoria: { in: categorias },
       estado: 'ACTIVO'
     }
 
+    const whereCategoria = categorias.length > 0 
+    ? { in: categorias } 
+    : undefined  // ← AGREGAR ESTO
+
+  const where: any = {
+    id: { notIn: idsInteractuados },
+    estado: 'ACTIVO',
+    ...(whereCategoria ? { categoria: whereCategoria } : {})  // ← CAMBIAR ESTO
+  }
     if (filtrosActivos?.modoInmueble && filtrosActivos.modoInmueble.length > 0) {
       where.tipoAccion = { in: filtrosActivos.modoInmueble }
     }

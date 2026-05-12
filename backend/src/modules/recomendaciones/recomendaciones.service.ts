@@ -65,6 +65,7 @@ export class RecomendacionesService {
     return resultadosML;
   }
   console.log('[ML] Sin resultados suficientes, usando fallback');
+  
 }
 
 
