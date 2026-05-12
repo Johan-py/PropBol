@@ -627,3 +627,29 @@ html.propbol-theme-dark :where(.bg-red-50,
   [class*="bg-[#FEF2F2"]) * {
   color: #fca5a5 !important;
 }
+
+/* Botones de sesiones activas solo en modo oscuro */
+html.propbol-theme-dark .propbol-btn-select-all {
+  background: #050505 !important;
+  color: #ffffff !important;
+  border: 1px solid #333333 !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55) !important;
+}
+
+html.propbol-theme-dark .propbol-btn-select-all:hover {
+  background: #111111 !important;
+  border-color: #525252 !important;
+}
+
+html.propbol-theme-dark .propbol-btn-close-session {
+  background: rgba(127, 29, 29, 0.2) !important;
+  color: #fca5a5 !important;
+  border: 1px solid rgba(239, 68, 68, 0.65) !important;
+  box-shadow: 0 12px 30px rgba(127, 29, 29, 0.25) !important;
+}
+
+html.propbol-theme-dark .propbol-btn-close-session:hover {
+  background: rgba(127, 29, 29, 0.35) !important;
+  color: #fecaca !important;
+  border-color: rgba(248, 113, 113, 0.9) !important;
+}
