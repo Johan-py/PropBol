@@ -51,10 +51,42 @@ export const useSearchFilters = () => {
     router.push(`/busqueda_mapa?${newParams.toString()}`)
     window.dispatchEvent(new Event('filterUpdate'))
   }
+   const removeFilter = (
+    router: ReturnType<typeof useRouter>,
+    currentParams: URLSearchParams,
+    keys: string | string[]
+  ) => {
+    const newParams = new URLSearchParams(currentParams.toString())
+    const toDelete = Array.isArray(keys) ? keys : [keys]
+    toDelete.forEach((k) => newParams.delete(k))
+    router.push(`/busqueda_mapa?${newParams.toString()}`)
+    window.dispatchEvent(new Event('filterUpdate'))
+  }
+  // AC 3, 4, 6, 10
+  const clearAllFilters = (
+    router: ReturnType<typeof useRouter>,
+    currentParams: URLSearchParams
+  ) => {
+    sessionStorage.removeItem(FILTER_KEY)
+    sessionStorage.removeItem('propbol_modo_recomendados')
+    sessionStorage.removeItem('propbol_recomendados')
+    const newParams = new URLSearchParams(currentParams.toString())
+    FILTROS_URL_KEYS.forEach((key) => newParams.delete(key))
+    router.push(`/busqueda_mapa?${newParams.toString()}`)
+    window.dispatchEvent(new Event('filterUpdate'))
+  }
+
+  const getActiveFilterCount = (searchParams: URLSearchParams): number => {
+    return FILTROS_URL_KEYS.filter((key) => searchParams.has(key)).length
+  }
+
 
   return {
     updateFilters,
     getBusquedaModo,
     cambiarAModoGeneral,
+    removeFilter,
+    clearAllFilters,      
+    getActiveFilterCount,
   }
 }
