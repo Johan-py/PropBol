@@ -281,7 +281,7 @@ export default function BlogCommentsSection({ blogId }: { blogId: string }) {
           </div>
         </div>
 
-        <div className="mt-8 rounded-[32px] border border-stone-200 bg-white p-4 shadow-sm sm:p-6">
+        <div className="mt-8 rounded-[32px] bg-white p-4 shadow-md sm:p-6">
           <div className="flex items-start gap-4">
             <Avatar author={currentUser} sizeClass="h-12 w-12 sm:h-14 sm:w-14" />
 
