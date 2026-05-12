@@ -11,7 +11,7 @@ export interface FiltrosBusqueda {
   municipioId?: string | number;
   zonaId?: string | number;
   barrioId?: string | number;
-  fecha?: "mas-recientes" | "mas-populares" | "mas-antiguos";
+  fecha?: "mas-recientes" | "mas-populares" | "mas-antiguos" | "mayor-descuento";
   precio?: "menor-a-mayor" | "mayor-a-menor";
   superficie?: "menor-a-mayor" | "mayor-a-menor";
   minPrice?: number | null;
@@ -291,11 +291,10 @@ export const propertiesRepository = {
       ];
     }
 
-    // HU6 - Filtro solo ofertas (precio actual < precio anterior)
     if (filtros.soloOfertas === true) {
       where.precio = {
         ...((where.precio as object) ?? {}),
-        lt: prisma.inmueble.fields.precio_anterior  // precio_actual < precio_anterior
+        lt: prisma.inmueble.fields.precio_anterior
       };
     }
 
@@ -316,8 +315,13 @@ export const propertiesRepository = {
       orderBy.push({ fechaPublicacion: "desc" });
     } else if (filtros.fecha === "mas-antiguos") {
       orderBy.push({ fechaPublicacion: "asc" });
-    } else if (filtros.fecha === "mas-populares") {
-      orderBy.push({ fechaPublicacion: "desc" }); // fallback mientras se ordena en memoria
+    } else if (filtros.fecha === "mas-populares") {// fallback mientras se ordena en memoria
+      orderBy.push({ fechaPublicacion: "desc" });
+    } else if (filtros.fecha === "mayor-descuento") {
+      orderBy.push({
+        precio_anterior: "desc"
+      });
+
     }
 
     orderBy.push({ id: "asc" }); // Desempate default

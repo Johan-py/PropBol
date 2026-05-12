@@ -86,8 +86,8 @@ export default function PropertyRow({
       </div>
 
       {/* CONTACTO: Aquí entra tu magia limpia y modular */}
-      {/* HU13 - Botón de redirección a mapas */}
-      <div className="flex justify-center">
+      {/* HU13 #70 - Boton Como llegar modo lista con lat/lng como props */}
+      <div className="flex justify-center min-h-[44px] items-center">
         <ComoLlegarButton lat={lat} lng={lng} variant="table" />
       </div>
       <div className="flex justify-center">

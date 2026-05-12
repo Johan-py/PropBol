@@ -57,6 +57,7 @@ import locationSearchHandler from "./api/locations/search.js";
 import { getZonasController } from "./modules/zonas/zonas.controller.js";
 import correoverificacionRoutes from "./modules/perfil/correoverificacion.routes.js";
 import perfilRoutes from "./modules/perfil/perfil.routes.js";
+import comparacionRoutes from "./modules/perfil/comparacion.routes.js";
 
 import {
   googleCallbackController,
@@ -207,6 +208,7 @@ app.use("/api/recomendaciones", recomendacionesRoutes);
 app.use("/api/blogs", blogsRoutes);
 app.use("/api/testimonios", testimoniosRoutes);
 app.use("/api/telemetria", telemetriaRouter);
+app.use("/api/comparaciones", comparacionRoutes);
 
 app.use("/api/transacciones", transaccionesRoutes);
 app.use("/api/suscripciones", suscripcionesRoutes);

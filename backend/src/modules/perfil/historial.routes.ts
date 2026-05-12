@@ -1,10 +1,13 @@
-import { Router } from 'express';
-import { getHistorialVistas } from './historial.controller.js';
-import { requireAuth } from '../../middleware/auth.middleware.js';
+import { Router } from 'express'
+import { historialController } from './historial.controller.js'
+import { requireAuth } from '../../middleware/auth.middleware.js'
 
-const router = Router();
+const router = Router()
 
-// Ruta: /api/perfil/historial/vistas
-router.get('/vistas', requireAuth, getHistorialVistas);
+// Endpoint: GET /api/perfil/historial/vistas
+router.get('/vistas', requireAuth, historialController.getHistorialVistas)
 
-export default router;
+// Endpoint: PATCH /api/perfil/historial/limpiar
+router.patch('/limpiar', requireAuth, historialController.deleteHistorial)
+
+export default router
