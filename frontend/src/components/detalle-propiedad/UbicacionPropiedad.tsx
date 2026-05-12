@@ -11,7 +11,7 @@ interface Props {
 
 export default function UbicacionPropiedad({ mapa }: Props) {
   return (
-    <section className="space-y-3">
+    <section className="space-y-3" role="region" aria-label="Ubicación de la propiedad">
       <h2 className="text-[18px] font-bold text-[#1f1f1f] md:text-[20px]">Ubicación</h2>
 
       <div className="overflow-hidden rounded-2xl border border-[#beb4a8] bg-[#dbe8d7]">
