@@ -154,7 +154,6 @@ export default function AjustesVisualizacion() {
         <main className="propbol-visual-settings-page min-h-screen bg-[#f8f6f1] px-4 py-8 text-gray-900">
             <section className="mx-auto w-full max-w-5xl">
                 <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-gray-100 md:p-8">
-                    <p className="text-sm font-semibold text-orange-600">Mi Perfil</p>
 
                     <h1 className="mt-2 text-3xl font-bold text-gray-900">
                         Ajustes de Visualización
