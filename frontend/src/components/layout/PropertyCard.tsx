@@ -1,7 +1,7 @@
 // frontend/src/components/layout/PropertyCard.tsx
 'use client'
-import Image from 'next/image'
 import { BedDouble, Bath, Maximize2, ImageOff, MapPin } from 'lucide-react'
+import { normalizePropertyThumbnailUrl } from '@/lib/propertyThumbnailUrl'
 import ContactButton from '../galeria/ContactButton' // <-- Tu botón modular importado
 import ActionButton from '../galeria/ActionButton' // <-- Botón de ver detalles (opcional, lo puedes usar o no dependiendo de tu diseño)
 import { useState } from 'react'
@@ -88,7 +88,7 @@ export default function PropertyCard({
       >
         {imagen ? (
           <img
-            src={imagen}
+            src={normalizePropertyThumbnailUrl(imagen)}
             alt={descripcion}
             sizes="(max-w-7xl) 30vw"
             className="object-cover group-hover:scale-105 transition-transform duration-500"
