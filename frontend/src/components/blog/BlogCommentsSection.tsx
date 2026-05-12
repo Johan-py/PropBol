@@ -123,8 +123,8 @@ const CommentItem = ({
 
                 <p className="mt-3 text-sm leading-7 text-stone-600 sm:text-base">
                   {parentAuthorName && parentAuthorName !== comment.author.name && (
-                    <span className="mr-1.5 font-bold text-blue-600 hover:underline cursor-default">
-                      {parentAuthorName}
+                    <span className="mr-2 inline-flex items-center rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-700">
+                      @{parentAuthorName}
                     </span>
                   )}
                   {comment.content}
