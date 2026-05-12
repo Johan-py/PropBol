@@ -23,7 +23,8 @@ import LogoutModal from "../navbar/LogoutModal";
 import { useNotifications } from "@/hooks/useNotifications";
 import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 import type { NotificationFilter } from "@/types/notification";
- 
+import ThemeToggleButton from "./ThemeToggleButton";
+
 export type User = {
   name: string;
   email: string;
@@ -362,61 +363,57 @@ export default function Navbar() {
       }, 600);
     }
   };
+
   const handlePublicarInmueble = async () => {
-  const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
-  if (!token) {
-    router.push("/sign-in");
-    return;
-  }
-
-  try {
-    // Obtener usuario autenticado
-    const meResponse = await fetch(`${API_URL}/api/auth/me`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const meData = await meResponse.json();
-
-    if (!meResponse.ok || !meData.user?.id) {
-      console.error("No se pudo obtener usuario autenticado");
+    if (!token) {
       router.push("/sign-in");
       return;
     }
 
-    const userId = meData.user.id;
-
-    // Validar límite de publicaciones
-    const limiteResponse = await fetch(
-      `${API_URL}/api/publicaciones/validar-limite/${userId}`,
-      {
+    try {
+      const meResponse = await fetch(`${API_URL}/api/auth/me`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
-    );
+      });
 
-    const limiteData = await limiteResponse.json();
+      const meData = (await meResponse.json()) as MeResponse;
 
-    // Si ya agotó publicaciones gratuitas
-    if (
-      limiteData.message === "LIMIT_REACHED" ||
-      limiteData.restantes <= 0
-    ) {
-      router.push("/Cobros-Limite");
-      return;
-    }
+      if (!meResponse.ok || !meData.user?.id) {
+        console.error("No se pudo obtener usuario autenticado");
+        router.push("/sign-in");
+        return;
+      }
 
-    // Si aún puede publicar
-    router.push("/registro-inmueble");
+      const limiteResponse = await fetch(
+        `${API_URL}/api/publicaciones/validar-limite/${meData.user.id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const limiteData = await limiteResponse.json();
+
+      if (
+        limiteResponse.ok &&
+        (limiteData.message === "LIMIT_REACHED" || Number(limiteData.restantes) <= 0)
+      ) {
+        router.push("/Cobros-Limite");
+        return;
+      }
+
+      router.push("/registro-inmueble");
     } catch (error) {
-       console.error("Error validando publicaciones:", error);
+      console.error("Error validando publicaciones:", error);
+      router.push("/registro-inmueble");
     }
-    };
+  };
 
   return (
     <>
@@ -435,8 +432,13 @@ export default function Navbar() {
                 onClick={handlePublicarInmueble}
                 className="hidden md:block rounded-md bg-[#E68B25] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-amber-700"
               >
-               Publica tu inmueble
+                Publica tu inmueble
               </button>
+
+              {/* HU13: botón general para alternar modo claro/oscuro */}
+              <div className="hidden md:block">
+                <ThemeToggleButton />
+              </div>
  
               <div className="relative" ref={notificationPanelRef}>
                 <button
@@ -758,14 +760,19 @@ export default function Navbar() {
               <button
                 id="tour-publicar-home-mobile"
                 type="button"
-                onClick={async () => {
+                onClick={() => {
                   setIsMobileMenuOpen(false);
-                  await handlePublicarInmueble();
-                 }}
-                className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10 text-left"
+                  void handlePublicarInmueble();
+                }}
+                className="rounded-md px-3 py-2 text-left text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"
               >
                 Publica tu inmueble
               </button>
+
+              {/* HU13: botón general para alternar modo claro/oscuro en menú móvil */}
+              <div className="px-3 py-2">
+                <ThemeToggleButton />
+              </div>
  
               <div id="tour-propiedades-mobile" className="flex flex-col">
                 <button

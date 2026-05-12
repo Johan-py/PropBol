@@ -76,7 +76,6 @@ model Usuario {
   verificacion_pago                     verificacion_pago[]
   visitor                               Visitor[]
   zona_usuario                          zona_usuario[]
-
   @@index([correo], map: "idx_usuario_correo")
   @@index([rolId], map: "idx_usuario_rol")
   @@index([rolId], map: "idx_usuario_rol_id")
