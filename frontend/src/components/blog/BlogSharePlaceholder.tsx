@@ -202,6 +202,26 @@ export default function BlogSharePlaceholder({
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(quote)}`, '_blank');
   };
 
+  const handleNativeShare = async () => {
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({
+          title: getTitle(),
+          text: description ? description.substring(0, 100) + '...' : 'Mira este artículo en PropBol',
+          url: getUrl(),
+        });
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          console.error('Error al compartir:', error);
+        }
+      }
+    } else {
+      // Fallback: copiar al portapapeles
+      navigator.clipboard.writeText(getUrl());
+      alert('¡Enlace copiado al portapapeles!');
+    }
+  };
+
   // Cerrar menú al hacer clic fuera del modal peee
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -270,8 +290,9 @@ export default function BlogSharePlaceholder({
               </svg>
             </button>
             <button
+              onClick={handleNativeShare}
               className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0"
-              title="Más opciones"
+              title="Más opciones de compartido"
             >
               <svg viewBox="0 0 24 24" className="w-6 h-6 opacity-90 group-hover:opacity-100 transition-opacity text-[#433527]" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="1.5"></circle>
