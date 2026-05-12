@@ -41,7 +41,7 @@ export default function ComparatorModal({ isOpen, onClose }: ComparatorModalProp
       try {
         const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '');
     
-        const res = await fetch(`${API_URL}/api/propiedades/comparar`, {
+        const res = await fetch(`${API_URL}/api/propiedad/comparar`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ ids: selectedIds }),

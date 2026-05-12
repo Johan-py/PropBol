@@ -89,7 +89,7 @@ export default function AdminDashboard() {
                     </p>
                     <h3 className="text-2xl font-bold font-montserrat text-stone-900">
                       {isLoading ? (
-                        <div className="h-8 w-12 bg-stone-100 animate-pulse rounded"></div> 
+                        <div className="h-8 w-12 bg-stone-100 animate-pulse rounded"></div>
                       ) : (
                         (pendingCount ?? 0)
                       )}
@@ -115,7 +115,7 @@ export default function AdminDashboard() {
                     </p>
                     <h3 className="text-2xl font-bold font-montserrat text-stone-900">
                       {isLoading ? (
-                        <div className="h-8 w-12 bg-stone-100 animate-pulse rounded"></div> 
+                        <div className="h-8 w-12 bg-stone-100 animate-pulse rounded"></div>
                       ) : (
                         (pendingPayments ?? 0)
                       )}
@@ -154,7 +154,7 @@ export default function AdminDashboard() {
                   </div>
                 </div>
                 <div className="h-8 w-8 rounded-full bg-stone-50 flex items-center justify-center transition-colors group-hover:bg-amber-600 group-hover:text-white">
-                  <MessageSquareText className="h-4 w-4" />
+                  <Cog className="h-4 w-4" />
                 </div>
               </Link>
             </div>
