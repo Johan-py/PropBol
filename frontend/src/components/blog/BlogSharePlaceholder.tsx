@@ -10,17 +10,17 @@ interface BlogShareProps {
   description?: string;
 }
 // Componente para colocar las opciones de compartir del blog
-export default function BlogSharePlaceholder({ 
-  title, 
-  author, 
-  category, 
-  imageUrl, 
-  description 
+export default function BlogSharePlaceholder({
+  title,
+  author,
+  category,
+  imageUrl,
+  description
 }: BlogShareProps) {
   const [isDownloadOpen, setIsDownloadOpen] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
-  
+
   const getUrl = () => typeof window !== 'undefined' ? window.location.href : '';
   const getTitle = () => title || (typeof document !== 'undefined' ? document.title : 'Blog PropBol');
 
@@ -60,7 +60,7 @@ export default function BlogSharePlaceholder({
       doc.setTextColor(165, 100, 0); // #a56400
       const infoText = `POR: ${author?.toUpperCase() || 'ANÓNIMO'}  |  CATEGORÍA: ${category?.toUpperCase() || 'GENERAL'}`;
       doc.text(infoText, margin, currentY);
-      
+
       currentY += 8;
       doc.setDrawColor(231, 229, 228); // stone-200
       doc.setLineWidth(0.1);
@@ -72,7 +72,7 @@ export default function BlogSharePlaceholder({
         try {
           const img = new Image();
           img.crossOrigin = "Anonymous";
-          
+
           await new Promise<void>((resolve, reject) => {
             img.onload = () => resolve();
             img.onerror = () => reject();
@@ -81,7 +81,7 @@ export default function BlogSharePlaceholder({
 
           const imgWidth = contentWidth;
           const imgHeight = (img.height * imgWidth) / img.width;
-          
+
           if (currentY + imgHeight > 270) {
             doc.addPage();
             currentY = 20;
@@ -96,26 +96,69 @@ export default function BlogSharePlaceholder({
       }
 
       // 4. Descripción / Contenido
-      doc.setFontSize(11);
       doc.setTextColor(68, 64, 60); // stone-700
-      doc.setFont('helvetica', 'normal');
-      
-      const cleanDescription = (description || '')
-        .replace(/[#*`]/g, '')
-        .replace(/!\[.*?\]\(.*?\)/g, '') // Eliminar imágenes markdown
-        .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Dejar solo el texto de los enlaces
-        .replace(/\n\s*\n/g, '\n\n')
-        .trim();
 
-      const descLines: string[] = doc.splitTextToSize(cleanDescription, contentWidth);
-      
-      descLines.forEach((line: string) => {
-        if (currentY > 280) {
-          doc.addPage();
-          currentY = 20;
+      // Separar por líneas para procesar el markdown básico
+      const rawLines = (description || '').split('\n');
+
+      rawLines.forEach((line: string) => {
+        const trimmedLine = line.trim();
+        if (!trimmedLine && line !== '') {
+          currentY += 5; // Espacio para líneas vacías
+          return;
         }
-        doc.text(line, margin, currentY);
-        currentY += 7;
+
+        let fontSize = 11;
+        let fontStyle = 'normal';
+        let xOffset = margin;
+        let textToPrint = trimmedLine;
+
+        // Detectar Encabezados
+        if (trimmedLine.startsWith('# ')) {
+          fontSize = 16;
+          fontStyle = 'bold';
+          textToPrint = trimmedLine.replace('# ', '');
+          currentY += 5;
+        } else if (trimmedLine.startsWith('## ')) {
+          fontSize = 14;
+          fontStyle = 'bold';
+          textToPrint = trimmedLine.replace('## ', '');
+          currentY += 3;
+        } else if (trimmedLine.startsWith('### ')) {
+          fontSize = 12;
+          fontStyle = 'bold';
+          textToPrint = trimmedLine.replace('### ', '');
+          currentY += 2;
+        } else if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ')) {
+          textToPrint = `• ${trimmedLine.substring(2)}`;
+          xOffset = margin + 5;
+        } else if (trimmedLine.startsWith('> ')) {
+          fontStyle = 'italic';
+          textToPrint = trimmedLine.replace('> ', '');
+          xOffset = margin + 5;
+          doc.setDrawColor(200, 200, 200);
+          doc.setLineWidth(0.5);
+          doc.line(margin + 2, currentY - 4, margin + 2, currentY + 4); // Simular barra de cita
+        }
+
+        doc.setFont('helvetica', fontStyle);
+        doc.setFontSize(fontSize);
+
+        // Limpiar negritas y cursivas básicas del texto interno para evitar ruido visual
+        textToPrint = textToPrint.replace(/[*_~`]/g, '');
+
+        const wrappedLines: string[] = doc.splitTextToSize(textToPrint, contentWidth - (xOffset - margin));
+
+        wrappedLines.forEach((wLine: string) => {
+          if (currentY > 275) {
+            doc.addPage();
+            currentY = 20;
+          }
+          doc.text(wLine, xOffset, currentY);
+          currentY += (fontSize / 2) + 2;
+        });
+
+        currentY += 2; // Espacio entre bloques
       });
 
       // Pie de página
@@ -302,7 +345,7 @@ export default function BlogSharePlaceholder({
                           elementsToHide.forEach(el => {
                             (el as HTMLElement).style.display = 'none';
                           });
-                          
+
                           // Ajustar el grid para que el contenido principal ocupe todo el ancho
                           const grid = clonedDoc.querySelector('.blog-grid-container') as HTMLElement;
                           if (grid) {
