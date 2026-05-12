@@ -291,12 +291,13 @@ export const propertiesRepository = {
       ];
     }
 
+
     // HU6 - Filtro solo ofertas
     if (filtros.soloOfertas === true) {
-     where.precio_anterior = {
-      not: null,
-  };
-}
+      where.precio_anterior = {
+        not: null,
+      };
+    }
 
     // ── ORDER BY ───────────────────────────────────────────────────────────
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
