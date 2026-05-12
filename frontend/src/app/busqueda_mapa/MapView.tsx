@@ -140,7 +140,7 @@ function MapClickHandler({ onMapClick, isDrawingMode }: {
   isDrawingMode: boolean
 }) {
   const map = useMap()
-
+  
   // AÑADIDO: Control nativo del cursor y bloqueo de arrastre (Criterios 2 y 20)
   useEffect(() => {
     if (isDrawingMode) {
@@ -152,57 +152,105 @@ function MapClickHandler({ onMapClick, isDrawingMode }: {
     }
   }, [isDrawingMode, map])
 
-  // Doble toque y arrastre para zoom (one-finger zoom)
-  useEffect(() => {
-    let lastTapTime = 0
-    let isDragging = false
-    let startY = 0
-    let startZoom = 0
+// 4 y 6. Double tap zoom + one finger zoom
+useEffect(() => {
+  const DOUBLE_TAP_DELAY = 300
+  const DRAG_THRESHOLD = 10
 
-    const handleTouchStart = (e: TouchEvent) => {
-      if (e.touches.length !== 1) return
+  let lastTapTime = 0
 
-      const now = Date.now()
-      const timeSinceLast = now - lastTapTime
+  let secondTap = false
+  let isDraggingZoom = false
 
-      if (timeSinceLast < 350) {
-        // Segundo toque rápido → iniciar modo arrastre
-        isDragging = true
-        startY = e.touches[0].clientY
-        startZoom = map.getZoom()
-        e.preventDefault()
-      }
+  let startY = 0
+  let startZoom = 0
 
-      lastTapTime = now
+  let touchStartTime = 0
+
+  const container = map.getContainer()
+
+  const handleTouchStart = (e: TouchEvent) => {
+    if (e.touches.length !== 1) return
+
+    const now = Date.now()
+    const timeSinceLast = now - lastTapTime
+
+    if (timeSinceLast < DOUBLE_TAP_DELAY) {
+      secondTap = true
+      touchStartTime = now
+
+      startY = e.touches[0].clientY
+      startZoom = map.getZoom()
     }
 
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!isDragging || e.touches.length !== 1) return
+    lastTapTime = now
+  }
 
-      const currentY = e.touches[0].clientY
-      const deltaY = startY - currentY
+  const handleTouchMove = (e: TouchEvent) => {
+    if (!secondTap) return
 
-      // Cada 50px de movimiento = 1 nivel de zoom
-      const zoomDelta = deltaY / 50
-      map.setZoom(startZoom + zoomDelta, { animate: false })
+    const currentY = e.touches[0].clientY
+    const deltaY = startY - currentY
+
+    // Activar modo drag zoom
+    if (Math.abs(deltaY) > DRAG_THRESHOLD) {
+      isDraggingZoom = true
+
+      const zoomDelta = deltaY / 80
+
+      map.setZoom(startZoom + zoomDelta, {
+        animate: false
+      })
+
       e.preventDefault()
     }
+  }
 
-    const handleTouchEnd = () => {
-      isDragging = false
+  const handleTouchEnd = (e: TouchEvent) => {
+    if (!secondTap) return
+
+    // Si NO hubo arrastre => doble toque normal
+    if (!isDraggingZoom) {
+      const touch = e.changedTouches[0]
+
+      const rect = container.getBoundingClientRect()
+
+      const point = L.point(
+        touch.clientX - rect.left,
+        touch.clientY - rect.top
+      )
+
+      const latlng = map.containerPointToLatLng(point)
+
+      map.flyTo(
+        latlng,
+        Math.min(map.getZoom() + 1, 19),
+        {
+          duration: 0.35
+        }
+      )
     }
 
-    const container = map.getContainer()
-    container.addEventListener('touchstart', handleTouchStart, { passive: false })
-    container.addEventListener('touchmove', handleTouchMove, { passive: false })
-    container.addEventListener('touchend', handleTouchEnd)
+    secondTap = false
+    isDraggingZoom = false
+  }
 
-    return () => {
-      container.removeEventListener('touchstart', handleTouchStart)
-      container.removeEventListener('touchmove', handleTouchMove)
-      container.removeEventListener('touchend', handleTouchEnd)
-    }
-  }, [map])
+  container.addEventListener('touchstart', handleTouchStart, {
+    passive: false
+  })
+
+  container.addEventListener('touchmove', handleTouchMove, {
+    passive: false
+  })
+
+  container.addEventListener('touchend', handleTouchEnd)
+
+  return () => {
+    container.removeEventListener('touchstart', handleTouchStart)
+    container.removeEventListener('touchmove', handleTouchMove)
+    container.removeEventListener('touchend', handleTouchEnd)
+  }
+}, [map])
 
   // Doble toque con dos dedos para alejar zoom
   useEffect(() => {
@@ -227,8 +275,16 @@ function MapClickHandler({ onMapClick, isDrawingMode }: {
         lastTwoFingerTapTime = now
 
         if (timeSinceLast < 350) {
-          map.zoomOut(1)
-        }
+  const center = map.getCenter()
+
+  map.flyTo(
+    center,
+    Math.max(map.getZoom() - 1, 1),
+    {
+      duration: 0.35
+    }
+  )
+}
       }
 
       // Reiniciamos el contador para el próximo gesto
@@ -246,20 +302,12 @@ function MapClickHandler({ onMapClick, isDrawingMode }: {
   }, [map])
 
 useEffect(() => {
-  let lastClickTime = 0
-
   const handleClick = (e: L.LeafletMouseEvent) => {
-    const now = Date.now()
-    const timeSinceLast = now - lastClickTime
-    lastClickTime = now
-
-    // Si dos toques llegan en menos de 350ms es doble toque → dejar que Leaflet haga zoom
-    if (timeSinceLast < 350) return
-
     onMapClick(e.latlng)
   }
 
   map.on('click', handleClick)
+
   return () => {
     map.off('click', handleClick)
   }
