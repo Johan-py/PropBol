@@ -102,7 +102,7 @@ const CommentItem = ({
 
   return (
     <div className={level > 0 ? 'border-l-2 border-stone-200 pl-4 sm:pl-6' : ''}>
-      <article className="rounded-[28px] border border-stone-200 bg-white p-4 shadow-sm sm:p-6">
+      <article className="rounded-[32px] bg-white p-4 shadow-md sm:p-6">
         <div className="flex items-start gap-3 sm:gap-4">
           <Avatar author={comment.author} sizeClass="h-11 w-11 sm:h-12 sm:w-12" />
 
