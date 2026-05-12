@@ -98,7 +98,7 @@ export default function PropertyRow({
       {/* CONTACTO: Aquí entra tu magia limpia y modular */}
       {/* HU13 #70 - Boton Como llegar modo lista con lat/lng como props */}
       <div className="flex justify-center min-h-[44px] items-center" role="navigation" aria-label="Navegar a ubicacion de la propiedad">
-        <ComoLlegarButton lat={lat} lng={lng} variant="table" />
+        <ComoLlegarButton lat={lat} lng={lng} variant="table" data-testid="como-llegar-row" />
       </div>
       <div className="flex justify-center">
         <ContactButton type={contactType} variant="table" />
