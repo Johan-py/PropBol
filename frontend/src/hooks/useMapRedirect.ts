@@ -1,4 +1,15 @@
 // HU13 - Hook para detectar dispositivo y construir URL de redireccion a mapas
+
+/**
+ * CA-09 - Calcula el centroide de un poligono para zona difuminada
+ * @param coordenadas - Array de pares [lat, lng] que forman el poligono
+ * @returns Par [lat, lng] correspondiente al centroide del poligono
+ */
+export function calcularCentroide(coordenadas: [number, number][]): [number, number] {
+  const lat = coordenadas.reduce((s, c) => s + c[0], 0) / coordenadas.length
+  const lng = coordenadas.reduce((s, c) => s + c[1], 0) / coordenadas.length
+  return [lat, lng]
+}
 export function useMapRedirect() {
   const getMapUrl = (lat: number, lng: number, originLat?: number, originLng?: number): string => {
     // #74 - Testing: coordenadas usan punto como separador decimal para compatibilidad con APIs de mapas
