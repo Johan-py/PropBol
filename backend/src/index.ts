@@ -74,6 +74,7 @@ import publicacionRoutes from "./modules/publicacion/publicacion.routes.js";
 import router from "./modules/registro-publicacion/publicacion.routes.js";
 import parametrosRoutes from "./modules/parametros-publicacion/parametros.routes.js";
 import tutorialPublicacionRoutes from "./modules/tutorial-publicacion/tutorial-publicacion.routes.js";
+import estadisticasRoutes from "./modules/estadisticas-publicacion/estadisticas.routes.js";
 
 import {
   facebookCallbackController,
@@ -186,6 +187,7 @@ app.use("/api/perfil/zonas", zonaRoutes);
 app.use("/api", router);
 app.use("/api", consumoRoutes);
 app.use("/api", parametrosRoutes);
+app.use("/api", estadisticasRoutes);
 app.use("/api/security", securityRoutes);
 app.use("/api/favorites", favoritesRoutes);
 app.use("/api/telemetria", telemetriaRoutes);
