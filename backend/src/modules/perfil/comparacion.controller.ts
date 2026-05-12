@@ -1,8 +1,8 @@
 import { Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../../lib/prisma.client.js";
 import type { AuthRequest } from "../../middleware/validarJWT.js";
 
-const prisma = new PrismaClient();
+//const prisma = new PrismaClient();
 
 export const comparacionController = {
   // Obtener todas las comparaciones del usuario autenticado
