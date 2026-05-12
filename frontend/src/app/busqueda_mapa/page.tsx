@@ -926,7 +926,11 @@ function BusquedaMapaContent() {
             >
               {viewMode === 'grid' ? (
                 <PropertyCard
-                  imagen=""
+                  imagen={
+                    property.thumbnailUrl ||
+                    property.imagen ||
+                    'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
+                  }
                   estado={property.type}
                   precioFormateado={property.precioFormateado || 'Consultar precio'}
                   descripcion={property.descripcion || property.title}
