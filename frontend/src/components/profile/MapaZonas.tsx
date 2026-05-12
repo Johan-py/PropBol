@@ -203,6 +203,7 @@ useEffect(() => {
     let lastTapTime = 0
     let secondTap = false
     let isDraggingZoom = false
+    let touchStartTime = 0
 
     let startY = 0
     let startZoom = 0
@@ -216,9 +217,17 @@ useEffect(() => {
         const timeSinceLast = now - lastTapTime
 
         if (timeSinceLast < DOUBLE_TAP_DELAY) {
-            secondTap = true
-            startY = e.touches[0].clientY
-            startZoom = map.getZoom()
+        secondTap = true
+        touchStartTime = now
+        startY = e.touches[0].clientY
+        startZoom = map.getZoom()
+
+        if (e.cancelable) {
+            e.preventDefault()
+        }
+        } else {
+        secondTap = false
+        isDraggingZoom = false
         }
 
         lastTapTime = now
@@ -226,6 +235,8 @@ useEffect(() => {
 
     const handleTouchMove = (e: TouchEvent) => {
         if (!secondTap) return
+
+        if (e.cancelable) { e.preventDefault() }
 
         const currentY = e.touches[0].clientY
         const deltaY = startY - currentY
@@ -238,8 +249,6 @@ useEffect(() => {
             map.setZoom(startZoom + zoomDelta, {
                 animate: false
             })
-
-            e.preventDefault()
         }
     }
 

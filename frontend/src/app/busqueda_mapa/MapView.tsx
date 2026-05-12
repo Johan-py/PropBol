@@ -181,6 +181,15 @@ useEffect(() => {
 
       startY = e.touches[0].clientY
       startZoom = map.getZoom()
+
+      // FIX: Detener la propagación al motor de scroll del navegador desde el momento exacto en que se registra el segundo tap.
+      if (e.cancelable) {
+        e.preventDefault()
+      }
+    } else {
+      // Limpiar estados residuales si pasó mucho tiempo
+      secondTap = false
+      isDraggingZoom = false
     }
 
     lastTapTime = now
@@ -188,6 +197,11 @@ useEffect(() => {
 
   const handleTouchMove = (e: TouchEvent) => {
     if (!secondTap) return
+
+    // FIX: Bloquear el scroll de la página de forma incondicional en cada frame de movimiento mientras estemos en el segundo tap.
+    if (e.cancelable) {
+      e.preventDefault()
+    }
 
     const currentY = e.touches[0].clientY
     const deltaY = startY - currentY
@@ -201,8 +215,6 @@ useEffect(() => {
       map.setZoom(startZoom + zoomDelta, {
         animate: false
       })
-
-      e.preventDefault()
     }
   }
 
