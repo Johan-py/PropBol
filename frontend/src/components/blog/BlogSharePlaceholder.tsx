@@ -146,9 +146,53 @@ export default function BlogSharePlaceholder({ title }: BlogShareProps) {
 
                 <button
                   className="flex items-center w-full gap-3 px-3 py-3 rounded-xl hover:bg-stone-50 text-stone-700 transition-colors group"
-                  onClick={() => {
+                  onClick={async () => {
                     setIsDownloadOpen(false);
-                    alert('La descarga como imagen estará disponible próximamente.');
+                    try {
+                      // Buscar el elemento principal del artículo (el blog completo)
+                      const articleElement = document.querySelector('article') as HTMLElement;
+                      if (!articleElement) {
+                        alert('No se encontró el contenido principal para descargar.');
+                        return;
+                      }
+
+                      // Importar html2canvas dinámicamente para no engordar el bundle inicial
+                      const html2canvas = (await import('html2canvas')).default;
+
+                      // Capturar el HTML usando html2canvas
+                      const canvas = await html2canvas(articleElement, {
+                        scale: 2, // Mejor resolución
+                        useCORS: true, // Para cargar imágenes externas sin error de CORS
+                        backgroundColor: '#ffffff', // Fondo blanco por defecto
+                        onclone: (clonedDoc) => {
+                          // Ocultar componentes que no se deben incluir en la captura (comentarios, sidebar, etc.)
+                          const elementsToHide = clonedDoc.querySelectorAll('.no-capture');
+                          elementsToHide.forEach(el => {
+                            (el as HTMLElement).style.display = 'none';
+                          });
+                          
+                          // Ajustar el grid para que el contenido principal ocupe todo el ancho
+                          const grid = clonedDoc.querySelector('.blog-grid-container') as HTMLElement;
+                          if (grid) {
+                            grid.style.gridTemplateColumns = '1fr';
+                          }
+                        }
+                      });
+
+                      // Convertir el canvas a URL de imagen
+                      const url = canvas.toDataURL('image/jpeg', 0.9);
+
+                      // Crear un enlace temporal y simular el clic para descargar
+                      const a = document.createElement('a');
+                      a.href = url;
+                      a.download = `${title?.replace(/\s+/g, '-').toLowerCase() || 'blog-completo'}.jpg`;
+                      document.body.appendChild(a);
+                      a.click();
+                      document.body.removeChild(a);
+                    } catch (error) {
+                      console.error('Error al descargar el blog:', error);
+                      alert('Hubo un error al intentar descargar el blog como imagen.');
+                    }
                   }}
                 >
                   <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 group-hover:bg-blue-100 transition-colors shrink-0">
