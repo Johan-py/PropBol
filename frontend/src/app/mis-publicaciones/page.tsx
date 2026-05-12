@@ -28,7 +28,7 @@ export default function MisPublicacionesList() {
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [filtro, setFiltro] = useState<'todas' | 'activas' | 'pausadas'>('todas')
+  const [filtro, setFiltro] = useState<'todas' | 'activas' | 'pausadas' | 'promocionadas'>('todas')
 
   const transformarPublicacion = (pub: any): MisPublicacionesItem => {
     return {
@@ -47,6 +47,7 @@ export default function MisPublicacionesList() {
       imagenUrl: pub.multimedia?.[0]?.url || pub.usuario?.avatar || null,
       tipoOperacion: pub.inmueble?.tipoAccion || 'VENTA',
       activa: pub.estado === 'ACTIVA',
+      promoted: pub.promoted ?? false,
       metricas: pub.metricas || {
         visitas: 0,
         favoritos: 0,
@@ -96,6 +97,12 @@ export default function MisPublicacionesList() {
     )
   }
 
+  const handlePromocionChange = (id: number, promoted: boolean) => {
+    setPublicaciones(prev =>
+      prev.map(p => (p.id === id ? { ...p, promoted } : p))
+    )
+  }
+
   useEffect(() => {
     cargarPublicaciones()
   }, [])
@@ -103,10 +110,13 @@ export default function MisPublicacionesList() {
   const publicacionesFiltradas = publicaciones.filter(p => {
     if (filtro === 'activas') return p.activa === true
     if (filtro === 'pausadas') return p.activa === false
+     if (filtro === 'promocionadas') return p.promoted === true
     return true
   })
 
-  const publicacionesActivas = publicaciones.filter(p => p.activa === true)
+   const publicacionesActivas = publicaciones.filter(p => p.activa === true && !p.promoted)
+   const publicacionesPublicidad = publicaciones.filter(p => p.promoted === true)
+ 
 
   const limiteMostrado = estadisticas.tieneSuscripcion
     ? estadisticas.limite
@@ -152,10 +162,10 @@ export default function MisPublicacionesList() {
         </p>
       </div>
 
-      <div className="flex gap-2 border-b border-gray-200 pb-2">
+      <div className="flex gap-2 border-b border-gray-200 pb-2 overflow-x-auto">
         <button
           onClick={() => setFiltro('todas')}
-          className={`px-4 py-2 rounded-lg transition ${
+          className={`px-4 py-2 rounded-lg transition whitespace-nowrap ${
             filtro === 'todas'
               ? 'bg-blue-600 text-white'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -172,7 +182,7 @@ export default function MisPublicacionesList() {
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
-          Activas ({publicaciones.filter(p => p.activa).length})
+          Activas ({publicaciones.filter(p => p.activa&& !p.promoted).length})
         </button>
 
         <button
@@ -185,7 +195,21 @@ export default function MisPublicacionesList() {
         >
           Pausadas ({publicaciones.filter(p => !p.activa).length})
         </button>
+
+         <button
+          onClick={() => setFiltro('promocionadas')}
+          className={`px-4 py-2 rounded-lg transition whitespace-nowrap ${
+            filtro === 'promocionadas'
+              ? 'bg-orange-600 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          }`}
+        >
+          Publicidad ({publicacionesPublicidad.length})
+        </button>
       </div>
+
+
+
 
       {publicacionesFiltradas.length === 0 ? (
         <div className="text-center py-8">
@@ -193,6 +217,7 @@ export default function MisPublicacionesList() {
             {filtro === 'todas' && 'No tienes publicaciones.'}
             {filtro === 'activas' && 'No tienes publicaciones activas.'}
             {filtro === 'pausadas' && 'No tienes publicaciones pausadas.'}
+            {filtro === 'promocionadas' && 'No tienes propiedades en publicidad.'}
           </p>
         </div>
       ) : (
@@ -203,6 +228,9 @@ export default function MisPublicacionesList() {
               publicacion={pub}
               onDeleted={handleDeleted}
               onEstadoChange={handleEstadoChange}
+              onPromocionChange={handlePromocionChange}
+              showPromoteButton={filtro === 'activas'}
+              showCancelPromoteButton={filtro === 'promocionadas'}
             />
           ))}
         </div>

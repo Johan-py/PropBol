@@ -1,24 +1,32 @@
 'use client'
 
 import { useState } from 'react'
-import { Bath, BedDouble, MapPin, Square, Trash2, Eye, Heart, Mail, Plus } from 'lucide-react'
+import { Bath, BedDouble, MapPin, Square, Trash2, Eye, Heart, Mail, Plus, Sparkles } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { publicacionService } from '@/services/publicacionn.service'
 import type { MisPublicacionesItem } from '@/types/publicacion'
 import ConfirmDeleteModal from './ConfirmDeleteModal'
 import DeleteSuccessModal from './DeleteSuccessModal'
 import DeleteErrorModal from './DeleteErrorModal'
+import PromocionarModal from './PromocionarModal'        
+import CancelPromocionModal from './CancelPromocionModal'
 
 interface Props {
   publicacion: MisPublicacionesItem
   onDeleted: (id: number) => void
   onEstadoChange?: (id: number, nuevoEstado: boolean) => void
+  onPromocionChange?: (id: number, promoted: boolean) => void  
+    showPromoteButton?: boolean
+  showCancelPromoteButton?: boolean
 }
 
 export default function PublicacionCard({
   publicacion,
   onDeleted,
-  onEstadoChange
+  onEstadoChange,
+  onPromocionChange,  
+  showPromoteButton = false,
+  showCancelPromoteButton = false,
 }: Props) {
   const router = useRouter()
 
@@ -31,6 +39,10 @@ export default function PublicacionCard({
   const [modalErrorAbierto, setModalErrorAbierto] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  const [modalPromocionAbierto, setModalPromocionAbierto] = useState(false)
+  const [modalCancelPromocionAbierto, setModalCancelPromocionAbierto] = useState(false)
+  const [canceling, setCanceling] = useState(false)
 
   const handleToggle = async () => {
     const nuevoEstado = !activa
@@ -68,6 +80,32 @@ export default function PublicacionCard({
       setLoading(false)
     }
   }
+  const handlePromocionar = async (propiedadId: number) => {
+    try {
+    
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      onPromocionChange?.(propiedadId, true)
+      
+      setModalPromocionAbierto(false)
+    } catch (err) {
+      console.error(err)
+      throw err
+    }
+  }
+
+  const handleCancelarPromocion = async () => {
+    setCanceling(true)
+    try {
+      await publicacionService.cancelarPublicidad(publicacion.id)
+      onPromocionChange?.(publicacion.id, false)
+      setModalCancelPromocionAbierto(false)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setCanceling(false)
+    }
+  }
+
 
   const abrirConfirmacion = () => {
     setError('')
@@ -116,6 +154,15 @@ export default function PublicacionCard({
             <div className="absolute inset-0 flex items-center justify-center bg-black/40">
               <span className="rounded-full bg-red-500 px-3 py-1 text-sm font-medium text-white">
                 Desactivada
+              </span>
+            </div>
+          )}
+
+          {publicacion.promoted && (
+            <div className="absolute top-2 right-2">
+              <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 px-2 py-1 text-xs font-bold text-white shadow-md">
+                <Sparkles size={12} />
+                Destacada
               </span>
             </div>
           )}
@@ -245,6 +292,27 @@ export default function PublicacionCard({
               </button>
             </div>
 
+            {showPromoteButton && !publicacion.promoted && (
+              <button
+                type="button"
+                onClick={() => setModalPromocionAbierto(true)}
+                className="mt-2 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 text-[13px] font-semibold text-white transition hover:from-orange-600 hover:to-orange-700"
+              >
+                <Sparkles size={16} />
+                Publicitar propiedad
+              </button>
+            )}
+
+            {showCancelPromoteButton && publicacion.promoted && (
+              <button
+                type="button"
+                onClick={() => setModalCancelPromocionAbierto(true)}
+                className="mt-2 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-red-500 bg-white text-[13px] font-semibold text-red-600 transition hover:bg-red-50"
+              >
+                Cancelar publicidad
+              </button>
+            )}
+
             <div className="mt-1 flex justify-start">
               <button
                 type="button"
@@ -276,6 +344,24 @@ export default function PublicacionCard({
         mensaje={error || 'No se puede eliminar la publicación, intente nuevamente'}
         onAceptar={cerrarError}
       />
+
+        <PromocionarModal
+        abierto={modalPromocionAbierto}
+        propiedadNombre={publicacion.titulo}
+        propiedadId={publicacion.id}
+        onConfirmar={handlePromocionar}
+        onCancelar={() => setModalPromocionAbierto(false)}
+      />
+
+      <CancelPromocionModal
+        abierto={modalCancelPromocionAbierto}
+        propiedadNombre={publicacion.titulo}
+        onConfirmar={handleCancelarPromocion}
+        onCancelar={() => setModalCancelPromocionAbierto(false)}
+        loading={canceling}
+      />
+
+
     </>
   )
 }

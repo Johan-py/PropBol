@@ -57,5 +57,35 @@ export const publicacionService = {
     }
 
     return data;
+  },
+
+  async iniciarPublicidad(publicacionId: number): Promise<{ checkoutUrl: string }> {
+    const response = await fetch(`${API_URL}/api/publicaciones/${publicacionId}/publicitar`, {
+      method: 'POST',
+      headers: getHeaders(),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.msg || data.message || 'Error al iniciar publicidad');
+    }
+
+    return data;
+  },
+
+  async cancelarPublicidad(publicacionId: number): Promise<{ ok: boolean; msg: string }> {
+    const response = await fetch(`${API_URL}/api/publicaciones/${publicacionId}/publicitar/cancelar`, {
+      method: 'DELETE',
+      headers: getHeaders(),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.msg || data.message || 'Error al cancelar publicidad');
+    }
+
+    return data;
   }
 };
