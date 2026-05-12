@@ -145,10 +145,10 @@ const CommentItem = ({
                 <button
                   type="button"
                   onClick={() => onReply(comment.id)}
-                  className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-stone-400 transition-colors hover:text-[#a56400]"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-stone-400 shadow-sm transition-all hover:scale-110 hover:text-amber-600 hover:shadow-md"
+                  title="Responder"
                 >
-                  <Reply size={15} />
-                  <span>Responder</span>
+                  <Reply size={16} />
                 </button>
 
                 {isOwnComment ? (
