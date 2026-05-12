@@ -109,7 +109,7 @@ const CommentItem = ({
           <div className="min-w-0 flex-1">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <div className="flex flex-col items-start gap-y-0.5">
                   <h3 className="text-base font-semibold text-stone-900">
                     {comment.author.name}
                   </h3>
