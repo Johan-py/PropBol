@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { Trash2, ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useState, useEffect, useCallback } from 'react';
+import { Trash2 } from "lucide-react";
 import { useRouter } from 'next/navigation';
 
 interface Propiedad {
@@ -30,20 +30,62 @@ export default function MisComparacionesPage() {
 
     const categorias = ['Ver Todas', 'Casas', 'Departamentos', 'Terrenos'];
 
-    // Obtener token del localStorage
     const getToken = () => localStorage.getItem('token');
 
-    // Fetch comparaciones del backend
-    useEffect(() => {
-        fetchComparaciones();
-    }, []);
+    // Mapeo de categorías para el endpoint
+    const getCategoriaEndpoint = (filtro: string): string | null => {
+        const map: Record<string, string> = {
+            'Casas': 'CASA',
+            'Departamentos': 'DEPARTAMENTO',
+            'Terrenos': 'TERRENO'
+        };
+        return map[filtro] || null;
+    };
 
-    const fetchComparaciones = async () => {
+    // ✅ Función para transformar datos del backend al formato del frontend
+    const transformarComparacion = (comp: any): Comparacion => {
+        // Si ya tiene la estructura 'propiedades' (endpoint de categoría transformado)
+        if (comp.propiedades) {
+            return comp;
+        }
+
+        // Si viene del endpoint /comparaciones (con detalle_comparacion)
+        return {
+            id: comp.id,
+            nombre: comp.nombre,
+            fecha: comp.creadoEn,
+            propiedades: comp.detalle_comparacion?.map((detalle: any) => ({
+                id: detalle.inmueble.id,
+                titulo: detalle.inmueble.titulo,
+                ubicacion: detalle.inmueble.ubicacion?.zona ||
+                    detalle.inmueble.ubicacion?.ciudad ||
+                    "Ubicación no disponible",
+                precio: detalle.inmueble.precio,
+                superficie: detalle.inmueble.superficieM2,
+                categoria: detalle.inmueble.categoria,
+                tipoAccion: detalle.inmueble.tipo_accion || detalle.inmueble.tipoAccion,
+            })) || []
+        };
+    };
+
+    // Fetch según el filtro seleccionado
+    const fetchComparaciones = useCallback(async () => {
         setLoading(true);
         setError(null);
+
         try {
             const token = getToken();
-            const response = await fetch('http://localhost:5000/api/comparaciones', {
+            let url = 'http://localhost:5000/api/comparaciones';
+
+            // Si no es "Ver Todas", usa el endpoint de categoría
+            if (filtro !== 'Ver Todas') {
+                const categoriaEndpoint = getCategoriaEndpoint(filtro);
+                if (categoriaEndpoint) {
+                    url = `http://localhost:5000/api/comparaciones/categoria/${categoriaEndpoint}`;
+                }
+            }
+
+            const response = await fetch(url, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
@@ -55,14 +97,23 @@ export default function MisComparacionesPage() {
             }
 
             const data = await response.json();
-            setComparaciones(data);
+
+            // ✅ Transformar los datos al formato unificado
+            const transformedData = Array.isArray(data) ? data.map(transformarComparacion) : [];
+            setComparaciones(transformedData);
+
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Error desconocido');
             console.error('Error fetching comparaciones:', err);
         } finally {
             setLoading(false);
         }
-    };
+    }, [filtro]);
+
+    // Efecto para cargar datos cuando cambia el filtro
+    useEffect(() => {
+        fetchComparaciones();
+    }, [fetchComparaciones]);
 
     // Eliminar comparación
     const eliminarComparacion = async (id: number) => {
@@ -82,7 +133,7 @@ export default function MisComparacionesPage() {
                 throw new Error('Error al eliminar la comparación');
             }
 
-            // Recargar la lista
+            // Recargar según el filtro actual
             await fetchComparaciones();
         } catch (err) {
             console.error('Error deleting comparacion:', err);
@@ -90,29 +141,8 @@ export default function MisComparacionesPage() {
         }
     };
 
-    // Filtrar comparaciones por categoría
-    const getComparacionesFiltradas = () => {
-        if (filtro === 'Ver Todas') {
-            return comparaciones;
-        }
-
-        const categoriaMap: Record<string, string> = {
-            'Casas': 'CASA',
-            'Departamentos': 'DEPARTAMENTO',
-            'Terrenos': 'TERRENO'
-        };
-
-        const categoriaFiltro = categoriaMap[filtro];
-
-        return comparaciones.filter(comp =>
-            comp.propiedades.some(prop => prop.categoria === categoriaFiltro)
-        );
-    };
-
-    // Agrupar por tipo de categoría para mostrar
-    const getComparacionesAgrupadas = () => {
-        const filtradas = getComparacionesFiltradas();
-
+    // ✅ Función para agrupar comparaciones por categoría (versión simplificada)
+    const comparacionesAgrupadas = () => {
         const grouped: Record<string, Comparacion[]> = {
             'DEPARTAMENTO': [],
             'CASA': [],
@@ -120,10 +150,12 @@ export default function MisComparacionesPage() {
             'OTROS': []
         };
 
-        filtradas.forEach(comp => {
+        comparaciones.forEach((comp) => {
             const categoriaPrincipal = comp.propiedades[0]?.categoria || 'OTROS';
-            if (grouped[categoriaPrincipal]) {
-                grouped[categoriaPrincipal].push(comp);
+            const categoriaKey = categoriaPrincipal as keyof typeof grouped;
+
+            if (grouped[categoriaKey]) {
+                grouped[categoriaKey].push(comp);
             } else {
                 grouped['OTROS'].push(comp);
             }
@@ -132,9 +164,6 @@ export default function MisComparacionesPage() {
         return grouped;
     };
 
-    const comparacionesAgrupadas = getComparacionesAgrupadas();
-
-    // Obtener nombre de categoría para mostrar
     const getCategoriaNombre = (categoria: string) => {
         const nombres: Record<string, string> = {
             'DEPARTAMENTO': 'Departamentos',
@@ -147,7 +176,6 @@ export default function MisComparacionesPage() {
         return nombres[categoria] || categoria;
     };
 
-    // Formatear precio
     const formatPrecio = (precio: number) => {
         if (precio >= 1000) {
             return `$${precio.toLocaleString()}`;
@@ -155,7 +183,6 @@ export default function MisComparacionesPage() {
         return `$${precio}`;
     };
 
-    // Formatear fecha
     const formatFecha = (fecha: string) => {
         return new Date(fecha).toLocaleDateString('es-ES', {
             day: 'numeric',
@@ -193,27 +220,30 @@ export default function MisComparacionesPage() {
         );
     }
 
+    const grupos = comparacionesAgrupadas();
+
     return (
         <main className="min-h-screen bg-white p-4 md:p-12 font-sans">
             <div className="max-w-7xl mx-auto">
-                {/* TITULO Y SUBTITULO */}
                 <header className="mb-8 text-left">
                     <h1 className="text-3xl md:text-4xl font-bold text-black mb-2">Historial de Comparaciones</h1>
                     <p className="text-gray-600 text-base md:text-lg">Revisa y retorna tus análisis previos de propiedades.</p>
-                    {comparaciones.length === 0 && (
+                    {comparaciones.length === 0 && filtro === 'Ver Todas' && (
                         <p className="text-gray-500 mt-4">Aún no tienes comparaciones guardadas.</p>
+                    )}
+                    {comparaciones.length === 0 && filtro !== 'Ver Todas' && (
+                        <p className="text-gray-500 mt-4">No hay comparaciones para {filtro.toLowerCase()}.</p>
                     )}
                 </header>
 
-                {/* FILTROS */}
                 <div className="flex gap-2 md:gap-4 mb-10 overflow-x-auto pb-2 no-scrollbar">
                     {categorias.map((cat) => (
                         <button
                             key={cat}
                             onClick={() => setFiltro(cat)}
                             className={`px-4 md:px-6 py-2 rounded-xl border-2 text-sm md:text-lg font-medium transition-all whitespace-nowrap ${filtro === cat
-                                    ? 'bg-[#E87B00] text-white border-[#E87B00]'
-                                    : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'
+                                ? 'bg-[#E87B00] text-white border-[#E87B00]'
+                                : 'bg-white text-gray-500 border-gray-200 hover:border-gray-300'
                                 }`}
                         >
                             {cat}
@@ -221,17 +251,16 @@ export default function MisComparacionesPage() {
                     ))}
                 </div>
 
-                {/* CONTENEDORES DE COMPARACIÓN */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-                    {Object.entries(comparacionesAgrupadas).map(([categoria, comparacionesList]) => {
+                    {Object.entries(grupos).map(([categoria, comparacionesList]) => {
                         if (comparacionesList.length === 0) return null;
 
                         return comparacionesList.map((comp) => (
                             <section
                                 key={comp.id}
                                 className={`rounded-3xl border p-5 md:p-8 flex flex-col ${categoria === 'DEPARTAMENTO'
-                                        ? 'bg-[#F0F4FF] border-[#DCE4FF]'
-                                        : 'bg-white border-gray-200 shadow-sm'
+                                    ? 'bg-[#F0F4FF] border-[#DCE4FF]'
+                                    : 'bg-white border-gray-200 shadow-sm'
                                     }`}
                             >
                                 <div className="flex justify-between items-center mb-6 px-2">
@@ -243,18 +272,16 @@ export default function MisComparacionesPage() {
                                     </span>
                                 </div>
 
-                                {/* Subgrid de propiedades */}
                                 <div className={`grid gap-4 mb-8 ${comp.propiedades.length === 3
-                                        ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3'
-                                        : comp.propiedades.length === 2
-                                            ? 'grid-cols-1 sm:grid-cols-2'
-                                            : 'grid-cols-1'
+                                    ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3'
+                                    : comp.propiedades.length === 2
+                                        ? 'grid-cols-1 sm:grid-cols-2'
+                                        : 'grid-cols-1'
                                     }`}>
                                     {comp.propiedades.map((prop) => (
                                         <div
                                             key={prop.id}
-                                            className="bg-white rounded-2xl overflow-hidden shadow-sm border border-blue-50 hover:shadow-md transition-shadow cursor-pointer"
-                                            onClick={() => router.push(`/propiedad/${prop.id}`)}
+                                            className="bg-white rounded-2xl overflow-hidden shadow-sm border border-blue-50 hover:shadow-md transition-shadow"
                                         >
                                             <div className="h-40 md:h-28 bg-gradient-to-r from-blue-100 to-blue-50 flex items-center justify-center">
                                                 <span className="text-gray-400 text-sm">📷 Imagen</span>
@@ -276,8 +303,8 @@ export default function MisComparacionesPage() {
                                                 {prop.tipoAccion && (
                                                     <p className="text-black mt-1">
                                                         <span className={`text-xs px-2 py-0.5 rounded-full ${prop.tipoAccion === 'VENTA'
-                                                                ? 'bg-green-100 text-green-700'
-                                                                : 'bg-blue-100 text-blue-700'
+                                                            ? 'bg-green-100 text-green-700'
+                                                            : 'bg-blue-100 text-blue-700'
                                                             }`}>
                                                             {prop.tipoAccion === 'VENTA' ? 'Venta' : 'Alquiler'}
                                                         </span>
@@ -298,19 +325,6 @@ export default function MisComparacionesPage() {
                         ));
                     })}
                 </div>
-
-                {/* Mensaje cuando no hay resultados filtrados */}
-                {Object.keys(comparacionesAgrupadas).every(key => comparacionesAgrupadas[key].length === 0) && (
-                    <div className="text-center py-20">
-                        <p className="text-gray-500">No hay comparaciones para mostrar con el filtro seleccionado.</p>
-                        <button
-                            onClick={() => setFiltro('Ver Todas')}
-                            className="mt-4 px-4 py-2 text-[#E87B00] hover:underline"
-                        >
-                            Ver todas
-                        </button>
-                    </div>
-                )}
             </div>
         </main>
     );
