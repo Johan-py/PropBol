@@ -492,8 +492,11 @@ model comparacion {
   nombre              String?               @db.VarChar(100)
   creadoEn            DateTime              @default(now())
   usuarioId           Int
+  activo              Boolean               @default(true)
   usuario             Usuario               @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   detalle_comparacion detalle_comparacion[]
+
+  @@index([usuarioId, activo], map: "idx_comparacion_usuario_activo")
 }
 
 model detalle_comparacion {
@@ -534,6 +537,7 @@ model propiedad_vista {
   inmuebleId  Int
   vistaEn     DateTime @default(now())
   veces_visto Int?     @default(1) @db.SmallInt
+  activo      Boolean? @default(true)
   inmueble    Inmueble @relation(fields: [inmuebleId], references: [id], onDelete: Cascade)
   usuario     Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 

@@ -869,14 +869,18 @@ function BusquedaMapaContent() {
       ) : displayedProperties.length === 0 ? (
         <EmptyState
           titulo={
-            tieneFiltrSuperficie
-              ? 'Sin resultados por superficie'
-              : 'No hay propiedades existentes'
+            isOfertaOpen
+              ? 'No hay ofertas disponibles'
+              : tieneFiltrSuperficie
+                ? 'Sin resultados por superficie'
+                : 'No hay propiedades existentes'
           }
           mensaje={
-            tieneFiltrSuperficie
-              ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
-              : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
+            isOfertaOpen
+              ? 'No se encontraron propiedades con descuento. Prueba desactivando el filtro "ofertas"'
+              : tieneFiltrSuperficie
+                ? `No se encontraron propiedades dentro del rango de superficie seleccionado.`
+                : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
           }
         />
       ) : (
@@ -907,7 +911,7 @@ function BusquedaMapaContent() {
                   ? 'ring-4 ring-[#ea580c] scale-[0.98] shadow-lg bg-orange-50/30'
                   : ''
                 }`}
-                
+
             >
               {viewMode === 'grid' ? (
                 <PropertyCard
@@ -918,6 +922,8 @@ function BusquedaMapaContent() {
                   ubicacionTexto={property.ubicacionTexto}
                   categoriaTexto={property.categoriaTexto}
                   accionTexto={property.accionTexto}
+                  lat={property.lat}
+                  lng={property.lng}
                   camas={property.nroCuartos ?? 0}
                   banos={property.nroBanos ?? 0}
                   metros={property.superficieM2 ?? 0}
@@ -937,6 +943,8 @@ function BusquedaMapaContent() {
                   ubicacionTexto={property.ubicacionTexto}
                   categoriaTexto={property.categoriaTexto}
                   accionTexto={property.accionTexto}
+                  lat={property.lat}
+                  lng={property.lng}
                   contactType="whatsapp"
                   image={
                     property.thumbnailUrl ||
@@ -947,8 +955,6 @@ function BusquedaMapaContent() {
                   onViewDetails={() => {
                     if (!isCompareMode) abrirDetallePropiedad(property.id)
                   }}
-                  lat={property.lat}
-                  lng={property.lng}
                 />
               )}
             </div>
@@ -1398,6 +1404,8 @@ function BusquedaMapaContent() {
                         ubicacionTexto={pinnedProperty.ubicacionTexto}
                         categoriaTexto={pinnedProperty.categoriaTexto}
                         accionTexto={pinnedProperty.accionTexto}
+                        lat={pinnedProperty.lat}
+                        lng={pinnedProperty.lng}
                         camas={pinnedProperty.nroCuartos ?? 0}
                         banos={pinnedProperty.nroBanos ?? 0}
                         metros={pinnedProperty.superficieM2 ?? 0}
@@ -1757,14 +1765,18 @@ function BusquedaMapaContent() {
                 ) : displayedProperties.length === 0 ? (
                   <EmptyState
                     titulo={
-                      tieneFiltrSuperficie
-                        ? 'Sin resultados por superficie'
-                        : 'No hay propiedades existentes'
+                      isOfertaOpen
+                        ? 'No hay ofertas disponibles'
+                        : tieneFiltrSuperficie
+                          ? 'Sin resultados por superficie'
+                          : 'No hay propiedades existentes'
                     }
                     mensaje={
-                      tieneFiltrSuperficie
-                        ? 'No se encontraron propiedades dentro del rango de superficie seleccionado.'
-                        : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
+                      isOfertaOpen
+                        ? 'No se encontraron propiedades con descuento. Prueba desactivando el filtro "ofertas"'
+                        : tieneFiltrSuperficie
+                          ? 'No se encontraron propiedades dentro del rango de superficie seleccionado.'
+                          : 'No se encontraron propiedades con los filtros seleccionados. Intenta con otra zona o categoría.'
                     }
                   />
                 ) : (
@@ -1819,6 +1831,8 @@ function BusquedaMapaContent() {
                             ubicacionTexto={property.ubicacionTexto}
                             categoriaTexto={property.categoriaTexto}
                             accionTexto={property.accionTexto}
+                            lat={property.lat}
+                            lng={property.lng}
                             camas={property.nroCuartos ?? 0}
                             banos={property.nroBanos ?? 0}
                             metros={property.superficieM2 ?? 0}
@@ -1836,6 +1850,8 @@ function BusquedaMapaContent() {
                             ubicacionTexto={property.ubicacionTexto}
                             categoriaTexto={property.categoriaTexto}
                             accionTexto={property.accionTexto}
+                            lat={property.lat}
+                            lng={property.lng}
                             contactType="whatsapp"
                             image={
                               property.thumbnailUrl ||
@@ -1845,8 +1861,6 @@ function BusquedaMapaContent() {
                             onViewDetails={() => {
                               if (!isCompareMode) abrirDetallePropiedad(property.id)
                             }}
-                            lat={property.lat}
-                            lng={property.lng}
                           />
                         )}
                       </div>
