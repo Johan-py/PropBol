@@ -104,7 +104,13 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
             </div>
 
             <div className="no-capture">
-              <BlogSharePlaceholder title={title} />
+              <BlogSharePlaceholder 
+                title={title} 
+                author={authorName}
+                category={publicBlog?.category || 'General'}
+                imageUrl={imageUrl}
+                description={articleContent}
+              />
             </div>
 
             <div className="no-capture">

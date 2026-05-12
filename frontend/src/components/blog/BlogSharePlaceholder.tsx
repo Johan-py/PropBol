@@ -42,17 +42,30 @@ export default function BlogSharePlaceholder({
 
       // 1. Título
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(22);
+      doc.setFontSize(24);
+      doc.setTextColor(28, 25, 23); // stone-900
       const titleLines = doc.splitTextToSize(getTitle(), contentWidth);
       doc.text(titleLines, margin, currentY);
-      currentY += (titleLines.length * 10) + 5;
+      currentY += (titleLines.length * 10);
+
+      // Línea decorativa de marca
+      doc.setDrawColor(165, 100, 0); // #a56400
+      doc.setLineWidth(1);
+      doc.line(margin, currentY, margin + 30, currentY);
+      currentY += 10;
 
       // 2. Info (Autor y Categoría)
       doc.setFontSize(10);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(100, 100, 100);
-      doc.text(`Por: ${author || 'Anónimo'} | Categoría: ${category || 'General'}`, margin, currentY);
-      currentY += 10;
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(165, 100, 0); // #a56400
+      const infoText = `POR: ${author?.toUpperCase() || 'ANÓNIMO'}  |  CATEGORÍA: ${category?.toUpperCase() || 'GENERAL'}`;
+      doc.text(infoText, margin, currentY);
+      
+      currentY += 8;
+      doc.setDrawColor(231, 229, 228); // stone-200
+      doc.setLineWidth(0.1);
+      doc.line(margin, currentY, margin + contentWidth, currentY);
+      currentY += 15;
 
       // 3. Imagen
       if (imageUrl) {
@@ -83,13 +96,16 @@ export default function BlogSharePlaceholder({
       }
 
       // 4. Descripción / Contenido
-      doc.setFontSize(12);
-      doc.setTextColor(30, 30, 30);
+      doc.setFontSize(11);
+      doc.setTextColor(68, 64, 60); // stone-700
       doc.setFont('helvetica', 'normal');
       
       const cleanDescription = (description || '')
         .replace(/[#*`]/g, '')
-        .replace(/\n\s*\n/g, '\n\n');
+        .replace(/!\[.*?\]\(.*?\)/g, '') // Eliminar imágenes markdown
+        .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Dejar solo el texto de los enlaces
+        .replace(/\n\s*\n/g, '\n\n')
+        .trim();
 
       const descLines: string[] = doc.splitTextToSize(cleanDescription, contentWidth);
       
@@ -262,11 +278,13 @@ export default function BlogSharePlaceholder({
                   className="flex items-center w-full gap-3 px-3 py-3 rounded-xl hover:bg-stone-50 text-stone-700 transition-colors group"
                   onClick={async () => {
                     setIsDownloadOpen(false);
+                    setIsGenerating(true);
                     try {
                       // Buscar el elemento principal del artículo (el blog completo)
                       const articleElement = document.querySelector('article') as HTMLElement;
                       if (!articleElement) {
                         alert('No se encontró el contenido principal para descargar.');
+                        setIsGenerating(false);
                         return;
                       }
 
@@ -306,6 +324,8 @@ export default function BlogSharePlaceholder({
                     } catch (error) {
                       console.error('Error al descargar el blog:', error);
                       alert('Hubo un error al intentar descargar el blog como imagen.');
+                    } finally {
+                      setIsGenerating(false);
                     }
                   }}
                 >
