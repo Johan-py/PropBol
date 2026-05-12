@@ -32,6 +32,8 @@ export default function MisComparacionesPage() {
 
     const getToken = () => localStorage.getItem('token');
 
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
     // Mapeo de categorías para el endpoint
     const getCategoriaEndpoint = (filtro: string): string | null => {
         const map: Record<string, string> = {
@@ -75,13 +77,13 @@ export default function MisComparacionesPage() {
 
         try {
             const token = getToken();
-            let url = 'http://localhost:5000/api/comparaciones';
+            let url = `${API_BASE_URL}/api/comparaciones`;
 
             // Si no es "Ver Todas", usa el endpoint de categoría
             if (filtro !== 'Ver Todas') {
                 const categoriaEndpoint = getCategoriaEndpoint(filtro);
                 if (categoriaEndpoint) {
-                    url = `http://localhost:5000/api/comparaciones/categoria/${categoriaEndpoint}`;
+                    url = `${API_BASE_URL}/api/comparaciones/categoria/${categoriaEndpoint}`;
                 }
             }
 
@@ -108,7 +110,7 @@ export default function MisComparacionesPage() {
         } finally {
             setLoading(false);
         }
-    }, [filtro]);
+    }, [filtro, API_BASE_URL]);
 
     // Efecto para cargar datos cuando cambia el filtro
     useEffect(() => {
@@ -121,7 +123,7 @@ export default function MisComparacionesPage() {
 
         try {
             const token = getToken();
-            const response = await fetch(`http://localhost:5000/api/comparaciones/${id}`, {
+            const response = await fetch(`${API_BASE_URL}/api/comparaciones/${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,
