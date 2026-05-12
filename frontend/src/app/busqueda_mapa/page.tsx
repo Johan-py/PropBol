@@ -723,7 +723,7 @@ function BusquedaMapaContent() {
   }, [effectiveSidebarWidth])
 
   /** Encabezado 2 columnas (títulos | orden+vista) según ancho del panel lateral, no del viewport */
-  const resultsHeaderSideBySide = effectiveSidebarWidth >= 420
+  const resultsHeaderSideBySide = effectiveSidebarWidth >= 560
 
   const dragStartY = useRef<number | null>(null)
   const dragStartState = useRef<SheetState>('peek')
@@ -1657,7 +1657,7 @@ function BusquedaMapaContent() {
                     <div className="flex min-w-0 justify-between gap-2">
                       <div className="flex min-w-0 flex-col">
                         <h1
-                          className={`font-semibold text-slate-900 transition-all duration-300 truncate ${isScrolled ? 'text-base' : 'text-xl'}`}
+                          className={`font-semibold text-slate-900 transition-all duration-300 break-words line-clamp-2 ${isScrolled ? 'text-base' : 'text-xl'}`}
                         >
                           {isClusterView
                             ? `${clusterProperties.length} propiedades en este clúster`
@@ -1691,7 +1691,7 @@ function BusquedaMapaContent() {
                             : '🌍 Todo Bolivia · buscar en zona específica'}
                         </button>
                         <h2
-                          className={`font-bold text-slate-900 transition-all duration-300 truncate flex items-center gap-2 ${isScrolled ? 'text-xs mt-0.5' : 'text-sm mt-1'}`}
+                          className={`font-bold text-slate-900 transition-all duration-300 flex flex-wrap items-center gap-x-2 gap-y-1 ${isScrolled ? 'text-xs mt-0.5' : 'text-sm mt-1'}`}
                         >
                           <div>
                             <span className="text-orange-500">
