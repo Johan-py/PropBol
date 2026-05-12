@@ -16,6 +16,12 @@ type RegistrarCompartidoParams = {
   medio?: string
 }
 
+type RegistrarCompartidoPorInmuebleParams = {
+  inmuebleId: number
+  usuarioId: number
+  medio?: string
+}
+
 type ObtenerEstadisticasParams = {
   publicacionId: number
   usuarioId: number
@@ -124,10 +130,10 @@ export class EstadisticasPublicacionService {
         }
       })
 
-      /*
-        Esto actualiza la sección "Mis propiedades vistas".
-        Solo se guarda cuando el usuario está logueado.
-      */
+      /**
+       * Esto actualiza la sección "Mis propiedades vistas".
+       * Solo se guarda cuando el usuario está logueado.
+       */
       if (usuarioId) {
         await tx.propiedad_vista.upsert({
           where: {
@@ -213,6 +219,32 @@ export class EstadisticasPublicacionService {
       registrado: true,
       mensaje: 'Compartido registrado correctamente.'
     }
+  }
+
+  static async registrarCompartidoPorInmueble({
+    inmuebleId,
+    usuarioId,
+    medio
+  }: RegistrarCompartidoPorInmuebleParams) {
+    const publicacion = await prisma.publicacion.findFirst({
+      where: {
+        inmuebleId,
+        estado: EstadoPublicacion.ACTIVA
+      },
+      select: {
+        id: true
+      }
+    })
+
+    if (!publicacion) {
+      throw new Error('PUBLICACION_NO_EXISTE')
+    }
+
+    return this.registrarCompartido({
+      publicacionId: publicacion.id,
+      usuarioId,
+      medio
+    })
   }
 
   static async obtenerEstadisticas({ publicacionId, usuarioId }: ObtenerEstadisticasParams) {

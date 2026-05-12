@@ -17,6 +17,12 @@ router.post(
   EstadisticasPublicacionController.registrarCompartido
 )
 
+router.post(
+  '/inmuebles/:inmuebleId/compartidos',
+  requireAuth,
+  EstadisticasPublicacionController.registrarCompartidoPorInmueble
+)
+
 router.get(
   '/publicaciones/:publicacionId/estadisticas',
   requireAuth,

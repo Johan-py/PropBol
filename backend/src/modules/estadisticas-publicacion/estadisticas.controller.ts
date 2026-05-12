@@ -1,5 +1,12 @@
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express'
 import { EstadisticasPublicacionService } from './estadisticas.service.js'
+
+type AuthRequest = Request & {
+  user?: {
+    id: number
+    correo?: string
+  }
+}
 
 function obtenerIp(req: Request): string {
   const forwarded = req.headers['x-forwarded-for']
@@ -19,7 +26,6 @@ function obtenerVisitorToken(req: Request): string | undefined {
   }
 
   const cookies = cookieHeader.split(';').map((cookie) => cookie.trim())
-
   const visitorCookie = cookies.find((cookie) => cookie.startsWith('visitor_token='))
 
   if (!visitorCookie) {
@@ -30,7 +36,7 @@ function obtenerVisitorToken(req: Request): string | undefined {
 }
 
 export class EstadisticasPublicacionController {
-  static async registrarVista(req: Request, res: Response) {
+  static async registrarVista(req: AuthRequest, res: Response) {
     try {
       const publicacionId = Number(req.params.publicacionId)
 
@@ -41,7 +47,7 @@ export class EstadisticasPublicacionController {
         })
       }
 
-      const usuarioId = (req as any).user?.id
+      const usuarioId = req.user?.id
       const visitorToken = obtenerVisitorToken(req)
       const ip = obtenerIp(req)
       const userAgent = req.headers['user-agent']
@@ -66,8 +72,8 @@ export class EstadisticasPublicacionController {
         ok: true,
         ...resultado
       })
-    } catch (error: any) {
-      if (error.message === 'PUBLICACION_NO_EXISTE') {
+    } catch (error) {
+      if (error instanceof Error && error.message === 'PUBLICACION_NO_EXISTE') {
         return res.status(404).json({
           ok: false,
           mensaje: 'La publicación no existe.'
@@ -81,11 +87,11 @@ export class EstadisticasPublicacionController {
     }
   }
 
-  static async registrarCompartido(req: Request, res: Response) {
+  static async registrarCompartido(req: AuthRequest, res: Response) {
     try {
       const publicacionId = Number(req.params.publicacionId)
-      const usuarioId = (req as any).user?.id
-      const { medio } = req.body
+      const usuarioId = req.user?.id
+      const { medio } = req.body as { medio?: string }
 
       if (!usuarioId) {
         return res.status(401).json({
@@ -111,8 +117,8 @@ export class EstadisticasPublicacionController {
         ok: true,
         ...resultado
       })
-    } catch (error: any) {
-      if (error.message === 'PUBLICACION_NO_EXISTE') {
+    } catch (error) {
+      if (error instanceof Error && error.message === 'PUBLICACION_NO_EXISTE') {
         return res.status(404).json({
           ok: false,
           mensaje: 'La publicación no existe.'
@@ -126,10 +132,55 @@ export class EstadisticasPublicacionController {
     }
   }
 
-  static async obtenerEstadisticas(req: Request, res: Response) {
+  static async registrarCompartidoPorInmueble(req: AuthRequest, res: Response) {
+    try {
+      const inmuebleId = Number(req.params.inmuebleId)
+      const usuarioId = req.user?.id
+      const { medio } = req.body as { medio?: string }
+
+      if (!usuarioId) {
+        return res.status(401).json({
+          ok: false,
+          mensaje: 'Debe iniciar sesión para compartir una publicación.'
+        })
+      }
+
+      if (Number.isNaN(inmuebleId)) {
+        return res.status(400).json({
+          ok: false,
+          mensaje: 'El id del inmueble no es válido.'
+        })
+      }
+
+      const resultado = await EstadisticasPublicacionService.registrarCompartidoPorInmueble({
+        inmuebleId,
+        usuarioId,
+        medio
+      })
+
+      return res.status(200).json({
+        ok: true,
+        ...resultado
+      })
+    } catch (error) {
+      if (error instanceof Error && error.message === 'PUBLICACION_NO_EXISTE') {
+        return res.status(404).json({
+          ok: false,
+          mensaje: 'No existe una publicación activa para este inmueble.'
+        })
+      }
+
+      return res.status(500).json({
+        ok: false,
+        mensaje: 'Error al registrar el compartido.'
+      })
+    }
+  }
+
+  static async obtenerEstadisticas(req: AuthRequest, res: Response) {
     try {
       const publicacionId = Number(req.params.publicacionId)
-      const usuarioId = (req as any).user?.id
+      const usuarioId = req.user?.id
 
       if (!usuarioId) {
         return res.status(401).json({
@@ -154,15 +205,15 @@ export class EstadisticasPublicacionController {
         ok: true,
         data: estadisticas
       })
-    } catch (error: any) {
-      if (error.message === 'PUBLICACION_NO_EXISTE') {
+    } catch (error) {
+      if (error instanceof Error && error.message === 'PUBLICACION_NO_EXISTE') {
         return res.status(404).json({
           ok: false,
           mensaje: 'La publicación no existe.'
         })
       }
 
-      if (error.message === 'NO_ES_PROPIETARIO') {
+      if (error instanceof Error && error.message === 'NO_ES_PROPIETARIO') {
         return res.status(403).json({
           ok: false,
           mensaje: 'No tiene permiso para ver las estadísticas de esta publicación.'
@@ -176,9 +227,9 @@ export class EstadisticasPublicacionController {
     }
   }
 
-  static async obtenerMisPropiedadesVistas(req: Request, res: Response) {
+  static async obtenerMisPropiedadesVistas(req: AuthRequest, res: Response) {
     try {
-      const usuarioId = (req as any).user?.id
+      const usuarioId = req.user?.id
 
       if (!usuarioId) {
         return res.status(401).json({

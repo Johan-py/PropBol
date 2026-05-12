@@ -11,6 +11,7 @@ import DescripcionPropiedad from '@/components/detalle-propiedad/DescripcionProp
 import DetallesPropiedad from '@/components/detalle-propiedad/DetallesPropiedad'
 import UbicacionPropiedad from '@/components/detalle-propiedad/UbicacionPropiedad'
 import ContactoPropiedad from '@/components/detalle-propiedad/ContactoPropiedad'
+import CompartirPublicacion from '@/components/detalle-propiedad/CompartirPublicacion'
 
 export default function DetallePropiedadPage() {
   const params = useParams()
@@ -87,7 +88,14 @@ export default function DetallePropiedadPage() {
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_300px] lg:items-start">
           <div className="space-y-5">
-            <ResumenPropiedad detalle={detalle} />
+            <div className="flex items-start justify-between gap-4">
+              <ResumenPropiedad detalle={detalle} />
+
+              <div className="mt-16 shrink-0">
+                <CompartirPublicacion publicacionId={id} titulo={detalle.titulo} />
+              </div>
+            </div>
+
             <DescripcionPropiedad descripcion={detalle.descripcion} />
             <DetallesPropiedad detalle={detalle} />
             <UbicacionPropiedad mapa={detalle.mapa} />
