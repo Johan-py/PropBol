@@ -328,7 +328,7 @@ export default function BlogCommentsSection({ blogId }: { blogId: string }) {
                 onChange={(event) => handleDraftChange(event.target.value)}
                 rows={5}
                 placeholder="Escribe tu comentario aqui..."
-                className="min-h-[180px] w-full resize-none rounded-[28px] border border-stone-200 bg-[#fcfbf8] px-5 py-4 text-sm leading-7 text-stone-700 outline-none transition focus:border-[#a56400] focus:ring-2 focus:ring-[#a56400]/15 sm:text-base"
+                className="min-h-[180px] w-full resize-none rounded-[28px] border border-stone-200 bg-[#fcfbf8] px-8 py-7 text-sm leading-7 text-stone-700 outline-none transition focus:border-[#a56400] focus:ring-2 focus:ring-[#a56400]/15 sm:text-base"
               />
 
               <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
