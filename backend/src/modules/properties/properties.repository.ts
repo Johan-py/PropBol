@@ -294,9 +294,19 @@ export const propertiesRepository = {
 
     // HU6 - Filtro solo ofertas
     if (filtros.soloOfertas === true) {
-      where.precio_anterior = {
-        not: null,
-      };
+      where.AND = [
+        ...(where.AND || []),
+        {
+          precio_anterior: {
+            not: null,
+          },
+        },
+        {
+          precio: {
+            gt: 0,
+          },
+        },
+      ];
     }
 
     // ── ORDER BY ───────────────────────────────────────────────────────────
@@ -319,10 +329,7 @@ export const propertiesRepository = {
     } else if (filtros.fecha === "mas-populares") {// fallback mientras se ordena en memoria
       orderBy.push({ fechaPublicacion: "desc" });
     } else if (filtros.fecha === "mayor-descuento") {
-      orderBy.push({
-        precio_anterior: "desc"
-      });
-
+      orderBy.push({ id: "asc" });
     }
 
     orderBy.push({ id: "asc" }); // Desempate default
@@ -405,6 +412,27 @@ export const propertiesRepository = {
       return resultados.sort(
         (a, b) => (vistaMap.get(b.id) ?? 0) - (vistaMap.get(a.id) ?? 0),
       );
+    }
+    if (filtros.fecha === "mayor-descuento") {
+      return resultados.sort((a, b) => {
+        const precioAnteriorA = Number((a as any).precio_anterior ?? 0);
+        const precioActualA = Number(a.precio);
+
+        const precioAnteriorB = Number((b as any).precio_anterior ?? 0);
+        const precioActualB = Number(b.precio);
+
+        const descuentoA =
+          precioAnteriorA > precioActualA
+            ? ((precioAnteriorA - precioActualA) / precioAnteriorA) * 100
+            : 0;
+
+        const descuentoB =
+          precioAnteriorB > precioActualB
+            ? ((precioAnteriorB - precioActualB) / precioAnteriorB) * 100
+            : 0;
+
+        return descuentoB - descuentoA;
+      });
     }
 
     return resultados;
