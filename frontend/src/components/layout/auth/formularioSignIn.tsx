@@ -662,6 +662,7 @@ export default function LoginForm() {
     setShowActivationPassword(false);
     setActivationCode("");
     setActivationError("");
+    setTimeLeft(0);
   };
 
   const handleActivateByPassword = async () => {
