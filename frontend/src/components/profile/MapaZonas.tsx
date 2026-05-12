@@ -195,75 +195,101 @@ export default function MapaZonas({
     function DobleToque() {
         const map = useMap()
 
-        useEffect(() => {
-            let lastClickTime = 0
+        // 4 y 6. Double tap zoom + one-finger zoom
+useEffect(() => {
+    const DOUBLE_TAP_DELAY = 300
+    const DRAG_THRESHOLD = 10
 
-            const handleClick = (e: any) => {
-                const now = Date.now()
-                const timeSinceLast = now - lastClickTime
-                lastClickTime = now
+    let lastTapTime = 0
+    let secondTap = false
+    let isDraggingZoom = false
 
-                if (timeSinceLast < 350) {
-                    map.zoomIn(1, { animate: true })
+    let startY = 0
+    let startZoom = 0
+
+    const container = map.getContainer()
+
+    const handleTouchStart = (e: TouchEvent) => {
+        if (e.touches.length !== 1) return
+
+        const now = Date.now()
+        const timeSinceLast = now - lastTapTime
+
+        if (timeSinceLast < DOUBLE_TAP_DELAY) {
+            secondTap = true
+            startY = e.touches[0].clientY
+            startZoom = map.getZoom()
+        }
+
+        lastTapTime = now
+    }
+
+    const handleTouchMove = (e: TouchEvent) => {
+        if (!secondTap) return
+
+        const currentY = e.touches[0].clientY
+        const deltaY = startY - currentY
+
+        if (Math.abs(deltaY) > DRAG_THRESHOLD) {
+            isDraggingZoom = true
+
+            const zoomDelta = deltaY / 80
+
+            map.setZoom(startZoom + zoomDelta, {
+                animate: false
+            })
+
+            e.preventDefault()
+        }
+    }
+
+    const handleTouchEnd = (e: TouchEvent) => {
+        if (!secondTap || e.touches.length !== 1) return
+        e.preventDefault()
+        e.stopPropagation()
+
+        // Doble toque normal
+        if (!isDraggingZoom) {
+            const touch = e.changedTouches[0]
+            const rect = container.getBoundingClientRect()
+
+            const point = L.point(
+                touch.clientX - rect.left,
+                touch.clientY - rect.top
+            )
+
+            const latlng = map.containerPointToLatLng(point)
+
+            map.flyTo(
+                latlng,
+                Math.min(map.getZoom() + 1, 19),
+                {
+                    duration: 0.35
                 }
-            }
+            )
+        }
 
-            map.on('click', handleClick)
-            return () => {
-                map.off('click', handleClick)
-            }
-        }, [map])
+        secondTap = false
+        isDraggingZoom = false
+    }
 
-        // Doble toque y arrastre para zoom continuo (one-finger zoom)
-        useEffect(() => {
-            let lastTapTime = 0
-            let isDragging = false
-            let startY = 0
-            let startZoom = 0
+    container.addEventListener('touchstart', handleTouchStart, {
+        passive: false
+    })
 
-            const handleTouchStart = (e: TouchEvent) => {
-                if (e.touches.length !== 1) return
+    container.addEventListener('touchmove', handleTouchMove, {
+        passive: false
+    })
 
-                const now = Date.now()
-                const timeSinceLast = now - lastTapTime
+    container.addEventListener('touchend', handleTouchEnd)
 
-                if (timeSinceLast < 350) {
-                    isDragging = true
-                    startY = e.touches[0].clientY
-                    startZoom = map.getZoom()
-                    e.preventDefault()
-                }
-
-                lastTapTime = now
-            }
-
-            const handleTouchMove = (e: TouchEvent) => {
-                if (!isDragging || e.touches.length !== 1) return
-
-                const currentY = e.touches[0].clientY
-                const deltaY = startY - currentY
-
-                const zoomDelta = deltaY / 50
-                map.setZoom(startZoom + zoomDelta, { animate: false })
-                e.preventDefault()
-            }
-
-            const handleTouchEnd = () => {
-                isDragging = false
-            }
-
-            const container = map.getContainer()
-            container.addEventListener('touchstart', handleTouchStart, { passive: false })
-            container.addEventListener('touchmove', handleTouchMove, { passive: false })
-            container.addEventListener('touchend', handleTouchEnd)
-
-            return () => {
-                container.removeEventListener('touchstart', handleTouchStart)
-                container.removeEventListener('touchmove', handleTouchMove)
-                container.removeEventListener('touchend', handleTouchEnd)
-            }
-        }, [map])
-
+    return () => {
+        container.removeEventListener('touchstart', handleTouchStart)
+        container.removeEventListener('touchmove', handleTouchMove)
+        container.removeEventListener('touchend', handleTouchEnd)
+    }
+}, [map])
+    
         // Doble toque con dos dedos para alejar zoom
         useEffect(() => {
             let lastTwoFingerTapTime = 0
@@ -284,7 +310,13 @@ export default function MapaZonas({
                     lastTwoFingerTapTime = now
 
                     if (timeSinceLast < 350) {
-                        map.zoomOut(1)
+                        map.flyTo(
+                            map.getCenter(),
+                            Math.max(map.getZoom() - 1, 1),
+                            {
+                                duration: 0.35
+                            }
+                        )
                     }
                 }
 
