@@ -1687,6 +1687,10 @@ export default function LoginForm() {
                   <span className="text-xl text-gray-700">›</span>
                 </button>
               </div>
+
+              {activationError && (
+                <p className="mt-3 text-xs text-red-500">{activationError}</p>
+              )}
             </div>
           )}
         </div>
