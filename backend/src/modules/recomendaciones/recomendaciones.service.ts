@@ -36,26 +36,27 @@ export class RecomendacionesService {
     }
 
     if (ia) {
-  console.log(`[ML] Solicitando recomendaciones con ML para usuario ${usuarioId}`);
+      console.log(`[ML] Solicitando recomendaciones con ML para usuario ${usuarioId}`)
 
-  const resultadosML = await featuresService.recomendar(
-    Number(usuarioId), // 1er argumento: usuarioId
-    limit,             // 2do argumento: limit
-    {                  // 3er argumento: objeto de filtros
-      modoInmueble: Array.isArray(filtros.modoInmueble) 
-        ? filtros.modoInmueble 
-        : filtros.modoInmueble ? [filtros.modoInmueble as string] : undefined,
-      query: filtros.query,
+      const resultadosML = await featuresService.recomendar(
+        Number(usuarioId), // 1er argumento: usuarioId
+        limit, // 2do argumento: limit
+        {
+          // 3er argumento: objeto de filtros
+          modoInmueble: Array.isArray(filtros.modoInmueble)
+            ? filtros.modoInmueble
+            : filtros.modoInmueble
+              ? [filtros.modoInmueble as string]
+              : undefined,
+          query: filtros.query
+        }
+      )
+
+      if (resultadosML && resultadosML.length > 0) {
+        return resultadosML
+      }
+      console.log('[ML] Sin resultados suficientes, usando fallback')
     }
-  );
-
-  if (resultadosML && resultadosML.length > 0) {
-    return resultadosML;
-  }
-  console.log('[ML] Sin resultados suficientes, usando fallback');
-}
-
-
 
     const cacheKey = `recomendaciones_globales_usuario_${usuarioId}_limit_${limit}_zona_${zonaForzada || 'none'}`
     const cached = cache.get<InmuebleConScore[]>(cacheKey)
