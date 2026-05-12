@@ -30,7 +30,8 @@ export default function UbicacionPropiedad({ mapa }: Props) {
       </div>
       {/* HU13 - Botón de redirección a mapas en detalle de publicación */}
       <div className="mt-3">
-        <ComoLlegarButton lat={mapa.latitud} lng={mapa.longitud} />
+        <ComoLlegarButton
+          data-testid="como-llegar-detalle" lat={mapa.latitud} lng={mapa.longitud} />
       </div>
     </section>
   )
