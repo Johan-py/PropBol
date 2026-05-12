@@ -360,7 +360,7 @@ export default function BlogCommentsSection({ blogId }: { blogId: string }) {
                     type="button"
                     onClick={() => void submitComment()}
                     disabled={isDraftEmpty || isSubmitting}
-                    className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-[#a56400] px-7 text-sm font-bold uppercase tracking-[0.16em] text-white transition hover:bg-[#8f5700] disabled:cursor-not-allowed disabled:bg-stone-300 shadow-lg shadow-[#a56400]/20"
+                    className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-600 px-7 text-sm font-bold uppercase tracking-[0.16em] text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:bg-stone-300 shadow-lg shadow-amber-600/20"
                   >
                     {isSubmitting
                       ? 'Publicando...'
