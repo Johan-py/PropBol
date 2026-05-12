@@ -67,7 +67,9 @@ export default function PropertyRow({
       <div className="flex flex-col overflow-hidden min-w-0">
         <span className="text-xs font-semibold text-gray-800 truncate">{title}</span>
         <span className="text-[11px] text-gray-600 truncate">{size}</span>
-        <span className="text-[11px] text-stone-500 line-clamp-1">{ubicacionTexto || 'Ubicación no especificada'}</span>
+        <span className="text-[11px] text-stone-500 line-clamp-1">
+          {ubicacionTexto || 'Ubicación no especificada'}
+        </span>
         <span className="text-[11px] text-stone-500 line-clamp-1">
           {`Categoría: ${categoriaTexto || '-'} · Acción: ${accionTexto || '-'}`}
         </span>
@@ -86,8 +88,8 @@ export default function PropertyRow({
       </div>
 
       {/* CONTACTO: Aquí entra tu magia limpia y modular */}
-      {/* HU13 - Botón de redirección a mapas */}
-      <div className="flex justify-center">
+      {/* HU13 #70 - Boton Como llegar modo lista con lat/lng como props */}
+      <div className="flex justify-center min-h-[44px] items-center">
         <ComoLlegarButton lat={lat} lng={lng} variant="table" />
       </div>
       <div className="flex justify-center">
