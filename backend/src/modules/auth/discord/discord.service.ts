@@ -7,6 +7,7 @@ import {
   findUserByDiscordEmail,
   findUserByDiscordId,
   linkDiscordToUser,
+  updateDiscordLastUsage,
 } from "./discord.repository.js";
 import {
   DiscordAuthError,
@@ -261,6 +262,8 @@ const authenticateWithDiscord = async (
 
   // Modo login
   if (userByDiscordId) {
+    await updateDiscordLastUsage(userByDiscordId.id, discordId);
+
     return await buildDiscordSessionResponse(
       userByDiscordId,
       "Inicio de sesión con Discord exitoso",

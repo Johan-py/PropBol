@@ -48,4 +48,10 @@ export const env = {
   CLOUDINARY_MULTIMEDIA_FOLDER:
     process.env.CLOUDINARY_MULTIMEDIA_FOLDER ??
     "propbol/publicaciones/multimedia",
+
+  LINKEDIN_CLIENT_ID: requireEnv("LINKEDIN_CLIENT_ID"),
+  LINKEDIN_CLIENT_SECRET: requireEnv("LINKEDIN_CLIENT_SECRET"),
+  LINKEDIN_CALLBACK_URL:
+    process.env.LINKEDIN_CALLBACK_URL ??
+    "http://localhost:5000/api/auth/linkedin/callback",
 };
