@@ -30,148 +30,64 @@ export default function BlogSharePlaceholder({
     setIsDownloadOpen(false);
 
     try {
+      const articleElement = document.querySelector('article') as HTMLElement;
+      if (!articleElement) {
+        alert('No se encontró el contenido principal para descargar.');
+        setIsGenerating(false);
+        return;
+      }
+
+      // Importar html2canvas dinámicamente
+      const html2canvas = (await import('html2canvas')).default;
+
+      // Capturar el HTML usando html2canvas
+      const canvas = await html2canvas(articleElement, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        onclone: (clonedDoc) => {
+          // Ocultar componentes que no se deben incluir
+          const elementsToHide = clonedDoc.querySelectorAll('.no-capture');
+          elementsToHide.forEach(el => {
+            (el as HTMLElement).style.display = 'none';
+          });
+
+          // Ajustar el grid
+          const grid = clonedDoc.querySelector('.blog-grid-container') as HTMLElement;
+          if (grid) {
+            grid.style.gridTemplateColumns = '1fr';
+          }
+        }
+      });
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.9);
+
       const doc = new jsPDF({
         orientation: 'p',
         unit: 'mm',
         format: 'a4'
       });
 
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const margin = 20;
-      const contentWidth = pageWidth - (margin * 2);
-      let currentY = 25;
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
 
-      // 1. Título
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(24);
-      doc.setTextColor(28, 25, 23); // stone-900
-      const titleLines = doc.splitTextToSize(getTitle(), contentWidth);
-      doc.text(titleLines, margin, currentY);
-      currentY += (titleLines.length * 10);
+      let heightLeft = imgHeight;
+      let position = 0;
 
-      // Línea decorativa de marca
-      doc.setDrawColor(165, 100, 0); // #a56400
-      doc.setLineWidth(1);
-      doc.line(margin, currentY, margin + 30, currentY);
-      currentY += 10;
+      // Primera página
+      doc.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
+      heightLeft -= pageHeight;
 
-      // 2. Info (Autor y Categoría)
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(165, 100, 0); // #a56400
-      const infoText = `POR: ${author?.toUpperCase() || 'ANÓNIMO'}  |  CATEGORÍA: ${category?.toUpperCase() || 'GENERAL'}`;
-      doc.text(infoText, margin, currentY);
-
-      currentY += 8;
-      doc.setDrawColor(231, 229, 228); // stone-200
-      doc.setLineWidth(0.1);
-      doc.line(margin, currentY, margin + contentWidth, currentY);
-      currentY += 15;
-
-      // 3. Imagen
-      if (imageUrl) {
-        try {
-          const img = new Image();
-          img.crossOrigin = "Anonymous";
-
-          await new Promise<void>((resolve, reject) => {
-            img.onload = () => resolve();
-            img.onerror = () => reject();
-            img.src = imageUrl;
-          });
-
-          const imgWidth = contentWidth;
-          const imgHeight = (img.height * imgWidth) / img.width;
-
-          if (currentY + imgHeight > 270) {
-            doc.addPage();
-            currentY = 20;
-          }
-
-          doc.addImage(img, 'JPEG', margin, currentY, imgWidth, imgHeight);
-          currentY += imgHeight + 15;
-        } catch (error) {
-          console.error("Error cargando la imagen para el PDF:", error);
-          currentY += 5;
-        }
+      // Páginas adicionales si el contenido es más largo
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        doc.addPage();
+        doc.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
+        heightLeft -= pageHeight;
       }
 
-      // 4. Descripción / Contenido
-      doc.setTextColor(68, 64, 60); // stone-700
-
-      // Separar por líneas para procesar el markdown básico
-      const rawLines = (description || '').split('\n');
-
-      rawLines.forEach((line: string) => {
-        const trimmedLine = line.trim();
-        if (!trimmedLine && line !== '') {
-          currentY += 5; // Espacio para líneas vacías
-          return;
-        }
-
-        let fontSize = 11;
-        let fontStyle = 'normal';
-        let xOffset = margin;
-        let textToPrint = trimmedLine;
-
-        // Detectar Encabezados
-        if (trimmedLine.startsWith('# ')) {
-          fontSize = 16;
-          fontStyle = 'bold';
-          textToPrint = trimmedLine.replace('# ', '');
-          currentY += 5;
-        } else if (trimmedLine.startsWith('## ')) {
-          fontSize = 14;
-          fontStyle = 'bold';
-          textToPrint = trimmedLine.replace('## ', '');
-          currentY += 3;
-        } else if (trimmedLine.startsWith('### ')) {
-          fontSize = 12;
-          fontStyle = 'bold';
-          textToPrint = trimmedLine.replace('### ', '');
-          currentY += 2;
-        } else if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ')) {
-          textToPrint = `• ${trimmedLine.substring(2)}`;
-          xOffset = margin + 5;
-        } else if (trimmedLine.startsWith('> ')) {
-          fontStyle = 'italic';
-          textToPrint = trimmedLine.replace('> ', '');
-          xOffset = margin + 5;
-          doc.setDrawColor(200, 200, 200);
-          doc.setLineWidth(0.5);
-          doc.line(margin + 2, currentY - 4, margin + 2, currentY + 4); // Simular barra de cita
-        }
-
-        doc.setFont('helvetica', fontStyle);
-        doc.setFontSize(fontSize);
-
-        // Limpiar negritas y cursivas básicas del texto interno para evitar ruido visual
-        textToPrint = textToPrint.replace(/[*_~`]/g, '');
-
-        const wrappedLines: string[] = doc.splitTextToSize(textToPrint, contentWidth - (xOffset - margin));
-
-        wrappedLines.forEach((wLine: string) => {
-          if (currentY > 275) {
-            doc.addPage();
-            currentY = 20;
-          }
-          doc.text(wLine, xOffset, currentY);
-          currentY += (fontSize / 2) + 2;
-        });
-
-        currentY += 2; // Espacio entre bloques
-      });
-
-      // Pie de página
-      const totalPages = doc.getNumberOfPages();
-      for (let i = 1; i <= totalPages; i++) {
-        doc.setPage(i);
-        doc.setFontSize(8);
-        doc.setTextColor(150, 150, 150);
-        doc.text(`PropBol - ${getTitle()} | Página ${i} de ${totalPages}`, pageWidth / 2, 285, { align: 'center' });
-      }
-
-      doc.save(`${getTitle().substring(0, 30)}.pdf`);
+      doc.save(`${title?.replace(/\s+/g, '-').toLowerCase() || 'blog-completo'}.pdf`);
     } catch (error) {
       console.error("Error al generar el PDF:", error);
       alert("Hubo un error al generar el PDF. Por favor intenta de nuevo.");
