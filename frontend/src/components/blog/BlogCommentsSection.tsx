@@ -268,7 +268,7 @@ export default function BlogCommentsSection({ blogId }: { blogId: string }) {
   }, [activeEdition, activeParent])
 
   return (
-    <section className="mt-16 bg-[#f7f1e7] py-12 sm:mt-20 sm:py-16">
+    <section className="mt-16 bg-stone-50 py-12 sm:mt-20 sm:py-16">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
