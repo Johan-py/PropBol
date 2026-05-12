@@ -1,14 +1,124 @@
 'use client'
 import React, { useState, useRef, useEffect } from 'react'
+import { jsPDF } from 'jspdf'
+
 interface BlogShareProps {
   title?: string;
+  author?: string;
+  category?: string;
+  imageUrl?: string;
+  description?: string;
 }
 // Componente para colocar las opciones de compartir del blog
-export default function BlogSharePlaceholder({ title }: BlogShareProps) {
+export default function BlogSharePlaceholder({ 
+  title, 
+  author, 
+  category, 
+  imageUrl, 
+  description 
+}: BlogShareProps) {
   const [isDownloadOpen, setIsDownloadOpen] = useState(false)
+  const [isGenerating, setIsGenerating] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+  
   const getUrl = () => typeof window !== 'undefined' ? window.location.href : '';
   const getTitle = () => title || (typeof document !== 'undefined' ? document.title : 'Blog PropBol');
+
+  const handleDownloadPDF = async () => {
+    setIsGenerating(true);
+    setIsDownloadOpen(false);
+
+    try {
+      const doc = new jsPDF({
+        orientation: 'p',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const margin = 20;
+      const contentWidth = pageWidth - (margin * 2);
+      let currentY = 25;
+
+      // 1. Título
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(22);
+      const titleLines = doc.splitTextToSize(getTitle(), contentWidth);
+      doc.text(titleLines, margin, currentY);
+      currentY += (titleLines.length * 10) + 5;
+
+      // 2. Info (Autor y Categoría)
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100, 100, 100);
+      doc.text(`Por: ${author || 'Anónimo'} | Categoría: ${category || 'General'}`, margin, currentY);
+      currentY += 10;
+
+      // 3. Imagen
+      if (imageUrl) {
+        try {
+          const img = new Image();
+          img.crossOrigin = "Anonymous";
+          
+          await new Promise<void>((resolve, reject) => {
+            img.onload = () => resolve();
+            img.onerror = () => reject();
+            img.src = imageUrl;
+          });
+
+          const imgWidth = contentWidth;
+          const imgHeight = (img.height * imgWidth) / img.width;
+          
+          if (currentY + imgHeight > 270) {
+            doc.addPage();
+            currentY = 20;
+          }
+
+          doc.addImage(img, 'JPEG', margin, currentY, imgWidth, imgHeight);
+          currentY += imgHeight + 15;
+        } catch (error) {
+          console.error("Error cargando la imagen para el PDF:", error);
+          currentY += 5;
+        }
+      }
+
+      // 4. Descripción / Contenido
+      doc.setFontSize(12);
+      doc.setTextColor(30, 30, 30);
+      doc.setFont('helvetica', 'normal');
+      
+      const cleanDescription = (description || '')
+        .replace(/[#*`]/g, '')
+        .replace(/\n\s*\n/g, '\n\n');
+
+      const descLines: string[] = doc.splitTextToSize(cleanDescription, contentWidth);
+      
+      descLines.forEach((line: string) => {
+        if (currentY > 280) {
+          doc.addPage();
+          currentY = 20;
+        }
+        doc.text(line, margin, currentY);
+        currentY += 7;
+      });
+
+      // Pie de página
+      const totalPages = doc.getNumberOfPages();
+      for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(150, 150, 150);
+        doc.text(`PropBol - ${getTitle()} | Página ${i} de ${totalPages}`, pageWidth / 2, 285, { align: 'center' });
+      }
+
+      doc.save(`${getTitle().substring(0, 30)}.pdf`);
+    } catch (error) {
+      console.error("Error al generar el PDF:", error);
+      alert("Hubo un error al generar el PDF. Por favor intenta de nuevo.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const shareToGmail = () => { window.open(`https://mail.google.com/mail/?view=cm&fs=1&su=${encodeURIComponent(getTitle())}&body=${encodeURIComponent('¡Hola! Te comparto este artículo que me pareció interesante:\n\n' + getUrl())}`, '_blank') };
 
@@ -106,18 +216,25 @@ export default function BlogSharePlaceholder({ title }: BlogShareProps) {
           <div className="relative w-full sm:w-56" ref={menuRef}>
             <button
               onClick={() => setIsDownloadOpen(!isDownloadOpen)}
+              disabled={isGenerating}
               className={`flex items-center justify-between gap-3 w-full h-12 px-5 rounded-xl border transition-all duration-300 group whitespace-nowrap shrink-0 ${isDownloadOpen
                 ? 'bg-stone-900 border-stone-900 text-white shadow-lg shadow-stone-200'
                 : 'border-stone-200 hover:border-stone-400 hover:bg-stone-50 text-[#433527]'
-                }`}
+                } ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <div className="flex items-center gap-2">
-                <svg viewBox="0 0 24 24" className={`w-[18px] h-[18px] ${isDownloadOpen ? 'text-stone-100' : 'text-[#433527]'}`} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                <span className="text-xs font-bold tracking-[0.1em]">DESCARGAR</span>
+                {isGenerating ? (
+                  <div className="w-4 h-4 border-2 border-stone-300 border-t-stone-100 rounded-full animate-spin" />
+                ) : (
+                  <svg viewBox="0 0 24 24" className={`w-[18px] h-[18px] ${isDownloadOpen ? 'text-stone-100' : 'text-[#433527]'}`} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                  </svg>
+                )}
+                <span className="text-xs font-bold tracking-[0.1em]">
+                  {isGenerating ? 'GENERANDO...' : 'DESCARGAR'}
+                </span>
               </div>
               <svg viewBox="0 0 24 24" className={`w-4 h-4 transition-transform duration-300 ${isDownloadOpen ? 'rotate-180 text-white' : 'text-stone-400 group-hover:text-stone-600'}`} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="6 9 12 15 18 9"></polyline>
@@ -129,10 +246,7 @@ export default function BlogSharePlaceholder({ title }: BlogShareProps) {
               <div className="absolute right-0 top-full mt-2.5 w-full bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-stone-100 p-2 z-50 animate-in fade-in zoom-in slide-in-from-top-2 duration-300 origin-top">
                 <button
                   className="flex items-center w-full gap-3 px-3 py-3 rounded-xl hover:bg-stone-50 text-stone-700 transition-colors group"
-                  onClick={() => {
-                    setIsDownloadOpen(false);
-                    alert('La descarga en PDF estará disponible próximamente.');
-                  }}
+                  onClick={handleDownloadPDF}
                 >
                   <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors shrink-0">
                     <svg viewBox="0 0 24 24" className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -212,4 +326,3 @@ export default function BlogSharePlaceholder({ title }: BlogShareProps) {
     </div>
   )
 }
-
