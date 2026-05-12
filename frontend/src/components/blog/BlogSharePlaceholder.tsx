@@ -269,6 +269,17 @@ export default function BlogSharePlaceholder({
                 <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
               </svg>
             </button>
+            <button
+              className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0"
+              title="Más opciones"
+            >
+              <svg viewBox="0 0 24 24" className="w-6 h-6 opacity-90 group-hover:opacity-100 transition-opacity text-[#433527]" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="1.5"></circle>
+                <circle cx="19" cy="12" r="1.5"></circle>
+                <circle cx="5" cy="12" r="1.5"></circle>
+              </svg>
+            </button>
+
           </div>
 
           {/* MENÚ DE DESCARGA */}
