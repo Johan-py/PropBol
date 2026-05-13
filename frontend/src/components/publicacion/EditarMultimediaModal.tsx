@@ -11,6 +11,9 @@ type EditarMultimediaModalProps = {
   onSaved: () => void | Promise<void>
 }
 
+const LIMITE_IMAGENES = 5
+const LIMITE_VIDEOS = 2
+
 const getApiUrl = () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -88,20 +91,20 @@ export default function EditarMultimediaModal({
   const inputFileRef = useRef<HTMLInputElement | null>(null)
 
   const [imagenes, setImagenes] = useState<string[]>([])
-  const [videoUrl, setVideoUrl] = useState('')
+  const [videosUrl, setVideosUrl] = useState<string[]>(['', ''])
   const [imagenesNuevas, setImagenesNuevas] = useState<string[]>([])
   const [guardando, setGuardando] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
   const totalImagenes = imagenes.length + imagenesNuevas.length
-  const videoTieneTexto = videoUrl.trim().length > 0
-  const videoValido = esVideoPermitido(videoUrl)
+  const videosValidos = videosUrl.every((video) => esVideoPermitido(video))
+  const videosConTexto = videosUrl.filter((video) => video.trim()).length
 
   useEffect(() => {
     if (open) {
       setImagenes(imagenesActuales ?? [])
-      setVideoUrl(videoActual ?? '')
+      setVideosUrl([videoActual ?? '', ''])
       setImagenesNuevas([])
       setError('')
       setSuccess('')
@@ -111,8 +114,8 @@ export default function EditarMultimediaModal({
   if (!open) return null
 
   const handleAgregarImagen = () => {
-    if (totalImagenes >= 10) {
-      setError('Has alcanzado el límite máximo de 10 imágenes.')
+    if (totalImagenes >= LIMITE_IMAGENES) {
+      setError(`Has alcanzado el límite máximo de ${LIMITE_IMAGENES} imágenes.`)
       return
     }
 
@@ -143,8 +146,8 @@ export default function EditarMultimediaModal({
       return
     }
 
-    if (totalImagenes >= 10) {
-      setError('Has alcanzado el límite máximo de 10 imágenes.')
+    if (totalImagenes >= LIMITE_IMAGENES) {
+      setError(`Has alcanzado el límite máximo de ${LIMITE_IMAGENES} imágenes.`)
       event.target.value = ''
       return
     }
@@ -173,7 +176,17 @@ export default function EditarMultimediaModal({
     setImagenesNuevas((prev) => prev.filter((_, i) => i !== index))
   }
 
-  const handleVistaPrevia = () => {
+  const handleCambiarVideo = (index: number, value: string) => {
+    setVideosUrl((prev) =>
+      prev.map((video, videoIndex) => (videoIndex === index ? value : video))
+    )
+    setError('')
+    setSuccess('')
+  }
+
+  const handleVistaPrevia = (index: number) => {
+    const videoUrl = videosUrl[index]
+
     setError('')
     setSuccess('')
 
@@ -190,10 +203,12 @@ export default function EditarMultimediaModal({
     window.open(videoUrl.trim(), '_blank', 'noopener,noreferrer')
   }
 
-  const handleEliminarVideo = () => {
+  const handleEliminarVideo = (index: number) => {
     setError('')
     setSuccess('')
-    setVideoUrl('')
+    setVideosUrl((prev) =>
+      prev.map((video, videoIndex) => (videoIndex === index ? '' : video))
+    )
   }
 
   const handleGuardar = async () => {
@@ -207,13 +222,22 @@ export default function EditarMultimediaModal({
         return
       }
 
-      if (videoUrl.trim() && !esVideoPermitido(videoUrl)) {
+      if (!videosValidos) {
         setError('Solo se permiten enlaces de YouTube o Plataformas permitidas.')
+        return
+      }
+
+      if (videosConTexto > LIMITE_VIDEOS) {
+        setError(`Solo se permiten hasta ${LIMITE_VIDEOS} enlaces de video.`)
         return
       }
 
       const apiUrl = getApiUrl()
       const token = getToken()
+
+      const videosLimpios = videosUrl
+        .map((video) => video.trim())
+        .filter(Boolean)
 
       const response = await fetch(
         `${apiUrl}/api/publicaciones/${publicacionId}/multimedia`,
@@ -226,7 +250,8 @@ export default function EditarMultimediaModal({
           body: JSON.stringify({
             imagenesActuales: imagenes,
             imagenesNuevas,
-            videoUrl: videoUrl.trim() || null
+            videoUrl: videosLimpios[0] ?? null,
+            videoUrls: videosLimpios
           })
         }
       )
@@ -286,12 +311,12 @@ export default function EditarMultimediaModal({
 
         <div className="mb-8">
           <h3 className="mb-4 text-lg font-semibold text-gray-800">
-            Imágenes actuales ({totalImagenes}/10)
+            Imágenes actuales ({totalImagenes}/{LIMITE_IMAGENES})
           </h3>
 
-          {totalImagenes >= 10 && (
+          {totalImagenes >= LIMITE_IMAGENES && (
             <p className="mb-4 rounded-lg border border-orange-200 bg-orange-50 px-4 py-3 text-sm text-orange-700">
-              Has alcanzado el límite máximo de 10 imágenes.
+              Has alcanzado el límite máximo de {LIMITE_IMAGENES} imágenes.
             </p>
           )}
 
@@ -343,7 +368,7 @@ export default function EditarMultimediaModal({
             <button
               type="button"
               onClick={handleAgregarImagen}
-              disabled={guardando || totalImagenes >= 10}
+              disabled={guardando || totalImagenes >= LIMITE_IMAGENES}
               className="flex h-36 w-44 flex-col items-center justify-center rounded-xl border border-dashed border-gray-400 bg-white text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <span className="text-3xl font-bold">+</span>
@@ -360,74 +385,88 @@ export default function EditarMultimediaModal({
           />
 
           <p className="mt-4 text-sm text-gray-500">
-            Puedes subir hasta 10 imágenes. Formatos: JPG, PNG. Tamaño máximo:
-            5MB por imagen.
+            Puedes subir hasta {LIMITE_IMAGENES} imágenes. Formatos: JPG, PNG.
+            Tamaño máximo: 5MB por imagen.
           </p>
         </div>
 
         <div className="mb-8">
           <h3 className="mb-3 text-lg font-semibold text-gray-800">
-            Video de la propiedad opcional
+            Videos de la propiedad opcional
           </h3>
 
-          <div className="flex flex-col gap-4 md:flex-row">
-            <input
-              type="url"
-              value={videoUrl}
-              onChange={(e) => {
-                setVideoUrl(e.target.value)
-                setError('')
-                setSuccess('')
-              }}
-              placeholder="https://www.youtube.com/watch?v=..."
-              className={`h-14 flex-1 rounded-lg border px-4 text-lg outline-none focus:border-[#D97706] ${
-                videoTieneTexto && !videoValido
-                  ? 'border-red-400'
-                  : 'border-gray-300'
-              }`}
-            />
-
-            <button
-              type="button"
-              onClick={handleVistaPrevia}
-              disabled={guardando || !videoTieneTexto || !videoValido}
-              className="h-14 rounded-lg border border-[#D97706] px-7 font-semibold text-[#D97706] hover:bg-orange-50 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Vista previa
-            </button>
-          </div>
-
-          {videoTieneTexto && !videoValido && (
-            <p className="mt-3 text-sm text-red-600">
-              Solo se permiten enlaces de YouTube o Plataformas permitidas.
-            </p>
-          )}
-
-          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
-            <button
-              type="button"
-              onClick={() =>
-                setError('El video se actualizará al guardar multimedia')
-              }
-              disabled={guardando || !videoTieneTexto || !videoValido}
-              className="h-12 rounded-lg border border-[#D97706] font-semibold text-[#D97706] hover:bg-orange-50 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Cambiar video
-            </button>
-
-            <button
-              type="button"
-              onClick={handleEliminarVideo}
-              disabled={guardando || !videoTieneTexto}
-              className="h-12 rounded-lg border border-red-400 font-semibold text-red-500 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Eliminar video
-            </button>
-          </div>
-
-          <p className="mt-3 text-sm text-gray-500">
-            Puedes agregar un enlace de YouTube o Vimeo.
+          <p className="mb-4 text-sm text-gray-500">
+            Puedes agregar hasta {LIMITE_VIDEOS} enlaces de YouTube o Vimeo.
           </p>
+
+          <div className="space-y-5">
+            {videosUrl.map((video, index) => {
+              const videoTieneTexto = video.trim().length > 0
+              const videoValido = esVideoPermitido(video)
+
+              return (
+                <div key={`video-${index}`} className="space-y-3">
+                  <label className="block text-sm font-semibold text-gray-700">
+                    Video {index + 1}
+                  </label>
+
+                  <div className="flex flex-col gap-4 md:flex-row">
+                    <input
+                      type="url"
+                      value={video}
+                      onChange={(e) => handleCambiarVideo(index, e.target.value)}
+                      placeholder="https://www.youtube.com/watch?v=..."
+                      className={`h-14 flex-1 rounded-lg border px-4 text-lg outline-none focus:border-[#D97706] ${
+                        videoTieneTexto && !videoValido
+                          ? 'border-red-400'
+                          : 'border-gray-300'
+                      }`}
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => handleVistaPrevia(index)}
+                      disabled={guardando || !videoTieneTexto || !videoValido}
+                      className="h-14 rounded-lg border border-[#D97706] px-7 font-semibold text-[#D97706] hover:bg-orange-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Vista previa
+                    </button>
+                  </div>
+
+                  {videoTieneTexto && !videoValido && (
+                    <p className="text-sm text-red-600">
+                      Solo se permiten enlaces de YouTube o Plataformas
+                      permitidas.
+                    </p>
+                  )}
+
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setError(
+                          'El video se actualizará al guardar multimedia'
+                        )
+                      }
+                      disabled={guardando || !videoTieneTexto || !videoValido}
+                      className="h-12 rounded-lg border border-[#D97706] font-semibold text-[#D97706] hover:bg-orange-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Cambiar video
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleEliminarVideo(index)}
+                      disabled={guardando || !videoTieneTexto}
+                      className="h-12 rounded-lg border border-red-400 font-semibold text-red-500 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Eliminar video
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </div>
 
         <div className="border-t border-gray-200 pt-6">
@@ -451,8 +490,6 @@ export default function EditarMultimediaModal({
             </button>
           </div>
         </div>
-       
-        
       </div>
     </div>
   )
