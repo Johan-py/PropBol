@@ -22,6 +22,18 @@ export const suscripcionesService = {
     return suscripcion;
   },
 
+  async obtenerUltimaSuscripcionExpirada(usuarioId: number) {
+    const hoy = new Date()
+    return prisma.suscripciones_activas.findFirst({
+      where: {
+        id_usuario: usuarioId,
+        fecha_fin: { lt: hoy },
+      },
+      include: { plan_suscripcion: true },
+      orderBy: { fecha_fin: 'desc' },
+    })
+  },
+
   /**
    * Verifica si el usuario tiene suscripción activa
    */

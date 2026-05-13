@@ -5,6 +5,17 @@ import { emitirComprobante } from './servicios/comprobanteService.js'
 import { suscripcionesService } from '../suscripciones/suscripciones.service.js'
 import { createNotificationRepository } from '../notificaciones/notificaciones.repository.js'
 
+function generarReferencia(id: number): string {
+  const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  let state = Math.imul(id, 2654435761) >>> 0
+  const chars: string[] = []
+  for (let i = 0; i < 9; i++) {
+    state = (Math.imul(state, 1664525) + 1013904223) >>> 0
+    chars.push(LETTERS[state % 26])
+  }
+  return `${chars.slice(0, 3).join('')}-${chars.slice(3, 6).join('')}-${chars.slice(6, 9).join('')}`
+}
+
 const crearNotificacion = async (usuarioId: number, titulo: string, mensaje: string) => {
   try {
     await createNotificationRepository({ usuarioId, titulo, mensaje })
@@ -50,7 +61,7 @@ export const generarPagoQr = async (req: AuthRequest, res: Response) => {
       estado: transaccion.estado,
       verificacion_requerida: transaccion.verificacion_requerida,
       monto_descuento: Number(transaccion.monto_descuento ?? 0),
-      referencia: `REF-${transaccion.id}`,
+      referencia: generarReferencia(transaccion.id),
       fechaExpiracion: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
       qrContent: plan.imagen_gr_url ?? null,
       plan_suscripcion: {
@@ -131,7 +142,7 @@ export const obtenerPagoPendiente = async (req: Request, res: Response) => {
     return res.json({
       id: transaccion.id,
       monto: Number(transaccion.total),
-      referencia: `REF-${transaccion.id}`,
+      referencia: generarReferencia(transaccion.id),
       estado: transaccion.estado?.toLowerCase() ?? 'pendiente',
       qrContent: transaccion.plan_suscripcion?.imagen_gr_url ?? null,
       fechaExpiracion: new Date(
@@ -296,7 +307,7 @@ export const listarTransaccionesAdmin = async (_req: Request, res: Response) => 
         id: t.id,
         usuario: `${t.usuario.nombre} ${t.usuario.apellido}`,
         correo: t.usuario.correo,
-        referencia: `REF-${t.id}`,
+        referencia: generarReferencia(t.id),
         monto: Number(t.total),
         fecha: t.fecha_intento,
         estado: t.estado ?? 'PENDIENTE',
@@ -315,6 +326,10 @@ export const rechazarPago = async (req: Request, res: Response) => {
 
     const { motivo } = req.body
 
+    if (!motivo?.trim()) {
+      return res.status(400).json({ error: 'El motivo del rechazo es obligatorio' })
+    }
+
     const transaccion = await prisma.transacciones.findUnique({ where: { id } })
     if (!transaccion) return res.status(404).json({ error: 'Transacción no encontrada' })
 
@@ -327,7 +342,7 @@ export const rechazarPago = async (req: Request, res: Response) => {
       data: { estado: 'RECHAZADO' },
     })
 
-    const motivoTexto = motivo?.trim() ? String(motivo).trim() : 'No especificado'
+    const motivoTexto = String(motivo).trim()
 
     await prisma.bitacora_pagos.create({
       data: {
@@ -343,7 +358,7 @@ export const rechazarPago = async (req: Request, res: Response) => {
     await crearNotificacion(
       transaccion.id_usuario,
       'Pago rechazado',
-      `Tu pago (Ref: TXN-${String(id).padStart(3, '0')}) fue rechazado. Motivo: ${motivoTexto}. Puedes intentar nuevamente.`
+      `Tu pago (Ref: ${generarReferencia(id)}) fue rechazado. Motivo: ${motivoTexto}. Puedes intentar nuevamente.`
     )
 
     return res.json({ mensaje: 'Pago rechazado correctamente' })
@@ -387,7 +402,7 @@ export const notificarPagoRealizado = async (req: AuthRequest, res: Response) =>
 
     const metodo = transaccion.metodo_pago?.includes('ANUAL') ? 'QR Anual' : 'QR'
     const titulo = `Nuevo pago pendiente — ${transaccion.usuario.nombre}`
-    const mensaje = `Plan: ${transaccion.plan_suscripcion?.nombre_plan ?? '—'} · Monto: Bs. ${Number(transaccion.total).toFixed(2)} · Método: ${metodo} · Ref: TXN-${String(id).padStart(3, '0')}`
+    const mensaje = `Plan: ${transaccion.plan_suscripcion?.nombre_plan ?? '—'} · Monto: Bs. ${Number(transaccion.total).toFixed(2)} · Método: ${metodo} · Ref: ${generarReferencia(id)}`
 
     await notificarAdmins(titulo, mensaje)
 
@@ -440,7 +455,7 @@ export const listarMisPagos = async (req: AuthRequest, res: Response) => {
     return res.json(
       transacciones.map((t) => ({
         id: t.id,
-        referencia: `TXN-${String(t.id).padStart(3, '0')}`,
+        referencia: generarReferencia(t.id),
         fecha: t.fecha_intento,
         plan: t.plan_suscripcion?.nombre_plan ?? null,
         metodo: t.metodo_pago,

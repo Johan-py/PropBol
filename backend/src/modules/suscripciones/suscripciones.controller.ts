@@ -13,7 +13,23 @@ export const obtenerMiSuscripcion = async (req: AuthRequest, res: Response) => {
     const suscripcion = await suscripcionesService.obtenerSuscripcionActiva(userId)
 
     if (!suscripcion) {
-      return res.json({ activa: false, idSuscripcion: null, planNombre: null })
+      const expirada = await suscripcionesService.obtenerUltimaSuscripcionExpirada(userId)
+      if (expirada) {
+        return res.json({
+          activa: false,
+          expirado: true,
+          idSuscripcion: expirada.id_suscripcion,
+          planNombre: expirada.plan_suscripcion?.nombre_plan ?? null,
+          precioPlan: expirada.plan_suscripcion?.precio_plan
+            ? Number(expirada.plan_suscripcion.precio_plan)
+            : null,
+          nroPublicaciones: expirada.plan_suscripcion?.nro_publicaciones_plan ?? null,
+          duracionDias: expirada.plan_suscripcion?.duracion_plan_dias ?? null,
+          fechaInicio: expirada.fecha_inicio,
+          fechaFin: expirada.fecha_fin,
+        })
+      }
+      return res.json({ activa: false, expirado: false, idSuscripcion: null, planNombre: null })
     }
 
     return res.json({

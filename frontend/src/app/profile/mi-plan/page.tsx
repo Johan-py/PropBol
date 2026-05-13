@@ -8,6 +8,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
 interface Suscripcion {
   activa: boolean
+  expirado?: boolean
   idSuscripcion: number | null
   planNombre: string | null
   precioPlan: number | null
@@ -162,6 +163,57 @@ export default function MiPlanPage() {
             >
               <ArrowUpRight size={15} />
               Cambiar Plan
+            </button>
+          </div>
+        </div>
+      ) : suscripcion?.expirado ? (
+        /* Estado expirado */
+        <div className="rounded-2xl border border-stone-200 bg-white shadow-sm overflow-hidden">
+          <div className="bg-gradient-to-r from-red-50 to-rose-50 border-b border-stone-100 px-6 py-5 flex items-center justify-between">
+            <div>
+              <p className="text-xs text-stone-500 uppercase tracking-wide font-medium mb-0.5">
+                Suscripción Vencida
+              </p>
+              <h2 className="text-2xl font-bold text-stone-800">{suscripcion.planNombre}</h2>
+              {suscripcion.precioPlan !== null && (
+                <p className="text-stone-400 font-semibold text-lg mt-1">
+                  Bs. {suscripcion.precioPlan.toFixed(2)}
+                  <span className="text-stone-400 text-sm font-normal"> /mes</span>
+                </p>
+              )}
+            </div>
+            <span className="flex items-center gap-1.5 bg-red-100 text-red-700 text-xs font-semibold px-3 py-1.5 rounded-full">
+              <XCircle size={13} />
+              Expirado
+            </span>
+          </div>
+          <div className="px-6 py-5 border-b border-stone-100">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-xs text-stone-400 mb-1 flex items-center gap-1">
+                  <Calendar size={11} /> Fecha inicio
+                </p>
+                <p className="text-sm font-medium text-stone-700">
+                  {formatDate(suscripcion.fechaInicio)}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-stone-400 mb-1 flex items-center gap-1">
+                  <Calendar size={11} /> Venció el
+                </p>
+                <p className="text-sm font-medium text-red-500">
+                  {formatDate(suscripcion.fechaFin)}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="px-6 py-5 flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={() => router.push('/cobros-suscripciones')}
+              className="flex-1 flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition"
+            >
+              <RefreshCw size={15} />
+              Renovar Plan
             </button>
           </div>
         </div>

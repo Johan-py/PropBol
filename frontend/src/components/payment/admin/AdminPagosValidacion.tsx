@@ -76,6 +76,7 @@ export default function AdminPagosValidacion() {
   // HU-15: modal de rechazo con motivo
   const [rechazando, setRechazando] = useState<TransaccionAdmin | null>(null)
   const [motivo, setMotivo] = useState('')
+  const [motivoError, setMotivoError] = useState(false)
 
   const cargarTransacciones = async () => {
     setIsLoading(true)
@@ -123,13 +124,18 @@ export default function AdminPagosValidacion() {
 
   const rechazarPago = async () => {
     if (!rechazando) return
+    if (!motivo.trim()) {
+      setMotivoError(true)
+      return
+    }
+    setMotivoError(false)
     setProcesando(rechazando.id)
     try {
       const token = localStorage.getItem('token')
       const res = await fetch(`${API_URL}/api/transacciones/${rechazando.id}/rechazar`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ motivo: motivo.trim() || 'No especificado' }),
+        body: JSON.stringify({ motivo: motivo.trim() }),
       })
       if (!res.ok) {
         const body = await res.json()
@@ -284,7 +290,7 @@ export default function AdminPagosValidacion() {
                                 Confirmar
                               </button>
                               <button
-                                onClick={() => { setRechazando(t); setMotivo('') }}
+                                onClick={() => { setRechazando(t); setMotivo(''); setMotivoError(false) }}
                                 disabled={procesando === t.id}
                                 className="flex items-center gap-1 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-100 disabled:opacity-50 transition-colors"
                               >
@@ -337,14 +343,17 @@ export default function AdminPagosValidacion() {
             </label>
             <textarea
               value={motivo}
-              onChange={(e) => setMotivo(e.target.value)}
+              onChange={(e) => { setMotivo(e.target.value); if (motivoError) setMotivoError(false) }}
               placeholder="Ej: Monto incorrecto, comprobante ilegible..."
               rows={3}
-              className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-red-400 resize-none mb-4"
+              className={`w-full border rounded-lg px-3 py-2 text-sm text-stone-800 focus:outline-none focus:ring-2 resize-none ${motivoError ? 'border-red-400 focus:ring-red-400' : 'border-stone-200 focus:ring-red-400'}`}
             />
-            <div className="flex gap-3">
+            {motivoError && (
+              <p className="text-xs text-red-500 mt-1 mb-2">El motivo del rechazo es obligatorio.</p>
+            )}
+            <div className="flex gap-3 mt-4">
               <button
-                onClick={() => { setRechazando(null); setMotivo('') }}
+                onClick={() => { setRechazando(null); setMotivo(''); setMotivoError(false) }}
                 className="flex-1 border border-stone-200 text-stone-600 text-sm rounded-lg py-2 hover:border-stone-400 transition"
               >
                 Cancelar
