@@ -6,7 +6,7 @@ import BlogCommentsSection from '@/components/blog/BlogCommentsSection'
 import MarkdownRenderer from '@/components/blog/MarkdownRenderer'
 import BlogSharePlaceholder from '@/components/blog/BlogSharePlaceholder'
 import { MOCK_USER_BLOGS } from '@/lib/mock/blogs.mock'
-import { getPublishedBlogById } from '@/services/blogs.service'
+import { getPublishedBlogById, getPublishedBlogs } from '@/services/blogs.service'
 import BackButton from "@/app/blogs/backButton"
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
@@ -57,6 +57,9 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
     userBlog?.resumen ??
     'Este articulo presenta una mirada clara y actual sobre el ecosistema inmobiliario y las oportunidades que aparecen cuando observamos el mercado con criterio.'
   const articleContent = publicBlog?.content?.trim() || userBlog?.resumen?.trim() || summary
+  const recommendedBlogs = (await getPublishedBlogs(8))
+    .filter((blog) => blog.id !== params.id)
+    .slice(0, 4)
 
   return (
     <article className="min-h-screen bg-[linear-gradient(180deg,#fbf6ef_0%,#f8f3eb_38%,#ffffff_100%)] pb-20">
@@ -134,7 +137,7 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
           </div>
 
           <div className="no-capture">
-            <BlogDetailSidebar />
+            <BlogDetailSidebar recommendations={recommendedBlogs} />
           </div>
         </div>
       </main>
