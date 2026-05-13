@@ -61,6 +61,8 @@ function MagicLinkAccessContent() {
 
   const [isExpiredLink, setIsExpiredLink] = useState(false);
   const [isInvalidLink, setIsInvalidLink] = useState(false);
+  const [isNetworkError, setIsNetworkError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     if (!token) {
@@ -68,10 +70,12 @@ function MagicLinkAccessContent() {
       setMessage("El enlace no contiene un token válido.");
       setIsExpiredLink(false);
       setIsInvalidLink(true);
+      setIsNetworkError(false);
       return;
     }
 
-    if (hasProcessedTokenRef.current) return;
+    if (hasProcessedTokenRef.current && retryCount === 0) return;
+
     hasProcessedTokenRef.current = true;
 
     const loginWithMagicLink = async () => {
@@ -101,6 +105,7 @@ function MagicLinkAccessContent() {
               normalizedError.includes("inválido") ||
               normalizedError.includes("invalido"),
           );
+          setIsNetworkError(false);
 
           return;
         }
@@ -114,20 +119,55 @@ function MagicLinkAccessContent() {
         );
         setIsExpiredLink(false);
         setIsInvalidLink(false);
+        setIsNetworkError(false);
 
         window.setTimeout(() => {
           router.replace("/");
         }, 1800);
       } catch {
         setStatus("error");
-        setMessage("No se pudo conectar con el servidor.");
+        setMessage(
+          "Se perdió la conexión durante la validación. Verifica tu red e intenta nuevamente.",
+        );
         setIsExpiredLink(false);
         setIsInvalidLink(false);
+        setIsNetworkError(true);
       }
     };
 
     loginWithMagicLink();
-  }, [router, token]);
+  }, [router, token, retryCount]);
+
+  useEffect(() => {
+    if (!isNetworkError) return;
+
+    const handleOnline = () => {
+      hasProcessedTokenRef.current = false;
+      setStatus("loading");
+      setMessage(
+        "Conexión recuperada. Estamos verificando tu link mágico nuevamente.",
+      );
+      setRetryCount((current) => current + 1);
+    };
+
+    window.addEventListener("online", handleOnline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+    };
+  }, [isNetworkError]);
+
+  const handleErrorAction = () => {
+    if (isNetworkError) {
+      hasProcessedTokenRef.current = false;
+      setStatus("loading");
+      setMessage("Reintentando validación del Magic Link...");
+      setRetryCount((current) => current + 1);
+      return;
+    }
+
+    router.replace("/sign-in");
+  };
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-white px-4">
@@ -199,7 +239,9 @@ function MagicLinkAccessContent() {
                 ? "Magic Link expirado"
                 : isInvalidLink
                   ? "Magic Link inválido"
-                  : "No se pudo iniciar sesión"}
+                  : isNetworkError
+                    ? "Conexión interrumpida"
+                    : "No se pudo iniciar sesión"}
             </h2>
 
             <p className="mt-3 text-sm font-semibold leading-relaxed text-[#9ca3af]">
@@ -208,12 +250,14 @@ function MagicLinkAccessContent() {
 
             <button
               type="button"
-              onClick={() => router.replace("/sign-in")}
+              onClick={handleErrorAction}
               className="mt-8 w-full rounded-md bg-orange-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-orange-600"
             >
               {isExpiredLink
                 ? "Solicitar un nuevo Magic Link"
-                : "Volver al inicio de sesión"}
+                : isNetworkError
+                  ? "Reintentar validación"
+                  : "Volver al inicio de sesión"}
             </button>
           </>
         )}
