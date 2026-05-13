@@ -110,34 +110,12 @@ export default function MiRegistroPage() {
   }
 
   useEffect(() => {
-    const validarFlujo = async () => {
-      const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token')
 
-      if (!token) {
-        router.push('/sign-in')
-        return
-      }
-
-      try {
-        const response = await fetch(`${API_URL}/api/publicaciones/flujo`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-
-        const result = await response.json()
-
-        if (!response.ok && result.message === 'LIMIT_REACHED') {
-          router.push('/Cobros-Limite')
-        }
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
-    validarFlujo()
-  }, [router])
+  if (!token) {
+    router.push('/sign-in')
+  }
+}, [router])
 
   const limpiarError = () => {
     setMensajeError('')
