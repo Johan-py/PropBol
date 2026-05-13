@@ -1,40 +1,82 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+import { useAccessibility } from "@/hooks/useAccessibility";
+import type { AccessibilityOption } from "@/hooks/useAccessibility";
 
 type ThemeOption = "light" | "dark";
-type AccessibilityOption = "none" | "deuteranopia";
 
-type VisualOptionCardProps = {
+type ThemeCardProps = {
     title: string;
     description: string;
-    icon: ReactNode;
-    previewClassName: string;
     selected: boolean;
     onClick: () => void;
+    preview: "light" | "dark";
 };
 
-const THEME_STORAGE_KEY = "propbol-theme";
-const ACCESSIBILITY_STORAGE_KEY = "propbol-accessibility";
+type AccessibilityCardProps = {
+  title: string;
+  description: string;
+  selected: boolean;
+  onClick: () => void;
+  colors: string[];
+  icon: string;
+};
 
-const THEME_CLASSES = ["propbol-theme-light", "propbol-theme-dark"];
-const ACCESSIBILITY_CLASSES = [
-    "propbol-accessibility-none",
-    "propbol-accessibility-deuteranopia",
-];
-
-function isThemeOption(value: string | null): value is ThemeOption {
-    return value === "light" || value === "dark";
+function MiniBrowserPreview({ mode }: { mode: "light" | "dark" }) {
+  const isDark = mode === "dark";
+  return (
+    <div
+      className={`visual-option-preview w-full overflow-hidden rounded-xl border ${
+        isDark ? "border-gray-700 bg-gray-900" : "border-gray-200 bg-gray-50"
+      }`}
+    >
+      <div
+        className={`flex items-center gap-1.5 px-3 py-2 ${
+          isDark ? "bg-gray-800" : "bg-gray-100"
+        }`}
+      >
+        <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
+        <span className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
+        <span className="h-2.5 w-2.5 rounded-full bg-green-400" />
+        <div
+          className={`ml-2 h-2 w-24 rounded-full ${
+            isDark ? "bg-gray-600" : "bg-gray-300"
+          }`}
+        />
+      </div>
+      <div className="space-y-2 p-4">
+        <div
+          className={`h-3 w-3/4 rounded-full ${
+            isDark ? "bg-gray-700" : "bg-gray-200"
+          }`}
+        />
+        <div
+          className={`h-2 w-full rounded-full ${
+            isDark ? "bg-gray-800" : "bg-gray-100"
+          }`}
+        />
+        <div
+          className={`h-2 w-5/6 rounded-full ${
+            isDark ? "bg-gray-800" : "bg-gray-100"
+          }`}
+        />
+        <div className="mt-3 flex gap-2">
+          <div className="h-6 w-16 rounded-lg bg-orange-400" />
+          <div
+            className={`h-6 w-16 rounded-lg ${
+              isDark ? "bg-gray-700" : "bg-gray-200"
+            }`}
+          />
+        </div>
+      </div>
+    </div>
+  );
 }
+/*
 
-function isAccessibilityOption(
-    value: string | null
-): value is AccessibilityOption {
-    return value === "none" || value === "deuteranopia";
-}
 
-function VisualOptionCard({
     title,
     description,
     icon,
@@ -230,4 +272,4 @@ export default function AjustesVisualizacion() {
             </section>
         </main>
     );
-}
+}*/
