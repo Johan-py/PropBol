@@ -456,7 +456,7 @@ export const editarMultimediaPublicacionController = async (
         case 'LIMITE_IMAGENES':
           return res.status(400).json({
             ok: false,
-            message: 'Has alcanzado el límite máximo de 10 imágenes.'
+            message: 'Has alcanzado el límite máximo de 5 imágenes.'
           })
 
         case 'FORMATO_IMAGEN_INVALIDO':

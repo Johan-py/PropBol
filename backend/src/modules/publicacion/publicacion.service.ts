@@ -599,7 +599,11 @@ const subirImagenACloudinary = async (
 export const editarMultimediaPublicacionService = async (
   publicacionId: number,
   usuarioSolicitanteId: number,
-  data: EditarMultimediaInput,
+  data: EditarMultimediaInput & {
+    imagenesActuales?: unknown
+    imagenesNuevas?: unknown
+    videoUrls?: unknown
+  },
   archivos: Express.Multer.File[]
 ) => {
   if (Number.isNaN(publicacionId) || publicacionId <= 0) {
@@ -624,31 +628,87 @@ export const editarMultimediaPublicacionService = async (
     throw new Error('PUBLICACION_YA_ELIMINADA')
   }
 
-  const imagenesAEliminar = parseImagenesAEliminar(data.imagenesAEliminar)
-  const videoUrl = normalizarTexto(data.videoUrl)
+  const parseStringArray = (valor: unknown): string[] => {
+    if (!valor) return []
 
-  if (!esVideoPermitido(videoUrl)) {
+    if (Array.isArray(valor)) {
+      return valor.map((item) => String(item).trim()).filter(Boolean)
+    }
+
+    if (typeof valor === 'string') {
+      try {
+        const parsed = JSON.parse(valor)
+
+        if (Array.isArray(parsed)) {
+          return parsed.map((item) => String(item).trim()).filter(Boolean)
+        }
+      } catch {
+        return valor.trim() ? [valor.trim()] : []
+      }
+    }
+
+    return []
+  }
+
+  const subirBase64ACloudinary = async (base64: string) => {
+    const resultado = await cloudinary.uploader.upload(base64, {
+      folder: 'propbol/publicaciones',
+      resource_type: 'image'
+    })
+
+    return resultado.secure_url
+  }
+
+  const imagenesActualesUrls = parseStringArray(data.imagenesActuales)
+  const imagenesNuevasBase64 = parseStringArray(data.imagenesNuevas)
+  const videosUrls = parseStringArray(data.videoUrls)
+
+  const videoUrlLegacy = normalizarTexto(data.videoUrl)
+
+  const videosFinales =
+    videosUrls.length > 0
+      ? videosUrls.slice(0, 2)
+      : videoUrlLegacy
+        ? [videoUrlLegacy]
+        : []
+
+  const videosValidos = videosFinales.every((video) => esVideoPermitido(video))
+
+  if (!videosValidos) {
     throw new Error('VIDEO_INVALIDO')
   }
 
-  const imagenesActuales = publicacion.multimedia.filter(
+  const imagenesActualesDb = publicacion.multimedia.filter(
     (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN
   )
 
+  const imagenesAEliminarPorUrl = imagenesActualesDb
+    .filter((item) => !imagenesActualesUrls.includes(item.url))
+    .map((item) => item.id)
+
+  const imagenesAEliminarPorId = parseImagenesAEliminar(data.imagenesAEliminar)
+
+  const imagenesAEliminar = Array.from(
+    new Set([...imagenesAEliminarPorUrl, ...imagenesAEliminarPorId])
+  )
+
   const totalImagenesDespues =
-    imagenesActuales.length - imagenesAEliminar.length + archivos.length
+    imagenesActualesDb.length -
+    imagenesAEliminar.length +
+    archivos.length +
+    imagenesNuevasBase64.length
 
   if (totalImagenesDespues <= 0) {
     throw new Error('MINIMO_UNA_IMAGEN')
   }
 
-  if (totalImagenesDespues > 10) {
+  if (totalImagenesDespues > 5) {
     throw new Error('LIMITE_IMAGENES')
   }
 
   await eliminarMultimediaPorIdsRepository(publicacionId, imagenesAEliminar)
 
-  const nuevasImagenes = await Promise.all(
+  const nuevasImagenesDesdeArchivos = await Promise.all(
     archivos.map(async (file) => {
       const url = await subirImagenACloudinary(file)
 
@@ -661,19 +721,35 @@ export const editarMultimediaPublicacionService = async (
     })
   )
 
-  await crearMultimediaRepository(nuevasImagenes)
+  const nuevasImagenesDesdeBase64 = await Promise.all(
+    imagenesNuevasBase64.map(async (base64) => {
+      const url = await subirBase64ACloudinary(base64)
 
-  await eliminarVideosDePublicacionRepository(publicacionId)
-
-  if (videoUrl) {
-    await crearMultimediaRepository([
-      {
-        url: videoUrl,
-        tipo: 'VIDEO',
+      return {
+        url,
+        tipo: 'IMAGEN' as const,
         pesoMb: null,
         publicacionId
       }
-    ])
+    })
+  )
+
+  await crearMultimediaRepository([
+    ...nuevasImagenesDesdeArchivos,
+    ...nuevasImagenesDesdeBase64
+  ])
+
+  await eliminarVideosDePublicacionRepository(publicacionId)
+
+  if (videosFinales.length > 0) {
+    await crearMultimediaRepository(
+      videosFinales.map((video) => ({
+        url: video,
+        tipo: 'VIDEO' as const,
+        pesoMb: null,
+        publicacionId
+      }))
+    )
   }
 
   const multimediaActualizada =
@@ -695,6 +771,7 @@ export const editarMultimediaPublicacionService = async (
       tipo: item.tipo,
       pesoMb: item.pesoMb ? Number(item.pesoMb) : null
     })),
-    videoUrl: videos[0]?.url ?? null
+    videoUrl: videos[0]?.url ?? null,
+    videoUrls: videos.map((item) => item.url)
   }
 }

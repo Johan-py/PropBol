@@ -23,7 +23,7 @@ router.patch('/:id/confirmar', requireAuth, confirmarPublicacionController)
 router.put(
   '/:id/multimedia',
   requireAuth,
-  uploadMultimedia.array('imagenesNuevas', 10),
+  uploadMultimedia.array('imagenesNuevas', 5),
   editarMultimediaPublicacionController
 )
 
