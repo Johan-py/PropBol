@@ -21,20 +21,30 @@ type MagicLinkLoginResponse = {
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const SESSION_DURATION_MS = 60 * 60 * 1000;
 
+const storage = (() => {
+  try {
+    localStorage.setItem("__test__", "1");
+    localStorage.removeItem("__test__");
+    return localStorage;
+  } catch {
+    return sessionStorage;
+  }
+})();
+
 const saveMagicLinkSession = (
   token: string,
   user: NonNullable<MagicLinkLoginResponse["user"]>,
 ) => {
-  localStorage.setItem("token", token);
+  storage.setItem("token", token);
 
   const sessionUser = buildSessionUser(user);
 
-  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(sessionUser));
-  localStorage.setItem("nombre", sessionUser.name);
-  localStorage.setItem("correo", sessionUser.email);
-  localStorage.setItem("avatar", sessionUser.avatar ?? "");
-  localStorage.setItem("controlador", String(sessionUser.controlador ?? false));
-  localStorage.setItem(
+  storage.setItem(USER_STORAGE_KEY, JSON.stringify(sessionUser));
+  storage.setItem("nombre", sessionUser.name);
+  storage.setItem("correo", sessionUser.email);
+  storage.setItem("avatar", sessionUser.avatar ?? "");
+  storage.setItem("controlador", String(sessionUser.controlador ?? false));
+  storage.setItem(
     "propbol_session_expires",
     String(Date.now() + SESSION_DURATION_MS),
   );
