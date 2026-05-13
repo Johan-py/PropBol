@@ -5,6 +5,8 @@ import PublicacionCard from '@/components/publicacion/PublicacionCard'
 import { publicacionService } from '@/services/publicacionn.service'
 import type { MisPublicacionesItem } from '@/types/publicacion'
 
+type TabType = 'todas' | 'activas' | 'pausadas' | 'promocionadas'
+
 export default function MisPublicacionesList() {
   const [publicaciones, setPublicaciones] = useState<MisPublicacionesItem[]>([])
   const [estadisticas, setEstadisticas] = useState<{
@@ -28,7 +30,7 @@ export default function MisPublicacionesList() {
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [filtro, setFiltro] = useState<'todas' | 'activas' | 'pausadas' | 'promocionadas'>('todas')
+  const [filtro, setFiltro] = useState<TabType>('todas')
 
   const transformarPublicacion = (pub: any): MisPublicacionesItem => {
     return {
@@ -107,8 +109,21 @@ export default function MisPublicacionesList() {
     cargarPublicaciones()
   }, [])
 
+  const getTabCount = (tab: TabType) => {
+    switch (tab) {
+      case 'activas':
+        return publicaciones.filter(p => p.activa === true && !p.promoted).length
+      case 'pausadas':
+        return publicaciones.filter(p => p.activa === false).length
+      case 'promocionadas':
+        return publicaciones.filter(p => p.promoted === true).length
+      default:
+        return publicaciones.length
+    }
+  }
+
   const publicacionesFiltradas = publicaciones.filter(p => {
-    if (filtro === 'activas') return p.activa === true
+    if (filtro === 'activas') return p.activa === true && !p.promoted
     if (filtro === 'pausadas') return p.activa === false
      if (filtro === 'promocionadas') return p.promoted === true
     return true
@@ -171,7 +186,7 @@ export default function MisPublicacionesList() {
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
-          Todas ({publicaciones.length})
+          Todas ({getTabCount('todas')})
         </button>
 
         <button
@@ -182,7 +197,7 @@ export default function MisPublicacionesList() {
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
-          Activas ({publicaciones.filter(p => p.activa&& !p.promoted).length})
+          Activas ({getTabCount('activas')})
         </button>
 
         <button
@@ -193,7 +208,7 @@ export default function MisPublicacionesList() {
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
-          Pausadas ({publicaciones.filter(p => !p.activa).length})
+          Pausadas ({getTabCount('pausadas')})
         </button>
 
          <button
@@ -204,12 +219,9 @@ export default function MisPublicacionesList() {
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
-          Publicidad ({publicacionesPublicidad.length})
+          Publicidad ({getTabCount('promocionadas')})
         </button>
       </div>
-
-
-
 
       {publicacionesFiltradas.length === 0 ? (
         <div className="text-center py-8">

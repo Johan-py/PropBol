@@ -100,7 +100,11 @@ export default function PublicacionCard({
       onPromocionChange?.(publicacion.id, false)
       setModalCancelPromocionAbierto(false)
     } catch (err) {
-      console.error(err)
+      console.error('Error al cancelar publicidad:', err)
+      setModalCancelPromocionAbierto(false)
+       setTimeout(() => {
+      alert('Error al cancelar publicidad. Intenta nuevamente.')
+    }, 100)
     } finally {
       setCanceling(false)
     }
