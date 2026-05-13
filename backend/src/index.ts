@@ -77,11 +77,12 @@ import {
   startDiscordRegisterController
 } from './modules/auth/discord/discord.controller.js'
 
-import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
-import publicacionRoutes from './modules/publicacion/publicacion.routes.js'
-import router from './modules/registro-publicacion/publicacion.routes.js'
-import parametrosRoutes from './modules/parametros-publicacion/parametros.routes.js'
-import tutorialPublicacionRoutes from './modules/tutorial-publicacion/tutorial-publicacion.routes.js'
+import multimediaRoutes from "./modules/multimedia/multimedia.routes.js";
+import publicacionRoutes from "./modules/publicacion/publicacion.routes.js";
+import router from "./modules/registro-publicacion/publicacion.routes.js";
+import parametrosRoutes from "./modules/parametros-publicacion/parametros.routes.js";
+import tutorialPublicacionRoutes from "./modules/tutorial-publicacion/tutorial-publicacion.routes.js";
+import estadisticasRoutes from "./modules/estadisticas-publicacion/estadisticas.routes.js";
 
 import {
   facebookCallbackController,
@@ -96,8 +97,9 @@ import {
   getLinkedInOriginalEmailController
 } from './modules/auth/social-links/social-links.controller.js'
 
-import securityRoutes from './routes/security.routes.js'
-import propiedadRoutes from './routes/propiedad.routes.js'
+import securityRoutes from "./routes/security.routes.js";
+import propiedadRoutes from "./routes/propiedad.routes.js";
+import { validarPublicacionesFree } from "./controllers/publicacionesController.js";
 // --------------------
 // LEGACY
 // --------------------
@@ -178,43 +180,48 @@ app.use('/api/auth-legacy', authRoutes)
 app.get('/api/users/:id/publicaciones/free', authMiddleware, (_req, res) => {
   res.json({ restantes: 2 })
 })
+app.get(
+  '/api/publicaciones/validar-limite/:id',
+  authMiddleware,
+  validarPublicacionesFree
+)
 app.use('/api/publicaciones-legacy', publicacionesRoutes)
 
 // --------------------
 // RUTAS PRINCIPALES
 // --------------------
-app.use('/api/publicaciones', publicacionRoutes)
-app.use('/api/publicaciones', multimediaRoutes)
-app.use('/api/publicaciones/tutorial', tutorialPublicacionRoutes)
-app.use('/api/perfil', correoverificacionRoutes)
-app.use('/api/perfil/usuario', perfilRoutes)
-app.use('/api/perfil/zonas', zonaRoutes)
-app.use('/api', router)
-app.use('/api', consumoRoutes)
-app.use('/api', parametrosRoutes)
-app.use('/api/security', securityRoutes)
-app.use('/api/favorites', favoritesRoutes)
-app.use('/api/telemetria', telemetriaRoutes)
-app.use('/api/recomendaciones', recomendacionesRoutes)
-app.use('/api/propiedad', propiedadRoutes)
-app.use('/api/publicaciones', publicacionRoutes)
-app.use('/api/publicaciones', multimediaRoutes)
-app.use('/api/perfil', correoverificacionRoutes)
-app.use('/api/perfil/usuario', perfilRoutes)
-app.use('/api/perfil/zonas', zonaRoutes)
-app.use('/api/perfil/historial', historialRoutes)
-app.use('/api/perfil/historial-busqueda', historialBusquedaRoutes)
-app.use('/api', router)
-app.use('/api', parametrosRoutes)
-app.use('/api/security', securityRoutes)
-app.use('/api/favorites', favoritesRoutes)
-app.use('/api/telemetria', telemetriaRoutes)
-app.use('/api/recomendaciones', recomendacionesRoutes)
-app.use('/api/blogs', blogsRoutes)
-app.use('/api/testimonios', testimoniosRoutes)
-app.use('/api/telemetria', telemetriaRouter)
-app.use('/api/comparaciones', comparacionRoutes)
-app.use('/api/sesiones', sesionRoutes)
+app.use("/api/publicaciones", publicacionRoutes);
+app.use("/api/publicaciones", multimediaRoutes);
+app.use("/api/publicaciones/tutorial", tutorialPublicacionRoutes);
+app.use("/api/perfil", correoverificacionRoutes);
+app.use("/api/perfil/usuario", perfilRoutes);
+app.use("/api/perfil/zonas", zonaRoutes);
+app.use("/api", router);
+app.use("/api", consumoRoutes);
+app.use("/api", parametrosRoutes);
+app.use("/api", estadisticasRoutes);
+app.use("/api/security", securityRoutes);
+app.use("/api/favorites", favoritesRoutes);
+app.use("/api/telemetria", telemetriaRoutes);
+app.use("/api/recomendaciones", recomendacionesRoutes);
+app.use("/api/propiedad", propiedadRoutes);
+app.use("/api/publicaciones", publicacionRoutes);
+app.use("/api/publicaciones", multimediaRoutes);
+app.use("/api/perfil", correoverificacionRoutes);
+app.use("/api/perfil/usuario", perfilRoutes);
+app.use("/api/perfil/zonas", zonaRoutes);
+app.use("/api/perfil/historial", historialRoutes);
+app.use("/api/perfil/historial-busqueda", historialBusquedaRoutes);
+app.use("/api", router);
+app.use("/api", parametrosRoutes);
+app.use("/api/security", securityRoutes);
+app.use("/api/favorites", favoritesRoutes);
+app.use("/api/telemetria", telemetriaRoutes);
+app.use("/api/recomendaciones", recomendacionesRoutes);
+app.use("/api/blogs", blogsRoutes);
+app.use("/api/testimonios", testimoniosRoutes);
+app.use("/api/telemetria", telemetriaRouter);
+app.use("/api/comparaciones", comparacionRoutes);
 
 app.use('/api/transacciones', transaccionesRoutes)
 app.use('/api/suscripciones', suscripcionesRoutes)
