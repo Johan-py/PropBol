@@ -30,148 +30,64 @@ export default function BlogSharePlaceholder({
     setIsDownloadOpen(false);
 
     try {
+      const articleElement = document.querySelector('article') as HTMLElement;
+      if (!articleElement) {
+        alert('No se encontró el contenido principal para descargar.');
+        setIsGenerating(false);
+        return;
+      }
+
+      // Importar html2canvas dinámicamente
+      const html2canvas = (await import('html2canvas')).default;
+
+      // Capturar el HTML usando html2canvas
+      const canvas = await html2canvas(articleElement, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        onclone: (clonedDoc) => {
+          // Ocultar componentes que no se deben incluir
+          const elementsToHide = clonedDoc.querySelectorAll('.no-capture');
+          elementsToHide.forEach(el => {
+            (el as HTMLElement).style.display = 'none';
+          });
+
+          // Ajustar el grid
+          const grid = clonedDoc.querySelector('.blog-grid-container') as HTMLElement;
+          if (grid) {
+            grid.style.gridTemplateColumns = '1fr';
+          }
+        }
+      });
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.9);
+
       const doc = new jsPDF({
         orientation: 'p',
         unit: 'mm',
         format: 'a4'
       });
 
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const margin = 20;
-      const contentWidth = pageWidth - (margin * 2);
-      let currentY = 25;
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const imgHeight = (canvas.height * pdfWidth) / canvas.width;
 
-      // 1. Título
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(24);
-      doc.setTextColor(28, 25, 23); // stone-900
-      const titleLines = doc.splitTextToSize(getTitle(), contentWidth);
-      doc.text(titleLines, margin, currentY);
-      currentY += (titleLines.length * 10);
+      let heightLeft = imgHeight;
+      let position = 0;
 
-      // Línea decorativa de marca
-      doc.setDrawColor(165, 100, 0); // #a56400
-      doc.setLineWidth(1);
-      doc.line(margin, currentY, margin + 30, currentY);
-      currentY += 10;
+      // Primera página
+      doc.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
+      heightLeft -= pageHeight;
 
-      // 2. Info (Autor y Categoría)
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(165, 100, 0); // #a56400
-      const infoText = `POR: ${author?.toUpperCase() || 'ANÓNIMO'}  |  CATEGORÍA: ${category?.toUpperCase() || 'GENERAL'}`;
-      doc.text(infoText, margin, currentY);
-
-      currentY += 8;
-      doc.setDrawColor(231, 229, 228); // stone-200
-      doc.setLineWidth(0.1);
-      doc.line(margin, currentY, margin + contentWidth, currentY);
-      currentY += 15;
-
-      // 3. Imagen
-      if (imageUrl) {
-        try {
-          const img = new Image();
-          img.crossOrigin = "Anonymous";
-
-          await new Promise<void>((resolve, reject) => {
-            img.onload = () => resolve();
-            img.onerror = () => reject();
-            img.src = imageUrl;
-          });
-
-          const imgWidth = contentWidth;
-          const imgHeight = (img.height * imgWidth) / img.width;
-
-          if (currentY + imgHeight > 270) {
-            doc.addPage();
-            currentY = 20;
-          }
-
-          doc.addImage(img, 'JPEG', margin, currentY, imgWidth, imgHeight);
-          currentY += imgHeight + 15;
-        } catch (error) {
-          console.error("Error cargando la imagen para el PDF:", error);
-          currentY += 5;
-        }
+      // Páginas adicionales si el contenido es más largo
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        doc.addPage();
+        doc.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
+        heightLeft -= pageHeight;
       }
 
-      // 4. Descripción / Contenido
-      doc.setTextColor(68, 64, 60); // stone-700
-
-      // Separar por líneas para procesar el markdown básico
-      const rawLines = (description || '').split('\n');
-
-      rawLines.forEach((line: string) => {
-        const trimmedLine = line.trim();
-        if (!trimmedLine && line !== '') {
-          currentY += 5; // Espacio para líneas vacías
-          return;
-        }
-
-        let fontSize = 11;
-        let fontStyle = 'normal';
-        let xOffset = margin;
-        let textToPrint = trimmedLine;
-
-        // Detectar Encabezados
-        if (trimmedLine.startsWith('# ')) {
-          fontSize = 16;
-          fontStyle = 'bold';
-          textToPrint = trimmedLine.replace('# ', '');
-          currentY += 5;
-        } else if (trimmedLine.startsWith('## ')) {
-          fontSize = 14;
-          fontStyle = 'bold';
-          textToPrint = trimmedLine.replace('## ', '');
-          currentY += 3;
-        } else if (trimmedLine.startsWith('### ')) {
-          fontSize = 12;
-          fontStyle = 'bold';
-          textToPrint = trimmedLine.replace('### ', '');
-          currentY += 2;
-        } else if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ')) {
-          textToPrint = `• ${trimmedLine.substring(2)}`;
-          xOffset = margin + 5;
-        } else if (trimmedLine.startsWith('> ')) {
-          fontStyle = 'italic';
-          textToPrint = trimmedLine.replace('> ', '');
-          xOffset = margin + 5;
-          doc.setDrawColor(200, 200, 200);
-          doc.setLineWidth(0.5);
-          doc.line(margin + 2, currentY - 4, margin + 2, currentY + 4); // Simular barra de cita
-        }
-
-        doc.setFont('helvetica', fontStyle);
-        doc.setFontSize(fontSize);
-
-        // Limpiar negritas y cursivas básicas del texto interno para evitar ruido visual
-        textToPrint = textToPrint.replace(/[*_~`]/g, '');
-
-        const wrappedLines: string[] = doc.splitTextToSize(textToPrint, contentWidth - (xOffset - margin));
-
-        wrappedLines.forEach((wLine: string) => {
-          if (currentY > 275) {
-            doc.addPage();
-            currentY = 20;
-          }
-          doc.text(wLine, xOffset, currentY);
-          currentY += (fontSize / 2) + 2;
-        });
-
-        currentY += 2; // Espacio entre bloques
-      });
-
-      // Pie de página
-      const totalPages = doc.getNumberOfPages();
-      for (let i = 1; i <= totalPages; i++) {
-        doc.setPage(i);
-        doc.setFontSize(8);
-        doc.setTextColor(150, 150, 150);
-        doc.text(`PropBol - ${getTitle()} | Página ${i} de ${totalPages}`, pageWidth / 2, 285, { align: 'center' });
-      }
-
-      doc.save(`${getTitle().substring(0, 30)}.pdf`);
+      doc.save(`${title?.replace(/\s+/g, '-').toLowerCase() || 'blog-completo'}.pdf`);
     } catch (error) {
       console.error("Error al generar el PDF:", error);
       alert("Hubo un error al generar el PDF. Por favor intenta de nuevo.");
@@ -202,6 +118,26 @@ export default function BlogSharePlaceholder({
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(quote)}`, '_blank');
   };
 
+  const handleNativeShare = async () => {
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({
+          title: getTitle(),
+          text: description ? description.substring(0, 100) + '...' : 'Mira este artículo en PropBol',
+          url: getUrl(),
+        });
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          console.error('Error al compartir:', error);
+        }
+      }
+    } else {
+      // Fallback: copiar al portapapeles
+      navigator.clipboard.writeText(getUrl());
+      alert('¡Enlace copiado al portapapeles!');
+    }
+  };
+
   // Cerrar menú al hacer clic fuera del modal peee
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -219,41 +155,41 @@ export default function BlogSharePlaceholder({
         <h3 className="text-xs font-bold uppercase tracking-[0.24em] text-[#a56400]">
           Compartir
         </h3>
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-6">
-          <div className="flex flex-wrap items-center justify-start gap-3 sm:gap-4 md:gap-6">
-            <button onClick={shareToGmail} className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir por Gmail">
+        <div className="flex flex-wrap items-center justify-between w-full gap-y-6">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <button onClick={shareToGmail} className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir por Gmail">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
                 alt="Gmail"
-                className="w-7 h-7 sm:w-8 sm:h-8 opacity-90 group-hover:opacity-100 transition-opacity"
-              />
-            </button>
-            <button onClick={shareToWhatsApp} className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir por WhatsApp">
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
-                alt="WhatsApp"
-                className="w-7 h-7 sm:w-8 sm:h-8 opacity-90 group-hover:opacity-100 transition-opacity"
-              />
-            </button>
-            <button onClick={shareToFacebook} className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir en Facebook">
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg"
-                alt="Facebook"
-                className="w-7 h-7 sm:w-8 sm:h-8 opacity-90 group-hover:opacity-100 transition-opacity"
-              />
-            </button>
-            <button onClick={shareToX} className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir en X (Twitter)">
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg"
-                alt="X"
                 className="w-6 h-6 sm:w-7 sm:h-7 opacity-90 group-hover:opacity-100 transition-opacity"
               />
             </button>
-            <button onClick={shareToLinkedIn} className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir en LinkedIn">
+            <button onClick={shareToWhatsApp} className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir por WhatsApp">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+                alt="WhatsApp"
+                className="w-6 h-6 sm:w-7 sm:h-7 opacity-90 group-hover:opacity-100 transition-opacity"
+              />
+            </button>
+            <button onClick={shareToFacebook} className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir en Facebook">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg"
+                alt="Facebook"
+                className="w-6 h-6 sm:w-7 sm:h-7 opacity-90 group-hover:opacity-100 transition-opacity"
+              />
+            </button>
+            <button onClick={shareToX} className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir en X (Twitter)">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg"
+                alt="X"
+                className="w-5 h-5 sm:w-6 sm:h-6 opacity-90 group-hover:opacity-100 transition-opacity"
+              />
+            </button>
+            <button onClick={shareToLinkedIn} className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir en LinkedIn">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png"
                 alt="LinkedIn"
-                className="w-7 h-7 sm:w-8 sm:h-8 opacity-90 group-hover:opacity-100 transition-opacity"
+                className="w-6 h-6 sm:w-7 sm:h-7 opacity-90 group-hover:opacity-100 transition-opacity"
               />
             </button>
             <button
@@ -261,26 +197,38 @@ export default function BlogSharePlaceholder({
                 navigator.clipboard.writeText(getUrl());
                 alert('¡Enlace copiado al portapapeles!');
               }}
-              className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0"
+              className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0"
               title="Copiar enlace"
             >
-              <svg viewBox="0 0 24 24" className="w-5 h-5 sm:w-[22px] sm:h-[22px] opacity-90 group-hover:opacity-100 transition-opacity text-[#433527]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <svg viewBox="0 0 24 24" className="w-5 h-5 opacity-90 group-hover:opacity-100 transition-opacity text-[#433527]" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <rect width="14" height="14" x="8" y="8" rx="2.5" ry="2.5"></rect>
                 <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+              </svg>
+            </button>
+            <button
+              onClick={handleNativeShare}
+              className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0"
+              title="Más opciones de compartido"
+            >
+              <svg viewBox="0 0 24 24" className="w-5 h-5 opacity-90 group-hover:opacity-100 transition-opacity text-[#433527]" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="1.5"></circle>
+                <circle cx="19" cy="12" r="1.5"></circle>
+                <circle cx="5" cy="12" r="1.5"></circle>
               </svg>
             </button>
           </div>
 
           {/* MENÚ DE DESCARGA */}
-          <div className="relative w-full sm:w-56" ref={menuRef}>
+          <div className="relative shrink-0" ref={menuRef}>
             <button
               onClick={() => setIsDownloadOpen(!isDownloadOpen)}
               disabled={isGenerating}
-              className={`flex items-center justify-between gap-3 w-full h-12 px-5 rounded-xl border transition-all duration-300 group whitespace-nowrap shrink-0 ${isDownloadOpen
+              className={`flex items-center justify-between gap-3 h-11 px-4 sm:h-12 sm:px-5 rounded-xl border transition-all duration-300 group whitespace-nowrap shrink-0 ${isDownloadOpen
                 ? 'bg-stone-900 border-stone-900 text-white shadow-lg shadow-stone-200'
                 : 'border-stone-200 hover:border-stone-400 hover:bg-stone-50 text-[#433527]'
                 } ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
+
               <div className="flex items-center gap-2">
                 {isGenerating ? (
                   <div className="w-4 h-4 border-2 border-stone-300 border-t-stone-100 rounded-full animate-spin" />

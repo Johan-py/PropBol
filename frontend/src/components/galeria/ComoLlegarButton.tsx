@@ -30,6 +30,7 @@ export default function ComoLlegarButton({ lat, lng, variant = 'grid' }: ComoLle
         disabled={!hasLocation}
         title={hasLocation ? '¿Cómo llegar?' : 'Ubicación no disponible'}
         aria-label="Calcular ruta hacia la propiedad en el mapa"
+        data-testid="como-llegar-btn"
         style={{ touchAction: 'manipulation' }}
         className="hover:scale-110 transition-transform duration-200 disabled:opacity-40 disabled:cursor-not-allowed min-h-[44px] min-w-[44px] flex items-center justify-center"
       >
@@ -52,6 +53,7 @@ export default function ComoLlegarButton({ lat, lng, variant = 'grid' }: ComoLle
         onClick={handleClick}
         disabled={!hasLocation}
         aria-label="Calcular ruta hacia la propiedad en el mapa"
+        data-testid="como-llegar-btn"
         title={hasLocation ? '¿Cómo llegar?' : 'Ubicación no disponible'}
         style={{ touchAction: 'manipulation' }}
         className="flex items-center justify-center w-full py-2.5 px-4 text-sm gap-2 rounded-lg font-medium transition-all duration-200 text-white shadow-sm bg-[#ea580c] hover:bg-[#c2410c] disabled:bg-stone-200 disabled:text-stone-400 disabled:cursor-not-allowed disabled:shadow-none"

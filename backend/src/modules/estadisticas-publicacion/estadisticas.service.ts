@@ -294,8 +294,7 @@ export class EstadisticasPublicacionService {
         id: true,
         titulo: true,
         estado: true,
-        usuarioId: true,
-        publicacion_estadistica: true
+        usuarioId: true
       }
     })
 
@@ -307,12 +306,22 @@ export class EstadisticasPublicacionService {
       throw new Error('NO_ES_PROPIETARIO')
     }
 
+    const estadistica = await prisma.publicacion_estadistica.findUnique({
+      where: {
+        publicacion_id: publicacionId
+      },
+      select: {
+        total_visualizaciones: true,
+        total_compartidos: true
+      }
+    })
+
     return {
       publicacionId: publicacion.id,
       titulo: publicacion.titulo,
       estado: publicacion.estado,
-      totalVisualizaciones: publicacion.publicacion_estadistica?.total_visualizaciones || 0,
-      totalCompartidos: publicacion.publicacion_estadistica?.total_compartidos || 0
+      totalVisualizaciones: estadistica?.total_visualizaciones ?? 0,
+      totalCompartidos: estadistica?.total_compartidos ?? 0
     }
   }
 
@@ -333,8 +342,7 @@ export class EstadisticasPublicacionService {
                 estado: EstadoPublicacion.ACTIVA
               },
               include: {
-                multimedia: true,
-                publicacion_estadistica: true
+                multimedia: true
               }
             },
             ubicacion: true
@@ -343,8 +351,42 @@ export class EstadisticasPublicacionService {
       }
     })
 
+    const publicacionesIds = vistas
+      .map((vista) => vista.inmueble.publicaciones[0]?.id)
+      .filter((id): id is number => typeof id === 'number')
+
+    const estadisticas = await prisma.publicacion_estadistica.findMany({
+      where: {
+        publicacion_id: {
+          in: publicacionesIds
+        }
+      },
+      select: {
+        publicacion_id: true,
+        total_visualizaciones: true,
+        total_compartidos: true
+      }
+    })
+
+    const estadisticasPorPublicacion = new Map<
+      number,
+      {
+        publicacion_id: number
+        total_visualizaciones: number
+        total_compartidos: number
+      }
+    >()
+
+    estadisticas.forEach((estadistica) => {
+      estadisticasPorPublicacion.set(estadistica.publicacion_id, estadistica)
+    })
+
     return vistas.map((vista) => {
       const publicacionActiva = vista.inmueble.publicaciones[0]
+
+      const estadistica = publicacionActiva
+        ? estadisticasPorPublicacion.get(publicacionActiva.id)
+        : undefined
 
       return {
         propiedadVistaId: vista.id,
@@ -352,7 +394,7 @@ export class EstadisticasPublicacionService {
         publicacionId: publicacionActiva?.id || null,
         titulo: vista.inmueble.titulo,
         descripcion: vista.inmueble.descripcion,
-        precio: vista.inmueble.precio,
+        precio: Number(vista.inmueble.precio),
         categoria: vista.inmueble.categoria,
         tipoAccion: vista.inmueble.tipoAccion,
         zona: vista.inmueble.ubicacion?.zona || null,
@@ -360,9 +402,8 @@ export class EstadisticasPublicacionService {
         imagen: publicacionActiva?.multimedia?.find((item) => item.tipo === 'IMAGEN')?.url || null,
         vecesVisto: vista.veces_visto || 1,
         ultimaVista: vista.vistaEn,
-        totalVisualizaciones:
-          publicacionActiva?.publicacion_estadistica?.total_visualizaciones || 0,
-        totalCompartidos: publicacionActiva?.publicacion_estadistica?.total_compartidos || 0
+        totalVisualizaciones: estadistica?.total_visualizaciones ?? 0,
+        totalCompartidos: estadistica?.total_compartidos ?? 0
       }
     })
   }
