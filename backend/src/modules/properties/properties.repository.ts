@@ -266,8 +266,17 @@ export const propertiesRepository = {
     if (filtros.labels && filtros.labels.length > 0) {
       where.AND = [
         ...(where.AND || []),
-        ...filtros.labels.map((id) => ({
-          inmueble_etiqueta: { some: { etiqueta_id: id } }
+        ...filtros.labels.map((labelId) => ({
+          publicaciones: {
+            some: {
+              estado: 'ACTIVA' as const,
+              publicacion_parametro: {
+                some: {
+                  parametro_id: labelId
+                }
+              }
+            }
+          }
         }))
       ]
     }
