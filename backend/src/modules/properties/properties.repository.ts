@@ -271,8 +271,6 @@ export const propertiesRepository = {
         }))
       ]
     }
-
-
     // HU6 - Filtro solo ofertas
     if (filtros.soloOfertas === true) {
       where.precio = {
