@@ -8,11 +8,11 @@ import type { AccessibilityOption } from "@/hooks/useAccessibility";
 type ThemeOption = "light" | "dark";
 
 type ThemeCardProps = {
-    title: string;
-    description: string;
-    selected: boolean;
-    onClick: () => void;
-    preview: "light" | "dark";
+  title: string;
+  description: string;
+  selected: boolean;
+  onClick: () => void;
+  preview: "light" | "dark";
 };
 
 type AccessibilityCardProps = {
