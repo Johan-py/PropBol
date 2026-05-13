@@ -180,7 +180,7 @@ export const confirmarPago = async (req: Request, res: Response) => {
 
     const transaccion = await prisma.transacciones.findUnique({
       where: { id: transaccionId },
-      select: { estado: true, id_usuario: true, id_suscripcion: true, metodo_pago: true },
+      select: { estado: true, id_usuario: true, id_suscripcion: true, metodo_pago: true, total: true },
     })
 
     if (!transaccion) {
