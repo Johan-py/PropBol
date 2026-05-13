@@ -88,6 +88,7 @@ export const useOrdenamiento = ({
         params.set('precio', nuevoOrden.precio)
       } else if (nuevoOrden.criterioActivo === 'superficie') {
         params.set('superficie', nuevoOrden.superficie)
+
       } else if (
         nuevoOrden.criterioActivo === 'fecha' ||
         nuevoOrden.criterioActivo === 'recomendados'

@@ -18,12 +18,9 @@ export default function ActiveSessions() {
 ];
 
   return (
-    <div className="propbol-active-sessions-page min-h-screen bg-[#EAEAEA] p-4">
-      {/* HU13: clase agregada para adaptar sesiones activas al modo oscuro sin tocar la lógica */}
-
+    <div className="min-h-screen bg-[#EAEAEA] p-4">
       {/* Contenedor principal */}
-     <div className="bg-[#D9D9D9] rounded-sm p-6">
-    
+      <div className="bg-[#D9D9D9] rounded-sm p-6">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-black">
@@ -86,12 +83,12 @@ export default function ActiveSessions() {
         </div>
         <div className="flex flex-col items-end mt-10 gap-5 max-w-5xl mx-auto">
 
-          <button className="propbol-btn-select-all bg-[#CFCFCF] hover:bg-[#BDBDBD] transition px-8 py-3 rounded-lg text-lg font-medium">
-            Seleccionar todas
-          </button>
+         <button className="bg-[#CFCFCF] hover:bg-[#BDBDBD] transition px-8 py-3 rounded-lg text-lg font-medium">
+                 Seleccionar todas
+        </button>
 
-          <button className="propbol-btn-close-session bg-[#EC7467] hover:bg-[#df6557] text-white transition px-12 py-3 rounded-lg text-xl font-bold">
-            Cerrar Sesión
+         <button className="bg-[#EC7467] hover:bg-[#df6557] text-white transition px-12 py-3 rounded-lg text-xl font-bold">
+                 Cerrar Sesión
         </button>
 
         </div>

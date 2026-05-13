@@ -21,18 +21,11 @@ interface PerfilData {
   pais: string | null
   genero: string | null
   direccion: string | null
-  fecha_nacimiento: string | null
+  fecha_nacimiento: string | null // ✅ UNA SOLA VARIABLE, exactamente como la base de datos
   telefonos: any[] | null
 }
 
-interface PaisAPI {
-  nombre: string
-  codigo: string
-  flag: string
-  digitos: number
-}
-
-const PAISES_DEFAULT: PaisAPI[] = [
+const PAISES = [
   { nombre: 'Bolivia', codigo: '+591', flag: '🇧🇴', digitos: 8 },
   { nombre: 'Argentina', codigo: '+54', flag: '🇦🇷', digitos: 10 },
   { nombre: 'Chile', codigo: '+56', flag: '🇨🇱', digitos: 9 },
@@ -59,8 +52,6 @@ function ProfileCardContent() {
   const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const [paisesOptions, setPaisesOptions] = useState<PaisAPI[]>(PAISES_DEFAULT)
-
   const [perfilData, setPerfilData] = useState<PerfilData | null>(null)
   const [nombre, setNombre] = useState('')
   const [pais, setPais] = useState('')
@@ -72,17 +63,14 @@ function ProfileCardContent() {
   const [previewAvatar, setPreviewAvatar] = useState<string | null>(null)
 
   // Estados para validaciones de error
-  const [errorNombre, setErrorNombre] = useState('')
-  const [errorFechaNacimiento, setErrorFechaNacimiento] = useState('')
-  const [errorDireccion, setErrorDireccion] = useState('')
-  const [errorTelefono, setErrorTelefono] = useState('')
+  const [errorNombre, setErrorNombre] = useState("");
+  const [errorFechaNacimiento, setErrorFechaNacimiento] = useState("");
 
-  const [originalNombre, setOriginalNombre] = useState('')
-  const [originalPais, setOriginalPais] = useState('')
-  const [originalGenero, setOriginalGenero] = useState('')
-  const [originalDireccion, setOriginalDireccion] = useState('')
-  const [originalFechaNacimiento, setOriginalFechaNacimiento] = useState('')
-  const [originalTelefonos, setOriginalTelefonos] = useState<Telefono[]>([])
+  const [originalNombre, setOriginalNombre] = useState("");
+  const [originalPais, setOriginalPais] = useState("");
+  const [originalGenero, setOriginalGenero] = useState("");
+  const [originalDireccion, setOriginalDireccion] = useState("");
+  const [originalFechaNacimiento, setOriginalFechaNacimiento] = useState("");
 
   const [isSecurityModalOpen, setIsSecurityModalOpen] = useState(false)
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false)
@@ -99,54 +87,21 @@ function ProfileCardContent() {
   const soloLetras = (value: string) => value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')
   const getToken = () => localStorage.getItem('token')
 
-  useEffect(() => {
-    const fetchPaises = async () => {
-      try {
-        const res = await fetch(
-          'https://restcountries.com/v3.1/all?fields=name,idd,flag,translations'
-        )
-        const data = await res.json()
-        const countriesList = data
-          .filter((c: any) => c.idd && c.idd.root)
-          .map((c: any) => {
-            const root = c.idd.root
-            const suffix = c.idd.suffixes?.length === 1 ? c.idd.suffixes[0] : ''
-            const codigoAPI = `${root}${suffix}`
-            const nombreAPI = c.translations?.spa?.common || c.name.common
-            const fallback = PAISES_DEFAULT.find(
-              (p) => p.codigo === codigoAPI || p.nombre === nombreAPI
-            )
-
-            return {
-              nombre: nombreAPI,
-              codigo: codigoAPI,
-              flag: c.flag,
-              digitos: fallback ? fallback.digitos : 15
-            }
-          })
-          .sort((a: any, b: any) => a.nombre.localeCompare(b.nombre))
-        setPaisesOptions(countriesList)
-      } catch (error) {
-        console.error('Error cargando API de países')
-      }
-    }
-    fetchPaises()
-  }, [])
-
+  // BUG 1 CORREGIDO: Disparamos un StorageEvent real y refrescamos el layout para el Navbar
   const syncNavbar = (key?: string, value?: string) => {
     window.dispatchEvent(new Event('storage'))
     window.dispatchEvent(new Event('profileUpdated'))
 
     if (key && value) {
-      window.dispatchEvent(
-        new StorageEvent('storage', {
-          key: key,
-          newValue: value,
-          url: window.location.href,
-          storageArea: localStorage
-        })
-      )
+      window.dispatchEvent(new StorageEvent('storage', {
+        key: key,
+        newValue: value,
+        url: window.location.href,
+        storageArea: localStorage
+      }))
     }
+    
+    // Fuerza a los componentes del servidor (como layouts) a reevaluarse
     router.refresh()
   }
 
@@ -182,6 +137,7 @@ function ProfileCardContent() {
         setDireccion(perfil.direccion || '')
         setOriginalDireccion(perfil.direccion || '')
 
+        // ✅ Lógica de Develop: FORMATEAR LA FECHA PARA EL INPUT DATE
         const fechaFormateada = perfil.fecha_nacimiento
           ? new Date(perfil.fecha_nacimiento).toISOString().split('T')[0]
           : ''
@@ -194,9 +150,10 @@ function ProfileCardContent() {
 
         localStorage.setItem('nombre', perfil.nombre || '')
         localStorage.setItem('correo', perfil.correo || '')
-
+        
+        // BUG 1 CORREGIDO: Sincronización robusta al cargar
         if (foto) {
-          const absoluteAvatar = foto.startsWith('http') ? foto : `${API_URL}${foto}`
+          const absoluteAvatar = foto.startsWith('http') ? foto : `${API_URL}${foto}`;
           localStorage.setItem('avatar', absoluteAvatar)
           syncNavbar('avatar', absoluteAvatar)
         } else {
@@ -204,18 +161,14 @@ function ProfileCardContent() {
         }
 
         if (perfil.telefonos && Array.isArray(perfil.telefonos) && perfil.telefonos.length > 0) {
-          const fetchedTelefonos = perfil.telefonos.map((tel: any, i: number) => ({
+          setTelefonos(perfil.telefonos.map((tel: any, i: number) => ({
             id: Date.now() + i,
             numero: tel.numero,
-            pais: paisesOptions.find((p) => tel.codigoPais === p.codigo)?.nombre || 'Bolivia',
+            pais: PAISES.find(p => tel.codigoPais === p.codigo)?.nombre || 'Bolivia',
             codigo: tel.codigoPais
-          }))
-          setTelefonos(fetchedTelefonos)
-          setOriginalTelefonos(fetchedTelefonos)
+          })))
         } else {
-          const defaultTel = [{ id: Date.now(), numero: '', pais: 'Bolivia', codigo: '+591' }]
-          setTelefonos(defaultTel)
-          setOriginalTelefonos(defaultTel)
+          setTelefonos([{ id: Date.now(), numero: '', pais: 'Bolivia', codigo: '+591' }])
         }
       }
     } catch (error) {
@@ -225,29 +178,32 @@ function ProfileCardContent() {
     }
   }
 
-  useEffect(() => {
-    cargarPerfil()
-  }, [])
+  useEffect(() => { cargarPerfil() }, [])
 
+  // BUG 2 CORREGIDO: Resaltado visual EXCLUSIVO para los campos vacíos
   useEffect(() => {
     if (focusParam === 'personal-data' && perfilData) {
       const el = document.getElementById('personal-data-form')
       el?.scrollIntoView({ behavior: 'smooth' })
 
+      // Evaluamos únicamente los campos que faltan por llenar
       const fieldsToHighlight: string[] = []
-      if (!perfilData.fecha_nacimiento) fieldsToHighlight.push('fechaNacimiento')
+
+      if (!perfilData.fecha_nacimiento) fieldsToHighlight.push('fechaNacimiento') // ✅ Lógica limpia
       if (!perfilData.pais) fieldsToHighlight.push('pais')
       if (!perfilData.genero) fieldsToHighlight.push('genero')
       if (!perfilData.direccion) fieldsToHighlight.push('direccion')
-
+      
       setHighlightedFields(fieldsToHighlight)
+      
+      // Apagamos el resaltado después de 6 segundos
       setTimeout(() => setHighlightedFields([]), 6000)
     }
   }, [focusParam, perfilData])
 
   const clearHighlight = (field: string) => {
     if (highlightedFields.includes(field)) {
-      setHighlightedFields((prev) => prev.filter((f) => f !== field))
+      setHighlightedFields(prev => prev.filter(f => f !== field))
     }
   }
 
@@ -255,96 +211,115 @@ function ProfileCardContent() {
   const hasEmailChanged = tempEmail !== originalEmail && isValidEmail(tempEmail)
 
   const guardarNombre = async () => {
-    const response = await fetch(`${API_URL}/api/perfil/usuario/nombre`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
-      body: JSON.stringify({ nombre })
-    })
-    if (!response.ok) throw new Error('Error al guardar nombre')
-    setOriginalNombre(nombre)
-    localStorage.setItem('nombre', nombre)
-    syncNavbar('nombre', nombre)
+    try {
+      await fetch(`${API_URL}/api/perfil/usuario/nombre`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+        body: JSON.stringify({ nombre })
+      })
+      setOriginalNombre(nombre)
+      localStorage.setItem('nombre', nombre)
+      syncNavbar('nombre', nombre)
+    } catch (error: any) {
+      console.error(error.message)
+    }
   }
 
   const guardarPais = async () => {
-    const response = await fetch(`${API_URL}/api/perfil/usuario/pais`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
-      body: JSON.stringify({ pais: pais || null })
-    })
-    if (!response.ok) throw new Error('Error al guardar país')
-    setOriginalPais(pais)
+    try {
+      await fetch(`${API_URL}/api/perfil/usuario/pais`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+        body: JSON.stringify({ pais })
+      })
+      setOriginalPais(pais)
+    } catch (error: any) {
+      console.error(error.message)
+    }
   }
 
   const guardarGenero = async () => {
-    const response = await fetch(`${API_URL}/api/perfil/usuario/genero`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
-      body: JSON.stringify({ genero: genero || null })
-    })
-    if (!response.ok) throw new Error('Error al guardar género')
-    setOriginalGenero(genero)
+    try {
+      await fetch(`${API_URL}/api/perfil/usuario/genero`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+        body: JSON.stringify({ genero })
+      })
+      setOriginalGenero(genero)
+    } catch (error: any) {
+      console.error(error.message)
+    }
   }
 
   const guardarDireccion = async () => {
-    const response = await fetch(`${API_URL}/api/perfil/usuario/direccion`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
-      body: JSON.stringify({ direccion: direccion || null })
-    })
-    if (!response.ok) throw new Error('Error al guardar dirección')
-    setOriginalDireccion(direccion)
+    try {
+      await fetch(`${API_URL}/api/perfil/usuario/direccion`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+        body: JSON.stringify({ direccion })
+      })
+      setOriginalDireccion(direccion)
+    } catch (error: any) {
+      console.error(error.message)
+    }
   }
 
   const guardarFechaNacimiento = async () => {
-    const response = await fetch(`${API_URL}/api/perfil/usuario/fecha-nacimiento`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
-      body: JSON.stringify({ fecha_nacimiento: fechaNacimiento || null })
-    })
-    if (!response.ok) throw new Error('Error al guardar fecha de nacimiento')
-    setOriginalFechaNacimiento(fechaNacimiento)
+    try {
+      await fetch(`${API_URL}/api/perfil/usuario/fecha-nacimiento`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+        body: JSON.stringify({ fecha_nacimiento: fechaNacimiento })
+      })
+      setOriginalFechaNacimiento(fechaNacimiento)
+    } catch (error: any) {
+      console.error(error.message)
+    }
   }
 
   const guardarTelefonos = async () => {
-    const numerosLimpios = telefonos.map((t) => t.numero.trim()).filter((num) => num !== '')
-    const tieneDuplicados = new Set(numerosLimpios).size !== numerosLimpios.length
+    const numerosLimpios = telefonos.map((t) => t.numero.trim()).filter((num) => num !== '');
+    const tieneDuplicados = new Set(numerosLimpios).size !== numerosLimpios.length;
 
     if (tieneDuplicados) {
-      alert('No puedes guardar números de teléfono duplicados. Por favor, verifica la información.')
-      throw new Error('Duplicados')
+      alert('No puedes guardar números de teléfono duplicados. Por favor, verifica la información.');
+      return;
     }
 
-    const token = getToken()
-    const body = {
-      telefonos: telefonos
-        .filter((t) => t.numero.trim() !== '')
-        .map((t, index) => ({
-          codigoPais: t.codigo,
-          numero: t.numero,
-          principal: index === 0
-        }))
-    }
+    try {
+      const token = getToken();
+      const body = {
+        telefonos: telefonos
+          .filter((t) => t.numero.trim() !== '')
+          .map((t, index) => ({
+            codigoPais: t.codigo,
+            numero: t.numero,
+            principal: index === 0
+          }))
+      };
 
-    const response = await fetch(`${API_URL}/api/perfil/usuario/telefonos`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify(body)
-    })
-    const data = await response.json()
-    if (!data.ok) throw new Error(data.msg)
-    setOriginalTelefonos([...telefonos])
-  }
+      await fetch(`${API_URL}/api/perfil/usuario/telefonos`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(body)
+      });
+    } catch (error: any) {
+      console.error(error.message)
+    }
+  };
 
   const subirFoto = async (file: File) => {
     const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
     if (!allowedTypes.includes(file.type)) {
       alert('Solo se permiten imágenes (JPEG, PNG, GIF, WEBP)')
-      throw new Error('Tipo inválido')
+      return
     }
     if (file.size > 5 * 1024 * 1024) {
       alert('La imagen no puede superar los 5MB')
-      throw new Error('Tamaño')
+      return
     }
 
     setIsUploading(true)
@@ -359,17 +334,19 @@ function ProfileCardContent() {
       const data = await response.json()
       if (data.ok) {
         const nuevaFoto = data.fotoPerfil || data.avatar
-        const absoluteAvatar = nuevaFoto.startsWith('http') ? nuevaFoto : `${API_URL}${nuevaFoto}`
+        const absoluteAvatar = nuevaFoto.startsWith('http') ? nuevaFoto : `${API_URL}${nuevaFoto}`;
+        
         setAvatar(nuevaFoto)
         localStorage.setItem('avatar', absoluteAvatar)
-        syncNavbar('avatar', absoluteAvatar)
+        
+        // BUG 1 CORREGIDO: Notificamos inmediatamente a la Navbar la nueva foto
+        syncNavbar('avatar', absoluteAvatar) 
         cargarPerfil()
       } else {
         throw new Error(data.msg)
       }
     } catch (error: any) {
       alert(error.message || 'Error al subir foto')
-      throw error
     } finally {
       setIsUploading(false)
     }
@@ -380,11 +357,16 @@ function ProfileCardContent() {
     try {
       const token = getToken()
       if (!token) throw new Error('No hay sesión activa')
+
       const verifyRes = await fetch(`${API_URL}/api/perfil/verificar-password`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
         body: JSON.stringify({ passwordActual })
       })
+
       const verifyData = await verifyRes.json()
       if (!verifyData.ok) throw new Error(verifyData.msg)
 
@@ -404,9 +386,13 @@ function ProfileCardContent() {
       const token = getToken()
       const solicitarRes = await fetch(`${API_URL}/api/perfil/solicitar-cambio-email`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
         body: JSON.stringify({ emailNuevo: nuevoEmail })
       })
+
       const solicitarData = await solicitarRes.json()
       if (!solicitarData.ok) throw new Error(solicitarData.msg)
 
@@ -415,7 +401,6 @@ function ProfileCardContent() {
       setOtpError('')
     } catch (error: any) {
       alert(error.message || 'Error al solicitar cambio de email')
-      throw error
     } finally {
       setIsLoading(false)
     }
@@ -427,9 +412,13 @@ function ProfileCardContent() {
       const token = getToken()
       const response = await fetch(`${API_URL}/api/perfil/confirmar-cambio-email`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
         body: JSON.stringify({ otp })
       })
+
       const data = await response.json()
       if (!data.ok) throw new Error(data.msg)
 
@@ -440,7 +429,7 @@ function ProfileCardContent() {
       setIsOtpModalOpen(false)
       setEmailToUpdate('')
       setOtpError('')
-
+      
       syncNavbar('correo', emailToUpdate)
       alert('Correo actualizado y cambios guardados exitosamente')
       cargarPerfil()
@@ -456,13 +445,19 @@ function ProfileCardContent() {
     try {
       const token = getToken()
       const emailNuevo = emailToUpdate || tempEmail
+
       const response = await fetch(`${API_URL}/api/perfil/solicitar-cambio-email`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
         body: JSON.stringify({ emailNuevo })
       })
+
       const data = await response.json()
       if (!data.ok) throw new Error(data.msg)
+
       setOtpError('')
       alert('Se ha enviado un nuevo código a tu correo')
     } catch (error: any) {
@@ -488,58 +483,45 @@ function ProfileCardContent() {
     setTelefonos(
       telefonos.map((t) => {
         if (t.id === id) {
-          const configPais =
-            paisesOptions.find((p) => p.nombre === t.pais) ||
-            PAISES_DEFAULT.find((p) => p.nombre === t.pais)
-          const maxDigitos = configPais?.digitos || 15
-          const soloNumerosYCortados = valor.replace(/\D/g, '').slice(0, maxDigitos)
-          return { ...t, numero: soloNumerosYCortados }
+          const configPais = PAISES.find(p => p.nombre === t.pais);
+          const maxDigitos = configPais?.digitos || 15;
+          const soloNumerosYCortados = valor.replace(/\D/g, '').slice(0, maxDigitos);
+          return { ...t, numero: soloNumerosYCortados };
         }
-        return t
+        return t;
       })
     )
   }
 
   const handleSaveAll = async () => {
-    setIsLoading(true)
-    let isWaitingForEmailOTP = false
+    setIsLoading(true);
+    let isWaitingForEmailOTP = false;
+    
+    if (tempAvatar) {
+      await subirFoto(tempAvatar)
+      setTempAvatar(null)
+      setPreviewAvatar(null)
+    }
 
-    try {
-      if (tempAvatar) {
-        await subirFoto(tempAvatar)
-        setTempAvatar(null)
-        setPreviewAvatar(null)
-      }
+    if (nombre !== originalNombre) await guardarNombre();
+    if (pais !== originalPais) await guardarPais();
+    if (genero !== originalGenero) await guardarGenero();
+    if (direccion !== originalDireccion) await guardarDireccion();
+    if (fechaNacimiento !== originalFechaNacimiento) await guardarFechaNacimiento();
+    await guardarTelefonos();
 
-      if (nombre !== originalNombre) await guardarNombre()
-      if (pais !== originalPais) await guardarPais()
-      if (genero !== originalGenero) await guardarGenero()
-      if (direccion !== originalDireccion) await guardarDireccion()
-      if (fechaNacimiento !== originalFechaNacimiento) await guardarFechaNacimiento()
+    if (isEmailEditable && hasEmailChanged) {
+      isWaitingForEmailOTP = true;
+      await solicitarCambioEmail(tempEmail)
+    } else if (isEmailEditable && !hasEmailChanged) {
+      setIsEmailEditable(false)
+    }
 
-      if (JSON.stringify(telefonos) !== JSON.stringify(originalTelefonos)) {
-        await guardarTelefonos()
-      }
+    setCampoEditando(null);
+    setIsLoading(false);
 
-      if (isEmailEditable && hasEmailChanged) {
-        isWaitingForEmailOTP = true
-        await solicitarCambioEmail(tempEmail)
-      } else if (isEmailEditable && !hasEmailChanged) {
-        setIsEmailEditable(false)
-      }
-
-      setCampoEditando(null)
-
-      if (!isWaitingForEmailOTP) {
-        alert('Cambios guardados exitosamente')
-      }
-    } catch (error) {
-      console.error('Proceso de guardado interrumpido:', error)
-      alert(
-        'No fue posible completar la actualización por un error de conexión o del sistema. Su información ingresada NO se ha perdido, por favor intente nuevamente.'
-      )
-    } finally {
-      setIsLoading(false)
+    if (!isWaitingForEmailOTP) {
+      alert('Cambios guardados exitosamente');
     }
   }
 
@@ -550,15 +532,10 @@ function ProfileCardContent() {
     setGenero(originalGenero)
     setDireccion(originalDireccion)
     setFechaNacimiento(originalFechaNacimiento)
-    setTelefonos(originalTelefonos)
     setTempEmail(originalEmail)
     setIsEmailEditable(false)
-    setTempAvatar(null)
-    setPreviewAvatar(null)
-    setErrorNombre('')
-    setErrorFechaNacimiento('')
-    setErrorDireccion('')
-    setErrorTelefono('')
+    setErrorNombre("")
+    setErrorFechaNacimiento("")
     setHighlightedFields([])
   }
 
@@ -573,8 +550,7 @@ function ProfileCardContent() {
     direccion !== originalDireccion ||
     fechaNacimiento !== originalFechaNacimiento ||
     tempEmail !== originalEmail ||
-    tempAvatar !== null ||
-    JSON.stringify(telefonos) !== JSON.stringify(originalTelefonos)
+    tempAvatar !== null;
 
   if (isLoading && !perfilData) {
     return (
@@ -585,15 +561,15 @@ function ProfileCardContent() {
   }
 
   return (
-    <div
-      id="personal-data-form"
-      className="propbol-profile-card bg-[#fdf6e6] border border-[#e5dfd7] p-5 md:p-8 rounded-xl flex flex-col md:flex-row gap-8 md:gap-10 items-center md:items-start transition-all duration-700 shadow-sm"
+    <div 
+      id="personal-data-form" 
+      className="bg-[#fdf6e6] border border-[#e5dfd7] p-5 md:p-8 rounded-xl flex flex-col md:flex-row gap-8 md:gap-10 items-center md:items-start transition-all duration-700 shadow-sm"
     >
       {/* PERFIL */}
       <div className="flex flex-col items-center justify-center w-full md:w-1/3 md:mt-4">
         <div className="relative mb-6 md:mb-10">
           <div className="w-28 h-28 rounded-full bg-white border border-gray-300 flex items-center justify-center shadow-sm overflow-hidden">
-            {previewAvatar || (avatar && avatar.trim() !== '') ? (
+              {(previewAvatar || (avatar && avatar.trim() !== "")) ? (
               <img
                 src={previewAvatar || (avatar?.startsWith('http') ? avatar : `${API_URL}${avatar}`)}
                 alt="Foto de perfil"
@@ -629,23 +605,18 @@ function ProfileCardContent() {
         </div>
 
         <p className="mt-2 md:mt-4 font-semibold text-lg text-center">{nombre}</p>
-        <p className="text-sm text-gray-500 text-center">
-          {isEmailEditable ? originalEmail : ofuscarEmail(originalEmail)}
-        </p>
+        <p className="text-sm text-gray-500 text-center">{isEmailEditable ? originalEmail : ofuscarEmail(originalEmail)}</p>
       </div>
 
       {/* FORMULARIO */}
       <div className="w-full md:w-2/3">
-        <h2 className="text-xl font-bold mb-6 text-stone-900 text-center md:text-left">
-          Datos Personales
-        </h2>
+        <h2 className="text-xl font-bold mb-6 text-stone-900 text-center md:text-left">Datos Personales</h2>
 
         <div className="flex flex-col gap-4">
-          {/* NOMBRE (Obligatorio) */}
+
+          {/* NOMBRE */}
           <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
-            <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">
-              Nombre Completo:
-            </label>
+            <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">Nombre Completo:</label>
             <div className="flex flex-col w-full">
               <div className="flex items-center gap-2">
                 <input
@@ -653,15 +624,11 @@ function ProfileCardContent() {
                   value={nombre}
                   onFocus={() => setCampoEditando('nombre')}
                   onChange={(e) => {
-                    setNombre(soloLetras(e.target.value))
-                    if (errorNombre) setErrorNombre('')
+                    setNombre(soloLetras(e.target.value));
+                    if (errorNombre) setErrorNombre("");
                   }}
                   className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                    errorNombre
-                      ? 'border-red-500 bg-red-50'
-                      : campoEditando === 'nombre'
-                        ? 'border-amber-500 ring-1 ring-amber-500'
-                        : 'border-stone-300 hover:border-amber-400'
+                    errorNombre ? "border-red-500 bg-red-50" : campoEditando === 'nombre' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
                   }`}
                 />
               </div>
@@ -671,9 +638,7 @@ function ProfileCardContent() {
 
           {/* EMAIL */}
           <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
-            <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">
-              E-mail:
-            </label>
+            <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">E-mail:</label>
             <div className="flex w-full items-center gap-2">
               <input
                 type="email"
@@ -693,92 +658,58 @@ function ProfileCardContent() {
             </div>
           </div>
           {isEmailEditable && tempEmail.length > 0 && !isValidEmail(tempEmail) && (
-            <div className="ml-0 md:ml-44">
-              <span className="text-red-500 text-xs mt-1">Formato de correo inválido</span>
-            </div>
+            <div className="ml-0 md:ml-44"><span className="text-red-500 text-xs mt-1">Formato de correo inválido</span></div>
           )}
 
           {/* TELÉFONOS */}
           {telefonos.map((tel, index) => {
             const keyCampo = `telefono-${tel.id}`
             return (
-              <div
-                key={tel.id}
-                className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4"
-              >
+              <div key={tel.id} className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
                 <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">
                   {index === 0 ? 'Teléfono:' : `Teléfono ${index + 1}:`}
                 </label>
-                <div className="flex flex-col w-full">
-                  <div className="flex items-center gap-2 w-full">
-                    <select
-                      value={`${tel.pais} ${tel.codigo}`}
-                      onFocus={() => setCampoEditando(keyCampo)}
-                      onChange={(e) => {
-                        const seleccion = paisesOptions.find(
-                          (p) => `${p.nombre} ${p.codigo}` === e.target.value
-                        )
-                        if (seleccion) {
-                          setTelefonos(
-                            telefonos.map((t) =>
-                              t.id === tel.id
-                                ? { ...t, pais: seleccion.nombre, codigo: seleccion.codigo }
-                                : t
-                            )
-                          )
-                        }
-                      }}
-                      className={`px-2 py-2 rounded text-sm bg-white border focus:outline-none transition-colors w-1/3 md:w-auto ${
-                        errorTelefono && index === 0
-                          ? 'border-red-500 bg-red-50'
-                          : campoEditando === keyCampo
-                            ? 'border-amber-500 ring-1 ring-amber-500'
-                            : 'border-stone-300 hover:border-amber-400'
-                      }`}
+                <div className="flex w-full items-center gap-2">
+                  <select
+                    value={`${tel.pais} ${tel.codigo}`}
+                    onFocus={() => setCampoEditando(keyCampo)}
+                    onChange={(e) => {
+                      const seleccion = PAISES.find((p) => `${p.nombre} ${p.codigo}` === e.target.value)
+                      if (seleccion) {
+                        setTelefonos(telefonos.map((t) => t.id === tel.id ? { ...t, pais: seleccion.nombre, codigo: seleccion.codigo } : t))
+                      }
+                    }}
+                    className={`px-2 py-2 rounded text-sm bg-white border focus:outline-none transition-colors w-1/3 md:w-auto ${
+                      campoEditando === keyCampo ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                    }`}
+                  >
+                    {PAISES.map((p) => (
+                      <option key={p.nombre} value={`${p.nombre} ${p.codigo}`}>{p.flag} {p.codigo}</option>
+                    ))}
+                  </select>
+                  <input
+                    type="text"
+                    placeholder="Ej. 70000000"
+                    value={tel.numero}
+                    onFocus={() => setCampoEditando(keyCampo)}
+                    onChange={(e) => actualizarTelefono(tel.id, e.target.value)}
+                    className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
+                      campoEditando === keyCampo ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                    }`}
+                  />
+                  {index === 0 && (
+                    <button
+                      onClick={agregarTelefono}
+                      disabled={telefonos.length >= 3}
+                      className="text-stone-500 disabled:opacity-30 disabled:cursor-not-allowed hover:text-orange-600 transition-colors"
                     >
-                      {paisesOptions.map((p) => (
-                        <option key={`${p.nombre}-${p.codigo}`} value={`${p.nombre} ${p.codigo}`}>
-                          {p.flag} {p.codigo}
-                        </option>
-                      ))}
-                    </select>
-                    <input
-                      type="text"
-                      placeholder="Ej. 70000000"
-                      value={tel.numero}
-                      onFocus={() => setCampoEditando(keyCampo)}
-                      onChange={(e) => {
-                        actualizarTelefono(tel.id, e.target.value)
-                        if (errorTelefono) setErrorTelefono('')
-                      }}
-                      className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-colors ${
-                        errorTelefono && index === 0
-                          ? 'border-red-500 bg-red-50'
-                          : campoEditando === keyCampo
-                            ? 'border-amber-500 ring-1 ring-amber-500'
-                            : 'border-stone-300 hover:border-amber-400'
-                      }`}
-                    />
-                    {index === 0 && (
-                      <button
-                        onClick={agregarTelefono}
-                        disabled={telefonos.length >= 3}
-                        className="text-stone-500 disabled:opacity-30 disabled:cursor-not-allowed hover:text-orange-600 transition-colors"
-                      >
-                        <Plus size={18} />
-                      </button>
-                    )}
-                    {index > 0 && (
-                      <button
-                        onClick={() => eliminarTelefono(tel.id)}
-                        className="text-stone-500 hover:text-red-500 transition-colors"
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                    )}
-                  </div>
-                  {errorTelefono && index === 0 && (
-                    <span className="text-red-500 text-xs mt-1">{errorTelefono}</span>
+                      <Plus size={18} />
+                    </button>
+                  )}
+                  {index > 0 && (
+                    <button onClick={() => eliminarTelefono(tel.id)} className="text-stone-500 hover:text-red-500 transition-colors">
+                      <Trash2 size={18} />
+                    </button>
                   )}
                 </div>
               </div>
@@ -790,136 +721,88 @@ function ProfileCardContent() {
             </p>
           )}
 
-          {/* FECHA DE NACIMIENTO (Opcional) */}
+          {/* FECHA DE NACIMIENTO */}
           <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
-            <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">
-              F. de Nacimiento:
-            </label>
+            <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">F. de Nacimiento:</label>
             <div className="flex flex-col w-full">
               <div className="flex items-center gap-2">
                 <input
                   type="date"
                   max="2999-12-31"
                   value={fechaNacimiento}
-                  onFocus={() => {
-                    setCampoEditando('fechaNacimiento')
-                    clearHighlight('fechaNacimiento')
-                  }}
+                  onFocus={() => { setCampoEditando('fechaNacimiento'); clearHighlight('fechaNacimiento'); }}
                   onChange={(e) => {
                     setFechaNacimiento(e.target.value)
-                    if (errorFechaNacimiento) setErrorFechaNacimiento('')
+                    if (errorFechaNacimiento) setErrorFechaNacimiento("")
                   }}
                   className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-all duration-500 ${
-                    errorFechaNacimiento
-                      ? 'border-red-500 bg-red-50'
-                      : highlightedFields.includes('fechaNacimiento')
-                        ? 'border-amber-500 ring-2 ring-amber-400 bg-amber-50 shadow-inner'
-                        : campoEditando === 'fechaNacimiento'
-                          ? 'border-amber-500 ring-1 ring-amber-500'
-                          : 'border-stone-300 hover:border-amber-400'
+                    errorFechaNacimiento ? "border-red-500 bg-red-50" : 
+                    highlightedFields.includes('fechaNacimiento') ? 'border-amber-500 ring-2 ring-amber-400 bg-amber-50 shadow-inner' :
+                    campoEditando === 'fechaNacimiento' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
                   }`}
                 />
               </div>
-              {errorFechaNacimiento && (
-                <span className="text-red-500 text-xs mt-1">{errorFechaNacimiento}</span>
-              )}
+              {errorFechaNacimiento && <span className="text-red-500 text-xs mt-1">{errorFechaNacimiento}</span>}
             </div>
           </div>
 
-          {/* PAÍS (Opcional) */}
+          {/* PAÍS */}
           <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
             <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">País:</label>
-            <div className="flex flex-col w-full">
-              <div className="flex items-center gap-2">
-                <select
-                  value={pais}
-                  onFocus={() => {
-                    setCampoEditando('pais')
-                    clearHighlight('pais')
-                  }}
-                  onChange={(e) => setPais(e.target.value)}
-                  className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-all duration-500 ${
-                    highlightedFields.includes('pais')
-                      ? 'border-amber-500 ring-2 ring-amber-400 bg-amber-50 shadow-inner'
-                      : campoEditando === 'pais'
-                        ? 'border-amber-500 ring-1 ring-amber-500'
-                        : 'border-stone-300 hover:border-amber-400'
-                  }`}
-                >
-                  <option value="">Seleccione un país</option>
-                  {paisesOptions.map((p) => (
-                    <option key={p.nombre} value={p.nombre}>
-                      {p.nombre}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <div className="flex w-full items-center gap-2">
+              <select
+                value={pais}
+                onFocus={() => { setCampoEditando('pais'); clearHighlight('pais'); }}
+                onChange={(e) => setPais(e.target.value)}
+                className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-all duration-500 ${
+                  highlightedFields.includes('pais') ? 'border-amber-500 ring-2 ring-amber-400 bg-amber-50 shadow-inner' :
+                  campoEditando === 'pais' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                }`}
+              >
+                <option value="">Seleccione un país</option>
+                <option value="Bolivia">Bolivia</option>
+                <option value="Argentina">Argentina</option>
+                <option value="Chile">Chile</option>
+                <option value="Perú">Perú</option>
+              </select>
             </div>
           </div>
 
-          {/* GÉNERO (Opcional) */}
+          {/* GÉNERO */}
           <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
-            <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">
-              Género:
-            </label>
-            <div className="flex flex-col w-full">
-              <div className="flex items-center gap-2">
-                <select
-                  value={genero}
-                  onFocus={() => {
-                    setCampoEditando('genero')
-                    clearHighlight('genero')
-                  }}
-                  onChange={(e) => setGenero(e.target.value)}
-                  className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-all duration-500 ${
-                    highlightedFields.includes('genero')
-                      ? 'border-amber-500 ring-2 ring-amber-400 bg-amber-50 shadow-inner'
-                      : campoEditando === 'genero'
-                        ? 'border-amber-500 ring-1 ring-amber-500'
-                        : 'border-stone-300 hover:border-amber-400'
-                  }`}
-                >
-                  <option value="">Seleccione género</option>
-                  <option value="Masculino">Masculino</option>
-                  <option value="Femenino">Femenino</option>
-                  <option value="Otro">Otro</option>
-                  <option value="Prefiero no decirlo">Prefiero no decirlo</option>
-                </select>
-              </div>
+            <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">Género:</label>
+            <div className="flex w-full items-center gap-2">
+              <select
+                value={genero}
+                onFocus={() => { setCampoEditando('genero'); clearHighlight('genero'); }}
+                onChange={(e) => setGenero(e.target.value)}
+                className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-all duration-500 ${
+                  highlightedFields.includes('genero') ? 'border-amber-500 ring-2 ring-amber-400 bg-amber-50 shadow-inner' :
+                  campoEditando === 'genero' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                }`}
+              >
+                <option value="">Seleccione género</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Otro">Otro</option>
+                <option value="Prefiero no decirlo">Prefiero no decirlo</option>
+              </select>
             </div>
           </div>
 
-          {/* DIRECCIÓN (Opcional, pero con reglas si se llena) */}
+          {/* DIRECCIÓN */}
           <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-4">
-            <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">
-              Dirección:
-            </label>
-            <div className="flex flex-col w-full">
-              <div className="flex items-center gap-2">
-                <input
-                  value={direccion}
-                  onFocus={() => {
-                    setCampoEditando('direccion')
-                    clearHighlight('direccion')
-                  }}
-                  onChange={(e) => {
-                    setDireccion(e.target.value)
-                    if (errorDireccion) setErrorDireccion('')
-                  }}
-                  className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-all duration-500 ${
-                    errorDireccion
-                      ? 'border-red-500 bg-red-50'
-                      : highlightedFields.includes('direccion')
-                        ? 'border-amber-500 ring-2 ring-amber-400 bg-amber-50 shadow-inner'
-                        : campoEditando === 'direccion'
-                          ? 'border-amber-500 ring-1 ring-amber-500'
-                          : 'border-stone-300 hover:border-amber-400'
-                  }`}
-                />
-              </div>
-              {errorDireccion && (
-                <span className="text-red-500 text-xs mt-1">{errorDireccion}</span>
-              )}
+            <label className="w-full md:w-40 font-medium text-stone-700 mb-1 md:mb-0">Dirección:</label>
+            <div className="flex w-full items-center gap-2">
+              <input
+                value={direccion}
+                onFocus={() => { setCampoEditando('direccion'); clearHighlight('direccion'); }}
+                onChange={(e) => setDireccion(e.target.value)}
+                className={`flex-1 px-3 py-2 rounded text-sm bg-white border focus:outline-none transition-all duration-500 ${
+                  highlightedFields.includes('direccion') ? 'border-amber-500 ring-2 ring-amber-400 bg-amber-50 shadow-inner' :
+                  campoEditando === 'direccion' ? 'border-amber-500 ring-1 ring-amber-500' : 'border-stone-300 hover:border-amber-400'
+                }`}
+              />
             </div>
           </div>
 
@@ -934,105 +817,66 @@ function ProfileCardContent() {
             </button>
             <button
               onClick={() => {
-                let hasError = false
+                let hasError = false;
 
                 if (!nombre.trim()) {
-                  setErrorNombre('El nombre es obligatorio')
-                  hasError = true
+                  setErrorNombre("El nombre es obligatorio");
+                  hasError = true;
                 } else {
-                  setErrorNombre('')
-                }
-
-                if (!telefonos[0].numero.trim()) {
-                  setErrorTelefono('Debes registrar al menos un número de teléfono')
-                  hasError = true
-                } else {
-                  setErrorTelefono('')
+                  setErrorNombre("");
                 }
 
                 if (fechaNacimiento) {
-                  const dob = new Date(fechaNacimiento)
-                  const today = new Date()
-                  let age = today.getFullYear() - dob.getFullYear()
-                  const m = today.getMonth() - dob.getMonth()
+                  const dob = new Date(fechaNacimiento);
+                  const today = new Date();
+                  let age = today.getFullYear() - dob.getFullYear();
+                  const m = today.getMonth() - dob.getMonth();
+                  
+                  // Ajuste si el mes/día actual es anterior al de cumpleaños
                   if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-                    age--
+                    age--;
                   }
+
                   if (age < 18) {
-                    setErrorFechaNacimiento('Debes ser mayor de 18 años para registrarte.')
-                    hasError = true
+                    setErrorFechaNacimiento("Debes ser mayor de 18 años para registrarte.");
+                    hasError = true;
                   } else {
-                    setErrorFechaNacimiento('')
+                    setErrorFechaNacimiento("");
                   }
                 } else {
-                  setErrorFechaNacimiento('')
+                  setErrorFechaNacimiento("");
                 }
 
-                // ✅ CRITERIO 1: Dirección (Opcional, pero sin espacios en blanco y < 250 chars)
-                if (direccion.length > 0 && !direccion.trim()) {
-                  setErrorDireccion('La dirección no puede contener solo espacios en blanco')
-                  hasError = true
-                } else if (direccion.length > 250) {
-                  setErrorDireccion('Límite de caracteres superado')
-                  hasError = true
-                } else {
-                  setErrorDireccion('')
-                }
+                if (hasError) return;
 
-                if (hasError) return
-
-                handleSaveAll()
+                handleSaveAll();
               }}
               disabled={isLoading || !hayCambios}
               className={`px-6 py-3 sm:py-2 rounded-lg text-sm font-medium shadow-sm transition w-full sm:w-auto ${
-                !hayCambios
-                  ? 'bg-orange-300 cursor-not-allowed text-white'
-                  : 'bg-orange-500 hover:bg-orange-600 text-white'
+                !hayCambios ? "bg-orange-300 cursor-not-allowed text-white" : "bg-orange-500 hover:bg-orange-600 text-white"
               }`}
             >
               {isLoading ? 'Guardando...' : 'Guardar Cambios'}
             </button>
           </div>
+
         </div>
       </div>
 
-      <SecurityModal
-        isOpen={isSecurityModalOpen}
-        onClose={() => {
-          setIsSecurityModalOpen(false)
-          setIsLoading(false)
-        }}
-        onSubmit={handlePasswordSubmit}
-        isLoading={isLoading}
-      />
-      <OtpModal
-        isOpen={isOtpModalOpen}
-        onClose={() => {
-          setIsOtpModalOpen(false)
-          setOtpError('')
-          setEmailToUpdate('')
-          setIsLoading(false)
-          setIsEmailEditable(false)
-          setTempEmail(originalEmail)
-        }}
-        onSubmit={handleOtpSubmit}
-        onResendCode={handleResendCode}
-        externalError={otpError}
-        isLoading={isLoading}
-      />
+      {/* MODALES */}
+      <SecurityModal isOpen={isSecurityModalOpen} onClose={() => { setIsSecurityModalOpen(false); setIsLoading(false) }} onSubmit={handlePasswordSubmit} isLoading={isLoading} />
+      <OtpModal isOpen={isOtpModalOpen} onClose={() => { setIsOtpModalOpen(false); setOtpError(''); setEmailToUpdate(''); setIsLoading(false); setIsEmailEditable(false); setTempEmail(originalEmail) }} onSubmit={handleOtpSubmit} onResendCode={handleResendCode} externalError={otpError} isLoading={isLoading} />
     </div>
   )
 }
 
 export default function ProfileCard() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex justify-center items-center h-64">
-          <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
-        </div>
-      }
-    >
+    <Suspense fallback={
+      <div className="flex justify-center items-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
+      </div>
+    }>
       <ProfileCardContent />
     </Suspense>
   )

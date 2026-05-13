@@ -33,19 +33,19 @@ export interface RecomendacionesParams {
   excludeIds?: number[] // Inmuebles a excluir
   zonaForzada?: string // Para forzar 60% de una zona
   ia?: boolean // Si es true, activa modo avanzado con IA (similitud de coseno)
-  modoInmueble?: string[]
-  query?: string
-  minPrice?: number
-  maxPrice?: number
-  minSuperficie?: number
-  maxSuperficie?: number
-  dormitoriosMin?: number
-  dormitoriosMax?: number
-  banosMin?: number
-  banosMax?: number
-  amenities?: string[]
-  labels?: string[]
-  tipoInmueble?: string
+  modoInmueble?: string[];
+  query?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  minSuperficie?: number;
+  maxSuperficie?: number;
+  dormitoriosMin?: number;
+  dormitoriosMax?: number;
+  banosMin?: number;
+  banosMax?: number;
+  amenities?: string[];
+  labels?: string[];
+  tipoInmueble?: string;
 }
 export interface ReglasAvanzadasConfig {
   umbralClicsRecomendacionAvanzada: number // 5 por defecto: activa modo avanzado

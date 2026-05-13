@@ -50,8 +50,6 @@ export class FeaturesService {
       for (const f of favoritos) {
         interacciones.set(f.inmuebleId, (interacciones.get(f.inmuebleId) || 0) + 5) // favoritos suman más
       }
-      console.log('[ML] Interacciones totales:', interacciones.size)
-      console.log('[ML] IDs en interacciones:', Array.from(interacciones.keys()))
 
       if (interacciones.size === 0) {
         // Sin historial: fallback a populares
@@ -159,21 +157,12 @@ export class FeaturesService {
       )
     ]
 
-    console.log('[ML] IDs interactuados:', idsInteractuados)
-    console.log('[ML] Categorías encontradas:', categorias) 
-
-
-    const whereCategoria = categorias.length > 0 
-    ? { in: categorias } 
-    : undefined  // ← AGREGAR ESTO
-
     const where: any = {
-    id: { notIn: idsInteractuados },
-    estado: 'ACTIVO',
-    ...(whereCategoria ? { categoria: whereCategoria } : {})  // ← CAMBIAR ESTO
-  }
+      id: { notIn: idsInteractuados },
+      categoria: { in: categorias },
+      estado: 'ACTIVO'
+    }
 
-  
     if (filtrosActivos?.modoInmueble && filtrosActivos.modoInmueble.length > 0) {
       where.tipoAccion = { in: filtrosActivos.modoInmueble }
     }

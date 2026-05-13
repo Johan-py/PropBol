@@ -112,17 +112,14 @@ export default function MapaListadoPaginacion({
           </div>
         ) : null}
       </div>
-
       <p className="text-[11px] text-stone-500 text-center">
         {disabled
           ? "Sin inmuebles en esta búsqueda — la paginación se activará al haber resultados."
           : `Mostrando ${from}–${to} de ${total}`}
       </p>
-
       {!disabled && totalPages > 1 && safePage >= totalPages && (
         <p className="text-[11px] text-stone-400 text-center">No hay más resultados para mostrar.</p>
       )}
-      
       {disabled && hint ? (
         <p className="text-[11px] text-red-600/90 text-center break-words">{hint}</p>
 ) : null}

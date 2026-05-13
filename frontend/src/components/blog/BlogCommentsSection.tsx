@@ -101,15 +101,15 @@ const CommentItem = ({
   const hasReplies = replies.length > 0
 
   return (
-    <div className={level > 0 ? 'border-l-2 border-stone-200 pl-6 sm:pl-10' : ''}>
-      <article className="rounded-[32px] bg-white p-4 shadow-md sm:p-6">
+    <div className={level > 0 ? 'border-l border-stone-200 pl-4 sm:pl-6' : ''}>
+      <article className="rounded-[28px] border border-stone-200 bg-white p-4 shadow-sm sm:p-6">
         <div className="flex items-start gap-3 sm:gap-4">
           <Avatar author={comment.author} sizeClass="h-11 w-11 sm:h-12 sm:w-12" />
 
           <div className="min-w-0 flex-1">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="min-w-0">
-                <div className="flex flex-col items-start gap-y-0.5">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   <h3 className="text-base font-semibold text-stone-900">
                     {comment.author.name}
                   </h3>
@@ -123,8 +123,8 @@ const CommentItem = ({
 
                 <p className="mt-3 text-sm leading-7 text-stone-600 sm:text-base">
                   {parentAuthorName && parentAuthorName !== comment.author.name && (
-                    <span className="mr-2 inline-flex items-center rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-700">
-                      @{parentAuthorName}
+                    <span className="mr-1.5 font-bold text-blue-600 hover:underline cursor-default">
+                      {parentAuthorName}
                     </span>
                   )}
                   {comment.content}
@@ -145,10 +145,10 @@ const CommentItem = ({
                 <button
                   type="button"
                   onClick={() => onReply(comment.id)}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-stone-400 shadow-sm transition-all hover:scale-110 hover:text-amber-600 hover:shadow-md"
-                  title="Responder"
+                  className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-stone-400 transition-colors hover:text-[#a56400]"
                 >
-                  <Reply size={16} />
+                  <Reply size={15} />
+                  <span>Responder</span>
                 </button>
 
                 {isOwnComment ? (
@@ -268,7 +268,7 @@ export default function BlogCommentsSection({ blogId }: { blogId: string }) {
   }, [activeEdition, activeParent])
 
   return (
-    <section className="mt-16 bg-stone-50 py-12 sm:mt-20 sm:py-16">
+    <section className="mt-16 bg-[#f7f1e7] py-12 sm:mt-20 sm:py-16">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -281,7 +281,7 @@ export default function BlogCommentsSection({ blogId }: { blogId: string }) {
           </div>
         </div>
 
-        <div className="mt-8 rounded-[32px] bg-white p-4 shadow-md sm:p-6">
+        <div className="mt-8 rounded-[32px] border border-stone-200 bg-white p-4 shadow-sm sm:p-6">
           <div className="flex items-start gap-4">
             <Avatar author={currentUser} sizeClass="h-12 w-12 sm:h-14 sm:w-14" />
 
@@ -328,7 +328,7 @@ export default function BlogCommentsSection({ blogId }: { blogId: string }) {
                 onChange={(event) => handleDraftChange(event.target.value)}
                 rows={5}
                 placeholder="Escribe tu comentario aqui..."
-                className="min-h-[180px] w-full resize-none rounded-[28px] border border-stone-200 bg-[#fcfbf8] px-8 py-7 text-sm leading-7 text-stone-700 outline-none transition focus:border-[#a56400] focus:ring-2 focus:ring-[#a56400]/15 sm:text-base"
+                className="min-h-[180px] w-full resize-none rounded-[28px] border border-stone-200 bg-[#fcfbf8] px-5 py-4 text-sm leading-7 text-stone-700 outline-none transition focus:border-[#a56400] focus:ring-2 focus:ring-[#a56400]/15 sm:text-base"
               />
 
               <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -360,7 +360,7 @@ export default function BlogCommentsSection({ blogId }: { blogId: string }) {
                     type="button"
                     onClick={() => void submitComment()}
                     disabled={isDraftEmpty || isSubmitting}
-                    className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-amber-600 px-7 text-sm font-bold uppercase tracking-[0.16em] text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:bg-stone-300 shadow-lg shadow-amber-600/20"
+                    className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-[#a56400] px-7 text-sm font-bold uppercase tracking-[0.16em] text-white transition hover:bg-[#8f5700] disabled:cursor-not-allowed disabled:bg-stone-300 shadow-lg shadow-[#a56400]/20"
                   >
                     {isSubmitting
                       ? 'Publicando...'

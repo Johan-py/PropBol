@@ -130,11 +130,24 @@ export const propertiesController = {
   // NUEVO MÉTODO COMPARADOR: compare
   compare: async (req: Request, res: Response) => {
     try {
-      // Ya sabemos que 'ids' existe, es un array, tiene entre 1 y 4 elementos, y todos son números.
       const { ids } = req.body;
 
-      // Convertimos el array de strings a números para Prisma con total seguridad
-      const idsNumericos = ids.map((id: any) => Number(id));
+      if (!ids || !Array.isArray(ids) || ids.length === 0) {
+        return res.status(400).json({ 
+          ok: false, 
+          message: 'Se requiere un arreglo de IDs válidos para comparar.' 
+        });
+      }
+
+      if (ids.length > 4) {
+        return res.status(400).json({ 
+          ok: false, 
+          message: 'El límite máximo es de 4 propiedades.' 
+        });
+      }
+
+      // Convertimos el array de strings a números para Prisma
+      const idsNumericos = ids.map(id => Number(id)).filter(id => !isNaN(id));
 
       const inmuebles = await propertiesService.getForComparison(idsNumericos);
 

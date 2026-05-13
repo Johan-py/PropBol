@@ -275,13 +275,6 @@ export default function UserMenu({
                 icon={CheckCircle}
                 onClick={onClosePanel}
               />
-              {/* HU13: acceso a ajustes de visualización y accesibilidad */}
-              <MenuLink
-                label="Ajustes de Visualización"
-                href="/profile/ajustes-visualizacion"
-                icon={Eye}
-                onClick={onClosePanel}
-              />
               <MenuLink
                 label="Seguridad"
                 href="/profile/security"
