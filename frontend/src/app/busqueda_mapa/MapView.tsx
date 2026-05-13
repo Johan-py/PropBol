@@ -1,7 +1,7 @@
 'use client'
 
 import {
-  MapContainer,
+  MapContainer as BaseMapContainer,
   TileLayer,
   Marker,
   Popup,
@@ -22,6 +22,19 @@ import ZonasOverlay from '@/components/map/ZonasOverlay'
 
 import type { PropertyMapPin } from '@/types/property'
 import type { ZonaPredefinida } from '@/types/zona'
+
+interface GestureMapProps extends React.ComponentProps<typeof BaseMapContainer> {
+  gestureHandling?: boolean;
+  gestureHandlingOptions?: {
+    text: {
+      touch: string;
+      scroll: string;
+      scrollMac: string;
+    };
+  };
+}
+
+const MapContainer = BaseMapContainer as React.ComponentType<GestureMapProps>;
 
 // Fix íconos default de Leaflet en Next.js (guard SSR)
 if (typeof window !== 'undefined') {
@@ -127,22 +140,184 @@ function MapClickHandler({ onMapClick, isDrawingMode }: {
   isDrawingMode: boolean
 }) {
   const map = useMap()
-
+  
   // AÑADIDO: Control nativo del cursor y bloqueo de arrastre (Criterios 2 y 20)
   useEffect(() => {
     if (isDrawingMode) {
-      map.dragging.disable() // Bloquea el movimiento del mapa
-      map.getContainer().style.cursor = 'crosshair' // Fuerza la cruz
+      map.dragging.disable()
+      map.getContainer().style.cursor = 'crosshair'
     } else {
-      map.dragging.enable() // Restaura el movimiento
-      map.getContainer().style.cursor = '' // Restaura la manito
+      map.dragging.enable()
+      map.getContainer().style.cursor = ''
     }
   }, [isDrawingMode, map])
+
+// 4 y 6. Double tap zoom + one finger zoom
+useEffect(() => {
+  const DOUBLE_TAP_DELAY = 300
+  const DRAG_THRESHOLD = 10
+
+  let lastTapTime = 0
+
+  let secondTap = false
+  let isDraggingZoom = false
+
+  let startY = 0
+  let startZoom = 0
+
+  let touchStartTime = 0
+
+  const container = map.getContainer()
+
+  const handleTouchStart = (e: TouchEvent) => {
+    if (e.touches.length !== 1) return
+
+    const now = Date.now()
+    const timeSinceLast = now - lastTapTime
+
+    if (timeSinceLast < DOUBLE_TAP_DELAY) {
+      secondTap = true
+      touchStartTime = now
+
+      startY = e.touches[0].clientY
+      startZoom = map.getZoom()
+
+      // FIX: Detener la propagación al motor de scroll del navegador desde el momento exacto en que se registra el segundo tap.
+      if (e.cancelable) {
+        e.preventDefault()
+      }
+    } else {
+      // Limpiar estados residuales si pasó mucho tiempo
+      secondTap = false
+      isDraggingZoom = false
+    }
+
+    lastTapTime = now
+  }
+
+  const handleTouchMove = (e: TouchEvent) => {
+    if (!secondTap) return
+
+    // FIX: Bloquear el scroll de la página de forma incondicional en cada frame de movimiento mientras estemos en el segundo tap.
+    if (e.cancelable) {
+      e.preventDefault()
+    }
+
+    const currentY = e.touches[0].clientY
+    const deltaY = startY - currentY
+
+    // Activar modo drag zoom
+    if (Math.abs(deltaY) > DRAG_THRESHOLD) {
+      isDraggingZoom = true
+
+      const zoomDelta = deltaY / 80
+
+      map.setZoom(startZoom + zoomDelta, {
+        animate: false
+      })
+    }
+  }
+
+  const handleTouchEnd = (e: TouchEvent) => {
+    if (!secondTap) return
+
+    // Si NO hubo arrastre => doble toque normal
+    if (!isDraggingZoom) {
+      const touch = e.changedTouches[0]
+
+      const rect = container.getBoundingClientRect()
+
+      const point = L.point(
+        touch.clientX - rect.left,
+        touch.clientY - rect.top
+      )
+
+      const latlng = map.containerPointToLatLng(point)
+
+      map.flyTo(
+        latlng,
+        Math.min(map.getZoom() + 1, 19),
+        {
+          duration: 0.35
+        }
+      )
+    }
+
+    secondTap = false
+    isDraggingZoom = false
+  }
+
+  container.addEventListener('touchstart', handleTouchStart, {
+    passive: false
+  })
+
+  container.addEventListener('touchmove', handleTouchMove, {
+    passive: false
+  })
+
+  container.addEventListener('touchend', handleTouchEnd)
+
+  return () => {
+    container.removeEventListener('touchstart', handleTouchStart)
+    container.removeEventListener('touchmove', handleTouchMove)
+    container.removeEventListener('touchend', handleTouchEnd)
+  }
+}, [map])
+
+  // Doble toque con dos dedos para alejar zoom
+  useEffect(() => {
+    let lastTwoFingerTapTime = 0
+    let maxTouchCount = 0
+
+    const handleTouchStart = (e: TouchEvent) => {
+      // Registramos el máximo de dedos usados en este gesto
+      if (e.touches.length > maxTouchCount) {
+        maxTouchCount = e.touches.length
+      }
+    }
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      // Solo procesamos cuando se levantan TODOS los dedos
+      if (e.touches.length !== 0) return
+
+      // Verificamos que en algún momento hubo 2 dedos
+      if (maxTouchCount === 2) {
+        const now = Date.now()
+        const timeSinceLast = now - lastTwoFingerTapTime
+        lastTwoFingerTapTime = now
+
+        if (timeSinceLast < 350) {
+  const center = map.getCenter()
+
+  map.flyTo(
+    center,
+    Math.max(map.getZoom() - 1, 1),
+    {
+      duration: 0.35
+    }
+  )
+}
+      }
+
+      // Reiniciamos el contador para el próximo gesto
+      maxTouchCount = 0
+    }
+
+    const container = map.getContainer()
+    container.addEventListener('touchstart', handleTouchStart)
+    container.addEventListener('touchend', handleTouchEnd)
+
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart)
+      container.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [map])
 
 useEffect(() => {
   const handleClick = (e: L.LeafletMouseEvent) => {
     onMapClick(e.latlng)
   }
+
   map.on('click', handleClick)
 
   return () => {
@@ -348,20 +523,12 @@ export default function MapView({
         zoom={zoom}
         zoomControl={false}
         touchZoom={true}
+        doubleClickZoom={true}
         dragging={true}
+        scrollWheelZoom={true}
         style={{ height: '100%', width: '100%' }}
         className={`z-0 ${isDrawingMode && !isPolygonClosed ? '[&.leaflet-container]:cursor-crosshair [&_.leaflet-interactive]:cursor-crosshair' : ''}`}
-        // Agregado: Control nativo del cursor y bloqueo de arrastre en modo dibujo MAPAS HU11
-        {...({ 
-          gestureHandling: true,
-          gestureHandlingOptions: {
-            text: {
-              touch: "Usa dos dedos para mover el mapa",
-              scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
-              scrollMac: "Usa \u2318 + scroll para hacer zoom en el mapa"
-            }
-          }
-        } as any)} //FIN AGREGADO MAPAS HU11
+        gestureHandling={typeof window !== 'undefined' && L ? L.Browser.mobile : false}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

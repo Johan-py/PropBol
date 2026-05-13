@@ -11,6 +11,7 @@ interface RawPropertyItem {
   titulo: string;
   descripcion?: string;
   precio: string | number;
+  precio_anterior?: string | number; 
   categoria?: string;
   currency?: string;
   moneda?: string;
@@ -118,6 +119,10 @@ export function useProperties(): UsePropertiesResult {
     console.log('🔄 useProperties disparado:', searchParamsStr)
 
     async function fetchNormalSearch() {
+      // Configuramos el temporizador de 1 segundo
+      const loaderTimer = setTimeout(() => {
+        if (!cancelled) setIsLoading(true);
+      }, 1000);
       try {
         const res = await fetch(
           `${API_URL}/api/properties/inmuebles?${searchParamsStr}`,
@@ -175,6 +180,8 @@ export function useProperties(): UsePropertiesResult {
                 price: displayPrice,
                 currency: selectedCurrency,
                 precioFormateado: formattedText,
+                precio: Number(item.precio),                               
+                precio_anterior: item.precio_anterior ? Number(item.precio_anterior) : null,
                 type: (item.categoria?.toLowerCase().trim() ||
                   "casa") as PropertyType,
                 title: item.titulo,
@@ -201,11 +208,16 @@ export function useProperties(): UsePropertiesResult {
               : "Error al conectar con PropBol",
           );
       } finally {
+        // Limpiamos el temporizador si fue rápido
+        clearTimeout(loaderTimer);
         if (!cancelled) setIsLoading(false);
       }
     }
 
     async function fetchRecomendados() {
+      const loaderTimer = setTimeout(() => {
+        if (!cancelled) setIsLoading(true);
+      }, 1000);
       try {
         const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
         const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {}
@@ -246,6 +258,8 @@ export function useProperties(): UsePropertiesResult {
                   price: displayPrice,
                   currency: selectedCurrency,
                   precioFormateado: formattedText,
+                  precio: Number(item.precio),
+                  precio_anterior: item.precio_anterior ? Number(item.precio_anterior) : null,
                   type: (item.categoria?.toLowerCase().trim() || 'casa') as PropertyType,
                   title: item.titulo,
                   descripcion: item.descripcion ?? null,
@@ -312,6 +326,8 @@ export function useProperties(): UsePropertiesResult {
               price: displayPrice,
               currency: selectedCurrency,
               precioFormateado: formattedText,
+              precio: Number(item.precio),                                   
+              precio_anterior: item.precio_anterior ? Number(item.precio_anterior) : null,  
               type: (item.categoria?.toLowerCase().trim() || 'casa') as any,
               title: item.titulo,
               descripcion: item.descripcion ?? null,
@@ -334,13 +350,12 @@ export function useProperties(): UsePropertiesResult {
           await fetchNormalSearch()
         }
       } finally {
+        clearTimeout(loaderTimer);
         if (!cancelled) setIsLoading(false)
       }
     }
 
     async function fetchProperties() {
-      // Evitar loaders agresivos cuando ya hay resultados en pantalla
-      if (properties.length === 0) setIsLoading(true)
       setError(null)
 
       // ✅ Modo recomendados (persistente por URL)
