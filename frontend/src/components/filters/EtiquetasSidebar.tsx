@@ -56,6 +56,16 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
           color: getFallbackColor(item.nombre ?? ''),
         }))
         setEtiquetasDB(etiquetas)
+        const nombresMap: Record<string, string> = {}
+
+        etiquetas.forEach((e) => {
+          nombresMap[e.id] = e.nombre
+        })
+
+        sessionStorage.setItem(
+          'propbol_etiquetas_nombres',
+          JSON.stringify(nombresMap)
+        )
       } catch (error) {
         console.error('Error cargando etiquetas:', error)
       } finally {
@@ -218,11 +228,6 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
                 >
                   <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: etiqueta.color }} />
                   <span>{etiqueta.nombre}</span>
-                  {etiqueta.cantidad !== undefined && (
-                    <span className="text-[10px] px-1.5 rounded-full bg-stone-100">
-                      {etiqueta.cantidad}
-                    </span>
-                  )}
                 </button>
               ))}
             </div>
