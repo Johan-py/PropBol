@@ -1,12 +1,35 @@
 import Image from "next/image"
 import { notFound } from 'next/navigation'
+import { Metadata } from 'next'
 import BlogDetailSidebar from '@/components/blog/BlogDetailSidebar'
 import BlogCommentsSection from '@/components/blog/BlogCommentsSection'
 import MarkdownRenderer from '@/components/blog/MarkdownRenderer'
 import BlogSharePlaceholder from '@/components/blog/BlogSharePlaceholder'
 import { MOCK_USER_BLOGS } from '@/lib/mock/blogs.mock'
-import { getPublishedBlogById } from '@/services/blogs.service'
+import { getPublishedBlogById, getPublishedBlogs } from '@/services/blogs.service'
 import BackButton from "@/app/blogs/backButton"
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const publicBlog = await getPublishedBlogById(params.id)
+  const userBlog = MOCK_USER_BLOGS.find((blog) => blog.id === params.id)
+
+  if (!publicBlog && !userBlog) return {}
+
+  const title = publicBlog?.title ?? userBlog?.titulo ?? 'Blog PropBol'
+  const description = `${publicBlog?.excerpt ?? userBlog?.resumen ?? 'Descubre más sobre el mercado inmobiliario en PropBol.'} | Lee el artículo completo en PropBol.`
+  const imageUrl = publicBlog?.imageUrl ?? userBlog?.imagenUrl ?? '/placeholder-blog.jpg'
+
+  return {
+    title: `${title} | PropBol Blog`,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [imageUrl],
+      type: 'article',
+    },
+  }
+}
 
 const formatPublishedDate = (value: string) =>
   new Date(value).toLocaleDateString('es-BO', {
@@ -34,6 +57,9 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
     userBlog?.resumen ??
     'Este articulo presenta una mirada clara y actual sobre el ecosistema inmobiliario y las oportunidades que aparecen cuando observamos el mercado con criterio.'
   const articleContent = publicBlog?.content?.trim() || userBlog?.resumen?.trim() || summary
+  const recommendedBlogs = (await getPublishedBlogs(8))
+    .filter((blog) => blog.id !== params.id)
+    .slice(0, 4)
 
   return (
     <article className="min-h-screen bg-[linear-gradient(180deg,#fbf6ef_0%,#f8f3eb_38%,#ffffff_100%)] pb-20">
@@ -47,18 +73,29 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
             {title}
           </h1>
 
-          <div className="mt-8 flex items-center gap-4 border-b border-stone-200 pb-8">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-stone-900 text-sm font-bold text-white">
-              {authorName.charAt(0).toUpperCase()}
+          <div className="mt-8 flex items-center justify-between gap-4 border-b border-stone-200 pb-8">
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-stone-900 text-sm font-bold text-white">
+                {authorName.charAt(0).toUpperCase()}
+              </div>
+
+              <div className="flex min-w-0 flex-col">
+                <span className="text-sm font-bold text-stone-900">{authorName}</span>
+                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-400">
+                  {publishedLabel}
+                </span>
+              </div>
             </div>
 
-            <div className="flex min-w-0 flex-col">
-              <span className="text-sm font-bold text-stone-900">{authorName}</span>
-              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-400">
-                {publishedLabel}
-              </span>
-            </div>
+            <button className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-stone-100 transition-colors text-stone-400 hover:text-stone-900 transition-all duration-300" title="Más opciones">
+              <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="12" cy="5" r="1"></circle>
+                <circle cx="12" cy="19" r="1"></circle>
+              </svg>
+            </button>
           </div>
+
         </div>
 
         <div className="mt-10 overflow-hidden rounded-[32px] bg-stone-100 shadow-[0_24px_80px_-32px_rgba(41,37,36,0.35)]">
@@ -74,22 +111,34 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
       </header>
 
       <main className="mx-auto mt-12 max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="blog-grid-container grid gap-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start xl:grid-cols-[minmax(0,1fr)_360px]">
           <div className="space-y-12">
             <div className="rounded-[36px] bg-white/90 p-6 shadow-[0_24px_80px_-50px_rgba(41,37,36,0.45)] sm:p-8 lg:p-10">
               <MarkdownRenderer content={articleContent} />
             </div>
 
-            <BlogSharePlaceholder />
+            <div className="no-capture">
+              <BlogSharePlaceholder 
+                title={title} 
+                author={authorName}
+                category={publicBlog?.category || 'General'}
+                imageUrl={imageUrl}
+                description={articleContent}
+              />
+            </div>
 
-            <BlogCommentsSection blogId={params.id} />
+            <div className="no-capture">
+              <BlogCommentsSection blogId={params.id} />
+            </div>
 
-            <div className="pt-2">
+            <div className="pt-2 no-capture">
               <BackButton />
             </div>
           </div>
 
-          <BlogDetailSidebar />
+          <div className="no-capture">
+            <BlogDetailSidebar recommendations={recommendedBlogs} />
+          </div>
         </div>
       </main>
     </article>
