@@ -1,5 +1,6 @@
 'use client'
 
+import { useAccessibility } from '@/hooks/useAccessibility'
 import {ThemeProvider as NextThemeProvider} from 'next-themes'
 import type { PropsWithChildren } from 'react'
 
@@ -7,15 +8,21 @@ type ThemeProviderProps = PropsWithChildren<{
     defaultTheme?: 'light' | 'dark' | 'system'
 }>
 
-export default function ThemeProvider({ children, defaultTheme = 'system'}: ThemeProviderProps){
+function AccessibilityProvider({ children }: { children: React.ReactNode}) {
+    useAccessibility()
+    return <>{children}</>
+}  
+ 
+export default function ThemeProvider({ children, defaultTheme = 'light'}: ThemeProviderProps) {
     return (
         <NextThemeProvider
         attribute="class"
         defaultTheme={defaultTheme}
-        enableSystem
+        storageKey="propbol-theme"
+        enableSystem={false}
         disableTransitionOnChange
     >
-        {children}
+        <AccessibilityProvider>{children}</AccessibilityProvider>
     </NextThemeProvider>
     )
 }
