@@ -43,7 +43,12 @@ export async function obtenerMisPublicaciones(): Promise<MisPublicacionesItem[]>
     throw new Error(data.message || 'No se pudieron obtener las publicaciones')
   }
 
-  return data.data
+  const publicaciones = Array.isArray(data.data) ? data.data : []
+  return publicaciones.map((pub: any) => ({
+    ...pub,
+    totalVisualizaciones: Number(pub.totalVisualizaciones ?? 0),
+    totalCompartidos: Number(pub.totalCompartidos ?? 0)
+  }))
 }
 
 export async function obtenerDetallePublicacion(id: number): Promise<PublicacionDetalle> {

@@ -364,57 +364,6 @@ export default function Navbar() {
     }
   };
 
-  const handlePublicarInmueble = async () => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      router.push("/sign-in");
-      return;
-    }
-
-    try {
-      const meResponse = await fetch(`${API_URL}/api/auth/me`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const meData = (await meResponse.json()) as MeResponse;
-
-      if (!meResponse.ok || !meData.user?.id) {
-        console.error("No se pudo obtener usuario autenticado");
-        router.push("/sign-in");
-        return;
-      }
-
-      const limiteResponse = await fetch(
-        `${API_URL}/api/publicaciones/validar-limite/${meData.user.id}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      const limiteData = await limiteResponse.json();
-
-      if (
-        limiteResponse.ok &&
-        (limiteData.message === "LIMIT_REACHED" || Number(limiteData.restantes) <= 0)
-      ) {
-        router.push("/Cobros-Limite");
-        return;
-      }
-
-      router.push("/registro-inmueble");
-    } catch (error) {
-      console.error("Error validando publicaciones:", error);
-      router.push("/registro-inmueble");
-    }
-  };
-
   return (
     <>
       <nav className="sticky top-0 z-[999] w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
@@ -426,14 +375,13 @@ export default function Navbar() {
             </div>
  
             <div className="flex items-center gap-4">
-              <button
+              <Link
                 id="tour-publicar-home"
-                type="button"
-                onClick={handlePublicarInmueble}
+                href="/registro-inmueble"
                 className="hidden md:block rounded-md bg-[#E68B25] px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-amber-700"
               >
                 Publica tu inmueble
-              </button>
+              </Link>
 
               {/* HU13: botón general para alternar modo claro/oscuro */}
               <div className="hidden md:block">
@@ -757,17 +705,14 @@ export default function Navbar() {
               {/* FIX: agregado id="tour-publicar-home-mobile" que faltaba.
                   Sin este id, el tour no podía encontrar el elemento al
                   retroceder desde "tour-notificaciones" al paso anterior. */}
-              <button
+              <Link
                 id="tour-publicar-home-mobile"
-                type="button"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  void handlePublicarInmueble();
-                }}
-                className="rounded-md px-3 py-2 text-left text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"
+                href="/registro-inmueble"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="rounded-md px-3 py-2 text-lg font-bold text-[#E68B25] hover:bg-[#E68B25]/10"
               >
                 Publica tu inmueble
-              </button>
+              </Link>
 
               {/* HU13: botón general para alternar modo claro/oscuro en menú móvil */}
               <div className="px-3 py-2">
