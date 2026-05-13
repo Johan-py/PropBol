@@ -74,21 +74,43 @@ function MiniBrowserPreview({ mode }: { mode: "light" | "dark" }) {
     </div>
   );
 }
-/*
+
+function ThemeCard({ title, description, selected, onClick, preview }: ThemeCardProps) {
+  return (
+    <button
+      type="button"
+      aria-pressed={selected}
+      onClick={onClick}
+      className={`group flex flex-col gap-4 rounded-2xl border-2 p-4 text-left shadow-sm transition-all duration-200 hover:shadow-md ${
+        selected
+          ? "border-orange-500 bg-orange-50/60"
+          : "border-gray-200 bg-white hover:border-orange-200"
+      }`}
+    >
+      <MiniBrowserPreview mode={preview} />
+      <div className="flex items-start gap-3">
+        <span
+          className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
+            selected
+              ? "border-orange-500 bg-orange-500"
+              : "border-gray-300 bg-white"
+          }`}
+        >
+          {selected && (
+            <span className="h-1.5 w-1.5 rounded-full bg-white" />
+          )}
+        </span>
+        <div>
+          <p className="font-semibold text-gray-900">{title}</p>
+          <p className="mt-0.5 text-sm leading-5 text-gray-500">{description}</p>
+        </div>
+      </div>
+    </button>
+  );
+}
 
 
-    title,
-    description,
-    icon,
-    previewClassName,
-    selected,
-    onClick,
-}: VisualOptionCardProps) {
-    return (
-        <button
-            type="button"
-            aria-pressed={selected}
-            onClick={onClick}
+            /*
             className={`rounded-2xl border p-5 text-left shadow-sm transition hover:border-orange-300 ${selected
                     ? "border-orange-500 bg-orange-50"
                     : "border-gray-200 bg-white"
