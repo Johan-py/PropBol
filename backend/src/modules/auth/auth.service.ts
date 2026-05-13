@@ -1,11 +1,14 @@
 import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
 
-import { env } from '../../config/env.js'
-import { prisma } from '../../lib/prisma.client.js'
-import { enviarCodigoRegistro ,
-  enviarCorreoRecuperacionPassword} from '../../lib/email.service.js'
-import { generateToken, type JwtPayload } from '../../utils/jwt.js'
+import { env } from "../../config/env.js";
+import { prisma } from "../../lib/prisma.client.js";
+import {
+  enviarCodigo2FA,
+  enviarCodigoRegistro,
+  enviarCorreoRecuperacionPassword,
+} from "../../lib/email.service.js";
+import { generateToken, type JwtPayload } from "../../utils/jwt.js";
 import {
   createPasswordRecovery,
   createSession,
@@ -16,10 +19,17 @@ import {
   findPasswordRecoveryByToken,
   findUser,
   findUserByCorreo,
-  invalidateAllUserSessions,
   markPasswordRecoveryAsUsed,
-  updateUserPassword
-} from './auth.repository.js'
+  findUserById,
+  create2FACode,
+  invalidateActive2FACodesByUserId,
+  activate2FAByUserId,
+  deactivate2FAByUserId,
+  expire2FACode,
+  findActive2FACodeByUserId,
+  increment2FACodeAttempts,
+  mark2FACodeAsUsed,
+} from "./auth.repository.js";
 
 type LoginDTO = {
   correo: string;
@@ -39,6 +49,11 @@ type VerifyRegisterCodeDTO = {
   verificationToken: string;
   codigo: string;
   password: string;
+};
+
+type Verify2FADTO = {
+  userId: number;
+  codigo: string;
 };
 
 type PendingRegisterPayload = {
@@ -73,17 +88,18 @@ const MAX_APELLIDO = 30;
 const MAX_LOGIN_ATTEMPTS = 5;
 const LOGIN_BLOCK_TIME_MS = 15 * 60 * 1000;
 
-const REGISTER_CODE_TTL_MINUTES = 5
+const REGISTER_CODE_TTL_MINUTES = 5;
+const TWO_FACTOR_CODE_TTL_MINUTES = 5;
 
 // límite de solicitudes de recuperación
-const MAX_RECOVERY_REQUESTS = 3
-const RECOVERY_WINDOW_MS = 5 * 60 * 1000
-const recoveryRequests = new Map<string, number[]>()
+const MAX_RECOVERY_REQUESTS = 3;
+const RECOVERY_WINDOW_MS = 5 * 60 * 1000;
+const recoveryRequests = new Map<string, number[]>();
 
 // límite de intentos por enlace
-const MAX_TOKEN_ATTEMPTS = 3
-const tokenAttempts = new Map<string, number>()
-const REGISTER_CODE_TTL_SECONDS = REGISTER_CODE_TTL_MINUTES * 60
+const MAX_TOKEN_ATTEMPTS = 3;
+const tokenAttempts = new Map<string, number>();
+const REGISTER_CODE_TTL_SECONDS = REGISTER_CODE_TTL_MINUTES * 60;
 
 const loginAttempts = new Map<string, LoginAttemptState>();
 
@@ -158,7 +174,6 @@ const registerFailedAttempt = (correo: string) => {
     retryAfterSeconds: 0,
   };
 };
-
 const clearFailedAttempts = (correo: string) => {
   loginAttempts.delete(correo);
 };
@@ -192,6 +207,14 @@ const normalizeRegisterPayload = (payload: RegisterDTO) => {
 
 const generateRegisterCode = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+const generate2FACode = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+const hash2FACode = (codigo: string) => {
+  return crypto.createHash("sha256").update(codigo).digest("hex");
 };
 
 const signRegisterCode = ({
@@ -269,11 +292,10 @@ export const loginService = async (payload: LoginDTO) => {
   const user = await findUser(correo);
 
   if (!user) {
-    throw new AuthError("Usuario no encontrado", 404);
-  }
-
-  if (user.activo === false) {
-    throw new AuthError("Esta cuenta está desactivada", 403);
+    throw new AuthError(
+      "Esta cuenta no está registrada. Puedes registrarte para crear una cuenta.",
+      404,
+    );
   }
 
   const isValidPassword = user.password === password;
@@ -292,12 +314,126 @@ export const loginService = async (payload: LoginDTO) => {
     }
 
     throw new AuthError(
-      `Credenciales inválidas. Te quedan ${attemptStatus.attemptsLeft} intento(s) antes del bloqueo temporal.`,
+      `Contraseña incorrecta. Te quedan ${attemptStatus.attemptsLeft} intento(s) antes del bloqueo temporal.`,
       401,
     );
   }
 
   clearFailedAttempts(correo);
+
+  if (user.activo === false) {
+    throw new AuthError("Esta cuenta está desactivada", 403);
+  }
+
+  if (user.two_factor_activo) {
+    const codigo = generate2FACode();
+    const codigoHash = hash2FACode(codigo);
+    const expiraEn = new Date(
+      Date.now() + TWO_FACTOR_CODE_TTL_MINUTES * 60 * 1000,
+    );
+
+    await invalidateActive2FACodesByUserId(user.id);
+
+    await create2FACode({
+      usuarioId: user.id,
+      codigoHash,
+      expiraEn,
+    });
+
+    const emailResult = await enviarCodigo2FA({
+      emailDestino: user.correo,
+      codigo,
+      nombreUsuario: user.nombre,
+    });
+
+    if (!emailResult.success) {
+      throw new Error(
+        "No se pudo enviar el código de verificación 2FA. Intenta nuevamente.",
+      );
+    }
+
+    return {
+      requires2FA: true,
+      userId: user.id,
+      email: user.correo,
+      expiresInMinutes: TWO_FACTOR_CODE_TTL_MINUTES,
+    };
+  }
+
+  const jwtPayload: JwtPayload = {
+    id: user.id,
+    correo: user.correo,
+  };
+
+  const token = generateToken(jwtPayload);
+  const fechaExpiracion = new Date(Date.now() + 60 * 60 * 1000);
+
+  await createSession({
+    token,
+    usuarioId: user.id,
+    fechaExpiracion,
+  });
+
+  return {
+    requires2FA: false,
+    user: {
+      id: user.id,
+      correo: user.correo,
+      nombre: user.nombre,
+      apellido: user.apellido,
+      avatar: user.avatar,
+      rol: user.rol,
+    },
+    token,
+  };
+};
+
+export const verify2FAService = async ({ userId, codigo }: Verify2FADTO) => {
+  const normalizedCode = codigo?.trim();
+
+  if (!userId || !normalizedCode) {
+    throw new AuthError("El usuario y el código son obligatorios", 400);
+  }
+
+  if (!/^\d{6}$/.test(normalizedCode)) {
+    throw new AuthError(
+      "El código debe tener exactamente 6 dígitos numéricos",
+      400,
+    );
+  }
+
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  if (!user.two_factor_activo) {
+    throw new AuthError(
+      "El usuario no tiene autenticación en dos pasos activada",
+      400,
+    );
+  }
+
+  const activeCode = await findActive2FACodeByUserId(userId);
+
+  if (!activeCode) {
+    throw new AuthError("El código es incorrecto", 401);
+  }
+
+  if (activeCode.expiraEn.getTime() < Date.now()) {
+    await expire2FACode(activeCode.id);
+    throw new AuthError("El código ha expirado", 401);
+  }
+
+  const codigoHash = hash2FACode(normalizedCode);
+
+  if (codigoHash !== activeCode.codigoHash) {
+    await increment2FACodeAttempts(activeCode.id, activeCode.intentos ?? 0);
+    throw new AuthError("El código es incorrecto", 401);
+  }
+
+  await mark2FACodeAsUsed(activeCode.id);
 
   const jwtPayload: JwtPayload = {
     id: user.id,
@@ -319,6 +455,8 @@ export const loginService = async (payload: LoginDTO) => {
       correo: user.correo,
       nombre: user.nombre,
       apellido: user.apellido,
+      avatar: user.avatar,
+      rol: user.rol,
     },
     token,
   };
@@ -459,6 +597,7 @@ export const getMeService = async (token: string) => {
       id: session.usuario.id,
       nombre: session.usuario.nombre,
       apellido: session.usuario.apellido,
+      avatar: session.usuario.avatar,
       correo: session.usuario.correo,
       rol: session.usuario.rol,
     },
@@ -475,6 +614,89 @@ export const logoutService = async (token: string) => {
   await desactiveSessionByToken(token);
 
   return { message: "Logout exitoso" };
+};
+
+type VerifyPasswordDTO = {
+  userId: number;
+  password: string;
+};
+
+export const verifyPasswordService = async ({
+  userId,
+  password,
+}: VerifyPasswordDTO) => {
+  const trimmed = password?.trim();
+
+  if (!trimmed) {
+    throw new AuthError("La contraseña es obligatoria", 400);
+  }
+
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  if (user.password !== trimmed) {
+    throw new AuthError("Contraseña incorrecta", 401);
+  }
+
+  return { valid: true };
+};
+
+export const activate2FAService = async ({
+  userId,
+  password,
+}: VerifyPasswordDTO) => {
+  const trimmed = password?.trim();
+
+  if (!trimmed) {
+    throw new AuthError("La contraseña es obligatoria", 400);
+  }
+
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  if (user.password !== trimmed) {
+    throw new AuthError("Contraseña incorrecta", 401);
+  }
+
+  await activate2FAByUserId(userId);
+
+  return {
+    message: "Verificación en dos pasos activada correctamente",
+    two_factor_activo: true,
+  };
+};
+
+export const deactivate2FAService = async (userId: number) => {
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  await deactivate2FAByUserId(userId);
+
+  return {
+    message: "Verificación en dos pasos desactivada correctamente",
+    two_factor_activo: false,
+  };
+};
+
+export const get2FAStatusService = async (userId: number) => {
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  return {
+    two_factor_activo: user.two_factor_activo,
+  };
 };
 
 type GoogleTokenResponse = {
@@ -574,144 +796,228 @@ export const loginWithGoogleCodeService = async (code: string) => {
       correo: user.correo,
       nombre: user.nombre,
       apellido: user.apellido,
+      avatar: user.avatar,
+      rol: user.rol,
     },
-    token
-  }
-}
-type ForgotPasswordDTO = {
-  correo: string
-}
+    token,
+  };
+};
 
-const RESET_PASSWORD_TTL_MINUTES = 15
+type ForgotPasswordDTO = {
+  correo: string;
+};
+
+const RESET_PASSWORD_TTL_MINUTES = 15;
 
 export const forgotPasswordService = async (payload: ForgotPasswordDTO) => {
-  const correo = payload.correo?.trim().toLowerCase()
+  const correo = payload.correo?.trim().toLowerCase();
 
   if (!correo) {
-    throw new Error('El correo es obligatorio')
+    throw new Error("El correo es obligatorio");
   }
 
-  const emailRegex = /\S+@\S+\.\S+/
+  const emailRegex = /\S+@\S+\.\S+/;
 
   if (!emailRegex.test(correo)) {
-    throw new Error('Formato de correo inválido')
+    throw new Error("Formato de correo inválido");
   }
 
-  const user = await findUserByCorreo(correo)
+  const user = await findUserByCorreo(correo);
 
-  const now = Date.now()
-  const requests = (recoveryRequests.get(correo) ?? []).filter(t => now - t < RECOVERY_WINDOW_MS)
+  const now = Date.now();
+  const requests = (recoveryRequests.get(correo) ?? []).filter(
+    (t) => now - t < RECOVERY_WINDOW_MS,
+  );
   if (requests.length >= MAX_RECOVERY_REQUESTS) {
-    throw new AuthError('Demasiadas solicitudes. Intenta nuevamente en 5 minutos.', 429)
+    throw new AuthError(
+      "Demasiadas solicitudes. Intenta nuevamente en 5 minutos.",
+      429,
+    );
   }
-  recoveryRequests.set(correo, [...requests, now])
+  recoveryRequests.set(correo, [...requests, now]);
 
   // Respuesta genérica para no revelar si el correo existe o no
   if (!user) {
     return {
-      message: 'Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.'
-    }
+      message:
+        "Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.",
+    };
   }
 
-  const resetToken = crypto.randomUUID()
-  const expiraEn = new Date(Date.now() + RESET_PASSWORD_TTL_MINUTES * 60 * 1000)
+  const resetToken = crypto.randomUUID();
+  const expiraEn = new Date(
+    Date.now() + RESET_PASSWORD_TTL_MINUTES * 60 * 1000,
+  );
 
-  await desactivarRecuperacionesPasswordActivas(user.id)
+  await desactivarRecuperacionesPasswordActivas(user.id);
 
   await createPasswordRecovery({
     usuarioId: user.id,
     token: resetToken,
-    expiraEn
-  })
+    expiraEn,
+  });
 
-  const resetLink = `${env.FRONTEND_URL}/reset-password?token=${resetToken}`
+  const resetLink = `${env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
   const emailResult = await enviarCorreoRecuperacionPassword({
     emailDestino: user.correo,
     nombreUsuario: user.nombre,
     resetLink,
-    minutosExpiracion: RESET_PASSWORD_TTL_MINUTES
-  })
+    minutosExpiracion: RESET_PASSWORD_TTL_MINUTES,
+  });
 
   if (!emailResult.success) {
-    throw new Error('No se pudo enviar el correo de recuperación. Intenta nuevamente.')
+    throw new Error(
+      "No se pudo enviar el correo de recuperación. Intenta nuevamente.",
+    );
   }
 
   return {
-    message: 'Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.'
-  }
-}
+    message:
+      "Si el correo está registrado, te enviamos un enlace para restablecer tu contraseña.",
+  };
+};
 
 type ResetPasswordDTO = {
-  token: string
-  password: string
-  confirmPassword: string
-}
+  token: string;
+  password: string;
+  confirmPassword: string;
+};
 
 export const resetPasswordService = async (payload: ResetPasswordDTO) => {
-  const token = payload.token?.trim()
-  const password = payload.password?.trim()
-  const confirmPassword = payload.confirmPassword?.trim()
+  const token = payload.token?.trim();
+  const password = payload.password?.trim();
+  const confirmPassword = payload.confirmPassword?.trim();
 
   if (!token || !password || !confirmPassword) {
-    throw new AuthError('Todos los campos son obligatorios', 400)
+    throw new AuthError("Todos los campos son obligatorios", 400);
   }
 
   if (password !== confirmPassword) {
-    throw new AuthError('Las contraseñas no coinciden', 400)
+    throw new AuthError("Las contraseñas no coinciden", 400);
   }
 
   if (password.length < 8) {
-    throw new AuthError('La contraseña debe tener al menos 8 caracteres', 400)
+    throw new AuthError("La contraseña debe tener al menos 8 caracteres", 400);
   }
 
   if (!/[A-Z]/.test(password)) {
-    throw new AuthError('La contraseña debe contener al menos una mayúscula', 400)
+    throw new AuthError(
+      "La contraseña debe contener al menos una mayúscula",
+      400,
+    );
   }
 
   if (!/[0-9]/.test(password)) {
-    throw new AuthError('La contraseña debe contener al menos un número', 400)
+    throw new AuthError("La contraseña debe contener al menos un número", 400);
   }
 
   if (!/[^A-Za-z0-9]/.test(password)) {
-    throw new AuthError('La contraseña debe contener al menos un carácter especial', 400)
+    throw new AuthError(
+      "La contraseña debe contener al menos un carácter especial",
+      400,
+    );
   }
 
-  const recovery = await findPasswordRecoveryByToken(token)
+  const recovery = await findPasswordRecoveryByToken(token);
 
   if (!recovery || !recovery.activo) {
-    throw new AuthError('El enlace no es válido o ya fue utilizado', 400)
+    throw new AuthError("El enlace no es válido o ya fue utilizado", 400);
   }
 
   if (new Date() > recovery.expiraEn) {
-    throw new AuthError('El enlace ha expirado. Solicita uno nuevo.', 400)
+    throw new AuthError("El enlace ha expirado. Solicita uno nuevo.", 400);
   }
 
-  const attempts = tokenAttempts.get(token) ?? 0
+  const attempts = tokenAttempts.get(token) ?? 0;
   if (attempts >= MAX_TOKEN_ATTEMPTS) {
-    await markPasswordRecoveryAsUsed(recovery.id)
-    tokenAttempts.delete(token)
-    throw new AuthError('Demasiados intentos. El enlace ha sido invalidado.', 429)
+    await markPasswordRecoveryAsUsed(recovery.id);
+    tokenAttempts.delete(token);
+    throw new AuthError(
+      "Demasiados intentos. El enlace ha sido invalidado.",
+      429,
+    );
   }
 
-  tokenAttempts.set(token, attempts + 1)
+  tokenAttempts.set(token, attempts + 1);
+
+  // Obtener el usuario para validar que la nueva contraseña sea diferente
+  const user = await findUserById(recovery.usuarioId);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  // Validar que la nueva contraseña sea diferente a la actual
+  if (user.password === password) {
+    throw new AuthError(
+      "La nueva contraseña debe ser diferente a la contraseña actual",
+      400,
+    );
+  }
 
   await prisma.$transaction([
     prisma.recuperacion_password.update({
       where: { id: recovery.id },
-      data: { usadoEn: new Date(), activo: false }
+      data: { usadoEn: new Date(), activo: false },
     }),
     prisma.usuario.update({
       where: { id: recovery.usuarioId },
-      data: { password }
+      data: { password },
     }),
     prisma.sesion.updateMany({
       where: { usuarioId: recovery.usuarioId, estado: true },
-      data: { estado: false }
-    })
-  ])
+      data: { estado: false },
+    }),
+  ]);
 
-  tokenAttempts.delete(token)
+  tokenAttempts.delete(token);
 
-  return { message: 'Contraseña actualizada correctamente. Ya puedes iniciar sesión.' }
-}
+  return {
+    message: "Contraseña actualizada correctamente. Ya puedes iniciar sesión.",
+  };
+};
+export const resend2FAService = async (userId: number) => {
+  if (!userId) {
+    throw new AuthError("El usuario es obligatorio", 400);
+  }
+
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  if (!user.two_factor_activo) {
+    throw new AuthError("El usuario no tiene 2FA activado", 400);
+  }
+
+  const codigo = generate2FACode();
+  const codigoHash = hash2FACode(codigo);
+  const expiraEn = new Date(
+    Date.now() + TWO_FACTOR_CODE_TTL_MINUTES * 60 * 1000,
+  );
+
+  await invalidateActive2FACodesByUserId(user.id);
+
+  await create2FACode({
+    usuarioId: user.id,
+    codigoHash,
+    expiraEn,
+  });
+
+  const emailResult = await enviarCodigo2FA({
+    emailDestino: user.correo,
+    codigo,
+    nombreUsuario: user.nombre,
+  });
+
+  if (!emailResult.success) {
+    throw new Error("No se pudo reenviar el código. Intenta nuevamente.");
+  }
+
+  return {
+    message: "Código reenviado correctamente",
+    expiresInMinutes: TWO_FACTOR_CODE_TTL_MINUTES,
+  };
+};

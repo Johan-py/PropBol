@@ -50,14 +50,14 @@ export function ComboBox({
   }, [])
 
   return (
-    <div className="flex flex-col gap-2 w-full font-inter" ref={comboBoxRef}>
-      <label className="text-sm font-medium text-stone-900">{label}</label>
+    <div className={`flex flex-col w-full font-inter ${label ? 'gap-2' : ''}`} ref={comboBoxRef}>
+      {label && <label className="text-sm font-medium text-stone-900">{label}</label>}
 
       <div className="relative group">
         {DisplayIcon && (
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none z-10">
             <DisplayIcon
-              className={`w-5 h-5 transition-colors ${isOpen ? 'text-amber-600' : 'text-stone-400'}`}
+              className={`w-5 h-5 transition-colors ${isOpen ? 'text-[#d97706]' : 'text-stone-400'}`}
             />
           </div>
         )}
@@ -65,11 +65,11 @@ export function ComboBox({
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className={`w-full flex items-center justify-between bg-white border text-stone-600 py-2.5 pr-3 rounded-xl transition-all shadow-sm focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600 hover:border-stone-300 ${
+          className={`w-full h-[40px] flex items-center justify-between bg-white border text-stone-600 pr-3 rounded-xl transition-all shadow-sm focus:outline-none focus:border-[#d97706] focus:ring-1 focus:ring-[#d97706] hover:border-[#d97706] ${
             DisplayIcon ? 'pl-10' : 'pl-4'
-          } ${isOpen ? 'border-amber-600 ring-1 ring-amber-600' : 'border-stone-200'}`}
+          } ${isOpen ? 'border-[#d97706] ring-1 ring-[#d97706]' : 'border-stone-200'}`}
         >
-          <span className={selected ? 'text-stone-900' : 'text-stone-500'}>
+          <span className={`text-sm ${selected ? 'text-stone-900 font-medium' : 'text-stone-500'}`}>
             {selected?.label || placeholder}
           </span>
           <ChevronDown
@@ -87,7 +87,7 @@ export function ComboBox({
                 <li
                   key={labelText}
                   onClick={() => handleOptionClick(option)}
-                  className="px-4 py-2.5 text-stone-600 hover:bg-amber-50 hover:text-amber-700 cursor-pointer flex items-center gap-2 transition-colors"
+                  className="px-4 py-2.5 text-stone-600 hover:bg-[#fdf3e7] hover:text-[#d97706] cursor-pointer flex items-center gap-2 transition-colors text-sm"
                 >
                   {OptionIcon && <OptionIcon className="w-4 h-4 opacity-70" />}
                   {labelText}

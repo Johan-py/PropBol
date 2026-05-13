@@ -1,13 +1,24 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import BlogCard from "@/components/blog/BlogCard";
 import MyRecentBlogsPanel from "@/components/blog/MyRecentBlogsPanel";
+import AddPostButton from "@/components/blog/AddPostButton";
 import BlogFilterChips from "@/components/blog/BlogFilterChips";
 import FeaturedBlogSpotlight from "@/components/blog/FeaturedBlogSpotlight";
 import { useBlogFeed } from "@/hooks/useBlogFeed";
-import { USER_STORAGE_KEY } from "@/lib/session";
+import { Blog } from "@/types/blog";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+
+type UserBlogResponse = {
+  id: number;
+  titulo: string;
+  estado: Blog["estado"];
+  imagen?: string | null;
+  fecha_creacion?: string;
+};
 
 export default function BlogsPage() {
   const {
@@ -17,25 +28,10 @@ export default function BlogsPage() {
     secondaryBlogs,
     canLoadMore,
     hasResults,
+    isLoading,
     toggleCategory,
     loadMore,
   } = useBlogFeed();
-
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  useEffect(() => {
-    const syncAuthState = () => {
-      setIsAuthenticated(Boolean(localStorage.getItem(USER_STORAGE_KEY)));
-    };
-
-    syncAuthState();
-    window.addEventListener("storage", syncAuthState);
-    window.addEventListener("propbol:session-changed", syncAuthState);
-
-    return () => {
-      window.removeEventListener("storage", syncAuthState);
-      window.removeEventListener("propbol:session-changed", syncAuthState);
-    };
-  }, []);
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#fbf6ef_0%,#f5efe7_45%,#ffffff_100%)]">
@@ -47,46 +43,30 @@ export default function BlogsPage() {
             Perspectivas para el Bien Raiz Moderno.
           </h1>
 
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="overflow-x-auto pb-1">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="overflow-x-auto pb-1 flex-1">
               <BlogFilterChips
                 categories={categories}
                 activeCategory={activeCategory}
                 onToggleCategory={toggleCategory}
               />
             </div>
-
-            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              {/* TODO: restringir este acceso por rol cuando se integre backend. */}
-              <Link
-                href="/admin/blogs"
-                className="inline-flex min-h-[54px] items-center justify-center border border-stone-300 px-8 text-sm font-semibold uppercase tracking-[0.22em] text-stone-700 transition-colors hover:border-[#a56400] hover:text-[#a56400]"
-              >
-                Moderar Posts
-              </Link>
-
-              <button
-                type="button"
-                disabled={!isAuthenticated}
-                aria-disabled={!isAuthenticated}
-                title={
-                  isAuthenticated
-                    ? "La creacion de blogs se habilitara cuando el flujo este integrado."
-                    : "Disponible solo para usuarios registrados."
-                }
-                className={`inline-flex min-h-[54px] items-center justify-center self-start px-8 text-sm font-semibold uppercase tracking-[0.22em] transition-colors lg:self-auto ${
-                  isAuthenticated
-                    ? "bg-[#a56400] text-white hover:bg-[#8e5800]"
-                    : "cursor-not-allowed bg-[#a56400] text-white/75 opacity-80"
-                }`}
-              >
-                AÑADIR POST
-              </button>
+            <div className="flex justify-end sm:flex-shrink-0">
+              <AddPostButton />
             </div>
           </div>
         </section>
 
-        {hasResults && featuredBlog ? (
+        {isLoading ? (
+          <section className="rounded-[32px] border border-stone-200 bg-white px-6 py-12 text-center shadow-sm">
+            <div className="animate-pulse flex flex-col items-center">
+              <div className="h-4 bg-stone-200 rounded w-1/4 mb-4"></div>
+              <div className="h-8 bg-stone-200 rounded w-1/2 mb-4"></div>
+              <div className="h-4 bg-stone-200 rounded w-3/4"></div>
+            </div>
+            <p className="mt-4 text-sm text-stone-400">Cargando artículos...</p>
+          </section>
+        ) : hasResults && featuredBlog ? (
           <FeaturedBlogSpotlight blog={featuredBlog} />
         ) : (
           <section className="rounded-[32px] border border-dashed border-stone-300 bg-white px-6 py-12 text-center shadow-sm">
@@ -105,31 +85,33 @@ export default function BlogsPage() {
           </section>
         )}
 
-        <section className="space-y-6">
-          {secondaryBlogs.length > 0 ? (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-              {secondaryBlogs.map((blog) => (
-                <BlogCard key={blog.id} {...blog} />
-              ))}
-            </div>
-          ) : hasResults ? (
-            <div className="rounded-[28px] border border-stone-200 bg-white px-6 py-10 text-center text-stone-600 shadow-sm">
-              Esta categoria solo tiene un articulo destacado por el momento.
-            </div>
-          ) : null}
+        {!isLoading && (
+          <section className="space-y-6">
+            {secondaryBlogs.length > 0 ? (
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                {secondaryBlogs.map((blog) => (
+                  <BlogCard key={blog.id} {...blog} />
+                ))}
+              </div>
+            ) : hasResults ? (
+              <div className="rounded-[28px] border border-stone-200 bg-white px-6 py-10 text-center text-stone-600 shadow-sm">
+                Esta categoria solo tiene un articulo destacado por el momento.
+              </div>
+            ) : null}
 
-          {canLoadMore && (
-            <div className="flex justify-center pt-2">
-              <button
-                type="button"
-                onClick={loadMore}
-                className="rounded-full border border-amber-600 px-6 py-3 text-sm font-semibold text-amber-700 transition-colors hover:bg-amber-600 hover:text-white"
-              >
-                CONTINUAR LEYENDO
-              </button>
-            </div>
-          )}
-        </section>
+            {canLoadMore && (
+              <div className="flex justify-center pt-2">
+                <button
+                  type="button"
+                  onClick={loadMore}
+                  className="rounded-full border border-amber-600 px-6 py-3 text-sm font-semibold text-amber-700 transition-colors hover:bg-amber-600 hover:text-white"
+                >
+                  CONTINUAR LEYENDO
+                </button>
+              </div>
+            )}
+          </section>
+        )}
       </div>
     </div>
   );

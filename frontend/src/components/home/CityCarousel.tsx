@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, type MouseEvent as ReactMouseEvent } from "react"
+import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent, type TouchEvent as ReactTouchEvent } from "react"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
@@ -11,12 +11,14 @@ type Props = {
 
 const FALLBACK_IMAGE = "/placeholder-house.jpg"
 const EDGE_ACTIVATION_WIDTH = 72
+const SWIPE_THRESHOLD = 42
 
 export default function CityCarousel({ images, cityName }: Props) {
   const carouselImages = images.length > 0 ? images : [FALLBACK_IMAGE]
   const [index, setIndex] = useState(0)
   const [activeEdge, setActiveEdge] = useState<"left" | "right" | null>(null)
   const [imageError, setImageError] = useState(false)
+  const touchStartXRef = useRef<number | null>(null)
 
   useEffect(() => {
     setIndex(0)
@@ -80,16 +82,67 @@ export default function CityCarousel({ images, cityName }: Props) {
     setIndex((currentIndex) => (currentIndex + 1) % carouselImages.length)
   }
 
+  const handleTouchStart = (event: ReactTouchEvent<HTMLDivElement>) => {
+    if (!hasMultipleImages) {
+      return
+    }
+
+    event.stopPropagation()
+    touchStartXRef.current = event.changedTouches[0]?.clientX ?? null
+  }
+
+  const handleTouchMove = (event: ReactTouchEvent<HTMLDivElement>) => {
+    if (!hasMultipleImages) {
+      return
+    }
+
+    event.stopPropagation()
+  }
+
+  const handleTouchEnd = (event: ReactTouchEvent<HTMLDivElement>) => {
+    if (!hasMultipleImages) {
+      return
+    }
+
+    event.stopPropagation()
+
+    const touchStartX = touchStartXRef.current
+    const touchEndX = event.changedTouches[0]?.clientX
+
+    touchStartXRef.current = null
+
+    if (touchStartX === null || touchEndX === undefined) {
+      return
+    }
+
+    const swipeDistance = touchEndX - touchStartX
+
+    if (Math.abs(swipeDistance) < SWIPE_THRESHOLD) {
+      return
+    }
+
+    if (swipeDistance < 0) {
+      setIndex((currentIndex) => (currentIndex + 1) % carouselImages.length)
+      return
+    }
+
+    setIndex((currentIndex) => (currentIndex - 1 + carouselImages.length) % carouselImages.length)
+  }
+
   return (
     <div
-      className="group relative h-48 w-full overflow-hidden rounded-t-2xl bg-stone-100"
+      className="group relative h-48 w-full cursor-pointer overflow-hidden rounded-t-2xl bg-stone-100"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       <Image
         src={imageError ? FALLBACK_IMAGE : activeImage}
         alt={`Vista destacada de ${cityName}`}
         fill
+        unoptimized
         sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw"
         className="object-cover transition-transform duration-500 md:group-hover:scale-[1.02]"
         onError={() => setImageError(true)}

@@ -1,79 +1,146 @@
-import React from 'react'
-import { MOCK_USER_BLOGS } from '@/lib/mock/blogs.mock'
+import Image from "next/image"
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
-import { ChevronLeft } from 'lucide-react'
+import { Metadata } from 'next'
+import BlogDetailSidebar from '@/components/blog/BlogDetailSidebar'
+import BlogCommentsSection from '@/components/blog/BlogCommentsSection'
+import MarkdownRenderer from '@/components/blog/MarkdownRenderer'
+import BlogSharePlaceholder from '@/components/blog/BlogSharePlaceholder'
+import { MOCK_USER_BLOGS } from '@/lib/mock/blogs.mock'
+import { getPublishedBlogById, getPublishedBlogs } from '@/services/blogs.service'
+import BackButton from "@/app/blogs/backButton"
 
-export default function BlogDetailPage({ params }: { params: { id: string } }) {
-  // Buscamos el blog en nuestros mocks por el ID
-  const blog = MOCK_USER_BLOGS.find((b) => b.id === params.id)
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const publicBlog = await getPublishedBlogById(params.id)
+  const userBlog = MOCK_USER_BLOGS.find((blog) => blog.id === params.id)
 
-  if (!blog) {
+  if (!publicBlog && !userBlog) return {}
+
+  const title = publicBlog?.title ?? userBlog?.titulo ?? 'Blog PropBol'
+  const description = `${publicBlog?.excerpt ?? userBlog?.resumen ?? 'Descubre más sobre el mercado inmobiliario en PropBol.'} | Lee el artículo completo en PropBol.`
+  const imageUrl = publicBlog?.imageUrl ?? userBlog?.imagenUrl ?? '/placeholder-blog.jpg'
+
+  return {
+    title: `${title} | PropBol Blog`,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [imageUrl],
+      type: 'article',
+    },
+  }
+}
+
+const formatPublishedDate = (value: string) =>
+  new Date(value).toLocaleDateString('es-BO', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  })
+
+export default async function BlogDetailPage({ params }: { params: { id: string } }) {
+  const publicBlog = await getPublishedBlogById(params.id)
+  const userBlog = MOCK_USER_BLOGS.find((blog) => blog.id === params.id)
+
+  if (!publicBlog && !userBlog) {
     notFound()
   }
 
-  return (
-    <article className="min-h-screen bg-white pb-20">
-      {/* Cabecera con Título e Imagen (HU62) */}
-      <header className="max-w-4xl mx-auto px-6 pt-10">
-        {/* Título Gigante */}
-        <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
-          {blog.titulo}
-        </h1>
+  const title = publicBlog?.title ?? userBlog?.titulo ?? 'Blog PropBol'
+  const imageUrl = publicBlog?.imageUrl ?? userBlog?.imagenUrl ?? '/placeholder-blog.jpg'
+  const authorName = publicBlog?.authorName ?? userBlog?.autor ?? 'Usuario PropBol'
+  const publishedLabel = publicBlog
+    ? formatPublishedDate(publicBlog.publishedAt)
+    : userBlog?.fecha ?? 'Fecha no disponible'
+  const summary =
+    publicBlog?.excerpt ??
+    userBlog?.resumen ??
+    'Este articulo presenta una mirada clara y actual sobre el ecosistema inmobiliario y las oportunidades que aparecen cuando observamos el mercado con criterio.'
+  const articleContent = publicBlog?.content?.trim() || userBlog?.resumen?.trim() || summary
+  const recommendedBlogs = (await getPublishedBlogs(8))
+    .filter((blog) => blog.id !== params.id)
+    .slice(0, 4)
 
-        {/* Cabecera: Autor y Fecha */}
-        <div className="flex items-center gap-4 mt-8 pb-8 border-b border-gray-100">
-          <div className="w-12 h-12 bg-gray-200 rounded-full overflow-hidden flex-shrink-0">
-            <div className="w-full h-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
-              {blog.autor ? blog.autor[0] : 'U'}
+  return (
+    <article className="min-h-screen bg-[linear-gradient(180deg,#fbf6ef_0%,#f8f3eb_38%,#ffffff_100%)] pb-20">
+      <header className="mx-auto max-w-5xl px-4 pt-10 sm:px-6 lg:px-8 lg:pt-14">
+        <div className="max-w-4xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#a56400]">
+            Blog PropBol
+          </p>
+
+          <h1 className="font-heading mt-4 text-4xl font-black leading-tight text-stone-900 sm:text-5xl lg:text-6xl">
+            {title}
+          </h1>
+
+          <div className="mt-8 flex items-center justify-between gap-4 border-b border-stone-200 pb-8">
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-stone-900 text-sm font-bold text-white">
+                {authorName.charAt(0).toUpperCase()}
+              </div>
+
+              <div className="flex min-w-0 flex-col">
+                <span className="text-sm font-bold text-stone-900">{authorName}</span>
+                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-400">
+                  {publishedLabel}
+                </span>
+              </div>
             </div>
+
+            <button className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-stone-100 transition-colors text-stone-400 hover:text-stone-900 transition-all duration-300" title="Más opciones">
+              <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="12" cy="5" r="1"></circle>
+                <circle cx="12" cy="19" r="1"></circle>
+              </svg>
+            </button>
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-bold text-gray-800">
-              {blog.autor || 'Usuario PropBol'}
-            </span>
-            <span className="text-xs text-gray-400 uppercase font-semibold tracking-wider">
-              {blog.fecha}
-            </span>
-          </div>
+
         </div>
 
-        {/* Imagen de portada redondeada */}
-        <div className="mt-10 relative w-full aspect-video overflow-hidden rounded-3xl shadow-lg bg-gray-100">
-          <img src={blog.imagenUrl} alt={blog.titulo} className="w-full h-full object-cover" />
+        <div className="mt-10 overflow-hidden rounded-[32px] bg-stone-100 shadow-[0_24px_80px_-32px_rgba(41,37,36,0.35)]">
+          <Image
+            src={imageUrl}
+            alt={title}
+            width={1600}
+            height={900}
+            className="h-full min-h-[240px] w-full object-cover sm:min-h-[360px]"
+            unoptimized
+          />
         </div>
       </header>
 
-      {/* Cuerpo del artículo con tipografía optimizada */}
-      <main className="max-w-3xl mx-auto px-6 mt-12">
-        <div className="text-lg leading-relaxed text-gray-700 space-y-6">
-          <p className="font-medium text-xl text-gray-800 italic">
-            {blog.resumen ||
-              'Este es un resumen del artículo que captura la atención del lector desde el primer momento.'}
-          </p>
+      <main className="mx-auto mt-12 max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="blog-grid-container grid gap-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start xl:grid-cols-[minmax(0,1fr)_360px]">
+          <div className="space-y-12">
+            <div className="rounded-[36px] bg-white/90 p-6 shadow-[0_24px_80px_-50px_rgba(41,37,36,0.45)] sm:p-8 lg:p-10">
+              <MarkdownRenderer content={articleContent} />
+            </div>
 
-          <p>
-            Resumen.
-          </p>
+            <div className="no-capture">
+              <BlogSharePlaceholder 
+                title={title} 
+                author={authorName}
+                category={publicBlog?.category || 'General'}
+                imageUrl={imageUrl}
+                description={articleContent}
+              />
+            </div>
 
-          <h2 className="text-2xl font-bold text-gray-900 pt-4">El impacto en el mercado actual</h2>
+            <div className="no-capture">
+              <BlogCommentsSection blogId={params.id} />
+            </div>
 
-          <p>
-            Resumen zzz.
-          </p>
+            <div className="pt-2 no-capture">
+              <BackButton />
+            </div>
+          </div>
+
+          <div className="no-capture">
+            <BlogDetailSidebar recommendations={recommendedBlogs} />
+          </div>
         </div>
       </main>
-
-      {/* Botón para volver */}
-      <div className="max-w-4xl mx-auto px-6 pt-12">
-        <Link
-          href="/profile"
-          className="flex items-center text-gray-500 hover:text-blue-600 transition-colors gap-1 text-sm font-medium"
-        >
-          <ChevronLeft size={18} />
-          Volver a mis blogs
-        </Link>
-      </div>
     </article>
   )
 }

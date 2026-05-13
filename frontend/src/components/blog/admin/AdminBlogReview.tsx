@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { CheckCircle2, ChevronLeft, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAdminBlogModeration } from "@/hooks/useAdminBlogModeration";
+import MarkdownRenderer from "@/components/blog/MarkdownRenderer";
 
 function formatDate(date: string) {
   return new Intl.DateTimeFormat("es-BO", {
@@ -19,30 +20,30 @@ function StatusBanner({
   status,
   rejectionComment,
 }: {
-  status: "APROBADO" | "RECHAZADO";
+  status: "PUBLICADO" | "RECHAZADO";
   rejectionComment: string | null;
 }) {
-  if (status === "APROBADO") {
+  if (status === "PUBLICADO") {
     return (
-      <div className="rounded-[28px] border border-emerald-200 bg-emerald-50 px-6 py-5 text-emerald-800">
-        <p className="text-xs font-semibold uppercase tracking-[0.25em]">
+      <div className="rounded-3xl border border-green-200 bg-green-50 px-6 py-5 text-green-800 font-inter">
+        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-green-600">
           Estado actual
         </p>
-        <h2 className="mt-2 text-2xl font-bold">Articulo publicado</h2>
+        <h2 className="mt-2 text-2xl font-bold font-montserrat">Artículo publicado</h2>
         <p className="mt-2 text-sm leading-7">
-          Este blog ya fue aprobado en la demo, por lo que no volvera a
-          aparecer en la pestana de pendientes.
+          Este blog ya fue publicado, por lo que no volverá a
+          aparecer en la pestaña de pendientes.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-[28px] border border-rose-200 bg-rose-50 px-6 py-5 text-rose-800">
-      <p className="text-xs font-semibold uppercase tracking-[0.25em]">
+    <div className="rounded-3xl border border-red-200 bg-red-50 px-6 py-5 text-red-800 font-inter">
+      <p className="text-xs font-semibold uppercase tracking-[0.25em] text-red-600">
         Estado actual
       </p>
-      <h2 className="mt-2 text-2xl font-bold">Articulo rechazado</h2>
+      <h2 className="mt-2 text-2xl font-bold font-montserrat">Artículo rechazado</h2>
       <p className="mt-2 text-sm leading-7">
         Comentario registrado: {rejectionComment || "Sin comentario adicional."}
       </p>
@@ -55,6 +56,7 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
   const { blogs, isReady, updateBlogStatus } = useAdminBlogModeration();
   const [rejectionComment, setRejectionComment] = useState("");
   const [formError, setFormError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const blog = useMemo(
     () => blogs.find((currentBlog) => currentBlog.id === blogId),
@@ -95,21 +97,31 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
     );
   }
 
-  const handleApprove = () => {
-    // TODO: enviar la aprobacion al backend cuando exista moderacion real.
-    updateBlogStatus(blog.id, "APROBADO");
-    router.push("/admin/blogs");
+  const handleApprove = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      await updateBlogStatus(blog.id, "PUBLICADO");
+      router.push("/admin/blogs");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleReject = () => {
+  const handleReject = async () => {
+    if (isSubmitting) return;
     if (!rejectionComment.trim()) {
       setFormError("Agrega un comentario para justificar el rechazo.");
       return;
     }
 
-    // TODO: enviar el rechazo y comentario al backend cuando exista moderacion real.
-    updateBlogStatus(blog.id, "RECHAZADO", rejectionComment);
-    router.push("/admin/blogs");
+    setIsSubmitting(true);
+    try {
+      await updateBlogStatus(blog.id, "RECHAZADO", rejectionComment);
+      router.push("/admin/blogs");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -124,29 +136,29 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
         </Link>
 
         <div className="mt-10 rounded-[36px] border border-stone-200 bg-white p-5 shadow-[0_24px_80px_rgba(28,25,23,0.08)] sm:p-8 lg:p-10">
-          <div className="rounded-full bg-indigo-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-indigo-700">
+          <div className="rounded-full bg-amber-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-amber-700 font-inter">
             {blog.category}
           </div>
 
-          <h1 className="mt-8 max-w-5xl text-4xl font-black leading-none tracking-tight text-stone-950 sm:text-6xl">
+          <h1 className="mt-8 max-w-5xl text-4xl font-bold leading-none tracking-tight text-stone-900 sm:text-6xl font-montserrat">
             {blog.title}
           </h1>
 
-          <div className="mt-10 grid gap-5 border-b border-stone-200 pb-8 text-sm text-stone-600 sm:grid-cols-3">
+          <div className="mt-10 grid gap-5 border-b border-stone-200 pb-8 text-sm text-stone-600 sm:grid-cols-3 font-inter">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
                 Autor
               </p>
-              <p className="mt-2 text-lg font-semibold text-stone-900">
+              <p className="mt-2 text-lg font-bold text-stone-900 font-montserrat">
                 {blog.authorName}
               </p>
               <p>{blog.authorRole}</p>
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
-                Fecha de creacion
+                Fecha de creación
               </p>
-              <p className="mt-2 text-lg font-semibold text-stone-900">
+              <p className="mt-2 text-lg font-bold text-stone-900 font-montserrat">
                 {formatDate(blog.submittedAt)}
               </p>
             </div>
@@ -154,7 +166,7 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-stone-400">
                 Tiempo de lectura
               </p>
-              <p className="mt-2 text-lg font-semibold text-stone-900">
+              <p className="mt-2 text-lg font-bold text-stone-900 font-montserrat">
                 {blog.readingTime}
               </p>
             </div>
@@ -168,24 +180,22 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
               height={980}
               className="h-auto w-full object-cover"
               priority
+              unoptimized
             />
           </div>
 
-          <div className="mx-auto mt-10 max-w-4xl space-y-9 text-lg leading-9 text-stone-700">
-            <p className="text-2xl leading-10 text-stone-800">{blog.excerpt}</p>
-            <p className="text-xl leading-9 text-stone-600">{blog.lead}</p>
-
+          <div className="mx-auto mt-10 max-w-4xl space-y-9 text-lg leading-9 text-stone-700 font-inter">
             {blog.sections.map((section, index) => (
               <section key={`${blog.id}-${index}`} className="space-y-4">
                 {section.heading && (
-                  <h2 className="text-3xl font-semibold leading-tight text-stone-900">
+                  <h2 className="text-3xl font-bold leading-tight text-stone-900 font-montserrat">
                     {section.heading}
                   </h2>
                 )}
 
-                {section.paragraphs.map((paragraph, paragraphIndex) => (
-                  <p key={`${blog.id}-${index}-${paragraphIndex}`}>{paragraph}</p>
-                ))}
+                <MarkdownRenderer
+                  content={section.paragraphs.join("\n\n")}
+                />
               </section>
             ))}
           </div>
@@ -193,20 +203,20 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
           <div className="mx-auto mt-12 max-w-4xl border-t border-stone-200 pt-8">
             {blog.status === "PENDIENTE" ? (
               <div className="space-y-6">
-                <div className="flex flex-col gap-2">
-                  <p className="text-sm font-semibold uppercase tracking-[0.22em] text-stone-400">
-                    Decision del admin
+                <div className="flex flex-col gap-2 font-inter">
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-600">
+                    Decisión del admin
                   </p>
-                  <h2 className="text-3xl font-bold text-stone-900">
+                  <h2 className="text-3xl font-bold text-stone-900 font-montserrat">
                     Revisa antes de publicar
                   </h2>
                   <p className="max-w-2xl text-base leading-7 text-stone-600">
-                    Si rechazas el articulo, agrega un comentario claro para que
-                    el autor sepa que debe mejorar.
+                    Si rechazas el artículo, agrega un comentario claro para que
+                    el autor sepa qué debe mejorar.
                   </p>
                 </div>
 
-                <label className="block">
+                <label className="block font-inter">
                   <span className="mb-2 block text-sm font-medium text-stone-700">
                     Comentario de rechazo
                   </span>
@@ -218,30 +228,32 @@ export default function AdminBlogReview({ blogId }: { blogId: string }) {
                     }}
                     rows={5}
                     placeholder="Ejemplo: falta citar fuentes, mejorar estructura o corregir tono editorial."
-                    className="w-full rounded-[24px] border border-stone-300 px-5 py-4 text-sm text-stone-700 outline-none transition focus:border-[#a56400]"
+                    className="w-full rounded-2xl border border-stone-300 px-5 py-4 text-sm text-stone-700 outline-none transition focus:border-amber-600"
                   />
                 </label>
 
                 {formError && (
-                  <p className="text-sm font-medium text-rose-600">{formError}</p>
+                  <p className="text-sm font-medium text-red-600 font-inter">{formError}</p>
                 )}
 
-                <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                <div className="flex flex-col gap-3 sm:flex-row sm:justify-end font-inter">
                   <button
                     type="button"
                     onClick={handleReject}
-                    className="inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full border border-rose-500 px-8 text-sm font-semibold uppercase tracking-[0.2em] text-rose-600 transition-colors hover:bg-rose-50"
+                    disabled={isSubmitting}
+                    className={`inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full border border-red-500 px-8 text-sm font-semibold uppercase tracking-[0.2em] text-red-600 transition-colors ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-50'}`}
                   >
                     <XCircle className="h-4 w-4" />
-                    Rechazar
+                    {isSubmitting ? 'Procesando...' : 'Rechazar'}
                   </button>
                   <button
                     type="button"
                     onClick={handleApprove}
-                    className="inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full bg-[#d28518] px-8 text-sm font-semibold uppercase tracking-[0.2em] text-white transition-colors hover:bg-[#b66f10]"
+                    disabled={isSubmitting}
+                    className={`inline-flex min-h-[54px] items-center justify-center gap-2 rounded-full bg-amber-600 px-8 text-sm font-semibold uppercase tracking-[0.2em] text-white transition-colors shadow-sm shadow-amber-200 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-amber-700'}`}
                   >
                     <CheckCircle2 className="h-4 w-4" />
-                    Publicar
+                    {isSubmitting ? 'Procesando...' : 'Publicar'}
                   </button>
                 </div>
               </div>

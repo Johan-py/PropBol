@@ -1,103 +1,130 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import { ADMIN_MODERATION_BLOGS_MOCK } from "@/lib/mock/adminModerationBlogs.mock";
-import type {
-  AdminModerationBlog,
-  AdminModerationStatus,
-} from "@/types/adminModerationBlog";
+import { useEffect, useState, useCallback } from 'react'
+import { createPlainTextExcerpt } from '@/lib/blogMarkdown'
+import type { AdminModerationBlog, AdminModerationStatus } from '@/types/adminModerationBlog'
 
-const ADMIN_BLOGS_STORAGE_KEY = "propbol_admin_moderation_blogs";
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 
-function loadStoredBlogs() {
-  if (typeof window === "undefined") {
-    return ADMIN_MODERATION_BLOGS_MOCK;
+interface BackendBlog {
+  id: number
+  titulo: string
+  contenido: string
+  imagen: string | null
+  estado: string
+  fecha_creacion: string
+  usuario: {
+    nombre: string
+    apellido: string
+    avatar: string | null
   }
-
-  const rawBlogs = localStorage.getItem(ADMIN_BLOGS_STORAGE_KEY);
-
-  if (!rawBlogs) {
-    // TODO: reemplazar este mock local por el listado real cuando exista backend.
-    localStorage.setItem(
-      ADMIN_BLOGS_STORAGE_KEY,
-      JSON.stringify(ADMIN_MODERATION_BLOGS_MOCK),
-    );
-
-    return ADMIN_MODERATION_BLOGS_MOCK;
+  categoria_blog: {
+    nombre: string
   }
+  blog_rechazo?: Array<{
+    comentario: string
+    fecha: string
+  }>
+}
 
-  try {
-    return JSON.parse(rawBlogs) as AdminModerationBlog[];
-  } catch {
-    localStorage.setItem(
-      ADMIN_BLOGS_STORAGE_KEY,
-      JSON.stringify(ADMIN_MODERATION_BLOGS_MOCK),
-    );
-
-    return ADMIN_MODERATION_BLOGS_MOCK;
+function mapBackendToFrontend(blog: BackendBlog): AdminModerationBlog {
+  return {
+    id: String(blog.id),
+    title: blog.titulo,
+    category: blog.categoria_blog?.nombre || 'General',
+    authorName: `${blog.usuario?.nombre} ${blog.usuario?.apellido}`,
+    authorRole: 'Autor de PropBol',
+    submittedAt: blog.fecha_creacion,
+    readingTime: '5 min',
+    coverImage: blog.imagen || 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d',
+    excerpt: createPlainTextExcerpt(blog.contenido, 150),
+    lead: createPlainTextExcerpt(blog.contenido, 300),
+    sections: [
+      {
+        paragraphs: [blog.contenido]
+      }
+    ],
+    status: blog.estado as AdminModerationStatus,
+    rejectionComment: blog.blog_rechazo?.[0]?.comentario || null,
+    reviewedAt: blog.blog_rechazo?.[0]?.fecha || null
   }
 }
 
 export function useAdminBlogModeration() {
-  const [blogs, setBlogs] = useState<AdminModerationBlog[]>(
-    ADMIN_MODERATION_BLOGS_MOCK,
-  );
-  const [isReady, setIsReady] = useState(false);
+  const [blogs, setBlogs] = useState<AdminModerationBlog[]>([])
+  const [isReady, setIsReady] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchBlogs = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) return
+
+      // Obtenemos todos los blogs para que el frontend filtre como antes (o podríamos filtrar por estado en la query)
+      const response = await fetch(`${API_URL}/api/blogs/admin?limit=100`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        const mapped = data.data.map(mapBackendToFrontend)
+        setBlogs(mapped)
+      } else {
+        setError('Error al cargar los blogs')
+      }
+    } catch (err) {
+      console.error('Error fetching admin blogs:', err)
+      setError('Error de conexión con el servidor')
+    } finally {
+      setIsReady(true)
+    }
+  }, [])
 
   useEffect(() => {
-    const syncBlogs = () => {
-      setBlogs(loadStoredBlogs());
-      setIsReady(true);
-    };
+    fetchBlogs()
+  }, [fetchBlogs])
 
-    syncBlogs();
-
-    const handleStorage = (event: StorageEvent) => {
-      if (event.key === ADMIN_BLOGS_STORAGE_KEY) {
-        syncBlogs();
-      }
-    };
-
-    window.addEventListener("storage", handleStorage);
-
-    return () => {
-      window.removeEventListener("storage", handleStorage);
-    };
-  }, []);
-
-  const updateBlogStatus = (
+  const updateBlogStatus = async (
     blogId: string,
     nextStatus: AdminModerationStatus,
-    rejectionComment?: string,
+    rejectionComment?: string
   ) => {
-    setBlogs((currentBlogs) => {
-      const updatedBlogs = currentBlogs.map((blog) => {
-        if (blog.id !== blogId) {
-          return blog;
-        }
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) return
 
-        return {
-          ...blog,
-          status: nextStatus,
-          rejectionComment:
-            nextStatus === "RECHAZADO" ? rejectionComment?.trim() ?? "" : null,
-          reviewedAt: new Date().toISOString(),
-        };
-      });
+      const response = await fetch(`${API_URL}/api/blogs/${blogId}/estado`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          estado: nextStatus === 'PUBLICADO' ? 'PUBLICADO' : 'RECHAZADO',
+          razon_rechazo: rejectionComment
+        })
+      })
 
-      // TODO: persistir aprobacion y rechazo con endpoints reales cuando exista backend.
-      localStorage.setItem(
-        ADMIN_BLOGS_STORAGE_KEY,
-        JSON.stringify(updatedBlogs),
-      );
-
-      return updatedBlogs;
-    });
-  };
+      if (response.ok) {
+        // Refrescar la lista después de actualizar
+        await fetchBlogs()
+      } else {
+        const data = await response.json()
+        alert(data.message || 'Error al actualizar el estado')
+      }
+    } catch (err) {
+      console.error('Error updating blog status:', err)
+      alert('Error de conexión al intentar actualizar')
+    }
+  }
 
   return {
     blogs,
     isReady,
+    error,
     updateBlogStatus,
-  };
+    refresh: fetchBlogs
+  }
 }
