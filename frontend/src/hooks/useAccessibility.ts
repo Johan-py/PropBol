@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export type AccessibilityOption =
   | "none"
@@ -56,5 +56,5 @@ export function useAccessibility() {
     localStorage.setItem(STORAGE_KEY, option);
   }, []);
 
-  return [accessibility, setAccessibility];
+  return { accessibility, setAccessibility };
 }
