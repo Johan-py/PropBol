@@ -137,6 +137,7 @@ useEffect(() => {
 
   let startY = 0
   let startZoom = 0
+  let touchStartTime = 0
 
   const container = map.getContainer()
 
@@ -148,8 +149,16 @@ useEffect(() => {
 
     if (timeSinceLast < DOUBLE_TAP_DELAY) {
       secondTap = true
+      touchStartTime = now
       startY = e.touches[0].clientY
       startZoom = map.getZoom()
+
+      if (e.cancelable) {
+        e.preventDefault()
+      }
+    } else {
+      secondTap = false
+      isDraggingZoom = false
     }
 
     lastTapTime = now
@@ -158,6 +167,8 @@ useEffect(() => {
   const handleTouchMove = (e: TouchEvent) => {
     if (!secondTap) return
 
+    if (e.cancelable) { e.preventDefault() }
+
     const currentY = e.touches[0].clientY
     const deltaY = startY - currentY
 
@@ -165,11 +176,10 @@ useEffect(() => {
       isDraggingZoom = true
 
       const zoomDelta = deltaY / 80
-      map.setZoom(Math.round(startZoom + zoomDelta), {
+
+      map.setZoom(startZoom + zoomDelta, {
         animate: false
       })
-
-      e.preventDefault()
     }
   }
 
@@ -284,13 +294,6 @@ export default function MapaPinSelector({
       scrollWheelZoom={true}
       style={{ height: '320px', width: '100%' }}
       gestureHandling={typeof window !== 'undefined' && L ? L.Browser.mobile : false}
-      gestureHandlingOptions={{
-        text: {
-          touch: "Usa dos dedos para mover el mapa",
-          scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
-          scrollMac: "Usa ⌘ + scroll para hacer zoom en el mapa"
-        }
-      }}
     >
       <TileLayer
         attribution="&copy; OpenStreetMap"

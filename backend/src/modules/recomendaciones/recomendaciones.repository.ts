@@ -1,7 +1,7 @@
 import { prisma } from '../../lib/prisma.client.js'
 
 export class RecomendacionesRepository {
-  async getHistorialVistas(usuarioId: number, diasLimite: number = 30) {
+  async getHistorialVistas(usuarioId: number, diasLimite: number = 90) {
     const fechaLimite = new Date()
     fechaLimite.setDate(fechaLimite.getDate() - diasLimite)
 

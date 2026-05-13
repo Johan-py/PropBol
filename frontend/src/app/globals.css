@@ -653,3 +653,18 @@ html.propbol-theme-dark .propbol-btn-close-session:hover {
   color: #fecaca !important;
   border-color: rgba(248, 113, 113, 0.9) !important;
 }
+
+/* Ocultar definitivamente el mensaje y la capa oscura de leaflet-gesture-handling */
+.leaflet-container::after,
+.leaflet-gesture-handling-warning::after,
+.leaflet-gesture-handling-touch-warning::after,
+.leaflet-gesture-handling-scroll-warning::after,
+.leaflet-container[data-gesture-handling-touch-warning]::after,
+.leaflet-container[data-gesture-handling-scroll-warning]::after {
+    display: none !important;
+    content: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    background: transparent !important;
+    pointer-events: none !important;
+}
