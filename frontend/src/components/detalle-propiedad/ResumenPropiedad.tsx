@@ -3,6 +3,9 @@ import type { DetallePropiedad } from '@/types/detallePropiedad'
 
 interface Props {
   detalle: DetallePropiedad
+  esOferta?: boolean
+  porcentajeDescuento?: number
+  formatPrice?: (value?: number) => string
 }
 
 function traducirOperacion(value: string) {
