@@ -662,7 +662,6 @@ export const editarMultimediaPublicacionService = async (
   const imagenesActualesUrls = parseStringArray(data.imagenesActuales)
   const imagenesNuevasBase64 = parseStringArray(data.imagenesNuevas)
   const videosUrls = parseStringArray(data.videoUrls)
-
   const videoUrlLegacy = normalizarTexto(data.videoUrl)
 
   const videosFinales =
@@ -671,12 +670,6 @@ export const editarMultimediaPublicacionService = async (
       : videoUrlLegacy
         ? [videoUrlLegacy]
         : []
-
-  const videosValidos = videosFinales.every((video) => esVideoPermitido(video))
-
-  if (!videosValidos) {
-    throw new Error('VIDEO_INVALIDO')
-  }
 
   const imagenesActualesDb = publicacion.multimedia.filter(
     (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN
@@ -739,17 +732,21 @@ export const editarMultimediaPublicacionService = async (
     ...nuevasImagenesDesdeBase64
   ])
 
-  await eliminarVideosDePublicacionRepository(publicacionId)
+  const videosValidos = videosFinales.every((video) => esVideoPermitido(video))
 
-  if (videosFinales.length > 0) {
-    await crearMultimediaRepository(
-      videosFinales.map((video) => ({
-        url: video,
-        tipo: 'VIDEO' as const,
-        pesoMb: null,
-        publicacionId
-      }))
-    )
+  if (videosValidos) {
+    await eliminarVideosDePublicacionRepository(publicacionId)
+
+    if (videosFinales.length > 0) {
+      await crearMultimediaRepository(
+        videosFinales.map((video) => ({
+          url: video,
+          tipo: 'VIDEO' as const,
+          pesoMb: null,
+          publicacionId
+        }))
+      )
+    }
   }
 
   const multimediaActualizada =
@@ -772,6 +769,7 @@ export const editarMultimediaPublicacionService = async (
       pesoMb: item.pesoMb ? Number(item.pesoMb) : null
     })),
     videoUrl: videos[0]?.url ?? null,
-    videoUrls: videos.map((item) => item.url)
+    videoUrls: videos.map((item) => item.url),
+    videoError: videosValidos ? null : 'VIDEO_INVALIDO'
   }
 }
