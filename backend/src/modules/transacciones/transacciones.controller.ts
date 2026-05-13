@@ -3,6 +3,21 @@ import { prisma } from '../../lib/prisma.client.js'
 import { crearTransaccion } from './servicios/transaccion.service.js'
 import { emitirComprobante } from './servicios/comprobanteService.js'
 import { suscripcionesService } from '../suscripciones/suscripciones.service.js'
+import { createNotificationRepository } from '../notificaciones/notificaciones.repository.js'
+
+const crearNotificacion = async (usuarioId: number, titulo: string, mensaje: string) => {
+  try {
+    await createNotificationRepository({ usuarioId, titulo, mensaje })
+  } catch { /* no bloquear el flujo principal */ }
+}
+
+const notificarAdmins = async (titulo: string, mensaje: string) => {
+  const admins = await prisma.usuario.findMany({
+    where: { rol: { nombre: 'ADMIN' } },
+    select: { id: true },
+  })
+  await Promise.all(admins.map((a) => crearNotificacion(a.id, titulo, mensaje)))
+}
 
 interface AuthRequest extends Request {
   user?: { id: number }
@@ -210,6 +225,20 @@ export const confirmarPago = async (req: Request, res: Response) => {
 
     const comprobanteEnviado = await emitirComprobante(transaccionId)
 
+    // HU-15: notificar al usuario que su pago fue aprobado
+    const planNombre = await prisma.plan_suscripcion.findUnique({
+      where: { id: transaccion.id_suscripcion },
+      select: { nombre_plan: true },
+    })
+    const vigenciaFin = new Date(ahora.getTime() + diasSuscripcion * 24 * 60 * 60 * 1000)
+      .toLocaleDateString('es-BO', { day: '2-digit', month: '2-digit', year: 'numeric' })
+
+    await crearNotificacion(
+      transaccion.id_usuario,
+      '¡Tu pago fue aprobado!',
+      `Plan ${planNombre?.nombre_plan ?? ''} activado. Vigencia hasta: ${vigenciaFin}. Monto: Bs. ${Number(transaccion.total).toFixed(2)}.`
+    )
+
     return res.status(200).json({
       mensaje: comprobanteEnviado
         ? 'Pago confirmado y comprobante enviado'
@@ -284,6 +313,8 @@ export const rechazarPago = async (req: Request, res: Response) => {
     const id = parseInt(String(req.params.id))
     if (isNaN(id)) return res.status(400).json({ error: 'ID inválido' })
 
+    const { motivo } = req.body
+
     const transaccion = await prisma.transacciones.findUnique({ where: { id } })
     if (!transaccion) return res.status(404).json({ error: 'Transacción no encontrada' })
 
@@ -296,17 +327,127 @@ export const rechazarPago = async (req: Request, res: Response) => {
       data: { estado: 'RECHAZADO' },
     })
 
+    const motivoTexto = motivo?.trim() ? String(motivo).trim() : 'No especificado'
+
     await prisma.bitacora_pagos.create({
       data: {
         id_usuario: transaccion.id_usuario,
         id_suscripcion: transaccion.id_suscripcion,
         id_transaccion: id,
         evento: 'PAGO_RECHAZADO',
-        mensaje: `Transacción ${id} rechazada por el administrador`,
+        mensaje: `Transacción ${id} rechazada. Motivo: ${motivoTexto}`,
       },
     })
 
+    // HU-15: notificar al usuario sobre el rechazo
+    await crearNotificacion(
+      transaccion.id_usuario,
+      'Pago rechazado',
+      `Tu pago (Ref: TXN-${String(id).padStart(3, '0')}) fue rechazado. Motivo: ${motivoTexto}. Puedes intentar nuevamente.`
+    )
+
     return res.json({ mensaje: 'Pago rechazado correctamente' })
+  } catch (error) {
+    return res.status(500).json({ error: toMessage(error) })
+  }
+}
+
+export const notificarPagoRealizado = async (req: AuthRequest, res: Response) => {
+  try {
+    const id = parseInt(String(req.params.id))
+    if (isNaN(id)) return res.status(400).json({ error: 'ID inválido' })
+
+    const transaccion = await prisma.transacciones.findUnique({
+      where: { id },
+      include: {
+        usuario: { select: { nombre: true, correo: true } },
+        plan_suscripcion: { select: { nombre_plan: true } },
+      },
+    })
+    if (!transaccion) return res.status(404).json({ error: 'Transacción no encontrada' })
+    if (transaccion.estado !== 'PENDIENTE') {
+      return res.status(409).json({ error: 'La transacción no está pendiente' })
+    }
+
+    // Idempotencia: evitar notificaciones duplicadas
+    const yaNotificado = await prisma.bitacora_pagos.findFirst({
+      where: { id_transaccion: id, evento: 'PAGO_NOTIFICADO_ADMIN' },
+    })
+    if (yaNotificado) return res.json({ mensaje: 'Ya notificado previamente' })
+
+    await prisma.bitacora_pagos.create({
+      data: {
+        id_usuario: transaccion.id_usuario,
+        id_suscripcion: transaccion.id_suscripcion,
+        id_transaccion: id,
+        evento: 'PAGO_NOTIFICADO_ADMIN',
+        mensaje: `Usuario ${transaccion.usuario.nombre} (${transaccion.usuario.correo}) indicó que realizó el pago`,
+      },
+    })
+
+    const metodo = transaccion.metodo_pago?.includes('ANUAL') ? 'QR Anual' : 'QR'
+    const titulo = `Nuevo pago pendiente — ${transaccion.usuario.nombre}`
+    const mensaje = `Plan: ${transaccion.plan_suscripcion?.nombre_plan ?? '—'} · Monto: Bs. ${Number(transaccion.total).toFixed(2)} · Método: ${metodo} · Ref: TXN-${String(id).padStart(3, '0')}`
+
+    await notificarAdmins(titulo, mensaje)
+
+    return res.json({ mensaje: 'Administradores notificados' })
+  } catch (error) {
+    return res.status(500).json({ error: toMessage(error) })
+  }
+}
+
+export const subirComprobante = async (req: AuthRequest, res: Response) => {
+  try {
+    const id = parseInt(String(req.params.id))
+    if (isNaN(id)) return res.status(400).json({ error: 'ID inválido' })
+
+    const file = (req as Request & { file?: Express.Multer.File }).file
+    if (!file) return res.status(400).json({ error: 'No se recibió ningún archivo' })
+
+    const transaccion = await prisma.transacciones.findUnique({ where: { id } })
+    if (!transaccion) return res.status(404).json({ error: 'Transacción no encontrada' })
+
+    const fileUrl = `/uploads/comprobantes/${file.filename}`
+
+    await prisma.bitacora_pagos.create({
+      data: {
+        id_usuario: transaccion.id_usuario,
+        id_suscripcion: transaccion.id_suscripcion,
+        id_transaccion: id,
+        evento: 'COMPROBANTE_SUBIDO',
+        mensaje: fileUrl,
+      },
+    })
+
+    return res.json({ mensaje: 'Comprobante subido', url: fileUrl })
+  } catch (error) {
+    return res.status(500).json({ error: toMessage(error) })
+  }
+}
+
+export const listarMisPagos = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user?.id
+    if (!userId) return res.status(401).json({ error: 'No autenticado' })
+
+    const transacciones = await prisma.transacciones.findMany({
+      where: { id_usuario: userId },
+      include: { plan_suscripcion: { select: { nombre_plan: true } } },
+      orderBy: { fecha_intento: 'desc' },
+    })
+
+    return res.json(
+      transacciones.map((t) => ({
+        id: t.id,
+        referencia: `TXN-${String(t.id).padStart(3, '0')}`,
+        fecha: t.fecha_intento,
+        plan: t.plan_suscripcion?.nombre_plan ?? null,
+        metodo: t.metodo_pago,
+        monto: Number(t.total),
+        estado: t.estado ?? 'PENDIENTE',
+      }))
+    )
   } catch (error) {
     return res.status(500).json({ error: toMessage(error) })
   }

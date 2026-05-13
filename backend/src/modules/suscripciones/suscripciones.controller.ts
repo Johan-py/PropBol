@@ -20,6 +20,11 @@ export const obtenerMiSuscripcion = async (req: AuthRequest, res: Response) => {
       activa: true,
       idSuscripcion: suscripcion.id_suscripcion,
       planNombre: suscripcion.plan_suscripcion?.nombre_plan ?? null,
+      precioPlan: suscripcion.plan_suscripcion?.precio_plan
+        ? Number(suscripcion.plan_suscripcion.precio_plan)
+        : null,
+      nroPublicaciones: suscripcion.plan_suscripcion?.nro_publicaciones_plan ?? null,
+      duracionDias: suscripcion.plan_suscripcion?.duracion_plan_dias ?? null,
       fechaInicio: suscripcion.fecha_inicio,
       fechaFin: suscripcion.fecha_fin,
     })

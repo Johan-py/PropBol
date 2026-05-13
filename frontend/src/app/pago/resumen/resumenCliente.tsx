@@ -26,7 +26,7 @@ export default function ResumenCliente() {
   const [tipoFacturacion, setTipoFacturacion] = useState<'mensual' | 'anual'>('mensual');
   const [descuentoPorcentaje, setDescuentoPorcentaje] = useState(0);
 
-  const nombreMetodo: Record<string, string> = { qr: 'QR Bancario' };
+  const nombreMetodo: Record<string, string> = { qr: 'QR Bancario', usdt: 'USDT TRC20' };
 
   const idSuscripcion = planIdParam ? parseInt(planIdParam, 10) : NaN;
 
@@ -146,10 +146,27 @@ export default function ResumenCliente() {
     if (!metodoSeleccionado || !plan) return;
 
     try {
-      const t = await obtenerOCrearTransaccion();
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
 
-      await fetch(`/api/transacciones/${t.id}/actualizar`, {
+      if (metodoSeleccionado === 'usdt') {
+        const res = await fetch(`${API_URL}/api/usdt`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({ idSuscripcion }),
+        });
+        if (!res.ok) throw new Error('No se pudo crear el pago USDT');
+        const data = await res.json();
+        localStorage.setItem('usdtPayment', JSON.stringify(data));
+        router.push(`/pago/usdt?transaccionId=${data.id}`);
+        return;
+      }
+
+      const t = await obtenerOCrearTransaccion();
+
+      await fetch(`${API_URL}/api/transacciones/${t.id}/actualizar`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -307,6 +324,24 @@ export default function ResumenCliente() {
                 <div className="font-bold">Pago por QR</div>
                 <div className="text-sm text-gray-500">
                   Escanea con tu app bancaria
+                </div>
+              </div>
+            </div>
+
+            <div
+              className={`flex items-start p-3 border rounded-lg cursor-pointer transition mt-3 ${
+                metodoSeleccionado === 'usdt'
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-gray-200 bg-gray-50 hover:bg-gray-100'
+              }`}
+              onClick={() => setMetodoSeleccionado('usdt')}
+            >
+              <span className="text-2xl mr-4">💎</span>
+
+              <div>
+                <div className="font-bold">USDT TRC20</div>
+                <div className="text-sm text-gray-500">
+                  Paga con USDT en la red TRON
                 </div>
               </div>
             </div>

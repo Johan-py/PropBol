@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { ArrowLeft, Clock, CheckCircle } from 'lucide-react'
+import { ArrowLeft, Clock, CheckCircle, Upload, X, FileText, Image } from 'lucide-react'
 import Stepper from '@/components/ui/Stepper'
 import { useCurrentPayment } from '@/hooks/payment/useCurrentPayment'
 import { usePaymentStatus } from '@/hooks/payment/usePaymentStatus'
@@ -22,6 +22,43 @@ export default function PagoQRPage() {
   const [timeLeft, setTimeLeft] = useState<number | null>(null)
   const [isExpired, setIsExpired] = useState(false)
   const expiredHandled = useRef(false)
+
+  // HU-13: comprobante
+  const [comprobante, setComprobante] = useState<File | null>(null)
+  const [comprobantePreview, setComprobantePreview] = useState<string | null>(null)
+  const [comprobanteError, setComprobanteError] = useState<string | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const MAX_SIZE = 5 * 1024 * 1024
+
+  const handleFileSelect = (file: File) => {
+    setComprobanteError(null)
+    const ext = file.name.split('.').pop()?.toLowerCase() ?? ''
+    if (!['jpg', 'jpeg', 'png', 'pdf'].includes(ext)) {
+      setComprobanteError('Formato no soportado. Usa JPG, PNG o PDF')
+      return
+    }
+    if (file.size > MAX_SIZE) {
+      setComprobanteError('El archivo supera el límite de 5 MB')
+      return
+    }
+    setComprobante(file)
+    if (ext === 'pdf') {
+      setComprobantePreview('pdf')
+    } else {
+      const reader = new FileReader()
+      reader.onload = (e) => setComprobantePreview(e.target?.result as string)
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const clearComprobante = () => {
+    setComprobante(null)
+    setComprobantePreview(null)
+    setComprobanteError(null)
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
 
   useEffect(() => {
     if (!payment) return
@@ -51,8 +88,27 @@ export default function PagoQRPage() {
     if (status === 'pagado') router.push('/pago/confirmacion')
   }, [status, router])
 
-  const handleConfirmarPago = () => {
+  const handleConfirmarPago = async () => {
     if (!payment) return
+    setUploading(true)
+    const token = localStorage.getItem('token') ?? ''
+    try {
+      if (comprobante) {
+        const fd = new FormData()
+        fd.append('comprobante', comprobante)
+        await fetch(`/api/transacciones/${payment.id}/comprobante`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+          body: fd,
+        })
+      }
+      // HU-14: notificar a admins
+      await fetch(`/api/transacciones/${payment.id}/notificar-admin`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+    } catch { /* continúa aunque falle */ }
+    finally { setUploading(false) }
     localStorage.setItem('currentPayment', JSON.stringify(payment))
     router.push('/pago/pendiente')
   }
@@ -258,17 +314,86 @@ export default function PagoQRPage() {
               </div>
             </div>
 
-            {/* Confirmar pago */}
-            <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-4">
-              <p className="text-sm font-semibold text-stone-800 mb-1">¿Ya realizaste el pago?</p>
-              <p className="text-xs text-stone-500 mb-3 leading-relaxed">
-                Después de escanear el QR y completar la transferencia en tu app bancaria, presiona el botón para confirmar tu pago.
+            {/* HU-13: Adjuntar comprobante + confirmar */}
+            <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-4 space-y-3">
+              <p className="text-sm font-semibold text-stone-800">Adjuntar comprobante</p>
+              <p className="text-xs text-stone-500 leading-relaxed">
+                Adjunta tu comprobante de transferencia antes de confirmar. Formatos: JPG, PNG, PDF · Máx. 5 MB
               </p>
+
+              {/* Upload area */}
+              {!comprobante ? (
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="border-2 border-dashed border-stone-200 hover:border-orange-400 rounded-xl p-5 flex flex-col items-center gap-2 cursor-pointer transition-colors"
+                >
+                  <Upload size={20} className="text-stone-400" />
+                  <span className="text-xs text-stone-500">Haz clic para seleccionar</span>
+                  <span className="text-xs text-stone-400">JPG · PNG · PDF · Máx. 5 MB</span>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".jpg,.jpeg,.png,.pdf"
+                    className="hidden"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0]
+                      if (f) handleFileSelect(f)
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="border border-stone-200 rounded-xl overflow-hidden">
+                  {/* Preview */}
+                  {comprobantePreview === 'pdf' ? (
+                    <div className="flex items-center gap-3 px-4 py-3 bg-stone-50">
+                      <FileText size={28} className="text-red-400 shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-medium text-stone-700 truncate">{comprobante.name}</p>
+                        <p className="text-xs text-stone-400">{(comprobante.size / 1024).toFixed(0)} KB · PDF</p>
+                      </div>
+                    </div>
+                  ) : comprobantePreview ? (
+                    <div className="relative">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={comprobantePreview}
+                        alt="Vista previa comprobante"
+                        className="w-full max-h-40 object-contain bg-stone-50"
+                      />
+                    </div>
+                  ) : null}
+
+                  {/* File info + remove */}
+                  <div className="flex items-center justify-between px-3 py-2 bg-white border-t border-stone-100">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Image size={13} className="text-stone-400 shrink-0" />
+                      <span className="text-xs text-stone-600 truncate">{comprobante.name}</span>
+                    </div>
+                    <button
+                      onClick={clearComprobante}
+                      className="text-stone-400 hover:text-red-500 ml-2 shrink-0"
+                      title="Quitar comprobante"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {comprobanteError && (
+                <p className="text-xs text-red-500">{comprobanteError}</p>
+              )}
+
               <button
                 onClick={handleConfirmarPago}
-                className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-lg text-sm font-semibold transition-colors"
+                disabled={uploading}
+                className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 disabled:opacity-70 text-white py-2.5 rounded-lg text-sm font-semibold transition-colors"
               >
-                <CheckCircle size={16} />
+                {uploading ? (
+                  <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-4 h-4" />
+                ) : (
+                  <CheckCircle size={16} />
+                )}
                 Ya realicé el pago
               </button>
             </div>

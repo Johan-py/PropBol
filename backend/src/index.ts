@@ -126,6 +126,7 @@ import recomendacionesRoutes from './modules/recomendaciones/recomendaciones.rou
 import transaccionesRoutes from './modules/transacciones/transacciones.routes.js'
 import suscripcionesRoutes from './modules/suscripciones/suscripciones.routes.js'
 import plansRoutes from './modules/plans/plans.routes.js'
+import usdtRoutes from './modules/usdt/usdt.routes.js'
 import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js'
 import whatsappRoutes from './modules/whatsapp/whatsapp.routes.js'
 import { getAdminTestimonios } from './modules/testimonios/adminTestimonios.controller.js'
@@ -224,6 +225,7 @@ app.use("/api/comparaciones", comparacionRoutes);
 app.use('/api/transacciones', transaccionesRoutes)
 app.use('/api/suscripciones', suscripcionesRoutes)
 app.use('/api/planes', plansRoutes)
+app.use('/api/usdt', usdtRoutes)
 app.use('/api/whatsapp', whatsappRoutes)
 app.use('/api/locations', locationRoutes)
 

@@ -73,6 +73,10 @@ export default function AdminPagosValidacion() {
   const [error, setError] = useState<string | null>(null)
   const [procesando, setProcesando] = useState<number | null>(null)
 
+  // HU-15: modal de rechazo con motivo
+  const [rechazando, setRechazando] = useState<TransaccionAdmin | null>(null)
+  const [motivo, setMotivo] = useState('')
+
   const cargarTransacciones = async () => {
     setIsLoading(true)
     setError(null)
@@ -97,21 +101,45 @@ export default function AdminPagosValidacion() {
     return () => clearInterval(interval)
   }, [])
 
-  const accionarPago = async (id: number, accion: 'confirmar' | 'rechazar') => {
+  const confirmarPago = async (id: number) => {
     setProcesando(id)
     try {
       const token = localStorage.getItem('token')
-      const res = await fetch(`${API_URL}/api/transacciones/${id}/${accion}`, {
+      const res = await fetch(`${API_URL}/api/transacciones/${id}/confirmar`, {
         method: 'PATCH',
         headers: { Authorization: `Bearer ${token}` },
       })
       if (!res.ok) {
         const body = await res.json()
-        throw new Error(body.error ?? 'Error al procesar')
+        throw new Error(body.error ?? 'Error al confirmar')
       }
       await cargarTransacciones()
     } catch (err) {
-      alert(err instanceof Error ? err.message : 'Error al procesar la acción')
+      alert(err instanceof Error ? err.message : 'Error al confirmar')
+    } finally {
+      setProcesando(null)
+    }
+  }
+
+  const rechazarPago = async () => {
+    if (!rechazando) return
+    setProcesando(rechazando.id)
+    try {
+      const token = localStorage.getItem('token')
+      const res = await fetch(`${API_URL}/api/transacciones/${rechazando.id}/rechazar`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ motivo: motivo.trim() || 'No especificado' }),
+      })
+      if (!res.ok) {
+        const body = await res.json()
+        throw new Error(body.error ?? 'Error al rechazar')
+      }
+      setRechazando(null)
+      setMotivo('')
+      await cargarTransacciones()
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Error al rechazar')
     } finally {
       setProcesando(null)
     }
@@ -248,7 +276,7 @@ export default function AdminPagosValidacion() {
                           {t.estado === 'PENDIENTE' ? (
                             <div className="flex items-center gap-2">
                               <button
-                                onClick={() => accionarPago(t.id, 'confirmar')}
+                                onClick={() => confirmarPago(t.id)}
                                 disabled={procesando === t.id}
                                 className="flex items-center gap-1 rounded-lg bg-green-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-green-700 disabled:opacity-50 transition-colors"
                               >
@@ -256,7 +284,7 @@ export default function AdminPagosValidacion() {
                                 Confirmar
                               </button>
                               <button
-                                onClick={() => accionarPago(t.id, 'rechazar')}
+                                onClick={() => { setRechazando(t); setMotivo('') }}
                                 disabled={procesando === t.id}
                                 className="flex items-center gap-1 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-100 disabled:opacity-50 transition-colors"
                               >
@@ -290,6 +318,48 @@ export default function AdminPagosValidacion() {
           </div>
         </div>
       </div>
+
+      {/* Modal motivo rechazo (HU-15) */}
+      {rechazando && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+                <XCircle className="h-5 w-5 text-red-500" />
+              </div>
+              <div>
+                <h2 className="font-semibold text-stone-800 text-sm">Rechazar pago</h2>
+                <p className="text-xs text-stone-400">{rechazando.usuario} · {rechazando.referencia}</p>
+              </div>
+            </div>
+            <label className="block text-xs font-medium text-stone-600 mb-1.5">
+              Motivo del rechazo
+            </label>
+            <textarea
+              value={motivo}
+              onChange={(e) => setMotivo(e.target.value)}
+              placeholder="Ej: Monto incorrecto, comprobante ilegible..."
+              rows={3}
+              className="w-full border border-stone-200 rounded-lg px-3 py-2 text-sm text-stone-800 focus:outline-none focus:ring-2 focus:ring-red-400 resize-none mb-4"
+            />
+            <div className="flex gap-3">
+              <button
+                onClick={() => { setRechazando(null); setMotivo('') }}
+                className="flex-1 border border-stone-200 text-stone-600 text-sm rounded-lg py-2 hover:border-stone-400 transition"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={rechazarPago}
+                disabled={!!procesando}
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg py-2 transition disabled:opacity-60"
+              >
+                Rechazar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
