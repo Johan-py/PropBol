@@ -1,48 +1,23 @@
 import type { Request, Response } from 'express'
 import { prisma } from '../../lib/prisma.client.js'
 
-const planes = [
-  {
-    id: 1,
-    name: 'Básico',
-    price: 0,
-    description: 'Publicaciones gratuitas limitadas',
-    tiempo: 'Por mes',
-    beneficios: ['10 publicaciones', 'Soporte básico'],
-    texto_corto: 'Ideal para empezar'
-  },
-  {
-    id: 2,
-    name: 'Estándar',
-    price: 99,
-    description: 'Más publicaciones y soporte prioritario',
-    tiempo: 'Por mes',
-    beneficios: ['50 publicaciones', 'Soporte prioritario', 'Estadísticas básicas'],
-    texto_corto: 'Para profesionales',
-    popular: true
-  },
-  {
-    id: 3,
-    name: 'Pro',
-    price: 199,
-    description: 'Publicaciones ilimitadas + estadísticas avanzadas',
-    tiempo: 'Por mes',
-    beneficios: [
-      'Publicaciones ilimitadas',
-      'Soporte 24/7',
-      'Estadísticas avanzadas',
-      'API acceso'
-    ],
-    texto_corto: 'Para empresas'
-  }
-]
-
 export const getPlanes = async (req: Request, res: Response) => {
   try {
-    const planesValidos = planes.filter(
-      (plan) => plan.price !== null && plan.price !== undefined && plan.price >= 0
-    )
-    res.json(planesValidos)
+    const rows = await prisma.plan_suscripcion.findMany({ orderBy: { id: 'asc' } })
+
+    const planes = rows
+      .filter(p => p.precio_plan !== null && Number(p.precio_plan) >= 0)
+      .map((p, i, arr) => ({
+        id: p.id,
+        name: p.nombre_plan ?? 'Plan',
+        price: Number(p.precio_plan),
+        description: p.descripcion_plan ?? '',
+        nro_publicaciones: p.nro_publicaciones_plan,
+        duracion_dias: p.duracion_plan_dias,
+        popular: arr.length > 1 && i === 1,
+      }))
+
+    res.json(planes)
   } catch {
     res.status(500).json({
       error: 'Error del servidor',
