@@ -480,6 +480,8 @@ export const obtenerDetallePublicacionPorInmuebleService = async (inmuebleId: nu
     inmuebleId: publicacion.inmueble.id,
     titulo: publicacion.titulo,
     precio: Number(publicacion.inmueble.precio),
+    //HU6-precio Anterior
+    precio_anterior: publicacion.inmueble.precio_anterior ? Number(publicacion.inmueble.precio_anterior) : undefined,
     tipoInmueble: publicacion.inmueble.categoria ?? null,
     tipoOperacion: publicacion.inmueble.tipoAccion,
     ubicacionTexto: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
