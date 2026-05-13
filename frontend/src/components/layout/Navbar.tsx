@@ -23,7 +23,10 @@ import LogoutModal from "../navbar/LogoutModal";
 import { useNotifications } from "@/hooks/useNotifications";
 import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 import type { NotificationFilter } from "@/types/notification";
+<<<<<<< HEAD
+=======
 import ThemeToggleButton from "./ThemeToggleButton";
+>>>>>>> 8ba30eecaf7f43e146d177cb9dc49495f86456d9
 
 export type User = {
   name: string;
@@ -425,11 +428,14 @@ export default function Navbar() {
                 Publica tu inmueble
               </Link>
 
+<<<<<<< HEAD
+=======
               {/* HU13: botón general para alternar modo claro/oscuro */}
               <div className="hidden md:block">
                 <ThemeToggleButton />
               </div>
-
+ 
+>>>>>>> 8ba30eecaf7f43e146d177cb9dc49495f86456d9
               <div className="relative" ref={notificationPanelRef}>
                 <button
                   id="tour-notificaciones"
@@ -766,11 +772,14 @@ export default function Navbar() {
                 Publica tu inmueble
               </Link>
 
+<<<<<<< HEAD
+=======
               {/* HU13: botón general para alternar modo claro/oscuro en menú móvil */}
               <div className="px-3 py-2">
                 <ThemeToggleButton />
               </div>
-
+ 
+>>>>>>> 8ba30eecaf7f43e146d177cb9dc49495f86456d9
               <div id="tour-propiedades-mobile" className="flex flex-col">
                 <button
                   onClick={() => setIsPropiedadesOpen(!isPropiedadesOpen)}
