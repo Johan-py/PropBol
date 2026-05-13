@@ -4,7 +4,7 @@ import {ThemeProvider as NextThemeProvider} from 'next-themes'
 import type { PropsWithChildren } from 'react'
 
 type ThemeProviderProps = PropsWithChildren<{
-    defaultTheme?: 'ligth' | 'dark' | 'system'
+    defaultTheme?: 'light' | 'dark' | 'system'
 }>
 
 export default function ThemeProvider({ children, defaultTheme = 'system'}: ThemeProviderProps){
