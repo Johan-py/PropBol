@@ -1,3 +1,4 @@
+import { prisma } from '../../lib/prisma.client.js'
 import {
   buscarPublicacionesPorUsuarioRepository,
   buscarPublicacionPorIdRepository,
@@ -46,6 +47,12 @@ type MultimediaResumen = {
   url: string
   tipo: string
   pesoMb: number | null
+}
+
+type EstadisticaPublicacionResumen = {
+  publicacion_id: number
+  total_visualizaciones: number
+  total_compartidos: number
 }
 
 const ESTADO_PUBLICACION_ELIMINADA = 'ELIMINADA'
@@ -107,19 +114,52 @@ export const listarMisPublicacionesService = async (usuarioId: number) => {
 
   type PublicacionesPorUsuario = Awaited<ReturnType<typeof buscarPublicacionesPorUsuarioRepository>>
 
-  return publicaciones.map((publicacion: PublicacionesPorUsuario[number]) => ({
-    id: publicacion.id,
-    titulo: publicacion.titulo,
-    precio: Number(publicacion.inmueble.precio),
-    ubicacion: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
-    nroBanos: publicacion.inmueble.nroBanos,
-    nroCuartos: publicacion.inmueble.nroCuartos,
-    superficieM2:
-      publicacion.inmueble.superficieM2 !== null && publicacion.inmueble.superficieM2 !== undefined
-        ? Number(publicacion.inmueble.superficieM2)
-        : null,
-    imagenUrl: obtenerPrimeraImagenUrl(publicacion.multimedia)
-  }))
+  const publicacionesIds = publicaciones.map((publicacion) => publicacion.id)
+
+  const estadisticas = await prisma.publicacion_estadistica.findMany({
+    where: {
+      publicacion_id: {
+        in: publicacionesIds
+      }
+    },
+    select: {
+      publicacion_id: true,
+      total_visualizaciones: true,
+      total_compartidos: true
+    }
+  })
+
+  const estadisticasPorPublicacion = new Map<number, EstadisticaPublicacionResumen>()
+
+  estadisticas.forEach((estadistica) => {
+    estadisticasPorPublicacion.set(estadistica.publicacion_id, estadistica)
+  })
+
+  return publicaciones.map((publicacion: PublicacionesPorUsuario[number]) => {
+    const estadistica = estadisticasPorPublicacion.get(publicacion.id)
+
+    return {
+      id: publicacion.id,
+      titulo: publicacion.titulo,
+      precio: Number(publicacion.inmueble.precio),
+      ubicacion: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
+      nroBanos: publicacion.inmueble.nroBanos,
+      nroCuartos: publicacion.inmueble.nroCuartos,
+      superficieM2:
+        publicacion.inmueble.superficieM2 !== null &&
+        publicacion.inmueble.superficieM2 !== undefined
+          ? Number(publicacion.inmueble.superficieM2)
+          : null,
+      imagenUrl: obtenerPrimeraImagenUrl(publicacion.multimedia),
+
+      tipoOperacion: publicacion.inmueble.tipoAccion,
+      activa: publicacion.estado === 'ACTIVA',
+      estado: publicacion.estado,
+
+      totalVisualizaciones: estadistica?.total_visualizaciones ?? 0,
+      totalCompartidos: estadistica?.total_compartidos ?? 0
+    }
+  })
 }
 
 export const editarPublicacionService = async (
@@ -480,6 +520,7 @@ export const obtenerDetallePublicacionPorInmuebleService = async (inmuebleId: nu
     }
   }
 }
+
 export const confirmarPublicacionService = async (
   publicacionId: number,
   usuarioSolicitanteId: number
