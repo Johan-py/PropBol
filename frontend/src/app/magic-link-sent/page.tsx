@@ -113,7 +113,8 @@ function MagicLinkAccessContent() {
             normalizedError.includes("alterado") ||
               normalizedError.includes("no es válido") ||
               normalizedError.includes("inválido") ||
-              normalizedError.includes("invalido"),
+              normalizedError.includes("invalido") ||
+              normalizedError.includes("no es reconocido"),
           );
           setIsNetworkError(false);
 

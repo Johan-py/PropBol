@@ -1035,8 +1035,8 @@ export const loginWithMagicLinkService = async ({
 
   if (!magicLink) {
     throw new AuthError(
-      "El Magic Link fue alterado, no existe o ya no es válido.",
-      401,
+        "Este enlace no es reconocido. Solicita un nuevo Magic Link para ingresar.",
+       404,
     );
   }
 
