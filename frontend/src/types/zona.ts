@@ -36,7 +36,7 @@ export const ZONA_COLORS = {
     borderActive: '#16a34a',
     fillActive: '#22c55e',
     fillOpacityActive: 0.28,
-    labelColor: '#16a34a',
-    labelColorSelected: '#16a34a'
+    labelColor: '#16A34A',
+    labelColorSelected: '#16A34A'
   }
 } as const
