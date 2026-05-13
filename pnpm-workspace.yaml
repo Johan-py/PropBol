@@ -1,6 +1,8 @@
 packages:
   - 'frontend'
   - 'backend'
+  - 'docs'
+
 allowBuilds:
   '@prisma/engines': false
   core-js: false

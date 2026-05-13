@@ -1,0 +1,50 @@
+---
+sidebar_position: 1
+---
+
+# Autenticación
+
+El sistema soporta login tradicional y OAuth social.
+
+## Proveedores OAuth
+
+| Proveedor | Módulo |
+|-----------|--------|
+| Google    | `src/modules/auth/google/` |
+| Facebook  | `src/modules/auth/facebook/` |
+| Discord   | `src/modules/auth/discord/` |
+
+## Endpoints
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+  <TabItem value="login" label="Login">
+
+```http
+  POST /api/auth/login
+  Content-Type: application/json
+
+  {
+    "email": "user@example.com",
+    "password": "secret"
+  }
+```
+
+  </TabItem>
+  <TabItem value="register" label="Registro">
+
+```http
+  POST /api/auth/register
+  Content-Type: application/json
+
+  {
+    "email": "user@example.com",
+    "password": "secret",
+    "nombre": "Juan"
+  }
+```
+
+  </TabItem>
+</Tabs>

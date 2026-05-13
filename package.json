@@ -18,7 +18,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:back": "eslint backend",
-    "lint:front": "eslint frontend"
+    "lint:front": "eslint frontend",
+    "docs:dev": "pnpm --filter docs dev",
+    "docs:build": "pnpm --filter docs build"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
