@@ -339,6 +339,7 @@ export const buscarDetallePublicacionPorInmuebleIdRepository = async (inmuebleId
           tipoAccion: true,
           categoria: true,
           precio: true,
+          precio_anterior: true,
           superficieM2: true,
           nroCuartos: true,
           nroBanos: true,
