@@ -10,6 +10,8 @@ interface Props {
     pesoMb: number | null
   }>
   titulo: string
+  esOferta?: boolean           
+  porcentajeDescuento?: number 
 }
 
 const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
