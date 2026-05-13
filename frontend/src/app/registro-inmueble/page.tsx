@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { ErrorValidacion } from "../../types/publicacion";
 import ErrorPanel from "../../components/publicacion/ErrorPanel";
+import VideoPublicacionModal from '../../components/video-publicacion/VideoPublicacionModal'
 
 const MapaPinSelector = dynamic(
   () => import('../../components/MapaPinSelector'),
@@ -28,6 +29,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export default function MiRegistroPage() {
   const router = useRouter()
+  const [mostrarVideo, setMostrarVideo] = useState(true)
 
   const [datos, setDatos] = useState({
     titulo: '',
@@ -626,6 +628,13 @@ export default function MiRegistroPage() {
   const errorMapa = campoError === 'mapa'
 
   return (
+     <>
+    {mostrarVideo && (
+      <VideoPublicacionModal
+        onClose={() => setMostrarVideo(false)}
+        onContinue={() => setMostrarVideo(false)}
+      />
+    )}
     <div className="min-h-screen bg-white text-gray-900">
       <main className="max-w-6xl mx-auto p-8 md:p-12">
         <h1 className="text-2xl font-bold mb-6 text-gray-950">Registro Inmueble</h1>
@@ -995,5 +1004,6 @@ export default function MiRegistroPage() {
         </div>
       </main>
     </div>
+   </>
   )
 }
