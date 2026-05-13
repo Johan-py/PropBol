@@ -122,7 +122,8 @@ export const listarMisPublicacionesService = async (usuarioId: number) => {
       publicacion.inmueble.superficieM2 !== null && publicacion.inmueble.superficieM2 !== undefined
         ? Number(publicacion.inmueble.superficieM2)
         : null,
-    imagenUrl: obtenerPrimeraImagenUrl(publicacion.multimedia)
+    imagenUrl: obtenerPrimeraImagenUrl(publicacion.multimedia),
+    promoted: publicacion.promoted ?? false
   }))
 }
 
@@ -662,29 +663,4 @@ export const obtenerEstadoPublicidadService = async (publicacionId: number) => {
     promotedAt: activa ? publicacion.promotedAt : null,
     promotedExpiresAt: activa ? publicacion.promotedExpiresAt : null
   }
-}
-
-export const listarMisPublicacionesService = async (usuarioId: number) => {
-  if (Number.isNaN(usuarioId) || usuarioId <= 0) {
-    throw new Error('USUARIO_INVALIDO')
-  }
-
-  const publicaciones = await buscarPublicacionesPorUsuarioRepository(usuarioId)
-
-  type PublicacionesPorUsuario = Awaited<ReturnType<typeof buscarPublicacionesPorUsuarioRepository>>
-
-  return publicaciones.map((publicacion: PublicacionesPorUsuario[number]) => ({
-    id: publicacion.id,
-    titulo: publicacion.titulo,
-    precio: Number(publicacion.inmueble.precio),
-    ubicacion: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
-    nroBanos: publicacion.inmueble.nroBanos,
-    nroCuartos: publicacion.inmueble.nroCuartos,
-    superficieM2:
-      publicacion.inmueble.superficieM2 !== null && publicacion.inmueble.superficieM2 !== undefined
-        ? Number(publicacion.inmueble.superficieM2)
-        : null,
-    imagenUrl: obtenerPrimeraImagenUrl(publicacion.multimedia),
-    promoted: publicacion.promoted ?? false  // NUEVO CAMPO
-  }))
 }

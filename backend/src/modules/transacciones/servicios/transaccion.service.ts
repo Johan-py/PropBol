@@ -56,7 +56,6 @@ export async function obtenerTransaccion(transaccionId: number) {
 
 export const obtenerPlanesPublicidad = async () => {
   return prisma.plan_publicidad.findMany({
-    where: { activo: true },
     orderBy: { precio_plan: 'asc' }
   })
 }
