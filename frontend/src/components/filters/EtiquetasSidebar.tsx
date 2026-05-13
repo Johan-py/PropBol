@@ -45,16 +45,17 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
       if (etiquetasDB.length > 0) return
       setIsLoading(true)
       try {
-        // TODO: Reemplazar con endpoint real: const res = await fetch('/api/publicaciones/etiquetas')
-        const mockData: Etiqueta[] = [
-          { id: '1', nombre: 'Inversión', color: '#10b981', cantidad: 45 },
-          { id: '2', nombre: 'Preventa', cantidad: 12 },
-          { id: '3', nombre: 'Nuevo', color: '#f59e0b', cantidad: 89 },
-          { id: '4', nombre: 'Oferta', cantidad: 5 },
-          { id: '5', nombre: 'Remate', color: '#8b5cf6', cantidad: 2 },
-          { id: '6', nombre: 'Amoblado', cantidad: 34 },
-        ]
-        setEtiquetasDB(mockData.map(e => ({ ...e, color: e.color || getFallbackColor(e.nombre) })))
+        const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
+        const res = await fetch(`${API_URL}/api/parametros`)
+        if (!res.ok) throw new Error(`Error ${res.status}`)
+        const json = await res.json()
+
+        const etiquetas: Etiqueta[] = (json.data || []).map((item: { id: number; nombre: string }) => ({
+          id: String(item.id),
+          nombre: item.nombre ?? '',
+          color: getFallbackColor(item.nombre ?? ''),
+        }))
+        setEtiquetasDB(etiquetas)
       } catch (error) {
         console.error('Error cargando etiquetas:', error)
       } finally {
