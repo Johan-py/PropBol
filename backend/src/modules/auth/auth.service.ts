@@ -27,6 +27,7 @@ import {
   activate2FAByUserId,
   deactivate2FAByUserId,
   expire2FACode,
+  getServerTime,
   findActive2FACodeByUserId,
   createMagicLink,
   increment2FACodeAttempts,
@@ -935,7 +936,10 @@ export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
   try {
     validateMagicLinkRequestLimit(correo);
 
-    const expiraEn = new Date(Date.now() + MAGIC_LINK_TTL_MINUTES * 60 * 1000);
+    const serverNow = await getServerTime();
+    const expiraEn = new Date(
+      serverNow.getTime() + MAGIC_LINK_TTL_MINUTES * 60 * 1000,
+    );
 
     const magicToken = jwt.sign(
       {
@@ -1051,7 +1055,9 @@ export const loginWithMagicLinkService = async ({
     );
   }
 
-  if (magicLink.expira_en.getTime() < Date.now()) {
+  const serverNow = await getServerTime();
+
+  if (magicLink.expira_en.getTime() < serverNow.getTime()) {
     await deactivateMagicLink(magicLink.id);
 
     throw new AuthError("Este Magic Link ha expirado.", 401);

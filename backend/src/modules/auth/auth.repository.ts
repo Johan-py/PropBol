@@ -527,6 +527,18 @@ export const invalidateActiveMagicLinksByUserId = async (usuarioId: number) => {
   `;
 };
 
+type ServerTimeRow = {
+  now: Date;
+};
+
+export const getServerTime = async () => {
+  const rows = await prisma.$queryRaw<ServerTimeRow[]>`
+    SELECT NOW() AS now
+  `;
+
+  return rows[0]?.now ?? new Date();
+};
+
 export const createMagicLink = async ({
   usuarioId,
   tokenHash,
