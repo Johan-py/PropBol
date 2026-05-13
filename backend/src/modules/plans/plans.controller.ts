@@ -154,6 +154,17 @@ export const restorePlan = async (req: Request, res: Response) => {
   }
 }
 
+export const uploadQrImage = async (req: Request, res: Response) => {
+  try {
+    const file = (req as Request & { file?: Express.Multer.File }).file
+    if (!file) return res.status(400).json({ error: 'Solo se permiten imágenes JPG o PNG' })
+    const url = `/uploads/qr/${file.filename}`
+    return res.json({ url })
+  } catch {
+    return res.status(500).json({ error: 'Error al subir imagen' })
+  }
+}
+
 export const getPlanById = async (req: Request, res: Response) => {
   try {
     const id = parseInt(String(req.params.id))

@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  Plus, Pencil, Trash2, RotateCcw, X, QrCode, Loader2, AlertTriangle,
+  Plus, Pencil, Trash2, RotateCcw, X, QrCode, Loader2, AlertTriangle, Upload,
 } from 'lucide-react'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
@@ -50,6 +50,12 @@ export default function AdminPlanesPage() {
   const [formError, setFormError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
 
+  // QR file upload
+  const [qrFile, setQrFile] = useState<File | null>(null)
+  const [qrPreview, setQrPreview] = useState<string | null>(null)
+  const [qrError, setQrError] = useState<string | null>(null)
+  const qrInputRef = useRef<HTMLInputElement>(null)
+
   // Confirm delete modal
   const [confirmDelete, setConfirmDelete] = useState<Plan | null>(null)
   const [deleting, setDeleting] = useState(false)
@@ -78,10 +84,17 @@ export default function AdminPlanesPage() {
     fetchPlanes()
   }, [])
 
+  const resetQr = () => {
+    setQrFile(null)
+    setQrPreview(null)
+    setQrError(null)
+  }
+
   const openCreate = () => {
     setEditando(null)
     setForm(EMPTY_FORM)
     setFormError(null)
+    resetQr()
     setModalOpen(true)
   }
 
@@ -96,7 +109,23 @@ export default function AdminPlanesPage() {
       imagen_gr_url: plan.imagen_gr_url ?? '',
     })
     setFormError(null)
+    resetQr()
     setModalOpen(true)
+  }
+
+  const handleQrSelect = (file: File) => {
+    setQrError(null)
+    const ext = file.name.split('.').pop()?.toLowerCase() ?? ''
+    if (!['jpg', 'jpeg', 'png'].includes(ext)) {
+      setQrError('Solo se permiten imágenes JPG o PNG')
+      return
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setQrError('La imagen no debe superar 2 MB')
+      return
+    }
+    setQrFile(file)
+    setQrPreview(URL.createObjectURL(file))
   }
 
   const handleSave = async () => {
@@ -109,13 +138,27 @@ export default function AdminPlanesPage() {
 
     setSaving(true)
     try {
+      let qrUrl = form.imagen_gr_url.trim() || null
+      if (qrFile) {
+        const fd = new FormData()
+        fd.append('qr', qrFile)
+        const uploadRes = await fetch(`${API_URL}/api/planes/admin/upload-qr`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${getToken()}` },
+          body: fd,
+        })
+        if (!uploadRes.ok) { setFormError('Error al subir la imagen QR'); setSaving(false); return }
+        const { url } = await uploadRes.json()
+        qrUrl = url
+      }
+
       const body = {
         nombre: form.nombre.trim(),
         precio: Number(form.precio),
         nro_publicaciones: form.nro_publicaciones ? Number(form.nro_publicaciones) : null,
         duracion_dias: form.duracion_dias ? Number(form.duracion_dias) : null,
         descripcion: form.descripcion.trim(),
-        imagen_gr_url: form.imagen_gr_url.trim() || null,
+        imagen_gr_url: qrUrl,
       }
 
       const url = editando
@@ -341,7 +384,53 @@ export default function AdminPlanesPage() {
                 <Field label="Vigencia (días)" value={form.duracion_dias} onChange={(v) => setForm({ ...form, duracion_dias: v })} placeholder="Ej: 30" type="number" />
               </div>
               <Field label="Descripción" value={form.descripcion} onChange={(v) => setForm({ ...form, descripcion: v })} placeholder="Descripción del plan" />
-              <Field label="URL imagen QR" value={form.imagen_gr_url} onChange={(v) => setForm({ ...form, imagen_gr_url: v })} placeholder="https://..." />
+
+              {/* QR Image upload */}
+              <div>
+                <label className="block text-xs font-medium text-stone-600 mb-1">Imagen QR</label>
+                <input
+                  ref={qrInputRef}
+                  type="file"
+                  accept=".jpg,.jpeg,.png"
+                  className="hidden"
+                  onChange={(e) => { if (e.target.files?.[0]) handleQrSelect(e.target.files[0]) }}
+                />
+                {qrPreview ? (
+                  <div className="relative w-32 h-32 border border-stone-200 rounded-lg overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={qrPreview} alt="Preview QR" className="w-full h-full object-contain" />
+                    <button
+                      type="button"
+                      onClick={() => { resetQr(); if (qrInputRef.current) qrInputRef.current.value = '' }}
+                      className="absolute top-1 right-1 bg-white rounded-full p-0.5 shadow text-stone-500 hover:text-red-500"
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                ) : form.imagen_gr_url ? (
+                  <div className="flex items-center gap-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`${API_URL}${form.imagen_gr_url}`} alt="QR actual" className="w-16 h-16 object-contain border border-stone-200 rounded-lg" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
+                    <button
+                      type="button"
+                      onClick={() => qrInputRef.current?.click()}
+                      className="text-xs text-orange-500 hover:text-orange-600 underline"
+                    >
+                      Cambiar imagen
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => qrInputRef.current?.click()}
+                    className="flex items-center gap-2 border border-dashed border-stone-300 hover:border-orange-400 rounded-lg px-4 py-3 text-sm text-stone-500 hover:text-orange-500 transition w-full"
+                  >
+                    <Upload size={15} />
+                    Subir imagen JPG o PNG (máx. 2 MB)
+                  </button>
+                )}
+                {qrError && <p className="text-xs text-red-500 mt-1">{qrError}</p>}
+              </div>
             </div>
 
             <div className="px-6 py-4 border-t border-stone-100 flex justify-end gap-3">

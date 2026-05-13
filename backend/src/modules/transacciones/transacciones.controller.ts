@@ -191,7 +191,7 @@ export const confirmarPago = async (req: Request, res: Response) => {
 
     const transaccion = await prisma.transacciones.findUnique({
       where: { id: transaccionId },
-      select: { estado: true, id_usuario: true, id_suscripcion: true, metodo_pago: true, total: true },
+      select: { estado: true, id_usuario: true, id_suscripcion: true, metodo_pago: true, total: true, fecha_intento: true },
     })
 
     if (!transaccion) {
@@ -244,10 +244,21 @@ export const confirmarPago = async (req: Request, res: Response) => {
     const vigenciaFin = new Date(ahora.getTime() + diasSuscripcion * 24 * 60 * 60 * 1000)
       .toLocaleDateString('es-BO', { day: '2-digit', month: '2-digit', year: 'numeric' })
 
+    const tiempoMs = transaccion.fecha_intento
+      ? ahora.getTime() - transaccion.fecha_intento.getTime()
+      : null
+    const tiempoTexto = (() => {
+      if (!tiempoMs || tiempoMs < 0) return ''
+      const totalMin = Math.floor(tiempoMs / 60000)
+      const h = Math.floor(totalMin / 60)
+      const m = totalMin % 60
+      return h > 0 ? ` Tiempo de revisión: ${h}h ${m}min.` : ` Tiempo de revisión: ${m}min.`
+    })()
+
     await crearNotificacion(
       transaccion.id_usuario,
       '¡Tu pago fue aprobado!',
-      `Plan ${planNombre?.nombre_plan ?? ''} activado. Vigencia hasta: ${vigenciaFin}. Monto: Bs. ${Number(transaccion.total).toFixed(2)}.`
+      `Plan ${planNombre?.nombre_plan ?? ''} activado. Vigencia hasta: ${vigenciaFin}. Monto: Bs. ${Number(transaccion.total).toFixed(2)}.${tiempoTexto}`
     )
 
     return res.status(200).json({
