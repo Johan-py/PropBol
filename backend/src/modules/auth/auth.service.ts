@@ -1035,8 +1035,8 @@ export const loginWithMagicLinkService = async ({
 
   if (!magicLink) {
     throw new AuthError(
-        "Este enlace no es reconocido. Solicita un nuevo Magic Link para ingresar.",
-       404,
+      "Este enlace no es reconocido. Solicita un nuevo Magic Link para ingresar.",
+      404,
     );
   }
 
@@ -1094,7 +1094,7 @@ export const loginWithMagicLinkService = async ({
     token: sessionToken,
     usuarioId: user.id,
     fechaExpiracion,
-    metodoAuth: "magic_link",
+    metodo_auth: "magic_link",
   });
 
   return {
