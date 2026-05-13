@@ -21,20 +21,30 @@ type MagicLinkLoginResponse = {
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const SESSION_DURATION_MS = 60 * 60 * 1000;
 
-const storage = (() => {
-  try {
-    localStorage.setItem("__test__", "1");
-    localStorage.removeItem("__test__");
-    return localStorage;
-  } catch {
-    return sessionStorage;
+const getBrowserStorage = () => {
+  if (typeof window === "undefined") {
+    return null;
   }
-})();
+
+  try {
+    window.localStorage.setItem("__test__", "1");
+    window.localStorage.removeItem("__test__");
+    return window.localStorage;
+  } catch {
+    return window.sessionStorage;
+  }
+};
 
 const saveMagicLinkSession = (
   token: string,
   user: NonNullable<MagicLinkLoginResponse["user"]>,
 ) => {
+  const storage = getBrowserStorage();
+
+  if (!storage) {
+    return;
+  }
+
   storage.setItem("token", token);
 
   const sessionUser = buildSessionUser(user);
@@ -122,7 +132,10 @@ function MagicLinkAccessContent() {
         }
 
         saveMagicLinkSession(data.token, data.user);
-        sessionStorage.removeItem("magicLinkEmail");
+
+        if (typeof window !== "undefined") {
+          window.sessionStorage.removeItem("magicLinkEmail");
+        }
 
         setStatus("success");
         setMessage(
