@@ -1,3 +1,4 @@
+import { prisma } from '../../lib/prisma.client.js'
 import {
   buscarPublicacionesPorUsuarioRepository,
   buscarPublicacionPorIdRepository,
@@ -6,8 +7,13 @@ import {
   eliminarLogicamentePublicacionRepository,
   buscarDetallePublicacionPorIdRepository,
   confirmarPublicacionRepository,
-  buscarDetallePublicacionPorInmuebleIdRepository
+  buscarDetallePublicacionPorInmuebleIdRepository,
+  eliminarMultimediaPorIdsRepository,
+  eliminarVideosDePublicacionRepository,
+  crearMultimediaRepository,
+  buscarMultimediaPublicacionRepository
 } from './publicacion.repository.js'
+import { cloudinary } from '../../config/cloudinary.js'
 
 type TipoAccionPermitido = 'VENTA' | 'ALQUILER' | 'ANTICRETO'
 
@@ -46,6 +52,12 @@ type MultimediaResumen = {
   url: string
   tipo: string
   pesoMb: number | null
+}
+
+type EstadisticaPublicacionResumen = {
+  publicacion_id: number
+  total_visualizaciones: number
+  total_compartidos: number
 }
 
 const ESTADO_PUBLICACION_ELIMINADA = 'ELIMINADA'
@@ -107,19 +119,52 @@ export const listarMisPublicacionesService = async (usuarioId: number) => {
 
   type PublicacionesPorUsuario = Awaited<ReturnType<typeof buscarPublicacionesPorUsuarioRepository>>
 
-  return publicaciones.map((publicacion: PublicacionesPorUsuario[number]) => ({
-    id: publicacion.id,
-    titulo: publicacion.titulo,
-    precio: Number(publicacion.inmueble.precio),
-    ubicacion: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
-    nroBanos: publicacion.inmueble.nroBanos,
-    nroCuartos: publicacion.inmueble.nroCuartos,
-    superficieM2:
-      publicacion.inmueble.superficieM2 !== null && publicacion.inmueble.superficieM2 !== undefined
-        ? Number(publicacion.inmueble.superficieM2)
-        : null,
-    imagenUrl: obtenerPrimeraImagenUrl(publicacion.multimedia)
-  }))
+  const publicacionesIds = publicaciones.map((publicacion) => publicacion.id)
+
+  const estadisticas = await prisma.publicacion_estadistica.findMany({
+    where: {
+      publicacion_id: {
+        in: publicacionesIds
+      }
+    },
+    select: {
+      publicacion_id: true,
+      total_visualizaciones: true,
+      total_compartidos: true
+    }
+  })
+
+  const estadisticasPorPublicacion = new Map<number, EstadisticaPublicacionResumen>()
+
+  estadisticas.forEach((estadistica) => {
+    estadisticasPorPublicacion.set(estadistica.publicacion_id, estadistica)
+  })
+
+  return publicaciones.map((publicacion: PublicacionesPorUsuario[number]) => {
+    const estadistica = estadisticasPorPublicacion.get(publicacion.id)
+
+    return {
+      id: publicacion.id,
+      titulo: publicacion.titulo,
+      precio: Number(publicacion.inmueble.precio),
+      ubicacion: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
+      nroBanos: publicacion.inmueble.nroBanos,
+      nroCuartos: publicacion.inmueble.nroCuartos,
+      superficieM2:
+        publicacion.inmueble.superficieM2 !== null &&
+        publicacion.inmueble.superficieM2 !== undefined
+          ? Number(publicacion.inmueble.superficieM2)
+          : null,
+      imagenUrl: obtenerPrimeraImagenUrl(publicacion.multimedia),
+
+      tipoOperacion: publicacion.inmueble.tipoAccion,
+      activa: publicacion.estado === 'ACTIVA',
+      estado: publicacion.estado,
+
+      totalVisualizaciones: estadistica?.total_visualizaciones ?? 0,
+      totalCompartidos: estadistica?.total_compartidos ?? 0
+    }
+  })
 }
 
 export const editarPublicacionService = async (
@@ -387,12 +432,18 @@ export const obtenerDetallePublicacionService = async (publicacionId: number) =>
     ubicacionTexto: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
     descripcion:
       publicacion.descripcion || publicacion.inmueble.descripcion || 'Sin descripción disponible',
-    imagenes: publicacion.multimedia.map((item) => ({
-      id: item.id,
-      url: item.url,
-      tipo: item.tipo,
-      pesoMb: item.pesoMb ? Number(item.pesoMb) : null
-    })),
+    imagenes: publicacion.multimedia
+      .filter((item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN)
+      .map((item) => ({
+        id: item.id,
+        url: item.url,
+        tipo: item.tipo,
+        pesoMb: item.pesoMb ? Number(item.pesoMb) : null
+      })),
+    videoUrl:
+      publicacion.multimedia.find(
+        (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_VIDEO
+      )?.url ?? null,
     detalles: {
       habitaciones: publicacion.inmueble.nroCuartos ?? null,
       banos: publicacion.inmueble.nroBanos ?? null,
@@ -440,17 +491,25 @@ export const obtenerDetallePublicacionPorInmuebleService = async (inmuebleId: nu
     inmuebleId: publicacion.inmueble.id,
     titulo: publicacion.titulo,
     precio: Number(publicacion.inmueble.precio),
+    //HU6-precio Anterior
+    precio_anterior: publicacion.inmueble.precio_anterior ? Number(publicacion.inmueble.precio_anterior) : undefined,
     tipoInmueble: publicacion.inmueble.categoria ?? null,
     tipoOperacion: publicacion.inmueble.tipoAccion,
     ubicacionTexto: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
     descripcion:
       publicacion.descripcion || publicacion.inmueble.descripcion || 'Sin descripción disponible',
-    imagenes: publicacion.multimedia.map((item) => ({
-      id: item.id,
-      url: item.url,
-      tipo: item.tipo,
-      pesoMb: item.pesoMb ? Number(item.pesoMb) : null
-    })),
+    imagenes: publicacion.multimedia
+      .filter((item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN)
+      .map((item) => ({
+        id: item.id,
+        url: item.url,
+        tipo: item.tipo,
+        pesoMb: item.pesoMb ? Number(item.pesoMb) : null
+      })),
+    videoUrl:
+      publicacion.multimedia.find(
+        (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_VIDEO
+      )?.url ?? null,
     detalles: {
       habitaciones: publicacion.inmueble.nroCuartos ?? null,
       banos: publicacion.inmueble.nroBanos ?? null,
@@ -478,6 +537,7 @@ export const obtenerDetallePublicacionPorInmuebleService = async (inmuebleId: nu
     }
   }
 }
+
 export const confirmarPublicacionService = async (
   publicacionId: number,
   usuarioSolicitanteId: number
@@ -515,5 +575,241 @@ export const confirmarPublicacionService = async (
     estado: publicacionConfirmada.estado,
     fechaPublicacion: publicacionConfirmada.fechaPublicacion,
     multimediaTotal: publicacionConfirmada.multimedia.length
+  }
+}
+
+type EditarMultimediaInput = {
+  imagenesAEliminar?: unknown
+  videoUrl?: unknown
+}
+
+const esVideoPermitido = (url: string) => {
+  const valor = url.trim()
+
+  if (!valor) return true
+
+  return (
+    valor.includes('youtube.com') ||
+    valor.includes('youtu.be') ||
+    valor.includes('vimeo.com')
+  )
+}
+
+const parseImagenesAEliminar = (valor: unknown): number[] => {
+  if (!valor) return []
+
+  if (Array.isArray(valor)) {
+    return valor
+      .map((item) => Number(item))
+      .filter((item) => !Number.isNaN(item) && item > 0)
+  }
+
+  if (typeof valor === 'string') {
+    try {
+      const parsed = JSON.parse(valor)
+
+      if (Array.isArray(parsed)) {
+        return parsed
+          .map((item) => Number(item))
+          .filter((item) => !Number.isNaN(item) && item > 0)
+      }
+    } catch {
+      const numero = Number(valor)
+      return !Number.isNaN(numero) && numero > 0 ? [numero] : []
+    }
+  }
+
+  return []
+}
+
+const subirImagenACloudinary = async (
+  file: Express.Multer.File
+): Promise<string> => {
+  const base64 = file.buffer.toString('base64')
+  const dataUri = `data:${file.mimetype};base64,${base64}`
+
+  const resultado = await cloudinary.uploader.upload(dataUri, {
+    folder: 'propbol/publicaciones',
+    resource_type: 'image'
+  })
+
+  return resultado.secure_url
+}
+
+export const editarMultimediaPublicacionService = async (
+  publicacionId: number,
+  usuarioSolicitanteId: number,
+  data: EditarMultimediaInput & {
+    imagenesActuales?: unknown
+    imagenesNuevas?: unknown
+    videoUrls?: unknown
+  },
+  archivos: Express.Multer.File[]
+) => {
+  if (Number.isNaN(publicacionId) || publicacionId <= 0) {
+    throw new Error('ID_INVALIDO')
+  }
+
+  if (Number.isNaN(usuarioSolicitanteId) || usuarioSolicitanteId <= 0) {
+    throw new Error('USUARIO_INVALIDO')
+  }
+
+  const publicacion = await buscarPublicacionPorIdRepository(publicacionId)
+
+  if (!publicacion) {
+    throw new Error('PUBLICACION_NO_EXISTE')
+  }
+
+  if (publicacion.usuarioId !== usuarioSolicitanteId) {
+    throw new Error('NO_AUTORIZADO')
+  }
+
+  if (publicacion.estado === ESTADO_PUBLICACION_ELIMINADA) {
+    throw new Error('PUBLICACION_YA_ELIMINADA')
+  }
+
+  const parseStringArray = (valor: unknown): string[] => {
+    if (!valor) return []
+
+    if (Array.isArray(valor)) {
+      return valor.map((item) => String(item).trim()).filter(Boolean)
+    }
+
+    if (typeof valor === 'string') {
+      try {
+        const parsed = JSON.parse(valor)
+
+        if (Array.isArray(parsed)) {
+          return parsed.map((item) => String(item).trim()).filter(Boolean)
+        }
+      } catch {
+        return valor.trim() ? [valor.trim()] : []
+      }
+    }
+
+    return []
+  }
+
+  const subirBase64ACloudinary = async (base64: string) => {
+    const resultado = await cloudinary.uploader.upload(base64, {
+      folder: 'propbol/publicaciones',
+      resource_type: 'image'
+    })
+
+    return resultado.secure_url
+  }
+
+  const imagenesActualesUrls = parseStringArray(data.imagenesActuales)
+  const imagenesNuevasBase64 = parseStringArray(data.imagenesNuevas)
+  const videosUrls = parseStringArray(data.videoUrls)
+  const videoUrlLegacy = normalizarTexto(data.videoUrl)
+
+  const videosFinales =
+    videosUrls.length > 0
+      ? videosUrls.slice(0, 2)
+      : videoUrlLegacy
+        ? [videoUrlLegacy]
+        : []
+
+  const imagenesActualesDb = publicacion.multimedia.filter(
+    (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN
+  )
+
+  const imagenesAEliminarPorUrl = imagenesActualesDb
+    .filter((item) => !imagenesActualesUrls.includes(item.url))
+    .map((item) => item.id)
+
+  const imagenesAEliminarPorId = parseImagenesAEliminar(data.imagenesAEliminar)
+
+  const imagenesAEliminar = Array.from(
+    new Set([...imagenesAEliminarPorUrl, ...imagenesAEliminarPorId])
+  )
+
+  const totalImagenesDespues =
+    imagenesActualesDb.length -
+    imagenesAEliminar.length +
+    archivos.length +
+    imagenesNuevasBase64.length
+
+  if (totalImagenesDespues <= 0) {
+    throw new Error('MINIMO_UNA_IMAGEN')
+  }
+
+  if (totalImagenesDespues > 5) {
+    throw new Error('LIMITE_IMAGENES')
+  }
+
+  await eliminarMultimediaPorIdsRepository(publicacionId, imagenesAEliminar)
+
+  const nuevasImagenesDesdeArchivos = await Promise.all(
+    archivos.map(async (file) => {
+      const url = await subirImagenACloudinary(file)
+
+      return {
+        url,
+        tipo: 'IMAGEN' as const,
+        pesoMb: Number((file.size / 1024 / 1024).toFixed(2)),
+        publicacionId
+      }
+    })
+  )
+
+  const nuevasImagenesDesdeBase64 = await Promise.all(
+    imagenesNuevasBase64.map(async (base64) => {
+      const url = await subirBase64ACloudinary(base64)
+
+      return {
+        url,
+        tipo: 'IMAGEN' as const,
+        pesoMb: null,
+        publicacionId
+      }
+    })
+  )
+
+  await crearMultimediaRepository([
+    ...nuevasImagenesDesdeArchivos,
+    ...nuevasImagenesDesdeBase64
+  ])
+
+  const videosValidos = videosFinales.every((video) => esVideoPermitido(video))
+
+  if (videosValidos) {
+    await eliminarVideosDePublicacionRepository(publicacionId)
+
+    if (videosFinales.length > 0) {
+      await crearMultimediaRepository(
+        videosFinales.map((video) => ({
+          url: video,
+          tipo: 'VIDEO' as const,
+          pesoMb: null,
+          publicacionId
+        }))
+      )
+    }
+  }
+
+  const multimediaActualizada =
+    await buscarMultimediaPublicacionRepository(publicacionId)
+
+  const imagenes = multimediaActualizada.filter(
+    (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN
+  )
+
+  const videos = multimediaActualizada.filter(
+    (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_VIDEO
+  )
+
+  return {
+    id: publicacionId,
+    imagenes: imagenes.map((item) => ({
+      id: item.id,
+      url: item.url,
+      tipo: item.tipo,
+      pesoMb: item.pesoMb ? Number(item.pesoMb) : null
+    })),
+    videoUrl: videos[0]?.url ?? null,
+    videoUrls: videos.map((item) => item.url),
+    videoError: videosValidos ? null : 'VIDEO_INVALIDO'
   }
 }
