@@ -1,5 +1,6 @@
 import { estado_blog } from "@prisma/client";
 import { blogsRepository, comentariosRepository } from "./blogs.repository.js";
+import { createBlogNotificationService } from "../notificaciones/notificaciones.service.js";
 
 // BLOGS SERVICE PE
 
@@ -101,11 +102,29 @@ export const blogsService = {
       throw new Error("RAZON_RECHAZO_REQUIRED");
     }
 
-    return blogsRepository.changeEstado(
+    const updatedBlog = await blogsRepository.changeEstado(
       id,
       estado as estado_blog,
       razon_rechazo,
     );
+
+    await createBlogNotificationService({
+      usuarioId: blog.usuario_id,
+      blog_id: id,
+      blogTitulo: blog.titulo,
+      tipo: estado === "PUBLICADO" ? "BLOG_APROBADO" : "BLOG_RECHAZADO",
+      ...(razon_rechazo ? { razonRechazo: razon_rechazo } : {}),
+    });
+
+    return updatedBlog;
+  },
+  async resubmit(id: number, usuario_id: number) {
+    const blog = await blogsRepository.findById(id);
+    if (!blog) throw new Error("BLOG_NOT_FOUND");
+    if (blog.usuario_id !== usuario_id) throw new Error("FORBIDDEN");
+    if (blog.estado !== "RECHAZADO") throw new Error("BLOG_NOT_REJECTED");
+
+    return blogsRepository.resubmit(id);
   },
   async eliminar(id: number, usuario_id: number) {
     const blog = await blogsRepository.findById(id);
@@ -136,11 +155,25 @@ export const comentariosService = {
     return comentariosRepository.create(data);
   },
 
-  async listarPorBlog(blog_id: number, usuario_id?: number, page: number = 1, limit: number = 10) {
-    return comentariosRepository.findByBlogId({ blog_id, usuario_id, page, limit });
+  async listarPorBlog(
+    blog_id: number,
+    usuario_id?: number,
+    page: number = 1,
+    limit: number = 10,
+  ) {
+    return comentariosRepository.findByBlogId({
+      blog_id,
+      usuario_id,
+      page,
+      limit,
+    });
   },
 
-  async actualizar(id: number, usuario_id: number, data: { contenido: string }) {
+  async actualizar(
+    id: number,
+    usuario_id: number,
+    data: { contenido: string },
+  ) {
     const comentario = await comentariosRepository.findById(id);
     if (!comentario) throw new Error("COMENTARIO_NOT_FOUND");
     if (comentario.usuario_id !== usuario_id) throw new Error("FORBIDDEN");
