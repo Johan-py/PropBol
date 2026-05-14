@@ -10,6 +10,7 @@ import {
   enviarCodigoActivacionCuenta,
 } from "../../lib/email.service.js";
 import { generateToken, type JwtPayload } from "../../utils/jwt.js";
+import { sendMagicLinkEmail } from "./magic-link-email.service.js";
 import { cache } from "../../lib/cache.service.js";
 import {
   createPasswordRecovery,
@@ -28,10 +29,17 @@ import {
   activate2FAByUserId,
   deactivate2FAByUserId,
   expire2FACode,
+  getServerTime,
   findActive2FACodeByUserId,
-  findAny2FACodeByUserIdAndHash,
+  createMagicLink,
   increment2FACodeAttempts,
   mark2FACodeAsUsed,
+  findMagicLinkByTokenHash,
+  invalidateAllUserSessions,
+  invalidateActiveMagicLinksByUserId,
+  markMagicLinkAsUsed,
+  deactivateMagicLink,
+  findAny2FACodeByUserIdAndHash,
   activateUser,
 } from "./auth.repository.js";
 
@@ -115,6 +123,21 @@ type LoginAttemptState = {
   blockedUntil: number | null;
 };
 
+type RequestMagicLinkDTO = {
+  correo: string;
+};
+
+type LoginWithMagicLinkDTO = {
+  token: string;
+};
+
+type MagicLinkJwtPayload = jwt.JwtPayload & {
+  purpose?: string;
+  userId?: number;
+  correo?: string;
+  nonce?: string;
+};
+
 export class AuthError extends Error {
   statusCode: number;
   retryAfterSeconds?: number;
@@ -133,6 +156,16 @@ const MAX_LOGIN_ATTEMPTS = 5;
 const LOGIN_BLOCK_TIME_MS = 15 * 60 * 1000;
 
 const REGISTER_CODE_TTL_MINUTES = 5;
+const MAGIC_LINK_TTL_MINUTES = 15;
+const MAGIC_LINK_TTL_SECONDS = MAGIC_LINK_TTL_MINUTES * 60;
+const MAGIC_LINK_RESEND_COOLDOWN_MS = 60 * 1000;
+const magicLinkLastSentAt = new Map<string, number>();
+const MAX_MAGIC_LINK_REQUESTS = 3;
+const MAGIC_LINK_IN_PROGRESS_RETRY_SECONDS = 10;
+const magicLinkRequestsInProgress = new Set<string>();
+
+const MAGIC_LINK_REQUEST_WINDOW_MS = 5 * 60 * 1000;
+const magicLinkRequests = new Map<string, number[]>();
 const TWO_FACTOR_CODE_TTL_MINUTES = 1;
 
 // límite de solicitudes de recuperación
@@ -259,6 +292,60 @@ const generate2FACode = () => {
 
 const hash2FACode = (codigo: string) => {
   return crypto.createHash("sha256").update(codigo).digest("hex");
+};
+
+const hashMagicLinkToken = (token: string) => {
+  return crypto.createHash("sha256").update(token).digest("hex");
+};
+
+const validateMagicLinkResendCooldown = (correo: string) => {
+  const lastSentAt = magicLinkLastSentAt.get(correo);
+
+  if (!lastSentAt) {
+    return;
+  }
+
+  const elapsedMs = Date.now() - lastSentAt;
+
+  if (elapsedMs < MAGIC_LINK_RESEND_COOLDOWN_MS) {
+    const retryAfterSeconds = Math.ceil(
+      (MAGIC_LINK_RESEND_COOLDOWN_MS - elapsedMs) / 1000,
+    );
+
+    throw new AuthError(
+      `Debes esperar ${retryAfterSeconds} segundo(s) antes de solicitar otro Magic Link.`,
+      429,
+      retryAfterSeconds,
+    );
+  }
+};
+
+const registerMagicLinkSent = (correo: string) => {
+  magicLinkLastSentAt.set(correo, Date.now());
+};
+
+const validateMagicLinkRequestLimit = (correo: string) => {
+  const now = Date.now();
+
+  const recentRequests = (magicLinkRequests.get(correo) ?? []).filter(
+    (timestamp) => now - timestamp < MAGIC_LINK_REQUEST_WINDOW_MS,
+  );
+
+  if (recentRequests.length >= MAX_MAGIC_LINK_REQUESTS) {
+    const oldestRequest = Math.min(...recentRequests);
+    const retryAfterSeconds = Math.ceil(
+      (MAGIC_LINK_REQUEST_WINDOW_MS - (now - oldestRequest)) / 1000,
+    );
+
+    throw new AuthError(
+      "Has solicitado demasiados Magic Links. Intenta nuevamente en unos minutos.",
+      429,
+      retryAfterSeconds,
+    );
+  }
+
+  recentRequests.push(now);
+  magicLinkRequests.set(correo, recentRequests);
 };
 
 const signRegisterCode = ({
@@ -519,7 +606,11 @@ export const registerUser = async (payload: RegisterDTO) => {
   const nonce = crypto.randomUUID();
 
   const codigoHash = hash2FACode(codigo);
-  cache.set(`last_reg_code_${normalized.correo}`, codigoHash, REGISTER_CODE_TTL_MINUTES * 60 * 1000);
+  cache.set(
+    `last_reg_code_${normalized.correo}`,
+    codigoHash,
+    REGISTER_CODE_TTL_MINUTES * 60 * 1000,
+  );
 
   const verificationToken = generatePendingRegisterToken({
     purpose: "pending-register",
