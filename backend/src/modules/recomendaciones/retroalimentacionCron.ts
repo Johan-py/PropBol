@@ -11,7 +11,7 @@ export async function ejecutarRetroalimentacion(): Promise<void> {
         id: true,
         usuario_id: true,
         inmueble_id: true,
-        fecha_evento: true,
+        fecha_evento: true
       }
     })
 
@@ -31,7 +31,7 @@ export async function ejecutarRetroalimentacion(): Promise<void> {
         where: {
           usuarioId_inmuebleId: {
             usuarioId: registro.usuario_id,
-            inmuebleId: registro.inmueble_id,
+            inmuebleId: registro.inmueble_id
           }
         }
       })
@@ -41,7 +41,7 @@ export async function ejecutarRetroalimentacion(): Promise<void> {
         where: {
           usuarioId_inmuebleId: {
             usuarioId: registro.usuario_id,
-            inmuebleId: registro.inmueble_id,
+            inmuebleId: registro.inmueble_id
           }
         },
         select: { veces_visto: true }
@@ -69,8 +69,9 @@ export async function ejecutarRetroalimentacion(): Promise<void> {
     }
 
     const tiempoTotal = Date.now() - inicio
-    console.log(`[Cron] Completada en ${tiempoTotal}ms — Positivos: ${positivos} | Negativos: ${negativos} | En espera: ${enEspera}`)
-
+    console.log(
+      `[Cron] Completada en ${tiempoTotal}ms — Positivos: ${positivos} | Negativos: ${negativos} | En espera: ${enEspera}`
+    )
   } catch (error) {
     console.error('[Cron] Error en retroalimentación automática:', error)
   }
@@ -83,7 +84,10 @@ export function iniciarCronRetroalimentacion(): void {
     ejecutarRetroalimentacion()
   }, 10_000)
 
-  setInterval(() => {
-    ejecutarRetroalimentacion()
-  }, 24 * 60 * 60 * 1000)
+  setInterval(
+    () => {
+      ejecutarRetroalimentacion()
+    },
+    24 * 60 * 60 * 1000
+  )
 }
