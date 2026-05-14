@@ -722,7 +722,7 @@ useEffect(() => {
           {TOUR_STEPS[currentStep].title}
         </p>
 
-        <p style={{ fontSize: fontDesc, color: "#374151", marginBottom: !hasValid ? 8 : 14 }}>
+        <p style={{ fontSize: fontDesc, color: theme.textMuted, marginBottom: !hasValid ? 8 : 14 }}>
           {TOUR_STEPS[currentStep].description}
         </p>
 
