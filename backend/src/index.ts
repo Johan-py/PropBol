@@ -1,4 +1,5 @@
 import path from "path";
+import http from "http";
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
@@ -94,7 +95,6 @@ import estadisticasRoutes from "./modules/estadisticas-publicacion/estadisticas.
 import tagsRoutes from "./modules/tags/tags.routes.js";
 import estadisticasZonaRoutes from "./modules/estadisticas-zona/estadisticas-zona.routes.js";
 
-
 import {
   facebookCallbackController,
   getFacebookLinkUrlController,
@@ -145,6 +145,7 @@ import adminPlanesRoutes from "./modules/planes/adminPlanes.routes.js";
 import sesionRoutes from "./modules/perfil/sesion.routes.js";
 
 import "./jobs/suscripcion.job.js";
+import { initSocket } from "./services/socket.service.js";
 
 // --------------------
 // SERVER
@@ -229,7 +230,7 @@ app.use("/api/perfil/usuario", perfilRoutes);
 app.use("/api/perfil/zonas", zonaRoutes);
 app.use("/api/perfil/historial", historialRoutes);
 app.use("/api/perfil/historial-busqueda", historialBusquedaRoutes);
-app.use('/api/sesion', sesionRoutes);
+app.use("/api/sesion", sesionRoutes);
 app.use("/api", router);
 app.use("/api", parametrosRoutes);
 app.use("/api/security", securityRoutes);
@@ -439,7 +440,10 @@ async function seedPlanes() {
 
 iniciarCronRetroalimentacion();
 
-app.listen(PORT, async () => {
+const server = http.createServer(app);
+initSocket(server);
+
+server.listen(PORT, async () => {
   console.log(`­ƒÜÇ Server running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);
 
