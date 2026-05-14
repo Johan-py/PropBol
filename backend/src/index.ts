@@ -133,7 +133,7 @@ import suscripcionesRoutes from './modules/suscripciones/suscripciones.routes.js
 import plansRoutes from './modules/plans/plans.routes.js'
 import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js'
 import whatsappRoutes from './modules/whatsapp/whatsapp.routes.js'
-import { getAdminTestimonios } from './modules/testimonios/adminTestimonios.controller.js'
+import adminTestimoniosRoutes from './modules/testimonios/adminTestimonios.routes.js'
 import sesionRoutes from './modules/perfil/sesion.routes.js'
 
 import './jobs/suscripcion.job.js'
@@ -368,7 +368,7 @@ app.post('/api/publicaciones', (req, res) => {
 // --------------------
 // TESTIMONIOSADMIN
 // --------------------
-app.get('/api/admin/testimonios', getAdminTestimonios)
+app.use('/api/admin', adminTestimoniosRoutes)
 
 // --------------------
 // LEVANTAR SERVIDOR
