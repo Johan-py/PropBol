@@ -171,7 +171,7 @@ export default function LimiteConsumoPage() {
         {/* CARDS */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
 
-          {/* Card 1: Disponibles */}
+          {/* Card 1: Publicaciones Disponibles */}
           <div className="bg-white p-6 rounded-2xl shadow-sm border-b-8 border-emerald-500 flex items-center gap-5 transition-transform hover:scale-105">
             <div className="bg-emerald-50 p-3 rounded-xl text-4xl">📗</div>
             <div className="flex flex-col text-left">
