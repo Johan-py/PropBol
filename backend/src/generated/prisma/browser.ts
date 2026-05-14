@@ -17,40 +17,141 @@ export { Prisma }
 export * as $Enums from './enums.js'
 export * from './enums.js'
 /**
+ * Model amenidad
+ *
+ */
+export type amenidad = Prisma.amenidadModel
+/**
+ * Model autenticacion_social
+ *
+ */
+export type autenticacion_social = Prisma.autenticacion_socialModel
+/**
  * Model banner_home
  *
  */
 export type banner_home = Prisma.banner_homeModel
+/**
+ * Model barrio
+ *
+ */
+export type barrio = Prisma.barrioModel
 /**
  * Model bitacora_pagos
  *
  */
 export type bitacora_pagos = Prisma.bitacora_pagosModel
 /**
+ * Model blog
+ *
+ */
+export type blog = Prisma.blogModel
+/**
+ * Model blog_rechazo
+ *
+ */
+export type blog_rechazo = Prisma.blog_rechazoModel
+/**
  * Model cambio_email
  *
  */
 export type cambio_email = Prisma.cambio_emailModel
+/**
+ * Model categoria_blog
+ *
+ */
+export type categoria_blog = Prisma.categoria_blogModel
+/**
+ * Model ciudad
+ *
+ */
+export type ciudad = Prisma.ciudadModel
+/**
+ * Model ciudad_imagen
+ *
+ */
+export type ciudad_imagen = Prisma.ciudad_imagenModel
+/**
+ * Model codigo_2fa
+ *
+ */
+export type codigo_2fa = Prisma.codigo_2faModel
+/**
+ * Model comentario
+ *
+ */
+export type comentario = Prisma.comentarioModel
+/**
+ * Model comentario_like
+ *
+ */
+export type comentario_like = Prisma.comentario_likeModel
+/**
+ * Model comparacion
+ *
+ */
+export type comparacion = Prisma.comparacionModel
+/**
+ * Model cupon
+ *
+ */
+export type cupon = Prisma.cuponModel
+/**
+ * Model departamento
+ *
+ */
+export type departamento = Prisma.departamentoModel
+/**
+ * Model detalle_comparacion
+ *
+ */
+export type detalle_comparacion = Prisma.detalle_comparacionModel
 /**
  * Model detalle_grupo
  *
  */
 export type detalle_grupo = Prisma.detalle_grupoModel
 /**
+ * Model entrenamiento_ml
+ * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+ * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ */
+export type entrenamiento_ml = Prisma.entrenamiento_mlModel
+/**
  * Model etiqueta
  *
  */
 export type etiqueta = Prisma.etiquetaModel
+/**
+ * Model favorito
+ *
+ */
+export type favorito = Prisma.favoritoModel
 /**
  * Model grupo_marcadores
  *
  */
 export type grupo_marcadores = Prisma.grupo_marcadoresModel
 /**
+ * Model historial_busqueda
+ *
+ */
+export type historial_busqueda = Prisma.historial_busquedaModel
+/**
+ * Model historial_password
+ *
+ */
+export type historial_password = Prisma.historial_passwordModel
+/**
  * Model inmueble
  *
  */
 export type inmueble = Prisma.inmuebleModel
+/**
+ * Model inmueble_amenidad
+ *
+ */
+export type inmueble_amenidad = Prisma.inmueble_amenidadModel
 /**
  * Model inmueble_etiqueta
  *
@@ -62,20 +163,40 @@ export type inmueble_etiqueta = Prisma.inmueble_etiquetaModel
  */
 export type interaccion_mapa = Prisma.interaccion_mapaModel
 /**
+ * Model magic_link
+ * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ */
+export type magic_link = Prisma.magic_linkModel
+/**
  * Model marcador_mapa
  *
  */
 export type marcador_mapa = Prisma.marcador_mapaModel
+/**
+ * Model modelo_version
+ * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ */
+export type modelo_version = Prisma.modelo_versionModel
 /**
  * Model multimedia
  *
  */
 export type multimedia = Prisma.multimediaModel
 /**
- * Model notificacion
+ * Model municipio
  *
  */
+export type municipio = Prisma.municipioModel
+/**
+ * Model notificacion
+ * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+ */
 export type notificacion = Prisma.notificacionModel
+/**
+ * Model parametros_personalizados
+ *
+ */
+export type parametros_personalizados = Prisma.parametros_personalizadosModel
 /**
  * Model perfil
  *
@@ -87,10 +208,55 @@ export type perfil = Prisma.perfilModel
  */
 export type plan_suscripcion = Prisma.plan_suscripcionModel
 /**
+ * Model propiedad_vista
+ *
+ */
+export type propiedad_vista = Prisma.propiedad_vistaModel
+/**
+ * Model provincia
+ *
+ */
+export type provincia = Prisma.provinciaModel
+/**
  * Model publicacion
  *
  */
 export type publicacion = Prisma.publicacionModel
+/**
+ * Model publicacion_compartido
+ * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ */
+export type publicacion_compartido = Prisma.publicacion_compartidoModel
+/**
+ * Model publicacion_estadistica
+ * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ */
+export type publicacion_estadistica = Prisma.publicacion_estadisticaModel
+/**
+ * Model publicacion_parametro
+ *
+ */
+export type publicacion_parametro = Prisma.publicacion_parametroModel
+/**
+ * Model publicacion_tag
+ *
+ */
+export type publicacion_tag = Prisma.publicacion_tagModel
+/**
+ * Model publicacion_vista
+ * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ */
+export type publicacion_vista = Prisma.publicacion_vistaModel
+/**
+ * Model punto_interes
+ *
+ */
+export type punto_interes = Prisma.punto_interesModel
+/**
+ * Model recuperacion_password
+ *
+ */
+export type recuperacion_password = Prisma.recuperacion_passwordModel
 /**
  * Model rol
  *
@@ -107,20 +273,45 @@ export type sesion = Prisma.sesionModel
  */
 export type sesion_mapa = Prisma.sesion_mapaModel
 /**
+ * Model spatial_ref_sys
+ * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+ */
+export type spatial_ref_sys = Prisma.spatial_ref_sysModel
+/**
  * Model suscripciones_activas
  *
  */
 export type suscripciones_activas = Prisma.suscripciones_activasModel
+/**
+ * Model tag
+ *
+ */
+export type tag = Prisma.tagModel
 /**
  * Model telefono
  *
  */
 export type telefono = Prisma.telefonoModel
 /**
+ * Model testimonio
+ *
+ */
+export type testimonio = Prisma.testimonioModel
+/**
+ * Model testimonio_like
+ *
+ */
+export type testimonio_like = Prisma.testimonio_likeModel
+/**
  * Model transacciones
  *
  */
 export type transacciones = Prisma.transaccionesModel
+/**
+ * Model tutorial_publicacion_usuario
+ *
+ */
+export type tutorial_publicacion_usuario = Prisma.tutorial_publicacion_usuarioModel
 /**
  * Model ubicacion_inmueble
  *
@@ -146,3 +337,18 @@ export type verificacion_pago = Prisma.verificacion_pagoModel
  *
  */
 export type visitor = Prisma.visitorModel
+/**
+ * Model zona_geografica
+ *
+ */
+export type zona_geografica = Prisma.zona_geograficaModel
+/**
+ * Model zona_predefinida
+ *
+ */
+export type zona_predefinida = Prisma.zona_predefinidaModel
+/**
+ * Model zona_usuario
+ *
+ */
+export type zona_usuario = Prisma.zona_usuarioModel

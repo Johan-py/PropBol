@@ -32,6 +32,7 @@ export type Ubicacion_inmuebleAvgAggregateOutputType = {
   longitud: runtime.Decimal | null
   inmueble_id: number | null
   ubicacion_maestra_id: number | null
+  barrio_id: number | null
 }
 
 export type Ubicacion_inmuebleSumAggregateOutputType = {
@@ -40,6 +41,7 @@ export type Ubicacion_inmuebleSumAggregateOutputType = {
   longitud: runtime.Decimal | null
   inmueble_id: number | null
   ubicacion_maestra_id: number | null
+  barrio_id: number | null
 }
 
 export type Ubicacion_inmuebleMinAggregateOutputType = {
@@ -51,6 +53,7 @@ export type Ubicacion_inmuebleMinAggregateOutputType = {
   zona: string | null
   inmueble_id: number | null
   ubicacion_maestra_id: number | null
+  barrio_id: number | null
 }
 
 export type Ubicacion_inmuebleMaxAggregateOutputType = {
@@ -62,6 +65,7 @@ export type Ubicacion_inmuebleMaxAggregateOutputType = {
   zona: string | null
   inmueble_id: number | null
   ubicacion_maestra_id: number | null
+  barrio_id: number | null
 }
 
 export type Ubicacion_inmuebleCountAggregateOutputType = {
@@ -73,6 +77,8 @@ export type Ubicacion_inmuebleCountAggregateOutputType = {
   zona: number
   inmueble_id: number
   ubicacion_maestra_id: number
+  barrio_id: number
+  vertices_difuminado: number
   _all: number
 }
 
@@ -82,6 +88,7 @@ export type Ubicacion_inmuebleAvgAggregateInputType = {
   longitud?: true
   inmueble_id?: true
   ubicacion_maestra_id?: true
+  barrio_id?: true
 }
 
 export type Ubicacion_inmuebleSumAggregateInputType = {
@@ -90,6 +97,7 @@ export type Ubicacion_inmuebleSumAggregateInputType = {
   longitud?: true
   inmueble_id?: true
   ubicacion_maestra_id?: true
+  barrio_id?: true
 }
 
 export type Ubicacion_inmuebleMinAggregateInputType = {
@@ -101,6 +109,7 @@ export type Ubicacion_inmuebleMinAggregateInputType = {
   zona?: true
   inmueble_id?: true
   ubicacion_maestra_id?: true
+  barrio_id?: true
 }
 
 export type Ubicacion_inmuebleMaxAggregateInputType = {
@@ -112,6 +121,7 @@ export type Ubicacion_inmuebleMaxAggregateInputType = {
   zona?: true
   inmueble_id?: true
   ubicacion_maestra_id?: true
+  barrio_id?: true
 }
 
 export type Ubicacion_inmuebleCountAggregateInputType = {
@@ -123,6 +133,8 @@ export type Ubicacion_inmuebleCountAggregateInputType = {
   zona?: true
   inmueble_id?: true
   ubicacion_maestra_id?: true
+  barrio_id?: true
+  vertices_difuminado?: true
   _all?: true
 }
 
@@ -226,6 +238,8 @@ export type Ubicacion_inmuebleGroupByOutputType = {
   zona: string | null
   inmueble_id: number
   ubicacion_maestra_id: number | null
+  barrio_id: number | null
+  vertices_difuminado: runtime.JsonValue | null
   _count: Ubicacion_inmuebleCountAggregateOutputType | null
   _avg: Ubicacion_inmuebleAvgAggregateOutputType | null
   _sum: Ubicacion_inmuebleSumAggregateOutputType | null
@@ -268,7 +282,10 @@ export type ubicacion_inmuebleWhereInput = {
   zona?: Prisma.StringNullableFilter<'ubicacion_inmueble'> | string | null
   inmueble_id?: Prisma.IntFilter<'ubicacion_inmueble'> | number
   ubicacion_maestra_id?: Prisma.IntNullableFilter<'ubicacion_inmueble'> | number | null
+  barrio_id?: Prisma.IntNullableFilter<'ubicacion_inmueble'> | number | null
+  vertices_difuminado?: Prisma.JsonNullableFilter<'ubicacion_inmueble'>
   marcador_mapa?: Prisma.Marcador_mapaListRelationFilter
+  barrio?: Prisma.XOR<Prisma.BarrioNullableScalarRelationFilter, Prisma.barrioWhereInput> | null
   inmueble?: Prisma.XOR<Prisma.InmuebleScalarRelationFilter, Prisma.inmuebleWhereInput>
   ubicacion_maestra?: Prisma.XOR<
     Prisma.Ubicacion_maestraNullableScalarRelationFilter,
@@ -285,7 +302,10 @@ export type ubicacion_inmuebleOrderByWithRelationInput = {
   zona?: Prisma.SortOrderInput | Prisma.SortOrder
   inmueble_id?: Prisma.SortOrder
   ubicacion_maestra_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  barrio_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  vertices_difuminado?: Prisma.SortOrderInput | Prisma.SortOrder
   marcador_mapa?: Prisma.marcador_mapaOrderByRelationAggregateInput
+  barrio?: Prisma.barrioOrderByWithRelationInput
   inmueble?: Prisma.inmuebleOrderByWithRelationInput
   ubicacion_maestra?: Prisma.ubicacion_maestraOrderByWithRelationInput
 }
@@ -313,7 +333,10 @@ export type ubicacion_inmuebleWhereUniqueInput = Prisma.AtLeast<
     ciudad?: Prisma.StringNullableFilter<'ubicacion_inmueble'> | string | null
     zona?: Prisma.StringNullableFilter<'ubicacion_inmueble'> | string | null
     ubicacion_maestra_id?: Prisma.IntNullableFilter<'ubicacion_inmueble'> | number | null
+    barrio_id?: Prisma.IntNullableFilter<'ubicacion_inmueble'> | number | null
+    vertices_difuminado?: Prisma.JsonNullableFilter<'ubicacion_inmueble'>
     marcador_mapa?: Prisma.Marcador_mapaListRelationFilter
+    barrio?: Prisma.XOR<Prisma.BarrioNullableScalarRelationFilter, Prisma.barrioWhereInput> | null
     inmueble?: Prisma.XOR<Prisma.InmuebleScalarRelationFilter, Prisma.inmuebleWhereInput>
     ubicacion_maestra?: Prisma.XOR<
       Prisma.Ubicacion_maestraNullableScalarRelationFilter,
@@ -332,6 +355,8 @@ export type ubicacion_inmuebleOrderByWithAggregationInput = {
   zona?: Prisma.SortOrderInput | Prisma.SortOrder
   inmueble_id?: Prisma.SortOrder
   ubicacion_maestra_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  barrio_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  vertices_difuminado?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ubicacion_inmuebleCountOrderByAggregateInput
   _avg?: Prisma.ubicacion_inmuebleAvgOrderByAggregateInput
   _max?: Prisma.ubicacion_inmuebleMaxOrderByAggregateInput
@@ -368,6 +393,8 @@ export type ubicacion_inmuebleScalarWhereWithAggregatesInput = {
     | Prisma.IntNullableWithAggregatesFilter<'ubicacion_inmueble'>
     | number
     | null
+  barrio_id?: Prisma.IntNullableWithAggregatesFilter<'ubicacion_inmueble'> | number | null
+  vertices_difuminado?: Prisma.JsonNullableWithAggregatesFilter<'ubicacion_inmueble'>
 }
 
 export type ubicacion_inmuebleCreateInput = {
@@ -376,7 +403,9 @@ export type ubicacion_inmuebleCreateInput = {
   direccion?: string | null
   ciudad?: string | null
   zona?: string | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   marcador_mapa?: Prisma.marcador_mapaCreateNestedManyWithoutUbicacion_inmuebleInput
+  barrio?: Prisma.barrioCreateNestedOneWithoutUbicacion_inmuebleInput
   inmueble: Prisma.inmuebleCreateNestedOneWithoutUbicacion_inmuebleInput
   ubicacion_maestra?: Prisma.ubicacion_maestraCreateNestedOneWithoutUbicacion_inmuebleInput
 }
@@ -390,6 +419,8 @@ export type ubicacion_inmuebleUncheckedCreateInput = {
   zona?: string | null
   inmueble_id: number
   ubicacion_maestra_id?: number | null
+  barrio_id?: number | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   marcador_mapa?: Prisma.marcador_mapaUncheckedCreateNestedManyWithoutUbicacion_inmuebleInput
 }
 
@@ -409,7 +440,9 @@ export type ubicacion_inmuebleUpdateInput = {
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ciudad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zona?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   marcador_mapa?: Prisma.marcador_mapaUpdateManyWithoutUbicacion_inmuebleNestedInput
+  barrio?: Prisma.barrioUpdateOneWithoutUbicacion_inmuebleNestedInput
   inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutUbicacion_inmuebleNestedInput
   ubicacion_maestra?: Prisma.ubicacion_maestraUpdateOneWithoutUbicacion_inmuebleNestedInput
 }
@@ -433,6 +466,8 @@ export type ubicacion_inmuebleUncheckedUpdateInput = {
   zona?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
   ubicacion_maestra_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  barrio_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   marcador_mapa?: Prisma.marcador_mapaUncheckedUpdateManyWithoutUbicacion_inmuebleNestedInput
 }
 
@@ -445,6 +480,8 @@ export type ubicacion_inmuebleCreateManyInput = {
   zona?: string | null
   inmueble_id: number
   ubicacion_maestra_id?: number | null
+  barrio_id?: number | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type ubicacion_inmuebleUpdateManyMutationInput = {
@@ -463,6 +500,7 @@ export type ubicacion_inmuebleUpdateManyMutationInput = {
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ciudad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zona?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type ubicacion_inmuebleUncheckedUpdateManyInput = {
@@ -484,6 +522,18 @@ export type ubicacion_inmuebleUncheckedUpdateManyInput = {
   zona?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
   ubicacion_maestra_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  barrio_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+}
+
+export type Ubicacion_inmuebleListRelationFilter = {
+  every?: Prisma.ubicacion_inmuebleWhereInput
+  some?: Prisma.ubicacion_inmuebleWhereInput
+  none?: Prisma.ubicacion_inmuebleWhereInput
+}
+
+export type ubicacion_inmuebleOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type Ubicacion_inmuebleNullableScalarRelationFilter = {
@@ -505,6 +555,8 @@ export type ubicacion_inmuebleCountOrderByAggregateInput = {
   zona?: Prisma.SortOrder
   inmueble_id?: Prisma.SortOrder
   ubicacion_maestra_id?: Prisma.SortOrder
+  barrio_id?: Prisma.SortOrder
+  vertices_difuminado?: Prisma.SortOrder
 }
 
 export type ubicacion_inmuebleAvgOrderByAggregateInput = {
@@ -513,6 +565,7 @@ export type ubicacion_inmuebleAvgOrderByAggregateInput = {
   longitud?: Prisma.SortOrder
   inmueble_id?: Prisma.SortOrder
   ubicacion_maestra_id?: Prisma.SortOrder
+  barrio_id?: Prisma.SortOrder
 }
 
 export type ubicacion_inmuebleMaxOrderByAggregateInput = {
@@ -524,6 +577,7 @@ export type ubicacion_inmuebleMaxOrderByAggregateInput = {
   zona?: Prisma.SortOrder
   inmueble_id?: Prisma.SortOrder
   ubicacion_maestra_id?: Prisma.SortOrder
+  barrio_id?: Prisma.SortOrder
 }
 
 export type ubicacion_inmuebleMinOrderByAggregateInput = {
@@ -535,6 +589,7 @@ export type ubicacion_inmuebleMinOrderByAggregateInput = {
   zona?: Prisma.SortOrder
   inmueble_id?: Prisma.SortOrder
   ubicacion_maestra_id?: Prisma.SortOrder
+  barrio_id?: Prisma.SortOrder
 }
 
 export type ubicacion_inmuebleSumOrderByAggregateInput = {
@@ -543,16 +598,101 @@ export type ubicacion_inmuebleSumOrderByAggregateInput = {
   longitud?: Prisma.SortOrder
   inmueble_id?: Prisma.SortOrder
   ubicacion_maestra_id?: Prisma.SortOrder
+  barrio_id?: Prisma.SortOrder
 }
 
-export type Ubicacion_inmuebleListRelationFilter = {
-  every?: Prisma.ubicacion_inmuebleWhereInput
-  some?: Prisma.ubicacion_inmuebleWhereInput
-  none?: Prisma.ubicacion_inmuebleWhereInput
+export type ubicacion_inmuebleCreateNestedManyWithoutBarrioInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.ubicacion_inmuebleCreateWithoutBarrioInput,
+        Prisma.ubicacion_inmuebleUncheckedCreateWithoutBarrioInput
+      >
+    | Prisma.ubicacion_inmuebleCreateWithoutBarrioInput[]
+    | Prisma.ubicacion_inmuebleUncheckedCreateWithoutBarrioInput[]
+  connectOrCreate?:
+    | Prisma.ubicacion_inmuebleCreateOrConnectWithoutBarrioInput
+    | Prisma.ubicacion_inmuebleCreateOrConnectWithoutBarrioInput[]
+  createMany?: Prisma.ubicacion_inmuebleCreateManyBarrioInputEnvelope
+  connect?: Prisma.ubicacion_inmuebleWhereUniqueInput | Prisma.ubicacion_inmuebleWhereUniqueInput[]
 }
 
-export type ubicacion_inmuebleOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
+export type ubicacion_inmuebleUncheckedCreateNestedManyWithoutBarrioInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.ubicacion_inmuebleCreateWithoutBarrioInput,
+        Prisma.ubicacion_inmuebleUncheckedCreateWithoutBarrioInput
+      >
+    | Prisma.ubicacion_inmuebleCreateWithoutBarrioInput[]
+    | Prisma.ubicacion_inmuebleUncheckedCreateWithoutBarrioInput[]
+  connectOrCreate?:
+    | Prisma.ubicacion_inmuebleCreateOrConnectWithoutBarrioInput
+    | Prisma.ubicacion_inmuebleCreateOrConnectWithoutBarrioInput[]
+  createMany?: Prisma.ubicacion_inmuebleCreateManyBarrioInputEnvelope
+  connect?: Prisma.ubicacion_inmuebleWhereUniqueInput | Prisma.ubicacion_inmuebleWhereUniqueInput[]
+}
+
+export type ubicacion_inmuebleUpdateManyWithoutBarrioNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.ubicacion_inmuebleCreateWithoutBarrioInput,
+        Prisma.ubicacion_inmuebleUncheckedCreateWithoutBarrioInput
+      >
+    | Prisma.ubicacion_inmuebleCreateWithoutBarrioInput[]
+    | Prisma.ubicacion_inmuebleUncheckedCreateWithoutBarrioInput[]
+  connectOrCreate?:
+    | Prisma.ubicacion_inmuebleCreateOrConnectWithoutBarrioInput
+    | Prisma.ubicacion_inmuebleCreateOrConnectWithoutBarrioInput[]
+  upsert?:
+    | Prisma.ubicacion_inmuebleUpsertWithWhereUniqueWithoutBarrioInput
+    | Prisma.ubicacion_inmuebleUpsertWithWhereUniqueWithoutBarrioInput[]
+  createMany?: Prisma.ubicacion_inmuebleCreateManyBarrioInputEnvelope
+  set?: Prisma.ubicacion_inmuebleWhereUniqueInput | Prisma.ubicacion_inmuebleWhereUniqueInput[]
+  disconnect?:
+    | Prisma.ubicacion_inmuebleWhereUniqueInput
+    | Prisma.ubicacion_inmuebleWhereUniqueInput[]
+  delete?: Prisma.ubicacion_inmuebleWhereUniqueInput | Prisma.ubicacion_inmuebleWhereUniqueInput[]
+  connect?: Prisma.ubicacion_inmuebleWhereUniqueInput | Prisma.ubicacion_inmuebleWhereUniqueInput[]
+  update?:
+    | Prisma.ubicacion_inmuebleUpdateWithWhereUniqueWithoutBarrioInput
+    | Prisma.ubicacion_inmuebleUpdateWithWhereUniqueWithoutBarrioInput[]
+  updateMany?:
+    | Prisma.ubicacion_inmuebleUpdateManyWithWhereWithoutBarrioInput
+    | Prisma.ubicacion_inmuebleUpdateManyWithWhereWithoutBarrioInput[]
+  deleteMany?:
+    | Prisma.ubicacion_inmuebleScalarWhereInput
+    | Prisma.ubicacion_inmuebleScalarWhereInput[]
+}
+
+export type ubicacion_inmuebleUncheckedUpdateManyWithoutBarrioNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.ubicacion_inmuebleCreateWithoutBarrioInput,
+        Prisma.ubicacion_inmuebleUncheckedCreateWithoutBarrioInput
+      >
+    | Prisma.ubicacion_inmuebleCreateWithoutBarrioInput[]
+    | Prisma.ubicacion_inmuebleUncheckedCreateWithoutBarrioInput[]
+  connectOrCreate?:
+    | Prisma.ubicacion_inmuebleCreateOrConnectWithoutBarrioInput
+    | Prisma.ubicacion_inmuebleCreateOrConnectWithoutBarrioInput[]
+  upsert?:
+    | Prisma.ubicacion_inmuebleUpsertWithWhereUniqueWithoutBarrioInput
+    | Prisma.ubicacion_inmuebleUpsertWithWhereUniqueWithoutBarrioInput[]
+  createMany?: Prisma.ubicacion_inmuebleCreateManyBarrioInputEnvelope
+  set?: Prisma.ubicacion_inmuebleWhereUniqueInput | Prisma.ubicacion_inmuebleWhereUniqueInput[]
+  disconnect?:
+    | Prisma.ubicacion_inmuebleWhereUniqueInput
+    | Prisma.ubicacion_inmuebleWhereUniqueInput[]
+  delete?: Prisma.ubicacion_inmuebleWhereUniqueInput | Prisma.ubicacion_inmuebleWhereUniqueInput[]
+  connect?: Prisma.ubicacion_inmuebleWhereUniqueInput | Prisma.ubicacion_inmuebleWhereUniqueInput[]
+  update?:
+    | Prisma.ubicacion_inmuebleUpdateWithWhereUniqueWithoutBarrioInput
+    | Prisma.ubicacion_inmuebleUpdateWithWhereUniqueWithoutBarrioInput[]
+  updateMany?:
+    | Prisma.ubicacion_inmuebleUpdateManyWithWhereWithoutBarrioInput
+    | Prisma.ubicacion_inmuebleUpdateManyWithWhereWithoutBarrioInput[]
+  deleteMany?:
+    | Prisma.ubicacion_inmuebleScalarWhereInput
+    | Prisma.ubicacion_inmuebleScalarWhereInput[]
 }
 
 export type ubicacion_inmuebleCreateNestedOneWithoutInmuebleInput = {
@@ -731,13 +871,109 @@ export type ubicacion_inmuebleUncheckedUpdateManyWithoutUbicacion_maestraNestedI
     | Prisma.ubicacion_inmuebleScalarWhereInput[]
 }
 
+export type ubicacion_inmuebleCreateWithoutBarrioInput = {
+  latitud: runtime.Decimal | runtime.DecimalJsLike | number | string
+  longitud: runtime.Decimal | runtime.DecimalJsLike | number | string
+  direccion?: string | null
+  ciudad?: string | null
+  zona?: string | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  marcador_mapa?: Prisma.marcador_mapaCreateNestedManyWithoutUbicacion_inmuebleInput
+  inmueble: Prisma.inmuebleCreateNestedOneWithoutUbicacion_inmuebleInput
+  ubicacion_maestra?: Prisma.ubicacion_maestraCreateNestedOneWithoutUbicacion_inmuebleInput
+}
+
+export type ubicacion_inmuebleUncheckedCreateWithoutBarrioInput = {
+  id?: number
+  latitud: runtime.Decimal | runtime.DecimalJsLike | number | string
+  longitud: runtime.Decimal | runtime.DecimalJsLike | number | string
+  direccion?: string | null
+  ciudad?: string | null
+  zona?: string | null
+  inmueble_id: number
+  ubicacion_maestra_id?: number | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  marcador_mapa?: Prisma.marcador_mapaUncheckedCreateNestedManyWithoutUbicacion_inmuebleInput
+}
+
+export type ubicacion_inmuebleCreateOrConnectWithoutBarrioInput = {
+  where: Prisma.ubicacion_inmuebleWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.ubicacion_inmuebleCreateWithoutBarrioInput,
+    Prisma.ubicacion_inmuebleUncheckedCreateWithoutBarrioInput
+  >
+}
+
+export type ubicacion_inmuebleCreateManyBarrioInputEnvelope = {
+  data:
+    | Prisma.ubicacion_inmuebleCreateManyBarrioInput
+    | Prisma.ubicacion_inmuebleCreateManyBarrioInput[]
+  skipDuplicates?: boolean
+}
+
+export type ubicacion_inmuebleUpsertWithWhereUniqueWithoutBarrioInput = {
+  where: Prisma.ubicacion_inmuebleWhereUniqueInput
+  update: Prisma.XOR<
+    Prisma.ubicacion_inmuebleUpdateWithoutBarrioInput,
+    Prisma.ubicacion_inmuebleUncheckedUpdateWithoutBarrioInput
+  >
+  create: Prisma.XOR<
+    Prisma.ubicacion_inmuebleCreateWithoutBarrioInput,
+    Prisma.ubicacion_inmuebleUncheckedCreateWithoutBarrioInput
+  >
+}
+
+export type ubicacion_inmuebleUpdateWithWhereUniqueWithoutBarrioInput = {
+  where: Prisma.ubicacion_inmuebleWhereUniqueInput
+  data: Prisma.XOR<
+    Prisma.ubicacion_inmuebleUpdateWithoutBarrioInput,
+    Prisma.ubicacion_inmuebleUncheckedUpdateWithoutBarrioInput
+  >
+}
+
+export type ubicacion_inmuebleUpdateManyWithWhereWithoutBarrioInput = {
+  where: Prisma.ubicacion_inmuebleScalarWhereInput
+  data: Prisma.XOR<
+    Prisma.ubicacion_inmuebleUpdateManyMutationInput,
+    Prisma.ubicacion_inmuebleUncheckedUpdateManyWithoutBarrioInput
+  >
+}
+
+export type ubicacion_inmuebleScalarWhereInput = {
+  AND?: Prisma.ubicacion_inmuebleScalarWhereInput | Prisma.ubicacion_inmuebleScalarWhereInput[]
+  OR?: Prisma.ubicacion_inmuebleScalarWhereInput[]
+  NOT?: Prisma.ubicacion_inmuebleScalarWhereInput | Prisma.ubicacion_inmuebleScalarWhereInput[]
+  id?: Prisma.IntFilter<'ubicacion_inmueble'> | number
+  latitud?:
+    | Prisma.DecimalFilter<'ubicacion_inmueble'>
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  longitud?:
+    | Prisma.DecimalFilter<'ubicacion_inmueble'>
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  direccion?: Prisma.StringNullableFilter<'ubicacion_inmueble'> | string | null
+  ciudad?: Prisma.StringNullableFilter<'ubicacion_inmueble'> | string | null
+  zona?: Prisma.StringNullableFilter<'ubicacion_inmueble'> | string | null
+  inmueble_id?: Prisma.IntFilter<'ubicacion_inmueble'> | number
+  ubicacion_maestra_id?: Prisma.IntNullableFilter<'ubicacion_inmueble'> | number | null
+  barrio_id?: Prisma.IntNullableFilter<'ubicacion_inmueble'> | number | null
+  vertices_difuminado?: Prisma.JsonNullableFilter<'ubicacion_inmueble'>
+}
+
 export type ubicacion_inmuebleCreateWithoutInmuebleInput = {
   latitud: runtime.Decimal | runtime.DecimalJsLike | number | string
   longitud: runtime.Decimal | runtime.DecimalJsLike | number | string
   direccion?: string | null
   ciudad?: string | null
   zona?: string | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   marcador_mapa?: Prisma.marcador_mapaCreateNestedManyWithoutUbicacion_inmuebleInput
+  barrio?: Prisma.barrioCreateNestedOneWithoutUbicacion_inmuebleInput
   ubicacion_maestra?: Prisma.ubicacion_maestraCreateNestedOneWithoutUbicacion_inmuebleInput
 }
 
@@ -749,6 +985,8 @@ export type ubicacion_inmuebleUncheckedCreateWithoutInmuebleInput = {
   ciudad?: string | null
   zona?: string | null
   ubicacion_maestra_id?: number | null
+  barrio_id?: number | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   marcador_mapa?: Prisma.marcador_mapaUncheckedCreateNestedManyWithoutUbicacion_inmuebleInput
 }
 
@@ -796,7 +1034,9 @@ export type ubicacion_inmuebleUpdateWithoutInmuebleInput = {
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ciudad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zona?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   marcador_mapa?: Prisma.marcador_mapaUpdateManyWithoutUbicacion_inmuebleNestedInput
+  barrio?: Prisma.barrioUpdateOneWithoutUbicacion_inmuebleNestedInput
   ubicacion_maestra?: Prisma.ubicacion_maestraUpdateOneWithoutUbicacion_inmuebleNestedInput
 }
 
@@ -818,6 +1058,8 @@ export type ubicacion_inmuebleUncheckedUpdateWithoutInmuebleInput = {
   ciudad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zona?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ubicacion_maestra_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  barrio_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   marcador_mapa?: Prisma.marcador_mapaUncheckedUpdateManyWithoutUbicacion_inmuebleNestedInput
 }
 
@@ -827,6 +1069,8 @@ export type ubicacion_inmuebleCreateWithoutMarcador_mapaInput = {
   direccion?: string | null
   ciudad?: string | null
   zona?: string | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  barrio?: Prisma.barrioCreateNestedOneWithoutUbicacion_inmuebleInput
   inmueble: Prisma.inmuebleCreateNestedOneWithoutUbicacion_inmuebleInput
   ubicacion_maestra?: Prisma.ubicacion_maestraCreateNestedOneWithoutUbicacion_inmuebleInput
 }
@@ -840,6 +1084,8 @@ export type ubicacion_inmuebleUncheckedCreateWithoutMarcador_mapaInput = {
   zona?: string | null
   inmueble_id: number
   ubicacion_maestra_id?: number | null
+  barrio_id?: number | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type ubicacion_inmuebleCreateOrConnectWithoutMarcador_mapaInput = {
@@ -886,6 +1132,8 @@ export type ubicacion_inmuebleUpdateWithoutMarcador_mapaInput = {
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ciudad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zona?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  barrio?: Prisma.barrioUpdateOneWithoutUbicacion_inmuebleNestedInput
   inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutUbicacion_inmuebleNestedInput
   ubicacion_maestra?: Prisma.ubicacion_maestraUpdateOneWithoutUbicacion_inmuebleNestedInput
 }
@@ -909,6 +1157,8 @@ export type ubicacion_inmuebleUncheckedUpdateWithoutMarcador_mapaInput = {
   zona?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
   ubicacion_maestra_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  barrio_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type ubicacion_inmuebleCreateWithoutUbicacion_maestraInput = {
@@ -917,7 +1167,9 @@ export type ubicacion_inmuebleCreateWithoutUbicacion_maestraInput = {
   direccion?: string | null
   ciudad?: string | null
   zona?: string | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   marcador_mapa?: Prisma.marcador_mapaCreateNestedManyWithoutUbicacion_inmuebleInput
+  barrio?: Prisma.barrioCreateNestedOneWithoutUbicacion_inmuebleInput
   inmueble: Prisma.inmuebleCreateNestedOneWithoutUbicacion_inmuebleInput
 }
 
@@ -929,6 +1181,8 @@ export type ubicacion_inmuebleUncheckedCreateWithoutUbicacion_maestraInput = {
   ciudad?: string | null
   zona?: string | null
   inmueble_id: number
+  barrio_id?: number | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   marcador_mapa?: Prisma.marcador_mapaUncheckedCreateNestedManyWithoutUbicacion_inmuebleInput
 }
 
@@ -975,28 +1229,83 @@ export type ubicacion_inmuebleUpdateManyWithWhereWithoutUbicacion_maestraInput =
   >
 }
 
-export type ubicacion_inmuebleScalarWhereInput = {
-  AND?: Prisma.ubicacion_inmuebleScalarWhereInput | Prisma.ubicacion_inmuebleScalarWhereInput[]
-  OR?: Prisma.ubicacion_inmuebleScalarWhereInput[]
-  NOT?: Prisma.ubicacion_inmuebleScalarWhereInput | Prisma.ubicacion_inmuebleScalarWhereInput[]
-  id?: Prisma.IntFilter<'ubicacion_inmueble'> | number
+export type ubicacion_inmuebleCreateManyBarrioInput = {
+  id?: number
+  latitud: runtime.Decimal | runtime.DecimalJsLike | number | string
+  longitud: runtime.Decimal | runtime.DecimalJsLike | number | string
+  direccion?: string | null
+  ciudad?: string | null
+  zona?: string | null
+  inmueble_id: number
+  ubicacion_maestra_id?: number | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+}
+
+export type ubicacion_inmuebleUpdateWithoutBarrioInput = {
   latitud?:
-    | Prisma.DecimalFilter<'ubicacion_inmueble'>
+    | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
   longitud?:
-    | Prisma.DecimalFilter<'ubicacion_inmueble'>
+    | Prisma.DecimalFieldUpdateOperationsInput
     | runtime.Decimal
     | runtime.DecimalJsLike
     | number
     | string
-  direccion?: Prisma.StringNullableFilter<'ubicacion_inmueble'> | string | null
-  ciudad?: Prisma.StringNullableFilter<'ubicacion_inmueble'> | string | null
-  zona?: Prisma.StringNullableFilter<'ubicacion_inmueble'> | string | null
-  inmueble_id?: Prisma.IntFilter<'ubicacion_inmueble'> | number
-  ubicacion_maestra_id?: Prisma.IntNullableFilter<'ubicacion_inmueble'> | number | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ciudad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zona?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  marcador_mapa?: Prisma.marcador_mapaUpdateManyWithoutUbicacion_inmuebleNestedInput
+  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutUbicacion_inmuebleNestedInput
+  ubicacion_maestra?: Prisma.ubicacion_maestraUpdateOneWithoutUbicacion_inmuebleNestedInput
+}
+
+export type ubicacion_inmuebleUncheckedUpdateWithoutBarrioInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  latitud?:
+    | Prisma.DecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  longitud?:
+    | Prisma.DecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ciudad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zona?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
+  ubicacion_maestra_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  marcador_mapa?: Prisma.marcador_mapaUncheckedUpdateManyWithoutUbicacion_inmuebleNestedInput
+}
+
+export type ubicacion_inmuebleUncheckedUpdateManyWithoutBarrioInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  latitud?:
+    | Prisma.DecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  longitud?:
+    | Prisma.DecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ciudad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  zona?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
+  ubicacion_maestra_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type ubicacion_inmuebleCreateManyUbicacion_maestraInput = {
@@ -1007,6 +1316,8 @@ export type ubicacion_inmuebleCreateManyUbicacion_maestraInput = {
   ciudad?: string | null
   zona?: string | null
   inmueble_id: number
+  barrio_id?: number | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 export type ubicacion_inmuebleUpdateWithoutUbicacion_maestraInput = {
@@ -1025,7 +1336,9 @@ export type ubicacion_inmuebleUpdateWithoutUbicacion_maestraInput = {
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ciudad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zona?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   marcador_mapa?: Prisma.marcador_mapaUpdateManyWithoutUbicacion_inmuebleNestedInput
+  barrio?: Prisma.barrioUpdateOneWithoutUbicacion_inmuebleNestedInput
   inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutUbicacion_inmuebleNestedInput
 }
 
@@ -1047,6 +1360,8 @@ export type ubicacion_inmuebleUncheckedUpdateWithoutUbicacion_maestraInput = {
   ciudad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zona?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
+  barrio_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   marcador_mapa?: Prisma.marcador_mapaUncheckedUpdateManyWithoutUbicacion_inmuebleNestedInput
 }
 
@@ -1068,6 +1383,8 @@ export type ubicacion_inmuebleUncheckedUpdateManyWithoutUbicacion_maestraInput =
   ciudad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   zona?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
+  barrio_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  vertices_difuminado?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
 }
 
 /**
@@ -1117,7 +1434,10 @@ export type ubicacion_inmuebleSelect<
     zona?: boolean
     inmueble_id?: boolean
     ubicacion_maestra_id?: boolean
+    barrio_id?: boolean
+    vertices_difuminado?: boolean
     marcador_mapa?: boolean | Prisma.ubicacion_inmueble$marcador_mapaArgs<ExtArgs>
+    barrio?: boolean | Prisma.ubicacion_inmueble$barrioArgs<ExtArgs>
     inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
     ubicacion_maestra?: boolean | Prisma.ubicacion_inmueble$ubicacion_maestraArgs<ExtArgs>
     _count?: boolean | Prisma.Ubicacion_inmuebleCountOutputTypeDefaultArgs<ExtArgs>
@@ -1137,6 +1457,9 @@ export type ubicacion_inmuebleSelectCreateManyAndReturn<
     zona?: boolean
     inmueble_id?: boolean
     ubicacion_maestra_id?: boolean
+    barrio_id?: boolean
+    vertices_difuminado?: boolean
+    barrio?: boolean | Prisma.ubicacion_inmueble$barrioArgs<ExtArgs>
     inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
     ubicacion_maestra?: boolean | Prisma.ubicacion_inmueble$ubicacion_maestraArgs<ExtArgs>
   },
@@ -1155,6 +1478,9 @@ export type ubicacion_inmuebleSelectUpdateManyAndReturn<
     zona?: boolean
     inmueble_id?: boolean
     ubicacion_maestra_id?: boolean
+    barrio_id?: boolean
+    vertices_difuminado?: boolean
+    barrio?: boolean | Prisma.ubicacion_inmueble$barrioArgs<ExtArgs>
     inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
     ubicacion_maestra?: boolean | Prisma.ubicacion_inmueble$ubicacion_maestraArgs<ExtArgs>
   },
@@ -1170,6 +1496,8 @@ export type ubicacion_inmuebleSelectScalar = {
   zona?: boolean
   inmueble_id?: boolean
   ubicacion_maestra_id?: boolean
+  barrio_id?: boolean
+  vertices_difuminado?: boolean
 }
 
 export type ubicacion_inmuebleOmit<
@@ -1182,13 +1510,16 @@ export type ubicacion_inmuebleOmit<
   | 'ciudad'
   | 'zona'
   | 'inmueble_id'
-  | 'ubicacion_maestra_id',
+  | 'ubicacion_maestra_id'
+  | 'barrio_id'
+  | 'vertices_difuminado',
   ExtArgs['result']['ubicacion_inmueble']
 >
 export type ubicacion_inmuebleInclude<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
   marcador_mapa?: boolean | Prisma.ubicacion_inmueble$marcador_mapaArgs<ExtArgs>
+  barrio?: boolean | Prisma.ubicacion_inmueble$barrioArgs<ExtArgs>
   inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
   ubicacion_maestra?: boolean | Prisma.ubicacion_inmueble$ubicacion_maestraArgs<ExtArgs>
   _count?: boolean | Prisma.Ubicacion_inmuebleCountOutputTypeDefaultArgs<ExtArgs>
@@ -1196,12 +1527,14 @@ export type ubicacion_inmuebleInclude<
 export type ubicacion_inmuebleIncludeCreateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
+  barrio?: boolean | Prisma.ubicacion_inmueble$barrioArgs<ExtArgs>
   inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
   ubicacion_maestra?: boolean | Prisma.ubicacion_inmueble$ubicacion_maestraArgs<ExtArgs>
 }
 export type ubicacion_inmuebleIncludeUpdateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
+  barrio?: boolean | Prisma.ubicacion_inmueble$barrioArgs<ExtArgs>
   inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
   ubicacion_maestra?: boolean | Prisma.ubicacion_inmueble$ubicacion_maestraArgs<ExtArgs>
 }
@@ -1212,6 +1545,7 @@ export type $ubicacion_inmueblePayload<
   name: 'ubicacion_inmueble'
   objects: {
     marcador_mapa: Prisma.$marcador_mapaPayload<ExtArgs>[]
+    barrio: Prisma.$barrioPayload<ExtArgs> | null
     inmueble: Prisma.$inmueblePayload<ExtArgs>
     ubicacion_maestra: Prisma.$ubicacion_maestraPayload<ExtArgs> | null
   }
@@ -1225,6 +1559,8 @@ export type $ubicacion_inmueblePayload<
       zona: string | null
       inmueble_id: number
       ubicacion_maestra_id: number | null
+      barrio_id: number | null
+      vertices_difuminado: runtime.JsonValue | null
     },
     ExtArgs['result']['ubicacion_inmueble']
   >
@@ -1777,6 +2113,19 @@ export interface Prisma__ubicacion_inmuebleClient<
       >
     | Null
   >
+  barrio<T extends Prisma.ubicacion_inmueble$barrioArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.ubicacion_inmueble$barrioArgs<ExtArgs>>
+  ): Prisma.Prisma__barrioClient<
+    runtime.Types.Result.GetResult<
+      Prisma.$barrioPayload<ExtArgs>,
+      T,
+      'findUniqueOrThrow',
+      GlobalOmitOptions
+    > | null,
+    null,
+    ExtArgs,
+    GlobalOmitOptions
+  >
   inmueble<T extends Prisma.inmuebleDefaultArgs<ExtArgs> = {}>(
     args?: Prisma.Subset<T, Prisma.inmuebleDefaultArgs<ExtArgs>>
   ): Prisma.Prisma__inmuebleClient<
@@ -1843,6 +2192,8 @@ export interface ubicacion_inmuebleFieldRefs {
   readonly zona: Prisma.FieldRef<'ubicacion_inmueble', 'String'>
   readonly inmueble_id: Prisma.FieldRef<'ubicacion_inmueble', 'Int'>
   readonly ubicacion_maestra_id: Prisma.FieldRef<'ubicacion_inmueble', 'Int'>
+  readonly barrio_id: Prisma.FieldRef<'ubicacion_inmueble', 'Int'>
+  readonly vertices_difuminado: Prisma.FieldRef<'ubicacion_inmueble', 'Json'>
 }
 
 // Custom InputTypes
@@ -2320,6 +2671,27 @@ export type ubicacion_inmueble$marcador_mapaArgs<
   take?: number
   skip?: number
   distinct?: Prisma.Marcador_mapaScalarFieldEnum | Prisma.Marcador_mapaScalarFieldEnum[]
+}
+
+/**
+ * ubicacion_inmueble.barrio
+ */
+export type ubicacion_inmueble$barrioArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the barrio
+   */
+  select?: Prisma.barrioSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the barrio
+   */
+  omit?: Prisma.barrioOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.barrioInclude<ExtArgs> | null
+  where?: Prisma.barrioWhereInput
 }
 
 /**

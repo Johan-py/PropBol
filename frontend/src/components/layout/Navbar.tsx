@@ -23,7 +23,8 @@ import LogoutModal from "../navbar/LogoutModal";
 import { useNotifications } from "@/hooks/useNotifications";
 import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 import type { NotificationFilter } from "@/types/notification";
- 
+import ThemeToggleButton from "./ThemeToggleButton";
+
 export type User = {
   name: string;
   email: string;
@@ -381,6 +382,11 @@ export default function Navbar() {
               >
                 Publica tu inmueble
               </Link>
+
+              {/* HU13: botón general para alternar modo claro/oscuro */}
+              <div className="hidden md:block">
+                <ThemeToggleButton />
+              </div>
  
               <div className="relative" ref={notificationPanelRef}>
                 <button
@@ -707,6 +713,11 @@ export default function Navbar() {
               >
                 Publica tu inmueble
               </Link>
+
+              {/* HU13: botón general para alternar modo claro/oscuro en menú móvil */}
+              <div className="px-3 py-2">
+                <ThemeToggleButton />
+              </div>
  
               <div id="tour-propiedades-mobile" className="flex flex-col">
                 <button
