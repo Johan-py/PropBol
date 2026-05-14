@@ -266,12 +266,20 @@ export const propertiesRepository = {
     if (filtros.labels && filtros.labels.length > 0) {
       where.AND = [
         ...(where.AND || []),
-        ...filtros.labels.map((id) => ({
-          inmueble_etiqueta: { some: { etiqueta_id: id } }
+        ...filtros.labels.map((labelId) => ({
+          publicaciones: {
+            some: {
+              estado: 'ACTIVA' as const,
+              publicacion_parametro: {
+                some: {
+                  parametro_id: labelId
+                }
+              }
+            }
+          }
         }))
       ]
     }
-
 
     // HU6 - Filtro solo ofertas
     if (filtros.soloOfertas === true) {
@@ -351,35 +359,35 @@ export const propertiesRepository = {
     const resultados =
       filtros.lat && filtros.lng
         ? inmuebles.filter((inmueble) => {
-          const u = inmueble.ubicacion
-          if (!u || !u.latitud || !u.longitud) return false
+            const u = inmueble.ubicacion
+            if (!u || !u.latitud || !u.longitud) return false
 
-          const lat = Number(u.latitud)
-          const lng = Number(u.longitud)
+            const lat = Number(u.latitud)
+            const lng = Number(u.longitud)
 
-          // Ignorar coordenadas inválidas
-          if (isNaN(lat) || isNaN(lng) || (lat === 0 && lng === 0)) return false
+            // Ignorar coordenadas inválidas
+            if (isNaN(lat) || isNaN(lng) || (lat === 0 && lng === 0)) return false
 
-          const centerLat = Number(filtros.lat)
-          const centerLng = Number(filtros.lng)
-          const radiusKm = filtros.radius || 1 // 1 km por defecto (igual que en el mapa)
+            const centerLat = Number(filtros.lat)
+            const centerLng = Number(filtros.lng)
+            const radiusKm = filtros.radius || 1 // 1 km por defecto (igual que en el mapa)
 
-          // Fórmula matemática para calcular distancia exacta en esfera (Tierra)
-          const R = 6371 // Radio de la Tierra en km
-          const dLat = ((lat - centerLat) * Math.PI) / 180
-          const dLng = ((lng - centerLng) * Math.PI) / 180
-          const a =
-            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos((centerLat * Math.PI) / 180) *
-            Math.cos((lat * Math.PI) / 180) *
-            Math.sin(dLng / 2) *
-            Math.sin(dLng / 2)
-          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-          const distancia = R * c
+            // Fórmula matemática para calcular distancia exacta en esfera (Tierra)
+            const R = 6371 // Radio de la Tierra en km
+            const dLat = ((lat - centerLat) * Math.PI) / 180
+            const dLng = ((lng - centerLng) * Math.PI) / 180
+            const a =
+              Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos((centerLat * Math.PI) / 180) *
+                Math.cos((lat * Math.PI) / 180) *
+                Math.sin(dLng / 2) *
+                Math.sin(dLng / 2)
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+            const distancia = R * c
 
-          // Solo retorna true si la propiedad está estrictamente dentro del radio
-          return distancia <= radiusKm
-        })
+            // Solo retorna true si la propiedad está estrictamente dentro del radio
+            return distancia <= radiusKm
+          })
         : inmuebles
 
     if (filtros.fecha === 'mas-populares') {
@@ -392,26 +400,26 @@ export const propertiesRepository = {
       const vistaMap = new Map(vistas.map((v) => [v.inmuebleId, v._count.usuarioId ?? 0]))
       return resultados.sort((a, b) => (vistaMap.get(b.id) ?? 0) - (vistaMap.get(a.id) ?? 0))
     }
-    if (filtros.fecha === "mayor-descuento") {
+    if (filtros.fecha === 'mayor-descuento') {
       return resultados.sort((a, b) => {
-        const precioAnteriorA = Number((a as any).precio_anterior ?? 0);
-        const precioActualA = Number(a.precio);
+        const precioAnteriorA = Number((a as any).precio_anterior ?? 0)
+        const precioActualA = Number(a.precio)
 
-        const precioAnteriorB = Number((b as any).precio_anterior ?? 0);
-        const precioActualB = Number(b.precio);
+        const precioAnteriorB = Number((b as any).precio_anterior ?? 0)
+        const precioActualB = Number(b.precio)
 
         const descuentoA =
           precioAnteriorA > precioActualA
             ? ((precioAnteriorA - precioActualA) / precioAnteriorA) * 100
-            : 0;
+            : 0
 
         const descuentoB =
           precioAnteriorB > precioActualB
             ? ((precioAnteriorB - precioActualB) / precioAnteriorB) * 100
-            : 0;
+            : 0
 
-        return descuentoB - descuentoA;
-      });
+        return descuentoB - descuentoA
+      })
     }
 
     return resultados
