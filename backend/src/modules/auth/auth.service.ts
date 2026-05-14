@@ -7,8 +7,10 @@ import {
   enviarCodigo2FA,
   enviarCodigoRegistro,
   enviarCorreoRecuperacionPassword,
+  enviarCodigoActivacionCuenta,
 } from "../../lib/email.service.js";
 import { generateToken, type JwtPayload } from "../../utils/jwt.js";
+import { cache } from "../../lib/cache.service.js";
 import {
   createPasswordRecovery,
   createSession,
@@ -27,13 +29,55 @@ import {
   deactivate2FAByUserId,
   expire2FACode,
   findActive2FACodeByUserId,
+  findAny2FACodeByUserIdAndHash,
   increment2FACodeAttempts,
   mark2FACodeAsUsed,
+  activateUser,
 } from "./auth.repository.js";
 
 type LoginDTO = {
   correo: string;
   password: string;
+};
+
+type ActivateAccountByPasswordDTO = {
+  correo: string;
+  password: string;
+};
+
+export const activateAccountByPasswordService = async (
+  payload: ActivateAccountByPasswordDTO,
+) => {
+  const correo = payload.correo?.trim().toLowerCase();
+  const password = payload.password?.trim();
+
+  if (!correo) {
+    throw new AuthError("El correo es obligatorio", 400);
+  }
+
+  if (!password) {
+    throw new AuthError("La contraseña es obligatoria", 400);
+  }
+
+  const user = await findUserByCorreo(correo);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  if (user.activo === true) {
+    throw new AuthError("Esta cuenta ya está activa", 400);
+  }
+
+  if (user.password !== password) {
+    throw new AuthError("Contraseña incorrecta", 401);
+  }
+
+  await activateUser(user.id);
+
+  return {
+    message: "Cuenta activada correctamente. Ya puedes iniciar sesión.",
+  };
 };
 
 type RegisterDTO = {
@@ -89,7 +133,7 @@ const MAX_LOGIN_ATTEMPTS = 5;
 const LOGIN_BLOCK_TIME_MS = 15 * 60 * 1000;
 
 const REGISTER_CODE_TTL_MINUTES = 5;
-const TWO_FACTOR_CODE_TTL_MINUTES = 5;
+const TWO_FACTOR_CODE_TTL_MINUTES = 1;
 
 // límite de solicitudes de recuperación
 const MAX_RECOVERY_REQUESTS = 3;
@@ -474,6 +518,13 @@ export const registerUser = async (payload: RegisterDTO) => {
   const codigo = generateRegisterCode();
   const nonce = crypto.randomUUID();
 
+  const codigoHash = hash2FACode(codigo);
+  cache.set(
+    `last_reg_code_${normalized.correo}`,
+    codigoHash,
+    REGISTER_CODE_TTL_MINUTES * 60 * 1000,
+  );
+
   const verificationToken = generatePendingRegisterToken({
     purpose: "pending-register",
     nombre: normalized.nombre,
@@ -531,6 +582,16 @@ export const verifyRegisterCodeService = async (
     throw new Error("El código ingresado no es válido");
   }
 
+  const codigoHash = hash2FACode(codigo);
+  const lastCodeHash = cache.get<string>(`last_reg_code_${decoded.correo}`);
+
+  if (lastCodeHash && lastCodeHash !== codigoHash) {
+    throw new AuthError(
+      "El código ingresado ha sido reemplazado. Por favor, use el código del correo más reciente",
+      401,
+    );
+  }
+
   const existingUser = await findUserByCorreo(decoded.correo);
 
   if (existingUser) {
@@ -554,6 +615,9 @@ export const verifyRegisterCodeService = async (
 
     throw error;
   }
+
+  // Limpiar el caché tras registro exitoso
+  cache.delete(`last_reg_code_${decoded.correo}`);
 
   const jwtPayload: JwtPayload = {
     id: newUser.id,
@@ -1019,5 +1083,166 @@ export const resend2FAService = async (userId: number) => {
   return {
     message: "Código reenviado correctamente",
     expiresInMinutes: TWO_FACTOR_CODE_TTL_MINUTES,
+  };
+};
+
+export const requestActivationCodeService = async (correo: string) => {
+  const normalizedCorreo = correo?.trim().toLowerCase();
+
+  if (!normalizedCorreo) {
+    throw new AuthError("El correo es obligatorio", 400);
+  }
+
+  const user = await findUserByCorreo(normalizedCorreo);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  if (user.activo === true) {
+    throw new AuthError("Esta cuenta ya está activa", 400);
+  }
+
+  const codigo = generate2FACode();
+  const codigoHash = hash2FACode(codigo);
+  const expiraEn = new Date(
+    Date.now() + TWO_FACTOR_CODE_TTL_MINUTES * 60 * 1000,
+  );
+
+  await invalidateActive2FACodesByUserId(user.id);
+
+  await create2FACode({
+    usuarioId: user.id,
+    codigoHash,
+    expiraEn,
+  });
+
+  const emailResult = await enviarCodigoActivacionCuenta({
+    emailDestino: user.correo,
+    codigo,
+    nombreUsuario: user.nombre,
+  });
+
+  if (!emailResult.success) {
+    throw new Error(
+      "No se pudo enviar el código de activación. Intenta nuevamente.",
+    );
+  }
+
+  return {
+    message: "Código de activación enviado correctamente",
+    expiresInMinutes: TWO_FACTOR_CODE_TTL_MINUTES,
+  };
+};
+
+export const activateAccountByCodeService = async (
+  correo: string,
+  codigo: string,
+) => {
+  const normalizedCorreo = correo?.trim().toLowerCase();
+  const normalizedCode = codigo?.trim();
+
+  if (!normalizedCorreo || !normalizedCode) {
+    throw new AuthError("Correo y código son obligatorios", 400);
+  }
+
+  if (!/^\d{6}$/.test(normalizedCode)) {
+    throw new AuthError(
+      "El código debe tener exactamente 6 dígitos numéricos",
+      400,
+    );
+  }
+
+  const user = await findUserByCorreo(normalizedCorreo);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  if (user.activo === true) {
+    throw new AuthError("Esta cuenta ya está activa", 400);
+  }
+
+  const activeCode = await findActive2FACodeByUserId(user.id);
+
+  if (!activeCode) {
+    throw new AuthError("El código es inválido", 401);
+  }
+
+  if (activeCode.expiraEn.getTime() < Date.now()) {
+    await expire2FACode(activeCode.id);
+    throw new AuthError("El código expiró", 401);
+  }
+
+  const codigoHash = hash2FACode(normalizedCode);
+
+  if (codigoHash !== activeCode.codigoHash) {
+    const anyCode = await findAny2FACodeByUserIdAndHash(user.id, codigoHash);
+
+    if (anyCode) {
+      throw new AuthError(
+        "El código ingresado ha sido reemplazado. Por favor, use el código del correo más reciente",
+        401,
+      );
+    }
+
+    await increment2FACodeAttempts(activeCode.id, activeCode.intentos ?? 0);
+    throw new AuthError("El código es inválido", 401);
+  }
+
+  await mark2FACodeAsUsed(activeCode.id);
+  await activateUser(user.id);
+
+  return {
+    message: "Cuenta activada correctamente. Ya puedes iniciar sesión.",
+  };
+};
+
+export const resendRegisterCodeService = async (verificationToken: string) => {
+  if (!verificationToken) {
+    throw new Error("El token de verificación es obligatorio");
+  }
+
+  const decoded = verifyPendingRegisterToken(verificationToken);
+
+  const codigo = generateRegisterCode();
+  const nonce = crypto.randomUUID();
+
+  const codigoHash = hash2FACode(codigo);
+  cache.set(
+    `last_reg_code_${decoded.correo}`,
+    codigoHash,
+    REGISTER_CODE_TTL_MINUTES * 60 * 1000,
+  );
+
+  const newToken = generatePendingRegisterToken({
+    purpose: "pending-register",
+    nombre: decoded.nombre,
+    apellido: decoded.apellido,
+    correo: decoded.correo,
+    telefono: decoded.telefono,
+    nonce,
+    codeSignature: signRegisterCode({
+      codigo,
+      correo: decoded.correo,
+      nonce,
+    }),
+  });
+
+  const emailResult = await enviarCodigoRegistro({
+    emailDestino: decoded.correo,
+    codigo,
+    nombreUsuario: decoded.nombre,
+  });
+
+  if (!emailResult.success) {
+    throw new Error(
+      "No se pudo reenviar el código de verificación. Intenta nuevamente.",
+    );
+  }
+
+  return {
+    verificationToken: newToken,
+    expiresInMinutes: REGISTER_CODE_TTL_MINUTES,
   };
 };

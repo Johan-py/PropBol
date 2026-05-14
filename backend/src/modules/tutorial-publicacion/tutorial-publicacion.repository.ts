@@ -5,13 +5,11 @@ const mapTutorialEstadoRecord = (record: {
   id: number;
   usuario_id: number;
   confirmado: boolean;
-  visto_en: Date | null;
   confirmado_en: Date | null;
 }): TutorialPublicacionEstadoRecord => ({
   id: record.id,
   usuarioId: record.usuario_id,
   confirmado: record.confirmado,
-  vistoEn: record.visto_en,
   confirmadoEn: record.confirmado_en,
 });
 
@@ -24,7 +22,6 @@ export const findTutorialEstadoByUsuarioIdRepository = async (
       id: true,
       usuario_id: true,
       confirmado: true,
-      visto_en: true,
       confirmado_en: true,
     },
   });
@@ -42,19 +39,15 @@ export const upsertTutorialConfirmadoRepository = async (
     create: {
       usuario_id: usuarioId,
       confirmado: true,
-      visto_en: now,
       confirmado_en: now,
     },
     update: {
       confirmado: true,
-      visto_en: now,
-      confirmado_en: now,
     },
     select: {
       id: true,
       usuario_id: true,
       confirmado: true,
-      visto_en: true,
       confirmado_en: true,
     },
   });
