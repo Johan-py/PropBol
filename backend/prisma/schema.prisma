@@ -234,15 +234,21 @@ model Publicacion {
   estado                EstadoPublicacion?      @default(ACTIVA) @map("estado")
   fechaPublicacion      DateTime?               @default(now()) @map("fecha_publicacion") @db.Timestamp(6)
   usuarioId             Int                     @map("usuario_id")
+  promoted              Boolean                 @default(false)
+  promotedAt            DateTime?               @map("promoted_at") @db.Timestamp(6)
+  promotedExpiresAt     DateTime?               @map("promoted_expires_at") @db.Timestamp(6)
+  paymentIntentId       String?                 @map("payment_intent_id")
   inmuebleId            Int                     @map("inmueble_id")
   multimedia            Multimedia[]
   inmueble              Inmueble                @relation(fields: [inmuebleId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "publicacion_inmueble_fk")
   usuario               Usuario                 @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "publicacion_usuario_fk")
   publicacion_parametro publicacion_parametro[]
+  publicacion_tag       publicacion_tag[]
 
   @@index([estado], map: "idx_publicacion_estado")
   @@index([inmuebleId], map: "idx_publicacion_inmueble")
   @@index([usuarioId], map: "idx_publicacion_usuario")
+  @@index([promoted], map: "idx_publicacion_promoted")
   @@map("publicacion")
 }
 
@@ -919,6 +925,26 @@ model modelo_version {
   activo       Boolean  @unique(map: "idx_modelo_activo", where: raw("(activo = true)")) @default(false)
   entrenado_en DateTime @default(now()) @db.Timestamp(6)
   notas        String?
+}
+model Tag {
+  id              Int               @id @default(autoincrement())
+  nombre          String            @unique @db.VarChar(30)
+  creado_en       DateTime?         @default(now()) @db.Timestamptz(6)
+  publicacion_tag publicacion_tag[]
+
+  @@map("tag")
+}
+
+model publicacion_tag {
+  publicacion_id  Int
+  tag_id          Int
+  agregado_en     DateTime    @default(now()) @db.Timestamptz(6)
+  publicacion     Publicacion @relation(fields: [publicacion_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  tag             Tag         @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([publicacion_id, tag_id])
+  @@index([tag_id])
+  @@map("publicacion_tag")
 }
 
 enum Genero {

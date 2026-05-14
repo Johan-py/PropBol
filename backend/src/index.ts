@@ -47,7 +47,7 @@ import {
   activateAccountByPasswordController,
   requestActivationCodeController,
   activateAccountByCodeController,
-  resendRegisterCodeController,
+  resendRegisterCodeController
 } from './modules/auth/auth.controller.js'
 import { requireAuth } from './middleware/auth.middleware.js'
 
@@ -81,12 +81,13 @@ import {
   startDiscordRegisterController
 } from './modules/auth/discord/discord.controller.js'
 
-import multimediaRoutes from "./modules/multimedia/multimedia.routes.js";
-import publicacionRoutes from "./modules/publicacion/publicacion.routes.js";
-import router from "./modules/registro-publicacion/publicacion.routes.js";
-import parametrosRoutes from "./modules/parametros-publicacion/parametros.routes.js";
-import tutorialPublicacionRoutes from "./modules/tutorial-publicacion/tutorial-publicacion.routes.js";
-import estadisticasRoutes from "./modules/estadisticas-publicacion/estadisticas.routes.js";
+import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
+import publicacionRoutes from './modules/publicacion/publicacion.routes.js'
+import router from './modules/registro-publicacion/publicacion.routes.js'
+import parametrosRoutes from './modules/parametros-publicacion/parametros.routes.js'
+import tutorialPublicacionRoutes from './modules/tutorial-publicacion/tutorial-publicacion.routes.js'
+import estadisticasRoutes from './modules/estadisticas-publicacion/estadisticas.routes.js'
+import tagsRoutes from './modules/tags/tags.routes.js'
 
 import {
   facebookCallbackController,
@@ -101,9 +102,9 @@ import {
   getLinkedInOriginalEmailController
 } from './modules/auth/social-links/social-links.controller.js'
 
-import securityRoutes from "./routes/security.routes.js";
-import propiedadRoutes from "./routes/propiedad.routes.js";
-import { validarPublicacionesFree } from "./controllers/publicacionesController.js";
+import securityRoutes from './routes/security.routes.js'
+import propiedadRoutes from './routes/propiedad.routes.js'
+import { validarPublicacionesFree } from './controllers/publicacionesController.js'
 // --------------------
 // LEGACY
 // --------------------
@@ -184,48 +185,45 @@ app.use('/api/auth-legacy', authRoutes)
 app.get('/api/users/:id/publicaciones/free', authMiddleware, (_req, res) => {
   res.json({ restantes: 2 })
 })
-app.get(
-  '/api/publicaciones/validar-limite/:id',
-  authMiddleware,
-  validarPublicacionesFree
-)
+app.get('/api/publicaciones/validar-limite/:id', authMiddleware, validarPublicacionesFree)
 app.use('/api/publicaciones-legacy', publicacionesRoutes)
 
 // --------------------
 // RUTAS PRINCIPALES
 // --------------------
-app.use("/api/publicaciones", publicacionRoutes);
-app.use("/api/publicaciones", multimediaRoutes);
-app.use("/api/publicaciones/tutorial", tutorialPublicacionRoutes);
-app.use("/api/perfil", correoverificacionRoutes);
-app.use("/api/perfil/usuario", perfilRoutes);
-app.use("/api/perfil/zonas", zonaRoutes);
-app.use("/api", router);
-app.use("/api", consumoRoutes);
-app.use("/api", parametrosRoutes);
-app.use("/api", estadisticasRoutes);
-app.use("/api/security", securityRoutes);
-app.use("/api/favorites", favoritesRoutes);
-app.use("/api/telemetria", telemetriaRoutes);
-app.use("/api/recomendaciones", recomendacionesRoutes);
-app.use("/api/propiedad", propiedadRoutes);
-app.use("/api/publicaciones", publicacionRoutes);
-app.use("/api/publicaciones", multimediaRoutes);
-app.use("/api/perfil", correoverificacionRoutes);
-app.use("/api/perfil/usuario", perfilRoutes);
-app.use("/api/perfil/zonas", zonaRoutes);
-app.use("/api/perfil/historial", historialRoutes);
-app.use("/api/perfil/historial-busqueda", historialBusquedaRoutes);
-app.use("/api", router);
-app.use("/api", parametrosRoutes);
-app.use("/api/security", securityRoutes);
-app.use("/api/favorites", favoritesRoutes);
-app.use("/api/telemetria", telemetriaRoutes);
-app.use("/api/recomendaciones", recomendacionesRoutes);
-app.use("/api/blogs", blogsRoutes);
-app.use("/api/testimonios", testimoniosRoutes);
-app.use("/api/telemetria", telemetriaRouter);
-app.use("/api/comparaciones", comparacionRoutes);
+app.use('/api/publicaciones', publicacionRoutes)
+app.use('/api/publicaciones', multimediaRoutes)
+app.use('/api/publicaciones/tutorial', tutorialPublicacionRoutes)
+app.use('/api/perfil', correoverificacionRoutes)
+app.use('/api/perfil/usuario', perfilRoutes)
+app.use('/api/perfil/zonas', zonaRoutes)
+app.use('/api', router)
+app.use('/api', consumoRoutes)
+app.use('/api', parametrosRoutes)
+app.use('/api', tagsRoutes)
+app.use('/api', estadisticasRoutes)
+app.use('/api/security', securityRoutes)
+app.use('/api/favorites', favoritesRoutes)
+app.use('/api/telemetria', telemetriaRoutes)
+app.use('/api/recomendaciones', recomendacionesRoutes)
+app.use('/api/propiedad', propiedadRoutes)
+app.use('/api/publicaciones', publicacionRoutes)
+app.use('/api/publicaciones', multimediaRoutes)
+app.use('/api/perfil', correoverificacionRoutes)
+app.use('/api/perfil/usuario', perfilRoutes)
+app.use('/api/perfil/zonas', zonaRoutes)
+app.use('/api/perfil/historial', historialRoutes)
+app.use('/api/perfil/historial-busqueda', historialBusquedaRoutes)
+app.use('/api', router)
+app.use('/api', parametrosRoutes)
+app.use('/api/security', securityRoutes)
+app.use('/api/favorites', favoritesRoutes)
+app.use('/api/telemetria', telemetriaRoutes)
+app.use('/api/recomendaciones', recomendacionesRoutes)
+app.use('/api/blogs', blogsRoutes)
+app.use('/api/testimonios', testimoniosRoutes)
+app.use('/api/telemetria', telemetriaRouter)
+app.use('/api/comparaciones', comparacionRoutes)
 
 app.use('/api/transacciones', transaccionesRoutes)
 app.use('/api/suscripciones', suscripcionesRoutes)
@@ -244,61 +242,45 @@ app.post('/api/users', (req, res) => {
 // --------------------
 // AUTH
 // --------------------
-app.post("/api/auth/register", registerController);
-app.post("/api/auth/login", loginController);
-app.post("/api/auth/verify-2fa", verify2FAController);
-app.post("/api/auth/activate-2fa", requireAuth, activate2FAController);
-app.post("/api/auth/deactivate-2fa", requireAuth, deactivate2FAController);
-app.get("/api/auth/2fa-status", requireAuth, get2FAStatusController);
-app.post("/api/auth/logout", logoutController);
-app.post("/api/auth/verify-register", verifyRegisterCodeController);
-app.post("/api/auth/resend-register-code", resendRegisterCodeController);
-app.post("/api/auth/activate-by-password", activateAccountByPasswordController);
-app.post("/api/auth/request-activation-code", requestActivationCodeController);
-app.post("/api/auth/activate-by-code", activateAccountByCodeController);
-app.get("/api/auth/me", getMeController);
+app.post('/api/auth/register', registerController)
+app.post('/api/auth/login', loginController)
+app.post('/api/auth/verify-2fa', verify2FAController)
+app.post('/api/auth/activate-2fa', requireAuth, activate2FAController)
+app.post('/api/auth/deactivate-2fa', requireAuth, deactivate2FAController)
+app.get('/api/auth/2fa-status', requireAuth, get2FAStatusController)
+app.post('/api/auth/logout', logoutController)
+app.post('/api/auth/verify-register', verifyRegisterCodeController)
+app.post('/api/auth/resend-register-code', resendRegisterCodeController)
+app.post('/api/auth/activate-by-password', activateAccountByPasswordController)
+app.post('/api/auth/request-activation-code', requestActivationCodeController)
+app.post('/api/auth/activate-by-code', activateAccountByCodeController)
+app.get('/api/auth/me', getMeController)
 
-app.get("/api/auth/google/login", StratGoogleLoginController);
-app.get("/api/auth/google/register", StartGoogleRegisterController);
-app.get("/api/auth/google/callback", googleCallbackController);
+app.get('/api/auth/google/login', StratGoogleLoginController)
+app.get('/api/auth/google/register', StartGoogleRegisterController)
+app.get('/api/auth/google/callback', googleCallbackController)
 
-app.get("/api/auth/discord/login", startDiscordLoginController);
-app.get("/api/auth/discord/register", startDiscordRegisterController);
-app.get("/api/auth/discord/callback", discordCallbackController);
+app.get('/api/auth/discord/login', startDiscordLoginController)
+app.get('/api/auth/discord/register', startDiscordRegisterController)
+app.get('/api/auth/discord/callback', discordCallbackController)
 
-app.get("/api/auth/facebook/login", startFacebookLoginController);
-app.get("/api/auth/facebook/register", startFacebookRegisterController);
-app.get("/api/auth/facebook/callback", facebookCallbackController);
+app.get('/api/auth/facebook/login', startFacebookLoginController)
+app.get('/api/auth/facebook/register', startFacebookRegisterController)
+app.get('/api/auth/facebook/callback', facebookCallbackController)
 
-app.get("/api/auth/social-links", requireAuth, getSocialLinksController);
-app.get(
-  "/api/auth/linkedin/original-email",
-  requireAuth,
-  getLinkedInOriginalEmailController,
-);
+app.get('/api/auth/social-links', requireAuth, getSocialLinksController)
+app.get('/api/auth/linkedin/original-email', requireAuth, getLinkedInOriginalEmailController)
 
-app.delete(
-  "/api/auth/social-links/:provider",
-  requireAuth,
-  unlinkSocialProviderController,
-);
+app.delete('/api/auth/social-links/:provider', requireAuth, unlinkSocialProviderController)
 
-app.get(
-  "/api/auth/facebook/link-url",
-  requireAuth,
-  getFacebookLinkUrlController,
-);
-app.get("/api/auth/discord/link-url", requireAuth, getDiscordLinkUrlController);
-app.get("/api/auth/google/link-url", requireAuth, getGoogleLinkUrlController);
+app.get('/api/auth/facebook/link-url', requireAuth, getFacebookLinkUrlController)
+app.get('/api/auth/discord/link-url', requireAuth, getDiscordLinkUrlController)
+app.get('/api/auth/google/link-url', requireAuth, getGoogleLinkUrlController)
 
-app.get("/api/auth/linkedin/login", startLinkedInLoginController);
-app.get("/api/auth/linkedin/callback", linkedInCallbackController);
-app.get(
-  "/api/auth/linkedin/link-url",
-  requireAuth,
-  getLinkedInLinkUrlController,
-);
-app.get("/api/auth/linkedin/register", startLinkedInRegisterController);
+app.get('/api/auth/linkedin/login', startLinkedInLoginController)
+app.get('/api/auth/linkedin/callback', linkedInCallbackController)
+app.get('/api/auth/linkedin/link-url', requireAuth, getLinkedInLinkUrlController)
+app.get('/api/auth/linkedin/register', startLinkedInRegisterController)
 //comentario
 
 // --------------------
