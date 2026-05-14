@@ -27,12 +27,14 @@ export type AggregateUsuario = {
 
 export type UsuarioAvgAggregateOutputType = {
   id: number | null
-  rol_id: number | null
+  intentos_fallidos_cambio_password: number | null
+  rolId: number | null
 }
 
 export type UsuarioSumAggregateOutputType = {
   id: number | null
-  rol_id: number | null
+  intentos_fallidos_cambio_password: number | null
+  rolId: number | null
 }
 
 export type UsuarioMinAggregateOutputType = {
@@ -46,10 +48,25 @@ export type UsuarioMinAggregateOutputType = {
   genero: $Enums.genero | null
   direccion: string | null
   activo: boolean | null
+  fechaRegistro: Date | null
+  createdAt: Date | null
+  intentos_fallidos_cambio_password: number | null
+  bloqueo_cambio_password_hasta: Date | null
+  password_actualizado_en: Date | null
+  two_factor_activo: boolean | null
+  two_factor_metodo: string | null
+  two_factor_activado_en: Date | null
+  controlador: boolean | null
+  notificacionWhatsapp: boolean | null
+  rolId: number | null
+  notificacion_email: boolean | null
+  notificacion_whatsapp: boolean | null
   fecha_registro: Date | null
-  created_at: Date | null
-  updated_at: Date | null
-  rol_id: number | null
+  updatedAt: Date | null
+  desactivado_en: Date | null
+  fecha_nacimiento: Date | null
+  telemetria_compartida: boolean | null
+  zona_conexion: string | null
 }
 
 export type UsuarioMaxAggregateOutputType = {
@@ -63,10 +80,25 @@ export type UsuarioMaxAggregateOutputType = {
   genero: $Enums.genero | null
   direccion: string | null
   activo: boolean | null
+  fechaRegistro: Date | null
+  createdAt: Date | null
+  intentos_fallidos_cambio_password: number | null
+  bloqueo_cambio_password_hasta: Date | null
+  password_actualizado_en: Date | null
+  two_factor_activo: boolean | null
+  two_factor_metodo: string | null
+  two_factor_activado_en: Date | null
+  controlador: boolean | null
+  notificacionWhatsapp: boolean | null
+  rolId: number | null
+  notificacion_email: boolean | null
+  notificacion_whatsapp: boolean | null
   fecha_registro: Date | null
-  created_at: Date | null
-  updated_at: Date | null
-  rol_id: number | null
+  updatedAt: Date | null
+  desactivado_en: Date | null
+  fecha_nacimiento: Date | null
+  telemetria_compartida: boolean | null
+  zona_conexion: string | null
 }
 
 export type UsuarioCountAggregateOutputType = {
@@ -80,21 +112,38 @@ export type UsuarioCountAggregateOutputType = {
   genero: number
   direccion: number
   activo: number
+  fechaRegistro: number
+  createdAt: number
+  intentos_fallidos_cambio_password: number
+  bloqueo_cambio_password_hasta: number
+  password_actualizado_en: number
+  two_factor_activo: number
+  two_factor_metodo: number
+  two_factor_activado_en: number
+  controlador: number
+  notificacionWhatsapp: number
+  rolId: number
+  notificacion_email: number
+  notificacion_whatsapp: number
   fecha_registro: number
-  created_at: number
-  updated_at: number
-  rol_id: number
+  updatedAt: number
+  desactivado_en: number
+  fecha_nacimiento: number
+  telemetria_compartida: number
+  zona_conexion: number
   _all: number
 }
 
 export type UsuarioAvgAggregateInputType = {
   id?: true
-  rol_id?: true
+  intentos_fallidos_cambio_password?: true
+  rolId?: true
 }
 
 export type UsuarioSumAggregateInputType = {
   id?: true
-  rol_id?: true
+  intentos_fallidos_cambio_password?: true
+  rolId?: true
 }
 
 export type UsuarioMinAggregateInputType = {
@@ -108,10 +157,25 @@ export type UsuarioMinAggregateInputType = {
   genero?: true
   direccion?: true
   activo?: true
+  fechaRegistro?: true
+  createdAt?: true
+  intentos_fallidos_cambio_password?: true
+  bloqueo_cambio_password_hasta?: true
+  password_actualizado_en?: true
+  two_factor_activo?: true
+  two_factor_metodo?: true
+  two_factor_activado_en?: true
+  controlador?: true
+  notificacionWhatsapp?: true
+  rolId?: true
+  notificacion_email?: true
+  notificacion_whatsapp?: true
   fecha_registro?: true
-  created_at?: true
-  updated_at?: true
-  rol_id?: true
+  updatedAt?: true
+  desactivado_en?: true
+  fecha_nacimiento?: true
+  telemetria_compartida?: true
+  zona_conexion?: true
 }
 
 export type UsuarioMaxAggregateInputType = {
@@ -125,10 +189,25 @@ export type UsuarioMaxAggregateInputType = {
   genero?: true
   direccion?: true
   activo?: true
+  fechaRegistro?: true
+  createdAt?: true
+  intentos_fallidos_cambio_password?: true
+  bloqueo_cambio_password_hasta?: true
+  password_actualizado_en?: true
+  two_factor_activo?: true
+  two_factor_metodo?: true
+  two_factor_activado_en?: true
+  controlador?: true
+  notificacionWhatsapp?: true
+  rolId?: true
+  notificacion_email?: true
+  notificacion_whatsapp?: true
   fecha_registro?: true
-  created_at?: true
-  updated_at?: true
-  rol_id?: true
+  updatedAt?: true
+  desactivado_en?: true
+  fecha_nacimiento?: true
+  telemetria_compartida?: true
+  zona_conexion?: true
 }
 
 export type UsuarioCountAggregateInputType = {
@@ -142,10 +221,25 @@ export type UsuarioCountAggregateInputType = {
   genero?: true
   direccion?: true
   activo?: true
+  fechaRegistro?: true
+  createdAt?: true
+  intentos_fallidos_cambio_password?: true
+  bloqueo_cambio_password_hasta?: true
+  password_actualizado_en?: true
+  two_factor_activo?: true
+  two_factor_metodo?: true
+  two_factor_activado_en?: true
+  controlador?: true
+  notificacionWhatsapp?: true
+  rolId?: true
+  notificacion_email?: true
+  notificacion_whatsapp?: true
   fecha_registro?: true
-  created_at?: true
-  updated_at?: true
-  rol_id?: true
+  updatedAt?: true
+  desactivado_en?: true
+  fecha_nacimiento?: true
+  telemetria_compartida?: true
+  zona_conexion?: true
   _all?: true
 }
 
@@ -247,10 +341,25 @@ export type UsuarioGroupByOutputType = {
   genero: $Enums.genero | null
   direccion: string | null
   activo: boolean | null
+  fechaRegistro: Date | null
+  createdAt: Date | null
+  intentos_fallidos_cambio_password: number
+  bloqueo_cambio_password_hasta: Date | null
+  password_actualizado_en: Date
+  two_factor_activo: boolean
+  two_factor_metodo: string
+  two_factor_activado_en: Date | null
+  controlador: boolean
+  notificacionWhatsapp: boolean | null
+  rolId: number | null
+  notificacion_email: boolean | null
+  notificacion_whatsapp: boolean | null
   fecha_registro: Date | null
-  created_at: Date | null
-  updated_at: Date | null
-  rol_id: number
+  updatedAt: Date | null
+  desactivado_en: Date | null
+  fecha_nacimiento: Date | null
+  telemetria_compartida: boolean | null
+  zona_conexion: string | null
   _count: UsuarioCountAggregateOutputType | null
   _avg: UsuarioAvgAggregateOutputType | null
   _sum: UsuarioSumAggregateOutputType | null
@@ -284,23 +393,59 @@ export type usuarioWhereInput = {
   genero?: Prisma.EnumgeneroNullableFilter<'usuario'> | $Enums.genero | null
   direccion?: Prisma.StringNullableFilter<'usuario'> | string | null
   activo?: Prisma.BoolNullableFilter<'usuario'> | boolean | null
+  fechaRegistro?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+  createdAt?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFilter<'usuario'> | number
+  bloqueo_cambio_password_hasta?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+  password_actualizado_en?: Prisma.DateTimeFilter<'usuario'> | Date | string
+  two_factor_activo?: Prisma.BoolFilter<'usuario'> | boolean
+  two_factor_metodo?: Prisma.StringFilter<'usuario'> | string
+  two_factor_activado_en?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+  controlador?: Prisma.BoolFilter<'usuario'> | boolean
+  notificacionWhatsapp?: Prisma.BoolNullableFilter<'usuario'> | boolean | null
+  rolId?: Prisma.IntNullableFilter<'usuario'> | number | null
+  notificacion_email?: Prisma.BoolNullableFilter<'usuario'> | boolean | null
+  notificacion_whatsapp?: Prisma.BoolNullableFilter<'usuario'> | boolean | null
   fecha_registro?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
-  created_at?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
-  updated_at?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
-  rol_id?: Prisma.IntFilter<'usuario'> | number
+  updatedAt?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+  desactivado_en?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+  fecha_nacimiento?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+  telemetria_compartida?: Prisma.BoolNullableFilter<'usuario'> | boolean | null
+  zona_conexion?: Prisma.StringNullableFilter<'usuario'> | string | null
+  autenticacion_social?: Prisma.Autenticacion_socialListRelationFilter
   bitacora_pagos?: Prisma.Bitacora_pagosListRelationFilter
+  blog?: Prisma.BlogListRelationFilter
   cambio_email?: Prisma.Cambio_emailListRelationFilter
+  codigo_2fa?: Prisma.Codigo_2faListRelationFilter
+  comentario?: Prisma.ComentarioListRelationFilter
+  comentario_like?: Prisma.Comentario_likeListRelationFilter
+  comparacion?: Prisma.ComparacionListRelationFilter
+  entrenamiento_ml?: Prisma.Entrenamiento_mlListRelationFilter
+  favorito?: Prisma.FavoritoListRelationFilter
+  historial_busqueda?: Prisma.Historial_busquedaListRelationFilter
+  historial_password?: Prisma.Historial_passwordListRelationFilter
   inmueble?: Prisma.InmuebleListRelationFilter
+  magic_link?: Prisma.Magic_linkListRelationFilter
   notificacion?: Prisma.NotificacionListRelationFilter
   perfil?: Prisma.XOR<Prisma.PerfilNullableScalarRelationFilter, Prisma.perfilWhereInput> | null
+  propiedad_vista?: Prisma.Propiedad_vistaListRelationFilter
   publicacion?: Prisma.PublicacionListRelationFilter
+  recuperacion_password?: Prisma.Recuperacion_passwordListRelationFilter
   sesion?: Prisma.SesionListRelationFilter
   suscripciones_activas?: Prisma.Suscripciones_activasListRelationFilter
-  telefono?: Prisma.TelefonoListRelationFilter
+  telefono_telefono_usuarioIdTousuario?: Prisma.TelefonoListRelationFilter
+  telefono_telefono_usuario_idTousuario?: Prisma.TelefonoListRelationFilter
+  testimonio?: Prisma.TestimonioListRelationFilter
+  testimonio_like?: Prisma.Testimonio_likeListRelationFilter
   transacciones?: Prisma.TransaccionesListRelationFilter
-  rol?: Prisma.XOR<Prisma.RolScalarRelationFilter, Prisma.rolWhereInput>
+  tutorial_publicacion_usuario?: Prisma.XOR<
+    Prisma.Tutorial_publicacion_usuarioNullableScalarRelationFilter,
+    Prisma.tutorial_publicacion_usuarioWhereInput
+  > | null
+  rol?: Prisma.XOR<Prisma.RolNullableScalarRelationFilter, Prisma.rolWhereInput> | null
   verificacion_pago?: Prisma.Verificacion_pagoListRelationFilter
   visitor?: Prisma.VisitorListRelationFilter
+  zona_usuario?: Prisma.Zona_usuarioListRelationFilter
 }
 
 export type usuarioOrderByWithRelationInput = {
@@ -314,23 +459,56 @@ export type usuarioOrderByWithRelationInput = {
   genero?: Prisma.SortOrderInput | Prisma.SortOrder
   direccion?: Prisma.SortOrderInput | Prisma.SortOrder
   activo?: Prisma.SortOrderInput | Prisma.SortOrder
+  fechaRegistro?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  intentos_fallidos_cambio_password?: Prisma.SortOrder
+  bloqueo_cambio_password_hasta?: Prisma.SortOrderInput | Prisma.SortOrder
+  password_actualizado_en?: Prisma.SortOrder
+  two_factor_activo?: Prisma.SortOrder
+  two_factor_metodo?: Prisma.SortOrder
+  two_factor_activado_en?: Prisma.SortOrderInput | Prisma.SortOrder
+  controlador?: Prisma.SortOrder
+  notificacionWhatsapp?: Prisma.SortOrderInput | Prisma.SortOrder
+  rolId?: Prisma.SortOrderInput | Prisma.SortOrder
+  notificacion_email?: Prisma.SortOrderInput | Prisma.SortOrder
+  notificacion_whatsapp?: Prisma.SortOrderInput | Prisma.SortOrder
   fecha_registro?: Prisma.SortOrderInput | Prisma.SortOrder
-  created_at?: Prisma.SortOrderInput | Prisma.SortOrder
-  updated_at?: Prisma.SortOrderInput | Prisma.SortOrder
-  rol_id?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  desactivado_en?: Prisma.SortOrderInput | Prisma.SortOrder
+  fecha_nacimiento?: Prisma.SortOrderInput | Prisma.SortOrder
+  telemetria_compartida?: Prisma.SortOrderInput | Prisma.SortOrder
+  zona_conexion?: Prisma.SortOrderInput | Prisma.SortOrder
+  autenticacion_social?: Prisma.autenticacion_socialOrderByRelationAggregateInput
   bitacora_pagos?: Prisma.bitacora_pagosOrderByRelationAggregateInput
+  blog?: Prisma.blogOrderByRelationAggregateInput
   cambio_email?: Prisma.cambio_emailOrderByRelationAggregateInput
+  codigo_2fa?: Prisma.codigo_2faOrderByRelationAggregateInput
+  comentario?: Prisma.comentarioOrderByRelationAggregateInput
+  comentario_like?: Prisma.comentario_likeOrderByRelationAggregateInput
+  comparacion?: Prisma.comparacionOrderByRelationAggregateInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlOrderByRelationAggregateInput
+  favorito?: Prisma.favoritoOrderByRelationAggregateInput
+  historial_busqueda?: Prisma.historial_busquedaOrderByRelationAggregateInput
+  historial_password?: Prisma.historial_passwordOrderByRelationAggregateInput
   inmueble?: Prisma.inmuebleOrderByRelationAggregateInput
+  magic_link?: Prisma.magic_linkOrderByRelationAggregateInput
   notificacion?: Prisma.notificacionOrderByRelationAggregateInput
   perfil?: Prisma.perfilOrderByWithRelationInput
+  propiedad_vista?: Prisma.propiedad_vistaOrderByRelationAggregateInput
   publicacion?: Prisma.publicacionOrderByRelationAggregateInput
+  recuperacion_password?: Prisma.recuperacion_passwordOrderByRelationAggregateInput
   sesion?: Prisma.sesionOrderByRelationAggregateInput
   suscripciones_activas?: Prisma.suscripciones_activasOrderByRelationAggregateInput
-  telefono?: Prisma.telefonoOrderByRelationAggregateInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoOrderByRelationAggregateInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoOrderByRelationAggregateInput
+  testimonio?: Prisma.testimonioOrderByRelationAggregateInput
+  testimonio_like?: Prisma.testimonio_likeOrderByRelationAggregateInput
   transacciones?: Prisma.transaccionesOrderByRelationAggregateInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioOrderByWithRelationInput
   rol?: Prisma.rolOrderByWithRelationInput
   verificacion_pago?: Prisma.verificacion_pagoOrderByRelationAggregateInput
   visitor?: Prisma.visitorOrderByRelationAggregateInput
+  zona_usuario?: Prisma.zona_usuarioOrderByRelationAggregateInput
 }
 
 export type usuarioWhereUniqueInput = Prisma.AtLeast<
@@ -348,23 +526,59 @@ export type usuarioWhereUniqueInput = Prisma.AtLeast<
     genero?: Prisma.EnumgeneroNullableFilter<'usuario'> | $Enums.genero | null
     direccion?: Prisma.StringNullableFilter<'usuario'> | string | null
     activo?: Prisma.BoolNullableFilter<'usuario'> | boolean | null
+    fechaRegistro?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+    createdAt?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+    intentos_fallidos_cambio_password?: Prisma.IntFilter<'usuario'> | number
+    bloqueo_cambio_password_hasta?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+    password_actualizado_en?: Prisma.DateTimeFilter<'usuario'> | Date | string
+    two_factor_activo?: Prisma.BoolFilter<'usuario'> | boolean
+    two_factor_metodo?: Prisma.StringFilter<'usuario'> | string
+    two_factor_activado_en?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+    controlador?: Prisma.BoolFilter<'usuario'> | boolean
+    notificacionWhatsapp?: Prisma.BoolNullableFilter<'usuario'> | boolean | null
+    rolId?: Prisma.IntNullableFilter<'usuario'> | number | null
+    notificacion_email?: Prisma.BoolNullableFilter<'usuario'> | boolean | null
+    notificacion_whatsapp?: Prisma.BoolNullableFilter<'usuario'> | boolean | null
     fecha_registro?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
-    created_at?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
-    updated_at?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
-    rol_id?: Prisma.IntFilter<'usuario'> | number
+    updatedAt?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+    desactivado_en?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+    fecha_nacimiento?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+    telemetria_compartida?: Prisma.BoolNullableFilter<'usuario'> | boolean | null
+    zona_conexion?: Prisma.StringNullableFilter<'usuario'> | string | null
+    autenticacion_social?: Prisma.Autenticacion_socialListRelationFilter
     bitacora_pagos?: Prisma.Bitacora_pagosListRelationFilter
+    blog?: Prisma.BlogListRelationFilter
     cambio_email?: Prisma.Cambio_emailListRelationFilter
+    codigo_2fa?: Prisma.Codigo_2faListRelationFilter
+    comentario?: Prisma.ComentarioListRelationFilter
+    comentario_like?: Prisma.Comentario_likeListRelationFilter
+    comparacion?: Prisma.ComparacionListRelationFilter
+    entrenamiento_ml?: Prisma.Entrenamiento_mlListRelationFilter
+    favorito?: Prisma.FavoritoListRelationFilter
+    historial_busqueda?: Prisma.Historial_busquedaListRelationFilter
+    historial_password?: Prisma.Historial_passwordListRelationFilter
     inmueble?: Prisma.InmuebleListRelationFilter
+    magic_link?: Prisma.Magic_linkListRelationFilter
     notificacion?: Prisma.NotificacionListRelationFilter
     perfil?: Prisma.XOR<Prisma.PerfilNullableScalarRelationFilter, Prisma.perfilWhereInput> | null
+    propiedad_vista?: Prisma.Propiedad_vistaListRelationFilter
     publicacion?: Prisma.PublicacionListRelationFilter
+    recuperacion_password?: Prisma.Recuperacion_passwordListRelationFilter
     sesion?: Prisma.SesionListRelationFilter
     suscripciones_activas?: Prisma.Suscripciones_activasListRelationFilter
-    telefono?: Prisma.TelefonoListRelationFilter
+    telefono_telefono_usuarioIdTousuario?: Prisma.TelefonoListRelationFilter
+    telefono_telefono_usuario_idTousuario?: Prisma.TelefonoListRelationFilter
+    testimonio?: Prisma.TestimonioListRelationFilter
+    testimonio_like?: Prisma.Testimonio_likeListRelationFilter
     transacciones?: Prisma.TransaccionesListRelationFilter
-    rol?: Prisma.XOR<Prisma.RolScalarRelationFilter, Prisma.rolWhereInput>
+    tutorial_publicacion_usuario?: Prisma.XOR<
+      Prisma.Tutorial_publicacion_usuarioNullableScalarRelationFilter,
+      Prisma.tutorial_publicacion_usuarioWhereInput
+    > | null
+    rol?: Prisma.XOR<Prisma.RolNullableScalarRelationFilter, Prisma.rolWhereInput> | null
     verificacion_pago?: Prisma.Verificacion_pagoListRelationFilter
     visitor?: Prisma.VisitorListRelationFilter
+    zona_usuario?: Prisma.Zona_usuarioListRelationFilter
   },
   'id' | 'correo'
 >
@@ -380,10 +594,25 @@ export type usuarioOrderByWithAggregationInput = {
   genero?: Prisma.SortOrderInput | Prisma.SortOrder
   direccion?: Prisma.SortOrderInput | Prisma.SortOrder
   activo?: Prisma.SortOrderInput | Prisma.SortOrder
+  fechaRegistro?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  intentos_fallidos_cambio_password?: Prisma.SortOrder
+  bloqueo_cambio_password_hasta?: Prisma.SortOrderInput | Prisma.SortOrder
+  password_actualizado_en?: Prisma.SortOrder
+  two_factor_activo?: Prisma.SortOrder
+  two_factor_metodo?: Prisma.SortOrder
+  two_factor_activado_en?: Prisma.SortOrderInput | Prisma.SortOrder
+  controlador?: Prisma.SortOrder
+  notificacionWhatsapp?: Prisma.SortOrderInput | Prisma.SortOrder
+  rolId?: Prisma.SortOrderInput | Prisma.SortOrder
+  notificacion_email?: Prisma.SortOrderInput | Prisma.SortOrder
+  notificacion_whatsapp?: Prisma.SortOrderInput | Prisma.SortOrder
   fecha_registro?: Prisma.SortOrderInput | Prisma.SortOrder
-  created_at?: Prisma.SortOrderInput | Prisma.SortOrder
-  updated_at?: Prisma.SortOrderInput | Prisma.SortOrder
-  rol_id?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  desactivado_en?: Prisma.SortOrderInput | Prisma.SortOrder
+  fecha_nacimiento?: Prisma.SortOrderInput | Prisma.SortOrder
+  telemetria_compartida?: Prisma.SortOrderInput | Prisma.SortOrder
+  zona_conexion?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.usuarioCountOrderByAggregateInput
   _avg?: Prisma.usuarioAvgOrderByAggregateInput
   _max?: Prisma.usuarioMaxOrderByAggregateInput
@@ -409,10 +638,33 @@ export type usuarioScalarWhereWithAggregatesInput = {
   genero?: Prisma.EnumgeneroNullableWithAggregatesFilter<'usuario'> | $Enums.genero | null
   direccion?: Prisma.StringNullableWithAggregatesFilter<'usuario'> | string | null
   activo?: Prisma.BoolNullableWithAggregatesFilter<'usuario'> | boolean | null
+  fechaRegistro?: Prisma.DateTimeNullableWithAggregatesFilter<'usuario'> | Date | string | null
+  createdAt?: Prisma.DateTimeNullableWithAggregatesFilter<'usuario'> | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntWithAggregatesFilter<'usuario'> | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<'usuario'>
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeWithAggregatesFilter<'usuario'> | Date | string
+  two_factor_activo?: Prisma.BoolWithAggregatesFilter<'usuario'> | boolean
+  two_factor_metodo?: Prisma.StringWithAggregatesFilter<'usuario'> | string
+  two_factor_activado_en?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<'usuario'>
+    | Date
+    | string
+    | null
+  controlador?: Prisma.BoolWithAggregatesFilter<'usuario'> | boolean
+  notificacionWhatsapp?: Prisma.BoolNullableWithAggregatesFilter<'usuario'> | boolean | null
+  rolId?: Prisma.IntNullableWithAggregatesFilter<'usuario'> | number | null
+  notificacion_email?: Prisma.BoolNullableWithAggregatesFilter<'usuario'> | boolean | null
+  notificacion_whatsapp?: Prisma.BoolNullableWithAggregatesFilter<'usuario'> | boolean | null
   fecha_registro?: Prisma.DateTimeNullableWithAggregatesFilter<'usuario'> | Date | string | null
-  created_at?: Prisma.DateTimeNullableWithAggregatesFilter<'usuario'> | Date | string | null
-  updated_at?: Prisma.DateTimeNullableWithAggregatesFilter<'usuario'> | Date | string | null
-  rol_id?: Prisma.IntWithAggregatesFilter<'usuario'> | number
+  updatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<'usuario'> | Date | string | null
+  desactivado_en?: Prisma.DateTimeNullableWithAggregatesFilter<'usuario'> | Date | string | null
+  fecha_nacimiento?: Prisma.DateTimeNullableWithAggregatesFilter<'usuario'> | Date | string | null
+  telemetria_compartida?: Prisma.BoolNullableWithAggregatesFilter<'usuario'> | boolean | null
+  zona_conexion?: Prisma.StringNullableWithAggregatesFilter<'usuario'> | string | null
 }
 
 export type usuarioCreateInput = {
@@ -425,22 +677,55 @@ export type usuarioCreateInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
-  rol: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioUncheckedCreateInput = {
@@ -454,22 +739,55 @@ export type usuarioUncheckedCreateInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  rol_id: number
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioUpdateInput = {
@@ -482,22 +800,59 @@ export type usuarioUpdateInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
-  rol?: Prisma.rolUpdateOneRequiredWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioUncheckedUpdateInput = {
@@ -511,22 +866,59 @@ export type usuarioUncheckedUpdateInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rol_id?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioCreateManyInput = {
@@ -540,10 +932,25 @@ export type usuarioCreateManyInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  rol_id: number
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
 }
 
 export type usuarioUpdateManyMutationInput = {
@@ -556,9 +963,28 @@ export type usuarioUpdateManyMutationInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type usuarioUncheckedUpdateManyInput = {
@@ -572,20 +998,39 @@ export type usuarioUncheckedUpdateManyInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rol_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
-
-export type UsuarioNullableScalarRelationFilter = {
-  is?: Prisma.usuarioWhereInput | null
-  isNot?: Prisma.usuarioWhereInput | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UsuarioScalarRelationFilter = {
   is?: Prisma.usuarioWhereInput
   isNot?: Prisma.usuarioWhereInput
+}
+
+export type UsuarioNullableScalarRelationFilter = {
+  is?: Prisma.usuarioWhereInput | null
+  isNot?: Prisma.usuarioWhereInput | null
 }
 
 export type UsuarioListRelationFilter = {
@@ -609,15 +1054,31 @@ export type usuarioCountOrderByAggregateInput = {
   genero?: Prisma.SortOrder
   direccion?: Prisma.SortOrder
   activo?: Prisma.SortOrder
+  fechaRegistro?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  intentos_fallidos_cambio_password?: Prisma.SortOrder
+  bloqueo_cambio_password_hasta?: Prisma.SortOrder
+  password_actualizado_en?: Prisma.SortOrder
+  two_factor_activo?: Prisma.SortOrder
+  two_factor_metodo?: Prisma.SortOrder
+  two_factor_activado_en?: Prisma.SortOrder
+  controlador?: Prisma.SortOrder
+  notificacionWhatsapp?: Prisma.SortOrder
+  rolId?: Prisma.SortOrder
+  notificacion_email?: Prisma.SortOrder
+  notificacion_whatsapp?: Prisma.SortOrder
   fecha_registro?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
-  rol_id?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  desactivado_en?: Prisma.SortOrder
+  fecha_nacimiento?: Prisma.SortOrder
+  telemetria_compartida?: Prisma.SortOrder
+  zona_conexion?: Prisma.SortOrder
 }
 
 export type usuarioAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  rol_id?: Prisma.SortOrder
+  intentos_fallidos_cambio_password?: Prisma.SortOrder
+  rolId?: Prisma.SortOrder
 }
 
 export type usuarioMaxOrderByAggregateInput = {
@@ -631,10 +1092,25 @@ export type usuarioMaxOrderByAggregateInput = {
   genero?: Prisma.SortOrder
   direccion?: Prisma.SortOrder
   activo?: Prisma.SortOrder
+  fechaRegistro?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  intentos_fallidos_cambio_password?: Prisma.SortOrder
+  bloqueo_cambio_password_hasta?: Prisma.SortOrder
+  password_actualizado_en?: Prisma.SortOrder
+  two_factor_activo?: Prisma.SortOrder
+  two_factor_metodo?: Prisma.SortOrder
+  two_factor_activado_en?: Prisma.SortOrder
+  controlador?: Prisma.SortOrder
+  notificacionWhatsapp?: Prisma.SortOrder
+  rolId?: Prisma.SortOrder
+  notificacion_email?: Prisma.SortOrder
+  notificacion_whatsapp?: Prisma.SortOrder
   fecha_registro?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
-  rol_id?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  desactivado_en?: Prisma.SortOrder
+  fecha_nacimiento?: Prisma.SortOrder
+  telemetria_compartida?: Prisma.SortOrder
+  zona_conexion?: Prisma.SortOrder
 }
 
 export type usuarioMinOrderByAggregateInput = {
@@ -648,15 +1124,57 @@ export type usuarioMinOrderByAggregateInput = {
   genero?: Prisma.SortOrder
   direccion?: Prisma.SortOrder
   activo?: Prisma.SortOrder
+  fechaRegistro?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  intentos_fallidos_cambio_password?: Prisma.SortOrder
+  bloqueo_cambio_password_hasta?: Prisma.SortOrder
+  password_actualizado_en?: Prisma.SortOrder
+  two_factor_activo?: Prisma.SortOrder
+  two_factor_metodo?: Prisma.SortOrder
+  two_factor_activado_en?: Prisma.SortOrder
+  controlador?: Prisma.SortOrder
+  notificacionWhatsapp?: Prisma.SortOrder
+  rolId?: Prisma.SortOrder
+  notificacion_email?: Prisma.SortOrder
+  notificacion_whatsapp?: Prisma.SortOrder
   fecha_registro?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
-  rol_id?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
+  desactivado_en?: Prisma.SortOrder
+  fecha_nacimiento?: Prisma.SortOrder
+  telemetria_compartida?: Prisma.SortOrder
+  zona_conexion?: Prisma.SortOrder
 }
 
 export type usuarioSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  rol_id?: Prisma.SortOrder
+  intentos_fallidos_cambio_password?: Prisma.SortOrder
+  rolId?: Prisma.SortOrder
+}
+
+export type usuarioCreateNestedOneWithoutAutenticacion_socialInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutAutenticacion_socialInput,
+    Prisma.usuarioUncheckedCreateWithoutAutenticacion_socialInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutAutenticacion_socialInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneRequiredWithoutAutenticacion_socialNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutAutenticacion_socialInput,
+    Prisma.usuarioUncheckedCreateWithoutAutenticacion_socialInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutAutenticacion_socialInput
+  upsert?: Prisma.usuarioUpsertWithoutAutenticacion_socialInput
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutAutenticacion_socialInput,
+      Prisma.usuarioUpdateWithoutAutenticacion_socialInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutAutenticacion_socialInput
+  >
 }
 
 export type usuarioCreateNestedOneWithoutBitacora_pagosInput = {
@@ -687,6 +1205,32 @@ export type usuarioUpdateOneWithoutBitacora_pagosNestedInput = {
   >
 }
 
+export type usuarioCreateNestedOneWithoutBlogInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutBlogInput,
+    Prisma.usuarioUncheckedCreateWithoutBlogInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutBlogInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneRequiredWithoutBlogNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutBlogInput,
+    Prisma.usuarioUncheckedCreateWithoutBlogInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutBlogInput
+  upsert?: Prisma.usuarioUpsertWithoutBlogInput
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutBlogInput,
+      Prisma.usuarioUpdateWithoutBlogInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutBlogInput
+  >
+}
+
 export type usuarioCreateNestedOneWithoutCambio_emailInput = {
   create?: Prisma.XOR<
     Prisma.usuarioCreateWithoutCambio_emailInput,
@@ -713,6 +1257,214 @@ export type usuarioUpdateOneRequiredWithoutCambio_emailNestedInput = {
   >
 }
 
+export type usuarioCreateNestedOneWithoutCodigo_2faInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutCodigo_2faInput,
+    Prisma.usuarioUncheckedCreateWithoutCodigo_2faInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutCodigo_2faInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneRequiredWithoutCodigo_2faNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutCodigo_2faInput,
+    Prisma.usuarioUncheckedCreateWithoutCodigo_2faInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutCodigo_2faInput
+  upsert?: Prisma.usuarioUpsertWithoutCodigo_2faInput
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutCodigo_2faInput,
+      Prisma.usuarioUpdateWithoutCodigo_2faInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutCodigo_2faInput
+  >
+}
+
+export type usuarioCreateNestedOneWithoutComentarioInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutComentarioInput,
+    Prisma.usuarioUncheckedCreateWithoutComentarioInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutComentarioInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneRequiredWithoutComentarioNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutComentarioInput,
+    Prisma.usuarioUncheckedCreateWithoutComentarioInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutComentarioInput
+  upsert?: Prisma.usuarioUpsertWithoutComentarioInput
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutComentarioInput,
+      Prisma.usuarioUpdateWithoutComentarioInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutComentarioInput
+  >
+}
+
+export type usuarioCreateNestedOneWithoutComentario_likeInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutComentario_likeInput,
+    Prisma.usuarioUncheckedCreateWithoutComentario_likeInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutComentario_likeInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneRequiredWithoutComentario_likeNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutComentario_likeInput,
+    Prisma.usuarioUncheckedCreateWithoutComentario_likeInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutComentario_likeInput
+  upsert?: Prisma.usuarioUpsertWithoutComentario_likeInput
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutComentario_likeInput,
+      Prisma.usuarioUpdateWithoutComentario_likeInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutComentario_likeInput
+  >
+}
+
+export type usuarioCreateNestedOneWithoutComparacionInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutComparacionInput,
+    Prisma.usuarioUncheckedCreateWithoutComparacionInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutComparacionInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneRequiredWithoutComparacionNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutComparacionInput,
+    Prisma.usuarioUncheckedCreateWithoutComparacionInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutComparacionInput
+  upsert?: Prisma.usuarioUpsertWithoutComparacionInput
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutComparacionInput,
+      Prisma.usuarioUpdateWithoutComparacionInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutComparacionInput
+  >
+}
+
+export type usuarioCreateNestedOneWithoutEntrenamiento_mlInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutEntrenamiento_mlInput,
+    Prisma.usuarioUncheckedCreateWithoutEntrenamiento_mlInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutEntrenamiento_mlInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneRequiredWithoutEntrenamiento_mlNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutEntrenamiento_mlInput,
+    Prisma.usuarioUncheckedCreateWithoutEntrenamiento_mlInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutEntrenamiento_mlInput
+  upsert?: Prisma.usuarioUpsertWithoutEntrenamiento_mlInput
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutEntrenamiento_mlInput,
+      Prisma.usuarioUpdateWithoutEntrenamiento_mlInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutEntrenamiento_mlInput
+  >
+}
+
+export type usuarioCreateNestedOneWithoutFavoritoInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutFavoritoInput,
+    Prisma.usuarioUncheckedCreateWithoutFavoritoInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutFavoritoInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneRequiredWithoutFavoritoNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutFavoritoInput,
+    Prisma.usuarioUncheckedCreateWithoutFavoritoInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutFavoritoInput
+  upsert?: Prisma.usuarioUpsertWithoutFavoritoInput
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutFavoritoInput,
+      Prisma.usuarioUpdateWithoutFavoritoInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutFavoritoInput
+  >
+}
+
+export type usuarioCreateNestedOneWithoutHistorial_busquedaInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutHistorial_busquedaInput,
+    Prisma.usuarioUncheckedCreateWithoutHistorial_busquedaInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutHistorial_busquedaInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneRequiredWithoutHistorial_busquedaNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutHistorial_busquedaInput,
+    Prisma.usuarioUncheckedCreateWithoutHistorial_busquedaInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutHistorial_busquedaInput
+  upsert?: Prisma.usuarioUpsertWithoutHistorial_busquedaInput
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutHistorial_busquedaInput,
+      Prisma.usuarioUpdateWithoutHistorial_busquedaInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutHistorial_busquedaInput
+  >
+}
+
+export type usuarioCreateNestedOneWithoutHistorial_passwordInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutHistorial_passwordInput,
+    Prisma.usuarioUncheckedCreateWithoutHistorial_passwordInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutHistorial_passwordInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneRequiredWithoutHistorial_passwordNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutHistorial_passwordInput,
+    Prisma.usuarioUncheckedCreateWithoutHistorial_passwordInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutHistorial_passwordInput
+  upsert?: Prisma.usuarioUpsertWithoutHistorial_passwordInput
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutHistorial_passwordInput,
+      Prisma.usuarioUpdateWithoutHistorial_passwordInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutHistorial_passwordInput
+  >
+}
+
 export type usuarioCreateNestedOneWithoutInmuebleInput = {
   create?: Prisma.XOR<
     Prisma.usuarioCreateWithoutInmuebleInput,
@@ -736,6 +1488,32 @@ export type usuarioUpdateOneRequiredWithoutInmuebleNestedInput = {
       Prisma.usuarioUpdateWithoutInmuebleInput
     >,
     Prisma.usuarioUncheckedUpdateWithoutInmuebleInput
+  >
+}
+
+export type usuarioCreateNestedOneWithoutMagic_linkInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutMagic_linkInput,
+    Prisma.usuarioUncheckedCreateWithoutMagic_linkInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutMagic_linkInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneRequiredWithoutMagic_linkNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutMagic_linkInput,
+    Prisma.usuarioUncheckedCreateWithoutMagic_linkInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutMagic_linkInput
+  upsert?: Prisma.usuarioUpsertWithoutMagic_linkInput
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutMagic_linkInput,
+      Prisma.usuarioUpdateWithoutMagic_linkInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutMagic_linkInput
   >
 }
 
@@ -791,6 +1569,32 @@ export type usuarioUpdateOneRequiredWithoutPerfilNestedInput = {
   >
 }
 
+export type usuarioCreateNestedOneWithoutPropiedad_vistaInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutPropiedad_vistaInput,
+    Prisma.usuarioUncheckedCreateWithoutPropiedad_vistaInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutPropiedad_vistaInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneRequiredWithoutPropiedad_vistaNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutPropiedad_vistaInput,
+    Prisma.usuarioUncheckedCreateWithoutPropiedad_vistaInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutPropiedad_vistaInput
+  upsert?: Prisma.usuarioUpsertWithoutPropiedad_vistaInput
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutPropiedad_vistaInput,
+      Prisma.usuarioUpdateWithoutPropiedad_vistaInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutPropiedad_vistaInput
+  >
+}
+
 export type usuarioCreateNestedOneWithoutPublicacionInput = {
   create?: Prisma.XOR<
     Prisma.usuarioCreateWithoutPublicacionInput,
@@ -814,6 +1618,32 @@ export type usuarioUpdateOneRequiredWithoutPublicacionNestedInput = {
       Prisma.usuarioUpdateWithoutPublicacionInput
     >,
     Prisma.usuarioUncheckedUpdateWithoutPublicacionInput
+  >
+}
+
+export type usuarioCreateNestedOneWithoutRecuperacion_passwordInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutRecuperacion_passwordInput,
+    Prisma.usuarioUncheckedCreateWithoutRecuperacion_passwordInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutRecuperacion_passwordInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneRequiredWithoutRecuperacion_passwordNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutRecuperacion_passwordInput,
+    Prisma.usuarioUncheckedCreateWithoutRecuperacion_passwordInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutRecuperacion_passwordInput
+  upsert?: Prisma.usuarioUpsertWithoutRecuperacion_passwordInput
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutRecuperacion_passwordInput,
+      Prisma.usuarioUpdateWithoutRecuperacion_passwordInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutRecuperacion_passwordInput
   >
 }
 
@@ -945,29 +1775,111 @@ export type usuarioUpdateOneWithoutSuscripciones_activasNestedInput = {
   >
 }
 
-export type usuarioCreateNestedOneWithoutTelefonoInput = {
+export type usuarioCreateNestedOneWithoutTelefono_telefono_usuarioIdTousuarioInput = {
   create?: Prisma.XOR<
-    Prisma.usuarioCreateWithoutTelefonoInput,
-    Prisma.usuarioUncheckedCreateWithoutTelefonoInput
+    Prisma.usuarioCreateWithoutTelefono_telefono_usuarioIdTousuarioInput,
+    Prisma.usuarioUncheckedCreateWithoutTelefono_telefono_usuarioIdTousuarioInput
   >
-  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutTelefonoInput
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutTelefono_telefono_usuarioIdTousuarioInput
   connect?: Prisma.usuarioWhereUniqueInput
 }
 
-export type usuarioUpdateOneRequiredWithoutTelefonoNestedInput = {
+export type usuarioCreateNestedOneWithoutTelefono_telefono_usuario_idTousuarioInput = {
   create?: Prisma.XOR<
-    Prisma.usuarioCreateWithoutTelefonoInput,
-    Prisma.usuarioUncheckedCreateWithoutTelefonoInput
+    Prisma.usuarioCreateWithoutTelefono_telefono_usuario_idTousuarioInput,
+    Prisma.usuarioUncheckedCreateWithoutTelefono_telefono_usuario_idTousuarioInput
   >
-  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutTelefonoInput
-  upsert?: Prisma.usuarioUpsertWithoutTelefonoInput
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutTelefono_telefono_usuario_idTousuarioInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneRequiredWithoutTelefono_telefono_usuarioIdTousuarioNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutTelefono_telefono_usuarioIdTousuarioInput,
+    Prisma.usuarioUncheckedCreateWithoutTelefono_telefono_usuarioIdTousuarioInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutTelefono_telefono_usuarioIdTousuarioInput
+  upsert?: Prisma.usuarioUpsertWithoutTelefono_telefono_usuarioIdTousuarioInput
   connect?: Prisma.usuarioWhereUniqueInput
   update?: Prisma.XOR<
     Prisma.XOR<
-      Prisma.usuarioUpdateToOneWithWhereWithoutTelefonoInput,
-      Prisma.usuarioUpdateWithoutTelefonoInput
+      Prisma.usuarioUpdateToOneWithWhereWithoutTelefono_telefono_usuarioIdTousuarioInput,
+      Prisma.usuarioUpdateWithoutTelefono_telefono_usuarioIdTousuarioInput
     >,
-    Prisma.usuarioUncheckedUpdateWithoutTelefonoInput
+    Prisma.usuarioUncheckedUpdateWithoutTelefono_telefono_usuarioIdTousuarioInput
+  >
+}
+
+export type usuarioUpdateOneWithoutTelefono_telefono_usuario_idTousuarioNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutTelefono_telefono_usuario_idTousuarioInput,
+    Prisma.usuarioUncheckedCreateWithoutTelefono_telefono_usuario_idTousuarioInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutTelefono_telefono_usuario_idTousuarioInput
+  upsert?: Prisma.usuarioUpsertWithoutTelefono_telefono_usuario_idTousuarioInput
+  disconnect?: Prisma.usuarioWhereInput | boolean
+  delete?: Prisma.usuarioWhereInput | boolean
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutTelefono_telefono_usuario_idTousuarioInput,
+      Prisma.usuarioUpdateWithoutTelefono_telefono_usuario_idTousuarioInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutTelefono_telefono_usuario_idTousuarioInput
+  >
+}
+
+export type usuarioCreateNestedOneWithoutTestimonioInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutTestimonioInput,
+    Prisma.usuarioUncheckedCreateWithoutTestimonioInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutTestimonioInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneWithoutTestimonioNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutTestimonioInput,
+    Prisma.usuarioUncheckedCreateWithoutTestimonioInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutTestimonioInput
+  upsert?: Prisma.usuarioUpsertWithoutTestimonioInput
+  disconnect?: Prisma.usuarioWhereInput | boolean
+  delete?: Prisma.usuarioWhereInput | boolean
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutTestimonioInput,
+      Prisma.usuarioUpdateWithoutTestimonioInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutTestimonioInput
+  >
+}
+
+export type usuarioCreateNestedOneWithoutTestimonio_likeInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutTestimonio_likeInput,
+    Prisma.usuarioUncheckedCreateWithoutTestimonio_likeInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutTestimonio_likeInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneRequiredWithoutTestimonio_likeNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutTestimonio_likeInput,
+    Prisma.usuarioUncheckedCreateWithoutTestimonio_likeInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutTestimonio_likeInput
+  upsert?: Prisma.usuarioUpsertWithoutTestimonio_likeInput
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutTestimonio_likeInput,
+      Prisma.usuarioUpdateWithoutTestimonio_likeInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutTestimonio_likeInput
   >
 }
 
@@ -994,6 +1906,32 @@ export type usuarioUpdateOneRequiredWithoutTransaccionesNestedInput = {
       Prisma.usuarioUpdateWithoutTransaccionesInput
     >,
     Prisma.usuarioUncheckedUpdateWithoutTransaccionesInput
+  >
+}
+
+export type usuarioCreateNestedOneWithoutTutorial_publicacion_usuarioInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutTutorial_publicacion_usuarioInput,
+    Prisma.usuarioUncheckedCreateWithoutTutorial_publicacion_usuarioInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutTutorial_publicacion_usuarioInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneRequiredWithoutTutorial_publicacion_usuarioNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutTutorial_publicacion_usuarioInput,
+    Prisma.usuarioUncheckedCreateWithoutTutorial_publicacion_usuarioInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutTutorial_publicacion_usuarioInput
+  upsert?: Prisma.usuarioUpsertWithoutTutorial_publicacion_usuarioInput
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutTutorial_publicacion_usuarioInput,
+      Prisma.usuarioUpdateWithoutTutorial_publicacion_usuarioInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutTutorial_publicacion_usuarioInput
   >
 }
 
@@ -1055,6 +1993,310 @@ export type usuarioUpdateOneWithoutVisitorNestedInput = {
   >
 }
 
+export type usuarioCreateNestedOneWithoutZona_usuarioInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutZona_usuarioInput,
+    Prisma.usuarioUncheckedCreateWithoutZona_usuarioInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutZona_usuarioInput
+  connect?: Prisma.usuarioWhereUniqueInput
+}
+
+export type usuarioUpdateOneRequiredWithoutZona_usuarioNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.usuarioCreateWithoutZona_usuarioInput,
+    Prisma.usuarioUncheckedCreateWithoutZona_usuarioInput
+  >
+  connectOrCreate?: Prisma.usuarioCreateOrConnectWithoutZona_usuarioInput
+  upsert?: Prisma.usuarioUpsertWithoutZona_usuarioInput
+  connect?: Prisma.usuarioWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.usuarioUpdateToOneWithWhereWithoutZona_usuarioInput,
+      Prisma.usuarioUpdateWithoutZona_usuarioInput
+    >,
+    Prisma.usuarioUncheckedUpdateWithoutZona_usuarioInput
+  >
+}
+
+export type usuarioCreateWithoutAutenticacion_socialInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutAutenticacion_socialInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutAutenticacion_socialInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutAutenticacion_socialInput,
+    Prisma.usuarioUncheckedCreateWithoutAutenticacion_socialInput
+  >
+}
+
+export type usuarioUpsertWithoutAutenticacion_socialInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutAutenticacion_socialInput,
+    Prisma.usuarioUncheckedUpdateWithoutAutenticacion_socialInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutAutenticacion_socialInput,
+    Prisma.usuarioUncheckedCreateWithoutAutenticacion_socialInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutAutenticacion_socialInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutAutenticacion_socialInput,
+    Prisma.usuarioUncheckedUpdateWithoutAutenticacion_socialInput
+  >
+}
+
+export type usuarioUpdateWithoutAutenticacion_socialInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutAutenticacion_socialInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
 export type usuarioCreateWithoutBitacora_pagosInput = {
   nombre: string
   apellido: string
@@ -1065,21 +2307,54 @@ export type usuarioCreateWithoutBitacora_pagosInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
-  rol: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioUncheckedCreateWithoutBitacora_pagosInput = {
@@ -1093,21 +2368,54 @@ export type usuarioUncheckedCreateWithoutBitacora_pagosInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  rol_id: number
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioCreateOrConnectWithoutBitacora_pagosInput = {
@@ -1148,21 +2456,58 @@ export type usuarioUpdateWithoutBitacora_pagosInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
-  rol?: Prisma.rolUpdateOneRequiredWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioUncheckedUpdateWithoutBitacora_pagosInput = {
@@ -1176,21 +2521,336 @@ export type usuarioUncheckedUpdateWithoutBitacora_pagosInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rol_id?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioCreateWithoutBlogInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutBlogInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutBlogInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutBlogInput,
+    Prisma.usuarioUncheckedCreateWithoutBlogInput
+  >
+}
+
+export type usuarioUpsertWithoutBlogInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutBlogInput,
+    Prisma.usuarioUncheckedUpdateWithoutBlogInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutBlogInput,
+    Prisma.usuarioUncheckedCreateWithoutBlogInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutBlogInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutBlogInput,
+    Prisma.usuarioUncheckedUpdateWithoutBlogInput
+  >
+}
+
+export type usuarioUpdateWithoutBlogInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutBlogInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioCreateWithoutCambio_emailInput = {
@@ -1203,21 +2863,54 @@ export type usuarioCreateWithoutCambio_emailInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
-  rol: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioUncheckedCreateWithoutCambio_emailInput = {
@@ -1231,21 +2924,54 @@ export type usuarioUncheckedCreateWithoutCambio_emailInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  rol_id: number
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioCreateOrConnectWithoutCambio_emailInput = {
@@ -1286,21 +3012,58 @@ export type usuarioUpdateWithoutCambio_emailInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
-  rol?: Prisma.rolUpdateOneRequiredWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioUncheckedUpdateWithoutCambio_emailInput = {
@@ -1314,21 +3077,2282 @@ export type usuarioUncheckedUpdateWithoutCambio_emailInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rol_id?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioCreateWithoutCodigo_2faInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutCodigo_2faInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutCodigo_2faInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutCodigo_2faInput,
+    Prisma.usuarioUncheckedCreateWithoutCodigo_2faInput
+  >
+}
+
+export type usuarioUpsertWithoutCodigo_2faInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutCodigo_2faInput,
+    Prisma.usuarioUncheckedUpdateWithoutCodigo_2faInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutCodigo_2faInput,
+    Prisma.usuarioUncheckedCreateWithoutCodigo_2faInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutCodigo_2faInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutCodigo_2faInput,
+    Prisma.usuarioUncheckedUpdateWithoutCodigo_2faInput
+  >
+}
+
+export type usuarioUpdateWithoutCodigo_2faInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutCodigo_2faInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioCreateWithoutComentarioInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutComentarioInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutComentarioInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutComentarioInput,
+    Prisma.usuarioUncheckedCreateWithoutComentarioInput
+  >
+}
+
+export type usuarioUpsertWithoutComentarioInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutComentarioInput,
+    Prisma.usuarioUncheckedUpdateWithoutComentarioInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutComentarioInput,
+    Prisma.usuarioUncheckedCreateWithoutComentarioInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutComentarioInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutComentarioInput,
+    Prisma.usuarioUncheckedUpdateWithoutComentarioInput
+  >
+}
+
+export type usuarioUpdateWithoutComentarioInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutComentarioInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioCreateWithoutComentario_likeInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutComentario_likeInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutComentario_likeInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutComentario_likeInput,
+    Prisma.usuarioUncheckedCreateWithoutComentario_likeInput
+  >
+}
+
+export type usuarioUpsertWithoutComentario_likeInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutComentario_likeInput,
+    Prisma.usuarioUncheckedUpdateWithoutComentario_likeInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutComentario_likeInput,
+    Prisma.usuarioUncheckedCreateWithoutComentario_likeInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutComentario_likeInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutComentario_likeInput,
+    Prisma.usuarioUncheckedUpdateWithoutComentario_likeInput
+  >
+}
+
+export type usuarioUpdateWithoutComentario_likeInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutComentario_likeInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioCreateWithoutComparacionInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutComparacionInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutComparacionInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutComparacionInput,
+    Prisma.usuarioUncheckedCreateWithoutComparacionInput
+  >
+}
+
+export type usuarioUpsertWithoutComparacionInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutComparacionInput,
+    Prisma.usuarioUncheckedUpdateWithoutComparacionInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutComparacionInput,
+    Prisma.usuarioUncheckedCreateWithoutComparacionInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutComparacionInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutComparacionInput,
+    Prisma.usuarioUncheckedUpdateWithoutComparacionInput
+  >
+}
+
+export type usuarioUpdateWithoutComparacionInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutComparacionInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioCreateWithoutEntrenamiento_mlInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutEntrenamiento_mlInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutEntrenamiento_mlInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutEntrenamiento_mlInput,
+    Prisma.usuarioUncheckedCreateWithoutEntrenamiento_mlInput
+  >
+}
+
+export type usuarioUpsertWithoutEntrenamiento_mlInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutEntrenamiento_mlInput,
+    Prisma.usuarioUncheckedUpdateWithoutEntrenamiento_mlInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutEntrenamiento_mlInput,
+    Prisma.usuarioUncheckedCreateWithoutEntrenamiento_mlInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutEntrenamiento_mlInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutEntrenamiento_mlInput,
+    Prisma.usuarioUncheckedUpdateWithoutEntrenamiento_mlInput
+  >
+}
+
+export type usuarioUpdateWithoutEntrenamiento_mlInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutEntrenamiento_mlInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioCreateWithoutFavoritoInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutFavoritoInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutFavoritoInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutFavoritoInput,
+    Prisma.usuarioUncheckedCreateWithoutFavoritoInput
+  >
+}
+
+export type usuarioUpsertWithoutFavoritoInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutFavoritoInput,
+    Prisma.usuarioUncheckedUpdateWithoutFavoritoInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutFavoritoInput,
+    Prisma.usuarioUncheckedCreateWithoutFavoritoInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutFavoritoInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutFavoritoInput,
+    Prisma.usuarioUncheckedUpdateWithoutFavoritoInput
+  >
+}
+
+export type usuarioUpdateWithoutFavoritoInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutFavoritoInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioCreateWithoutHistorial_busquedaInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutHistorial_busquedaInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutHistorial_busquedaInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutHistorial_busquedaInput,
+    Prisma.usuarioUncheckedCreateWithoutHistorial_busquedaInput
+  >
+}
+
+export type usuarioUpsertWithoutHistorial_busquedaInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutHistorial_busquedaInput,
+    Prisma.usuarioUncheckedUpdateWithoutHistorial_busquedaInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutHistorial_busquedaInput,
+    Prisma.usuarioUncheckedCreateWithoutHistorial_busquedaInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutHistorial_busquedaInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutHistorial_busquedaInput,
+    Prisma.usuarioUncheckedUpdateWithoutHistorial_busquedaInput
+  >
+}
+
+export type usuarioUpdateWithoutHistorial_busquedaInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutHistorial_busquedaInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioCreateWithoutHistorial_passwordInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutHistorial_passwordInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutHistorial_passwordInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutHistorial_passwordInput,
+    Prisma.usuarioUncheckedCreateWithoutHistorial_passwordInput
+  >
+}
+
+export type usuarioUpsertWithoutHistorial_passwordInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutHistorial_passwordInput,
+    Prisma.usuarioUncheckedUpdateWithoutHistorial_passwordInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutHistorial_passwordInput,
+    Prisma.usuarioUncheckedCreateWithoutHistorial_passwordInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutHistorial_passwordInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutHistorial_passwordInput,
+    Prisma.usuarioUncheckedUpdateWithoutHistorial_passwordInput
+  >
+}
+
+export type usuarioUpdateWithoutHistorial_passwordInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutHistorial_passwordInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioCreateWithoutInmuebleInput = {
@@ -1341,21 +5365,54 @@ export type usuarioCreateWithoutInmuebleInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
-  rol: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioUncheckedCreateWithoutInmuebleInput = {
@@ -1369,21 +5426,54 @@ export type usuarioUncheckedCreateWithoutInmuebleInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  rol_id: number
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioCreateOrConnectWithoutInmuebleInput = {
@@ -1424,21 +5514,58 @@ export type usuarioUpdateWithoutInmuebleInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
-  rol?: Prisma.rolUpdateOneRequiredWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioUncheckedUpdateWithoutInmuebleInput = {
@@ -1452,21 +5579,336 @@ export type usuarioUncheckedUpdateWithoutInmuebleInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rol_id?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioCreateWithoutMagic_linkInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutMagic_linkInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutMagic_linkInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutMagic_linkInput,
+    Prisma.usuarioUncheckedCreateWithoutMagic_linkInput
+  >
+}
+
+export type usuarioUpsertWithoutMagic_linkInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutMagic_linkInput,
+    Prisma.usuarioUncheckedUpdateWithoutMagic_linkInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutMagic_linkInput,
+    Prisma.usuarioUncheckedCreateWithoutMagic_linkInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutMagic_linkInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutMagic_linkInput,
+    Prisma.usuarioUncheckedUpdateWithoutMagic_linkInput
+  >
+}
+
+export type usuarioUpdateWithoutMagic_linkInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutMagic_linkInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioCreateWithoutNotificacionInput = {
@@ -1479,21 +5921,54 @@ export type usuarioCreateWithoutNotificacionInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
-  rol: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioUncheckedCreateWithoutNotificacionInput = {
@@ -1507,21 +5982,54 @@ export type usuarioUncheckedCreateWithoutNotificacionInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  rol_id: number
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioCreateOrConnectWithoutNotificacionInput = {
@@ -1562,21 +6070,58 @@ export type usuarioUpdateWithoutNotificacionInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
-  rol?: Prisma.rolUpdateOneRequiredWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioUncheckedUpdateWithoutNotificacionInput = {
@@ -1590,21 +6135,58 @@ export type usuarioUncheckedUpdateWithoutNotificacionInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rol_id?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioCreateWithoutPerfilInput = {
@@ -1617,21 +6199,54 @@ export type usuarioCreateWithoutPerfilInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
-  rol: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioUncheckedCreateWithoutPerfilInput = {
@@ -1645,21 +6260,54 @@ export type usuarioUncheckedCreateWithoutPerfilInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  rol_id: number
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioCreateOrConnectWithoutPerfilInput = {
@@ -1700,21 +6348,58 @@ export type usuarioUpdateWithoutPerfilInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
-  rol?: Prisma.rolUpdateOneRequiredWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioUncheckedUpdateWithoutPerfilInput = {
@@ -1728,21 +6413,336 @@ export type usuarioUncheckedUpdateWithoutPerfilInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rol_id?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioCreateWithoutPropiedad_vistaInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutPropiedad_vistaInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutPropiedad_vistaInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutPropiedad_vistaInput,
+    Prisma.usuarioUncheckedCreateWithoutPropiedad_vistaInput
+  >
+}
+
+export type usuarioUpsertWithoutPropiedad_vistaInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutPropiedad_vistaInput,
+    Prisma.usuarioUncheckedUpdateWithoutPropiedad_vistaInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutPropiedad_vistaInput,
+    Prisma.usuarioUncheckedCreateWithoutPropiedad_vistaInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutPropiedad_vistaInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutPropiedad_vistaInput,
+    Prisma.usuarioUncheckedUpdateWithoutPropiedad_vistaInput
+  >
+}
+
+export type usuarioUpdateWithoutPropiedad_vistaInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutPropiedad_vistaInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioCreateWithoutPublicacionInput = {
@@ -1755,21 +6755,54 @@ export type usuarioCreateWithoutPublicacionInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
-  rol: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioUncheckedCreateWithoutPublicacionInput = {
@@ -1783,21 +6816,54 @@ export type usuarioUncheckedCreateWithoutPublicacionInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  rol_id: number
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioCreateOrConnectWithoutPublicacionInput = {
@@ -1838,21 +6904,58 @@ export type usuarioUpdateWithoutPublicacionInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
-  rol?: Prisma.rolUpdateOneRequiredWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioUncheckedUpdateWithoutPublicacionInput = {
@@ -1866,21 +6969,336 @@ export type usuarioUncheckedUpdateWithoutPublicacionInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rol_id?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioCreateWithoutRecuperacion_passwordInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutRecuperacion_passwordInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutRecuperacion_passwordInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutRecuperacion_passwordInput,
+    Prisma.usuarioUncheckedCreateWithoutRecuperacion_passwordInput
+  >
+}
+
+export type usuarioUpsertWithoutRecuperacion_passwordInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutRecuperacion_passwordInput,
+    Prisma.usuarioUncheckedUpdateWithoutRecuperacion_passwordInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutRecuperacion_passwordInput,
+    Prisma.usuarioUncheckedCreateWithoutRecuperacion_passwordInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutRecuperacion_passwordInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutRecuperacion_passwordInput,
+    Prisma.usuarioUncheckedUpdateWithoutRecuperacion_passwordInput
+  >
+}
+
+export type usuarioUpdateWithoutRecuperacion_passwordInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutRecuperacion_passwordInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioCreateWithoutRolInput = {
@@ -1893,21 +7311,54 @@ export type usuarioCreateWithoutRolInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioUncheckedCreateWithoutRolInput = {
@@ -1921,21 +7372,54 @@ export type usuarioUncheckedCreateWithoutRolInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioCreateOrConnectWithoutRolInput = {
@@ -1993,10 +7477,25 @@ export type usuarioScalarWhereInput = {
   genero?: Prisma.EnumgeneroNullableFilter<'usuario'> | $Enums.genero | null
   direccion?: Prisma.StringNullableFilter<'usuario'> | string | null
   activo?: Prisma.BoolNullableFilter<'usuario'> | boolean | null
+  fechaRegistro?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+  createdAt?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFilter<'usuario'> | number
+  bloqueo_cambio_password_hasta?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+  password_actualizado_en?: Prisma.DateTimeFilter<'usuario'> | Date | string
+  two_factor_activo?: Prisma.BoolFilter<'usuario'> | boolean
+  two_factor_metodo?: Prisma.StringFilter<'usuario'> | string
+  two_factor_activado_en?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+  controlador?: Prisma.BoolFilter<'usuario'> | boolean
+  notificacionWhatsapp?: Prisma.BoolNullableFilter<'usuario'> | boolean | null
+  rolId?: Prisma.IntNullableFilter<'usuario'> | number | null
+  notificacion_email?: Prisma.BoolNullableFilter<'usuario'> | boolean | null
+  notificacion_whatsapp?: Prisma.BoolNullableFilter<'usuario'> | boolean | null
   fecha_registro?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
-  created_at?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
-  updated_at?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
-  rol_id?: Prisma.IntFilter<'usuario'> | number
+  updatedAt?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+  desactivado_en?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+  fecha_nacimiento?: Prisma.DateTimeNullableFilter<'usuario'> | Date | string | null
+  telemetria_compartida?: Prisma.BoolNullableFilter<'usuario'> | boolean | null
+  zona_conexion?: Prisma.StringNullableFilter<'usuario'> | string | null
 }
 
 export type usuarioCreateWithoutSesionInput = {
@@ -2009,21 +7508,54 @@ export type usuarioCreateWithoutSesionInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
-  rol: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioUncheckedCreateWithoutSesionInput = {
@@ -2037,21 +7569,54 @@ export type usuarioUncheckedCreateWithoutSesionInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  rol_id: number
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioCreateOrConnectWithoutSesionInput = {
@@ -2092,21 +7657,58 @@ export type usuarioUpdateWithoutSesionInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
-  rol?: Prisma.rolUpdateOneRequiredWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioUncheckedUpdateWithoutSesionInput = {
@@ -2120,21 +7722,58 @@ export type usuarioUncheckedUpdateWithoutSesionInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rol_id?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioCreateWithoutSuscripciones_activasInput = {
@@ -2147,21 +7786,54 @@ export type usuarioCreateWithoutSuscripciones_activasInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
-  rol: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioUncheckedCreateWithoutSuscripciones_activasInput = {
@@ -2175,21 +7847,54 @@ export type usuarioUncheckedCreateWithoutSuscripciones_activasInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  rol_id: number
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioCreateOrConnectWithoutSuscripciones_activasInput = {
@@ -2230,21 +7935,58 @@ export type usuarioUpdateWithoutSuscripciones_activasInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
-  rol?: Prisma.rolUpdateOneRequiredWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioUncheckedUpdateWithoutSuscripciones_activasInput = {
@@ -2258,24 +8000,61 @@ export type usuarioUncheckedUpdateWithoutSuscripciones_activasInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rol_id?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
-export type usuarioCreateWithoutTelefonoInput = {
+export type usuarioCreateWithoutTelefono_telefono_usuarioIdTousuarioInput = {
   nombre: string
   apellido: string
   correo: string
@@ -2285,24 +8064,57 @@ export type usuarioCreateWithoutTelefonoInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
-  rol: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
 }
 
-export type usuarioUncheckedCreateWithoutTelefonoInput = {
+export type usuarioUncheckedCreateWithoutTelefono_telefono_usuarioIdTousuarioInput = {
   id?: number
   nombre: string
   apellido: string
@@ -2313,52 +8125,214 @@ export type usuarioUncheckedCreateWithoutTelefonoInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  rol_id: number
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
-export type usuarioCreateOrConnectWithoutTelefonoInput = {
+export type usuarioCreateOrConnectWithoutTelefono_telefono_usuarioIdTousuarioInput = {
   where: Prisma.usuarioWhereUniqueInput
   create: Prisma.XOR<
-    Prisma.usuarioCreateWithoutTelefonoInput,
-    Prisma.usuarioUncheckedCreateWithoutTelefonoInput
+    Prisma.usuarioCreateWithoutTelefono_telefono_usuarioIdTousuarioInput,
+    Prisma.usuarioUncheckedCreateWithoutTelefono_telefono_usuarioIdTousuarioInput
   >
 }
 
-export type usuarioUpsertWithoutTelefonoInput = {
+export type usuarioCreateWithoutTelefono_telefono_usuario_idTousuarioInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutTelefono_telefono_usuario_idTousuarioInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutTelefono_telefono_usuario_idTousuarioInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutTelefono_telefono_usuario_idTousuarioInput,
+    Prisma.usuarioUncheckedCreateWithoutTelefono_telefono_usuario_idTousuarioInput
+  >
+}
+
+export type usuarioUpsertWithoutTelefono_telefono_usuarioIdTousuarioInput = {
   update: Prisma.XOR<
-    Prisma.usuarioUpdateWithoutTelefonoInput,
-    Prisma.usuarioUncheckedUpdateWithoutTelefonoInput
+    Prisma.usuarioUpdateWithoutTelefono_telefono_usuarioIdTousuarioInput,
+    Prisma.usuarioUncheckedUpdateWithoutTelefono_telefono_usuarioIdTousuarioInput
   >
   create: Prisma.XOR<
-    Prisma.usuarioCreateWithoutTelefonoInput,
-    Prisma.usuarioUncheckedCreateWithoutTelefonoInput
+    Prisma.usuarioCreateWithoutTelefono_telefono_usuarioIdTousuarioInput,
+    Prisma.usuarioUncheckedCreateWithoutTelefono_telefono_usuarioIdTousuarioInput
   >
   where?: Prisma.usuarioWhereInput
 }
 
-export type usuarioUpdateToOneWithWhereWithoutTelefonoInput = {
+export type usuarioUpdateToOneWithWhereWithoutTelefono_telefono_usuarioIdTousuarioInput = {
   where?: Prisma.usuarioWhereInput
   data: Prisma.XOR<
-    Prisma.usuarioUpdateWithoutTelefonoInput,
-    Prisma.usuarioUncheckedUpdateWithoutTelefonoInput
+    Prisma.usuarioUpdateWithoutTelefono_telefono_usuarioIdTousuarioInput,
+    Prisma.usuarioUncheckedUpdateWithoutTelefono_telefono_usuarioIdTousuarioInput
   >
 }
 
-export type usuarioUpdateWithoutTelefonoInput = {
+export type usuarioUpdateWithoutTelefono_telefono_usuarioIdTousuarioInput = {
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   apellido?: Prisma.StringFieldUpdateOperationsInput | string
   correo?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2368,24 +8342,61 @@ export type usuarioUpdateWithoutTelefonoInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
-  rol?: Prisma.rolUpdateOneRequiredWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
 }
 
-export type usuarioUncheckedUpdateWithoutTelefonoInput = {
+export type usuarioUncheckedUpdateWithoutTelefono_telefono_usuarioIdTousuarioInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   nombre?: Prisma.StringFieldUpdateOperationsInput | string
   apellido?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2396,21 +8407,763 @@ export type usuarioUncheckedUpdateWithoutTelefonoInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rol_id?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUpsertWithoutTelefono_telefono_usuario_idTousuarioInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutTelefono_telefono_usuario_idTousuarioInput,
+    Prisma.usuarioUncheckedUpdateWithoutTelefono_telefono_usuario_idTousuarioInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutTelefono_telefono_usuario_idTousuarioInput,
+    Prisma.usuarioUncheckedCreateWithoutTelefono_telefono_usuario_idTousuarioInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutTelefono_telefono_usuario_idTousuarioInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutTelefono_telefono_usuario_idTousuarioInput,
+    Prisma.usuarioUncheckedUpdateWithoutTelefono_telefono_usuario_idTousuarioInput
+  >
+}
+
+export type usuarioUpdateWithoutTelefono_telefono_usuario_idTousuarioInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutTelefono_telefono_usuario_idTousuarioInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioCreateWithoutTestimonioInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutTestimonioInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutTestimonioInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutTestimonioInput,
+    Prisma.usuarioUncheckedCreateWithoutTestimonioInput
+  >
+}
+
+export type usuarioUpsertWithoutTestimonioInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutTestimonioInput,
+    Prisma.usuarioUncheckedUpdateWithoutTestimonioInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutTestimonioInput,
+    Prisma.usuarioUncheckedCreateWithoutTestimonioInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutTestimonioInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutTestimonioInput,
+    Prisma.usuarioUncheckedUpdateWithoutTestimonioInput
+  >
+}
+
+export type usuarioUpdateWithoutTestimonioInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutTestimonioInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioCreateWithoutTestimonio_likeInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutTestimonio_likeInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutTestimonio_likeInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutTestimonio_likeInput,
+    Prisma.usuarioUncheckedCreateWithoutTestimonio_likeInput
+  >
+}
+
+export type usuarioUpsertWithoutTestimonio_likeInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutTestimonio_likeInput,
+    Prisma.usuarioUncheckedUpdateWithoutTestimonio_likeInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutTestimonio_likeInput,
+    Prisma.usuarioUncheckedCreateWithoutTestimonio_likeInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutTestimonio_likeInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutTestimonio_likeInput,
+    Prisma.usuarioUncheckedUpdateWithoutTestimonio_likeInput
+  >
+}
+
+export type usuarioUpdateWithoutTestimonio_likeInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutTestimonio_likeInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioCreateWithoutTransaccionesInput = {
@@ -2423,21 +9176,54 @@ export type usuarioCreateWithoutTransaccionesInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoCreateNestedManyWithoutUsuarioInput
-  rol: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioUncheckedCreateWithoutTransaccionesInput = {
@@ -2451,21 +9237,54 @@ export type usuarioUncheckedCreateWithoutTransaccionesInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  rol_id: number
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
   visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioCreateOrConnectWithoutTransaccionesInput = {
@@ -2506,21 +9325,58 @@ export type usuarioUpdateWithoutTransaccionesInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUpdateManyWithoutUsuarioNestedInput
-  rol?: Prisma.rolUpdateOneRequiredWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioUncheckedUpdateWithoutTransaccionesInput = {
@@ -2534,21 +9390,336 @@ export type usuarioUncheckedUpdateWithoutTransaccionesInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rol_id?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioCreateWithoutTutorial_publicacion_usuarioInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutTutorial_publicacion_usuarioInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutTutorial_publicacion_usuarioInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutTutorial_publicacion_usuarioInput,
+    Prisma.usuarioUncheckedCreateWithoutTutorial_publicacion_usuarioInput
+  >
+}
+
+export type usuarioUpsertWithoutTutorial_publicacion_usuarioInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutTutorial_publicacion_usuarioInput,
+    Prisma.usuarioUncheckedUpdateWithoutTutorial_publicacion_usuarioInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutTutorial_publicacion_usuarioInput,
+    Prisma.usuarioUncheckedCreateWithoutTutorial_publicacion_usuarioInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutTutorial_publicacion_usuarioInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutTutorial_publicacion_usuarioInput,
+    Prisma.usuarioUncheckedUpdateWithoutTutorial_publicacion_usuarioInput
+  >
+}
+
+export type usuarioUpdateWithoutTutorial_publicacion_usuarioInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutTutorial_publicacion_usuarioInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioCreateWithoutVerificacion_pagoInput = {
@@ -2561,21 +9732,54 @@ export type usuarioCreateWithoutVerificacion_pagoInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
-  rol: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
   visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioUncheckedCreateWithoutVerificacion_pagoInput = {
@@ -2589,21 +9793,54 @@ export type usuarioUncheckedCreateWithoutVerificacion_pagoInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  rol_id: number
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
   visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioCreateOrConnectWithoutVerificacion_pagoInput = {
@@ -2644,21 +9881,58 @@ export type usuarioUpdateWithoutVerificacion_pagoInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
-  rol?: Prisma.rolUpdateOneRequiredWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioUncheckedUpdateWithoutVerificacion_pagoInput = {
@@ -2672,21 +9946,58 @@ export type usuarioUncheckedUpdateWithoutVerificacion_pagoInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rol_id?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioCreateWithoutVisitorInput = {
@@ -2699,21 +10010,54 @@ export type usuarioCreateWithoutVisitorInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
-  rol: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioUncheckedCreateWithoutVisitorInput = {
@@ -2727,21 +10071,54 @@ export type usuarioUncheckedCreateWithoutVisitorInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
-  rol_id: number
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
   cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
   notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
   perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
   publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
   sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
-  telefono?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
   transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedCreateNestedManyWithoutUsuarioInput
 }
 
 export type usuarioCreateOrConnectWithoutVisitorInput = {
@@ -2782,21 +10159,58 @@ export type usuarioUpdateWithoutVisitorInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
-  rol?: Prisma.rolUpdateOneRequiredWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioUncheckedUpdateWithoutVisitorInput = {
@@ -2810,21 +10224,336 @@ export type usuarioUncheckedUpdateWithoutVisitorInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  rol_id?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioCreateWithoutZona_usuarioInput = {
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioCreateNestedOneWithoutUsuarioInput
+  rol?: Prisma.rolCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioUncheckedCreateWithoutZona_usuarioInput = {
+  id?: number
+  nombre: string
+  apellido: string
+  correo: string
+  password: string
+  pais?: string | null
+  avatar?: string | null
+  genero?: $Enums.genero | null
+  direccion?: string | null
+  activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  rolId?: number | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
+  fecha_registro?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedCreateNestedManyWithoutUsuarioInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutUsuarioInput
+  blog?: Prisma.blogUncheckedCreateNestedManyWithoutUsuarioInput
+  cambio_email?: Prisma.cambio_emailUncheckedCreateNestedManyWithoutUsuarioInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario?: Prisma.comentarioUncheckedCreateNestedManyWithoutUsuarioInput
+  comentario_like?: Prisma.comentario_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  comparacion?: Prisma.comparacionUncheckedCreateNestedManyWithoutUsuarioInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedCreateNestedManyWithoutUsuarioInput
+  favorito?: Prisma.favoritoUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedCreateNestedManyWithoutUsuarioInput
+  historial_password?: Prisma.historial_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  inmueble?: Prisma.inmuebleUncheckedCreateNestedManyWithoutUsuarioInput
+  magic_link?: Prisma.magic_linkUncheckedCreateNestedManyWithoutUsuarioInput
+  notificacion?: Prisma.notificacionUncheckedCreateNestedManyWithoutUsuarioInput
+  perfil?: Prisma.perfilUncheckedCreateNestedOneWithoutUsuarioInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedCreateNestedManyWithoutUsuarioInput
+  publicacion?: Prisma.publicacionUncheckedCreateNestedManyWithoutUsuarioInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedCreateNestedManyWithoutUsuarioInput
+  sesion?: Prisma.sesionUncheckedCreateNestedManyWithoutUsuarioInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutUsuarioInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuarioIdTousuarioInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedCreateNestedManyWithoutUsuario_telefono_usuario_idTousuarioInput
+  testimonio?: Prisma.testimonioUncheckedCreateNestedManyWithoutUsuarioInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedCreateNestedManyWithoutUsuarioInput
+  transacciones?: Prisma.transaccionesUncheckedCreateNestedManyWithoutUsuarioInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedCreateNestedOneWithoutUsuarioInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutUsuarioInput
+  visitor?: Prisma.visitorUncheckedCreateNestedManyWithoutUsuarioInput
+}
+
+export type usuarioCreateOrConnectWithoutZona_usuarioInput = {
+  where: Prisma.usuarioWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutZona_usuarioInput,
+    Prisma.usuarioUncheckedCreateWithoutZona_usuarioInput
+  >
+}
+
+export type usuarioUpsertWithoutZona_usuarioInput = {
+  update: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutZona_usuarioInput,
+    Prisma.usuarioUncheckedUpdateWithoutZona_usuarioInput
+  >
+  create: Prisma.XOR<
+    Prisma.usuarioCreateWithoutZona_usuarioInput,
+    Prisma.usuarioUncheckedCreateWithoutZona_usuarioInput
+  >
+  where?: Prisma.usuarioWhereInput
+}
+
+export type usuarioUpdateToOneWithWhereWithoutZona_usuarioInput = {
+  where?: Prisma.usuarioWhereInput
+  data: Prisma.XOR<
+    Prisma.usuarioUpdateWithoutZona_usuarioInput,
+    Prisma.usuarioUncheckedUpdateWithoutZona_usuarioInput
+  >
+}
+
+export type usuarioUpdateWithoutZona_usuarioInput = {
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
+  rol?: Prisma.rolUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+}
+
+export type usuarioUncheckedUpdateWithoutZona_usuarioInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  nombre?: Prisma.StringFieldUpdateOperationsInput | string
+  apellido?: Prisma.StringFieldUpdateOperationsInput | string
+  correo?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  pais?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
+  direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  rolId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
+  cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
+  notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
+  publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
+  sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
+  visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioCreateManyRolInput = {
@@ -2838,9 +10567,24 @@ export type usuarioCreateManyRolInput = {
   genero?: $Enums.genero | null
   direccion?: string | null
   activo?: boolean | null
+  fechaRegistro?: Date | string | null
+  createdAt?: Date | string | null
+  intentos_fallidos_cambio_password?: number
+  bloqueo_cambio_password_hasta?: Date | string | null
+  password_actualizado_en?: Date | string
+  two_factor_activo?: boolean
+  two_factor_metodo?: string
+  two_factor_activado_en?: Date | string | null
+  controlador?: boolean
+  notificacionWhatsapp?: boolean | null
+  notificacion_email?: boolean | null
+  notificacion_whatsapp?: boolean | null
   fecha_registro?: Date | string | null
-  created_at?: Date | string | null
-  updated_at?: Date | string | null
+  updatedAt?: Date | string | null
+  desactivado_en?: Date | string | null
+  fecha_nacimiento?: Date | string | null
+  telemetria_compartida?: boolean | null
+  zona_conexion?: string | null
 }
 
 export type usuarioUpdateWithoutRolInput = {
@@ -2853,21 +10597,58 @@ export type usuarioUpdateWithoutRolInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioUncheckedUpdateWithoutRolInput = {
@@ -2881,21 +10662,58 @@ export type usuarioUncheckedUpdateWithoutRolInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  autenticacion_social?: Prisma.autenticacion_socialUncheckedUpdateManyWithoutUsuarioNestedInput
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutUsuarioNestedInput
+  blog?: Prisma.blogUncheckedUpdateManyWithoutUsuarioNestedInput
   cambio_email?: Prisma.cambio_emailUncheckedUpdateManyWithoutUsuarioNestedInput
+  codigo_2fa?: Prisma.codigo_2faUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario?: Prisma.comentarioUncheckedUpdateManyWithoutUsuarioNestedInput
+  comentario_like?: Prisma.comentario_likeUncheckedUpdateManyWithoutUsuarioNestedInput
+  comparacion?: Prisma.comparacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  entrenamiento_ml?: Prisma.entrenamiento_mlUncheckedUpdateManyWithoutUsuarioNestedInput
+  favorito?: Prisma.favoritoUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_busqueda?: Prisma.historial_busquedaUncheckedUpdateManyWithoutUsuarioNestedInput
+  historial_password?: Prisma.historial_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   inmueble?: Prisma.inmuebleUncheckedUpdateManyWithoutUsuarioNestedInput
+  magic_link?: Prisma.magic_linkUncheckedUpdateManyWithoutUsuarioNestedInput
   notificacion?: Prisma.notificacionUncheckedUpdateManyWithoutUsuarioNestedInput
   perfil?: Prisma.perfilUncheckedUpdateOneWithoutUsuarioNestedInput
+  propiedad_vista?: Prisma.propiedad_vistaUncheckedUpdateManyWithoutUsuarioNestedInput
   publicacion?: Prisma.publicacionUncheckedUpdateManyWithoutUsuarioNestedInput
+  recuperacion_password?: Prisma.recuperacion_passwordUncheckedUpdateManyWithoutUsuarioNestedInput
   sesion?: Prisma.sesionUncheckedUpdateManyWithoutUsuarioNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutUsuarioNestedInput
-  telefono?: Prisma.telefonoUncheckedUpdateManyWithoutUsuarioNestedInput
+  telefono_telefono_usuarioIdTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuarioIdTousuarioNestedInput
+  telefono_telefono_usuario_idTousuario?: Prisma.telefonoUncheckedUpdateManyWithoutUsuario_telefono_usuario_idTousuarioNestedInput
+  testimonio?: Prisma.testimonioUncheckedUpdateManyWithoutUsuarioNestedInput
+  testimonio_like?: Prisma.testimonio_likeUncheckedUpdateManyWithoutUsuarioNestedInput
   transacciones?: Prisma.transaccionesUncheckedUpdateManyWithoutUsuarioNestedInput
+  tutorial_publicacion_usuario?: Prisma.tutorial_publicacion_usuarioUncheckedUpdateOneWithoutUsuarioNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutUsuarioNestedInput
   visitor?: Prisma.visitorUncheckedUpdateManyWithoutUsuarioNestedInput
+  zona_usuario?: Prisma.zona_usuarioUncheckedUpdateManyWithoutUsuarioNestedInput
 }
 
 export type usuarioUncheckedUpdateManyWithoutRolInput = {
@@ -2909,9 +10727,28 @@ export type usuarioUncheckedUpdateManyWithoutRolInput = {
   genero?: Prisma.NullableEnumgeneroFieldUpdateOperationsInput | $Enums.genero | null
   direccion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activo?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  fechaRegistro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  intentos_fallidos_cambio_password?: Prisma.IntFieldUpdateOperationsInput | number
+  bloqueo_cambio_password_hasta?:
+    | Prisma.NullableDateTimeFieldUpdateOperationsInput
+    | Date
+    | string
+    | null
+  password_actualizado_en?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  two_factor_activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  two_factor_metodo?: Prisma.StringFieldUpdateOperationsInput | string
+  two_factor_activado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  controlador?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  notificacionWhatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_email?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  notificacion_whatsapp?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   fecha_registro?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  created_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  updated_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  desactivado_en?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_nacimiento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  telemetria_compartida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  zona_conexion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 /**
@@ -2919,33 +10756,71 @@ export type usuarioUncheckedUpdateManyWithoutRolInput = {
  */
 
 export type UsuarioCountOutputType = {
+  autenticacion_social: number
   bitacora_pagos: number
+  blog: number
   cambio_email: number
+  codigo_2fa: number
+  comentario: number
+  comentario_like: number
+  comparacion: number
+  entrenamiento_ml: number
+  favorito: number
+  historial_busqueda: number
+  historial_password: number
   inmueble: number
+  magic_link: number
   notificacion: number
+  propiedad_vista: number
   publicacion: number
+  recuperacion_password: number
   sesion: number
   suscripciones_activas: number
-  telefono: number
+  telefono_telefono_usuarioIdTousuario: number
+  telefono_telefono_usuario_idTousuario: number
+  testimonio: number
+  testimonio_like: number
   transacciones: number
   verificacion_pago: number
   visitor: number
+  zona_usuario: number
 }
 
 export type UsuarioCountOutputTypeSelect<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
+  autenticacion_social?: boolean | UsuarioCountOutputTypeCountAutenticacion_socialArgs
   bitacora_pagos?: boolean | UsuarioCountOutputTypeCountBitacora_pagosArgs
+  blog?: boolean | UsuarioCountOutputTypeCountBlogArgs
   cambio_email?: boolean | UsuarioCountOutputTypeCountCambio_emailArgs
+  codigo_2fa?: boolean | UsuarioCountOutputTypeCountCodigo_2faArgs
+  comentario?: boolean | UsuarioCountOutputTypeCountComentarioArgs
+  comentario_like?: boolean | UsuarioCountOutputTypeCountComentario_likeArgs
+  comparacion?: boolean | UsuarioCountOutputTypeCountComparacionArgs
+  entrenamiento_ml?: boolean | UsuarioCountOutputTypeCountEntrenamiento_mlArgs
+  favorito?: boolean | UsuarioCountOutputTypeCountFavoritoArgs
+  historial_busqueda?: boolean | UsuarioCountOutputTypeCountHistorial_busquedaArgs
+  historial_password?: boolean | UsuarioCountOutputTypeCountHistorial_passwordArgs
   inmueble?: boolean | UsuarioCountOutputTypeCountInmuebleArgs
+  magic_link?: boolean | UsuarioCountOutputTypeCountMagic_linkArgs
   notificacion?: boolean | UsuarioCountOutputTypeCountNotificacionArgs
+  propiedad_vista?: boolean | UsuarioCountOutputTypeCountPropiedad_vistaArgs
   publicacion?: boolean | UsuarioCountOutputTypeCountPublicacionArgs
+  recuperacion_password?: boolean | UsuarioCountOutputTypeCountRecuperacion_passwordArgs
   sesion?: boolean | UsuarioCountOutputTypeCountSesionArgs
   suscripciones_activas?: boolean | UsuarioCountOutputTypeCountSuscripciones_activasArgs
-  telefono?: boolean | UsuarioCountOutputTypeCountTelefonoArgs
+  telefono_telefono_usuarioIdTousuario?:
+    | boolean
+    | UsuarioCountOutputTypeCountTelefono_telefono_usuarioIdTousuarioArgs
+  telefono_telefono_usuario_idTousuario?:
+    | boolean
+    | UsuarioCountOutputTypeCountTelefono_telefono_usuario_idTousuarioArgs
+  testimonio?: boolean | UsuarioCountOutputTypeCountTestimonioArgs
+  testimonio_like?: boolean | UsuarioCountOutputTypeCountTestimonio_likeArgs
   transacciones?: boolean | UsuarioCountOutputTypeCountTransaccionesArgs
   verificacion_pago?: boolean | UsuarioCountOutputTypeCountVerificacion_pagoArgs
   visitor?: boolean | UsuarioCountOutputTypeCountVisitorArgs
+  zona_usuario?: boolean | UsuarioCountOutputTypeCountZona_usuarioArgs
 }
 
 /**
@@ -2963,10 +10838,28 @@ export type UsuarioCountOutputTypeDefaultArgs<
 /**
  * UsuarioCountOutputType without action
  */
+export type UsuarioCountOutputTypeCountAutenticacion_socialArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.autenticacion_socialWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
 export type UsuarioCountOutputTypeCountBitacora_pagosArgs<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
   where?: Prisma.bitacora_pagosWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountBlogArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.blogWhereInput
 }
 
 /**
@@ -2981,10 +10874,91 @@ export type UsuarioCountOutputTypeCountCambio_emailArgs<
 /**
  * UsuarioCountOutputType without action
  */
+export type UsuarioCountOutputTypeCountCodigo_2faArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.codigo_2faWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountComentarioArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.comentarioWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountComentario_likeArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.comentario_likeWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountComparacionArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.comparacionWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountEntrenamiento_mlArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.entrenamiento_mlWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountFavoritoArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.favoritoWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountHistorial_busquedaArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.historial_busquedaWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountHistorial_passwordArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.historial_passwordWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
 export type UsuarioCountOutputTypeCountInmuebleArgs<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
   where?: Prisma.inmuebleWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountMagic_linkArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.magic_linkWhereInput
 }
 
 /**
@@ -2999,10 +10973,28 @@ export type UsuarioCountOutputTypeCountNotificacionArgs<
 /**
  * UsuarioCountOutputType without action
  */
+export type UsuarioCountOutputTypeCountPropiedad_vistaArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.propiedad_vistaWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
 export type UsuarioCountOutputTypeCountPublicacionArgs<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
   where?: Prisma.publicacionWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountRecuperacion_passwordArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.recuperacion_passwordWhereInput
 }
 
 /**
@@ -3026,10 +11018,37 @@ export type UsuarioCountOutputTypeCountSuscripciones_activasArgs<
 /**
  * UsuarioCountOutputType without action
  */
-export type UsuarioCountOutputTypeCountTelefonoArgs<
+export type UsuarioCountOutputTypeCountTelefono_telefono_usuarioIdTousuarioArgs<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
   where?: Prisma.telefonoWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountTelefono_telefono_usuario_idTousuarioArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.telefonoWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountTestimonioArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.testimonioWhereInput
+}
+
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountTestimonio_likeArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.testimonio_likeWhereInput
 }
 
 /**
@@ -3059,6 +11078,15 @@ export type UsuarioCountOutputTypeCountVisitorArgs<
   where?: Prisma.visitorWhereInput
 }
 
+/**
+ * UsuarioCountOutputType without action
+ */
+export type UsuarioCountOutputTypeCountZona_usuarioArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.zona_usuarioWhereInput
+}
+
 export type usuarioSelect<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = runtime.Types.Extensions.GetSelect<
@@ -3073,23 +11101,62 @@ export type usuarioSelect<
     genero?: boolean
     direccion?: boolean
     activo?: boolean
+    fechaRegistro?: boolean
+    createdAt?: boolean
+    intentos_fallidos_cambio_password?: boolean
+    bloqueo_cambio_password_hasta?: boolean
+    password_actualizado_en?: boolean
+    two_factor_activo?: boolean
+    two_factor_metodo?: boolean
+    two_factor_activado_en?: boolean
+    controlador?: boolean
+    notificacionWhatsapp?: boolean
+    rolId?: boolean
+    notificacion_email?: boolean
+    notificacion_whatsapp?: boolean
     fecha_registro?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    rol_id?: boolean
+    updatedAt?: boolean
+    desactivado_en?: boolean
+    fecha_nacimiento?: boolean
+    telemetria_compartida?: boolean
+    zona_conexion?: boolean
+    autenticacion_social?: boolean | Prisma.usuario$autenticacion_socialArgs<ExtArgs>
     bitacora_pagos?: boolean | Prisma.usuario$bitacora_pagosArgs<ExtArgs>
+    blog?: boolean | Prisma.usuario$blogArgs<ExtArgs>
     cambio_email?: boolean | Prisma.usuario$cambio_emailArgs<ExtArgs>
+    codigo_2fa?: boolean | Prisma.usuario$codigo_2faArgs<ExtArgs>
+    comentario?: boolean | Prisma.usuario$comentarioArgs<ExtArgs>
+    comentario_like?: boolean | Prisma.usuario$comentario_likeArgs<ExtArgs>
+    comparacion?: boolean | Prisma.usuario$comparacionArgs<ExtArgs>
+    entrenamiento_ml?: boolean | Prisma.usuario$entrenamiento_mlArgs<ExtArgs>
+    favorito?: boolean | Prisma.usuario$favoritoArgs<ExtArgs>
+    historial_busqueda?: boolean | Prisma.usuario$historial_busquedaArgs<ExtArgs>
+    historial_password?: boolean | Prisma.usuario$historial_passwordArgs<ExtArgs>
     inmueble?: boolean | Prisma.usuario$inmuebleArgs<ExtArgs>
+    magic_link?: boolean | Prisma.usuario$magic_linkArgs<ExtArgs>
     notificacion?: boolean | Prisma.usuario$notificacionArgs<ExtArgs>
     perfil?: boolean | Prisma.usuario$perfilArgs<ExtArgs>
+    propiedad_vista?: boolean | Prisma.usuario$propiedad_vistaArgs<ExtArgs>
     publicacion?: boolean | Prisma.usuario$publicacionArgs<ExtArgs>
+    recuperacion_password?: boolean | Prisma.usuario$recuperacion_passwordArgs<ExtArgs>
     sesion?: boolean | Prisma.usuario$sesionArgs<ExtArgs>
     suscripciones_activas?: boolean | Prisma.usuario$suscripciones_activasArgs<ExtArgs>
-    telefono?: boolean | Prisma.usuario$telefonoArgs<ExtArgs>
+    telefono_telefono_usuarioIdTousuario?:
+      | boolean
+      | Prisma.usuario$telefono_telefono_usuarioIdTousuarioArgs<ExtArgs>
+    telefono_telefono_usuario_idTousuario?:
+      | boolean
+      | Prisma.usuario$telefono_telefono_usuario_idTousuarioArgs<ExtArgs>
+    testimonio?: boolean | Prisma.usuario$testimonioArgs<ExtArgs>
+    testimonio_like?: boolean | Prisma.usuario$testimonio_likeArgs<ExtArgs>
     transacciones?: boolean | Prisma.usuario$transaccionesArgs<ExtArgs>
-    rol?: boolean | Prisma.rolDefaultArgs<ExtArgs>
+    tutorial_publicacion_usuario?:
+      | boolean
+      | Prisma.usuario$tutorial_publicacion_usuarioArgs<ExtArgs>
+    rol?: boolean | Prisma.usuario$rolArgs<ExtArgs>
     verificacion_pago?: boolean | Prisma.usuario$verificacion_pagoArgs<ExtArgs>
     visitor?: boolean | Prisma.usuario$visitorArgs<ExtArgs>
+    zona_usuario?: boolean | Prisma.usuario$zona_usuarioArgs<ExtArgs>
     _count?: boolean | Prisma.UsuarioCountOutputTypeDefaultArgs<ExtArgs>
   },
   ExtArgs['result']['usuario']
@@ -3109,11 +11176,26 @@ export type usuarioSelectCreateManyAndReturn<
     genero?: boolean
     direccion?: boolean
     activo?: boolean
+    fechaRegistro?: boolean
+    createdAt?: boolean
+    intentos_fallidos_cambio_password?: boolean
+    bloqueo_cambio_password_hasta?: boolean
+    password_actualizado_en?: boolean
+    two_factor_activo?: boolean
+    two_factor_metodo?: boolean
+    two_factor_activado_en?: boolean
+    controlador?: boolean
+    notificacionWhatsapp?: boolean
+    rolId?: boolean
+    notificacion_email?: boolean
+    notificacion_whatsapp?: boolean
     fecha_registro?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    rol_id?: boolean
-    rol?: boolean | Prisma.rolDefaultArgs<ExtArgs>
+    updatedAt?: boolean
+    desactivado_en?: boolean
+    fecha_nacimiento?: boolean
+    telemetria_compartida?: boolean
+    zona_conexion?: boolean
+    rol?: boolean | Prisma.usuario$rolArgs<ExtArgs>
   },
   ExtArgs['result']['usuario']
 >
@@ -3132,11 +11214,26 @@ export type usuarioSelectUpdateManyAndReturn<
     genero?: boolean
     direccion?: boolean
     activo?: boolean
+    fechaRegistro?: boolean
+    createdAt?: boolean
+    intentos_fallidos_cambio_password?: boolean
+    bloqueo_cambio_password_hasta?: boolean
+    password_actualizado_en?: boolean
+    two_factor_activo?: boolean
+    two_factor_metodo?: boolean
+    two_factor_activado_en?: boolean
+    controlador?: boolean
+    notificacionWhatsapp?: boolean
+    rolId?: boolean
+    notificacion_email?: boolean
+    notificacion_whatsapp?: boolean
     fecha_registro?: boolean
-    created_at?: boolean
-    updated_at?: boolean
-    rol_id?: boolean
-    rol?: boolean | Prisma.rolDefaultArgs<ExtArgs>
+    updatedAt?: boolean
+    desactivado_en?: boolean
+    fecha_nacimiento?: boolean
+    telemetria_compartida?: boolean
+    zona_conexion?: boolean
+    rol?: boolean | Prisma.usuario$rolArgs<ExtArgs>
   },
   ExtArgs['result']['usuario']
 >
@@ -3152,10 +11249,25 @@ export type usuarioSelectScalar = {
   genero?: boolean
   direccion?: boolean
   activo?: boolean
+  fechaRegistro?: boolean
+  createdAt?: boolean
+  intentos_fallidos_cambio_password?: boolean
+  bloqueo_cambio_password_hasta?: boolean
+  password_actualizado_en?: boolean
+  two_factor_activo?: boolean
+  two_factor_metodo?: boolean
+  two_factor_activado_en?: boolean
+  controlador?: boolean
+  notificacionWhatsapp?: boolean
+  rolId?: boolean
+  notificacion_email?: boolean
+  notificacion_whatsapp?: boolean
   fecha_registro?: boolean
-  created_at?: boolean
-  updated_at?: boolean
-  rol_id?: boolean
+  updatedAt?: boolean
+  desactivado_en?: boolean
+  fecha_nacimiento?: boolean
+  telemetria_compartida?: boolean
+  zona_conexion?: boolean
 }
 
 export type usuarioOmit<
@@ -3171,39 +11283,76 @@ export type usuarioOmit<
   | 'genero'
   | 'direccion'
   | 'activo'
+  | 'fechaRegistro'
+  | 'createdAt'
+  | 'intentos_fallidos_cambio_password'
+  | 'bloqueo_cambio_password_hasta'
+  | 'password_actualizado_en'
+  | 'two_factor_activo'
+  | 'two_factor_metodo'
+  | 'two_factor_activado_en'
+  | 'controlador'
+  | 'notificacionWhatsapp'
+  | 'rolId'
+  | 'notificacion_email'
+  | 'notificacion_whatsapp'
   | 'fecha_registro'
-  | 'created_at'
-  | 'updated_at'
-  | 'rol_id',
+  | 'updatedAt'
+  | 'desactivado_en'
+  | 'fecha_nacimiento'
+  | 'telemetria_compartida'
+  | 'zona_conexion',
   ExtArgs['result']['usuario']
 >
 export type usuarioInclude<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
+  autenticacion_social?: boolean | Prisma.usuario$autenticacion_socialArgs<ExtArgs>
   bitacora_pagos?: boolean | Prisma.usuario$bitacora_pagosArgs<ExtArgs>
+  blog?: boolean | Prisma.usuario$blogArgs<ExtArgs>
   cambio_email?: boolean | Prisma.usuario$cambio_emailArgs<ExtArgs>
+  codigo_2fa?: boolean | Prisma.usuario$codigo_2faArgs<ExtArgs>
+  comentario?: boolean | Prisma.usuario$comentarioArgs<ExtArgs>
+  comentario_like?: boolean | Prisma.usuario$comentario_likeArgs<ExtArgs>
+  comparacion?: boolean | Prisma.usuario$comparacionArgs<ExtArgs>
+  entrenamiento_ml?: boolean | Prisma.usuario$entrenamiento_mlArgs<ExtArgs>
+  favorito?: boolean | Prisma.usuario$favoritoArgs<ExtArgs>
+  historial_busqueda?: boolean | Prisma.usuario$historial_busquedaArgs<ExtArgs>
+  historial_password?: boolean | Prisma.usuario$historial_passwordArgs<ExtArgs>
   inmueble?: boolean | Prisma.usuario$inmuebleArgs<ExtArgs>
+  magic_link?: boolean | Prisma.usuario$magic_linkArgs<ExtArgs>
   notificacion?: boolean | Prisma.usuario$notificacionArgs<ExtArgs>
   perfil?: boolean | Prisma.usuario$perfilArgs<ExtArgs>
+  propiedad_vista?: boolean | Prisma.usuario$propiedad_vistaArgs<ExtArgs>
   publicacion?: boolean | Prisma.usuario$publicacionArgs<ExtArgs>
+  recuperacion_password?: boolean | Prisma.usuario$recuperacion_passwordArgs<ExtArgs>
   sesion?: boolean | Prisma.usuario$sesionArgs<ExtArgs>
   suscripciones_activas?: boolean | Prisma.usuario$suscripciones_activasArgs<ExtArgs>
-  telefono?: boolean | Prisma.usuario$telefonoArgs<ExtArgs>
+  telefono_telefono_usuarioIdTousuario?:
+    | boolean
+    | Prisma.usuario$telefono_telefono_usuarioIdTousuarioArgs<ExtArgs>
+  telefono_telefono_usuario_idTousuario?:
+    | boolean
+    | Prisma.usuario$telefono_telefono_usuario_idTousuarioArgs<ExtArgs>
+  testimonio?: boolean | Prisma.usuario$testimonioArgs<ExtArgs>
+  testimonio_like?: boolean | Prisma.usuario$testimonio_likeArgs<ExtArgs>
   transacciones?: boolean | Prisma.usuario$transaccionesArgs<ExtArgs>
-  rol?: boolean | Prisma.rolDefaultArgs<ExtArgs>
+  tutorial_publicacion_usuario?: boolean | Prisma.usuario$tutorial_publicacion_usuarioArgs<ExtArgs>
+  rol?: boolean | Prisma.usuario$rolArgs<ExtArgs>
   verificacion_pago?: boolean | Prisma.usuario$verificacion_pagoArgs<ExtArgs>
   visitor?: boolean | Prisma.usuario$visitorArgs<ExtArgs>
+  zona_usuario?: boolean | Prisma.usuario$zona_usuarioArgs<ExtArgs>
   _count?: boolean | Prisma.UsuarioCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type usuarioIncludeCreateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
-  rol?: boolean | Prisma.rolDefaultArgs<ExtArgs>
+  rol?: boolean | Prisma.usuario$rolArgs<ExtArgs>
 }
 export type usuarioIncludeUpdateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
-  rol?: boolean | Prisma.rolDefaultArgs<ExtArgs>
+  rol?: boolean | Prisma.usuario$rolArgs<ExtArgs>
 }
 
 export type $usuarioPayload<
@@ -3211,19 +11360,37 @@ export type $usuarioPayload<
 > = {
   name: 'usuario'
   objects: {
+    autenticacion_social: Prisma.$autenticacion_socialPayload<ExtArgs>[]
     bitacora_pagos: Prisma.$bitacora_pagosPayload<ExtArgs>[]
+    blog: Prisma.$blogPayload<ExtArgs>[]
     cambio_email: Prisma.$cambio_emailPayload<ExtArgs>[]
+    codigo_2fa: Prisma.$codigo_2faPayload<ExtArgs>[]
+    comentario: Prisma.$comentarioPayload<ExtArgs>[]
+    comentario_like: Prisma.$comentario_likePayload<ExtArgs>[]
+    comparacion: Prisma.$comparacionPayload<ExtArgs>[]
+    entrenamiento_ml: Prisma.$entrenamiento_mlPayload<ExtArgs>[]
+    favorito: Prisma.$favoritoPayload<ExtArgs>[]
+    historial_busqueda: Prisma.$historial_busquedaPayload<ExtArgs>[]
+    historial_password: Prisma.$historial_passwordPayload<ExtArgs>[]
     inmueble: Prisma.$inmueblePayload<ExtArgs>[]
+    magic_link: Prisma.$magic_linkPayload<ExtArgs>[]
     notificacion: Prisma.$notificacionPayload<ExtArgs>[]
     perfil: Prisma.$perfilPayload<ExtArgs> | null
+    propiedad_vista: Prisma.$propiedad_vistaPayload<ExtArgs>[]
     publicacion: Prisma.$publicacionPayload<ExtArgs>[]
+    recuperacion_password: Prisma.$recuperacion_passwordPayload<ExtArgs>[]
     sesion: Prisma.$sesionPayload<ExtArgs>[]
     suscripciones_activas: Prisma.$suscripciones_activasPayload<ExtArgs>[]
-    telefono: Prisma.$telefonoPayload<ExtArgs>[]
+    telefono_telefono_usuarioIdTousuario: Prisma.$telefonoPayload<ExtArgs>[]
+    telefono_telefono_usuario_idTousuario: Prisma.$telefonoPayload<ExtArgs>[]
+    testimonio: Prisma.$testimonioPayload<ExtArgs>[]
+    testimonio_like: Prisma.$testimonio_likePayload<ExtArgs>[]
     transacciones: Prisma.$transaccionesPayload<ExtArgs>[]
-    rol: Prisma.$rolPayload<ExtArgs>
+    tutorial_publicacion_usuario: Prisma.$tutorial_publicacion_usuarioPayload<ExtArgs> | null
+    rol: Prisma.$rolPayload<ExtArgs> | null
     verificacion_pago: Prisma.$verificacion_pagoPayload<ExtArgs>[]
     visitor: Prisma.$visitorPayload<ExtArgs>[]
+    zona_usuario: Prisma.$zona_usuarioPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
@@ -3237,10 +11404,25 @@ export type $usuarioPayload<
       genero: $Enums.genero | null
       direccion: string | null
       activo: boolean | null
+      fechaRegistro: Date | null
+      createdAt: Date | null
+      intentos_fallidos_cambio_password: number
+      bloqueo_cambio_password_hasta: Date | null
+      password_actualizado_en: Date
+      two_factor_activo: boolean
+      two_factor_metodo: string
+      two_factor_activado_en: Date | null
+      controlador: boolean
+      notificacionWhatsapp: boolean | null
+      rolId: number | null
+      notificacion_email: boolean | null
+      notificacion_whatsapp: boolean | null
       fecha_registro: Date | null
-      created_at: Date | null
-      updated_at: Date | null
-      rol_id: number
+      updatedAt: Date | null
+      desactivado_en: Date | null
+      fecha_nacimiento: Date | null
+      telemetria_compartida: boolean | null
+      zona_conexion: string | null
     },
     ExtArgs['result']['usuario']
   >
@@ -3756,6 +11938,17 @@ export interface Prisma__usuarioClient<
   GlobalOmitOptions = {}
 > extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: 'PrismaPromise'
+  autenticacion_social<T extends Prisma.usuario$autenticacion_socialArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.usuario$autenticacion_socialArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$autenticacion_socialPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
   bitacora_pagos<T extends Prisma.usuario$bitacora_pagosArgs<ExtArgs> = {}>(
     args?: Prisma.Subset<T, Prisma.usuario$bitacora_pagosArgs<ExtArgs>>
   ): Prisma.PrismaPromise<
@@ -3765,6 +11958,12 @@ export interface Prisma__usuarioClient<
         'findMany',
         GlobalOmitOptions
       >
+    | Null
+  >
+  blog<T extends Prisma.usuario$blogArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.usuario$blogArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<Prisma.$blogPayload<ExtArgs>, T, 'findMany', GlobalOmitOptions>
     | Null
   >
   cambio_email<T extends Prisma.usuario$cambio_emailArgs<ExtArgs> = {}>(
@@ -3778,11 +11977,110 @@ export interface Prisma__usuarioClient<
       >
     | Null
   >
+  codigo_2fa<T extends Prisma.usuario$codigo_2faArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.usuario$codigo_2faArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$codigo_2faPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
+  comentario<T extends Prisma.usuario$comentarioArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.usuario$comentarioArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$comentarioPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
+  comentario_like<T extends Prisma.usuario$comentario_likeArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.usuario$comentario_likeArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$comentario_likePayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
+  comparacion<T extends Prisma.usuario$comparacionArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.usuario$comparacionArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$comparacionPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
+  entrenamiento_ml<T extends Prisma.usuario$entrenamiento_mlArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.usuario$entrenamiento_mlArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$entrenamiento_mlPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
+  favorito<T extends Prisma.usuario$favoritoArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.usuario$favoritoArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$favoritoPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
+  historial_busqueda<T extends Prisma.usuario$historial_busquedaArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.usuario$historial_busquedaArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$historial_busquedaPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
+  historial_password<T extends Prisma.usuario$historial_passwordArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.usuario$historial_passwordArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$historial_passwordPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
   inmueble<T extends Prisma.usuario$inmuebleArgs<ExtArgs> = {}>(
     args?: Prisma.Subset<T, Prisma.usuario$inmuebleArgs<ExtArgs>>
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$inmueblePayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
+  magic_link<T extends Prisma.usuario$magic_linkArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.usuario$magic_linkArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$magic_linkPayload<ExtArgs>,
         T,
         'findMany',
         GlobalOmitOptions
@@ -3813,11 +12111,33 @@ export interface Prisma__usuarioClient<
     ExtArgs,
     GlobalOmitOptions
   >
+  propiedad_vista<T extends Prisma.usuario$propiedad_vistaArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.usuario$propiedad_vistaArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$propiedad_vistaPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
   publicacion<T extends Prisma.usuario$publicacionArgs<ExtArgs> = {}>(
     args?: Prisma.Subset<T, Prisma.usuario$publicacionArgs<ExtArgs>>
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$publicacionPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
+  recuperacion_password<T extends Prisma.usuario$recuperacion_passwordArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.usuario$recuperacion_passwordArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$recuperacion_passwordPayload<ExtArgs>,
         T,
         'findMany',
         GlobalOmitOptions
@@ -3846,11 +12166,48 @@ export interface Prisma__usuarioClient<
       >
     | Null
   >
-  telefono<T extends Prisma.usuario$telefonoArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.usuario$telefonoArgs<ExtArgs>>
+  telefono_telefono_usuarioIdTousuario<
+    T extends Prisma.usuario$telefono_telefono_usuarioIdTousuarioArgs<ExtArgs> = {}
+  >(
+    args?: Prisma.Subset<T, Prisma.usuario$telefono_telefono_usuarioIdTousuarioArgs<ExtArgs>>
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$telefonoPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
+  telefono_telefono_usuario_idTousuario<
+    T extends Prisma.usuario$telefono_telefono_usuario_idTousuarioArgs<ExtArgs> = {}
+  >(
+    args?: Prisma.Subset<T, Prisma.usuario$telefono_telefono_usuario_idTousuarioArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$telefonoPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
+  testimonio<T extends Prisma.usuario$testimonioArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.usuario$testimonioArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$testimonioPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
+  testimonio_like<T extends Prisma.usuario$testimonio_likeArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.usuario$testimonio_likeArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$testimonio_likePayload<ExtArgs>,
         T,
         'findMany',
         GlobalOmitOptions
@@ -3868,17 +12225,31 @@ export interface Prisma__usuarioClient<
       >
     | Null
   >
-  rol<T extends Prisma.rolDefaultArgs<ExtArgs> = {}>(
-    args?: Prisma.Subset<T, Prisma.rolDefaultArgs<ExtArgs>>
+  tutorial_publicacion_usuario<
+    T extends Prisma.usuario$tutorial_publicacion_usuarioArgs<ExtArgs> = {}
+  >(
+    args?: Prisma.Subset<T, Prisma.usuario$tutorial_publicacion_usuarioArgs<ExtArgs>>
+  ): Prisma.Prisma__tutorial_publicacion_usuarioClient<
+    runtime.Types.Result.GetResult<
+      Prisma.$tutorial_publicacion_usuarioPayload<ExtArgs>,
+      T,
+      'findUniqueOrThrow',
+      GlobalOmitOptions
+    > | null,
+    null,
+    ExtArgs,
+    GlobalOmitOptions
+  >
+  rol<T extends Prisma.usuario$rolArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.usuario$rolArgs<ExtArgs>>
   ): Prisma.Prisma__rolClient<
-    | runtime.Types.Result.GetResult<
-        Prisma.$rolPayload<ExtArgs>,
-        T,
-        'findUniqueOrThrow',
-        GlobalOmitOptions
-      >
-    | Null,
-    Null,
+    runtime.Types.Result.GetResult<
+      Prisma.$rolPayload<ExtArgs>,
+      T,
+      'findUniqueOrThrow',
+      GlobalOmitOptions
+    > | null,
+    null,
     ExtArgs,
     GlobalOmitOptions
   >
@@ -3898,6 +12269,17 @@ export interface Prisma__usuarioClient<
   ): Prisma.PrismaPromise<
     | runtime.Types.Result.GetResult<
         Prisma.$visitorPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
+  zona_usuario<T extends Prisma.usuario$zona_usuarioArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.usuario$zona_usuarioArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$zona_usuarioPayload<ExtArgs>,
         T,
         'findMany',
         GlobalOmitOptions
@@ -3945,10 +12327,25 @@ export interface usuarioFieldRefs {
   readonly genero: Prisma.FieldRef<'usuario', 'genero'>
   readonly direccion: Prisma.FieldRef<'usuario', 'String'>
   readonly activo: Prisma.FieldRef<'usuario', 'Boolean'>
+  readonly fechaRegistro: Prisma.FieldRef<'usuario', 'DateTime'>
+  readonly createdAt: Prisma.FieldRef<'usuario', 'DateTime'>
+  readonly intentos_fallidos_cambio_password: Prisma.FieldRef<'usuario', 'Int'>
+  readonly bloqueo_cambio_password_hasta: Prisma.FieldRef<'usuario', 'DateTime'>
+  readonly password_actualizado_en: Prisma.FieldRef<'usuario', 'DateTime'>
+  readonly two_factor_activo: Prisma.FieldRef<'usuario', 'Boolean'>
+  readonly two_factor_metodo: Prisma.FieldRef<'usuario', 'String'>
+  readonly two_factor_activado_en: Prisma.FieldRef<'usuario', 'DateTime'>
+  readonly controlador: Prisma.FieldRef<'usuario', 'Boolean'>
+  readonly notificacionWhatsapp: Prisma.FieldRef<'usuario', 'Boolean'>
+  readonly rolId: Prisma.FieldRef<'usuario', 'Int'>
+  readonly notificacion_email: Prisma.FieldRef<'usuario', 'Boolean'>
+  readonly notificacion_whatsapp: Prisma.FieldRef<'usuario', 'Boolean'>
   readonly fecha_registro: Prisma.FieldRef<'usuario', 'DateTime'>
-  readonly created_at: Prisma.FieldRef<'usuario', 'DateTime'>
-  readonly updated_at: Prisma.FieldRef<'usuario', 'DateTime'>
-  readonly rol_id: Prisma.FieldRef<'usuario', 'Int'>
+  readonly updatedAt: Prisma.FieldRef<'usuario', 'DateTime'>
+  readonly desactivado_en: Prisma.FieldRef<'usuario', 'DateTime'>
+  readonly fecha_nacimiento: Prisma.FieldRef<'usuario', 'DateTime'>
+  readonly telemetria_compartida: Prisma.FieldRef<'usuario', 'Boolean'>
+  readonly zona_conexion: Prisma.FieldRef<'usuario', 'String'>
 }
 
 // Custom InputTypes
@@ -4377,6 +12774,36 @@ export type usuarioDeleteManyArgs<
 }
 
 /**
+ * usuario.autenticacion_social
+ */
+export type usuario$autenticacion_socialArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the autenticacion_social
+   */
+  select?: Prisma.autenticacion_socialSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the autenticacion_social
+   */
+  omit?: Prisma.autenticacion_socialOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.autenticacion_socialInclude<ExtArgs> | null
+  where?: Prisma.autenticacion_socialWhereInput
+  orderBy?:
+    | Prisma.autenticacion_socialOrderByWithRelationInput
+    | Prisma.autenticacion_socialOrderByWithRelationInput[]
+  cursor?: Prisma.autenticacion_socialWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?:
+    | Prisma.Autenticacion_socialScalarFieldEnum
+    | Prisma.Autenticacion_socialScalarFieldEnum[]
+}
+
+/**
  * usuario.bitacora_pagos
  */
 export type usuario$bitacora_pagosArgs<
@@ -4402,6 +12829,32 @@ export type usuario$bitacora_pagosArgs<
   take?: number
   skip?: number
   distinct?: Prisma.Bitacora_pagosScalarFieldEnum | Prisma.Bitacora_pagosScalarFieldEnum[]
+}
+
+/**
+ * usuario.blog
+ */
+export type usuario$blogArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the blog
+   */
+  select?: Prisma.blogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the blog
+   */
+  omit?: Prisma.blogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.blogInclude<ExtArgs> | null
+  where?: Prisma.blogWhereInput
+  orderBy?: Prisma.blogOrderByWithRelationInput | Prisma.blogOrderByWithRelationInput[]
+  cursor?: Prisma.blogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.BlogScalarFieldEnum | Prisma.BlogScalarFieldEnum[]
 }
 
 /**
@@ -4433,6 +12886,224 @@ export type usuario$cambio_emailArgs<
 }
 
 /**
+ * usuario.codigo_2fa
+ */
+export type usuario$codigo_2faArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the codigo_2fa
+   */
+  select?: Prisma.codigo_2faSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the codigo_2fa
+   */
+  omit?: Prisma.codigo_2faOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.codigo_2faInclude<ExtArgs> | null
+  where?: Prisma.codigo_2faWhereInput
+  orderBy?: Prisma.codigo_2faOrderByWithRelationInput | Prisma.codigo_2faOrderByWithRelationInput[]
+  cursor?: Prisma.codigo_2faWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Codigo_2faScalarFieldEnum | Prisma.Codigo_2faScalarFieldEnum[]
+}
+
+/**
+ * usuario.comentario
+ */
+export type usuario$comentarioArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the comentario
+   */
+  select?: Prisma.comentarioSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the comentario
+   */
+  omit?: Prisma.comentarioOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.comentarioInclude<ExtArgs> | null
+  where?: Prisma.comentarioWhereInput
+  orderBy?: Prisma.comentarioOrderByWithRelationInput | Prisma.comentarioOrderByWithRelationInput[]
+  cursor?: Prisma.comentarioWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ComentarioScalarFieldEnum | Prisma.ComentarioScalarFieldEnum[]
+}
+
+/**
+ * usuario.comentario_like
+ */
+export type usuario$comentario_likeArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the comentario_like
+   */
+  select?: Prisma.comentario_likeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the comentario_like
+   */
+  omit?: Prisma.comentario_likeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.comentario_likeInclude<ExtArgs> | null
+  where?: Prisma.comentario_likeWhereInput
+  orderBy?:
+    | Prisma.comentario_likeOrderByWithRelationInput
+    | Prisma.comentario_likeOrderByWithRelationInput[]
+  cursor?: Prisma.comentario_likeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Comentario_likeScalarFieldEnum | Prisma.Comentario_likeScalarFieldEnum[]
+}
+
+/**
+ * usuario.comparacion
+ */
+export type usuario$comparacionArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the comparacion
+   */
+  select?: Prisma.comparacionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the comparacion
+   */
+  omit?: Prisma.comparacionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.comparacionInclude<ExtArgs> | null
+  where?: Prisma.comparacionWhereInput
+  orderBy?:
+    | Prisma.comparacionOrderByWithRelationInput
+    | Prisma.comparacionOrderByWithRelationInput[]
+  cursor?: Prisma.comparacionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ComparacionScalarFieldEnum | Prisma.ComparacionScalarFieldEnum[]
+}
+
+/**
+ * usuario.entrenamiento_ml
+ */
+export type usuario$entrenamiento_mlArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the entrenamiento_ml
+   */
+  select?: Prisma.entrenamiento_mlSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the entrenamiento_ml
+   */
+  omit?: Prisma.entrenamiento_mlOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.entrenamiento_mlInclude<ExtArgs> | null
+  where?: Prisma.entrenamiento_mlWhereInput
+  orderBy?:
+    | Prisma.entrenamiento_mlOrderByWithRelationInput
+    | Prisma.entrenamiento_mlOrderByWithRelationInput[]
+  cursor?: Prisma.entrenamiento_mlWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Entrenamiento_mlScalarFieldEnum | Prisma.Entrenamiento_mlScalarFieldEnum[]
+}
+
+/**
+ * usuario.favorito
+ */
+export type usuario$favoritoArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the favorito
+   */
+  select?: Prisma.favoritoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the favorito
+   */
+  omit?: Prisma.favoritoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.favoritoInclude<ExtArgs> | null
+  where?: Prisma.favoritoWhereInput
+  orderBy?: Prisma.favoritoOrderByWithRelationInput | Prisma.favoritoOrderByWithRelationInput[]
+  cursor?: Prisma.favoritoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FavoritoScalarFieldEnum | Prisma.FavoritoScalarFieldEnum[]
+}
+
+/**
+ * usuario.historial_busqueda
+ */
+export type usuario$historial_busquedaArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the historial_busqueda
+   */
+  select?: Prisma.historial_busquedaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the historial_busqueda
+   */
+  omit?: Prisma.historial_busquedaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.historial_busquedaInclude<ExtArgs> | null
+  where?: Prisma.historial_busquedaWhereInput
+  orderBy?:
+    | Prisma.historial_busquedaOrderByWithRelationInput
+    | Prisma.historial_busquedaOrderByWithRelationInput[]
+  cursor?: Prisma.historial_busquedaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Historial_busquedaScalarFieldEnum | Prisma.Historial_busquedaScalarFieldEnum[]
+}
+
+/**
+ * usuario.historial_password
+ */
+export type usuario$historial_passwordArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the historial_password
+   */
+  select?: Prisma.historial_passwordSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the historial_password
+   */
+  omit?: Prisma.historial_passwordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.historial_passwordInclude<ExtArgs> | null
+  where?: Prisma.historial_passwordWhereInput
+  orderBy?:
+    | Prisma.historial_passwordOrderByWithRelationInput
+    | Prisma.historial_passwordOrderByWithRelationInput[]
+  cursor?: Prisma.historial_passwordWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Historial_passwordScalarFieldEnum | Prisma.Historial_passwordScalarFieldEnum[]
+}
+
+/**
  * usuario.inmueble
  */
 export type usuario$inmuebleArgs<
@@ -4456,6 +13127,32 @@ export type usuario$inmuebleArgs<
   take?: number
   skip?: number
   distinct?: Prisma.InmuebleScalarFieldEnum | Prisma.InmuebleScalarFieldEnum[]
+}
+
+/**
+ * usuario.magic_link
+ */
+export type usuario$magic_linkArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the magic_link
+   */
+  select?: Prisma.magic_linkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the magic_link
+   */
+  omit?: Prisma.magic_linkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.magic_linkInclude<ExtArgs> | null
+  where?: Prisma.magic_linkWhereInput
+  orderBy?: Prisma.magic_linkOrderByWithRelationInput | Prisma.magic_linkOrderByWithRelationInput[]
+  cursor?: Prisma.magic_linkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Magic_linkScalarFieldEnum | Prisma.Magic_linkScalarFieldEnum[]
 }
 
 /**
@@ -4508,6 +13205,34 @@ export type usuario$perfilArgs<
 }
 
 /**
+ * usuario.propiedad_vista
+ */
+export type usuario$propiedad_vistaArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the propiedad_vista
+   */
+  select?: Prisma.propiedad_vistaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the propiedad_vista
+   */
+  omit?: Prisma.propiedad_vistaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.propiedad_vistaInclude<ExtArgs> | null
+  where?: Prisma.propiedad_vistaWhereInput
+  orderBy?:
+    | Prisma.propiedad_vistaOrderByWithRelationInput
+    | Prisma.propiedad_vistaOrderByWithRelationInput[]
+  cursor?: Prisma.propiedad_vistaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Propiedad_vistaScalarFieldEnum | Prisma.Propiedad_vistaScalarFieldEnum[]
+}
+
+/**
  * usuario.publicacion
  */
 export type usuario$publicacionArgs<
@@ -4533,6 +13258,36 @@ export type usuario$publicacionArgs<
   take?: number
   skip?: number
   distinct?: Prisma.PublicacionScalarFieldEnum | Prisma.PublicacionScalarFieldEnum[]
+}
+
+/**
+ * usuario.recuperacion_password
+ */
+export type usuario$recuperacion_passwordArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the recuperacion_password
+   */
+  select?: Prisma.recuperacion_passwordSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the recuperacion_password
+   */
+  omit?: Prisma.recuperacion_passwordOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.recuperacion_passwordInclude<ExtArgs> | null
+  where?: Prisma.recuperacion_passwordWhereInput
+  orderBy?:
+    | Prisma.recuperacion_passwordOrderByWithRelationInput
+    | Prisma.recuperacion_passwordOrderByWithRelationInput[]
+  cursor?: Prisma.recuperacion_passwordWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?:
+    | Prisma.Recuperacion_passwordScalarFieldEnum
+    | Prisma.Recuperacion_passwordScalarFieldEnum[]
 }
 
 /**
@@ -4592,9 +13347,9 @@ export type usuario$suscripciones_activasArgs<
 }
 
 /**
- * usuario.telefono
+ * usuario.telefono_telefono_usuarioIdTousuario
  */
-export type usuario$telefonoArgs<
+export type usuario$telefono_telefono_usuarioIdTousuarioArgs<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
   /**
@@ -4615,6 +13370,86 @@ export type usuario$telefonoArgs<
   take?: number
   skip?: number
   distinct?: Prisma.TelefonoScalarFieldEnum | Prisma.TelefonoScalarFieldEnum[]
+}
+
+/**
+ * usuario.telefono_telefono_usuario_idTousuario
+ */
+export type usuario$telefono_telefono_usuario_idTousuarioArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the telefono
+   */
+  select?: Prisma.telefonoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the telefono
+   */
+  omit?: Prisma.telefonoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.telefonoInclude<ExtArgs> | null
+  where?: Prisma.telefonoWhereInput
+  orderBy?: Prisma.telefonoOrderByWithRelationInput | Prisma.telefonoOrderByWithRelationInput[]
+  cursor?: Prisma.telefonoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TelefonoScalarFieldEnum | Prisma.TelefonoScalarFieldEnum[]
+}
+
+/**
+ * usuario.testimonio
+ */
+export type usuario$testimonioArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the testimonio
+   */
+  select?: Prisma.testimonioSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the testimonio
+   */
+  omit?: Prisma.testimonioOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.testimonioInclude<ExtArgs> | null
+  where?: Prisma.testimonioWhereInput
+  orderBy?: Prisma.testimonioOrderByWithRelationInput | Prisma.testimonioOrderByWithRelationInput[]
+  cursor?: Prisma.testimonioWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TestimonioScalarFieldEnum | Prisma.TestimonioScalarFieldEnum[]
+}
+
+/**
+ * usuario.testimonio_like
+ */
+export type usuario$testimonio_likeArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the testimonio_like
+   */
+  select?: Prisma.testimonio_likeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the testimonio_like
+   */
+  omit?: Prisma.testimonio_likeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.testimonio_likeInclude<ExtArgs> | null
+  where?: Prisma.testimonio_likeWhereInput
+  orderBy?:
+    | Prisma.testimonio_likeOrderByWithRelationInput
+    | Prisma.testimonio_likeOrderByWithRelationInput[]
+  cursor?: Prisma.testimonio_likeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Testimonio_likeScalarFieldEnum | Prisma.Testimonio_likeScalarFieldEnum[]
 }
 
 /**
@@ -4643,6 +13478,48 @@ export type usuario$transaccionesArgs<
   take?: number
   skip?: number
   distinct?: Prisma.TransaccionesScalarFieldEnum | Prisma.TransaccionesScalarFieldEnum[]
+}
+
+/**
+ * usuario.tutorial_publicacion_usuario
+ */
+export type usuario$tutorial_publicacion_usuarioArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the tutorial_publicacion_usuario
+   */
+  select?: Prisma.tutorial_publicacion_usuarioSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the tutorial_publicacion_usuario
+   */
+  omit?: Prisma.tutorial_publicacion_usuarioOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.tutorial_publicacion_usuarioInclude<ExtArgs> | null
+  where?: Prisma.tutorial_publicacion_usuarioWhereInput
+}
+
+/**
+ * usuario.rol
+ */
+export type usuario$rolArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the rol
+   */
+  select?: Prisma.rolSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the rol
+   */
+  omit?: Prisma.rolOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.rolInclude<ExtArgs> | null
+  where?: Prisma.rolWhereInput
 }
 
 /**
@@ -4697,6 +13574,34 @@ export type usuario$visitorArgs<
   take?: number
   skip?: number
   distinct?: Prisma.VisitorScalarFieldEnum | Prisma.VisitorScalarFieldEnum[]
+}
+
+/**
+ * usuario.zona_usuario
+ */
+export type usuario$zona_usuarioArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the zona_usuario
+   */
+  select?: Prisma.zona_usuarioSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the zona_usuario
+   */
+  omit?: Prisma.zona_usuarioOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.zona_usuarioInclude<ExtArgs> | null
+  where?: Prisma.zona_usuarioWhereInput
+  orderBy?:
+    | Prisma.zona_usuarioOrderByWithRelationInput
+    | Prisma.zona_usuarioOrderByWithRelationInput[]
+  cursor?: Prisma.zona_usuarioWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Zona_usuarioScalarFieldEnum | Prisma.Zona_usuarioScalarFieldEnum[]
 }
 
 /**

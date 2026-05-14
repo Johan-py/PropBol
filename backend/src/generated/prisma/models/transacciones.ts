@@ -33,6 +33,8 @@ export type TransaccionesAvgAggregateOutputType = {
   iva_porcentaje: runtime.Decimal | null
   iva_monto: runtime.Decimal | null
   total: runtime.Decimal | null
+  cupon_id: number | null
+  monto_descuento: runtime.Decimal | null
 }
 
 export type TransaccionesSumAggregateOutputType = {
@@ -43,6 +45,8 @@ export type TransaccionesSumAggregateOutputType = {
   iva_porcentaje: runtime.Decimal | null
   iva_monto: runtime.Decimal | null
   total: runtime.Decimal | null
+  cupon_id: number | null
+  monto_descuento: runtime.Decimal | null
 }
 
 export type TransaccionesMinAggregateOutputType = {
@@ -59,6 +63,8 @@ export type TransaccionesMinAggregateOutputType = {
   estado: string | null
   verificacion_requerida: boolean | null
   tiempo_activacion: Date | null
+  cupon_id: number | null
+  monto_descuento: runtime.Decimal | null
 }
 
 export type TransaccionesMaxAggregateOutputType = {
@@ -75,6 +81,8 @@ export type TransaccionesMaxAggregateOutputType = {
   estado: string | null
   verificacion_requerida: boolean | null
   tiempo_activacion: Date | null
+  cupon_id: number | null
+  monto_descuento: runtime.Decimal | null
 }
 
 export type TransaccionesCountAggregateOutputType = {
@@ -91,6 +99,8 @@ export type TransaccionesCountAggregateOutputType = {
   estado: number
   verificacion_requerida: number
   tiempo_activacion: number
+  cupon_id: number
+  monto_descuento: number
   _all: number
 }
 
@@ -102,6 +112,8 @@ export type TransaccionesAvgAggregateInputType = {
   iva_porcentaje?: true
   iva_monto?: true
   total?: true
+  cupon_id?: true
+  monto_descuento?: true
 }
 
 export type TransaccionesSumAggregateInputType = {
@@ -112,6 +124,8 @@ export type TransaccionesSumAggregateInputType = {
   iva_porcentaje?: true
   iva_monto?: true
   total?: true
+  cupon_id?: true
+  monto_descuento?: true
 }
 
 export type TransaccionesMinAggregateInputType = {
@@ -128,6 +142,8 @@ export type TransaccionesMinAggregateInputType = {
   estado?: true
   verificacion_requerida?: true
   tiempo_activacion?: true
+  cupon_id?: true
+  monto_descuento?: true
 }
 
 export type TransaccionesMaxAggregateInputType = {
@@ -144,6 +160,8 @@ export type TransaccionesMaxAggregateInputType = {
   estado?: true
   verificacion_requerida?: true
   tiempo_activacion?: true
+  cupon_id?: true
+  monto_descuento?: true
 }
 
 export type TransaccionesCountAggregateInputType = {
@@ -160,6 +178,8 @@ export type TransaccionesCountAggregateInputType = {
   estado?: true
   verificacion_requerida?: true
   tiempo_activacion?: true
+  cupon_id?: true
+  monto_descuento?: true
   _all?: true
 }
 
@@ -268,6 +288,8 @@ export type TransaccionesGroupByOutputType = {
   estado: string | null
   verificacion_requerida: boolean | null
   tiempo_activacion: Date | null
+  cupon_id: number | null
+  monto_descuento: runtime.Decimal | null
   _count: TransaccionesCountAggregateOutputType | null
   _avg: TransaccionesAvgAggregateOutputType | null
   _sum: TransaccionesSumAggregateOutputType | null
@@ -325,8 +347,17 @@ export type transaccionesWhereInput = {
   estado?: Prisma.StringNullableFilter<'transacciones'> | string | null
   verificacion_requerida?: Prisma.BoolNullableFilter<'transacciones'> | boolean | null
   tiempo_activacion?: Prisma.DateTimeNullableFilter<'transacciones'> | Date | string | null
+  cupon_id?: Prisma.IntNullableFilter<'transacciones'> | number | null
+  monto_descuento?:
+    | Prisma.DecimalNullableFilter<'transacciones'>
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
   bitacora_pagos?: Prisma.Bitacora_pagosListRelationFilter
   suscripciones_activas?: Prisma.Suscripciones_activasListRelationFilter
+  cupon?: Prisma.XOR<Prisma.CuponNullableScalarRelationFilter, Prisma.cuponWhereInput> | null
   plan_suscripcion?: Prisma.XOR<
     Prisma.Plan_suscripcionScalarRelationFilter,
     Prisma.plan_suscripcionWhereInput
@@ -349,8 +380,11 @@ export type transaccionesOrderByWithRelationInput = {
   estado?: Prisma.SortOrderInput | Prisma.SortOrder
   verificacion_requerida?: Prisma.SortOrderInput | Prisma.SortOrder
   tiempo_activacion?: Prisma.SortOrderInput | Prisma.SortOrder
+  cupon_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  monto_descuento?: Prisma.SortOrderInput | Prisma.SortOrder
   bitacora_pagos?: Prisma.bitacora_pagosOrderByRelationAggregateInput
   suscripciones_activas?: Prisma.suscripciones_activasOrderByRelationAggregateInput
+  cupon?: Prisma.cuponOrderByWithRelationInput
   plan_suscripcion?: Prisma.plan_suscripcionOrderByWithRelationInput
   usuario?: Prisma.usuarioOrderByWithRelationInput
   verificacion_pago?: Prisma.verificacion_pagoOrderByRelationAggregateInput
@@ -394,8 +428,17 @@ export type transaccionesWhereUniqueInput = Prisma.AtLeast<
     estado?: Prisma.StringNullableFilter<'transacciones'> | string | null
     verificacion_requerida?: Prisma.BoolNullableFilter<'transacciones'> | boolean | null
     tiempo_activacion?: Prisma.DateTimeNullableFilter<'transacciones'> | Date | string | null
+    cupon_id?: Prisma.IntNullableFilter<'transacciones'> | number | null
+    monto_descuento?:
+      | Prisma.DecimalNullableFilter<'transacciones'>
+      | runtime.Decimal
+      | runtime.DecimalJsLike
+      | number
+      | string
+      | null
     bitacora_pagos?: Prisma.Bitacora_pagosListRelationFilter
     suscripciones_activas?: Prisma.Suscripciones_activasListRelationFilter
+    cupon?: Prisma.XOR<Prisma.CuponNullableScalarRelationFilter, Prisma.cuponWhereInput> | null
     plan_suscripcion?: Prisma.XOR<
       Prisma.Plan_suscripcionScalarRelationFilter,
       Prisma.plan_suscripcionWhereInput
@@ -420,6 +463,8 @@ export type transaccionesOrderByWithAggregationInput = {
   estado?: Prisma.SortOrderInput | Prisma.SortOrder
   verificacion_requerida?: Prisma.SortOrderInput | Prisma.SortOrder
   tiempo_activacion?: Prisma.SortOrderInput | Prisma.SortOrder
+  cupon_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  monto_descuento?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.transaccionesCountOrderByAggregateInput
   _avg?: Prisma.transaccionesAvgOrderByAggregateInput
   _max?: Prisma.transaccionesMaxOrderByAggregateInput
@@ -480,6 +525,14 @@ export type transaccionesScalarWhereWithAggregatesInput = {
     | Date
     | string
     | null
+  cupon_id?: Prisma.IntNullableWithAggregatesFilter<'transacciones'> | number | null
+  monto_descuento?:
+    | Prisma.DecimalNullableWithAggregatesFilter<'transacciones'>
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
 }
 
 export type transaccionesCreateInput = {
@@ -493,8 +546,10 @@ export type transaccionesCreateInput = {
   estado?: string | null
   verificacion_requerida?: boolean | null
   tiempo_activacion?: Date | string | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutTransaccionesInput
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutTransaccionesInput
+  cupon?: Prisma.cuponCreateNestedOneWithoutTransaccionesInput
   plan_suscripcion: Prisma.plan_suscripcionCreateNestedOneWithoutTransaccionesInput
   usuario: Prisma.usuarioCreateNestedOneWithoutTransaccionesInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutTransaccionesInput
@@ -514,6 +569,8 @@ export type transaccionesUncheckedCreateInput = {
   estado?: string | null
   verificacion_requerida?: boolean | null
   tiempo_activacion?: Date | string | null
+  cupon_id?: number | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutTransaccionesInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutTransaccionesInput
@@ -550,8 +607,16 @@ export type transaccionesUpdateInput = {
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutTransaccionesNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutTransaccionesNestedInput
+  cupon?: Prisma.cuponUpdateOneWithoutTransaccionesNestedInput
   plan_suscripcion?: Prisma.plan_suscripcionUpdateOneRequiredWithoutTransaccionesNestedInput
   usuario?: Prisma.usuarioUpdateOneRequiredWithoutTransaccionesNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutTransaccionesNestedInput
@@ -591,6 +656,14 @@ export type transaccionesUncheckedUpdateInput = {
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cupon_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutTransaccionesNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutTransaccionesNestedInput
@@ -610,6 +683,8 @@ export type transaccionesCreateManyInput = {
   estado?: string | null
   verificacion_requerida?: boolean | null
   tiempo_activacion?: Date | string | null
+  cupon_id?: number | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type transaccionesUpdateManyMutationInput = {
@@ -643,6 +718,13 @@ export type transaccionesUpdateManyMutationInput = {
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
 }
 
 export type transaccionesUncheckedUpdateManyInput = {
@@ -679,6 +761,14 @@ export type transaccionesUncheckedUpdateManyInput = {
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cupon_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
 }
 
 export type TransaccionesNullableScalarRelationFilter = {
@@ -710,6 +800,8 @@ export type transaccionesCountOrderByAggregateInput = {
   estado?: Prisma.SortOrder
   verificacion_requerida?: Prisma.SortOrder
   tiempo_activacion?: Prisma.SortOrder
+  cupon_id?: Prisma.SortOrder
+  monto_descuento?: Prisma.SortOrder
 }
 
 export type transaccionesAvgOrderByAggregateInput = {
@@ -720,6 +812,8 @@ export type transaccionesAvgOrderByAggregateInput = {
   iva_porcentaje?: Prisma.SortOrder
   iva_monto?: Prisma.SortOrder
   total?: Prisma.SortOrder
+  cupon_id?: Prisma.SortOrder
+  monto_descuento?: Prisma.SortOrder
 }
 
 export type transaccionesMaxOrderByAggregateInput = {
@@ -736,6 +830,8 @@ export type transaccionesMaxOrderByAggregateInput = {
   estado?: Prisma.SortOrder
   verificacion_requerida?: Prisma.SortOrder
   tiempo_activacion?: Prisma.SortOrder
+  cupon_id?: Prisma.SortOrder
+  monto_descuento?: Prisma.SortOrder
 }
 
 export type transaccionesMinOrderByAggregateInput = {
@@ -752,6 +848,8 @@ export type transaccionesMinOrderByAggregateInput = {
   estado?: Prisma.SortOrder
   verificacion_requerida?: Prisma.SortOrder
   tiempo_activacion?: Prisma.SortOrder
+  cupon_id?: Prisma.SortOrder
+  monto_descuento?: Prisma.SortOrder
 }
 
 export type transaccionesSumOrderByAggregateInput = {
@@ -762,6 +860,8 @@ export type transaccionesSumOrderByAggregateInput = {
   iva_porcentaje?: Prisma.SortOrder
   iva_monto?: Prisma.SortOrder
   total?: Prisma.SortOrder
+  cupon_id?: Prisma.SortOrder
+  monto_descuento?: Prisma.SortOrder
 }
 
 export type transaccionesCreateNestedOneWithoutBitacora_pagosInput = {
@@ -790,6 +890,92 @@ export type transaccionesUpdateOneWithoutBitacora_pagosNestedInput = {
     >,
     Prisma.transaccionesUncheckedUpdateWithoutBitacora_pagosInput
   >
+}
+
+export type transaccionesCreateNestedManyWithoutCuponInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.transaccionesCreateWithoutCuponInput,
+        Prisma.transaccionesUncheckedCreateWithoutCuponInput
+      >
+    | Prisma.transaccionesCreateWithoutCuponInput[]
+    | Prisma.transaccionesUncheckedCreateWithoutCuponInput[]
+  connectOrCreate?:
+    | Prisma.transaccionesCreateOrConnectWithoutCuponInput
+    | Prisma.transaccionesCreateOrConnectWithoutCuponInput[]
+  createMany?: Prisma.transaccionesCreateManyCuponInputEnvelope
+  connect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
+}
+
+export type transaccionesUncheckedCreateNestedManyWithoutCuponInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.transaccionesCreateWithoutCuponInput,
+        Prisma.transaccionesUncheckedCreateWithoutCuponInput
+      >
+    | Prisma.transaccionesCreateWithoutCuponInput[]
+    | Prisma.transaccionesUncheckedCreateWithoutCuponInput[]
+  connectOrCreate?:
+    | Prisma.transaccionesCreateOrConnectWithoutCuponInput
+    | Prisma.transaccionesCreateOrConnectWithoutCuponInput[]
+  createMany?: Prisma.transaccionesCreateManyCuponInputEnvelope
+  connect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
+}
+
+export type transaccionesUpdateManyWithoutCuponNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.transaccionesCreateWithoutCuponInput,
+        Prisma.transaccionesUncheckedCreateWithoutCuponInput
+      >
+    | Prisma.transaccionesCreateWithoutCuponInput[]
+    | Prisma.transaccionesUncheckedCreateWithoutCuponInput[]
+  connectOrCreate?:
+    | Prisma.transaccionesCreateOrConnectWithoutCuponInput
+    | Prisma.transaccionesCreateOrConnectWithoutCuponInput[]
+  upsert?:
+    | Prisma.transaccionesUpsertWithWhereUniqueWithoutCuponInput
+    | Prisma.transaccionesUpsertWithWhereUniqueWithoutCuponInput[]
+  createMany?: Prisma.transaccionesCreateManyCuponInputEnvelope
+  set?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
+  disconnect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
+  delete?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
+  connect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
+  update?:
+    | Prisma.transaccionesUpdateWithWhereUniqueWithoutCuponInput
+    | Prisma.transaccionesUpdateWithWhereUniqueWithoutCuponInput[]
+  updateMany?:
+    | Prisma.transaccionesUpdateManyWithWhereWithoutCuponInput
+    | Prisma.transaccionesUpdateManyWithWhereWithoutCuponInput[]
+  deleteMany?: Prisma.transaccionesScalarWhereInput | Prisma.transaccionesScalarWhereInput[]
+}
+
+export type transaccionesUncheckedUpdateManyWithoutCuponNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.transaccionesCreateWithoutCuponInput,
+        Prisma.transaccionesUncheckedCreateWithoutCuponInput
+      >
+    | Prisma.transaccionesCreateWithoutCuponInput[]
+    | Prisma.transaccionesUncheckedCreateWithoutCuponInput[]
+  connectOrCreate?:
+    | Prisma.transaccionesCreateOrConnectWithoutCuponInput
+    | Prisma.transaccionesCreateOrConnectWithoutCuponInput[]
+  upsert?:
+    | Prisma.transaccionesUpsertWithWhereUniqueWithoutCuponInput
+    | Prisma.transaccionesUpsertWithWhereUniqueWithoutCuponInput[]
+  createMany?: Prisma.transaccionesCreateManyCuponInputEnvelope
+  set?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
+  disconnect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
+  delete?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
+  connect?: Prisma.transaccionesWhereUniqueInput | Prisma.transaccionesWhereUniqueInput[]
+  update?:
+    | Prisma.transaccionesUpdateWithWhereUniqueWithoutCuponInput
+    | Prisma.transaccionesUpdateWithWhereUniqueWithoutCuponInput[]
+  updateMany?:
+    | Prisma.transaccionesUpdateManyWithWhereWithoutCuponInput
+    | Prisma.transaccionesUpdateManyWithWhereWithoutCuponInput[]
+  deleteMany?: Prisma.transaccionesScalarWhereInput | Prisma.transaccionesScalarWhereInput[]
 }
 
 export type transaccionesCreateNestedManyWithoutPlan_suscripcionInput = {
@@ -1031,7 +1217,9 @@ export type transaccionesCreateWithoutBitacora_pagosInput = {
   estado?: string | null
   verificacion_requerida?: boolean | null
   tiempo_activacion?: Date | string | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutTransaccionesInput
+  cupon?: Prisma.cuponCreateNestedOneWithoutTransaccionesInput
   plan_suscripcion: Prisma.plan_suscripcionCreateNestedOneWithoutTransaccionesInput
   usuario: Prisma.usuarioCreateNestedOneWithoutTransaccionesInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutTransaccionesInput
@@ -1051,6 +1239,8 @@ export type transaccionesUncheckedCreateWithoutBitacora_pagosInput = {
   estado?: string | null
   verificacion_requerida?: boolean | null
   tiempo_activacion?: Date | string | null
+  cupon_id?: number | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutTransaccionesInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutTransaccionesInput
 }
@@ -1114,7 +1304,15 @@ export type transaccionesUpdateWithoutBitacora_pagosInput = {
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutTransaccionesNestedInput
+  cupon?: Prisma.cuponUpdateOneWithoutTransaccionesNestedInput
   plan_suscripcion?: Prisma.plan_suscripcionUpdateOneRequiredWithoutTransaccionesNestedInput
   usuario?: Prisma.usuarioUpdateOneRequiredWithoutTransaccionesNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutTransaccionesNestedInput
@@ -1154,8 +1352,143 @@ export type transaccionesUncheckedUpdateWithoutBitacora_pagosInput = {
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cupon_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutTransaccionesNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutTransaccionesNestedInput
+}
+
+export type transaccionesCreateWithoutCuponInput = {
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
+  metodo_pago?: string | null
+  fecha_intento?: Date | string | null
+  fecha_completado?: Date | string | null
+  estado?: string | null
+  verificacion_requerida?: boolean | null
+  tiempo_activacion?: Date | string | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutTransaccionesInput
+  suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutTransaccionesInput
+  plan_suscripcion: Prisma.plan_suscripcionCreateNestedOneWithoutTransaccionesInput
+  usuario: Prisma.usuarioCreateNestedOneWithoutTransaccionesInput
+  verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutTransaccionesInput
+}
+
+export type transaccionesUncheckedCreateWithoutCuponInput = {
+  id?: number
+  id_usuario: number
+  id_suscripcion: number
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
+  metodo_pago?: string | null
+  fecha_intento?: Date | string | null
+  fecha_completado?: Date | string | null
+  estado?: string | null
+  verificacion_requerida?: boolean | null
+  tiempo_activacion?: Date | string | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutTransaccionesInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutTransaccionesInput
+}
+
+export type transaccionesCreateOrConnectWithoutCuponInput = {
+  where: Prisma.transaccionesWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.transaccionesCreateWithoutCuponInput,
+    Prisma.transaccionesUncheckedCreateWithoutCuponInput
+  >
+}
+
+export type transaccionesCreateManyCuponInputEnvelope = {
+  data: Prisma.transaccionesCreateManyCuponInput | Prisma.transaccionesCreateManyCuponInput[]
+  skipDuplicates?: boolean
+}
+
+export type transaccionesUpsertWithWhereUniqueWithoutCuponInput = {
+  where: Prisma.transaccionesWhereUniqueInput
+  update: Prisma.XOR<
+    Prisma.transaccionesUpdateWithoutCuponInput,
+    Prisma.transaccionesUncheckedUpdateWithoutCuponInput
+  >
+  create: Prisma.XOR<
+    Prisma.transaccionesCreateWithoutCuponInput,
+    Prisma.transaccionesUncheckedCreateWithoutCuponInput
+  >
+}
+
+export type transaccionesUpdateWithWhereUniqueWithoutCuponInput = {
+  where: Prisma.transaccionesWhereUniqueInput
+  data: Prisma.XOR<
+    Prisma.transaccionesUpdateWithoutCuponInput,
+    Prisma.transaccionesUncheckedUpdateWithoutCuponInput
+  >
+}
+
+export type transaccionesUpdateManyWithWhereWithoutCuponInput = {
+  where: Prisma.transaccionesScalarWhereInput
+  data: Prisma.XOR<
+    Prisma.transaccionesUpdateManyMutationInput,
+    Prisma.transaccionesUncheckedUpdateManyWithoutCuponInput
+  >
+}
+
+export type transaccionesScalarWhereInput = {
+  AND?: Prisma.transaccionesScalarWhereInput | Prisma.transaccionesScalarWhereInput[]
+  OR?: Prisma.transaccionesScalarWhereInput[]
+  NOT?: Prisma.transaccionesScalarWhereInput | Prisma.transaccionesScalarWhereInput[]
+  id?: Prisma.IntFilter<'transacciones'> | number
+  id_usuario?: Prisma.IntFilter<'transacciones'> | number
+  id_suscripcion?: Prisma.IntFilter<'transacciones'> | number
+  subtotal?:
+    | Prisma.DecimalFilter<'transacciones'>
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  iva_porcentaje?:
+    | Prisma.DecimalFilter<'transacciones'>
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  iva_monto?:
+    | Prisma.DecimalFilter<'transacciones'>
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  total?:
+    | Prisma.DecimalFilter<'transacciones'>
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  metodo_pago?: Prisma.StringNullableFilter<'transacciones'> | string | null
+  fecha_intento?: Prisma.DateTimeNullableFilter<'transacciones'> | Date | string | null
+  fecha_completado?: Prisma.DateTimeNullableFilter<'transacciones'> | Date | string | null
+  estado?: Prisma.StringNullableFilter<'transacciones'> | string | null
+  verificacion_requerida?: Prisma.BoolNullableFilter<'transacciones'> | boolean | null
+  tiempo_activacion?: Prisma.DateTimeNullableFilter<'transacciones'> | Date | string | null
+  cupon_id?: Prisma.IntNullableFilter<'transacciones'> | number | null
+  monto_descuento?:
+    | Prisma.DecimalNullableFilter<'transacciones'>
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
 }
 
 export type transaccionesCreateWithoutPlan_suscripcionInput = {
@@ -1169,8 +1502,10 @@ export type transaccionesCreateWithoutPlan_suscripcionInput = {
   estado?: string | null
   verificacion_requerida?: boolean | null
   tiempo_activacion?: Date | string | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutTransaccionesInput
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutTransaccionesInput
+  cupon?: Prisma.cuponCreateNestedOneWithoutTransaccionesInput
   usuario: Prisma.usuarioCreateNestedOneWithoutTransaccionesInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutTransaccionesInput
 }
@@ -1188,6 +1523,8 @@ export type transaccionesUncheckedCreateWithoutPlan_suscripcionInput = {
   estado?: string | null
   verificacion_requerida?: boolean | null
   tiempo_activacion?: Date | string | null
+  cupon_id?: number | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutTransaccionesInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutTransaccionesInput
@@ -1236,45 +1573,6 @@ export type transaccionesUpdateManyWithWhereWithoutPlan_suscripcionInput = {
   >
 }
 
-export type transaccionesScalarWhereInput = {
-  AND?: Prisma.transaccionesScalarWhereInput | Prisma.transaccionesScalarWhereInput[]
-  OR?: Prisma.transaccionesScalarWhereInput[]
-  NOT?: Prisma.transaccionesScalarWhereInput | Prisma.transaccionesScalarWhereInput[]
-  id?: Prisma.IntFilter<'transacciones'> | number
-  id_usuario?: Prisma.IntFilter<'transacciones'> | number
-  id_suscripcion?: Prisma.IntFilter<'transacciones'> | number
-  subtotal?:
-    | Prisma.DecimalFilter<'transacciones'>
-    | runtime.Decimal
-    | runtime.DecimalJsLike
-    | number
-    | string
-  iva_porcentaje?:
-    | Prisma.DecimalFilter<'transacciones'>
-    | runtime.Decimal
-    | runtime.DecimalJsLike
-    | number
-    | string
-  iva_monto?:
-    | Prisma.DecimalFilter<'transacciones'>
-    | runtime.Decimal
-    | runtime.DecimalJsLike
-    | number
-    | string
-  total?:
-    | Prisma.DecimalFilter<'transacciones'>
-    | runtime.Decimal
-    | runtime.DecimalJsLike
-    | number
-    | string
-  metodo_pago?: Prisma.StringNullableFilter<'transacciones'> | string | null
-  fecha_intento?: Prisma.DateTimeNullableFilter<'transacciones'> | Date | string | null
-  fecha_completado?: Prisma.DateTimeNullableFilter<'transacciones'> | Date | string | null
-  estado?: Prisma.StringNullableFilter<'transacciones'> | string | null
-  verificacion_requerida?: Prisma.BoolNullableFilter<'transacciones'> | boolean | null
-  tiempo_activacion?: Prisma.DateTimeNullableFilter<'transacciones'> | Date | string | null
-}
-
 export type transaccionesCreateWithoutSuscripciones_activasInput = {
   subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
   iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1286,7 +1584,9 @@ export type transaccionesCreateWithoutSuscripciones_activasInput = {
   estado?: string | null
   verificacion_requerida?: boolean | null
   tiempo_activacion?: Date | string | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutTransaccionesInput
+  cupon?: Prisma.cuponCreateNestedOneWithoutTransaccionesInput
   plan_suscripcion: Prisma.plan_suscripcionCreateNestedOneWithoutTransaccionesInput
   usuario: Prisma.usuarioCreateNestedOneWithoutTransaccionesInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutTransaccionesInput
@@ -1306,6 +1606,8 @@ export type transaccionesUncheckedCreateWithoutSuscripciones_activasInput = {
   estado?: string | null
   verificacion_requerida?: boolean | null
   tiempo_activacion?: Date | string | null
+  cupon_id?: number | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutTransaccionesInput
 }
@@ -1369,7 +1671,15 @@ export type transaccionesUpdateWithoutSuscripciones_activasInput = {
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutTransaccionesNestedInput
+  cupon?: Prisma.cuponUpdateOneWithoutTransaccionesNestedInput
   plan_suscripcion?: Prisma.plan_suscripcionUpdateOneRequiredWithoutTransaccionesNestedInput
   usuario?: Prisma.usuarioUpdateOneRequiredWithoutTransaccionesNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutTransaccionesNestedInput
@@ -1409,6 +1719,14 @@ export type transaccionesUncheckedUpdateWithoutSuscripciones_activasInput = {
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cupon_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutTransaccionesNestedInput
 }
@@ -1424,8 +1742,10 @@ export type transaccionesCreateWithoutUsuarioInput = {
   estado?: string | null
   verificacion_requerida?: boolean | null
   tiempo_activacion?: Date | string | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutTransaccionesInput
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutTransaccionesInput
+  cupon?: Prisma.cuponCreateNestedOneWithoutTransaccionesInput
   plan_suscripcion: Prisma.plan_suscripcionCreateNestedOneWithoutTransaccionesInput
   verificacion_pago?: Prisma.verificacion_pagoCreateNestedManyWithoutTransaccionesInput
 }
@@ -1443,6 +1763,8 @@ export type transaccionesUncheckedCreateWithoutUsuarioInput = {
   estado?: string | null
   verificacion_requerida?: boolean | null
   tiempo_activacion?: Date | string | null
+  cupon_id?: number | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutTransaccionesInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedCreateNestedManyWithoutTransaccionesInput
@@ -1500,8 +1822,10 @@ export type transaccionesCreateWithoutVerificacion_pagoInput = {
   estado?: string | null
   verificacion_requerida?: boolean | null
   tiempo_activacion?: Date | string | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bitacora_pagos?: Prisma.bitacora_pagosCreateNestedManyWithoutTransaccionesInput
   suscripciones_activas?: Prisma.suscripciones_activasCreateNestedManyWithoutTransaccionesInput
+  cupon?: Prisma.cuponCreateNestedOneWithoutTransaccionesInput
   plan_suscripcion: Prisma.plan_suscripcionCreateNestedOneWithoutTransaccionesInput
   usuario: Prisma.usuarioCreateNestedOneWithoutTransaccionesInput
 }
@@ -1520,6 +1844,8 @@ export type transaccionesUncheckedCreateWithoutVerificacion_pagoInput = {
   estado?: string | null
   verificacion_requerida?: boolean | null
   tiempo_activacion?: Date | string | null
+  cupon_id?: number | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedCreateNestedManyWithoutTransaccionesInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedCreateNestedManyWithoutTransaccionesInput
 }
@@ -1583,8 +1909,16 @@ export type transaccionesUpdateWithoutVerificacion_pagoInput = {
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutTransaccionesNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutTransaccionesNestedInput
+  cupon?: Prisma.cuponUpdateOneWithoutTransaccionesNestedInput
   plan_suscripcion?: Prisma.plan_suscripcionUpdateOneRequiredWithoutTransaccionesNestedInput
   usuario?: Prisma.usuarioUpdateOneRequiredWithoutTransaccionesNestedInput
 }
@@ -1623,8 +1957,167 @@ export type transaccionesUncheckedUpdateWithoutVerificacion_pagoInput = {
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cupon_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutTransaccionesNestedInput
+}
+
+export type transaccionesCreateManyCuponInput = {
+  id?: number
+  id_usuario: number
+  id_suscripcion: number
+  subtotal: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iva_porcentaje: runtime.Decimal | runtime.DecimalJsLike | number | string
+  iva_monto: runtime.Decimal | runtime.DecimalJsLike | number | string
+  total: runtime.Decimal | runtime.DecimalJsLike | number | string
+  metodo_pago?: string | null
+  fecha_intento?: Date | string | null
+  fecha_completado?: Date | string | null
+  estado?: string | null
+  verificacion_requerida?: boolean | null
+  tiempo_activacion?: Date | string | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
+export type transaccionesUpdateWithoutCuponInput = {
+  subtotal?:
+    | Prisma.DecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  iva_porcentaje?:
+    | Prisma.DecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  iva_monto?:
+    | Prisma.DecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  total?:
+    | Prisma.DecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
+  bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutTransaccionesNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutTransaccionesNestedInput
+  plan_suscripcion?: Prisma.plan_suscripcionUpdateOneRequiredWithoutTransaccionesNestedInput
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutTransaccionesNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutTransaccionesNestedInput
+}
+
+export type transaccionesUncheckedUpdateWithoutCuponInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  id_usuario?: Prisma.IntFieldUpdateOperationsInput | number
+  id_suscripcion?: Prisma.IntFieldUpdateOperationsInput | number
+  subtotal?:
+    | Prisma.DecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  iva_porcentaje?:
+    | Prisma.DecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  iva_monto?:
+    | Prisma.DecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  total?:
+    | Prisma.DecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
+  bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput
+  suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutTransaccionesNestedInput
+  verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutTransaccionesNestedInput
+}
+
+export type transaccionesUncheckedUpdateManyWithoutCuponInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  id_usuario?: Prisma.IntFieldUpdateOperationsInput | number
+  id_suscripcion?: Prisma.IntFieldUpdateOperationsInput | number
+  subtotal?:
+    | Prisma.DecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  iva_porcentaje?:
+    | Prisma.DecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  iva_monto?:
+    | Prisma.DecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  total?:
+    | Prisma.DecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+  metodo_pago?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fecha_intento?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fecha_completado?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
 }
 
 export type transaccionesCreateManyPlan_suscripcionInput = {
@@ -1640,6 +2133,8 @@ export type transaccionesCreateManyPlan_suscripcionInput = {
   estado?: string | null
   verificacion_requerida?: boolean | null
   tiempo_activacion?: Date | string | null
+  cupon_id?: number | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type transaccionesUpdateWithoutPlan_suscripcionInput = {
@@ -1673,8 +2168,16 @@ export type transaccionesUpdateWithoutPlan_suscripcionInput = {
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutTransaccionesNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutTransaccionesNestedInput
+  cupon?: Prisma.cuponUpdateOneWithoutTransaccionesNestedInput
   usuario?: Prisma.usuarioUpdateOneRequiredWithoutTransaccionesNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutTransaccionesNestedInput
 }
@@ -1712,6 +2215,14 @@ export type transaccionesUncheckedUpdateWithoutPlan_suscripcionInput = {
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cupon_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutTransaccionesNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutTransaccionesNestedInput
@@ -1750,6 +2261,14 @@ export type transaccionesUncheckedUpdateManyWithoutPlan_suscripcionInput = {
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cupon_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
 }
 
 export type transaccionesCreateManyUsuarioInput = {
@@ -1765,6 +2284,8 @@ export type transaccionesCreateManyUsuarioInput = {
   estado?: string | null
   verificacion_requerida?: boolean | null
   tiempo_activacion?: Date | string | null
+  cupon_id?: number | null
+  monto_descuento?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type transaccionesUpdateWithoutUsuarioInput = {
@@ -1798,8 +2319,16 @@ export type transaccionesUpdateWithoutUsuarioInput = {
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
   bitacora_pagos?: Prisma.bitacora_pagosUpdateManyWithoutTransaccionesNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUpdateManyWithoutTransaccionesNestedInput
+  cupon?: Prisma.cuponUpdateOneWithoutTransaccionesNestedInput
   plan_suscripcion?: Prisma.plan_suscripcionUpdateOneRequiredWithoutTransaccionesNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUpdateManyWithoutTransaccionesNestedInput
 }
@@ -1837,6 +2366,14 @@ export type transaccionesUncheckedUpdateWithoutUsuarioInput = {
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cupon_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
   bitacora_pagos?: Prisma.bitacora_pagosUncheckedUpdateManyWithoutTransaccionesNestedInput
   suscripciones_activas?: Prisma.suscripciones_activasUncheckedUpdateManyWithoutTransaccionesNestedInput
   verificacion_pago?: Prisma.verificacion_pagoUncheckedUpdateManyWithoutTransaccionesNestedInput
@@ -1875,6 +2412,14 @@ export type transaccionesUncheckedUpdateManyWithoutUsuarioInput = {
   estado?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   verificacion_requerida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   tiempo_activacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cupon_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  monto_descuento?:
+    | Prisma.NullableDecimalFieldUpdateOperationsInput
+    | runtime.Decimal
+    | runtime.DecimalJsLike
+    | number
+    | string
+    | null
 }
 
 /**
@@ -1951,8 +2496,11 @@ export type transaccionesSelect<
     estado?: boolean
     verificacion_requerida?: boolean
     tiempo_activacion?: boolean
+    cupon_id?: boolean
+    monto_descuento?: boolean
     bitacora_pagos?: boolean | Prisma.transacciones$bitacora_pagosArgs<ExtArgs>
     suscripciones_activas?: boolean | Prisma.transacciones$suscripciones_activasArgs<ExtArgs>
+    cupon?: boolean | Prisma.transacciones$cuponArgs<ExtArgs>
     plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>
     usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
     verificacion_pago?: boolean | Prisma.transacciones$verificacion_pagoArgs<ExtArgs>
@@ -1978,6 +2526,9 @@ export type transaccionesSelectCreateManyAndReturn<
     estado?: boolean
     verificacion_requerida?: boolean
     tiempo_activacion?: boolean
+    cupon_id?: boolean
+    monto_descuento?: boolean
+    cupon?: boolean | Prisma.transacciones$cuponArgs<ExtArgs>
     plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>
     usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
   },
@@ -2001,6 +2552,9 @@ export type transaccionesSelectUpdateManyAndReturn<
     estado?: boolean
     verificacion_requerida?: boolean
     tiempo_activacion?: boolean
+    cupon_id?: boolean
+    monto_descuento?: boolean
+    cupon?: boolean | Prisma.transacciones$cuponArgs<ExtArgs>
     plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>
     usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
   },
@@ -2021,6 +2575,8 @@ export type transaccionesSelectScalar = {
   estado?: boolean
   verificacion_requerida?: boolean
   tiempo_activacion?: boolean
+  cupon_id?: boolean
+  monto_descuento?: boolean
 }
 
 export type transaccionesOmit<
@@ -2038,7 +2594,9 @@ export type transaccionesOmit<
   | 'fecha_completado'
   | 'estado'
   | 'verificacion_requerida'
-  | 'tiempo_activacion',
+  | 'tiempo_activacion'
+  | 'cupon_id'
+  | 'monto_descuento',
   ExtArgs['result']['transacciones']
 >
 export type transaccionesInclude<
@@ -2046,6 +2604,7 @@ export type transaccionesInclude<
 > = {
   bitacora_pagos?: boolean | Prisma.transacciones$bitacora_pagosArgs<ExtArgs>
   suscripciones_activas?: boolean | Prisma.transacciones$suscripciones_activasArgs<ExtArgs>
+  cupon?: boolean | Prisma.transacciones$cuponArgs<ExtArgs>
   plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>
   usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
   verificacion_pago?: boolean | Prisma.transacciones$verificacion_pagoArgs<ExtArgs>
@@ -2054,12 +2613,14 @@ export type transaccionesInclude<
 export type transaccionesIncludeCreateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
+  cupon?: boolean | Prisma.transacciones$cuponArgs<ExtArgs>
   plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>
   usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
 }
 export type transaccionesIncludeUpdateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
+  cupon?: boolean | Prisma.transacciones$cuponArgs<ExtArgs>
   plan_suscripcion?: boolean | Prisma.plan_suscripcionDefaultArgs<ExtArgs>
   usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
 }
@@ -2071,6 +2632,7 @@ export type $transaccionesPayload<
   objects: {
     bitacora_pagos: Prisma.$bitacora_pagosPayload<ExtArgs>[]
     suscripciones_activas: Prisma.$suscripciones_activasPayload<ExtArgs>[]
+    cupon: Prisma.$cuponPayload<ExtArgs> | null
     plan_suscripcion: Prisma.$plan_suscripcionPayload<ExtArgs>
     usuario: Prisma.$usuarioPayload<ExtArgs>
     verificacion_pago: Prisma.$verificacion_pagoPayload<ExtArgs>[]
@@ -2090,6 +2652,8 @@ export type $transaccionesPayload<
       estado: string | null
       verificacion_requerida: boolean | null
       tiempo_activacion: Date | null
+      cupon_id: number | null
+      monto_descuento: runtime.Decimal | null
     },
     ExtArgs['result']['transacciones']
   >
@@ -2651,6 +3215,19 @@ export interface Prisma__transaccionesClient<
       >
     | Null
   >
+  cupon<T extends Prisma.transacciones$cuponArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.transacciones$cuponArgs<ExtArgs>>
+  ): Prisma.Prisma__cuponClient<
+    runtime.Types.Result.GetResult<
+      Prisma.$cuponPayload<ExtArgs>,
+      T,
+      'findUniqueOrThrow',
+      GlobalOmitOptions
+    > | null,
+    null,
+    ExtArgs,
+    GlobalOmitOptions
+  >
   plan_suscripcion<T extends Prisma.plan_suscripcionDefaultArgs<ExtArgs> = {}>(
     args?: Prisma.Subset<T, Prisma.plan_suscripcionDefaultArgs<ExtArgs>>
   ): Prisma.Prisma__plan_suscripcionClient<
@@ -2734,6 +3311,8 @@ export interface transaccionesFieldRefs {
   readonly estado: Prisma.FieldRef<'transacciones', 'String'>
   readonly verificacion_requerida: Prisma.FieldRef<'transacciones', 'Boolean'>
   readonly tiempo_activacion: Prisma.FieldRef<'transacciones', 'DateTime'>
+  readonly cupon_id: Prisma.FieldRef<'transacciones', 'Int'>
+  readonly monto_descuento: Prisma.FieldRef<'transacciones', 'Decimal'>
 }
 
 // Custom InputTypes
@@ -3229,6 +3808,27 @@ export type transacciones$suscripciones_activasArgs<
   distinct?:
     | Prisma.Suscripciones_activasScalarFieldEnum
     | Prisma.Suscripciones_activasScalarFieldEnum[]
+}
+
+/**
+ * transacciones.cupon
+ */
+export type transacciones$cuponArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the cupon
+   */
+  select?: Prisma.cuponSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the cupon
+   */
+  omit?: Prisma.cuponOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.cuponInclude<ExtArgs> | null
+  where?: Prisma.cuponWhereInput
 }
 
 /**
