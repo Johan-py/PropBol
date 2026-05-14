@@ -128,16 +128,16 @@ import historialRoutes from "./modules/perfil/historial.routes.js";
 import { verifyEmailTransport } from "./lib/email.service.js";
 
 // FAVORITES
-import favoritesRoutes from "./modules/favorites/favorites.routes.js";
-import telemetriaRoutes from "./modules/telemetria/telemetria.routes.js";
-import recomendacionesRoutes from "./modules/recomendaciones/recomendaciones.routes.js";
-import transaccionesRoutes from "./modules/transacciones/transacciones.routes.js";
-import suscripcionesRoutes from "./modules/suscripciones/suscripciones.routes.js";
-import plansRoutes from "./modules/plans/plans.routes.js";
-import historialBusquedaRoutes from "./modules/perfil/historialBusqueda.routes.js";
-import whatsappRoutes from "./modules/whatsapp/whatsapp.routes.js";
-import { getAdminTestimonios } from "./modules/testimonios/adminTestimonios.controller.js";
-import sesionRoutes from "./modules/perfil/sesion.routes.js";
+import favoritesRoutes from './modules/favorites/favorites.routes.js'
+import telemetriaRoutes from './modules/telemetria/telemetria.routes.js'
+import recomendacionesRoutes from './modules/recomendaciones/recomendaciones.routes.js'
+import transaccionesRoutes from './modules/transacciones/transacciones.routes.js'
+import suscripcionesRoutes from './modules/suscripciones/suscripciones.routes.js'
+import plansRoutes from './modules/plans/plans.routes.js'
+import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js'
+import whatsappRoutes from './modules/whatsapp/whatsapp.routes.js'
+import adminTestimoniosRoutes from './modules/testimonios/adminTestimonios.routes.js'
+import sesionRoutes from './modules/perfil/sesion.routes.js'
 
 import "./jobs/suscripcion.job.js";
 
@@ -394,7 +394,7 @@ app.post("/api/publicaciones", (req, res) => {
 // --------------------
 // TESTIMONIOSADMIN
 // --------------------
-app.get("/api/admin/testimonios", getAdminTestimonios);
+app.use('/api/admin', adminTestimoniosRoutes)
 
 // --------------------
 // LEVANTAR SERVIDOR
