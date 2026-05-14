@@ -586,8 +586,6 @@ useEffect(() => {
     completeTour();
     setShowTour(false);
   };
-
-  if (!showTour) return null;
   const theme = {
   bg:           isDark ? "#111111" : "#ffffff",
   text:         isDark ? "#ffffff" : "#111827",
@@ -595,6 +593,9 @@ useEffect(() => {
   textSubtle:   isDark ? "#6b7280" : "#9ca3af",
   stepInactive: isDark ? "#374151" : "#e5e7eb",
 };
+
+  if (!showTour) return null;
+  
 
   const PADDING = 8;
   const hasValid = highlight !== null;
