@@ -48,32 +48,73 @@ export const JsonNull = runtime.JsonNull
 export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
+  amenidad: 'amenidad',
+  autenticacion_social: 'autenticacion_social',
   banner_home: 'banner_home',
+  barrio: 'barrio',
   bitacora_pagos: 'bitacora_pagos',
+  blog: 'blog',
+  blog_rechazo: 'blog_rechazo',
   cambio_email: 'cambio_email',
+  categoria_blog: 'categoria_blog',
+  ciudad: 'ciudad',
+  ciudad_imagen: 'ciudad_imagen',
+  codigo_2fa: 'codigo_2fa',
+  comentario: 'comentario',
+  comentario_like: 'comentario_like',
+  comparacion: 'comparacion',
+  cupon: 'cupon',
+  departamento: 'departamento',
+  detalle_comparacion: 'detalle_comparacion',
   detalle_grupo: 'detalle_grupo',
+  entrenamiento_ml: 'entrenamiento_ml',
   etiqueta: 'etiqueta',
+  favorito: 'favorito',
   grupo_marcadores: 'grupo_marcadores',
+  historial_busqueda: 'historial_busqueda',
+  historial_password: 'historial_password',
   inmueble: 'inmueble',
+  inmueble_amenidad: 'inmueble_amenidad',
   inmueble_etiqueta: 'inmueble_etiqueta',
   interaccion_mapa: 'interaccion_mapa',
+  magic_link: 'magic_link',
   marcador_mapa: 'marcador_mapa',
+  modelo_version: 'modelo_version',
   multimedia: 'multimedia',
+  municipio: 'municipio',
   notificacion: 'notificacion',
+  parametros_personalizados: 'parametros_personalizados',
   perfil: 'perfil',
   plan_suscripcion: 'plan_suscripcion',
+  propiedad_vista: 'propiedad_vista',
+  provincia: 'provincia',
   publicacion: 'publicacion',
+  publicacion_compartido: 'publicacion_compartido',
+  publicacion_estadistica: 'publicacion_estadistica',
+  publicacion_parametro: 'publicacion_parametro',
+  publicacion_tag: 'publicacion_tag',
+  publicacion_vista: 'publicacion_vista',
+  punto_interes: 'punto_interes',
+  recuperacion_password: 'recuperacion_password',
   rol: 'rol',
   sesion: 'sesion',
   sesion_mapa: 'sesion_mapa',
+  spatial_ref_sys: 'spatial_ref_sys',
   suscripciones_activas: 'suscripciones_activas',
+  tag: 'tag',
   telefono: 'telefono',
+  testimonio: 'testimonio',
+  testimonio_like: 'testimonio_like',
   transacciones: 'transacciones',
+  tutorial_publicacion_usuario: 'tutorial_publicacion_usuario',
   ubicacion_inmueble: 'ubicacion_inmueble',
   ubicacion_maestra: 'ubicacion_maestra',
   usuario: 'usuario',
   verificacion_pago: 'verificacion_pago',
-  visitor: 'visitor'
+  visitor: 'visitor',
+  zona_geografica: 'zona_geografica',
+  zona_predefinida: 'zona_predefinida',
+  zona_usuario: 'zona_usuario'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -92,6 +133,30 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel =
   (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
+export const AmenidadScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre'
+} as const
+
+export type AmenidadScalarFieldEnum =
+  (typeof AmenidadScalarFieldEnum)[keyof typeof AmenidadScalarFieldEnum]
+
+export const Autenticacion_socialScalarFieldEnum = {
+  id: 'id',
+  usuarioId: 'usuarioId',
+  proveedor: 'proveedor',
+  correoProveedor: 'correoProveedor',
+  idExterno: 'idExterno',
+  vinculadoEn: 'vinculadoEn',
+  activo: 'activo',
+  token_acceso_cifrado: 'token_acceso_cifrado',
+  token_expira_en: 'token_expira_en',
+  ultimo_uso_en: 'ultimo_uso_en'
+} as const
+
+export type Autenticacion_socialScalarFieldEnum =
+  (typeof Autenticacion_socialScalarFieldEnum)[keyof typeof Autenticacion_socialScalarFieldEnum]
+
 export const Banner_homeScalarFieldEnum = {
   id: 'id',
   url_imagen: 'url_imagen',
@@ -104,6 +169,15 @@ export const Banner_homeScalarFieldEnum = {
 
 export type Banner_homeScalarFieldEnum =
   (typeof Banner_homeScalarFieldEnum)[keyof typeof Banner_homeScalarFieldEnum]
+
+export const BarrioScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  zona_id: 'zona_id'
+} as const
+
+export type BarrioScalarFieldEnum =
+  (typeof BarrioScalarFieldEnum)[keyof typeof BarrioScalarFieldEnum]
 
 export const Bitacora_pagosScalarFieldEnum = {
   id: 'id',
@@ -118,6 +192,31 @@ export const Bitacora_pagosScalarFieldEnum = {
 export type Bitacora_pagosScalarFieldEnum =
   (typeof Bitacora_pagosScalarFieldEnum)[keyof typeof Bitacora_pagosScalarFieldEnum]
 
+export const BlogScalarFieldEnum = {
+  id: 'id',
+  titulo: 'titulo',
+  contenido: 'contenido',
+  imagen: 'imagen',
+  estado: 'estado',
+  eliminado: 'eliminado',
+  fecha_creacion: 'fecha_creacion',
+  fecha_publicacion: 'fecha_publicacion',
+  usuario_id: 'usuario_id',
+  categoria_id: 'categoria_id'
+} as const
+
+export type BlogScalarFieldEnum = (typeof BlogScalarFieldEnum)[keyof typeof BlogScalarFieldEnum]
+
+export const Blog_rechazoScalarFieldEnum = {
+  id: 'id',
+  comentario: 'comentario',
+  fecha: 'fecha',
+  blog_id: 'blog_id'
+} as const
+
+export type Blog_rechazoScalarFieldEnum =
+  (typeof Blog_rechazoScalarFieldEnum)[keyof typeof Blog_rechazoScalarFieldEnum]
+
 export const Cambio_emailScalarFieldEnum = {
   id: 'id',
   email_nuevo: 'email_nuevo',
@@ -131,6 +230,115 @@ export const Cambio_emailScalarFieldEnum = {
 export type Cambio_emailScalarFieldEnum =
   (typeof Cambio_emailScalarFieldEnum)[keyof typeof Cambio_emailScalarFieldEnum]
 
+export const Categoria_blogScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre'
+} as const
+
+export type Categoria_blogScalarFieldEnum =
+  (typeof Categoria_blogScalarFieldEnum)[keyof typeof Categoria_blogScalarFieldEnum]
+
+export const CiudadScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  slug: 'slug',
+  descripcion: 'descripcion',
+  popularidad: 'popularidad'
+} as const
+
+export type CiudadScalarFieldEnum =
+  (typeof CiudadScalarFieldEnum)[keyof typeof CiudadScalarFieldEnum]
+
+export const Ciudad_imagenScalarFieldEnum = {
+  id: 'id',
+  ciudadid: 'ciudadid',
+  url: 'url',
+  orden: 'orden'
+} as const
+
+export type Ciudad_imagenScalarFieldEnum =
+  (typeof Ciudad_imagenScalarFieldEnum)[keyof typeof Ciudad_imagenScalarFieldEnum]
+
+export const Codigo_2faScalarFieldEnum = {
+  id: 'id',
+  usuarioId: 'usuarioId',
+  codigoHash: 'codigoHash',
+  creadoEn: 'creadoEn',
+  expiraEn: 'expiraEn',
+  usadoEn: 'usadoEn',
+  intentos: 'intentos',
+  activo: 'activo'
+} as const
+
+export type Codigo_2faScalarFieldEnum =
+  (typeof Codigo_2faScalarFieldEnum)[keyof typeof Codigo_2faScalarFieldEnum]
+
+export const ComentarioScalarFieldEnum = {
+  id: 'id',
+  contenido: 'contenido',
+  fecha_creacion: 'fecha_creacion',
+  usuario_id: 'usuario_id',
+  blog_id: 'blog_id',
+  comentario_padre_id: 'comentario_padre_id'
+} as const
+
+export type ComentarioScalarFieldEnum =
+  (typeof ComentarioScalarFieldEnum)[keyof typeof ComentarioScalarFieldEnum]
+
+export const Comentario_likeScalarFieldEnum = {
+  id: 'id',
+  usuario_id: 'usuario_id',
+  comentario_id: 'comentario_id'
+} as const
+
+export type Comentario_likeScalarFieldEnum =
+  (typeof Comentario_likeScalarFieldEnum)[keyof typeof Comentario_likeScalarFieldEnum]
+
+export const ComparacionScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  creadoEn: 'creadoEn',
+  usuarioId: 'usuarioId',
+  activo: 'activo'
+} as const
+
+export type ComparacionScalarFieldEnum =
+  (typeof ComparacionScalarFieldEnum)[keyof typeof ComparacionScalarFieldEnum]
+
+export const CuponScalarFieldEnum = {
+  id: 'id',
+  codigo: 'codigo',
+  descripcion: 'descripcion',
+  tipo_descuento: 'tipo_descuento',
+  valor_descuento: 'valor_descuento',
+  max_usos: 'max_usos',
+  usos_actuales: 'usos_actuales',
+  fecha_inicio: 'fecha_inicio',
+  fecha_fin: 'fecha_fin',
+  activo: 'activo',
+  fecha_creacion: 'fecha_creacion'
+} as const
+
+export type CuponScalarFieldEnum = (typeof CuponScalarFieldEnum)[keyof typeof CuponScalarFieldEnum]
+
+export const DepartamentoScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre'
+} as const
+
+export type DepartamentoScalarFieldEnum =
+  (typeof DepartamentoScalarFieldEnum)[keyof typeof DepartamentoScalarFieldEnum]
+
+export const Detalle_comparacionScalarFieldEnum = {
+  id: 'id',
+  comparacionId: 'comparacionId',
+  inmuebleId: 'inmuebleId',
+  orden: 'orden'
+} as const
+
+export type Detalle_comparacionScalarFieldEnum =
+  (typeof Detalle_comparacionScalarFieldEnum)[keyof typeof Detalle_comparacionScalarFieldEnum]
+
 export const Detalle_grupoScalarFieldEnum = {
   grupo_id: 'grupo_id',
   marcador_id: 'marcador_id'
@@ -139,6 +347,22 @@ export const Detalle_grupoScalarFieldEnum = {
 export type Detalle_grupoScalarFieldEnum =
   (typeof Detalle_grupoScalarFieldEnum)[keyof typeof Detalle_grupoScalarFieldEnum]
 
+export const Entrenamiento_mlScalarFieldEnum = {
+  id: 'id',
+  usuario_id: 'usuario_id',
+  inmueble_id: 'inmueble_id',
+  tipo_evento: 'tipo_evento',
+  score_real: 'score_real',
+  retroalimentacion: 'retroalimentacion',
+  features: 'features',
+  fecha_evento: 'fecha_evento',
+  usado_en_modelo: 'usado_en_modelo',
+  version_modelo: 'version_modelo'
+} as const
+
+export type Entrenamiento_mlScalarFieldEnum =
+  (typeof Entrenamiento_mlScalarFieldEnum)[keyof typeof Entrenamiento_mlScalarFieldEnum]
+
 export const EtiquetaScalarFieldEnum = {
   id: 'id',
   nombre: 'nombre'
@@ -146,6 +370,16 @@ export const EtiquetaScalarFieldEnum = {
 
 export type EtiquetaScalarFieldEnum =
   (typeof EtiquetaScalarFieldEnum)[keyof typeof EtiquetaScalarFieldEnum]
+
+export const FavoritoScalarFieldEnum = {
+  id: 'id',
+  usuarioId: 'usuarioId',
+  inmuebleId: 'inmuebleId',
+  agregadoEn: 'agregadoEn'
+} as const
+
+export type FavoritoScalarFieldEnum =
+  (typeof FavoritoScalarFieldEnum)[keyof typeof FavoritoScalarFieldEnum]
 
 export const Grupo_marcadoresScalarFieldEnum = {
   id: 'id',
@@ -161,6 +395,26 @@ export const Grupo_marcadoresScalarFieldEnum = {
 export type Grupo_marcadoresScalarFieldEnum =
   (typeof Grupo_marcadoresScalarFieldEnum)[keyof typeof Grupo_marcadoresScalarFieldEnum]
 
+export const Historial_busquedaScalarFieldEnum = {
+  id: 'id',
+  usuarioid: 'usuarioid',
+  termino: 'termino',
+  creadoen: 'creadoen'
+} as const
+
+export type Historial_busquedaScalarFieldEnum =
+  (typeof Historial_busquedaScalarFieldEnum)[keyof typeof Historial_busquedaScalarFieldEnum]
+
+export const Historial_passwordScalarFieldEnum = {
+  id: 'id',
+  usuarioId: 'usuarioId',
+  passwordHash: 'passwordHash',
+  creadoEn: 'creadoEn'
+} as const
+
+export type Historial_passwordScalarFieldEnum =
+  (typeof Historial_passwordScalarFieldEnum)[keyof typeof Historial_passwordScalarFieldEnum]
+
 export const InmuebleScalarFieldEnum = {
   id: 'id',
   titulo: 'titulo',
@@ -175,11 +429,22 @@ export const InmuebleScalarFieldEnum = {
   fecha_publicacion: 'fecha_publicacion',
   created_at: 'created_at',
   updated_at: 'updated_at',
-  propietario_id: 'propietario_id'
+  propietario_id: 'propietario_id',
+  banoCompartido: 'banoCompartido',
+  precio_anterior: 'precio_anterior',
+  fecha_reduccion: 'fecha_reduccion'
 } as const
 
 export type InmuebleScalarFieldEnum =
   (typeof InmuebleScalarFieldEnum)[keyof typeof InmuebleScalarFieldEnum]
+
+export const Inmueble_amenidadScalarFieldEnum = {
+  inmueble_id: 'inmueble_id',
+  amenidad_id: 'amenidad_id'
+} as const
+
+export type Inmueble_amenidadScalarFieldEnum =
+  (typeof Inmueble_amenidadScalarFieldEnum)[keyof typeof Inmueble_amenidadScalarFieldEnum]
 
 export const Inmueble_etiquetaScalarFieldEnum = {
   inmueble_id: 'inmueble_id',
@@ -203,6 +468,23 @@ export const Interaccion_mapaScalarFieldEnum = {
 export type Interaccion_mapaScalarFieldEnum =
   (typeof Interaccion_mapaScalarFieldEnum)[keyof typeof Interaccion_mapaScalarFieldEnum]
 
+export const Magic_linkScalarFieldEnum = {
+  id: 'id',
+  usuario_id: 'usuario_id',
+  token_hash: 'token_hash',
+  correo: 'correo',
+  expira_en: 'expira_en',
+  usado_en: 'usado_en',
+  activo: 'activo',
+  creado_en: 'creado_en',
+  intentos_reenvio: 'intentos_reenvio',
+  ultimo_reenvio_en: 'ultimo_reenvio_en',
+  invalidado_en: 'invalidado_en'
+} as const
+
+export type Magic_linkScalarFieldEnum =
+  (typeof Magic_linkScalarFieldEnum)[keyof typeof Magic_linkScalarFieldEnum]
+
 export const Marcador_mapaScalarFieldEnum = {
   id: 'id',
   tipo: 'tipo',
@@ -215,6 +497,22 @@ export const Marcador_mapaScalarFieldEnum = {
 export type Marcador_mapaScalarFieldEnum =
   (typeof Marcador_mapaScalarFieldEnum)[keyof typeof Marcador_mapaScalarFieldEnum]
 
+export const Modelo_versionScalarFieldEnum = {
+  id: 'id',
+  version: 'version',
+  archivo_path: 'archivo_path',
+  algoritmo: 'algoritmo',
+  precision: 'precision',
+  recall: 'recall',
+  datos_usados: 'datos_usados',
+  activo: 'activo',
+  entrenado_en: 'entrenado_en',
+  notas: 'notas'
+} as const
+
+export type Modelo_versionScalarFieldEnum =
+  (typeof Modelo_versionScalarFieldEnum)[keyof typeof Modelo_versionScalarFieldEnum]
+
 export const MultimediaScalarFieldEnum = {
   id: 'id',
   url: 'url',
@@ -226,20 +524,41 @@ export const MultimediaScalarFieldEnum = {
 export type MultimediaScalarFieldEnum =
   (typeof MultimediaScalarFieldEnum)[keyof typeof MultimediaScalarFieldEnum]
 
+export const MunicipioScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  provincia: 'provincia'
+} as const
+
+export type MunicipioScalarFieldEnum =
+  (typeof MunicipioScalarFieldEnum)[keyof typeof MunicipioScalarFieldEnum]
+
 export const NotificacionScalarFieldEnum = {
   id: 'id',
   titulo: 'titulo',
   mensaje: 'mensaje',
   leida: 'leida',
-  fecha_creacion: 'fecha_creacion',
-  fecha_lectura: 'fecha_lectura',
+  fechaCreacion: 'fechaCreacion',
+  fechaLectura: 'fechaLectura',
   eliminada: 'eliminada',
   archivada: 'archivada',
-  usuario_id: 'usuario_id'
+  usuarioId: 'usuarioId',
+  tipo: 'tipo',
+  blog_id: 'blog_id'
 } as const
 
 export type NotificacionScalarFieldEnum =
   (typeof NotificacionScalarFieldEnum)[keyof typeof NotificacionScalarFieldEnum]
+
+export const Parametros_personalizadosScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  descripcion: 'descripcion',
+  creado_en: 'creado_en'
+} as const
+
+export type Parametros_personalizadosScalarFieldEnum =
+  (typeof Parametros_personalizadosScalarFieldEnum)[keyof typeof Parametros_personalizadosScalarFieldEnum]
 
 export const PerfilScalarFieldEnum = {
   id: 'id',
@@ -264,6 +583,27 @@ export const Plan_suscripcionScalarFieldEnum = {
 export type Plan_suscripcionScalarFieldEnum =
   (typeof Plan_suscripcionScalarFieldEnum)[keyof typeof Plan_suscripcionScalarFieldEnum]
 
+export const Propiedad_vistaScalarFieldEnum = {
+  id: 'id',
+  usuarioId: 'usuarioId',
+  inmuebleId: 'inmuebleId',
+  vistaEn: 'vistaEn',
+  veces_visto: 'veces_visto',
+  activo: 'activo'
+} as const
+
+export type Propiedad_vistaScalarFieldEnum =
+  (typeof Propiedad_vistaScalarFieldEnum)[keyof typeof Propiedad_vistaScalarFieldEnum]
+
+export const ProvinciaScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  departamento: 'departamento'
+} as const
+
+export type ProvinciaScalarFieldEnum =
+  (typeof ProvinciaScalarFieldEnum)[keyof typeof ProvinciaScalarFieldEnum]
+
 export const PublicacionScalarFieldEnum = {
   id: 'id',
   titulo: 'titulo',
@@ -271,11 +611,95 @@ export const PublicacionScalarFieldEnum = {
   estado: 'estado',
   fecha_publicacion: 'fecha_publicacion',
   usuario_id: 'usuario_id',
-  inmueble_id: 'inmueble_id'
+  inmueble_id: 'inmueble_id',
+  payment_intent_id: 'payment_intent_id',
+  promoted: 'promoted',
+  promoted_at: 'promoted_at',
+  promoted_expires_at: 'promoted_expires_at'
 } as const
 
 export type PublicacionScalarFieldEnum =
   (typeof PublicacionScalarFieldEnum)[keyof typeof PublicacionScalarFieldEnum]
+
+export const Publicacion_compartidoScalarFieldEnum = {
+  id: 'id',
+  publicacion_id: 'publicacion_id',
+  usuario_id: 'usuario_id',
+  medio: 'medio',
+  creado_en: 'creado_en'
+} as const
+
+export type Publicacion_compartidoScalarFieldEnum =
+  (typeof Publicacion_compartidoScalarFieldEnum)[keyof typeof Publicacion_compartidoScalarFieldEnum]
+
+export const Publicacion_estadisticaScalarFieldEnum = {
+  id: 'id',
+  publicacion_id: 'publicacion_id',
+  total_visualizaciones: 'total_visualizaciones',
+  total_compartidos: 'total_compartidos',
+  actualizado_en: 'actualizado_en'
+} as const
+
+export type Publicacion_estadisticaScalarFieldEnum =
+  (typeof Publicacion_estadisticaScalarFieldEnum)[keyof typeof Publicacion_estadisticaScalarFieldEnum]
+
+export const Publicacion_parametroScalarFieldEnum = {
+  id: 'id',
+  publicacion_id: 'publicacion_id',
+  parametro_id: 'parametro_id',
+  valor: 'valor',
+  creado_en: 'creado_en'
+} as const
+
+export type Publicacion_parametroScalarFieldEnum =
+  (typeof Publicacion_parametroScalarFieldEnum)[keyof typeof Publicacion_parametroScalarFieldEnum]
+
+export const Publicacion_tagScalarFieldEnum = {
+  publicacion_id: 'publicacion_id',
+  tag_id: 'tag_id',
+  agregado_en: 'agregado_en'
+} as const
+
+export type Publicacion_tagScalarFieldEnum =
+  (typeof Publicacion_tagScalarFieldEnum)[keyof typeof Publicacion_tagScalarFieldEnum]
+
+export const Publicacion_vistaScalarFieldEnum = {
+  id: 'id',
+  publicacion_id: 'publicacion_id',
+  usuario_id: 'usuario_id',
+  visitor_id: 'visitor_id',
+  ip: 'ip',
+  user_agent: 'user_agent',
+  creado_en: 'creado_en'
+} as const
+
+export type Publicacion_vistaScalarFieldEnum =
+  (typeof Publicacion_vistaScalarFieldEnum)[keyof typeof Publicacion_vistaScalarFieldEnum]
+
+export const Punto_interesScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  latitud: 'latitud',
+  longitud: 'longitud',
+  inmueble_id: 'inmueble_id'
+} as const
+
+export type Punto_interesScalarFieldEnum =
+  (typeof Punto_interesScalarFieldEnum)[keyof typeof Punto_interesScalarFieldEnum]
+
+export const Recuperacion_passwordScalarFieldEnum = {
+  id: 'id',
+  usuarioId: 'usuarioId',
+  token: 'token',
+  expiraEn: 'expiraEn',
+  creadoEn: 'creadoEn',
+  usadoEn: 'usadoEn',
+  intentos: 'intentos',
+  activo: 'activo'
+} as const
+
+export type Recuperacion_passwordScalarFieldEnum =
+  (typeof Recuperacion_passwordScalarFieldEnum)[keyof typeof Recuperacion_passwordScalarFieldEnum]
 
 export const RolScalarFieldEnum = {
   id: 'id',
@@ -287,10 +711,11 @@ export type RolScalarFieldEnum = (typeof RolScalarFieldEnum)[keyof typeof RolSca
 export const SesionScalarFieldEnum = {
   id: 'id',
   token: 'token',
-  fecha_inicio: 'fecha_inicio',
-  fecha_expiracion: 'fecha_expiracion',
+  fechaInicio: 'fechaInicio',
+  fechaExpiracion: 'fechaExpiracion',
   estado: 'estado',
-  usuario_id: 'usuario_id'
+  usuarioId: 'usuarioId',
+  metodo_auth: 'metodo_auth'
 } as const
 
 export type SesionScalarFieldEnum =
@@ -313,6 +738,17 @@ export const Sesion_mapaScalarFieldEnum = {
 export type Sesion_mapaScalarFieldEnum =
   (typeof Sesion_mapaScalarFieldEnum)[keyof typeof Sesion_mapaScalarFieldEnum]
 
+export const Spatial_ref_sysScalarFieldEnum = {
+  srid: 'srid',
+  auth_name: 'auth_name',
+  auth_srid: 'auth_srid',
+  srtext: 'srtext',
+  proj4text: 'proj4text'
+} as const
+
+export type Spatial_ref_sysScalarFieldEnum =
+  (typeof Spatial_ref_sysScalarFieldEnum)[keyof typeof Spatial_ref_sysScalarFieldEnum]
+
 export const Suscripciones_activasScalarFieldEnum = {
   id: 'id',
   id_usuario: 'id_usuario',
@@ -326,16 +762,52 @@ export const Suscripciones_activasScalarFieldEnum = {
 export type Suscripciones_activasScalarFieldEnum =
   (typeof Suscripciones_activasScalarFieldEnum)[keyof typeof Suscripciones_activasScalarFieldEnum]
 
+export const TagScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  creado_en: 'creado_en'
+} as const
+
+export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
+
 export const TelefonoScalarFieldEnum = {
   id: 'id',
-  codigo_pais: 'codigo_pais',
+  codigoPais: 'codigoPais',
   numero: 'numero',
   principal: 'principal',
+  usuarioId: 'usuarioId',
+  codigo_pais: 'codigo_pais',
   usuario_id: 'usuario_id'
 } as const
 
 export type TelefonoScalarFieldEnum =
   (typeof TelefonoScalarFieldEnum)[keyof typeof TelefonoScalarFieldEnum]
+
+export const TestimonioScalarFieldEnum = {
+  id: 'id',
+  comentario: 'comentario',
+  calificacion: 'calificacion',
+  visible: 'visible',
+  eliminado: 'eliminado',
+  fecha_creacion: 'fecha_creacion',
+  usuario_id: 'usuario_id',
+  ciudad: 'ciudad',
+  zona: 'zona',
+  categoria: 'categoria'
+} as const
+
+export type TestimonioScalarFieldEnum =
+  (typeof TestimonioScalarFieldEnum)[keyof typeof TestimonioScalarFieldEnum]
+
+export const Testimonio_likeScalarFieldEnum = {
+  id: 'id',
+  testimonio_id: 'testimonio_id',
+  usuario_id: 'usuario_id',
+  creado_en: 'creado_en'
+} as const
+
+export type Testimonio_likeScalarFieldEnum =
+  (typeof Testimonio_likeScalarFieldEnum)[keyof typeof Testimonio_likeScalarFieldEnum]
 
 export const TransaccionesScalarFieldEnum = {
   id: 'id',
@@ -350,11 +822,24 @@ export const TransaccionesScalarFieldEnum = {
   fecha_completado: 'fecha_completado',
   estado: 'estado',
   verificacion_requerida: 'verificacion_requerida',
-  tiempo_activacion: 'tiempo_activacion'
+  tiempo_activacion: 'tiempo_activacion',
+  cupon_id: 'cupon_id',
+  monto_descuento: 'monto_descuento'
 } as const
 
 export type TransaccionesScalarFieldEnum =
   (typeof TransaccionesScalarFieldEnum)[keyof typeof TransaccionesScalarFieldEnum]
+
+export const Tutorial_publicacion_usuarioScalarFieldEnum = {
+  id: 'id',
+  usuario_id: 'usuario_id',
+  confirmado: 'confirmado',
+  visto_en: 'visto_en',
+  confirmado_en: 'confirmado_en'
+} as const
+
+export type Tutorial_publicacion_usuarioScalarFieldEnum =
+  (typeof Tutorial_publicacion_usuarioScalarFieldEnum)[keyof typeof Tutorial_publicacion_usuarioScalarFieldEnum]
 
 export const Ubicacion_inmuebleScalarFieldEnum = {
   id: 'id',
@@ -364,7 +849,9 @@ export const Ubicacion_inmuebleScalarFieldEnum = {
   ciudad: 'ciudad',
   zona: 'zona',
   inmueble_id: 'inmueble_id',
-  ubicacion_maestra_id: 'ubicacion_maestra_id'
+  ubicacion_maestra_id: 'ubicacion_maestra_id',
+  barrio_id: 'barrio_id',
+  vertices_difuminado: 'vertices_difuminado'
 } as const
 
 export type Ubicacion_inmuebleScalarFieldEnum =
@@ -395,10 +882,25 @@ export const UsuarioScalarFieldEnum = {
   genero: 'genero',
   direccion: 'direccion',
   activo: 'activo',
+  fechaRegistro: 'fechaRegistro',
+  createdAt: 'createdAt',
+  intentos_fallidos_cambio_password: 'intentos_fallidos_cambio_password',
+  bloqueo_cambio_password_hasta: 'bloqueo_cambio_password_hasta',
+  password_actualizado_en: 'password_actualizado_en',
+  two_factor_activo: 'two_factor_activo',
+  two_factor_metodo: 'two_factor_metodo',
+  two_factor_activado_en: 'two_factor_activado_en',
+  controlador: 'controlador',
+  notificacionWhatsapp: 'notificacionWhatsapp',
+  rolId: 'rolId',
+  notificacion_email: 'notificacion_email',
+  notificacion_whatsapp: 'notificacion_whatsapp',
   fecha_registro: 'fecha_registro',
-  created_at: 'created_at',
-  updated_at: 'updated_at',
-  rol_id: 'rol_id'
+  updatedAt: 'updatedAt',
+  desactivado_en: 'desactivado_en',
+  fecha_nacimiento: 'fecha_nacimiento',
+  telemetria_compartida: 'telemetria_compartida',
+  zona_conexion: 'zona_conexion'
 } as const
 
 export type UsuarioScalarFieldEnum =
@@ -420,11 +922,47 @@ export const VisitorScalarFieldEnum = {
   ip: 'ip',
   meta_data: 'meta_data',
   fecha_visita: 'fecha_visita',
-  usuario_id: 'usuario_id'
+  usuario_id: 'usuario_id',
+  token: 'token'
 } as const
 
 export type VisitorScalarFieldEnum =
   (typeof VisitorScalarFieldEnum)[keyof typeof VisitorScalarFieldEnum]
+
+export const Zona_geograficaScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  municipio: 'municipio'
+} as const
+
+export type Zona_geograficaScalarFieldEnum =
+  (typeof Zona_geograficaScalarFieldEnum)[keyof typeof Zona_geograficaScalarFieldEnum]
+
+export const Zona_predefinidaScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  coordenadas: 'coordenadas',
+  color: 'color',
+  activa: 'activa',
+  creadoEn: 'creadoEn'
+} as const
+
+export type Zona_predefinidaScalarFieldEnum =
+  (typeof Zona_predefinidaScalarFieldEnum)[keyof typeof Zona_predefinidaScalarFieldEnum]
+
+export const Zona_usuarioScalarFieldEnum = {
+  id: 'id',
+  nombre: 'nombre',
+  descripcion: 'descripcion',
+  geometria: 'geometria',
+  area: 'area',
+  creadoEn: 'creadoEn',
+  actualizadoEn: 'actualizadoEn',
+  usuarioId: 'usuarioId'
+} as const
+
+export type Zona_usuarioScalarFieldEnum =
+  (typeof Zona_usuarioScalarFieldEnum)[keyof typeof Zona_usuarioScalarFieldEnum]
 
 export const SortOrder = {
   asc: 'asc',
@@ -440,6 +978,12 @@ export const NullableJsonNullValueInput = {
 
 export type NullableJsonNullValueInput =
   (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 export const QueryMode = {
   default: 'default',
