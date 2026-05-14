@@ -20,7 +20,7 @@ import {
   requestActivationCodeService,
   activateAccountByCodeService,
   resendRegisterCodeService,
-} from './auth.service.js'
+} from "./auth.service.js";
 
 type RegisterBody = {
   nombre: string;
@@ -405,14 +405,14 @@ export const resendMagicLinkController = async (
   res: Response,
 ) => {
   try {
-  const result = await resendMagicLinkService(req.body);
-  const { message: _message, ...responseData } = result;
+    const result = await resendMagicLinkService(req.body);
+    const { message: _message, ...responseData } = result;
 
-  return res.status(200).json({
-    message: "Te reenviamos un link mágico a tu correo electrónico.",
-    ...responseData,
-  });
-} catch (error)  {
+    return res.status(200).json({
+      message: "Te reenviamos un link mágico a tu correo electrónico.",
+      ...responseData,
+    });
+  } catch (error) {
     if (error instanceof AuthError) {
       if (error.retryAfterSeconds) {
         res.setHeader("Retry-After", String(error.retryAfterSeconds));
@@ -424,9 +424,7 @@ export const resendMagicLinkController = async (
     }
 
     const message =
-      error instanceof Error
-        ? error.message
-        : "Error al reenviar link mágico";
+      error instanceof Error ? error.message : "Error al reenviar link mágico";
 
     return res.status(400).json({ message });
   }
@@ -462,7 +460,10 @@ export const resetPasswordController = async (req: Request, res: Response) => {
   }
 };
 
-export const activateAccountByPasswordController = async (req: Request, res: Response) => {
+export const activateAccountByPasswordController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const { correo, password } = req.body;
     const result = await activateAccountByPasswordService({ correo, password });
@@ -531,7 +532,10 @@ export const activateAccountByCodeController = async (
   }
 };
 
-export const resendRegisterCodeController = async (req: Request, res: Response) => {
+export const resendRegisterCodeController = async (
+  req: Request,
+  res: Response,
+) => {
   try {
     const { verificationToken } = req.body;
     const result = await resendRegisterCodeService(verificationToken);
