@@ -230,7 +230,8 @@ export const useBlogComments = (blogId: string) => {
     socket.on(nuevoEvento, (data) => {
       setComments((prev) => {
         if (prev.some((c) => c.id === String(data.id))) return prev;
-        return [mapBackendComment(data), ...prev];
+        const mapped = mapBackendComment(data);
+        return [{ ...mapped, isNewSocket: true }, ...prev];
       });
     });
 
@@ -346,9 +347,12 @@ export const useBlogComments = (blogId: string) => {
 
       if (res.ok || res.status === 204) {
         const idsToDelete = [
-          commentId,
-          ...getDescendantIds(comments, commentId),
+          String(commentId),
+          ...getDescendantIds(comments, String(commentId)),
         ];
+        setComments((prev) =>
+          prev.filter((c) => !idsToDelete.includes(String(c.id))),
+        );
         setMenuOpenForId(null);
 
         if (replyingToId && idsToDelete.includes(replyingToId))
