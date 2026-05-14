@@ -1,4 +1,3 @@
-import { prisma } from '../../lib/prisma.client.js'
 import {
   buscarPublicacionesPorUsuarioRepository,
   buscarPublicacionPorIdRepository,
@@ -13,7 +12,7 @@ import {
   buscarPublicacionPorIdSimpleRepository,
   verificarPublicidadActivaRepository
 } from './publicacion.repository.js'
-import { cloudinary } from '../../config/cloudinary.js'
+import { prisma } from '../../lib/prisma.client.js'
 
 type TipoAccionPermitido = 'VENTA' | 'ALQUILER' | 'ANTICRETO'
 
@@ -52,12 +51,6 @@ type MultimediaResumen = {
   url: string
   tipo: string
   pesoMb: number | null
-}
-
-type EstadisticaPublicacionResumen = {
-  publicacion_id: number
-  total_visualizaciones: number
-  total_compartidos: number
 }
 
 const ESTADO_PUBLICACION_ELIMINADA = 'ELIMINADA'
@@ -130,8 +123,7 @@ export const listarMisPublicacionesService = async (usuarioId: number) => {
       publicacion.inmueble.superficieM2 !== null && publicacion.inmueble.superficieM2 !== undefined
         ? Number(publicacion.inmueble.superficieM2)
         : null,
-    imagenUrl: obtenerPrimeraImagenUrl(publicacion.multimedia),
-    promoted: publicacion.promoted ?? false
+    imagenUrl: obtenerPrimeraImagenUrl(publicacion.multimedia)
   }))
 }
 
@@ -400,18 +392,12 @@ export const obtenerDetallePublicacionService = async (publicacionId: number) =>
     ubicacionTexto: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
     descripcion:
       publicacion.descripcion || publicacion.inmueble.descripcion || 'Sin descripción disponible',
-    imagenes: publicacion.multimedia
-      .filter((item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN)
-      .map((item) => ({
-        id: item.id,
-        url: item.url,
-        tipo: item.tipo,
-        pesoMb: item.pesoMb ? Number(item.pesoMb) : null
-      })),
-    videoUrl:
-      publicacion.multimedia.find(
-        (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_VIDEO
-      )?.url ?? null,
+    imagenes: publicacion.multimedia.map((item) => ({
+      id: item.id,
+      url: item.url,
+      tipo: item.tipo,
+      pesoMb: item.pesoMb ? Number(item.pesoMb) : null
+    })),
     detalles: {
       habitaciones: publicacion.inmueble.nroCuartos ?? null,
       banos: publicacion.inmueble.nroBanos ?? null,
@@ -459,25 +445,17 @@ export const obtenerDetallePublicacionPorInmuebleService = async (inmuebleId: nu
     inmuebleId: publicacion.inmueble.id,
     titulo: publicacion.titulo,
     precio: Number(publicacion.inmueble.precio),
-    //HU6-precio Anterior
-    precio_anterior: publicacion.inmueble.precio_anterior ? Number(publicacion.inmueble.precio_anterior) : undefined,
     tipoInmueble: publicacion.inmueble.categoria ?? null,
     tipoOperacion: publicacion.inmueble.tipoAccion,
     ubicacionTexto: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
     descripcion:
       publicacion.descripcion || publicacion.inmueble.descripcion || 'Sin descripción disponible',
-    imagenes: publicacion.multimedia
-      .filter((item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN)
-      .map((item) => ({
-        id: item.id,
-        url: item.url,
-        tipo: item.tipo,
-        pesoMb: item.pesoMb ? Number(item.pesoMb) : null
-      })),
-    videoUrl:
-      publicacion.multimedia.find(
-        (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_VIDEO
-      )?.url ?? null,
+    imagenes: publicacion.multimedia.map((item) => ({
+      id: item.id,
+      url: item.url,
+      tipo: item.tipo,
+      pesoMb: item.pesoMb ? Number(item.pesoMb) : null
+    })),
     detalles: {
       habitaciones: publicacion.inmueble.nroCuartos ?? null,
       banos: publicacion.inmueble.nroBanos ?? null,
@@ -505,7 +483,6 @@ export const obtenerDetallePublicacionPorInmuebleService = async (inmuebleId: nu
     }
   }
 }
-
 export const confirmarPublicacionService = async (
   publicacionId: number,
   usuarioSolicitanteId: number
@@ -572,14 +549,7 @@ export const iniciarPublicidadService = async (
     throw new Error('PUBLICACION_YA_ELIMINADA')
   }
 
-  
-  const yaPublicitada = await verificarPublicidadActivaRepository(publicacionId)
-  if (yaPublicitada) {
-    throw new Error('PUBLICACION_YA_PUBLICITADA')
-  }
-
- 
-  // SIMULACIÓN (reemplazar con integración real)
+  // SIMULACIÓN (reemplazar con integración real de pagos)
   const checkoutUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/pago?publicacion=${publicacionId}&monto=9.99`
 
   return { checkoutUrl }
@@ -596,6 +566,10 @@ export const confirmarPublicidadService = async (
 
   if (Number.isNaN(usuarioId) || usuarioId <= 0) {
     throw new Error('USUARIO_INVALIDO')
+  }
+
+  if (!paymentIntentId || paymentIntentId.trim() === '') {
+    throw new Error('PAYMENT_INTENT_REQUERIDO')
   }
 
   const publicacion = await buscarPublicacionPorIdRepository(publicacionId)
@@ -623,10 +597,9 @@ export const confirmarPublicidadService = async (
     promoted: publicacionActualizada.promoted,
     promotedAt: publicacionActualizada.promotedAt,
     promotedExpiresAt: publicacionActualizada.promotedExpiresAt,
-    message: 'Publicidad activada correctamente por 30 días'
+    message: 'Publicidad activada correctamente'
   }
 }
-
 
 export const cancelarPublicidadService = async (
   publicacionId: number,
@@ -678,7 +651,9 @@ export const obtenerEstadoPublicidadService = async (publicacionId: number) => {
     throw new Error('PUBLICACION_NO_EXISTE')
   }
 
-  const activa = await verificarPublicidadActivaRepository(publicacionId)
+  const activa = publicacion.promoted === true && 
+                  publicacion.promotedExpiresAt !== null && 
+                  new Date(publicacion.promotedExpiresAt) > new Date()
 
   return {
     id: publicacion.id,

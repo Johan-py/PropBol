@@ -339,7 +339,6 @@ export const buscarDetallePublicacionPorInmuebleIdRepository = async (inmuebleId
           tipoAccion: true,
           categoria: true,
           precio: true,
-          precio_anterior: true,
           superficieM2: true,
           nroCuartos: true,
           nroBanos: true,
@@ -378,7 +377,6 @@ export const buscarDetallePublicacionPorInmuebleIdRepository = async (inmuebleId
     }
   })
 }
-
 export const confirmarPublicacionRepository = async (publicacionId: number) => {
   return prisma.publicacion.update({
     where: { id: publicacionId },
@@ -396,59 +394,71 @@ export const confirmarPublicacionRepository = async (publicacionId: number) => {
   })
 }
 
-type NuevaMultimediaInput = {
-  url: string
-  tipo: 'IMAGEN' | 'VIDEO'
-  pesoMb?: number | null
-  publicacionId: number
-}
-
-export const eliminarMultimediaPorIdsRepository = async (
+export const activarPublicidadRepository = async (
   publicacionId: number,
-  multimediaIds: number[]
+  usuarioId: number,
+  paymentIntentId: string
 ) => {
-  if (multimediaIds.length === 0) return { count: 0 }
+  const fechaInicio = new Date()
+  const fechaExpiracion = new Date()
+  fechaExpiracion.setDate(fechaExpiracion.getDate() + 30) 
 
-  return prisma.multimedia.deleteMany({
+  return prisma.publicacion.update({
     where: {
-      id: {
-        in: multimediaIds
-      },
-      publicacionId
-    }
-  })
-}
-
-export const eliminarVideosDePublicacionRepository = async (
-  publicacionId: number
-) => {
-  return prisma.multimedia.deleteMany({
-    where: {
-      publicacionId,
-      tipo: 'VIDEO'
-    }
-  })
-}
-
-export const crearMultimediaRepository = async (
-  data: NuevaMultimediaInput[]
-) => {
-  if (data.length === 0) return { count: 0 }
-
-  return prisma.multimedia.createMany({
-    data
-  })
-}
-
-export const buscarMultimediaPublicacionRepository = async (
-  publicacionId: number
-) => {
-  return prisma.multimedia.findMany({
-    where: {
-      publicacionId
+      id: publicacionId,
+      usuarioId: usuarioId
     },
-    orderBy: {
-      id: 'asc'
+    data: {
+      promoted: true,
+      promotedAt: fechaInicio,
+      promotedExpiresAt: fechaExpiracion,
+      paymentIntentId: paymentIntentId
     }
   })
+}
+
+export const cancelarPublicidadRepository = async (
+  publicacionId: number,
+  usuarioId: number
+) => {
+  return prisma.publicacion.update({
+    where: {
+      id: publicacionId,
+      usuarioId: usuarioId
+    },
+    data: {
+      promoted: false,
+      promotedAt: null,
+      promotedExpiresAt: null,
+      paymentIntentId: null
+    }
+  })
+}
+
+export const buscarPublicacionPorIdSimpleRepository = async (publicacionId: number) => {
+  return prisma.publicacion.findUnique({
+    where: { id: publicacionId },
+    select: {
+      id: true,
+      promoted: true,
+      promotedAt: true,
+      promotedExpiresAt: true
+    }
+  })
+}
+
+export const verificarPublicidadActivaRepository = async (publicacionId: number) => {
+  const publicacion = await prisma.publicacion.findUnique({
+    where: { id: publicacionId },
+    select: {
+      promoted: true,
+      promotedExpiresAt: true
+    }
+  })
+
+  if (!publicacion) return false
+
+  return publicacion.promoted === true &&
+    publicacion.promotedExpiresAt !== null &&
+    new Date(publicacion.promotedExpiresAt) > new Date()
 }
