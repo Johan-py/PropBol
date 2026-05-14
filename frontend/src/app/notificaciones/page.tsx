@@ -185,16 +185,26 @@ export default function NotificationsPage() {
                       if (notification.status === 'no leida' && isOnline) {
                         void markAsRead(notification.id)
                       }
-
-                      router.push(`/notificaciones/${notification.id}`)
+                      if (notification.tipo === 'BLOG_APROBADO' && notification.blogId) {
+                        router.push(`/blog/${notification.blogId}`)
+                      } else if (notification.tipo === 'BLOG_RECHAZADO' && notification.blogId) {
+                        router.push(`/blog/${notification.blogId}/edit`)
+                      } else {
+                        router.push(`/notificaciones/${notification.id}`)
+                      }
                     }}
                     onKeyDown={(event) => {
                       if (event.key === 'Enter' || event.key === ' ') {
                         if (notification.status === 'no leida' && isOnline) {
                           void markAsRead(notification.id)
                         }
-
-                        router.push(`/notificaciones/${notification.id}`)
+                        if (notification.tipo === 'BLOG_APROBADO' && notification.blogId) {
+                          router.push(`/blog/${notification.blogId}`)
+                        } else if (notification.tipo === 'BLOG_RECHAZADO' && notification.blogId) {
+                          router.push(`/blog/${notification.blogId}/edit`)
+                        } else {
+                          router.push(`/notificaciones/${notification.id}`)
+                        }
                       }
                     }}
                     role="button"
