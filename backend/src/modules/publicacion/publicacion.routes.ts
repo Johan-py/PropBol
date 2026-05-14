@@ -1,6 +1,6 @@
-import { Router } from 'express'
-import { requireAuth } from '../../middleware/auth.middleware.js'
-import { uploadMultimedia } from '../../middleware/uploadMultimedia.middleware.js'
+import { Router } from "express";
+import { requireAuth } from "../../middleware/auth.middleware.js";
+import { uploadMultimedia } from "../../middleware/uploadMultimedia.middleware.js";
 import {
   listarMisPublicacionesController,
   obtenerResumenFinalController,
@@ -9,25 +9,28 @@ import {
   eliminarPublicacionController,
   obtenerDetallePublicacionController,
   obtenerDetallePublicacionPorInmuebleController,
-  confirmarPublicacionController
-} from './publicacion.controller.js'
+  confirmarPublicacionController,
+} from "./publicacion.controller.js";
 
-const router = Router()
+const router = Router();
 
-router.get('/mias', requireAuth, listarMisPublicacionesController)
-router.get('/:id/resumen-final', requireAuth, obtenerResumenFinalController)
-router.get('/inmueble/:inmuebleId/detalle', obtenerDetallePublicacionPorInmuebleController)
-router.get('/:id/detalle', obtenerDetallePublicacionController)
-router.patch('/:id/confirmar', requireAuth, confirmarPublicacionController)
+router.get("/mias", requireAuth, listarMisPublicacionesController);
+router.get("/:id/resumen-final", requireAuth, obtenerResumenFinalController);
+router.get(
+  "/inmueble/:inmuebleId/detalle",
+  obtenerDetallePublicacionPorInmuebleController,
+);
+router.get("/:id/detalle", obtenerDetallePublicacionController);
+router.patch("/:id/confirmar", requireAuth, confirmarPublicacionController);
 
 router.put(
-  '/:id/multimedia',
+  "/:id/multimedia",
   requireAuth,
-  uploadMultimedia.array('imagenesNuevas', 5),
-  editarMultimediaPublicacionController
-)
+  uploadMultimedia.array("imagenesNuevas", 5),
+  editarMultimediaPublicacionController,
+);
 
-router.put('/:id', requireAuth, editarPublicacionController)
-router.delete('/:id', requireAuth, eliminarPublicacionController)
+router.put("/:id", requireAuth, editarPublicacionController);
+router.delete("/:id", requireAuth, eliminarPublicacionController);
 
-export default router
+export default router;

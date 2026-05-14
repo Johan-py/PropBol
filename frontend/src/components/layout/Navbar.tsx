@@ -615,12 +615,30 @@ export default function Navbar() {
                                         </p>
                                       </div>
 
-                                      <p className="mt-1 line-clamp-2 text-sm text-stone-600">
+                                      <p className={`mt-1 line-clamp-2 text-sm ${notification.tipo === "BLOG_RECHAZADO" ? "text-red-600" : "text-stone-600"}`}>
                                         {notification.description?.trim() ||
                                           "(Sin descripción disponible)"}
                                       </p>
 
-                                      <div className="mt-2 flex items-center gap-2">
+                                      <div className="mt-2 flex flex-wrap items-center gap-2">
+                                        {notification.tipo ===
+                                          "BLOG_APROBADO" && (
+                                          <span className="rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-semibold text-green-700">
+                                            Aprobado
+                                          </span>
+                                        )}
+                                        {notification.tipo ===
+                                          "BLOG_RECHAZADO" && (
+                                          <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-semibold text-red-600">
+                                            Rechazado
+                                          </span>
+                                        )}
+                                        {notification.tipo ===
+                                          "BLOG_PENDIENTE" && (
+                                          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
+                                            Pendiente
+                                          </span>
+                                        )}
                                         <span className="text-[10px] uppercase text-stone-400">
                                           {notification.status}
                                         </span>

@@ -266,7 +266,10 @@ export const findActive2FACodeByUserId = async (usuarioId: number) => {
   });
 };
 
-export const findAny2FACodeByUserIdAndHash = async (usuarioId: number, codigoHash: string) => {
+export const findAny2FACodeByUserIdAndHash = async (
+  usuarioId: number,
+  codigoHash: string,
+) => {
   return await prisma.codigo_2fa.findFirst({
     where: {
       usuarioId,
@@ -583,6 +586,7 @@ export const createMagicLink = async ({
     },
   });
 };
+
 type MagicLinkRecord = {
   id: number;
   usuario_id: number;
