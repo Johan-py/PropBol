@@ -1,15 +1,26 @@
 'use client'
 
-import 'leaflet/dist/leaflet.css'
-import 'leaflet-gesture-handling/dist/leaflet-gesture-handling.css' // MAPAS HU11
-import { MapContainer, TileLayer, Marker, Polygon, CircleMarker, useMapEvents } from 'react-leaflet'
-import { useState } from 'react'
+import { MapContainer as BaseMapContainer, TileLayer, Marker, Polygon, CircleMarker, useMapEvents } from 'react-leaflet'
+import { useState, useEffect } from 'react'
 import L from 'leaflet'
 // Importar CSS y L dinámicamente para evitar errores de SSR
 if (typeof window !== 'undefined') {
   const { GestureHandling } = require('leaflet-gesture-handling');
   L.Map.addInitHook('addHandler', 'gestureHandling', GestureHandling);
 }
+
+interface GestureMapProps extends React.ComponentProps<typeof BaseMapContainer> {
+  gestureHandling?: boolean;
+  gestureHandlingOptions?: {
+    text: {
+      touch: string;
+      scroll: string;
+      scrollMac: string;
+    };
+  };
+}
+
+const MapContainer = BaseMapContainer as React.ComponentType<GestureMapProps>;
 
 const pinIcon = L.divIcon({
   className: '',
@@ -57,7 +68,7 @@ function EventosMapa({
   setVertices,
   setMensajeLimite,
 }: any) {
-  useMapEvents({
+  const map = useMapEvents({
     click(e) {
       if (modoPinActivo) {
         setPinCoords({
@@ -115,6 +126,153 @@ function EventosMapa({
 }
   })
 
+  // 4 y 6. Double tap zoom + one-finger zoom
+useEffect(() => {
+  const DOUBLE_TAP_DELAY = 300
+  const DRAG_THRESHOLD = 10
+
+  let lastTapTime = 0
+  let secondTap = false
+  let isDraggingZoom = false
+
+  let startY = 0
+  let startZoom = 0
+  let touchStartTime = 0
+
+  const container = map.getContainer()
+
+  const handleTouchStart = (e: TouchEvent) => {
+    if (e.touches.length !== 1) return
+
+    const now = Date.now()
+    const timeSinceLast = now - lastTapTime
+
+    if (timeSinceLast < DOUBLE_TAP_DELAY) {
+      secondTap = true
+      touchStartTime = now
+      startY = e.touches[0].clientY
+      startZoom = map.getZoom()
+
+      if (e.cancelable) {
+        e.preventDefault()
+      }
+    } else {
+      secondTap = false
+      isDraggingZoom = false
+    }
+
+    lastTapTime = now
+  }
+
+  const handleTouchMove = (e: TouchEvent) => {
+    if (!secondTap) return
+
+    if (e.cancelable) { e.preventDefault() }
+
+    const currentY = e.touches[0].clientY
+    const deltaY = startY - currentY
+
+    if (Math.abs(deltaY) > DRAG_THRESHOLD) {
+      isDraggingZoom = true
+
+      const zoomDelta = deltaY / 80
+
+      map.setZoom(startZoom + zoomDelta, {
+        animate: false
+      })
+    }
+  }
+
+  const handleTouchEnd = (e: TouchEvent) => {
+    if (!secondTap || e.changedTouches.length === 0) return
+    
+    e.preventDefault()
+    e.stopPropagation()
+    // Si no arrastró → doble toque normal
+    if (!isDraggingZoom) {
+      const touch = e.changedTouches[0]
+      const rect = container.getBoundingClientRect()
+
+      const point = L.point(
+        touch.clientX - rect.left,
+        touch.clientY - rect.top
+      )
+
+      const latlng = map.containerPointToLatLng(point)
+
+      map.flyTo(
+        latlng,
+        Math.min(map.getZoom() + 1, 19),
+        {
+          duration: 0.35
+        }
+      )
+    }
+
+    secondTap = false
+    isDraggingZoom = false
+  }
+
+  container.addEventListener('touchstart', handleTouchStart, {
+    passive: false
+  })
+
+  container.addEventListener('touchmove', handleTouchMove, {
+    passive: false
+  })
+
+  container.addEventListener('touchend', handleTouchEnd)
+
+  return () => {
+    container.removeEventListener('touchstart', handleTouchStart)
+    container.removeEventListener('touchmove', handleTouchMove)
+    container.removeEventListener('touchend', handleTouchEnd)
+  }
+}, [map])
+
+  // Doble toque con dos dedos para alejar zoom
+  useEffect(() => {
+    let lastTwoFingerTapTime = 0
+    let maxTouchCount = 0
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length > maxTouchCount) {
+        maxTouchCount = e.touches.length
+      }
+    }
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (e.touches.length !== 0) return
+
+      if (maxTouchCount === 2) {
+        const now = Date.now()
+        const timeSinceLast = now - lastTwoFingerTapTime
+        lastTwoFingerTapTime = now
+
+        if (timeSinceLast < 350) {
+          map.flyTo(
+            map.getCenter(),
+            Math.max(map.getZoom() - 1, 1),
+            {
+              duration: 0.35
+            }
+          )
+        }
+      }
+
+      maxTouchCount = 0
+    }
+
+    const container = map.getContainer()
+    container.addEventListener('touchstart', handleTouchStart)
+    container.addEventListener('touchend', handleTouchEnd)
+
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart)
+      container.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [map])
+
   return null
 }
 
@@ -133,19 +291,9 @@ export default function MapaPinSelector({
     <MapContainer
       center={[-17.3895, -66.1568]}
       zoom={13}
-      scrollWheelZoom
+      scrollWheelZoom={true}
       style={{ height: '320px', width: '100%' }}
-      // Agregado: Control nativo del cursor y bloqueo de arrastre en modo dibujo MAPAS HU11
-      {...({ 
-        gestureHandling: true,
-        gestureHandlingOptions: {
-          text: {
-            touch: "Usa dos dedos para mover el mapa",
-            scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
-            scrollMac: "Usa \u2318 + scroll para hacer zoom en el mapa"
-          }
-        }
-      } as any)}
+      gestureHandling={typeof window !== 'undefined' && L ? L.Browser.mobile : false}
     >
       <TileLayer
         attribution="&copy; OpenStreetMap"

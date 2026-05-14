@@ -2,7 +2,8 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Polygon, Marker, useMap } from 'react-leaflet'
 import L from 'leaflet'
-import type { ZonaPredefinida } from '@/types/zona'
+import type { ZonaPredefinida, TipoZona } from '@/types/zona'
+import { ZONA_COLORS as COLORES } from '@/types/zona'
 
 const MIN_ZOOM_LABELS = 13
 const MAX_LABEL_CHARS = 32
@@ -60,7 +61,8 @@ function centroide(coords: [number, number][]): [number, number] {
 function dimensionarEtiqueta(
   nombre: string,
   zoom: number,
-  isSelected: boolean
+  isSelected: boolean,
+  tipoZona: TipoZona = 'predefinida'
 ): {
   width: number
   height: number
@@ -78,18 +80,22 @@ function dimensionarEtiqueta(
   // Scale proporcional: reduce continuamente conforme el zoom disminuye
   // Para zoom=13: 0.64, para zoom=18: ~1.02, para zoom<13: reduce hasta 0.36
   const zoomOffset = Math.max(-MIN_ZOOM_LABELS, zoom - MIN_ZOOM_LABELS) // Puede ser negativo
-  const zoomProportional = 0.64 + (zoomOffset / 8) * 0.38 // Rango: 0.36 a ~1.02
-  const scale = Math.max(0.36, Math.min(1.12, zoomProportional + selectedBoost))
+  const zoomProportional = 0.70 + (zoomOffset / 8) * 0.40 // Rango: 0.36 a ~1.02
+  let scale = Math.max(0.40, Math.min(1.12, zoomProportional + selectedBoost))
+
+   if (tipoZona === 'personalizada') {
+    scale = scale * 1.2
+  }
 
   const paddingX = Math.round((8 * scale) * 10) / 10
   const paddingY = Math.round((5 * scale) * 10) / 10
 
   // Calcular fontSize inicial basado en escala
-  let fontSize = Math.round((11.5 * scale) * 10) / 10
+  let fontSize = Math.round((12 * scale) * 10) / 10
   let lineHeight = Math.round((fontSize * 1.20) * 10) / 10
 
-  const widthMin = Math.round(80 * scale)
-  const widthMax = Math.round(135 * scale)
+  const widthMin = Math.round(85 * scale)
+  const widthMax = Math.round(150 * scale)
   
   // Ser agresivo con word wrap para AMBOS casos (seleccionada y no seleccionada)
   const factorAnchoWrap = isSelected ? 0.70 : 0.75
@@ -232,7 +238,7 @@ function esValido(coords: unknown): coords is [number, number][] {
 }
 
 // criterio 20: word-wrap; criterio 8: cursor pointer; criterio 23: tabindex + keydown→click
-function labelIcon(nombre: string, isSelected: boolean, zoom: number): L.DivIcon {
+function labelIcon(nombre: string, isSelected: boolean, zoom: number, tipoZona: TipoZona = 'predefinida'): L.DivIcon {
   // Cuando está seleccionada, permitir más caracteres para el word wrap
   const maxChars = isSelected ? MAX_LABEL_CHARS_SELECTED * 1.3 : MAX_LABEL_CHARS
   const nombreVisible = truncarNombreEtiqueta(nombre, Math.round(maxChars))
@@ -244,10 +250,13 @@ function labelIcon(nombre: string, isSelected: boolean, zoom: number): L.DivIcon
     paddingX,
     paddingY,
     maxCharsPorLinea
-  } = dimensionarEtiqueta(nombreVisible, zoom, isSelected)
+  } = dimensionarEtiqueta(nombreVisible, zoom, isSelected, tipoZona)
   const textoHtml = htmlEtiquetaConWrap(nombreVisible, maxCharsPorLinea)
   const nombreCompletoEscapado = escaparHtml(nombre)
-  const color = isSelected ? '#ea580c' : '#1a1a1a'
+  
+  // Usar colores según el tipo de zona
+  const colorConfig = COLORES[tipoZona]
+  const color = isSelected ? colorConfig.labelColorSelected : colorConfig.labelColor
   const shadow = isSelected
     ? '0 0 4px rgba(255,255,255,0.9), 0 0 8px rgba(255,255,255,0.6)'
     : '0 1px 3px rgba(255,255,255,0.95), 0 -1px 3px rgba(255,255,255,0.95), 1px 0 3px rgba(255,255,255,0.95), -1px 0 3px rgba(255,255,255,0.95)'
@@ -294,6 +303,25 @@ function labelIcon(nombre: string, isSelected: boolean, zoom: number): L.DivIcon
   })
 }
 
+function isPointInPolygon(lat: number, lng: number, polygon: [number, number][]): boolean {
+  let inside = false
+  
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    // Acceso correcto a las coordenadas
+    const xi = polygon[i][0]  // latitude
+    const yi = polygon[i][1]  // longitude
+    const xj = polygon[j][0]  // latitude
+    const yj = polygon[j][1]  // longitude
+    
+    const intersect = ((yi > lat) != (yj > lat)) &&
+      (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi)
+    
+    if (intersect) inside = !inside
+  }
+  return inside
+}
+
+
 function ZonaInteractiva({
   zona,
   selected,
@@ -307,52 +335,82 @@ function ZonaInteractiva({
   onZoneSelect: (id: number | null) => void
   onZoneCycle?: (direction: 1 | -1) => void
 }) {
+  // HU10: Determinar tipo de zona (predefinida o personalizada) basado en el ID
+  const tipoZona: TipoZona = zona.tipo || (zona.id < 0 ? 'personalizada' : 'predefinida')
+  const colorConfig = COLORES[tipoZona]
   const polygonRef = useRef<L.Polygon | null>(null)
-  const center = centroide(zona.coordenadas)
+  const [center, setCenter] = useState<[number, number]>(() => 
+    centroide(zona.coordenadas)
+  )
+
+  // Función para verificar punto dentro de polígono
+  const isPointInPolygon = (lat: number, lng: number, polygon: [number, number][]): boolean => {
+    let inside = false
+    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+      const xi = polygon[i][0]
+      const yi = polygon[i][1]
+      const xj = polygon[j][0]
+      const yj = polygon[j][1]
+      
+      const intersect = ((yi > lat) != (yj > lat)) &&
+        (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi)
+      
+      if (intersect) inside = !inside
+    }
+    return inside
+  }
 
   useEffect(() => {
-    const element = polygonRef.current?.getElement() as SVGPathElement | null
-    if (!element) return
-
-    element.setAttribute('tabindex', '0')
-    element.setAttribute('role', 'button')
-    element.setAttribute('aria-label', `Zona ${zona.nombre}`)
-    element.setAttribute('aria-pressed', String(selected))
-    element.style.cursor = 'pointer'
-    element.style.outline = 'none'
-    element.style.boxShadow = 'none'
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Tab') {
-        if (!onZoneCycle) return
-        event.preventDefault()
-        onZoneCycle(event.shiftKey ? -1 : 1)
-        return
-      }
-
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault()
-        onZoneSelect(selected ? null : zona.id)
-      }
+   // Función para recalcular el centro óptimo según el zoom
+  const recalcularCentroOptimo = () => {
+    const coords = zona.coordenadas
+    const polygon = L.polygon(coords)
+    const bounds = polygon.getBounds()
+    
+    // Para zoom bajo , usar centroide estándar
+    if (zoom <= 13) {
+      setCenter(centroide(coords))
+      return
     }
-
-    element.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      element.removeEventListener('keydown', handleKeyDown)
+    
+    // Para zoom medio, usar el centro del bounding box
+    if (zoom <= 15) {
+      const centerLat = (bounds.getNorth() + bounds.getSouth()) / 2
+      const centerLng = (bounds.getEast() + bounds.getWest()) / 2
+      setCenter([centerLat, centerLng])
+      return
     }
-  }, [selected, zona.nombre])
+    
+    // Para zoom alto - 
+    // Calcular el centro promedio de todos los puntos del polígono
+    let sumLat = 0
+    let sumLng = 0
+    let totalPuntos = 0
+    
+    for (let i = 0; i < coords.length; i++) {
+      sumLat += coords[i][0]
+      sumLng += coords[i][1]
+      totalPuntos++
+    }
+    
+    const centerLat = sumLat / totalPuntos
+    const centerLng = sumLng / totalPuntos
+    
+    // Verificar si el punto está dentro del polígono
+    if (isPointInPolygon(centerLat, centerLng, coords)) {
+      setCenter([centerLat, centerLng])
+    } else {
+      setCenter([
+        (bounds.getNorth() + bounds.getSouth()) / 2,
+        (bounds.getEast() + bounds.getWest()) / 2
+      ])
+    }
+  }
+  
+  recalcularCentroOptimo()
+}, [zoom, zona.coordenadas])
 
-  useEffect(() => {
-    if (!selected) return
 
-    const element = polygonRef.current?.getElement() as SVGPathElement | null
-    if (!element) return
-
-    requestAnimationFrame(() => {
-      element.focus({ preventScroll: true })
-    })
-  }, [selected])
 
   return (
     <Fragment>
@@ -360,11 +418,11 @@ function ZonaInteractiva({
         ref={polygonRef}
         positions={zona.coordenadas}
         pathOptions={{
-          color: selected ? '#ea580c' : '#64748b',
+          color: selected ? colorConfig.borderActive : colorConfig.borderInactive,
           weight: selected ? 2 : 1.8,
           dashArray: selected ? '6,6' : undefined,
-          fillColor: selected ? '#ea580c' : '#94a3b8',
-          fillOpacity: selected ? 0.25 : 0.10,
+          fillColor: selected ? colorConfig.fillActive : colorConfig.fillInactive,
+          fillOpacity: selected ? colorConfig.fillOpacityActive : colorConfig.fillOpacityInactive,
           lineJoin: 'round',
           lineCap: 'round'
         }}
@@ -414,7 +472,7 @@ function ZonaInteractiva({
       {zoom >= MIN_ZOOM_LABELS && (
         <Marker
           position={center}
-          icon={labelIcon(zona.nombre, selected, zoom)}
+          icon={labelIcon(zona.nombre, selected, zoom, tipoZona)}
           interactive
           keyboard={false}
           zIndexOffset={-100}

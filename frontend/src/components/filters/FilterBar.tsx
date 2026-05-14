@@ -16,7 +16,8 @@ import {
   Trees,
   Flower2,
   MapPin,
-  X
+  X,
+  Tag
 } from 'lucide-react'
 import { useSearchFilters } from '@/hooks/useSearchFilters'
 import { LocationSearch } from '../layout/LocationSearch'
@@ -33,9 +34,6 @@ import { BarChart2 } from 'lucide-react'
 const AMENITIES_MAP: Record<string, string> = {
   '1': 'Piscina', '2': 'Terraza', '3': 'Jardín', '4': 'Cochera', '5': 'Gimnasio',
   '6': 'Ascensor', '7': 'Aire', '8': 'Amueblado', '9': 'Parrillero', '10': 'Seguridad'
-}
-const LABELS_MAP: Record<string, string> = {
-  '1': 'Inversión', '2': 'Preventa', '3': 'Nuevo', '4': 'Oferta'
 }
 
 interface FilterBarProps {
@@ -55,6 +53,8 @@ interface FilterBarProps {
   isZonaFilterActive?: boolean
   isOfertaActive?: boolean
   onToggleOferta?: () => void
+  isEtiquetasFilterActive?: boolean
+  onOpenEtiquetasFilter?: () => void
 }
 type LocationValue =
   | string
@@ -116,7 +116,7 @@ const trackSearchTelemetria = async (filtros: {
   }
 }
 
-export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad, isPriceFilterActive = false, isSuperficieFilterActive = false, isZonaFilterActive = false, isOfertaActive = false, onToggleOferta }: FilterBarProps) {
+export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilter, onOpenSuperficieFilter, isCapacidadActive = false, onToggleCapacidad, isPriceFilterActive = false, isSuperficieFilterActive = false, isZonaFilterActive = false, isOfertaActive = false, onToggleOferta, isEtiquetasFilterActive = false, onOpenEtiquetasFilter }: FilterBarProps) {
 
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -148,13 +148,43 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     }
   }, [])
 
-  const propertyTypes = [
+  const propertyTypes = useMemo(() => [
     { label: 'Casas', icon: Home },
     { label: 'Departamentos', icon: Building },
     { label: 'Cuartos', icon: Bed },
     { label: 'Terrenos', icon: Trees },
     { label: 'Espacios Cementerio', icon: Flower2 }
-  ]
+  ], [])
+
+  // NUEVO: Sincronización reactiva desde la URL (Query Params)
+  useEffect(() => {
+    if (!searchParams) return
+
+    // Restaurar Tipo de Inmueble
+    const urlTipo = searchParams.get('tipoInmueble')
+    if (urlTipo && urlTipo !== 'CUALQUIER TIPO') {
+      const match = propertyTypes.find(pt => pt.label.toUpperCase() === urlTipo.toUpperCase())
+      if (match) setTipoInmueble(match.label)
+    } else {
+      setTipoInmueble('Cualquier tipo')
+    }
+
+    // Restaurar Modos (Venta/Alquiler)
+    const urlModos = searchParams.getAll('modoInmueble')
+    if (urlModos.length > 0) {
+      setModosSeleccionados(urlModos)
+    } else {
+      setModosSeleccionados(['VENTA']) // Default
+    }
+
+    // Restaurar Ubicación/Texto Libre
+    const urlQuery = searchParams.get('query')
+    if (urlQuery) {
+      setUbicacionTexto(urlQuery)
+    } else {
+      setUbicacionTexto('')
+    }
+  }, [searchParams, propertyTypes])
 
   // =======================================================================
   // 1. GENERADOR DINÁMICO DE FILTROS ACTIVOS (Fila inferior removible)
@@ -230,9 +260,12 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     const minB = params.get('banosMin'); const maxB = params.get('banosMax')
     if (minB || maxB) filters.push({ id: 'banos', label: `Baños: ${minB || 0} a ${maxB || '+'}`, onRemove: () => removeParam(['banosMin', 'banosMax']) })
 
-    const bc = params.get('banoCompartido')
-    if (bc === 'true') filters.push({ id: 'bc', label: 'Con baño compartido', onRemove: () => removeParam(['banoCompartido']) })
-    else if (bc === 'false') filters.push({ id: 'bc', label: 'Sin baño compartido', onRemove: () => removeParam(['banoCompartido']) })
+    const tipoBanoParam = params.get('tipoBano')
+    if (tipoBanoParam === 'privado') {
+      filters.push({ id: 'tb', label: 'Baño privado', onRemove: () => removeParam(['tipoBano']) })
+    } else if (tipoBanoParam === 'compartido') {
+      filters.push({ id: 'tb', label: 'Baño compartido', onRemove: () => removeParam(['tipoBano']) })
+    }
 
     // -- Amenidades y Etiquetas (HU6) --
     const amenities = params.get('amenities')?.split(',').filter(Boolean) || []
@@ -246,9 +279,30 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       }
     }))
 
+    // -- Solo ofertas (HU6) --
+    const soloOfertas = searchParams?.get('soloOfertas')
+    if (soloOfertas === 'true') {
+      filters.push({
+        id: 'solo-ofertas',
+        label: 'Solo ofertas',
+        onRemove: () => {
+          params.delete('soloOfertas')
+          router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
+        }
+      })
+    }
+
+    const etiquetasNombres: Record<string, string> = (() => {
+      try {
+        return JSON.parse(sessionStorage.getItem('propbol_etiquetas_nombres') || '{}')
+      } catch {
+        return {}
+      }
+    })()
+
     const labels = params.get('labels')?.split(',').filter(Boolean) || []
     labels.forEach(l => filters.push({
-      id: `label-${l}`, label: `Etiqueta: ${LABELS_MAP[l] || l}`,
+      id: `label-${l}`, label: etiquetasNombres[l] || `Etiqueta ${l}`,
       onRemove: () => {
         const newLb = labels.filter(id => id !== l)
         if (newLb.length > 0) params.set('labels', newLb.join(','))
@@ -275,7 +329,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
   const handleSearch = async (e?: React.FormEvent) => {
 
     if (e) e.preventDefault()
-    const urlParams = new URLSearchParams(window.location.search)
+    const urlParams = new URLSearchParams(searchParams?.toString() || '')
     const minPrice = urlParams.get('minPrice')
     const maxPrice = urlParams.get('maxPrice')
     const minSuperficie = urlParams.get('minSuperficie')
@@ -284,7 +338,9 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     const maxDorm = urlParams.get('dormitoriosMax')
     const minBanos = urlParams.get('banosMin')
     const maxBanos = urlParams.get('banosMax')
-    const banoCompartido = urlParams.get('banoCompartido')
+    const tipoBanoVal = urlParams.get('tipoBano')
+    const banoCompartido =
+      tipoBanoVal === 'compartido' ? true : tipoBanoVal === 'privado' ? false : undefined
     const tipoMap: Record<string, string> = {
       Casas: 'CASA',
       Departamentos: 'DEPARTAMENTO',
@@ -312,7 +368,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       dormitoriosMax: maxDorm || undefined,
       banosMin: minBanos || undefined,
       banosMax: maxBanos || undefined,
-      banoCompartido: banoCompartido === 'true' ? true : banoCompartido === 'false' ? false : undefined
+      banoCompartido
     }
     await trackSearchTelemetria({
       tipoInmueble: nuevosFiltros.tipoInmueble,
@@ -327,7 +383,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       dormitoriosMax: maxDorm,
       banosMin: minBanos,
       banosMax: maxBanos,
-      banoCompartido: banoCompartido === 'true' ? true : banoCompartido === 'false' ? false : null
+      banoCompartido: banoCompartido === true ? true : banoCompartido === false ? false : null
     })
     updateFilters(nuevosFiltros)
 
@@ -340,16 +396,6 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     params.delete('lng')
     params.delete('radius')
     params.delete('orden')
-    try {
-      const merged = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}') as {
-        locationId?: string | number
-      }
-      if (merged.locationId != null && merged.locationId !== '') {
-        params.set('locationId', String(merged.locationId))
-      }
-    } catch {
-      /* ignore */
-    }
 
     modosSeleccionados.forEach((modo) => params.append('modoInmueble', modo))
     if (tipoFinal) params.set('tipoInmueble', tipoFinal)
@@ -449,6 +495,12 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
               <ChevronDown className={`w-4 h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-400'}`} />
             </button>
 
+            <button type="button" onClick={() => onOpenEtiquetasFilter?.()} className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isEtiquetasFilterActive ? 'bg-[#d97706] text-white border-[#d97706]' : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'}`}>
+              <Tag className={`w-4 h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-500'}`} />
+              <span>Etiquetas</span>
+              <ChevronDown className={`w-4 h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-400'}`} />
+            </button>
+
             {/* Modal de Filtros Avanzados */}
             <button type="button" onClick={() => setIsAdvancedFiltersOpen(true)} className="h-[38px] flex items-center gap-2 px-4 rounded-full bg-white border border-stone-200 text-stone-600 text-sm font-medium hover:border-[#d97706] shadow-sm transition-all focus:outline-none shrink-0">
               <SlidersHorizontal className="w-4 h-4 text-stone-500" />
@@ -466,46 +518,88 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
               onClick={async (e) => {
                 e.preventDefault()
 
-                // Copiamos los filtros actuales de la URL en vez de destruirlos
                 const params = new URLSearchParams(searchParams?.toString() || '')
+                const isActive = params.get('orden') === 'recomendados'
 
-                if (isRecomendadosActive) {
-                  // MODO: APAGAR
+                if (isActive) {
+                  const savedFilters = sessionStorage.getItem('propbol_filtros_respaldo')
+                  if (savedFilters) {
+                    const restoredParams = new URLSearchParams(savedFilters)
+                    restoredParams.delete('orden')
+                    restoredParams.delete('ia')
+                    router.push(`/busqueda_mapa?${restoredParams.toString()}`)
+                    sessionStorage.removeItem('propbol_filtros_respaldo')
+                  } else {
+                    params.delete('orden')
+                    params.delete('ia')
+                    router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
+                  }
                   sessionStorage.removeItem('propbol_modo_recomendados')
                   sessionStorage.removeItem('propbol_recomendados')
-                  params.delete('orden')
-                  router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
-                  return // Nos detenemos aquí
+                  return
                 }
 
-                // MODO: ENCENDER
-                const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+                sessionStorage.setItem('propbol_filtros_respaldo', params.toString())
+
+
+
+                const cleanParams = new URLSearchParams()
+                const modoInmueble = params.getAll('modoInmueble')
+                modoInmueble.forEach(m => cleanParams.append('modoInmueble', m))
+                cleanParams.set('orden', 'recomendados')
+                cleanParams.set('ia', '1')
+
+
+                const token = localStorage.getItem('token')
                 if (token) {
-                  // Llamada a la API respetando los parámetros de búsqueda actuales (ej. si estaban en Cochabamba)
-                  const fetchParams = new URLSearchParams({ orden: 'recomendados' })
-                  const res = await fetch(`/api/inmuebles/recomendados?${fetchParams}`, {
-                    headers: { Authorization: `Bearer ${token}` }
-                  })
-                  const data = await res.json()
-                  if (data.success && data.data.length > 0) {
-                    sessionStorage.setItem('recomendaciones_resultado', JSON.stringify(data.data))
-                    sessionStorage.setItem('propbol_modo_recomendados', 'true')
-                    sessionStorage.setItem('propbol_recomendados', JSON.stringify(data.data))
+                  try {
+                    const res = await fetch(`/api/inmuebles/recomendados?${cleanParams.toString()}`, {
+                      headers: { Authorization: `Bearer ${token}` }
+                    })
+                    const data = await res.json()
+                    if (data.success && data.data.length > 0) {
+                      sessionStorage.setItem('propbol_recomendados', JSON.stringify(data.data))
+                      sessionStorage.setItem('propbol_modo_recomendados', 'true')
+                    }
+                  } catch (error) {
+                    console.error('Error obteniendo recomendaciones:', error)
+                    // Fallback silencioso: useProperties cargará los populares
+                  }
+                } else {
+                  // ── Visitante sin cuenta → más populares de su zona ────────────────
+                  // No bloqueamos ni mostramos error. useProperties detectará
+                  // propbol_modo_recomendados=true y cargará los populares.
+                  // Opcionalmente pre-cargamos los populares para más rapidez:
+                  try {
+                    const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+                    const res = await fetch(
+                      `${API_BASE}/api/properties/inmuebles?fecha=mas-populares&${cleanParams.toString()}`
+                    )
+                    const data = await res.json()
+                    if (data.ok && data.data?.length > 0) {
+                      sessionStorage.setItem('propbol_recomendados', JSON.stringify(data.data))
+                      sessionStorage.setItem('propbol_modo_recomendados', 'true')
+                    }
+                  } catch (error) {
+                    console.error('Error cargando populares para visitante:', error)
+                    // useProperties hará la carga normal como fallback
                   }
                 }
 
-                // Actualizamos la URL manteniendo el resto de filtros (zona, precio, etc.) y agregando orden=recomendados
-                params.set('orden', 'recomendados')
-                router.push(`/busqueda_mapa?${params.toString()}`)
+                router.push(`/busqueda_mapa?${cleanParams.toString()}`)
               }}
-              className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isRecomendadosActive
+
+
+
+              className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${searchParams?.get('orden') === 'recomendados'
                   ? 'bg-[#d97706] text-white border-[#d97706]'
                   : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
                 }`}
             >
-              <Award className={`w-4 h-4 ${isRecomendadosActive ? 'text-white' : 'text-stone-500'}`} />
+              <Award className={`w-4 h-4 ${searchParams?.get('orden') === 'recomendados' ? 'text-white' : 'text-stone-500'}`} />
               <span>Recomendados</span>
             </button>
+
             <button
               type="button"
               onClick={(e) => {
@@ -513,8 +607,8 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                 toggleCompareMode();
               }}
               className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isCompareMode
-                  ? 'bg-[#d97706] text-white border-[#d97706]'
-                  : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+                ? 'bg-[#d97706] text-white border-[#d97706]'
+                : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
                 }`}
             >
               <BarChart2 className={`w-4 h-4 ${isCompareMode ? 'text-white' : 'text-stone-500'}`} />
@@ -529,7 +623,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
 
               {activeFilters.map(filter => (
                 <div key={filter.id} className="group flex items-center gap-1.5 bg-[#fdf3e7] border border-orange-200 text-orange-800 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all hover:bg-orange-100 animate-in fade-in zoom-in duration-200">
-                  <span>{filter.label}</span>
+                  <span className="max-w-[160px] truncate">{filter.label}</span>
                   <button
                     type="button"
                     onClick={(e) => { e.preventDefault(); filter.onRemove() }}
