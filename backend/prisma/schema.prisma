@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["partialIndexes"]
 }
 
 datasource db {
@@ -52,6 +53,7 @@ model Usuario {
   comentario                            comentario[]
   comentario_like                       comentario_like[]
   comparacion                           comparacion[]
+  entrenamiento_ml                      entrenamiento_ml[]
   favorito                              favorito[]
   historial_busqueda                    historial_busqueda[]
   historial_password                    historial_password[]
@@ -166,6 +168,7 @@ model Inmueble {
   precio_anterior     Decimal?              @db.Decimal(12, 2)
   fecha_reduccion     DateTime?             @db.Timestamp(6)
   detalle_comparacion detalle_comparacion[]
+  entrenamiento_ml    entrenamiento_ml[]
   favorito            favorito[]
   propietario         Usuario               @relation(fields: [propietarioId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "inmueble_propietario_fk")
   inmueble_amenidad   inmueble_amenidad[]
@@ -339,6 +342,7 @@ model Visitor {
   meta_data    Json?
   fecha_visita DateTime? @default(now()) @db.Timestamp(6)
   usuario_id   Int?
+  token        String?   @unique
   usuario      Usuario?  @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("visitor")
@@ -495,8 +499,6 @@ model comparacion {
   activo              Boolean               @default(true)
   usuario             Usuario               @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   detalle_comparacion detalle_comparacion[]
-
-  @@index([usuarioId, activo], map: "idx_comparacion_usuario_activo")
 }
 
 model detalle_comparacion {
@@ -830,6 +832,87 @@ model TutorialPublicacionUsuario {
   usuario      Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("tutorial_publicacion_usuario")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model publicacion_compartido {
+  id             Int      @id @default(autoincrement())
+  publicacion_id Int
+  usuario_id     Int
+  medio          String?  @db.VarChar(50)
+  creado_en      DateTime @default(now()) @db.Timestamp(6)
+
+  @@index([publicacion_id], map: "idx_publicacion_compartido_publicacion")
+  @@index([usuario_id], map: "idx_publicacion_compartido_usuario")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model publicacion_estadistica {
+  id                    Int      @id @default(autoincrement())
+  publicacion_id        Int      @unique
+  total_visualizaciones Int      @default(0)
+  total_compartidos     Int      @default(0)
+  actualizado_en        DateTime @default(now()) @db.Timestamp(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model publicacion_vista {
+  id             Int      @id @default(autoincrement())
+  publicacion_id Int
+  usuario_id     Int?
+  visitor_id     Int?
+  ip             String?
+  user_agent     String?
+  creado_en      DateTime @default(now()) @db.Timestamp(6)
+
+  @@index([publicacion_id], map: "idx_publicacion_vista_publicacion")
+  @@index([usuario_id], map: "idx_publicacion_vista_usuario")
+  @@index([visitor_id], map: "idx_publicacion_vista_visitor")
+}
+
+model punto_interes {
+  id          Int     @id @default(autoincrement())
+  nombre      String
+  latitud     Decimal @db.Decimal(10, 7)
+  longitud    Decimal @db.Decimal(10, 7)
+  inmueble_id Int
+
+  @@index([inmueble_id], map: "idx_punto_interes_inmueble")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model entrenamiento_ml {
+  id                Int      @id @default(autoincrement())
+  usuario_id        Int
+  inmueble_id       Int
+  tipo_evento       String   @default("CLICK") @db.VarChar(20)
+  score_real        Float    @default(0) @db.Real
+  retroalimentacion Int?     @db.SmallInt
+  features          Json?
+  fecha_evento      DateTime @default(now()) @db.Timestamp(6)
+  usado_en_modelo   Boolean  @default(false)
+  version_modelo    String?  @db.VarChar(20)
+  inmueble          Inmueble @relation(fields: [inmueble_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  usuario           Usuario  @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([fecha_evento(sort: Desc)], map: "idx_ml_fecha")
+  @@index([tipo_evento], map: "idx_ml_tipo_evento")
+  @@index([usuario_id, usado_en_modelo], map: "idx_ml_usuario_usado")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model modelo_version {
+  id           Int      @id @default(autoincrement())
+  version      String   @unique @db.VarChar(20)
+  archivo_path String   @db.VarChar(255)
+  algoritmo    String   @db.VarChar(50)
+  precision    Float?   @db.Real
+  recall       Float?   @db.Real
+  datos_usados Int?
+  activo       Boolean  @unique(map: "idx_modelo_activo", where: raw("(activo = true)")) @default(false)
+  entrenado_en DateTime @default(now()) @db.Timestamp(6)
+  notas        String?
 }
 
 enum Genero {
