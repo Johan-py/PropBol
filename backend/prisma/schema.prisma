@@ -322,7 +322,7 @@ model SesionMapa {
 
 model InteraccionMapa {
   id               Int             @id @default(autoincrement())
-  tipo             TipoInteraccion
+  tipo             public_TipoInteraccion
   latitud_momento  Decimal?        @db.Decimal(10, 7)
   longitud_momento Decimal?        @db.Decimal(10, 7)
   zoom_momento     Int?
@@ -1013,25 +1013,6 @@ enum TipoMarcador {
   CLUSTER
 
   @@map("tipo_marcador")
-}
-
-enum estado_publicacion {
-  ACTIVA
-  PAUSADA
-  ELIMINADA
-}
-
-enum genero {
-  MASCULINO
-  FEMENINO
-  OTRO
-  PREFIERO_NO_DECIR
-}
-
-enum tipo_accion {
-  VENTA
-  ALQUILER
-  ANTICRETO
 }
 
 enum tipo_interaccion {
