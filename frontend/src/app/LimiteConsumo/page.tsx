@@ -169,25 +169,32 @@ export default function LimiteConsumoPage() {
         </div>
 
         {/* CARDS */}
-        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-  {/* Card 1: Disponibles */}
-  <div className="bg-white p-6 rounded-2xl shadow-sm border-b-8 border-emerald-500 flex items-center gap-5 transition-transform hover:scale-105">
-    <div className="bg-emerald-50 p-3 rounded-xl text-4xl">📗</div>
-    <div className="flex flex-col text-left">
-      <h3 className="text-5xl font-black text-emerald-600 leading-none">
-        {disponibles}
-      </h3>
-      <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">
-        Publicaciones Disponibles
-      </p>
-    </div>
-  </div>
+          
+          {/* Card 1: Disponibles */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border-b-8 border-emerald-500 flex items-center gap-5 transition-transform hover:scale-105">
+            <div className="bg-emerald-50 p-3 rounded-xl text-4xl">📗</div>
+            <div className="flex flex-col text-left">
+              <h3 className="text-5xl font-black text-emerald-600 leading-none">
+                {disponibles}
+              </h3>
+              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">
+                Publicaciones Disponibles
+              </p>
+            </div>
+          </div>
 
-          <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 text-center">
-            <BarChart2 className="mx-auto mb-2 text-green-500" size={22} />
-            <h3 className="text-green-600 text-2xl font-bold">{data.usadas}</h3>
-            <p className="text-gray-500 text-sm mt-1">Usadas</p>
+                  {/* Card 2: Usadas */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border-b-8 border-amber-500 flex items-center gap-5 transition-transform hover:scale-105">
+            <div className="bg-amber-50 p-3 rounded-xl text-4xl">📙</div>
+            <div className="flex flex-col text-left">
+              <h3 className="text-5xl font-black text-amber-600 leading-none">
+                {data.usadas}
+              </h3>
+              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">
+                Publicaciones Utilizadas
+              </p>
+            </div>
           </div>
 
           <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 text-center">
