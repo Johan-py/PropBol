@@ -124,7 +124,11 @@ const GOOGLE_TIMEOUT_MESSAGE =
 const FACEBOOK_TIMEOUT_MESSAGE =
   'La autenticación con Facebook tardó demasiado. Por favor intenta nuevamente.'
 
-const DEACTIVATED_ACCOUNT_MESSAGE = 'Esta cuenta está desactivada'
+const DEACTIVATED_ACCOUNT_MESSAGE = "Esta cuenta está desactivada";
+const ACTIVATION_CONNECTION_ERROR_MESSAGE =
+  "Ocurrió un problema de conexión. Por favor, inténtelo de nuevo más tarde";
+const ACTIVATION_REQUEST_TIMEOUT_MS = 10000;
+const ACTIVATION_CODE_LENGTH = 6;
 
 const clearClientSession = () => {
   localStorage.removeItem('token')
@@ -264,6 +268,30 @@ export default function LoginForm() {
   const [successMessage, setSuccessMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [googleError, setGoogleError] = useState('')
+
+  const [showActivationModal, setShowActivationModal] = useState(false);
+  const [activationStep, setActivationStep] = useState<
+  "options" | "password" | "code"
+>("options");
+  const [activationPassword, setActivationPassword] = useState("");
+  const [showActivationPassword, setShowActivationPassword] = useState(false);
+  const [activationCode, setActivationCode] = useState("");
+  const [activationEmail, setActivationEmail] = useState("");
+  const [activationError, setActivationError] = useState("");
+  const [isActivating, setIsActivating] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
+
+  const activationModalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [timeLeft]);
 
   useEffect(() => {
     const authMessage = sessionStorage.getItem('authMessage')
@@ -658,8 +686,9 @@ export default function LoginForm() {
         setPassword('')
 
         if (response.status === 403) {
-          setErrorMessage(DEACTIVATED_ACCOUNT_MESSAGE)
-          return
+          setActivationEmail(trimmedCorreo);
+          setErrorMessage(DEACTIVATED_ACCOUNT_MESSAGE);
+          return;
         }
 
         if (response.status === 404) {
@@ -718,6 +747,248 @@ export default function LoginForm() {
       setIsLoading(false)
     }
   }
+
+  const closeActivationModal = () => {
+    setShowActivationModal(false);
+    setActivationStep("options");
+    setActivationPassword("");
+    setShowActivationPassword(false);
+    setActivationCode("");
+    setActivationError("");
+    setTimeLeft(0);
+  };
+
+  const handleActivateByPassword = async () => {
+    const trimmedPassword = activationPassword.trim();
+
+    if (!trimmedPassword) {
+      setActivationError("La contraseña es obligatoria");
+      return;
+    }
+
+    if (isActivating) {
+      return;
+    }
+
+    if (!navigator.onLine) {
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => {
+      controller.abort();
+    }, ACTIVATION_REQUEST_TIMEOUT_MS);
+
+    setActivationError("");
+    setIsActivating(true);
+
+    try {
+      const response = await fetch(`${API_URL}/api/auth/activate-by-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          correo: activationEmail,
+          password: trimmedPassword,
+        }),
+        signal: controller.signal,
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.status >= 500) {
+        setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+        return;
+      }
+
+      if (!response.ok) {
+        setActivationError(data.message || "Error al activar la cuenta");
+        return;
+      }
+
+      setSuccessMessage(data.message || "Cuenta activada correctamente. Ahora puedes iniciar sesión.");
+      setErrorMessage("");
+      setPassword("");
+      closeActivationModal();
+      router.push("/sign-in");
+    } catch (error) {
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+    } finally {
+      window.clearTimeout(timeoutId);
+      setIsActivating(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!showActivationModal) {
+      return;
+    }
+
+    const modal = activationModalRef.current;
+
+    const getFocusableElements = () => {
+      if (!modal) {
+        return [];
+      }
+
+      return Array.from(
+        modal.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), input:not([disabled]), a[href], textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+    };
+
+    const focusableElements = getFocusableElements();
+    focusableElements[0]?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeActivationModal();
+        return;
+      }
+
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      const elements = getFocusableElements();
+
+      if (elements.length === 0) {
+        event.preventDefault();
+        return;
+      }
+
+      const firstElement = elements[0];
+      const lastElement = elements[elements.length - 1];
+
+      if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+        return;
+      }
+
+      if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showActivationModal, activationStep, isActivating]);
+
+  const handleRequestActivationCode = async () => {
+    setActivationError("");
+    setIsActivating(true);
+
+    try {
+      const response = await fetch(`${API_URL}/api/auth/request-activation-code`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo: activationEmail }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setActivationError(data.message || "Error al enviar el código");
+        return;
+      }
+
+      setActivationStep("code");
+      setTimeLeft(60);
+    } catch (error) {
+      setActivationError(
+        error instanceof Error
+          ? error.message
+          : "Error al conectar con el servidor",
+      );
+    } finally {
+      setIsActivating(false);
+    }
+  };
+
+  const handleActivateByCode = async () => {
+    const trimmedCode = activationCode.trim();
+
+    if (!trimmedCode) {
+      setActivationError("El código es obligatorio");
+      return;
+    }
+
+    if (!/^\d{6}$/.test(trimmedCode)) {
+      setActivationError("El código debe tener exactamente 6 dígitos numéricos");
+      return;
+    }
+
+    if (isActivating) {
+      return;
+    }
+
+    if (!navigator.onLine) {
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => {
+      controller.abort();
+    }, ACTIVATION_REQUEST_TIMEOUT_MS);
+
+    setActivationError("");
+    setIsActivating(true);
+
+    try {
+      const response = await fetch(`${API_URL}/api/auth/activate-by-code`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          correo: activationEmail,
+          codigo: trimmedCode,
+        }),
+        signal: controller.signal,
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.status >= 500) {
+        setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+        return;
+      }
+
+      if (!response.ok) {
+        setActivationError(data.message || "Error al activar la cuenta");
+        return;
+      }
+
+      setSuccessMessage(data.message || "Cuenta activada correctamente. Ahora puedes iniciar sesión.");
+      setErrorMessage("");
+      setPassword("");
+      closeActivationModal();
+      router.push("/sign-in");
+    } catch (error) {
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+    } finally {
+      window.clearTimeout(timeoutId);
+      setIsActivating(false);
+    }
+  };
+
+  const maskEmail = (email: string) => {
+    const [name, domain] = email.split("@");
+
+    if (!name || !domain) {
+      return email;
+    }
+
+    const visiblePart = name.slice(0, 3);
+    const hiddenPart = "*".repeat(Math.max(name.length - 3, 3));
+
+    return `${visiblePart}${hiddenPart}@${domain}`;
+  };
 
   const handleFacebookLogin = () => {
     clearClientSession()
@@ -1050,10 +1321,30 @@ export default function LoginForm() {
           </Link>
         </div>
 
-        {errorMessage && (
-          <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
-            {errorMessage}
-          </p>
+        {errorMessage === DEACTIVATED_ACCOUNT_MESSAGE ? (
+          <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3">
+            <p className="text-sm font-semibold text-red-600">
+              {DEACTIVATED_ACCOUNT_MESSAGE}
+            </p>
+
+            <p className="mt-2 text-xs text-gray-600">
+              Puedes solicitar su activación para volver a ingresar.
+            </p>
+
+            <button
+              type="button"
+              onClick={() => setShowActivationModal(true)}
+              className="mt-3 text-sm font-medium text-orange-500 hover:underline"
+            >
+              Activar cuenta
+            </button>
+          </div>
+        ) : (
+          errorMessage && (
+            <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+              {errorMessage}
+            </p>
+          )
         )}
 
         {successMessage && (
@@ -1179,6 +1470,291 @@ export default function LoginForm() {
       >
         Ir a la página principal
       </button>
+
+      {showActivationModal && (
+        <div 
+          onClick={closeActivationModal} 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          {activationStep === "password" && (
+            <div 
+              ref={activationModalRef}
+              onClick={(event) => event.stopPropagation()}
+              className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
+              <h2 className="text-xl font-bold text-gray-900">
+                Activar cuenta
+              </h2>
+
+              <p className="mt-3 text-sm text-gray-600">
+                Ingresa tu contraseña para activar tu cuenta.
+              </p>
+
+              <div className="mt-5">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Contraseña
+                </label>
+
+                <div className="relative">
+                  <input
+                    type={showActivationPassword ? "text" : "password"}
+                    value={activationPassword}
+                    onChange={(e) => setActivationPassword(e.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key !== "Enter") {
+                        return;
+                      }
+
+                      event.preventDefault();
+
+                      if (!isActivating && activationPassword.trim()) {
+                        handleActivateByPassword();
+                      }
+                    }}
+                    placeholder="Ingresa tu contraseña"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 pr-16 text-sm outline-none focus:border-orange-500"
+                    disabled={isActivating}
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setShowActivationPassword(!showActivationPassword)
+                    }
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-orange-500 hover:underline"
+                  >
+                    {showActivationPassword ? "Ocultar" : "Ver"}
+                  </button>
+                </div>
+
+                {activationError && (
+                  <p className="mt-2 text-xs text-red-500">{activationError}</p>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setActivationStep("options");
+                  setActivationPassword("");
+                  setShowActivationPassword(false);
+                  setActivationError("");
+                }}
+                disabled={isActivating}
+                className="mt-4 text-sm font-medium text-gray-500 underline hover:text-gray-700 disabled:opacity-50"
+              >
+                ← Volver
+              </button>
+
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={closeActivationModal}
+                  disabled={isActivating}
+                  className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-50"
+                >
+                  Cancelar
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleActivateByPassword}
+                  disabled={isActivating || !activationPassword.trim()}
+                  className="rounded-md bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:bg-orange-300"
+                >
+                  {isActivating ? "Activando..." : "Confirmar"}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {activationStep === "code" && (
+            <div 
+              ref={activationModalRef}
+              onClick={(event) => event.stopPropagation()}
+              className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
+              <h2 className="text-xl font-bold text-gray-900">
+                Activar cuenta
+              </h2>
+
+              <p className="mt-3 text-sm text-gray-600">
+                Hemos enviado un código de verificación a tu correo electrónico.
+                Ingresa el código para activar tu cuenta.
+              </p>
+
+              <div className="mt-5">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Código de verificación
+                </label>
+
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  //maxLength={ACTIVATION_CODE_LENGTH}
+                  value={activationCode}
+                  onChange={(e) => {
+                    const onlyNumbers = e.target.value
+                      .replace(/\D/g, "")
+                      .slice(0, ACTIVATION_CODE_LENGTH);
+
+                    setActivationCode(onlyNumbers);
+                  }}
+
+                  onPaste={(e) => {
+                    e.preventDefault();
+
+                    const pastedText = e.clipboardData.getData("text");
+                    const onlyNumbers = pastedText
+                      .replace(/\D/g, "")
+                      .slice(0, ACTIVATION_CODE_LENGTH);
+
+                    setActivationCode(onlyNumbers);
+                  }}
+
+                  onKeyDown={(event) => {
+                    if (event.key !== "Enter") {
+                      return;
+                    }
+
+                    event.preventDefault();
+
+                    if (
+                      !isActivating &&
+                      activationCode.length === ACTIVATION_CODE_LENGTH
+                    ) {
+                      handleActivateByCode();
+                    }
+                  }}
+                  placeholder="Ingresa tu código"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500"
+                  disabled={isActivating}
+                />
+
+                {activationError && (
+                  <p className="mt-2 text-xs text-red-500">{activationError}</p>
+                )}
+              </div>
+
+              <div className="mt-3 flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActivationStep("options");
+                    setActivationCode("");
+                    setActivationError("");
+                  }}
+                  disabled={isActivating}
+                  className="text-sm font-medium text-gray-500 underline hover:text-gray-700 disabled:opacity-50"
+                >
+                  ← Volver
+                </button>
+
+                {timeLeft > 0 ? (
+                  <p className="text-xs text-gray-500">
+                    Reenviar en {Math.floor(timeLeft / 60)}:
+                    {(timeLeft % 60).toString().padStart(2, "0")}
+                  </p>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleRequestActivationCode}
+                    disabled={isActivating}
+                    className="text-xs font-semibold text-orange-500 hover:underline disabled:opacity-50"
+                  >
+                    Volver a enviar
+                  </button>
+                )}
+              </div>
+
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={closeActivationModal}
+                  disabled={isActivating}
+                  className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-50"
+                >
+                  Cancelar
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleActivateByCode}
+                  disabled={isActivating || activationCode.length !== ACTIVATION_CODE_LENGTH}
+                  className="rounded-md bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:bg-orange-300"
+                >
+                  {isActivating ? "Activando..." : "Confirmar"}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {activationStep === "options" && (
+            <div 
+              ref={activationModalRef}
+              onClick={(event) => event.stopPropagation()}
+              className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
+              <button
+                type="button"
+                onClick={closeActivationModal}
+                className="absolute right-4 top-4 text-2xl font-medium text-gray-700 hover:text-gray-900"
+                aria-label="Cerrar ventana"
+              >
+                ×
+              </button>
+
+              <h2 className="text-xl font-bold text-gray-900">
+                Activar cuenta
+              </h2>
+
+              <p className="mt-3 text-sm text-gray-600">
+                Correo asociado:{" "}
+                <span className="font-medium text-gray-700">
+                  {maskEmail(activationEmail)}
+                </span>
+              </p>
+
+              <p className="mt-5 text-sm text-gray-600">
+                Escoja el método de activación
+              </p>
+
+              <div className="mt-3 space-y-3">
+                <button
+                  type="button"
+                  onClick={() => setActivationStep("password")}
+                  className="flex w-full items-center justify-between rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-800 transition hover:bg-gray-50"
+                >
+                  <span className="flex items-center gap-3">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100 text-orange-500">
+                      🔒
+                    </span>
+                    Contraseña
+                  </span>
+
+                  <span className="text-xl text-gray-700">›</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleRequestActivationCode}
+                  disabled={isActivating}
+                  className="flex w-full items-center justify-between rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-800 transition hover:bg-gray-50 disabled:opacity-50"
+                >
+                  <span className="flex items-center gap-3">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100 text-orange-500">
+                      ✉️
+                    </span>
+                    {isActivating ? "Enviando..." : "Código de Verificación"}
+                  </span>
+
+                  <span className="text-xl text-gray-700">›</span>
+                </button>
+              </div>
+
+              {activationError && (
+                <p className="mt-3 text-xs text-red-500">{activationError}</p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
