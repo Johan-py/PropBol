@@ -195,16 +195,29 @@ export default function VistasRecientesPage() {
     const handleClearHistory = async () => {
         if (properties.length === 0) return;
         if (!confirm("¿Deseas borrar todo tu historial de vistas?")) return;
+        
         const token = localStorage.getItem('token');
         try {
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/perfil/historial/vistas`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
+            // CAMBIO: Usamos PATCH y el endpoint /limpiar para el borrado lógico
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/perfil/historial/limpiar`, {
+                method: 'PATCH',
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json' 
+                }
             });
-            setProperties([]);
-            setFilteredProperties([]);
-            setCurrentPage(1);
-        } catch (error) { console.error(error); }
+
+            if (response.ok) {
+                setProperties([]);
+                setFilteredProperties([]);
+                setCurrentPage(1);
+                // Opcional: alert("Historial limpiado correctamente");
+            } else {
+                console.error("Error al intentar limpiar el historial en el servidor");
+            }
+        } catch (error) { 
+            console.error("Error de red:", error); 
+        }
     };
 
     if (loading) return <div className="p-20 text-center font-bold text-black">Conectando con PropBol...</div>;

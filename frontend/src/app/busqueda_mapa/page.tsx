@@ -2197,7 +2197,29 @@ function BusquedaMapaContent() {
         />
       </main>
       {/* MONTAJE DEL MODAL COMPARATIVO */}
-      <CompareFooter onOpenModal={() => setIsModalOpen(true)} />
+      <CompareFooter 
+        onOpenModal={() => {
+          // Abrimos el modal instantáneamente para el usuario
+          setIsModalOpen(true);
+
+          // Guardamos la comparación en el historial silenciosamente
+          const token = localStorage.getItem('token');
+          if (token && selectedIds.length >= 2) {
+            const idsNumericos = selectedIds.map(id => Number(id)).filter(id => !isNaN(id));
+
+            fetch(`${API_URL}/api/comparaciones`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                inmueblesIds: idsNumericos
+              })
+            }).catch(err => console.error("Error al guardar historial de comparación:", err));
+          }
+        }} 
+      />
       
       <ComparatorModal 
         isOpen={isModalOpen} 
