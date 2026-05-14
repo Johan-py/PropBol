@@ -37,23 +37,48 @@ export default function ActiveSessions() {
         ])
         return
       }
-      const res = await fetch(`${API_URL}api/perfil/sesiones`, {
-        headers: { Authorization: `Bearer ${token}` }
+
+      const res = await fetch(`${API_URL}/api/sesion/`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
       })
+
+      // Verificar si la respuesta es JSON
+      const contentType = res.headers.get('content-type')
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await res.text()
+        console.error('Respuesta no JSON:', text.substring(0, 200))
+        throw new Error(`Error del servidor: ${res.status} ${res.statusText}`)
+      }
+
+      if (!res.ok) {
+        const errorData = await res.json()
+        throw new Error(errorData.error || `Error ${res.status}: ${res.statusText}`)
+      }
+
       const data = await res.json()
-      if (data.sesiones) {
+
+      if (data.sesiones && Array.isArray(data.sesiones)) {
         setSesiones(data.sesiones)
+      } else if (Array.isArray(data)) {
+        setSesiones(data)
       } else {
-        throw new Error('Error al obtener sesiones')
+        throw new Error('Formato de respuesta inválido')
       }
     } catch (err: any) {
+      console.error('Error cargando sesiones:', err)
       setError(err.message || 'Error al cargar sesiones')
     } finally {
       setIsLoading(false)
     }
   }
 
-  useEffect(() => { cargarSesiones() }, [])
+  useEffect(() => {
+    cargarSesiones()
+  }, [])
 
   // ── Seleccionar / deseleccionar ───────────────────────
   const toggleSeleccion = (id: number, esActual: boolean) => {
@@ -79,20 +104,39 @@ export default function ActiveSessions() {
     if (seleccionadas.length === 0) return
     setIsLoading(true)
     setError(null)
+
     try {
       const token = getToken()
-      if (token) {
-        for (const id of seleccionadas) {
-          await fetch(`${API_URL}/api/sesion/${id}`, {
-            method: 'DELETE',
-            headers: { Authorization: `Bearer ${token}` }
-          })
-        }
+      if (!token) {
+        throw new Error('No hay token de autenticación')
       }
+
+      // Usar Promise.all para mejor rendimiento
+      const promises = seleccionadas.map(id =>
+        fetch(`${API_URL}/api/sesion/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include'
+        })
+      )
+
+      const responses = await Promise.all(promises)
+      const failed = responses.filter(r => !r.ok)
+
+      if (failed.length > 0) {
+        throw new Error(`Fallaron ${failed.length} cierres de sesión`)
+      }
+
+      // Actualizar estado local
       setSesiones(prev => prev.filter(s => !seleccionadas.includes(s.id)))
       setSeleccionadas([])
+
     } catch (err: any) {
-      setError('Error al cerrar sesiones.')
+      console.error('Error cerrando sesiones:', err)
+      setError(err.message || 'Error al cerrar sesiones')
     } finally {
       setIsLoading(false)
     }
@@ -102,18 +146,34 @@ export default function ActiveSessions() {
   const cerrarTodas = async () => {
     setIsLoading(true)
     setError(null)
+
     try {
       const token = getToken()
-      if (token) {
-        await fetch(`${API_URL}/api/sesion/cerrar/todas`, {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` }
-        })
+      if (!token) {
+        throw new Error('No hay token de autenticación')
       }
+
+      const res = await fetch(`${API_URL}/api/sesion/cerrar/todas`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      })
+
+      if (!res.ok) {
+        const errorData = await res.json()
+        throw new Error(errorData.error || 'Error al cerrar todas las sesiones')
+      }
+
+      // Mantener solo la sesión actual
       setSesiones(prev => prev.filter(s => s.esActual))
       setSeleccionadas([])
+
     } catch (err: any) {
-      setError('Error al cerrar todas las sesiones.')
+      console.error('Error cerrando todas:', err)
+      setError(err.message || 'Error al cerrar todas las sesiones')
     } finally {
       setIsLoading(false)
     }
@@ -121,18 +181,25 @@ export default function ActiveSessions() {
 
   // ── Formatear fecha ───────────────────────────────────
   const formatearFecha = (fecha: string) => {
-    const diff = Date.now() - new Date(fecha).getTime()
-    const min = Math.floor(diff / 60000)
-    const hrs = Math.floor(diff / 3600000)
-    const dias = Math.floor(diff / 86400000)
-    if (min < 60) return `Hace ${min} min`
-    if (hrs < 24) return `Hace ${hrs} hora${hrs > 1 ? 's' : ''}`
-    return `Hace ${dias} día${dias > 1 ? 's' : ''}`
+    try {
+      const diff = Date.now() - new Date(fecha).getTime()
+      const minutos = Math.floor(diff / 60000)
+      const horas = Math.floor(diff / 3600000)
+      const dias = Math.floor(diff / 86400000)
+
+      if (minutos < 1) return 'Hace unos segundos'
+      if (minutos < 60) return `Hace ${minutos} ${minutos === 1 ? 'minuto' : 'minutos'}`
+      if (horas < 24) return `Hace ${horas} ${horas === 1 ? 'hora' : 'horas'}`
+      return `Hace ${dias} ${dias === 1 ? 'día' : 'días'}`
+    } catch {
+      return 'Fecha desconocida'
+    }
   }
 
-  const todasSeleccionadas =
-    sesiones.filter(s => !s.esActual).length > 0 &&
+  const todasSeleccionadas = sesiones.filter(s => !s.esActual).length > 0 &&
     seleccionadas.length === sesiones.filter(s => !s.esActual).length
+
+  const sesionesActivasCount = sesiones.filter(s => !s.esActual).length
 
   return (
     <div className="min-h-screen bg-[#EAEAEA] p-4">
@@ -144,14 +211,14 @@ export default function ActiveSessions() {
             Gestión de Sesiones Activas
           </h1>
           <p className="text-lg text-black mt-2">
-            {sesiones.length} sesiones activas
+            {sesiones.length} {sesiones.length === 1 ? 'sesión activa' : 'sesiones activas'}
           </p>
         </div>
 
         {/* ERROR */}
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
-            {error}
+            <strong>Error:</strong> {error}
           </div>
         )}
 
@@ -159,6 +226,10 @@ export default function ActiveSessions() {
         {isLoading && sesiones.length === 0 ? (
           <div className="flex justify-center items-center h-32">
             <div className="w-8 h-8 border-4 border-amber-500 border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : sesiones.length === 0 && !isLoading ? (
+          <div className="bg-[#F4F4F4] rounded-2xl p-8 text-center">
+            <p className="text-gray-600 text-lg">No hay sesiones activas</p>
           </div>
         ) : (
           <div className="bg-[#F4F4F4] rounded-2xl p-8">
@@ -168,7 +239,7 @@ export default function ActiveSessions() {
               <p>ID</p>
               <p>Última actividad</p>
               <p>Estado</p>
-              <p>Acción</p>
+              <p>Seleccionar</p>
             </div>
 
             {/* FILAS */}
@@ -182,9 +253,15 @@ export default function ActiveSessions() {
                       : 'bg-[#E7DFD7]'
                     }`}
                 >
-                  <p>{sesion.id}.</p>
+                  <p className="font-medium">#{sesion.id}</p>
                   <p>{formatearFecha(sesion.fechaInicio)}</p>
-                  <p>{sesion.esActual ? 'Sesión actual' : 'Activa'}</p>
+                  <p>
+                    {sesion.esActual ? (
+                      <span className="text-green-600 font-semibold">✓ Sesión actual</span>
+                    ) : (
+                      <span className="text-blue-600">Activa</span>
+                    )}
+                  </p>
 
                   <div className="flex flex-col items-center">
                     <input
@@ -199,7 +276,7 @@ export default function ActiveSessions() {
                     />
                     {sesion.esActual && (
                       <p className="text-xs text-red-500 mt-2 text-center">
-                        No se puede cerrar esta sesión
+                        No se puede cerrar
                       </p>
                     )}
                   </div>
@@ -211,36 +288,46 @@ export default function ActiveSessions() {
         )}
 
         {/* BOTONES */}
-        <div className="flex flex-col items-end mt-10 gap-5 max-w-5xl mx-auto">
-          <button
-            onClick={seleccionarTodas}
-            className="bg-[#CFCFCF] hover:bg-[#BDBDBD] transition px-8 py-3 rounded-lg text-lg font-medium"
-          >
-            {todasSeleccionadas ? 'Deseleccionar todas' : 'Seleccionar todas'}
-          </button>
-
-          <div className="flex gap-4">
+        {sesiones.length > 0 && (
+          <div className="flex flex-col items-end mt-10 gap-5 max-w-5xl mx-auto">
             <button
-              onClick={cerrarTodas}
-              disabled={sesiones.filter(s => !s.esActual).length === 0 || isLoading}
+              onClick={seleccionarTodas}
+              disabled={sesionesActivasCount === 0}
               className="bg-[#CFCFCF] hover:bg-[#BDBDBD] transition px-8 py-3 rounded-lg text-lg font-medium disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Cerrar todas
+              {todasSeleccionadas ? 'Deseleccionar todas' : 'Seleccionar todas'}
             </button>
 
-            <button
-              onClick={cerrarSesiones}
-              disabled={seleccionadas.length === 0 || isLoading}
-              className={`transition px-12 py-3 rounded-lg text-xl font-bold text-white
-                ${seleccionadas.length === 0 || isLoading
-                  ? 'bg-red-300 cursor-not-allowed'
-                  : 'bg-[#EC7467] hover:bg-[#df6557]'
-                }`}
-            >
-              {isLoading ? 'Cerrando...' : `Cerrar Sesión${seleccionadas.length > 1 ? 'es' : ''} ${seleccionadas.length > 0 ? `(${seleccionadas.length})` : ''}`}
-            </button>
+            <div className="flex gap-4">
+              <button
+                onClick={cerrarTodas}
+                disabled={sesionesActivasCount === 0 || isLoading}
+                className="bg-[#CFCFCF] hover:bg-[#BDBDBD] transition px-8 py-3 rounded-lg text-lg font-medium disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Cerrar todas
+              </button>
+
+              <button
+                onClick={cerrarSesiones}
+                disabled={seleccionadas.length === 0 || isLoading}
+                className={`transition px-12 py-3 rounded-lg text-xl font-bold text-white
+                  ${seleccionadas.length === 0 || isLoading
+                    ? 'bg-red-300 cursor-not-allowed'
+                    : 'bg-[#EC7467] hover:bg-[#df6557]'
+                  }`}
+              >
+                {isLoading ? (
+                  <span className="flex items-center gap-2">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Cerrando...
+                  </span>
+                ) : (
+                  `Cerrar${seleccionadas.length > 1 ? ' todas' : ''}${seleccionadas.length > 0 ? ` (${seleccionadas.length})` : ''}`
+                )}
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
       </div>
     </div>

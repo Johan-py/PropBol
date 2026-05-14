@@ -152,7 +152,8 @@ const allowedOrigins = [
   'https://prop-bol-cicd.vercel.app',
   'http://localhost:3000',
   'http://localhost:3001',
-  'http://localhost:2000'
+  'http://localhost:2000',
+  'https://propbol-all-services.onrender.com'
 ]
 
 // Middleware CORS global
@@ -217,6 +218,7 @@ app.use("/api/perfil/usuario", perfilRoutes);
 app.use("/api/perfil/zonas", zonaRoutes);
 app.use("/api/perfil/historial", historialRoutes);
 app.use("/api/perfil/historial-busqueda", historialBusquedaRoutes);
+app.use('/api/sesion', sesionRoutes);
 app.use("/api", router);
 app.use("/api", parametrosRoutes);
 app.use("/api/security", securityRoutes);
