@@ -28,6 +28,9 @@ export const crearPlan = async (req: Request, res: Response) => {
     if (!nombre_plan || precio_plan === undefined || precio_plan === null) {
       return res.status(400).json({ error: 'nombre_plan y precio_plan son requeridos' })
     }
+    if (Number(precio_plan) < 0) {
+      return res.status(400).json({ error: 'El precio no puede ser negativo' })
+    }
     const plan = await prisma.plan_suscripcion.create({
       data: { nombre_plan, descripcion_plan, precio_plan, duracion_plan_dias, nro_publicaciones_plan, imagen_gr_url },
     })
@@ -50,6 +53,9 @@ export const actualizarPlan = async (req: Request, res: Response) => {
     const id = parseInt(String(req.params.id))
     if (isNaN(id)) return res.status(400).json({ error: 'ID inválido' })
     const { nombre_plan, descripcion_plan, precio_plan, duracion_plan_dias, nro_publicaciones_plan, imagen_gr_url } = req.body
+    if (precio_plan !== undefined && Number(precio_plan) < 0) {
+      return res.status(400).json({ error: 'El precio no puede ser negativo' })
+    }
     const plan = await prisma.plan_suscripcion.update({
       where: { id },
       data: { nombre_plan, descripcion_plan, precio_plan, duracion_plan_dias, nro_publicaciones_plan, imagen_gr_url },

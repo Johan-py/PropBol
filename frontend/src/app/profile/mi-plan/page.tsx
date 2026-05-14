@@ -2,14 +2,16 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { CreditCard, Calendar, BarChart2, Zap, CheckCircle, AlertCircle, ArrowRight } from 'lucide-react'
+import { CreditCard, Calendar, BarChart2, Zap, CheckCircle, AlertCircle, ArrowRight, RefreshCw } from 'lucide-react'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 
 interface Suscripcion {
   activa: boolean
+  expirado?: boolean
   idSuscripcion: number | null
   planNombre: string | null
+  precioPlan: number | null
   fechaInicio: string | null
   fechaFin: string | null
 }
@@ -22,6 +24,12 @@ interface Consumo {
 
 function diasRestantes(fechaFin: string): number {
   return Math.max(0, Math.ceil((new Date(fechaFin).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+}
+
+function formatDate(iso: string | null): string {
+  if (!iso) return '—'
+  const d = new Date(iso)
+  return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`
 }
 
 export default function MiPlanPage() {
@@ -56,6 +64,7 @@ export default function MiPlanPage() {
   }
 
   const activa = sus?.activa ?? false
+  const expirado = sus?.expirado ?? false
   const dias = sus?.fechaFin ? diasRestantes(sus.fechaFin) : 0
   const porcentajeUso = consumo && consumo.limite > 0
     ? Math.min(100, Math.round((consumo.usadas / consumo.limite) * 100))
@@ -72,19 +81,33 @@ export default function MiPlanPage() {
           </h1>
         </div>
 
-        {activa ? (
+        {activa || expirado ? (
           <>
             {/* Plan card */}
-            <div className="rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-50 to-orange-50 p-6 shadow-sm">
+            <div className={`rounded-2xl border p-6 shadow-sm ${expirado ? 'border-stone-200 bg-stone-50' : 'border-amber-100 bg-gradient-to-br from-amber-50 to-orange-50'}`}>
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <span className="text-xs font-semibold uppercase tracking-wide text-green-600">Activa</span>
+                    {expirado ? (
+                      <>
+                        <AlertCircle className="h-5 w-5 text-stone-400" />
+                        <span className="text-xs font-semibold uppercase tracking-wide text-stone-500">Expirado</span>
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle className="h-5 w-5 text-green-500" />
+                        <span className="text-xs font-semibold uppercase tracking-wide text-green-600">Activa</span>
+                      </>
+                    )}
                   </div>
                   <h2 className="text-2xl font-bold font-montserrat text-stone-900">{sus?.planNombre}</h2>
+                  {sus?.precioPlan != null && (
+                    <p className="text-sm text-stone-500 mt-0.5">
+                      Bs. {sus.precioPlan.toFixed(2)} / mes
+                    </p>
+                  )}
                 </div>
-                <Zap className="h-8 w-8 text-amber-500" />
+                <Zap className={`h-8 w-8 ${expirado ? 'text-stone-300' : 'text-amber-500'}`} />
               </div>
 
               <div className="mt-4 grid grid-cols-2 gap-3">
@@ -94,9 +117,7 @@ export default function MiPlanPage() {
                     <span>Inicio</span>
                   </div>
                   <p className="text-sm font-semibold text-stone-800">
-                    {sus?.fechaInicio
-                      ? new Date(sus.fechaInicio).toLocaleDateString('es-BO', { day: '2-digit', month: 'short', year: 'numeric' })
-                      : '—'}
+                    {formatDate(sus?.fechaInicio ?? null)}
                   </p>
                 </div>
                 <div className="rounded-xl bg-white/70 p-3">
@@ -105,19 +126,19 @@ export default function MiPlanPage() {
                     <span>Vencimiento</span>
                   </div>
                   <p className="text-sm font-semibold text-stone-800">
-                    {sus?.fechaFin
-                      ? new Date(sus.fechaFin).toLocaleDateString('es-BO', { day: '2-digit', month: 'short', year: 'numeric' })
-                      : '—'}
+                    {formatDate(sus?.fechaFin ?? null)}
                   </p>
                 </div>
               </div>
 
-              <div className="mt-3 rounded-xl bg-white/70 px-4 py-3 flex items-center justify-between">
-                <span className="text-sm text-stone-600">Días restantes</span>
-                <span className={`text-lg font-bold font-montserrat ${dias <= 7 ? 'text-red-600' : 'text-amber-600'}`}>
-                  {dias} días
-                </span>
-              </div>
+              {!expirado && (
+                <div className="mt-3 rounded-xl bg-white/70 px-4 py-3 flex items-center justify-between">
+                  <span className="text-sm text-stone-600">Días restantes</span>
+                  <span className={`text-lg font-bold font-montserrat ${dias <= 7 ? 'text-red-600' : 'text-amber-600'}`}>
+                    {dias} días
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Usage */}
@@ -146,7 +167,7 @@ export default function MiPlanPage() {
             )}
           </>
         ) : (
-          /* No subscription */
+          /* No subscription at all */
           <div className="rounded-2xl border border-dashed border-stone-300 bg-white p-10 text-center space-y-4">
             <AlertCircle className="h-12 w-12 text-stone-300 mx-auto" />
             <h2 className="text-xl font-bold font-montserrat text-stone-900">Sin suscripción activa</h2>
@@ -179,6 +200,15 @@ export default function MiPlanPage() {
             >
               Cambiar plan
               <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          )}
+          {(activa || expirado) && (
+            <Link
+              href="/cobros-suscripciones"
+              className="flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-4 py-2.5 text-sm font-medium text-green-700 hover:bg-green-100 transition-colors"
+            >
+              <RefreshCw className="h-3.5 w-3.5" />
+              Renovar plan
             </Link>
           )}
         </div>

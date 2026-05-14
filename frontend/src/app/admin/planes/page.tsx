@@ -79,6 +79,10 @@ export default function AdminPlanesPage() {
 
   const handleSave = async () => {
     if (!form.nombre_plan?.trim()) return
+    if (form.precio_plan < 0) {
+      setError('El precio no puede ser negativo')
+      return
+    }
     setSaving(true)
     try {
       const url = editId
@@ -333,7 +337,7 @@ export default function AdminPlanesPage() {
               <AlertTriangle className="h-10 w-10 text-red-500 mx-auto" />
               <h2 className="text-lg font-bold font-montserrat text-stone-900">¿Eliminar plan?</h2>
               <p className="text-sm text-stone-500">
-                Esta acción es permanente. No se puede eliminar si tiene suscripciones activas.
+                El plan se eliminará permanentemente. Los usuarios con suscripciones activas conservarán su plan hasta la fecha de vencimiento. No se puede eliminar si hay suscripciones activas vigentes.
               </p>
               <div className="flex gap-3">
                 <button

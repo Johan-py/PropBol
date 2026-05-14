@@ -21,22 +21,25 @@ interface Transaccion {
 }
 
 const estadoBadge: Record<string, { label: string; icon: React.FC<{ className?: string }>; cls: string }> = {
-  COMPLETADO: { label: 'Completado', icon: CheckCircle, cls: 'bg-green-50 text-green-700 border-green-100' },
-  PENDIENTE:  { label: 'Pendiente',  icon: Clock,        cls: 'bg-amber-50 text-amber-700 border-amber-100' },
-  CANCELADO:  { label: 'Cancelado',  icon: XCircle,      cls: 'bg-stone-50 text-stone-500 border-stone-200' },
-  RECHAZADO:  { label: 'Rechazado',  icon: AlertCircle,  cls: 'bg-red-50 text-red-600 border-red-100' },
+  COMPLETADO: { label: 'Aceptado',  icon: CheckCircle, cls: 'bg-green-50 text-green-700 border-green-100' },
+  PENDIENTE:  { label: 'Pendiente', icon: Clock,        cls: 'bg-amber-50 text-amber-700 border-amber-100' },
+  CANCELADO:  { label: 'Cancelado', icon: XCircle,      cls: 'bg-stone-50 text-stone-500 border-stone-200' },
+  RECHAZADO:  { label: 'Rechazado', icon: AlertCircle,  cls: 'bg-red-50 text-red-600 border-red-100' },
 }
 
-const metodoPagoLabel: Record<string, string> = {
-  QR_BANCARIO:         'QR Bancario',
-  QR_BANCARIO_MENSUAL: 'QR Bancario (mensual)',
-  QR_BANCARIO_ANUAL:   'QR Bancario (anual)',
-  USDT_TRC20:          'USDT TRC20',
+const metodoPagoBadge: Record<string, { label: string; cls: string }> = {
+  QR_BANCARIO:         { label: 'QR Bancario',        cls: 'bg-amber-50 text-amber-700 border-amber-100' },
+  QR_BANCARIO_MENSUAL: { label: 'QR Bancario (mens.)', cls: 'bg-amber-50 text-amber-700 border-amber-100' },
+  QR_BANCARIO_ANUAL:   { label: 'QR Bancario (anual)', cls: 'bg-amber-50 text-amber-700 border-amber-100' },
+  USDT_TRC20:          { label: 'USDT TRC20',          cls: 'bg-blue-50 text-blue-700 border-blue-100' },
 }
+
+const BOB_PER_USDT = 6.91
 
 function formatDate(iso: string | null) {
   if (!iso) return '—'
-  return new Date(iso).toLocaleDateString('es-BO', { day: '2-digit', month: 'short', year: 'numeric' })
+  const d = new Date(iso)
+  return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`
 }
 
 export default function HistorialPagosPage() {
@@ -99,6 +102,8 @@ export default function HistorialPagosPage() {
             {transacciones.map((t) => {
               const badge = estadoBadge[t.estado] ?? estadoBadge.PENDIENTE
               const BadgeIcon = badge.icon
+              const metodoBadge = metodoPagoBadge[t.metodo_pago] ?? { label: t.metodo_pago, cls: 'bg-stone-50 text-stone-600 border-stone-200' }
+              const isUsdt = t.metodo_pago === 'USDT_TRC20'
               return (
                 <div
                   key={t.id}
@@ -106,7 +111,7 @@ export default function HistorialPagosPage() {
                 >
                   <div className="flex items-start justify-between gap-3 flex-wrap">
                     <div className="space-y-0.5">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-sm font-bold font-montserrat text-stone-900">{t.plan}</span>
                         <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-semibold ${badge.cls}`}>
                           <BadgeIcon className="h-3 w-3" />
@@ -114,12 +119,19 @@ export default function HistorialPagosPage() {
                         </span>
                       </div>
                       <p className="text-xs text-stone-400">{t.referencia}</p>
-                      <p className="text-xs text-stone-400">{metodoPagoLabel[t.metodo_pago] ?? t.metodo_pago}</p>
+                      <span className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium ${metodoBadge.cls}`}>
+                        {metodoBadge.label}
+                      </span>
                     </div>
                     <div className="text-right">
                       <p className="text-lg font-bold font-montserrat text-stone-900">
                         Bs. {t.total.toFixed(2)}
                       </p>
+                      {isUsdt && (
+                        <p className="text-xs text-blue-600 font-medium">
+                          ≈ {(t.total / BOB_PER_USDT).toFixed(4)} USDT
+                        </p>
+                      )}
                       {t.monto_descuento > 0 && (
                         <p className="text-xs text-green-600">-Bs. {t.monto_descuento.toFixed(2)} descuento</p>
                       )}
