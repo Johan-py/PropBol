@@ -110,17 +110,37 @@ export function UbicacionEspecificaPanel({ onClose, onApply }: UbicacionEspecifi
       </div>
 
       {/* 3. FOOTER (Fijo al fondo) */}
-      <div className="shrink-0 px-6 pb-6 pt-4 border-t border-stone-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+      <div className="shrink-0 px-6 pb-6 pt-4 border-t border-stone-100 dark:border-slate-800 bg-white dark:bg-slate-900 relative">
+        
+        {/* Usamos un ID para tener la máxima prioridad en CSS (1,1,2) */}
+        <style dangerouslySetInnerHTML={{__html: `
+          html body #btn-aplicar-ubicacion {
+            background-color: #d97706 !important;
+            color: #ffffff !important;
+          }
+          html body #btn-aplicar-ubicacion:hover {
+            background-color: #b95e00 !important;
+          }
+          html.dark body #btn-aplicar-ubicacion {
+            background-color: #E87C1E !important;
+          }
+          html.dark body #btn-aplicar-ubicacion:hover {
+            background-color: #d97706 !important;
+          }
+        `}} />
+
         <button
            type="button"
            onClick={() => handlers.onDepartamentoChange('todos')}
-           className="text-xs text-stone-400 hover:text-[#d97706] transition-colors underline text-center w-full mb-3"
+           className="text-xs text-stone-400 dark:text-slate-400 hover:text-[#d97706] dark:hover:text-[#E87C1E] transition-colors underline text-center w-full mb-3"
         >
           Limpiar filtro
         </button>
+        
         <button
+          id="btn-aplicar-ubicacion"
           onClick={() => onApply(selecciones)}
-          className="bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold py-3 px-4 w-full transition-all active:scale-95 shadow-md"
+          className="rounded-[12px] font-bold py-3 px-4 w-full transition-all active:scale-95 shadow-md border-none"
         >
           Aplicar
         </button>
