@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Copy, CheckCircle, Clock, AlertTriangle, ArrowLeft, Loader2 } from 'lucide-react'
 import Stepper from '@/components/ui/Stepper'
@@ -26,7 +26,7 @@ const fmt = (s: number) => {
   return `${m}:${sec}`
 }
 
-export default function PagoUsdtPage() {
+function PagoUsdtContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const transaccionId = searchParams.get('transaccionId')
@@ -432,5 +432,17 @@ export default function PagoUsdtPage() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function PagoUsdtPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="animate-spin text-orange-500 w-8 h-8" />
+      </div>
+    }>
+      <PagoUsdtContent />
+    </Suspense>
   )
 }
