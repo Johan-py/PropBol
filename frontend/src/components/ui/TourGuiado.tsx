@@ -768,14 +768,16 @@ useEffect(() => {
                 style={{
                   background: "none",
                   color: "#E68B25",
-                  border: "1px solid #E68B25",
-                  borderRadius: 8,
-                  padding: isMobile ? "8px 12px" : "10px 18px",
-                  fontSize: fontBtn,
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  minHeight: 44,
-                }}
+                 border: "1px solid #E68B25",
+                 borderRadius: 8,
+                 padding: isMobile ? "8px 12px" : "10px 18px",
+                 fontSize: fontBtn,
+                 fontWeight: 600,
+                 cursor: "pointer",
+                 minHeight: 44,
+                 backgroundColor: isDark ? "transparent" : "transparent",
+                 WebkitTextFillColor: "#E68B25",
+            }}
               >
                 ← Anterior
               </button>
