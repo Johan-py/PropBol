@@ -61,7 +61,8 @@ function centroide(coords: [number, number][]): [number, number] {
 function dimensionarEtiqueta(
   nombre: string,
   zoom: number,
-  isSelected: boolean
+  isSelected: boolean,
+  tipoZona: TipoZona = 'predefinida'
 ): {
   width: number
   height: number
@@ -80,7 +81,11 @@ function dimensionarEtiqueta(
   // Para zoom=13: 0.64, para zoom=18: ~1.02, para zoom<13: reduce hasta 0.36
   const zoomOffset = Math.max(-MIN_ZOOM_LABELS, zoom - MIN_ZOOM_LABELS) // Puede ser negativo
   const zoomProportional = 0.70 + (zoomOffset / 8) * 0.40 // Rango: 0.36 a ~1.02
-  const scale = Math.max(0.40, Math.min(1.12, zoomProportional + selectedBoost))
+  let scale = Math.max(0.40, Math.min(1.12, zoomProportional + selectedBoost))
+
+   if (tipoZona === 'personalizada') {
+    scale = scale * 1.2
+  }
 
   const paddingX = Math.round((8 * scale) * 10) / 10
   const paddingY = Math.round((5 * scale) * 10) / 10
@@ -245,7 +250,7 @@ function labelIcon(nombre: string, isSelected: boolean, zoom: number, tipoZona: 
     paddingX,
     paddingY,
     maxCharsPorLinea
-  } = dimensionarEtiqueta(nombreVisible, zoom, isSelected)
+  } = dimensionarEtiqueta(nombreVisible, zoom, isSelected, tipoZona)
   const textoHtml = htmlEtiquetaConWrap(nombreVisible, maxCharsPorLinea)
   const nombreCompletoEscapado = escaparHtml(nombre)
   

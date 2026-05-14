@@ -10,7 +10,6 @@ export type TutorialPublicacionContent = {
 export type TutorialPublicacionEstado = {
   debeMostrarTutorial: boolean
   confirmado: boolean
-  vistoEn: string | null
   confirmadoEn: string | null
 }
 
@@ -18,7 +17,6 @@ export type TutorialPublicacionEstadoRecord = {
   id: number
   usuarioId: number
   confirmado: boolean
-  vistoEn: Date | null
   confirmadoEn: Date | null
 }
 
@@ -32,5 +30,5 @@ export type ConfirmTutorialInput = {
 
 export type ConfirmTutorialResult = {
   confirmado: boolean
-  confirmadoEn: string
+  confirmadoEn: string | null
 }
