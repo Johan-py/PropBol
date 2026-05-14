@@ -364,7 +364,6 @@ export function useProperties(): UsePropertiesResult {
         return
       }
 
-      // Si no es modo recomendados, búsqueda normal
       await fetchNormalSearch()
     }
 
