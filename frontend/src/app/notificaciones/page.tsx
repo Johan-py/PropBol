@@ -219,6 +219,21 @@ export default function NotificationsPage() {
 
                   <div className="flex shrink-0 flex-col items-end gap-2">
                     <div className="text-right">
+                      {notification.tipo === 'BLOG_APROBADO' && (
+                        <span className="mb-1 inline-block rounded-full bg-green-100 px-2 py-0.5 text-[10px] font-semibold text-green-700">
+                          Aprobado
+                        </span>
+                      )}
+                      {notification.tipo === 'BLOG_RECHAZADO' && (
+                        <span className="mb-1 inline-block rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-semibold text-red-600">
+                          Rechazado
+                        </span>
+                      )}
+                      {notification.tipo === 'BLOG_PENDIENTE' && (
+                        <span className="mb-1 inline-block rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-700">
+                          Pendiente
+                        </span>
+                      )}
                       <p
                         className={`text-[11px] font-semibold uppercase tracking-wide ${
                           notification.status === 'no leida' ? 'text-amber-600' : 'text-stone-400'
