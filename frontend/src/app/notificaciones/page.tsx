@@ -210,7 +210,7 @@ export default function NotificationsPage() {
                           {notification.title?.trim() || '(Sin título)'}
                         </h2>
 
-                        <p className="mt-1 break-words text-sm text-stone-600">
+                        <p className={`mt-1 line-clamp-2 text-sm ${notification.tipo === 'BLOG_RECHAZADO' ? 'text-red-600' : 'text-stone-600'}`}>
                           {notification.description?.trim() || '(Sin descripción disponible)'}
                         </p>
                       </div>

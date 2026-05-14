@@ -1,15 +1,16 @@
-import path from 'path'
-import 'dotenv/config'
-import express from 'express'
-import cors from 'cors'
-import { env } from './config/env.js'
-import type { Request, Response } from 'express'
-import { prisma } from './lib/prisma.client.js'
-import zonaRoutes from './modules/perfil/zonaUsario.routes.js'
-import telemetriaRouter from './modules/perfil/telemetria.routes.js'
-import locationRoutes from './modules/locations/locations.routes.js'
-import consumoRoutes from './modules/LimiteSuscripcion/consumo.routes.js'
-import { iniciarCronRetroalimentacion } from './modules/recomendaciones/retroalimentacionCron.js'
+import path from "path";
+import http from "http";
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
+import { env } from "./config/env.js";
+import type { Request, Response } from "express";
+import { prisma } from "./lib/prisma.client.js";
+import zonaRoutes from "./modules/perfil/zonaUsario.routes.js";
+import telemetriaRouter from "./modules/perfil/telemetria.routes.js";
+import locationRoutes from "./modules/locations/locations.routes.js";
+import consumoRoutes from "./modules/LimiteSuscripcion/consumo.routes.js";
+import { iniciarCronRetroalimentacion } from "./modules/recomendaciones/retroalimentacionCron.js";
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -94,7 +95,6 @@ import estadisticasRoutes from "./modules/estadisticas-publicacion/estadisticas.
 import tagsRoutes from "./modules/tags/tags.routes.js";
 import estadisticasZonaRoutes from "./modules/estadisticas-zona/estadisticas-zona.routes.js";
 
-
 import {
   facebookCallbackController,
   getFacebookLinkUrlController,
@@ -131,18 +131,21 @@ import historialRoutes from './modules/perfil/historial.routes.js'
 import { verifyEmailTransport } from './lib/email.service.js'
 
 // FAVORITES
-import favoritesRoutes from './modules/favorites/favorites.routes.js'
-import telemetriaRoutes from './modules/telemetria/telemetria.routes.js'
-import recomendacionesRoutes from './modules/recomendaciones/recomendaciones.routes.js'
-import transaccionesRoutes from './modules/transacciones/transacciones.routes.js'
-import suscripcionesRoutes from './modules/suscripciones/suscripciones.routes.js'
-import plansRoutes from './modules/plans/plans.routes.js'
-import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js'
-import whatsappRoutes from './modules/whatsapp/whatsapp.routes.js'
-import adminTestimoniosRoutes from './modules/testimonios/adminTestimonios.routes.js'
-import sesionRoutes from './modules/perfil/sesion.routes.js'
+import favoritesRoutes from "./modules/favorites/favorites.routes.js";
+import telemetriaRoutes from "./modules/telemetria/telemetria.routes.js";
+import recomendacionesRoutes from "./modules/recomendaciones/recomendaciones.routes.js";
+import transaccionesRoutes from "./modules/transacciones/transacciones.routes.js";
+import suscripcionesRoutes from "./modules/suscripciones/suscripciones.routes.js";
+import plansRoutes from "./modules/plans/plans.routes.js";
+import usdtRoutes from "./modules/usdt/usdt.routes.js";
+import historialBusquedaRoutes from "./modules/perfil/historialBusqueda.routes.js";
+import whatsappRoutes from "./modules/whatsapp/whatsapp.routes.js";
+import adminTestimoniosRoutes from "./modules/testimonios/adminTestimonios.routes.js";
+import adminPlanesRoutes from "./modules/planes/adminPlanes.routes.js";
+import sesionRoutes from "./modules/perfil/sesion.routes.js";
 
-import './jobs/suscripcion.job.js'
+import "./jobs/suscripcion.job.js";
+import { initSocket } from "./services/socket.service.js";
 
 // --------------------
 // SERVER
@@ -204,47 +207,48 @@ app.use("/api/publicaciones-legacy", publicacionesRoutes);
 // --------------------
 // RUTAS PRINCIPALES
 // --------------------
-app.use('/api/publicaciones', publicacionRoutes)
-app.use('/api/publicaciones', multimediaRoutes)
-app.use('/api/publicaciones/tutorial', tutorialPublicacionRoutes)
-app.use('/api/perfil', correoverificacionRoutes)
-app.use('/api/perfil/usuario', perfilRoutes)
-app.use('/api/perfil/zonas', zonaRoutes)
-app.use('/api', router)
-app.use('/api', consumoRoutes)
-app.use('/api', parametrosRoutes)
-app.use('/api', tagsRoutes)
-app.use('/api', estadisticasRoutes)
-app.use('/api/estadisticas-zona', estadisticasZonaRoutes)
-app.use('/api/security', securityRoutes)
-app.use('/api/favorites', favoritesRoutes)
-app.use('/api/telemetria', telemetriaRoutes)
-app.use('/api/recomendaciones', recomendacionesRoutes)
-app.use('/api/propiedad', propiedadRoutes)
-app.use('/api/publicaciones', publicacionRoutes)
-app.use('/api/publicaciones', multimediaRoutes)
-app.use('/api/perfil', correoverificacionRoutes)
-app.use('/api/perfil/usuario', perfilRoutes)
-app.use('/api/perfil/zonas', zonaRoutes)
-app.use('/api/perfil/historial', historialRoutes)
-app.use('/api/perfil/historial-busqueda', historialBusquedaRoutes)
-app.use('/api', router)
-app.use('/api', parametrosRoutes)
-app.use('/api/security', securityRoutes)
-app.use('/api/favorites', favoritesRoutes)
-app.use('/api/telemetria', telemetriaRoutes)
-app.use('/api/recomendaciones', recomendacionesRoutes)
-app.use('/api/blogs', blogsRoutes)
-app.use('/api/testimonios', testimoniosRoutes)
-app.use('/api/telemetria', telemetriaRouter)
-app.use('/api/comparaciones', comparacionRoutes)
-app.use('/api/sesiones', sesionRoutes)
+app.use("/api/publicaciones", publicacionRoutes);
+app.use("/api/publicaciones", multimediaRoutes);
+app.use("/api/publicaciones/tutorial", tutorialPublicacionRoutes);
+app.use("/api/perfil", correoverificacionRoutes);
+app.use("/api/perfil/usuario", perfilRoutes);
+app.use("/api/perfil/zonas", zonaRoutes);
+app.use("/api", router);
+app.use("/api", consumoRoutes);
+app.use("/api", parametrosRoutes);
+app.use("/api", estadisticasRoutes);
+app.use("/api/estadisticas-zona", estadisticasZonaRoutes);
+app.use("/api/security", securityRoutes);
+app.use("/api/favorites", favoritesRoutes);
+app.use("/api/telemetria", telemetriaRoutes);
+app.use("/api/recomendaciones", recomendacionesRoutes);
+app.use("/api/propiedad", propiedadRoutes);
+app.use("/api/publicaciones", publicacionRoutes);
+app.use("/api/publicaciones", multimediaRoutes);
+app.use("/api/perfil", correoverificacionRoutes);
+app.use("/api/perfil/usuario", perfilRoutes);
+app.use("/api/perfil/zonas", zonaRoutes);
+app.use("/api/perfil/historial", historialRoutes);
+app.use("/api/perfil/historial-busqueda", historialBusquedaRoutes);
+app.use("/api/sesion", sesionRoutes);
+app.use("/api", router);
+app.use("/api", parametrosRoutes);
+app.use("/api/security", securityRoutes);
+app.use("/api/favorites", favoritesRoutes);
+app.use("/api/telemetria", telemetriaRoutes);
+app.use("/api/recomendaciones", recomendacionesRoutes);
+app.use("/api/blogs", blogsRoutes);
+app.use("/api/testimonios", testimoniosRoutes);
+app.use("/api/telemetria", telemetriaRouter);
+app.use("/api/comparaciones", comparacionRoutes);
+app.use("/api/sesiones", sesionRoutes);
 
-app.use('/api/transacciones', transaccionesRoutes)
-app.use('/api/suscripciones', suscripcionesRoutes)
-app.use('/api/planes', plansRoutes)
-app.use('/api/whatsapp', whatsappRoutes)
-app.use('/api/locations', locationRoutes)
+app.use("/api/transacciones", transaccionesRoutes);
+app.use("/api/suscripciones", suscripcionesRoutes);
+app.use("/api/planes", plansRoutes);
+app.use("/api/usdt", usdtRoutes);
+app.use("/api/whatsapp", whatsappRoutes);
+app.use("/api/locations", locationRoutes);
 
 // --------------------
 // MOCK / TEST
@@ -367,7 +371,8 @@ app.post('/api/publicaciones', (req, res) => {
 // --------------------
 // TESTIMONIOSADMIN
 // --------------------
-app.use('/api/admin', adminTestimoniosRoutes)
+app.use("/api/admin", adminTestimoniosRoutes);
+app.use("/api/admin", adminPlanesRoutes);
 
 // --------------------
 // LEVANTAR SERVIDOR
@@ -407,9 +412,12 @@ async function seedPlanes() {
 
 iniciarCronRetroalimentacion()
 
-app.listen(PORT, async () => {
-  console.log(`­ƒÜÇ Server running on port ${PORT}`)
-  console.log(`Health check: http://localhost:${PORT}/health`)
+const server = http.createServer(app);
+initSocket(server);
+
+server.listen(PORT, async () => {
+  console.log(`­ƒÜÇ Server running on port ${PORT}`);
+  console.log(`Health check: http://localhost:${PORT}/health`);
 
   try {
     await seedPlanes()
