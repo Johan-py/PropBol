@@ -121,8 +121,13 @@ model Notificacion {
   eliminada     Boolean   @default(false)
   archivada     Boolean   @default(false)
   usuarioId     Int
+  tipo          String    @default("GENERAL") @db.VarChar(30)
+  blog_id       Int?
+  blog          blog?     @relation(fields: [blog_id], references: [id], onUpdate: NoAction, map: "notificacion_blog_fk")
   usuario       Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "notificacion_usuario_id_fkey")
 
+  @@index([blog_id], map: "idx_notificacion_blog")
+  @@index([usuarioId, leida], map: "idx_notificacion_usuario_leida")
   @@map("notificacion")
 }
 
@@ -232,17 +237,18 @@ model Publicacion {
   promoted              Boolean                 @default(false)
   promotedAt            DateTime?               @map("promoted_at") @db.Timestamp(6)
   promotedExpiresAt     DateTime?               @map("promoted_expires_at") @db.Timestamp(6)
-  paymentIntentId       String?                 @map("payment_intent_id") 
+  paymentIntentId       String?                 @map("payment_intent_id")
   inmuebleId            Int                     @map("inmueble_id")
   multimedia            Multimedia[]
   inmueble              Inmueble                @relation(fields: [inmuebleId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "publicacion_inmueble_fk")
   usuario               Usuario                 @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "publicacion_usuario_fk")
   publicacion_parametro publicacion_parametro[]
-  
+  publicacion_tag       publicacion_tag[]
+
   @@index([estado], map: "idx_publicacion_estado")
   @@index([inmuebleId], map: "idx_publicacion_inmueble")
   @@index([usuarioId], map: "idx_publicacion_usuario")
-  @@index([promoted], map: "idx_publicacion_promoted") 
+  @@index([promoted], map: "idx_publicacion_promoted")
   @@map("publicacion")
 
 }
@@ -685,6 +691,7 @@ model blog {
   usuario           Usuario        @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "blog_usuario_fk")
   blog_rechazo      blog_rechazo[]
   comentario        comentario[]
+  notificacion      Notificacion[]
 
   @@index([estado])
   @@index([usuario_id], map: "blog_usuario_idx")
@@ -840,8 +847,7 @@ model TutorialPublicacionUsuario {
   @@map("tutorial_publicacion_usuario")
 }
 
-<<<<<<< HEAD
-=======
+
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model publicacion_compartido {
   id             Int      @id @default(autoincrement())
@@ -922,7 +928,27 @@ model modelo_version {
   entrenado_en DateTime @default(now()) @db.Timestamp(6)
   notas        String?
 }
->>>>>>> c6a97b8f2833225a78a0841470b09eae6a8ba279
+
+model Tag {
+  id              Int               @id @default(autoincrement())
+  nombre          String            @unique @db.VarChar(30)
+  creado_en       DateTime?         @default(now()) @db.Timestamptz(6)
+  publicacion_tag publicacion_tag[]
+
+  @@map("tag")
+}
+
+model publicacion_tag {
+  publicacion_id  Int
+  tag_id          Int
+  agregado_en     DateTime    @default(now()) @db.Timestamptz(6)
+  publicacion     Publicacion @relation(fields: [publicacion_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  tag             Tag         @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([publicacion_id, tag_id])
+  @@index([tag_id])
+  @@map("publicacion_tag")
+}
 
 enum Genero {
   MASCULINO
