@@ -118,7 +118,9 @@ const readCurrentUser = (): BlogCommentAuthor => {
   }
 };
 
-function mapBackendComment(backendComment: any): BlogComment {
+function mapBackendComment(
+  backendComment: Record<string, unknown> | any,
+): BlogComment {
   return {
     id: String(backendComment.id),
     blogId: String(backendComment.blog_id),
