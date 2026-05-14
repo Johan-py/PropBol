@@ -5,13 +5,11 @@ const mapTutorialEstadoRecord = (record: {
   id: number
   usuarioId: number
   confirmado: boolean
-  vistoEn: Date | null
   confirmadoEn: Date | null
 }): TutorialPublicacionEstadoRecord => ({
   id: record.id,
   usuarioId: record.usuarioId,
   confirmado: record.confirmado,
-  vistoEn: record.vistoEn,
   confirmadoEn: record.confirmadoEn
 })
 
@@ -24,7 +22,6 @@ export const findTutorialEstadoByUsuarioIdRepository = async (
       id: true,
       usuarioId: true,
       confirmado: true,
-      vistoEn: true,
       confirmadoEn: true
     }
   })
@@ -42,19 +39,15 @@ export const upsertTutorialConfirmadoRepository = async (
     create: {
       usuarioId,
       confirmado: true,
-      vistoEn: now,
       confirmadoEn: now
     },
     update: {
-      confirmado: true,
-      vistoEn: now,
-      confirmadoEn: now
+      confirmado: true
     },
     select: {
       id: true,
       usuarioId: true,
       confirmado: true,
-      vistoEn: true,
       confirmadoEn: true
     }
   })
