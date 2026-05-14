@@ -2,8 +2,9 @@ import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
 import { env } from "../../config/env.js";
 import { prisma } from "../../lib/prisma.client.js";
-import { enviarCodigoDesactivacionCuenta,
-         enviarCodigoActivacion2FA,
+import {
+  enviarCodigoDesactivacionCuenta,
+  enviarCodigoActivacion2FA,
 } from "../../lib/email.service.js";
 
 import {

@@ -99,6 +99,14 @@ export default function BlogCreateForm({
         <div className="space-y-8">
           <BlogFormHeader mode={mode} />
 
+          {statusLabel === "PENDIENTE" && (
+            <div className="rounded-[24px] bg-amber-50 border border-amber-200 p-6 shadow-sm">
+              <h3 className="text-sm font-bold text-amber-700 uppercase tracking-wider mb-2">En revisión</h3>
+              <p className="text-amber-700 leading-relaxed">Tu blog está siendo revisado por el equipo de moderación.</p>
+              <p className="text-xs text-amber-600/80 mt-3 italic">No es posible editar ni reenviar mientras esté en revisión.</p>
+            </div>
+          )}
+
           {statusLabel === "RECHAZADO" && rejectionReason && (
             <div className="rounded-[24px] bg-[#FDECEC] border border-[#F3BABA] p-6 shadow-sm">
               <h3 className="text-sm font-bold text-[#D94848] uppercase tracking-wider mb-2">Motivo de rechazo</h3>
