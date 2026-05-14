@@ -53,8 +53,8 @@ export default function ZoomControls() {
     alignItems: 'center',
     justifyContent: 'center',
     transition: 'background-color 0.2s ease, color 0.2s ease',
-    backgroundColor: active === type ? '#F97316' : '#ffffff',
-    color: disabled ? '#d1d5db' : active === type ? '#ffffff' : '#374151'
+    backgroundColor: active === type ? '#ffffff' : '#000000',
+    color: disabled ? '#888888' : active === type ? '#000000' : '#ffffff'
   })
   return (
     <div

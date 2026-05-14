@@ -651,7 +651,7 @@ export default function MapView({
         )}
 
         <Marker position={center} icon={createGpsIcon()}>
-          <Popup>Tu ubicación actual</Popup>
+          <Popup><span style={{ color: '#1f2937' }}>Tu ubicación actual</span></Popup>
         </Marker>
 
         {/* NUEVO: Marcador de Origen y Círculo de Radio */}
@@ -664,9 +664,9 @@ export default function MapView({
             />
             <Marker position={searchOrigin} icon={createSearchOriginIcon()} zIndexOffset={1000}>
               <Popup>
-                <div className="text-center min-w-[120px]">
-                  <p className="font-bold text-blue-600 mb-1">Centro de búsqueda</p>
-                  <p className="text-xs text-stone-500">Mostrando radio de 1km</p>
+                <div className="text-center min-w-[120px] pb-map-popup-dark-fix">
+                  <p className="font-bold mb-1" style={{ '--popup-light-color': '#2563EB', '--popup-dark-color': '#60a5fa' } as React.CSSProperties}>Centro de búsqueda</p>
+                  <p className="text-xs" style={{ '--popup-light-color': '#78716c', '--popup-dark-color': '#a8a29e' } as React.CSSProperties}>Mostrando radio de 1km</p>
                 </div>
               </Popup>
             </Marker>
@@ -733,12 +733,12 @@ export default function MapView({
                 }}
               >
                 <Popup>
-                  <div className="text-sm min-w-[160px]">
-                    <p className="font-semibold text-gray-800 mb-1">{property.title}</p>
-                    <p className="font-bold" style={{ color: PIN_LABEL[property.type] }}>
+                  <div className="text-sm min-w-[160px] pb-map-popup-dark-fix">
+                    <p className="font-semibold mb-1" style={{ '--popup-light-color': '#1f2937', '--popup-dark-color': '#f3f4f6' } as React.CSSProperties}>{property.title}</p>
+                    <p className="font-bold" style={{ '--popup-light-color': PIN_LABEL[property.type], '--popup-dark-color': property.type === 'casa' ? '#60a5fa' : '#a78bfa' } as React.CSSProperties}>
                       {formatPrice(property.price, property.currency)}
                     </p>
-                    <p className="text-gray-500 capitalize mt-1">{property.type}</p>
+                    <p className="capitalize mt-1" style={{ '--popup-light-color': '#6b7280', '--popup-dark-color': '#9ca3af' } as React.CSSProperties}>{property.type}</p>
                   </div>
                 </Popup>
               </Marker>

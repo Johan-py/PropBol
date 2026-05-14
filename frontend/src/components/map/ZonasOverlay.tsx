@@ -294,9 +294,9 @@ function labelIcon(nombre: string, isSelected: boolean, zoom: number, tipoZona: 
         justify-content: center;
         box-sizing: border-box;
       ">
-      <span title="${nombreCompletoEscapado}" aria-label="${nombreCompletoEscapado}" style="display:block;max-width:100%;white-space:normal;overflow-wrap:break-word;word-break:break-word;width:100%;overflow:hidden;">
+      <div title="${nombreCompletoEscapado}" aria-label="${nombreCompletoEscapado}" style="display:block;max-width:100%;white-space:normal;overflow-wrap:break-word;word-break:break-word;width:100%;overflow:hidden;">
         ${textoHtml}
-      </span>
+      </div>
     </div>`,
     iconSize: [width, height],
     iconAnchor: [Math.round(width / 2), Math.round(height / 2)]

@@ -589,20 +589,20 @@ html.dark body :where([class*="shadow"],
 }
 
 /* Botones principales naranjas */
-html.dark body :where([class*="bg-orange-500"],
-  [class*="bg-orange-600"],
-  [class*="bg-[#E68B25]"],
-  [class*="bg-[#e68b25]"],
-  [class*="bg-[#E8962F]"],
-  [class*="bg-[#e8962f]"]) {
+html.dark body :where([class*="bg-orange-500"]:not(.map-toggle-switch),
+  [class*="bg-orange-600"]:not(.map-toggle-switch),
+  [class*="bg-[#E68B25]"]:not(.map-toggle-switch),
+  [class*="bg-[#e68b25]"]:not(.map-toggle-switch),
+  [class*="bg-[#E8962F]"]:not(.map-toggle-switch),
+  [class*="bg-[#e8962f]"]:not(.map-toggle-switch)) {
   background: var(--pb-accent) !important;
   color: #ffffff !important;
   border-color: var(--pb-accent) !important;
 }
 
 /* Hover general */
-html.dark body :where(a:hover,
-  button:hover,
+html.dark body :where(a:hover:not(.map-toggle-switch),
+  button:hover:not(.map-toggle-switch),
   [role="menuitem"]:hover) {
   background-color: var(--pb-surface-2) !important;
 }
@@ -740,7 +740,7 @@ html.dark .propbol-btn-close-session:hover {
 }
 
 /* Fix para botones naranjas y overlays en modo oscuro */
-html.propbol-theme-dark body :where([class*="bg-orange-500"], [class*="bg-orange-600"], [class*="bg-amber-"], [class*="bg-primary"], [class*="bg-[#A67C00]"], [class*="bg-[#D97706]"]) {
+html.propbol-theme-dark body :where([class*="bg-orange-500"]:not(.map-toggle-switch), [class*="bg-orange-600"]:not(.map-toggle-switch), [class*="bg-amber-"]:not(.map-toggle-switch), [class*="bg-primary"]:not(.map-toggle-switch), [class*="bg-[#A67C00]"]:not(.map-toggle-switch), [class*="bg-[#D97706]"]:not(.map-toggle-switch)) {
   background: var(--pb-accent) !important;
   color: #ffffff !important;
   border-color: var(--pb-accent) !important;
@@ -782,4 +782,21 @@ html.propbol-theme-dark body :where([class*="text-amber-600"], [class*="text-amb
 
 html.propbol-theme-dark body :where([class*="text-red-600"], [class*="text-[#D94848]"]) {
   color: #fca5a5 !important;
+}
+/* Fix popups Leaflet estilos modo claro y oscuro invertido */
+html body .pb-map-popup-dark-fix p,
+html body .pb-map-popup-dark-fix div,
+html body .pb-map-popup-dark-fix span {
+  color: var(--popup-light-color, #1f2937);
+}
+
+html.dark .leaflet-popup-content-wrapper,
+html.dark .leaflet-popup-tip {
+  background: var(--pb-surface, #1f2937) !important;
+}
+
+html.dark body .pb-map-popup-dark-fix p,
+html.dark body .pb-map-popup-dark-fix div,
+html.dark body .pb-map-popup-dark-fix span {
+  color: var(--popup-dark-color, #f3f4f6) !important;
 }
