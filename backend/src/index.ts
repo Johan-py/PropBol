@@ -45,6 +45,9 @@ import {
   forgotPasswordController,
   resetPasswordController,
   resend2FAController,
+  requestMagicLinkController,
+  loginWithMagicLinkController,
+  resendMagicLinkController,
   activateAccountByPasswordController,
   requestActivationCodeController,
   activateAccountByCodeController,
@@ -179,6 +182,9 @@ app.use("/uploads", express.static(path.resolve("uploads")));
 // RUTAS LEGACY
 // --------------------
 app.post("/api/auth/forgot-password", forgotPasswordController);
+app.post("/api/auth/magic-link/request", requestMagicLinkController);
+app.post("/api/auth/magic-link/login", loginWithMagicLinkController);
+app.post("/api/auth/magic-link/resend", resendMagicLinkController);
 app.post("/api/auth/resend-2fa", resend2FAController);
 app.post("/api/auth/reset-password", resetPasswordController);
 app.use("/api/auth-legacy", authRoutes);
@@ -227,6 +233,7 @@ app.use("/api/blogs", blogsRoutes);
 app.use("/api/testimonios", testimoniosRoutes);
 app.use("/api/telemetria", telemetriaRouter);
 app.use("/api/comparaciones", comparacionRoutes);
+app.use("/api/sesiones", sesionRoutes);
 
 app.use("/api/transacciones", transaccionesRoutes);
 app.use("/api/suscripciones", suscripcionesRoutes);
@@ -253,10 +260,16 @@ app.post("/api/auth/deactivate-2fa", requireAuth, deactivate2FAController);
 app.get("/api/auth/2fa-status", requireAuth, get2FAStatusController);
 app.post("/api/auth/logout", logoutController);
 app.post("/api/auth/verify-register", verifyRegisterCodeController);
+app.post("/api/auth/register", registerController);
+app.post("/api/auth/login", loginController);
+app.post("/api/auth/logout", logoutController);
+app.post("/api/auth/verify-register", verifyRegisterCodeController);
 app.post("/api/auth/resend-register-code", resendRegisterCodeController);
+
 app.post("/api/auth/activate-by-password", activateAccountByPasswordController);
 app.post("/api/auth/request-activation-code", requestActivationCodeController);
 app.post("/api/auth/activate-by-code", activateAccountByCodeController);
+
 app.get("/api/auth/me", getMeController);
 
 app.get("/api/auth/google/login", StratGoogleLoginController);
@@ -277,13 +290,11 @@ app.get(
   requireAuth,
   getLinkedInOriginalEmailController,
 );
-
 app.delete(
   "/api/auth/social-links/:provider",
   requireAuth,
   unlinkSocialProviderController,
 );
-
 app.get(
   "/api/auth/facebook/link-url",
   requireAuth,
@@ -291,7 +302,6 @@ app.get(
 );
 app.get("/api/auth/discord/link-url", requireAuth, getDiscordLinkUrlController);
 app.get("/api/auth/google/link-url", requireAuth, getGoogleLinkUrlController);
-
 app.get("/api/auth/linkedin/login", startLinkedInLoginController);
 app.get("/api/auth/linkedin/callback", linkedInCallbackController);
 app.get(

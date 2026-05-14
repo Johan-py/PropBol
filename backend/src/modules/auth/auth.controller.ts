@@ -13,6 +13,9 @@ import {
   verify2FAService,
   verifyRegisterCodeService,
   resend2FAService,
+  requestMagicLinkService,
+  loginWithMagicLinkService,
+  resendMagicLinkService,
   activateAccountByPasswordService,
   requestActivationCodeService,
   activateAccountByCodeService,
@@ -41,6 +44,14 @@ type Verify2FABody = {
 
 type VerifyPasswordBody = {
   password: string;
+};
+
+type RequestMagicLinkBody = {
+  correo: string;
+};
+
+type LoginWithMagicLinkBody = {
+  token: string;
 };
 
 const isDuplicateEmailError = (message: string) => {
@@ -367,6 +378,58 @@ export const get2FAStatusController = async (req: Request, res: Response) => {
   }
 };
 
+export const requestMagicLinkController = async (
+  req: Request<unknown, unknown, RequestMagicLinkBody>,
+  res: Response,
+) => {
+  try {
+    const result = await requestMagicLinkService(req.body);
+
+    return res.status(200).json(result);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
+    const message =
+      error instanceof Error ? error.message : "Error al solicitar link mágico";
+
+    return res.status(400).json({ message });
+  }
+};
+
+export const resendMagicLinkController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const result = await resendMagicLinkService(req.body);
+    const { message: _message, ...responseData } = result;
+
+    return res.status(200).json({
+      message: "Te reenviamos un link mágico a tu correo electrónico.",
+      ...responseData,
+    });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      if (error.retryAfterSeconds) {
+        res.setHeader("Retry-After", String(error.retryAfterSeconds));
+      }
+
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
+    const message =
+      error instanceof Error ? error.message : "Error al reenviar link mágico";
+
+    return res.status(400).json({ message });
+  }
+};
+
 export const forgotPasswordController = async (req: Request, res: Response) => {
   try {
     const result = await forgotPasswordService(req.body);
@@ -490,6 +553,33 @@ export const resendRegisterCodeController = async (
 
     const message =
       error instanceof Error ? error.message : "Error al reenviar el código";
+
+    return res.status(400).json({ message });
+  }
+};
+
+export const loginWithMagicLinkController = async (
+  req: Request<unknown, unknown, LoginWithMagicLinkBody>,
+  res: Response,
+) => {
+  try {
+    const result = await loginWithMagicLinkService(req.body);
+
+    return res.status(200).json({
+      message: "Inicio de sesión con Magic Link exitoso",
+      ...result,
+    });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Error al iniciar sesión con Magic Link";
 
     return res.status(400).json({ message });
   }
