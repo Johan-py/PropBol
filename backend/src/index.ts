@@ -85,14 +85,15 @@ import {
   startDiscordRegisterController
 } from './modules/auth/discord/discord.controller.js'
 
-import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
-import publicacionRoutes from './modules/publicacion/publicacion.routes.js'
-import router from './modules/registro-publicacion/publicacion.routes.js'
-import parametrosRoutes from './modules/parametros-publicacion/parametros.routes.js'
-import tutorialPublicacionRoutes from './modules/tutorial-publicacion/tutorial-publicacion.routes.js'
-import estadisticasRoutes from './modules/estadisticas-publicacion/estadisticas.routes.js'
-import estadisticasZonaRoutes from './modules/estadisticas-zona/estadisticas-zona.routes.js'
-import tagsRoutes from './modules/tags/tags.routes.js'
+import multimediaRoutes from "./modules/multimedia/multimedia.routes.js";
+import publicacionRoutes from "./modules/publicacion/publicacion.routes.js";
+import router from "./modules/registro-publicacion/publicacion.routes.js";
+import parametrosRoutes from "./modules/parametros-publicacion/parametros.routes.js";
+import tutorialPublicacionRoutes from "./modules/tutorial-publicacion/tutorial-publicacion.routes.js";
+import estadisticasRoutes from "./modules/estadisticas-publicacion/estadisticas.routes.js";
+import tagsRoutes from "./modules/tags/tags.routes.js";
+import estadisticasZonaRoutes from "./modules/estadisticas-zona/estadisticas-zona.routes.js";
+
 
 import {
   facebookCallbackController,
@@ -107,9 +108,9 @@ import {
   getLinkedInOriginalEmailController
 } from './modules/auth/social-links/social-links.controller.js'
 
-import securityRoutes from './routes/security.routes.js'
-import propiedadRoutes from './routes/propiedad.routes.js'
-import { validarPublicacionesFree } from './controllers/publicacionesController.js'
+import securityRoutes from "./routes/security.routes.js";
+import propiedadRoutes from "./routes/propiedad.routes.js";
+import { validarPublicacionesFree } from "./controllers/publicacionesController.js";
 // --------------------
 // LEGACY
 // --------------------
@@ -183,22 +184,22 @@ app.use('/uploads', express.static(path.resolve('uploads')))
 // --------------------
 // RUTAS LEGACY
 // --------------------
-app.post('/api/auth/forgot-password', forgotPasswordController)
-app.post('/api/auth/magic-link/request', requestMagicLinkController)
-app.post('/api/auth/magic-link/login', loginWithMagicLinkController)
-app.post('/api/auth/magic-link/resend', resendMagicLinkController)
-app.post('/api/auth/resend-2fa', resend2FAController)
-app.post('/api/auth/reset-password', resetPasswordController)
-
-app.use('/api/auth-legacy', authRoutes)
-
-app.get('/api/users/:id/publicaciones/free', authMiddleware, (_req, res) => {
-  res.json({ restantes: 2 })
-})
-
-app.get('/api/publicaciones/validar-limite/:id', authMiddleware, validarPublicacionesFree)
-
-app.use('/api/publicaciones-legacy', publicacionesRoutes)
+app.post("/api/auth/forgot-password", forgotPasswordController);
+app.post("/api/auth/magic-link/request", requestMagicLinkController);
+app.post("/api/auth/magic-link/login", loginWithMagicLinkController);
+app.post("/api/auth/magic-link/resend", resendMagicLinkController);
+app.post("/api/auth/resend-2fa", resend2FAController);
+app.post("/api/auth/reset-password", resetPasswordController);
+app.use("/api/auth-legacy", authRoutes);
+app.get("/api/users/:id/publicaciones/free", authMiddleware, (_req, res) => {
+  res.json({ restantes: 2 });
+});
+app.get(
+  "/api/publicaciones/validar-limite/:id",
+  authMiddleware,
+  validarPublicacionesFree,
+);
+app.use("/api/publicaciones-legacy", publicacionesRoutes);
 
 // --------------------
 // RUTAS PRINCIPALES
@@ -276,17 +277,17 @@ app.post('/api/auth/activate-by-code', activateAccountByCodeController)
 
 app.get('/api/auth/me', getMeController)
 
-app.get('/api/auth/google/login', StratGoogleLoginController)
-app.get('/api/auth/google/register', StartGoogleRegisterController)
-app.get('/api/auth/google/callback', googleCallbackController)
+app.get("/api/auth/google/login", StratGoogleLoginController);
+app.get("/api/auth/google/register", StartGoogleRegisterController);
+app.get("/api/auth/google/callback", googleCallbackController);
 
-app.get('/api/auth/discord/login', startDiscordLoginController)
-app.get('/api/auth/discord/register', startDiscordRegisterController)
-app.get('/api/auth/discord/callback', discordCallbackController)
+app.get("/api/auth/discord/login", startDiscordLoginController);
+app.get("/api/auth/discord/register", startDiscordRegisterController);
+app.get("/api/auth/discord/callback", discordCallbackController);
 
-app.get('/api/auth/facebook/login', startFacebookLoginController)
-app.get('/api/auth/facebook/register', startFacebookRegisterController)
-app.get('/api/auth/facebook/callback', facebookCallbackController)
+app.get("/api/auth/facebook/login", startFacebookLoginController);
+app.get("/api/auth/facebook/register", startFacebookRegisterController);
+app.get("/api/auth/facebook/callback", facebookCallbackController);
 
 app.get('/api/auth/social-links', requireAuth, getSocialLinksController)
 app.get('/api/auth/linkedin/original-email', requireAuth, getLinkedInOriginalEmailController)
