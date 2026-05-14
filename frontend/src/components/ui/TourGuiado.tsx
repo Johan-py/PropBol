@@ -214,6 +214,19 @@ export default function TourGuiado() {
   const ioRef = useRef<IntersectionObserver | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [tooltipH, setTooltipH] = useState(0);
+  const [isDark, setIsDark] = useState(false);
+
+useEffect(() => {
+  const check = () =>
+    setIsDark(document.documentElement.classList.contains("propbol-theme-dark"));
+  check();
+  const observer = new MutationObserver(check);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+  return () => observer.disconnect();
+}, []);
 
   // Ref para trackear el step desde el que venimos REALMENTE
   // (funciona igual en navegación hacia adelante y hacia atrás)
