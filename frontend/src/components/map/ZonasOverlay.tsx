@@ -262,8 +262,9 @@ function labelIcon(nombre: string, isSelected: boolean, zoom: number, tipoZona: 
     : '0 1px 3px rgba(255,255,255,0.95), 0 -1px 3px rgba(255,255,255,0.95), 1px 0 3px rgba(255,255,255,0.95), -1px 0 3px rgba(255,255,255,0.95)'
 
   return L.divIcon({
-    className: '',
+    className: 'pb-map-label-container',
     html: `<div
+      class="pb-map-label"
       aria-hidden="true"
       style="
         background: transparent;

@@ -128,7 +128,7 @@ export default function DetallePropiedadPage() {
         <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_300px] lg:items-start">
           <div className="space-y-5">
             <div className="flex items-start justify-between gap-4">
-              <ResumenPropiedad detalle={detalle} />
+              <ResumenPropiedad detalle={detalle} esOferta={esOferta} porcentajeDescuento={porcentajeDescuento} formatPrice={formatPrice}/>
 
               <div className="mt-16 shrink-0">
                 <CompartirPublicacion publicacionId={id} titulo={detalle.titulo} />

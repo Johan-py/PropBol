@@ -46,41 +46,47 @@ export class FavoritesService {
   }
 
   static async add(usuarioId: number, inmuebleId: number) {
+  console.log('[DEBUG] FavoritesService.add llamado:', usuarioId, inmuebleId)
   try {
     const favorito = await prisma.favorito.create({
       data: { usuarioId, inmuebleId }
     })
 
-    // Guardar en entrenamiento_ml de forma asíncrona
+console.log('[DEBUG] Buscando inmueble para entrenamiento_ml:', inmuebleId)
     const inmueble = await prisma.inmueble.findUnique({
       where: { id: inmuebleId },
       include: { ubicacion: true, inmueble_amenidad: true }
-    })
-
+})
+console.log('[DEBUG] Inmueble encontrado:', inmueble?.id)
     if (inmueble) {
-      prisma.entrenamiento_ml.create({
-        data: {
-          usuario_id: usuarioId,
-          inmueble_id: inmuebleId,
-          tipo_evento: 'FAVORITO',
-          score_real: 1.0,
-          features: {
-            categoria: inmueble.categoria,
-            tipoAccion: inmueble.tipoAccion,
-            precio: Number(inmueble.precio),
-            superficieM2: Number(inmueble.superficieM2 || 0),
-            nroCuartos: inmueble.nroCuartos || 0,
-            nroBanos: inmueble.nroBanos || 0,
-            zona: inmueble.ubicacion?.zona || null,
-            ciudad: inmueble.ubicacion?.ciudad || null,
-            amenidades: inmueble.inmueble_amenidad.map(a => a.amenidad_id),
-            precioReducido: inmueble.precio_anterior !== null &&
-              Number(inmueble.precio_anterior) > Number(inmueble.precio)
-          },
-          usado_en_modelo: false
-        }
-      }).catch(err => console.error('[ML] Error guardando favorito en entrenamiento_ml:', err))
-    }
+  try {
+    await prisma.entrenamiento_ml.create({
+      data: {
+        usuario_id: usuarioId,
+        inmueble_id: inmuebleId,
+        tipo_evento: 'FAVORITO',
+        score_real: 1.0,
+        features: {
+          categoria: inmueble.categoria,
+          tipoAccion: inmueble.tipoAccion,
+          precio: Number(inmueble.precio),
+          superficieM2: Number(inmueble.superficieM2 || 0),
+          nroCuartos: inmueble.nroCuartos || 0,
+          nroBanos: inmueble.nroBanos || 0,
+          zona: inmueble.ubicacion?.zona || null,
+          ciudad: inmueble.ubicacion?.ciudad || null,
+          amenidades: inmueble.inmueble_amenidad.map(a => a.amenidad_id),
+          precioReducido: inmueble.precio_anterior !== null &&
+            Number(inmueble.precio_anterior) > Number(inmueble.precio)
+        },
+        usado_en_modelo: false
+      }
+    })
+    console.log('[ML] Registro guardado en entrenamiento_ml')
+  } catch (err) {
+    console.error('[ML] Error guardando en entrenamiento_ml:', err)
+  }
+}
 
     return favorito
   } catch (error: any) {
@@ -90,7 +96,6 @@ export class FavoritesService {
     throw error
   }
 }
-
   static async remove(usuarioId: number, inmuebleId: number) {
     try {
       // Eliminar directamente usando el unique compuesto
