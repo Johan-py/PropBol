@@ -91,6 +91,7 @@ import router from "./modules/registro-publicacion/publicacion.routes.js";
 import parametrosRoutes from "./modules/parametros-publicacion/parametros.routes.js";
 import tutorialPublicacionRoutes from "./modules/tutorial-publicacion/tutorial-publicacion.routes.js";
 import estadisticasRoutes from "./modules/estadisticas-publicacion/estadisticas.routes.js";
+import tagsRoutes from "./modules/tags/tags.routes.js";
 
 import {
   facebookCallbackController,

@@ -567,3 +567,42 @@ Ya puedes iniciar sesión y acceder a PropBol.
 Si no realizaste este registro, ignora este mensaje o contacta con soporte.`,
   });
 };
+
+export const enviarCodigoActivacion2FA = async ({
+  emailDestino,
+  codigo,
+  nombreUsuario,
+}: EnviarCodigoParams): Promise<EmailSendResult> => {
+  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : "Hola,";
+
+  return sendBrevoEmail({
+    to: emailDestino,
+    subject:
+      "Código de verificación - Activar verificación en dos pasos PropBol",
+    htmlContent: `
+      <!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
+      <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
+        <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:10px;overflow:hidden;">
+          <div style="background:#d97706;padding:20px;text-align:center;">
+            <h1 style="color:#fff;margin:0;font-size:24px;">Verificación en dos pasos</h1>
+          </div>
+          <div style="padding:30px;">
+            <p style="font-size:16px;color:#333;">${saludo}</p>
+            <p style="font-size:16px;color:#333;">Ingresa el siguiente código para activar la verificación en dos pasos en tu cuenta:</p>
+            <div style="background:#fef3c7;padding:20px;text-align:center;margin:25px 0;border-radius:8px;border:1px solid #fde68a;">
+              <span style="font-size:36px;font-weight:bold;letter-spacing:5px;color:#92400e;">${codigo}</span>
+            </div>
+            <p style="font-size:14px;color:#666;">Este código expirará en <strong style="color:#d97706;">5 minutos</strong>.</p>
+            <div style="background:#fffbeb;border-left:4px solid #d97706;padding:12px;margin:20px 0;">
+              <p style="margin:0;font-size:13px;color:#78350f;">Si no solicitaste esta acción, ignora este mensaje.</p>
+            </div>
+          </div>
+          <div style="background:#f9fafb;padding:20px;text-align:center;border-top:1px solid #e5e7eb;">
+            <p style="font-size:12px;color:#9ca3af;margin:0;">Este es un mensaje automático, por favor no responder.</p>
+          </div>
+        </div>
+      </body></html>
+    `,
+    textContent: `${saludo}\n\nTu código para activar la verificación en dos pasos es: ${codigo}\n\nEste código expirará en 5 minutos.`,
+  });
+};
