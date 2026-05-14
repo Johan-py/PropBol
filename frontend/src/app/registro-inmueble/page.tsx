@@ -944,8 +944,8 @@ const [poiSeleccionado, setPoiSeleccionado] = useState<number | null>(null)
               </div>
 
               <div className="mt-6">
-<div className="flex items-center justify-between mb-4 gap-4">
-                  <div className="flex gap-3 flex-wrap">
+                <div className="flex items-center gap-3 mb-4 gap-4">
+                  <div className="flex items-center gap-3">
                     <button
                       type="button"
                       onClick={() => {
@@ -953,7 +953,7 @@ const [poiSeleccionado, setPoiSeleccionado] = useState<number | null>(null)
                         setModoDifuminadoActivo(false)
                         setVertices([]) // Lógica de develop: borra el polígono anterior
                       }}
-                      className={`px-4 py-2 rounded-full text-sm transition-colors ${
+                      className={`px-4 py-2 rounded-full text-xs transition ${
                         modoPinActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
                       }`}
                     >
@@ -1036,7 +1036,9 @@ if (poiSeleccionado !== null) {
           : 'bg-gray-200 text-gray-400 cursor-not-allowed'
       }`}
     >
-      -Referencia
+     <span className="whitespace-nowrap">
+  -Referencia
+     </span>
     </button>
   </div>
 
