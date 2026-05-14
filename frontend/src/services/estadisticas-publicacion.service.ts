@@ -161,3 +161,7 @@ export const obtenerMisPropiedadesVistas = async () => {
     return [];
   }
 };
+// Alias para mantener compatibilidad con componentes ya creados
+export const registrarVisualizacion = registrarVistaPublicacion;
+
+export const registrarCompartido = registrarCompartidoPublicacion;
