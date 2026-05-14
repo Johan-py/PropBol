@@ -730,9 +730,9 @@ useEffect(() => {
           <p
             style={{
               fontSize: fontMeta,
-              color: "#9ca3af",
+              color: theme.textSubtle,
               marginBottom: 14,
-              fontStyle: "italic",
+            fontStyle: "italic",
             }}
           >
             Esta sección no está visible en tu dispositivo actual.
