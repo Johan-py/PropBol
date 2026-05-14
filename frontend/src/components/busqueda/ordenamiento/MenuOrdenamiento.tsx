@@ -156,7 +156,7 @@ export function MenuOrdenamiento({
   }
 
   function aplicar(parcial: Partial<EstadoOrdenamiento>) {
-    if(procesandoRef.current) return
+    if (procesandoRef.current) return
     procesandoRef.current = true
 
     const nuevoOrden: EstadoOrdenamiento = { ...orden, ...parcial }
@@ -170,14 +170,14 @@ export function MenuOrdenamiento({
 
   // ── Seleccionar FECHA ──────────────────────────────────────────────────────
   function seleccionarFecha(valor: EstadoOrdenamiento['fecha']) {
-  aplicar({
-    fecha: valor,
-    precio: ORDENAMIENTO_DEFAULT.precio,
-    superficie: ORDENAMIENTO_DEFAULT.superficie,
-    criterioActivo: valor === 'mas-recomendados' ? 'recomendados' : 'fecha',
-  })
-  setDropdownAbierto(null)
-}
+    aplicar({
+      fecha: valor,
+      precio: ORDENAMIENTO_DEFAULT.precio,
+      superficie: ORDENAMIENTO_DEFAULT.superficie,
+      criterioActivo: valor === 'mas-recomendados' ? 'recomendados' : 'fecha'
+    })
+    setDropdownAbierto(null)
+  }
 
   // ── Seleccionar PRECIO ─────────────────────────────────────────────────────
   function seleccionarPrecio(valor: OrdenDireccion) {
@@ -219,20 +219,30 @@ export function MenuOrdenamiento({
     : `${isCompact ? 'gap-2 mb-0' : 'gap-4 mb-6'}`
 
   return (
-    <div ref={menuRef} className={`flex w-fit max-w-full flex-col transition-all duration-300 ${panelClasses}`}>
+    <div
+      ref={menuRef}
+      className={`flex w-fit max-w-full flex-col transition-all duration-300 ${panelClasses}`}
+    >
       {/* Contenedor principal animado */}
-      <div className={`flex flex-col transition-all duration-300 ${isCompact ? 'gap-0' : embeddedInPanel ? 'gap-2' : 'gap-3'}`}>
-        
+      <div
+        className={`flex flex-col transition-all duration-300 ${isCompact ? 'gap-0' : embeddedInPanel ? 'gap-2' : 'gap-3'}`}
+      >
         {/* Título: Ordenar por (Se oculta al hacer scroll) */}
-        <div className={`flex items-center gap-2 transition-all duration-300 overflow-hidden ${isCompact ? 'max-h-0 opacity-0 m-0' : 'max-h-10 opacity-100'}`}>
+        <div
+          className={`flex items-center gap-2 transition-all duration-300 overflow-hidden ${isCompact ? 'max-h-0 opacity-0 m-0' : 'max-h-10 opacity-100'}`}
+        >
           <ArrowUpDown className="w-4 h-4 text-gray-400" strokeWidth={2} />
           <span className="text-sm font-semibold text-gray-600">Ordenar por:</span>
         </div>
 
         <div className="flex flex-row flex-wrap gap-3 items-end">
           {/* Dropdown Fecha */}
-          <div className={`flex flex-col transition-all duration-200 ${fechaApagada ? 'opacity-40 pointer-events-none' : ''} ${isCompact ? 'gap-0' : 'gap-1.5'}`}>
-            <div className={`transition-all duration-300 overflow-hidden ${isCompact ? 'max-h-0 opacity-0' : 'max-h-6 opacity-100'}`}>
+          <div
+            className={`flex flex-col transition-all duration-200 ${fechaApagada ? 'opacity-40 pointer-events-none' : ''} ${isCompact ? 'gap-0' : 'gap-1.5'}`}
+          >
+            <div
+              className={`transition-all duration-300 overflow-hidden ${isCompact ? 'max-h-0 opacity-0' : 'max-h-6 opacity-100'}`}
+            >
               <span className="text-xs text-gray-400 font-medium">Más:</span>
             </div>
             <Dropdown
@@ -253,10 +263,14 @@ export function MenuOrdenamiento({
           </div>
 
           {/* Dropdown Métricas */}
-          <div className={`flex flex-col transition-all duration-200 ${metricasApagada ? 'opacity-40 pointer-events-none' : ''} ${isCompact ? 'gap-0' : 'gap-1.5'}`}>
-             <div className={`transition-all duration-300 overflow-hidden ${isCompact ? 'max-h-0 opacity-0' : 'max-h-6 opacity-100'}`}>
-               <span className="text-xs text-gray-400 font-medium">Métricas:</span>
-             </div>
+          <div
+            className={`flex flex-col transition-all duration-200 ${metricasApagada ? 'opacity-40 pointer-events-none' : ''} ${isCompact ? 'gap-0' : 'gap-1.5'}`}
+          >
+            <div
+              className={`transition-all duration-300 overflow-hidden ${isCompact ? 'max-h-0 opacity-0' : 'max-h-6 opacity-100'}`}
+            >
+              <span className="text-xs text-gray-400 font-medium">Métricas:</span>
+            </div>
             <Dropdown
               label={labelMetricas}
               isOpen={dropdownAbierto === 'metricas'}

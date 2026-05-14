@@ -43,7 +43,12 @@ export async function obtenerMisPublicaciones(): Promise<MisPublicacionesItem[]>
     throw new Error(data.message || 'No se pudieron obtener las publicaciones')
   }
 
-  return data.data
+  const publicaciones = Array.isArray(data.data) ? data.data : []
+  return publicaciones.map((pub: any) => ({
+    ...pub,
+    totalVisualizaciones: Number(pub.totalVisualizaciones ?? 0),
+    totalCompartidos: Number(pub.totalCompartidos ?? 0)
+  }))
 }
 
 export async function obtenerDetallePublicacion(id: number): Promise<PublicacionDetalle> {
@@ -108,6 +113,7 @@ export async function eliminarPublicacion(id: number) {
 
   return data
 }
+<<<<<<< HEAD
 export async function iniciarPublicidad(publicacionId: number): Promise<{ checkoutUrl: string }> {
   const apiUrl = getApiUrl()
   const token = getToken()
@@ -118,11 +124,28 @@ export async function iniciarPublicidad(publicacionId: number): Promise<{ checko
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     }
+=======
+
+export async function editarMultimediaPublicacion(
+  id: number,
+  formData: FormData
+) {
+  const apiUrl = getApiUrl()
+  const token = getToken()
+
+  const response = await fetch(`${apiUrl}/api/publicaciones/${id}/multimedia`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    body: formData
+>>>>>>> c6a97b8f2833225a78a0841470b09eae6a8ba279
   })
 
   const data = await response.json()
 
   if (!response.ok) {
+<<<<<<< HEAD
     throw new Error(data.message || 'Error al iniciar publicidad')
   }
 
@@ -149,4 +172,10 @@ export async function cancelarPublicidad(publicacionId: number): Promise<{ ok: b
   }
 
   return data
+=======
+    throw new Error(data.message || 'No se pudo actualizar la multimedia')
+  }
+
+  return data.data
+>>>>>>> c6a97b8f2833225a78a0841470b09eae6a8ba279
 }

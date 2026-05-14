@@ -26,7 +26,7 @@ export default function AdminDashboard() {
           fetch(`${API_URL}/api/transacciones/admin`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch(`${API_URL}/api/testimonios/count`, {
+          fetch(`${API_URL}/api/admin/testimonios`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ])
@@ -41,7 +41,7 @@ export default function AdminDashboard() {
         }
         if (testimoniosRes.ok) {
           const data = await testimoniosRes.json()
-          setTestimonioCount(data.total)
+          setTestimonioCount(Array.isArray(data) ? data.length : data.total || 0)
         }
       } catch (error) {
         console.error('Error fetching pending counts:', error)     

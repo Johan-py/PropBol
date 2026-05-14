@@ -339,6 +339,7 @@ export const buscarDetallePublicacionPorInmuebleIdRepository = async (inmuebleId
           tipoAccion: true,
           categoria: true,
           precio: true,
+          precio_anterior: true,
           superficieM2: true,
           nroCuartos: true,
           nroBanos: true,
@@ -377,6 +378,7 @@ export const buscarDetallePublicacionPorInmuebleIdRepository = async (inmuebleId
     }
   })
 }
+
 export const confirmarPublicacionRepository = async (publicacionId: number) => {
   return prisma.publicacion.update({
     where: { id: publicacionId },
@@ -394,78 +396,59 @@ export const confirmarPublicacionRepository = async (publicacionId: number) => {
   })
 }
 
-export const activarPublicidadRepository = async (
+type NuevaMultimediaInput = {
+  url: string
+  tipo: 'IMAGEN' | 'VIDEO'
+  pesoMb?: number | null
+  publicacionId: number
+}
+
+export const eliminarMultimediaPorIdsRepository = async (
   publicacionId: number,
-  usuarioId: number,
-  paymentIntentId?: string
+  multimediaIds: number[]
 ) => {
-  const expiresAt = new Date()
-  expiresAt.setDate(expiresAt.getDate() + 30) // 30 días de duración
+  if (multimediaIds.length === 0) return { count: 0 }
 
-  return prisma.publicacion.update({
+  return prisma.multimedia.deleteMany({
     where: {
-      id: publicacionId,
-      usuarioId: usuarioId
-    },
-    data: {
-      promoted: true,
-      promotedAt: new Date(),
-      promotedExpiresAt: expiresAt,
-      paymentIntentId: paymentIntentId || null
+      id: {
+        in: multimediaIds
+      },
+      publicacionId
     }
   })
 }
 
-export const cancelarPublicidadRepository = async (
-  publicacionId: number,
-  usuarioId: number
+export const eliminarVideosDePublicacionRepository = async (
+  publicacionId: number
 ) => {
-  return prisma.publicacion.update({
+  return prisma.multimedia.deleteMany({
     where: {
-      id: publicacionId,
-      usuarioId: usuarioId
+      publicacionId,
+      tipo: 'VIDEO'
+    }
+  })
+}
+
+export const crearMultimediaRepository = async (
+  data: NuevaMultimediaInput[]
+) => {
+  if (data.length === 0) return { count: 0 }
+
+  return prisma.multimedia.createMany({
+    data
+  })
+}
+
+export const buscarMultimediaPublicacionRepository = async (
+  publicacionId: number
+) => {
+  return prisma.multimedia.findMany({
+    where: {
+      publicacionId
     },
-    data: {
-      promoted: false,
-      promotedAt: null,
-      promotedExpiresAt: null
+    orderBy: {
+      id: 'asc'
     }
   })
 }
-
-export const buscarPublicacionPorIdSimpleRepository = async (id: number) => {
-  return prisma.publicacion.findUnique({
-    where: { id },
-    include: {
-      inmueble: true,
-      usuario: {
-        select: {
-          id: true,
-          nombre: true,
-          apellido: true,
-          correo: true
-        }
-      }
-    }
-  })
-}
-
-export const verificarPublicidadActivaRepository = async (publicacionId: number) => {
-  const publicacion = await prisma.publicacion.findUnique({
-    where: { id: publicacionId },
-    select: { promoted: true, promotedExpiresAt: true }
-  })
-
-  if (!publicacion) return false
-
-  if (publicacion.promoted && publicacion.promotedExpiresAt && publicacion.promotedExpiresAt < new Date()) {
-    await prisma.publicacion.update({
-      where: { id: publicacionId },
-      data: { promoted: false, promotedAt: null, promotedExpiresAt: null }
-    })
-    return false
-  }
-
-  return publicacion.promoted
-}
-

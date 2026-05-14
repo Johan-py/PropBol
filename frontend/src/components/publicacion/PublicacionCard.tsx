@@ -74,7 +74,11 @@ export default function PublicacionCard({
       setModalExitoAbierto(true)
     } catch (err) {
       setModalConfirmacionAbierto(false)
-      setError(err instanceof Error ? err.message : 'No se puede eliminar la publicación, intente nuevamente')
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'No se puede eliminar la publicación, intente nuevamente'
+      )
       setModalErrorAbierto(true)
     } finally {
       setLoading(false)
@@ -134,12 +138,17 @@ export default function PublicacionCard({
   const precioFormateado = `USD ${publicacion.precio.toLocaleString('en-US')}`
   const tipoOperacionTexto = publicacion.tipoOperacion || 'Venta / Alquiler'
 
+  const totalVisualizaciones = publicacion.totalVisualizaciones ?? 0
+  const totalCompartidos = publicacion.totalCompartidos ?? 0
+
   const irAEditar = () => {
     router.push(`/mis-publicaciones/${publicacion.id}/editar`)
   }
 
   const irAParametros = () => {
-    router.push(`/propiedades/parametros?publicacionId=${publicacion.id}&returnTo=mis-publicaciones`)
+    router.push(
+      `/propiedades/parametros?publicacionId=${publicacion.id}&returnTo=mis-publicaciones`
+    )
   }
   
 
@@ -189,7 +198,31 @@ export default function PublicacionCard({
                 {precioFormateado}
               </p>
 
-              <div className="mt-2 grid grid-cols-3 gap-2 text-xs text-gray-500">
+              <div className="mt-2 flex items-center gap-8 text-xs text-[#1f1f1f]">
+                <div className="flex items-center gap-2">
+                  <Eye className="h-5 w-5 text-black" />
+                  <div className="leading-tight">
+                    <p className="text-[10px] text-[#5f5f5f]">
+                      Visualizaciones
+                    </p>
+                    <p className="text-center text-sm font-semibold text-black">
+                      {totalVisualizaciones}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Share2 className="h-5 w-5 text-black" />
+                  <div className="leading-tight">
+                    <p className="text-[10px] text-[#5f5f5f]">Compartidos</p>
+                    <p className="text-center text-sm font-semibold text-black">
+                      {totalCompartidos}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-3 grid grid-cols-3 gap-2 text-xs text-gray-500">
                 <div className="flex items-center gap-1">
                   <BedDouble size={14} />
                   <span>{publicacion.nroCuartos ?? '-'} habs</span>
@@ -339,10 +372,7 @@ export default function PublicacionCard({
         loading={loading}
       />
 
-      <DeleteSuccessModal
-        abierto={modalExitoAbierto}
-        onAceptar={cerrarExito}
-      />
+      <DeleteSuccessModal abierto={modalExitoAbierto} onAceptar={cerrarExito} />
 
       <DeleteErrorModal
         abierto={modalErrorAbierto}

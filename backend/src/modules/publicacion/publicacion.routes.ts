@@ -1,9 +1,11 @@
 import { Router } from 'express'
 import { requireAuth } from '../../middleware/auth.middleware.js'
+import { uploadMultimedia } from '../../middleware/uploadMultimedia.middleware.js'
 import {
   listarMisPublicacionesController,
   obtenerResumenFinalController,
   editarPublicacionController,
+  editarMultimediaPublicacionController,
   eliminarPublicacionController,
   obtenerDetallePublicacionController,
   obtenerDetallePublicacionPorInmuebleController,
@@ -21,6 +23,14 @@ router.get('/:id/resumen-final', requireAuth, obtenerResumenFinalController)
 router.get('/inmueble/:inmuebleId/detalle', obtenerDetallePublicacionPorInmuebleController)
 router.get('/:id/detalle', obtenerDetallePublicacionController)
 router.patch('/:id/confirmar', requireAuth, confirmarPublicacionController)
+
+router.put(
+  '/:id/multimedia',
+  requireAuth,
+  uploadMultimedia.array('imagenesNuevas', 5),
+  editarMultimediaPublicacionController
+)
+
 router.put('/:id', requireAuth, editarPublicacionController)
 router.delete('/:id', requireAuth, eliminarPublicacionController)
 router.post('/:id/publicitar', requireAuth, iniciarPublicidadController)

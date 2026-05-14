@@ -1,3 +1,4 @@
+import { prisma } from '../../lib/prisma.client.js'
 import {
   buscarPublicacionesPorUsuarioRepository,
   buscarPublicacionPorIdRepository,
@@ -12,6 +13,7 @@ import {
   buscarPublicacionPorIdSimpleRepository,
   verificarPublicidadActivaRepository
 } from './publicacion.repository.js'
+import { cloudinary } from '../../config/cloudinary.js'
 
 type TipoAccionPermitido = 'VENTA' | 'ALQUILER' | 'ANTICRETO'
 
@@ -50,6 +52,12 @@ type MultimediaResumen = {
   url: string
   tipo: string
   pesoMb: number | null
+}
+
+type EstadisticaPublicacionResumen = {
+  publicacion_id: number
+  total_visualizaciones: number
+  total_compartidos: number
 }
 
 const ESTADO_PUBLICACION_ELIMINADA = 'ELIMINADA'
@@ -392,12 +400,18 @@ export const obtenerDetallePublicacionService = async (publicacionId: number) =>
     ubicacionTexto: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
     descripcion:
       publicacion.descripcion || publicacion.inmueble.descripcion || 'Sin descripción disponible',
-    imagenes: publicacion.multimedia.map((item) => ({
-      id: item.id,
-      url: item.url,
-      tipo: item.tipo,
-      pesoMb: item.pesoMb ? Number(item.pesoMb) : null
-    })),
+    imagenes: publicacion.multimedia
+      .filter((item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN)
+      .map((item) => ({
+        id: item.id,
+        url: item.url,
+        tipo: item.tipo,
+        pesoMb: item.pesoMb ? Number(item.pesoMb) : null
+      })),
+    videoUrl:
+      publicacion.multimedia.find(
+        (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_VIDEO
+      )?.url ?? null,
     detalles: {
       habitaciones: publicacion.inmueble.nroCuartos ?? null,
       banos: publicacion.inmueble.nroBanos ?? null,
@@ -445,17 +459,25 @@ export const obtenerDetallePublicacionPorInmuebleService = async (inmuebleId: nu
     inmuebleId: publicacion.inmueble.id,
     titulo: publicacion.titulo,
     precio: Number(publicacion.inmueble.precio),
+    //HU6-precio Anterior
+    precio_anterior: publicacion.inmueble.precio_anterior ? Number(publicacion.inmueble.precio_anterior) : undefined,
     tipoInmueble: publicacion.inmueble.categoria ?? null,
     tipoOperacion: publicacion.inmueble.tipoAccion,
     ubicacionTexto: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
     descripcion:
       publicacion.descripcion || publicacion.inmueble.descripcion || 'Sin descripción disponible',
-    imagenes: publicacion.multimedia.map((item) => ({
-      id: item.id,
-      url: item.url,
-      tipo: item.tipo,
-      pesoMb: item.pesoMb ? Number(item.pesoMb) : null
-    })),
+    imagenes: publicacion.multimedia
+      .filter((item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN)
+      .map((item) => ({
+        id: item.id,
+        url: item.url,
+        tipo: item.tipo,
+        pesoMb: item.pesoMb ? Number(item.pesoMb) : null
+      })),
+    videoUrl:
+      publicacion.multimedia.find(
+        (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_VIDEO
+      )?.url ?? null,
     detalles: {
       habitaciones: publicacion.inmueble.nroCuartos ?? null,
       banos: publicacion.inmueble.nroBanos ?? null,
@@ -483,6 +505,7 @@ export const obtenerDetallePublicacionPorInmuebleService = async (inmuebleId: nu
     }
   }
 }
+
 export const confirmarPublicacionService = async (
   publicacionId: number,
   usuarioSolicitanteId: number

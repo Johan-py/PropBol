@@ -3,6 +3,7 @@ import {
   eliminarPublicacionService,
   listarMisPublicacionesService,
   editarPublicacionService,
+  editarMultimediaPublicacionService,
   obtenerResumenFinalService,
   obtenerDetallePublicacionService,
   obtenerDetallePublicacionPorInmuebleService,
@@ -285,6 +286,7 @@ export const obtenerDetallePublicacionController = async (req: Request, res: Res
     })
   }
 }
+
 export const obtenerDetallePublicacionPorInmuebleController = async (
   req: Request,
   res: Response
@@ -323,6 +325,7 @@ export const obtenerDetallePublicacionPorInmuebleController = async (
     })
   }
 }
+
 export const confirmarPublicacionController = async (req: AuthRequest, res: Response) => {
   const publicacionId = Number(req.params.id)
   const usuarioSolicitanteId = req.user?.id
@@ -387,202 +390,26 @@ export const confirmarPublicacionController = async (req: AuthRequest, res: Resp
     })
   }
 }
-export const iniciarPublicidadController = async (req: AuthRequest, res: Response) => {
+
+export const editarMultimediaPublicacionController = async (
+  req: AuthRequest,
+  res: Response
+) => {
   const publicacionId = Number(req.params.id)
-  const usuarioId = req.user?.id
+  const usuarioSolicitanteId = req.user?.id
+  const archivos = (req.files as Express.Multer.File[]) ?? []
 
   try {
-    const resultado = await iniciarPublicidadService(publicacionId, Number(usuarioId))
-
-    return res.status(200).json({
-      ok: true,
-      checkoutUrl: resultado.checkoutUrl,
-      message: 'Redirigiendo al pago...'
-    })
-  } catch (error) {
-    if (error instanceof Error) {
-      switch (error.message) {
-        case 'ID_INVALIDO':
-          return res.status(400).json({
-            ok: false,
-            message: 'El id de la publicación es inválido'
-          })
-        case 'USUARIO_INVALIDO':
-          return res.status(401).json({
-            ok: false,
-            message: 'Usuario no autenticado'
-          })
-        case 'PUBLICACION_NO_EXISTE':
-          return res.status(404).json({
-            ok: false,
-            message: 'La publicación no existe'
-          })
-        case 'NO_AUTORIZADO':
-          return res.status(403).json({
-            ok: false,
-            message: 'No puede publicitar publicaciones de otros usuarios'
-          })
-        case 'PUBLICACION_YA_ELIMINADA':
-          return res.status(409).json({
-            ok: false,
-            message: 'La publicación ya fue eliminada'
-          })
-        case 'PUBLICACION_YA_PUBLICITADA':
-          return res.status(400).json({
-            ok: false,
-            message: 'La propiedad ya está publicitada'
-          })
-      }
-    }
-
-    console.error('Error al iniciar publicidad:', error)
-    return res.status(500).json({
-      ok: false,
-      message: 'Error al iniciar publicidad'
-    })
-  }
-}
-
-/**
- * HU-11: Confirmar pago y activar publicidad
- * POST /api/publicaciones/:id/publicitar/confirmar
- * (Este endpoint puede ser llamado por webhook de pagos o confirmación manual)
- */
-export const confirmarPublicidadController = async (req: AuthRequest, res: Response) => {
-  const publicacionId = Number(req.params.id)
-  const usuarioId = req.user?.id
-  const { paymentIntentId } = req.body
-
-  if (!paymentIntentId) {
-    return res.status(400).json({
-      ok: false,
-      message: 'Se requiere el ID del pago'
-    })
-  }
-
-  try {
-    const resultado = await confirmarPublicidadService(
+    const resultado = await editarMultimediaPublicacionService(
       publicacionId,
-      Number(usuarioId),
-      paymentIntentId
+      Number(usuarioSolicitanteId),
+      req.body,
+      archivos
     )
 
     return res.status(200).json({
       ok: true,
-      data: resultado,
-      message: 'Publicidad activada correctamente'
-    })
-  } catch (error) {
-    if (error instanceof Error) {
-      switch (error.message) {
-        case 'ID_INVALIDO':
-          return res.status(400).json({
-            ok: false,
-            message: 'El id de la publicación es inválido'
-          })
-        case 'USUARIO_INVALIDO':
-          return res.status(401).json({
-            ok: false,
-            message: 'Usuario no autenticado'
-          })
-        case 'PUBLICACION_NO_EXISTE':
-          return res.status(404).json({
-            ok: false,
-            message: 'La publicación no existe'
-          })
-        case 'NO_AUTORIZADO':
-          return res.status(403).json({
-            ok: false,
-            message: 'No puede publicitar publicaciones de otros usuarios'
-          })
-        case 'PUBLICACION_YA_ELIMINADA':
-          return res.status(409).json({
-            ok: false,
-            message: 'La publicación ya fue eliminada'
-          })
-      }
-    }
-
-    console.error('Error al confirmar publicidad:', error)
-    return res.status(500).json({
-      ok: false,
-      message: 'Error al confirmar publicidad'
-    })
-  }
-}
-
-/**
- * HU-11: Cancelar publicidad
- * DELETE /api/publicaciones/:id/publicitar/cancelar
- */
-export const cancelarPublicidadController = async (req: AuthRequest, res: Response) => {
-  const publicacionId = Number(req.params.id)
-  const usuarioId = req.user?.id
-
-  try {
-    const resultado = await cancelarPublicidadService(publicacionId, Number(usuarioId))
-
-    return res.status(200).json({
-      ok: true,
-      data: resultado,
-      message: 'Publicidad cancelada correctamente'
-    })
-  } catch (error) {
-    if (error instanceof Error) {
-      switch (error.message) {
-        case 'ID_INVALIDO':
-          return res.status(400).json({
-            ok: false,
-            message: 'El id de la publicación es inválido'
-          })
-        case 'USUARIO_INVALIDO':
-          return res.status(401).json({
-            ok: false,
-            message: 'Usuario no autenticado'
-          })
-        case 'PUBLICACION_NO_EXISTE':
-          return res.status(404).json({
-            ok: false,
-            message: 'La publicación no existe'
-          })
-        case 'NO_AUTORIZADO':
-          return res.status(403).json({
-            ok: false,
-            message: 'No puede cancelar publicidad de otros usuarios'
-          })
-        case 'PUBLICACION_YA_ELIMINADA':
-          return res.status(409).json({
-            ok: false,
-            message: 'La publicación ya fue eliminada'
-          })
-        case 'PUBLICACION_NO_PUBLICITADA':
-          return res.status(400).json({
-            ok: false,
-            message: 'La publicación no está publicitada'
-          })
-      }
-    }
-
-    console.error('Error al cancelar publicidad:', error)
-    return res.status(500).json({
-      ok: false,
-      message: 'Error al cancelar publicidad'
-    })
-  }
-}
-
-/**
- * HU-11: Obtener estado de publicidad
- * GET /api/publicaciones/:id/publicitar/estado
- */
-export const obtenerEstadoPublicidadController = async (req: AuthRequest, res: Response) => {
-  const publicacionId = Number(req.params.id)
-
-  try {
-    const resultado = await obtenerEstadoPublicidadService(publicacionId)
-
-    return res.status(200).json({
-      ok: true,
+      message: 'Contenido multimedia actualizado correctamente',
       data: resultado
     })
   } catch (error) {
@@ -593,18 +420,68 @@ export const obtenerEstadoPublicidadController = async (req: AuthRequest, res: R
             ok: false,
             message: 'El id de la publicación es inválido'
           })
+
+        case 'USUARIO_INVALIDO':
+          return res.status(401).json({
+            ok: false,
+            message: 'Usuario no autenticado'
+          })
+
         case 'PUBLICACION_NO_EXISTE':
           return res.status(404).json({
             ok: false,
             message: 'La publicación no existe'
           })
+
+        case 'NO_AUTORIZADO':
+          return res.status(403).json({
+            ok: false,
+            message: 'No puede editar multimedia de publicaciones de otros usuarios'
+          })
+
+        case 'PUBLICACION_YA_ELIMINADA':
+          return res.status(409).json({
+            ok: false,
+            message: 'La publicación ya fue eliminada'
+          })
+
+        case 'VIDEO_INVALIDO':
+          return res.status(400).json({
+            ok: false,
+            message: 'Solo se permiten enlaces de YouTube o plataformas permitidas.'
+          })
+
+        case 'MINIMO_UNA_IMAGEN':
+          return res.status(400).json({
+            ok: false,
+            message: 'La publicación debe tener al menos 1 imagen.'
+          })
+
+        case 'LIMITE_IMAGENES':
+          return res.status(400).json({
+            ok: false,
+            message: 'Has alcanzado el límite máximo de 5 imágenes.'
+          })
+
+        case 'FORMATO_IMAGEN_INVALIDO':
+          return res.status(400).json({
+            ok: false,
+            message: 'Formato no válido. Solo se permiten archivos JPG y PNG.'
+          })
+
+        case 'LIMIT_FILE_SIZE':
+          return res.status(400).json({
+            ok: false,
+            message: 'El archivo supera el tamaño máximo permitido de 5MB por imagen.'
+          })
       }
     }
 
-    console.error('Error al obtener estado de publicidad:', error)
+    console.error('Error al editar multimedia de publicación:', error)
+
     return res.status(500).json({
       ok: false,
-      message: 'Error al obtener estado de publicidad'
+      message: 'No se pudo actualizar el contenido multimedia'
     })
   }
 }

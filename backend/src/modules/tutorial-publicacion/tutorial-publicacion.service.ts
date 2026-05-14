@@ -25,7 +25,6 @@ export const getTutorialPublicacionEstadoService = async ({
     return {
       debeMostrarTutorial: true,
       confirmado: false,
-      vistoEn: null,
       confirmadoEn: null
     }
   }
@@ -33,7 +32,6 @@ export const getTutorialPublicacionEstadoService = async ({
   return {
     debeMostrarTutorial: !estado.confirmado,
     confirmado: estado.confirmado,
-    vistoEn: estado.vistoEn ? estado.vistoEn.toISOString() : null,
     confirmadoEn: estado.confirmadoEn ? estado.confirmadoEn.toISOString() : null
   }
 }
@@ -45,8 +43,6 @@ export const confirmTutorialPublicacionService = async ({
 
   return {
     confirmado: estado.confirmado,
-    confirmadoEn: estado.confirmadoEn
-      ? estado.confirmadoEn.toISOString()
-      : new Date().toISOString()
+    confirmadoEn: estado.confirmadoEn ? estado.confirmadoEn.toISOString() : null
   }
 }

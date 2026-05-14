@@ -36,20 +36,24 @@ export default function MisPublicacionesList() {
     return {
       id: pub.id,
       titulo: pub.titulo,
-      precio: parseFloat(pub.inmueble?.precio || '0'),
+      precio: Number(pub.precio ?? pub.inmueble?.precio ?? 0),
       ubicacion:
+        pub.ubicacion ||
         pub.inmueble?.ubicacion?.direccion ||
         pub.inmueble?.ubicacion?.zona ||
         'Ubicación no especificada',
-      nroBanos: pub.inmueble?.nroBanos ?? null,
-      nroCuartos: pub.inmueble?.nroCuartos ?? null,
-      superficieM2: pub.inmueble?.superficieM2
-        ? parseFloat(pub.inmueble.superficieM2)
-        : null,
-      imagenUrl: pub.multimedia?.[0]?.url || pub.usuario?.avatar || null,
-      tipoOperacion: pub.inmueble?.tipoAccion || 'VENTA',
-      activa: pub.estado === 'ACTIVA',
-      promoted: pub.promoted ?? false,
+      nroBanos: pub.nroBanos ?? pub.inmueble?.nroBanos ?? null,
+      nroCuartos: pub.nroCuartos ?? pub.inmueble?.nroCuartos ?? null,
+      superficieM2:
+        pub.superficieM2 ??
+        (pub.inmueble?.superficieM2 ? Number(pub.inmueble.superficieM2) : null),
+      imagenUrl: pub.imagenUrl || pub.multimedia?.[0]?.url || pub.usuario?.avatar || null,
+      tipoOperacion: pub.tipoOperacion || pub.inmueble?.tipoAccion || 'VENTA',
+      activa: pub.estado ? pub.estado === 'ACTIVA' : pub.activa,
+
+      totalVisualizaciones: Number(pub.totalVisualizaciones ?? 0),
+      totalCompartidos: Number(pub.totalCompartidos ?? 0),
+
       metricas: pub.metricas || {
         visitas: 0,
         favoritos: 0,
@@ -63,24 +67,28 @@ export default function MisPublicacionesList() {
       setLoading(true)
       setError('')
 
-      const data = await publicacionService.obtenerMisPublicaciones()
+      const data = await publicacionService.obtenerMisPublicacionesConEstadisticas()
 
-      if (data.ok) {
-        const publicacionesTransformadas = data.publicaciones
-          .filter((pub: any) => pub.estado !== 'ELIMINADA')
-          .map(transformarPublicacion)
+      const publicacionesTransformadas = data
+        .filter((pub: any) => pub.estado !== 'ELIMINADA')
+        .map(transformarPublicacion)
 
-        setPublicaciones(publicacionesTransformadas)
+      setPublicaciones(publicacionesTransformadas)
 
-        setEstadisticas({
-          ...data.estadisticas,
-          limite: data.estadisticas?.tieneSuscripcion
-            ? data.estadisticas.limite
-            : Math.max(3, data.estadisticas?.limite ?? 3)
-        })
-      } else {
-        setError(data.msg || 'Error al cargar las publicaciones')
-      }
+      const publicacionesActivasCalculadas = publicacionesTransformadas.filter(
+        (pub: MisPublicacionesItem) => pub.activa === true
+      )
+
+      setEstadisticas((prev) => ({
+        ...prev,
+        totalPublicaciones: publicacionesTransformadas.length,
+        limite: Math.max(3, publicacionesActivasCalculadas.length),
+        disponibles: Math.max(
+          0,
+          Math.max(3, publicacionesActivasCalculadas.length) -
+            publicacionesActivasCalculadas.length
+        )
+      }))
     } catch (error) {
       console.error('Error cargando publicaciones:', error)
       setError('Error de conexión con el servidor')
