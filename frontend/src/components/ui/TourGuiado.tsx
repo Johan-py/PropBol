@@ -309,14 +309,17 @@ useEffect(() => {
   }, []);
 
   useEffect(() => {
-    if (showTour) {
-      document.body.style.overflow = "hidden";
-      window.scrollTo({ top: 0, behavior: "auto" });
-      return () => {
-        document.body.style.overflow = "";
-      };
-    }
-  }, [showTour]);
+  if (showTour) {
+    document.body.style.overflow = "hidden";
+    window.scrollTo({ top: 0, behavior: "auto" });
+  } else {
+    document.body.style.overflow = "";
+  }
+
+  return () => {
+    document.body.style.overflow = "";
+  };
+}, [showTour]);
 
   useEffect(() => {
     if (!showTour) return;
