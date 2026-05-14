@@ -1,6 +1,6 @@
 'use client'
 
-import { Newspaper, Clock, CreditCard } from 'lucide-react'
+import { Newspaper, Clock, CreditCard, MessageSquareText, Cog } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
@@ -9,6 +9,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 export default function AdminDashboard() {
   const [pendingCount, setPendingCount] = useState<number | null>(null)
   const [pendingPayments, setPendingPayments] = useState<number | null>(null)
+  const [testimonioCount, setTestimonioCount] = useState<number | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -18,11 +19,14 @@ export default function AdminDashboard() {
         window.dispatchEvent(new Event("propbol:token-guardado"));
         if (!token) return
 
-        const [blogsRes, pagosRes] = await Promise.all([
+        const [blogsRes, pagosRes, testimoniosRes] = await Promise.all([
           fetch(`${API_URL}/api/blogs/admin?estado=PENDIENTE&limit=1`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
           fetch(`${API_URL}/api/transacciones/admin`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch(`${API_URL}/api/admin/testimonios`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ])
@@ -35,8 +39,12 @@ export default function AdminDashboard() {
           const data: Array<{ estado: string }> = await pagosRes.json()
           setPendingPayments(data.filter((t) => t.estado === 'PENDIENTE').length)
         }
+        if (testimoniosRes.ok) {
+          const data = await testimoniosRes.json()
+          setTestimonioCount(Array.isArray(data) ? data.length : data.total || 0)
+        }
       } catch (error) {
-        console.error('Error fetching pending counts:', error)
+        console.error('Error fetching pending counts:', error)     
       } finally {
         setIsLoading(false)
       }
@@ -116,6 +124,37 @@ export default function AdminDashboard() {
                 </div>
                 <div className="h-8 w-8 rounded-full bg-stone-50 flex items-center justify-center transition-colors group-hover:bg-amber-600 group-hover:text-white">
                   <Clock className="h-4 w-4" />
+                </div>
+              </Link>
+            </div>
+          </section>
+
+          {/* Management Section */}
+          <section className="space-y-6">
+            <div className="flex items-center gap-2 border-b border-stone-200 pb-2">
+              <Cog className="h-5 w-5 text-amber-600" />
+              <h2 className="text-xl font-bold font-montserrat text-stone-900">Gestión</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Testimonios */}
+              <Link
+                href="/admin/testimonios"
+                className="group flex items-center justify-between rounded-2xl border border-stone-100 bg-white p-6 shadow-sm transition-all hover:shadow-md hover:border-amber-600"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="rounded-xl bg-amber-50 p-3 text-amber-600 transition-colors group-hover:bg-amber-100">
+                    <MessageSquareText className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium font-inter text-stone-500">Gestión de Testimonios</p>
+                    <h3 className="text-2xl font-bold font-montserrat text-stone-900">
+                      {isLoading ? <div className="h-8 w-12 bg-stone-100 animate-pulse rounded"></div> : (testimonioCount ?? 0)}
+                    </h3>
+                  </div>
+                </div>
+                <div className="h-8 w-8 rounded-full bg-stone-50 flex items-center justify-center transition-colors group-hover:bg-amber-600 group-hover:text-white">
+                  <Cog className="h-4 w-4" />
                 </div>
               </Link>
             </div>

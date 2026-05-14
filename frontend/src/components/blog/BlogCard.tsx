@@ -55,7 +55,7 @@ export default function BlogCard({
             alt={title}
             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-stone-900/5 transition-opacity duration-500 group-hover:opacity-0" />
+          <div className="absolute inset-0 bg-black/5 transition-opacity duration-500 group-hover:opacity-0" />
         </div>
 
         <div className="flex flex-1 flex-col p-6 sm:p-8">

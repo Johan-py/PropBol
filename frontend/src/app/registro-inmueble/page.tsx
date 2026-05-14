@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { ErrorValidacion } from "../../types/publicacion";
 import ErrorPanel from "../../components/publicacion/ErrorPanel";
+import VideoPublicacionModal from '../../components/video-publicacion/VideoPublicacionModal'
 
 const MapaPinSelector = dynamic(
   () => import('../../components/MapaPinSelector'),
@@ -28,6 +29,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 export default function MiRegistroPage() {
   const router = useRouter()
+  const [mostrarVideo, setMostrarVideo] = useState(true)
 
   const [datos, setDatos] = useState({
     titulo: '',
@@ -119,34 +121,12 @@ const [poiSeleccionado, setPoiSeleccionado] = useState<number | null>(null)
   }
 
   useEffect(() => {
-    const validarFlujo = async () => {
-      const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token')
 
-      if (!token) {
-        router.push('/sign-in')
-        return
-      }
-
-      try {
-        const response = await fetch(`${API_URL}/api/publicaciones/flujo`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-
-        const result = await response.json()
-
-        if (!response.ok && result.message === 'LIMIT_REACHED') {
-          router.push('/Cobros-Limite')
-        }
-      } catch (error) {
-        console.error(error)
-      }
-    }
-
-    validarFlujo()
-  }, [router])
+  if (!token) {
+    router.push('/sign-in')
+  }
+}, [router])
 
   const limpiarError = () => {
     setMensajeError('')
@@ -697,6 +677,13 @@ const [poiSeleccionado, setPoiSeleccionado] = useState<number | null>(null)
   const errorMapa = campoError === 'mapa'
 
   return (
+     <>
+    {mostrarVideo && (
+      <VideoPublicacionModal
+        onClose={() => setMostrarVideo(false)}
+        onContinue={() => setMostrarVideo(false)}
+      />
+    )}
     <div className="min-h-screen bg-white text-gray-900">
       <main className="max-w-6xl mx-auto p-8 md:p-12">
         <h1 className="text-2xl font-bold mb-6 text-gray-950">Registro Inmueble</h1>
@@ -957,47 +944,47 @@ const [poiSeleccionado, setPoiSeleccionado] = useState<number | null>(null)
               </div>
 
               <div className="mt-6">
-                <div className="flex items-center justify-between mb-4 gap-2">
+<div className="flex items-center justify-between mb-4 gap-4">
+                  <div className="flex gap-3 flex-wrap">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setModoPinActivo(true)
+                        setModoDifuminadoActivo(false)
+                        setVertices([]) // Lógica de develop: borra el polígono anterior
+                      }}
+                      className={`px-4 py-2 rounded-full text-sm transition-colors ${
+                        modoPinActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
+                      }`}
+                    >
+                      Pin
+                    </button>
 
-  <div className="flex gap-2">
-    <button
-      type="button"
-      onClick={() => {
-        setModoPinActivo(true)
-        setModoDifuminadoActivo(false)
-      }}
-      className={`px-4 py-2 rounded-full text-xs ${
-        modoPinActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
-      }`}
-    >
-      Pin
-    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setModoDifuminadoActivo(true)
+                        setModoPinActivo(false)
+                        setPinCoords(null) // Lógica de develop: borra el pin anterior
+                      }}
+                      className={`px-4 py-2 rounded-full text-sm transition-colors ${
+                        modoDifuminadoActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
+                      }`}
+                    >
+                      Difuminado
+                    </button>
 
-    <button
-      type="button"
-      onClick={() => {
-        setModoDifuminadoActivo(true)
-        setModoPinActivo(false)
-      }}
-      className={`px-4 py-2 rounded-full text-xs ${
-        modoDifuminadoActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
-      }`}
-    >
-      Difuminado
-    </button>
+                    <button
+                      type="button"
+                      disabled={!pinCoords}
+                      onClick={() => {
+                        if (!pinCoords) return
 
-    <button
-      type="button"
-      disabled={!pinCoords}
-      onClick={() => {
-        if (!pinCoords) return
-
-       const referenciasEnEsePunto = pois.filter(
-  (poi) =>
-    poi.lat === pinCoords.lat &&
-    poi.lng === pinCoords.lng
-)
-
+                        const referenciasEnEsePunto = pois.filter(
+                          (poi) =>
+                            poi.lat === pinCoords.lat &&
+                            poi.lng === pinCoords.lng
+                        )
 if (pois.length >= 12) {
   alert('Máximo 12 referencias')
   return
@@ -1138,5 +1125,6 @@ if (poiSeleccionado !== null) {
         </div>
       </main>
     </div>
+   </>
   )
 }

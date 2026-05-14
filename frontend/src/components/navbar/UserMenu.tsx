@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import type { User } from "../layout/Navbar";
-import { User as UserIcon, Eye, FileText, Map, Star, Shield, LayoutDashboard } from "lucide-react";
+import { User as UserIcon, Eye, FileText, Map, Star, Shield, LayoutDashboard, CheckCircle } from "lucide-react";
 
 type UserMenuProps = {
   user: User | null;
@@ -267,6 +267,19 @@ export default function UserMenu({
                 label="Mis comparaciones"
                 href="/mis-comparaciones"
                 icon={FileText}
+                onClick={onClosePanel}
+              />
+              <MenuLink
+                label="Sesiones activas"
+                href="/profile/sesiones-activas"
+                icon={CheckCircle}
+                onClick={onClosePanel}
+              />
+              {/* HU13: acceso a ajustes de visualización y accesibilidad */}
+              <MenuLink
+                label="Ajustes de Visualización"
+                href="/profile/ajustes-visualizacion"
+                icon={Eye}
                 onClick={onClosePanel}
               />
               <MenuLink
