@@ -8,14 +8,113 @@
  * 🟢 You can import this file directly.
  */
 
+export const Categoria = {
+  CASA: 'CASA',
+  DEPARTAMENTO: 'DEPARTAMENTO',
+  TERRENO: 'TERRENO',
+  OFICINA: 'OFICINA',
+  CUARTO: 'CUARTO',
+  TERRENO_MORTUORIO: 'TERRENO_MORTUORIO'
+} as const
+
+export type Categoria = (typeof Categoria)[keyof typeof Categoria]
+
+export const EstadoBlog = {
+  BORRADOR: 'BORRADOR',
+  PENDIENTE: 'PENDIENTE',
+  PUBLICADO: 'PUBLICADO',
+  RECHAZADO: 'RECHAZADO'
+} as const
+
+export type EstadoBlog = (typeof EstadoBlog)[keyof typeof EstadoBlog]
+
+export const EstadoInmueble = {
+  ACTIVO: 'ACTIVO',
+  INACTIVO: 'INACTIVO',
+  VENDIDO: 'VENDIDO',
+  ALQUILADO: 'ALQUILADO',
+  RESERVADO: 'RESERVADO'
+} as const
+
+export type EstadoInmueble = (typeof EstadoInmueble)[keyof typeof EstadoInmueble]
+
+export const EstadoPublicacion = {
+  ACTIVA: 'ACTIVA',
+  PAUSADA: 'PAUSADA',
+  ELIMINADA: 'ELIMINADA'
+} as const
+
+export type EstadoPublicacion = (typeof EstadoPublicacion)[keyof typeof EstadoPublicacion]
+
+export const Genero = {
+  MASCULINO: 'MASCULINO',
+  FEMENINO: 'FEMENINO',
+  OTRO: 'OTRO',
+  PREFIERO_NO_DECIR: 'PREFIERO_NO_DECIR'
+} as const
+
+export type Genero = (typeof Genero)[keyof typeof Genero]
+
+export const RolNombre = {
+  ADMIN: 'ADMIN',
+  PROPIETARIO: 'PROPIETARIO',
+  AGENTE: 'AGENTE',
+  VISITANTE: 'VISITANTE'
+} as const
+
+export type RolNombre = (typeof RolNombre)[keyof typeof RolNombre]
+
+export const TipoAccion = {
+  VENTA: 'VENTA',
+  ALQUILER: 'ALQUILER',
+  ANTICRETO: 'ANTICRETO'
+} as const
+
+export type TipoAccion = (typeof TipoAccion)[keyof typeof TipoAccion]
+
+export const TipoInteraccion = {
+  CLICK: 'CLICK',
+  HOVER: 'HOVER',
+  ZOOM: 'ZOOM',
+  DRAG: 'DRAG'
+} as const
+
+export type TipoInteraccion = (typeof TipoInteraccion)[keyof typeof TipoInteraccion]
+
+export const TipoMarcador = {
+  NORMAL: 'NORMAL',
+  DESTACADO: 'DESTACADO',
+  CLUSTER: 'CLUSTER'
+} as const
+
+export type TipoMarcador = (typeof TipoMarcador)[keyof typeof TipoMarcador]
+
+export const TipoMultimedia = {
+  IMAGEN: 'IMAGEN',
+  VIDEO: 'VIDEO'
+} as const
+
+export type TipoMultimedia = (typeof TipoMultimedia)[keyof typeof TipoMultimedia]
+
 export const categoria = {
   CASA: 'CASA',
   DEPARTAMENTO: 'DEPARTAMENTO',
   TERRENO: 'TERRENO',
-  OFICINA: 'OFICINA'
+  OFICINA: 'OFICINA',
+  CUARTO: 'CUARTO',
+  TERRENO_MORTUORIO: 'TERRENO_MORTUORIO'
 } as const
 
 export type categoria = (typeof categoria)[keyof typeof categoria]
+
+export const estado_blog = {
+  BORRADOR: 'BORRADOR',
+  PENDIENTE: 'PENDIENTE',
+  PUBLICADO: 'PUBLICADO',
+  RECHAZADO: 'RECHAZADO'
+} as const
+
+export type estado_blog = (typeof estado_blog)[keyof typeof estado_blog]
 
 export const estado_inmueble = {
   ACTIVO: 'ACTIVO',
@@ -38,19 +137,11 @@ export type estado_publicacion = (typeof estado_publicacion)[keyof typeof estado
 export const genero = {
   MASCULINO: 'MASCULINO',
   FEMENINO: 'FEMENINO',
-  OTRO: 'OTRO'
+  OTRO: 'OTRO',
+  PREFIERO_NO_DECIR: 'PREFIERO_NO_DECIR'
 } as const
 
 export type genero = (typeof genero)[keyof typeof genero]
-
-export const rol_nombre = {
-  ADMIN: 'ADMIN',
-  PROPIETARIO: 'PROPIETARIO',
-  AGENTE: 'AGENTE',
-  VISITANTE: 'VISITANTE'
-} as const
-
-export type rol_nombre = (typeof rol_nombre)[keyof typeof rol_nombre]
 
 export const tipo_accion = {
   VENTA: 'VENTA',
