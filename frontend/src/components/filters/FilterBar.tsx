@@ -35,9 +35,6 @@ const AMENITIES_MAP: Record<string, string> = {
   '1': 'Piscina', '2': 'Terraza', '3': 'Jardín', '4': 'Cochera', '5': 'Gimnasio',
   '6': 'Ascensor', '7': 'Aire', '8': 'Amueblado', '9': 'Parrillero', '10': 'Seguridad'
 }
-const LABELS_MAP: Record<string, string> = {
-  '1': 'Inversión', '2': 'Preventa', '3': 'Nuevo', '4': 'Oferta'
-}
 
 interface FilterBarProps {
   onSearch?: (filtros: {
@@ -295,11 +292,17 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       })
     }
 
-
+    const etiquetasNombres: Record<string, string> = (() => {
+      try {
+        return JSON.parse(sessionStorage.getItem('propbol_etiquetas_nombres') || '{}')
+      } catch {
+        return {}
+      }
+    })()
 
     const labels = params.get('labels')?.split(',').filter(Boolean) || []
     labels.forEach(l => filters.push({
-      id: `label-${l}`, label: `Etiqueta: ${LABELS_MAP[l] || l}`,
+      id: `label-${l}`, label: etiquetasNombres[l] || `Etiqueta ${l}`,
       onRemove: () => {
         const newLb = labels.filter(id => id !== l)
         if (newLb.length > 0) params.set('labels', newLb.join(','))
@@ -620,7 +623,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
 
               {activeFilters.map(filter => (
                 <div key={filter.id} className="group flex items-center gap-1.5 bg-[#fdf3e7] border border-orange-200 text-orange-800 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all hover:bg-orange-100 animate-in fade-in zoom-in duration-200">
-                  <span>{filter.label}</span>
+                  <span className="max-w-[160px] truncate">{filter.label}</span>
                   <button
                     type="button"
                     onClick={(e) => { e.preventDefault(); filter.onRemove() }}
