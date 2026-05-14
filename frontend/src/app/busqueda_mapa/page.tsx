@@ -1558,7 +1558,11 @@ function BusquedaMapaContent() {
           className={`bg-white border-r border-stone-200 flex flex-col z-10 transition-[width] duration-200 min-h-0 overflow-hidden ${
             isSidebarOpen ? 'w-full md:h-full h-[65dvh]' : 'w-0'
           }`}
-          style={isSidebarOpen ? { width: isMounted ? effectiveSidebarWidth : 450 } : { width: 0 }}
+          style={
+            isSidebarOpen 
+              ? { width: isMounted ? (activeSidebarView === 'results' && !isPriceFilterOpen ? effectiveSidebarWidth : 450) : 450 } 
+              : { width: 0 }
+          }
         >
           {/* ✅ MODIFICADO: ternario que alterna entre filtro de precio y resultados */}
           {isPriceFilterOpen ? (
@@ -1959,8 +1963,8 @@ function BusquedaMapaContent() {
           ) : null}
         </aside>
 
-        {/* Divider resizable (solo desktop con sidebar abierto) */}
-        {isSidebarOpen && (
+        {/* Divider resizable (solo desktop con sidebar abierto, en vista de resultados y si Precio está cerrado) */}
+        {isSidebarOpen && activeSidebarView === 'results' && !isPriceFilterOpen && (
           <div
             className="hidden md:block w-1 bg-stone-200 hover:bg-orange-300 active:bg-orange-400 cursor-col-resize relative z-20"
             onMouseDown={(e) => {
