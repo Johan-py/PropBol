@@ -9,7 +9,7 @@ import zonaRoutes from "./modules/perfil/zonaUsario.routes.js";
 import telemetriaRouter from "./modules/perfil/telemetria.routes.js";
 import locationRoutes from "./modules/locations/locations.routes.js";
 import consumoRoutes from "./modules/LimiteSuscripcion/consumo.routes.js";
-import { iniciarCronRetroalimentacion } from './modules/recomendaciones/retroalimentacionCron.js'
+import { iniciarCronRetroalimentacion } from "./modules/recomendaciones/retroalimentacionCron.js";
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -52,8 +52,8 @@ import {
   requestActivationCodeController,
   activateAccountByCodeController,
   resendRegisterCodeController,
-} from './modules/auth/auth.controller.js'
-import { requireAuth } from './middleware/auth.middleware.js'
+} from "./modules/auth/auth.controller.js";
+import { requireAuth } from "./middleware/auth.middleware.js";
 
 // --------------------
 // ROUTES / HANDLERS
@@ -128,16 +128,16 @@ import historialRoutes from "./modules/perfil/historial.routes.js";
 import { verifyEmailTransport } from "./lib/email.service.js";
 
 // FAVORITES
-import favoritesRoutes from './modules/favorites/favorites.routes.js'
-import telemetriaRoutes from './modules/telemetria/telemetria.routes.js'
-import recomendacionesRoutes from './modules/recomendaciones/recomendaciones.routes.js'
-import transaccionesRoutes from './modules/transacciones/transacciones.routes.js'
-import suscripcionesRoutes from './modules/suscripciones/suscripciones.routes.js'
-import plansRoutes from './modules/plans/plans.routes.js'
-import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js'
-import whatsappRoutes from './modules/whatsapp/whatsapp.routes.js'
-import adminTestimoniosRoutes from './modules/testimonios/adminTestimonios.routes.js'
-import sesionRoutes from './modules/perfil/sesion.routes.js'
+import favoritesRoutes from "./modules/favorites/favorites.routes.js";
+import telemetriaRoutes from "./modules/telemetria/telemetria.routes.js";
+import recomendacionesRoutes from "./modules/recomendaciones/recomendaciones.routes.js";
+import transaccionesRoutes from "./modules/transacciones/transacciones.routes.js";
+import suscripcionesRoutes from "./modules/suscripciones/suscripciones.routes.js";
+import plansRoutes from "./modules/plans/plans.routes.js";
+import historialBusquedaRoutes from "./modules/perfil/historialBusqueda.routes.js";
+import whatsappRoutes from "./modules/whatsapp/whatsapp.routes.js";
+import adminTestimoniosRoutes from "./modules/testimonios/adminTestimonios.routes.js";
+import sesionRoutes from "./modules/perfil/sesion.routes.js";
 
 import "./jobs/suscripcion.job.js";
 
@@ -173,10 +173,10 @@ app.use(
   }),
 );
 
-app.use(express.json({ limit: '100mb' }))
-app.use(express.urlencoded({ extended: true, limit: '100mb' }))
-app.use(express.json())
-app.use('/uploads', express.static(path.resolve('uploads')))
+app.use(express.json({ limit: "100mb" }));
+app.use(express.urlencoded({ extended: true, limit: "100mb" }));
+app.use(express.json());
+app.use("/uploads", express.static(path.resolve("uploads")));
 
 // --------------------
 // RUTAS LEGACY
@@ -197,7 +197,7 @@ app.get("/api/users/:id/publicaciones/free", authMiddleware, (_req, res) => {
 app.get(
   "/api/publicaciones/validar-limite/:id",
   authMiddleware,
-  validarPublicacionesFree
+  validarPublicacionesFree,
 );
 
 app.use("/api/publicaciones-legacy", publicacionesRoutes);
@@ -394,7 +394,7 @@ app.post("/api/publicaciones", (req, res) => {
 // --------------------
 // TESTIMONIOSADMIN
 // --------------------
-app.use('/api/admin', adminTestimoniosRoutes)
+app.use("/api/admin", adminTestimoniosRoutes);
 
 // --------------------
 // LEVANTAR SERVIDOR
@@ -432,7 +432,7 @@ async function seedPlanes() {
   console.log("✅ Planes de suscripción inicializados en DB");
 }
 
-iniciarCronRetroalimentacion()
+iniciarCronRetroalimentacion();
 
 app.listen(PORT, async () => {
   console.log(`🚀 Server running on port ${PORT}`);
@@ -452,4 +452,4 @@ app.listen(PORT, async () => {
   }
 });
 
-export default app
+export default app;
