@@ -280,23 +280,14 @@ export const propertiesRepository = {
         }))
       ]
     }
-
+    
     // HU6 - Filtro solo ofertas
     if (filtros.soloOfertas === true) {
-      where.AND = [
-        ...(where.AND || []),
-        {
-          precio_anterior: {
-            not: null
-          }
-        },
-        {
-          precio: {
-            gt: 0
-          }
-        }
-      ]
-    }
+      where.precio = {
+        ...((where.precio as object) ?? {}),
+        lt: prisma.inmueble.fields.precio_anterior
+      };
+      }
 
     // ── ORDER BY ───────────────────────────────────────────────────────────
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
