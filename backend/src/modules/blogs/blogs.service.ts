@@ -1,6 +1,9 @@
 import { estado_blog } from "@prisma/client";
 import { blogsRepository, comentariosRepository } from "./blogs.repository.js";
-import { createBlogNotificationService } from "../notificaciones/notificaciones.service.js";
+import {
+  createBlogNotificationService,
+  createAdminBlogPendingNotificationService,
+} from "../notificaciones/notificaciones.service.js";
 
 // BLOGS SERVICE PE
 
@@ -35,7 +38,7 @@ export const blogsService = {
     const estado: estado_blog =
       data.accion === "pendiente" ? "PENDIENTE" : "BORRADOR";
 
-    return blogsRepository.create({
+    const blog = await blogsRepository.create({
       titulo: data.titulo,
       contenido: data.contenido,
       imagen: data.imagen,
@@ -43,6 +46,19 @@ export const blogsService = {
       usuario_id,
       estado,
     });
+
+    if (estado === "PENDIENTE") {
+      try {
+        await createAdminBlogPendingNotificationService({
+          blog_id: blog.id,
+          blogTitulo: blog.titulo,
+        });
+      } catch (e) {
+        console.error("[Blog] Error al notificar al admin (crear):", e);
+      }
+    }
+
+    return blog;
   },
   async actualizar(
     id: number,
@@ -79,13 +95,28 @@ export const blogsService = {
       estado = "BORRADOR";
     }
 
-    return blogsRepository.update(id, {
+    const wasNotPending = blog.estado !== "PENDIENTE";
+
+    const updatedBlog = await blogsRepository.update(id, {
       titulo: data.titulo,
       contenido: data.contenido,
       imagen: data.imagen,
       categoria_id: data.categoria_id,
       ...(estado ? { estado } : {}),
     });
+
+    if (wasNotPending && updatedBlog.estado === "PENDIENTE") {
+      try {
+        await createAdminBlogPendingNotificationService({
+          blog_id: id,
+          blogTitulo: updatedBlog.titulo,
+        });
+      } catch (e) {
+        console.error("[Blog] Error al notificar al admin (actualizar):", e);
+      }
+    }
+
+    return updatedBlog;
   },
   async subirImagen(file: Express.Multer.File, usuario_id: number) {
     return blogsRepository.uploadImage(file, usuario_id);
@@ -108,13 +139,17 @@ export const blogsService = {
       razon_rechazo,
     );
 
-    await createBlogNotificationService({
-      usuarioId: blog.usuario_id,
-      blog_id: id,
-      blogTitulo: blog.titulo,
-      tipo: estado === "PUBLICADO" ? "BLOG_APROBADO" : "BLOG_RECHAZADO",
-      ...(razon_rechazo ? { razonRechazo: razon_rechazo } : {}),
-    });
+    try {
+      await createBlogNotificationService({
+        usuarioId: blog.usuario_id,
+        blog_id: id,
+        blogTitulo: blog.titulo,
+        tipo: estado === "PUBLICADO" ? "BLOG_APROBADO" : "BLOG_RECHAZADO",
+        ...(razon_rechazo ? { razonRechazo: razon_rechazo } : {}),
+      });
+    } catch (notifError) {
+      console.error("[Blog] Error al crear notificación de blog:", notifError);
+    }
 
     return updatedBlog;
   },
@@ -124,7 +159,18 @@ export const blogsService = {
     if (blog.usuario_id !== usuario_id) throw new Error("FORBIDDEN");
     if (blog.estado !== "RECHAZADO") throw new Error("BLOG_NOT_REJECTED");
 
-    return blogsRepository.resubmit(id);
+    const updatedBlog = await blogsRepository.resubmit(id);
+
+    try {
+      await createAdminBlogPendingNotificationService({
+        blog_id: id,
+        blogTitulo: blog.titulo,
+      });
+    } catch (e) {
+      console.error("[Blog] Error al notificar al admin (resubmit):", e);
+    }
+
+    return updatedBlog;
   },
   async eliminar(id: number, usuario_id: number) {
     const blog = await blogsRepository.findById(id);
