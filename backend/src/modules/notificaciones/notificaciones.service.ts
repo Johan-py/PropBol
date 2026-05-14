@@ -352,6 +352,34 @@ export const createBlogNotificationService = async ({
   return notification;
 };
 
+export const createAdminBlogPendingNotificationService = async ({
+  blog_id,
+  blogTitulo,
+}: {
+  blog_id: number;
+  blogTitulo: string;
+}) => {
+  const admins = await prisma.usuario.findMany({
+    where: { rol: { nombre: "ADMIN" }, activo: true },
+    select: { id: true },
+  });
+
+  if (admins.length === 0) return;
+
+  await Promise.all(
+    admins.map(async (admin) => {
+      const notification = await createNotificationRepository({
+        usuarioId: admin.id,
+        titulo: "Blog pendiente de revisión",
+        mensaje: `El blog "${blogTitulo}" está esperando tu revisión.`,
+        tipo: "BLOG_PENDIENTE",
+        blog_id,
+      });
+      emitNotificationEvent(admin.id, "created", notification.id);
+    }),
+  );
+};
+
 export const archiveNotificationService = async (
   id: number,
   usuarioId: number,

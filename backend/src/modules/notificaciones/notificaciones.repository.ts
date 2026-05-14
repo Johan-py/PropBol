@@ -35,7 +35,11 @@ type SoftDeleteNotificationParams = {
   usuarioId: number;
 };
 
-export type TipoNotificacion = "GENERAL" | "BLOG_APROBADO" | "BLOG_RECHAZADO";
+export type TipoNotificacion =
+  | "GENERAL"
+  | "BLOG_APROBADO"
+  | "BLOG_RECHAZADO"
+  | "BLOG_PENDIENTE";
 
 type CreateNotificationParams = {
   usuarioId: number;
