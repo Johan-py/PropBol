@@ -9,6 +9,7 @@ import zonaRoutes from './modules/perfil/zonaUsario.routes.js'
 import telemetriaRouter from './modules/perfil/telemetria.routes.js'
 import locationRoutes from './modules/locations/locations.routes.js'
 import consumoRoutes from './modules/LimiteSuscripcion/consumo.routes.js'
+import { iniciarCronRetroalimentacion } from './modules/recomendaciones/retroalimentacionCron.js'
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -404,6 +405,8 @@ async function seedPlanes() {
   })
   console.log('✅ Planes de suscripción inicializados en DB')
 }
+
+iniciarCronRetroalimentacion()
 
 app.listen(PORT, async () => {
   console.log(`🚀 Server running on port ${PORT}`)
