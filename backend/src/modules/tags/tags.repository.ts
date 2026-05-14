@@ -1,13 +1,13 @@
 import { prisma } from '../../lib/prisma.client.js'
 
 const findAll = async () => {
-  return prisma.Tag.findMany({
+  return prisma.tag.findMany({
     orderBy: { nombre: 'asc' }
   })
 }
 
 const findByName = async (nombre: string) => {
-  return prisma.Tag.findFirst({
+  return prisma.tag.findFirst({
     where: {
       nombre: {
         equals: nombre.trim(),
@@ -21,7 +21,7 @@ const findOrCreate = async (nombre: string) => {
   const existing = await findByName(nombre)
   if (existing) return existing
 
-  return prisma.Tag.create({
+  return prisma.tag.create({
     data: { nombre: nombre.trim() }
   })
 }

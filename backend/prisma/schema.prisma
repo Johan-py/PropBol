@@ -121,8 +121,13 @@ model Notificacion {
   eliminada     Boolean   @default(false)
   archivada     Boolean   @default(false)
   usuarioId     Int
+  tipo          String    @default("GENERAL") @db.VarChar(30)
+  blog_id       Int?
+  blog          blog?     @relation(fields: [blog_id], references: [id], onUpdate: NoAction, map: "notificacion_blog_fk")
   usuario       Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "notificacion_usuario_id_fkey")
 
+  @@index([blog_id], map: "idx_notificacion_blog")
+  @@index([usuarioId, leida], map: "idx_notificacion_usuario_leida")
   @@map("notificacion")
 }
 
@@ -679,6 +684,7 @@ model blog {
   usuario           Usuario        @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "blog_usuario_fk")
   blog_rechazo      blog_rechazo[]
   comentario        comentario[]
+  notificacion      Notificacion[]
 
   @@index([estado])
   @@index([usuario_id], map: "blog_usuario_idx")
