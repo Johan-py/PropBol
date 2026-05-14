@@ -161,7 +161,7 @@ export default function NotificationDetailPage() {
               Mensaje
             </h2>
 
-            <p className="whitespace-pre-line text-base leading-7 text-stone-700">
+            <p className={`whitespace-pre-line text-base leading-7 ${notification.tipo === 'BLOG_RECHAZADO' ? 'text-red-600' : 'text-stone-700'}`}>
               {notification.description?.trim() || '(Sin descripción disponible)'}
             </p>
           </div>
