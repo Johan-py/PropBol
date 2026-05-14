@@ -137,7 +137,8 @@ export default function DetallePropiedadPage() {
 
             <DescripcionPropiedad descripcion={detalle.descripcion} />
             <DetallesPropiedad detalle={detalle} />
-            <UbicacionPropiedad mapa={detalle.mapa} />
+            <UbicacionPropiedad mapa={detalle.mapa} puntosDeInteres={detalle.puntosDeInteres} 
+/>
           </div>
 
           <div className="lg:sticky lg:top-16 lg:self-start">
