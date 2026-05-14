@@ -765,9 +765,10 @@ useEffect(() => {
             {currentStep > 0 && (
               <button
                 onClick={() => setCurrentStep((prev) => prev - 1)}
+                className="propbol-tour-btn-prev"
                 style={{
-                  background: "none",
-                  color: "#E68B25",
+                 background: "none",
+                 color: "#E68B25",
                  border: "1px solid #E68B25",
                  borderRadius: 8,
                  padding: isMobile ? "8px 12px" : "10px 18px",
