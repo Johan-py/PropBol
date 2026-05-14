@@ -216,6 +216,7 @@ app.use("/api/perfil/zonas", zonaRoutes);
 app.use("/api", router);
 app.use("/api", consumoRoutes);
 app.use("/api", parametrosRoutes);
+app.use("/api/tags", tagsRoutes);
 app.use("/api", estadisticasRoutes);
 app.use("/api/estadisticas-zona", estadisticasZonaRoutes);
 app.use("/api/security", securityRoutes);
