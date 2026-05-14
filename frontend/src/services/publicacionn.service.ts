@@ -58,6 +58,16 @@ export const publicacionService = {
 
     return data
   },
+  // Simula publicitar — conectar al módulo de cobros cuando esté listo
+  async publicitar(_id: number, _plan: string): Promise<{ ok: boolean }> {
+    return new Promise(resolve => setTimeout(() => resolve({ ok: true }), 2100))
+  },
+
+  // Simula cancelar publicidad — conectar al módulo de cobros cuando esté listo
+  async cancelarPublicidad(_id: number): Promise<{ ok: boolean }> {
+    return new Promise(resolve => setTimeout(() => resolve({ ok: true }), 600))
+  },
+
   // para obtener estadisticas de cant de vistas y compartidas
   async obtenerMisPublicacionesConEstadisticas(): Promise<any> {
     const response = await fetch(`${API_URL}/api/publicaciones/mias`, {

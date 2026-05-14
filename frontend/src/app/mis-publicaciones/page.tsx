@@ -28,7 +28,7 @@ export default function MisPublicacionesList() {
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [filtro, setFiltro] = useState<'todas' | 'activas' | 'pausadas'>('todas')
+  const [filtro, setFiltro] = useState<'todas' | 'activas' | 'pausadas' | 'publicidad'>('todas')
 
   const transformarPublicacion = (pub: any): MisPublicacionesItem => {
     return {
@@ -105,13 +105,21 @@ export default function MisPublicacionesList() {
     )
   }
 
+  const handlePromovidaChange = (id: number, promovida: boolean) => {
+    setPublicaciones(prev =>
+      prev.map(p => (p.id === id ? { ...p, promovida } : p))
+    )
+    if (promovida) setFiltro('publicidad')
+  }
+
   useEffect(() => {
     cargarPublicaciones()
   }, [])
 
   const publicacionesFiltradas = publicaciones.filter(p => {
-    if (filtro === 'activas') return p.activa === true
+    if (filtro === 'activas') return p.activa === true && !p.promovida
     if (filtro === 'pausadas') return p.activa === false
+    if (filtro === 'publicidad') return p.promovida === true
     return true
   })
 
@@ -161,39 +169,27 @@ export default function MisPublicacionesList() {
         </p>
       </div>
 
-      <div className="flex gap-2 border-b border-gray-200 pb-2">
-        <button
-          onClick={() => setFiltro('todas')}
-          className={`px-4 py-2 rounded-lg transition ${
-            filtro === 'todas'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-          }`}
-        >
-          Todas ({publicaciones.length})
-        </button>
-
-        <button
-          onClick={() => setFiltro('activas')}
-          className={`px-4 py-2 rounded-lg transition ${
-            filtro === 'activas'
-              ? 'bg-green-600 text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-          }`}
-        >
-          Activas ({publicaciones.filter(p => p.activa).length})
-        </button>
-
-        <button
-          onClick={() => setFiltro('pausadas')}
-          className={`px-4 py-2 rounded-lg transition ${
-            filtro === 'pausadas'
-              ? 'bg-yellow-600 text-white'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-          }`}
-        >
-          Pausadas ({publicaciones.filter(p => !p.activa).length})
-        </button>
+      <div className="flex gap-2 overflow-x-auto border-b border-gray-200 pb-2">
+        {(
+          [
+            { key: 'todas',      label: 'Todas',      count: publicaciones.length,                                        color: 'bg-blue-600' },
+            { key: 'activas',    label: 'Activas',    count: publicaciones.filter(p => p.activa && !p.promovida).length,  color: 'bg-green-600' },
+            { key: 'pausadas',   label: 'Pausadas',   count: publicaciones.filter(p => !p.activa).length,                 color: 'bg-yellow-600' },
+            { key: 'publicidad', label: 'Publicidad', count: publicaciones.filter(p => p.promovida).length,               color: 'bg-[#D97706]' },
+          ] as const
+        ).map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setFiltro(tab.key)}
+            className={`flex-shrink-0 rounded-lg px-4 py-2 text-sm transition ${
+              filtro === tab.key
+                ? `${tab.color} text-white`
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            {tab.label} ({tab.count})
+          </button>
+        ))}
       </div>
 
       {publicacionesFiltradas.length === 0 ? (
@@ -202,6 +198,7 @@ export default function MisPublicacionesList() {
             {filtro === 'todas' && 'No tienes publicaciones.'}
             {filtro === 'activas' && 'No tienes publicaciones activas.'}
             {filtro === 'pausadas' && 'No tienes publicaciones pausadas.'}
+            {filtro === 'publicidad' && 'No tienes publicaciones destacadas.'}
           </p>
         </div>
       ) : (
@@ -212,6 +209,8 @@ export default function MisPublicacionesList() {
               publicacion={pub}
               onDeleted={handleDeleted}
               onEstadoChange={handleEstadoChange}
+              onPromovidaChange={handlePromovidaChange}
+              sourceTab={filtro}
             />
           ))}
         </div>

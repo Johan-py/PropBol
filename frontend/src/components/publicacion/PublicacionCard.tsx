@@ -8,27 +8,36 @@ import type { MisPublicacionesItem } from '@/types/publicacion'
 import ConfirmDeleteModal from './ConfirmDeleteModal'
 import DeleteSuccessModal from './DeleteSuccessModal'
 import DeleteErrorModal from './DeleteErrorModal'
+import PublicitarModal from './PublicitarModal'
+import CancelarPublicidadModal from './CancelarPublicidadModal'
 
 interface Props {
   publicacion: MisPublicacionesItem
   onDeleted: (id: number) => void
   onEstadoChange?: (id: number, nuevoEstado: boolean) => void
+  onPromovidaChange?: (id: number, promovida: boolean) => void
+  sourceTab?: 'todas' | 'activas' | 'pausadas' | 'publicidad'
 }
 
 export default function PublicacionCard({
   publicacion,
   onDeleted,
-  onEstadoChange
+  onEstadoChange,
+  onPromovidaChange,
+  sourceTab
 }: Props) {
   const router = useRouter()
 
   const [activa, setActiva] = useState(publicacion.activa ?? true)
+  const [promovida, setPromovida] = useState(publicacion.promovida ?? false)
   const [isToggling, setIsToggling] = useState(false)
   const [toggleError, setToggleError] = useState('')
 
   const [modalConfirmacionAbierto, setModalConfirmacionAbierto] = useState(false)
   const [modalExitoAbierto, setModalExitoAbierto] = useState(false)
   const [modalErrorAbierto, setModalErrorAbierto] = useState(false)
+  const [modalPublicitarAbierto, setModalPublicitarAbierto] = useState(false)
+  const [modalCancelarPublicidadAbierto, setModalCancelarPublicidadAbierto] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -93,6 +102,17 @@ export default function PublicacionCard({
     setError('')
   }
 
+  const handlePublicitarExito = (_planNombre: string, _dias: number) => {
+    setPromovida(true)
+    onPromovidaChange?.(publicacion.id, true)
+  }
+
+  const handleCancelarPublicidadConfirmado = () => {
+    setPromovida(false)
+    setModalCancelarPublicidadAbierto(false)
+    onPromovidaChange?.(publicacion.id, false)
+  }
+
   const precioFormateado = `USD ${publicacion.precio.toLocaleString('en-US')}`
   const tipoOperacionTexto = publicacion.tipoOperacion || 'Venta / Alquiler'
 
@@ -120,6 +140,12 @@ export default function PublicacionCard({
             alt={publicacion.titulo}
             className="h-[180px] w-full object-cover"
           />
+
+          {promovida && (
+            <span className="absolute left-2 top-2 rounded-full bg-gradient-to-r from-[#D97706] to-[#f59e0b] px-3 py-1 text-xs font-bold text-white shadow">
+              ⭐ Destacada
+            </span>
+          )}
 
           {!activa && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/40">
@@ -288,6 +314,26 @@ export default function PublicacionCard({
                 Añadir otros parámetros
               </button>
             </div>
+
+            {sourceTab === 'activas' && !promovida && (
+              <button
+                type="button"
+                onClick={() => setModalPublicitarAbierto(true)}
+                className="mt-1 flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#D97706] to-[#f59e0b] text-[13px] font-semibold text-white shadow transition hover:opacity-90"
+              >
+                🚀 Publicitar
+              </button>
+            )}
+
+            {sourceTab === 'publicidad' && promovida && (
+              <button
+                type="button"
+                onClick={() => setModalCancelarPublicidadAbierto(true)}
+                className="mt-1 flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-red-500 text-[13px] font-medium text-red-600 transition hover:bg-red-50"
+              >
+                ⛔ Cancelar publicidad
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -305,6 +351,22 @@ export default function PublicacionCard({
         abierto={modalErrorAbierto}
         mensaje={error || 'No se puede eliminar la publicación, intente nuevamente'}
         onAceptar={cerrarError}
+      />
+
+      <PublicitarModal
+        abierto={modalPublicitarAbierto}
+        publicacionId={publicacion.id}
+        tituloPub={publicacion.titulo}
+        onCerrar={() => setModalPublicitarAbierto(false)}
+        onExito={handlePublicitarExito}
+      />
+
+      <CancelarPublicidadModal
+        abierto={modalCancelarPublicidadAbierto}
+        publicacionId={publicacion.id}
+        tituloPub={publicacion.titulo}
+        onCerrar={() => setModalCancelarPublicidadAbierto(false)}
+        onConfirmado={handleCancelarPublicidadConfirmado}
       />
     </>
   )

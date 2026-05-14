@@ -9,10 +9,10 @@ export interface MisPublicacionesItem {
   imagenUrl: string | null
   tipoOperacion?: string
   activa?: boolean
-  // Estadísticas de la publicación
+  promovida?: boolean
   totalVisualizaciones?: number
   totalCompartidos?: number
-  
+
   metricas?: {
     visitas: number
     favoritos: number
