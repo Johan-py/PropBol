@@ -91,6 +91,7 @@ import router from './modules/registro-publicacion/publicacion.routes.js'
 import parametrosRoutes from './modules/parametros-publicacion/parametros.routes.js'
 import tutorialPublicacionRoutes from './modules/tutorial-publicacion/tutorial-publicacion.routes.js'
 import estadisticasRoutes from './modules/estadisticas-publicacion/estadisticas.routes.js'
+import estadisticasZonaRoutes from './modules/estadisticas-zona/estadisticas-zona.routes.js'
 import tagsRoutes from './modules/tags/tags.routes.js'
 
 import {
@@ -120,7 +121,7 @@ import testimoniosRoutes from "./modules/testimonios/testimonios.routes.js";
 // --------------------
 // LEGACY
 // --------------------
-// Borra la línea 66 y pon esta:
+// Borra la l├¡nea 66 y pon esta:
 import historialRoutes from "./modules/perfil/historial.routes.js";
 
 // --------------------
@@ -216,6 +217,7 @@ app.use("/api", router);
 app.use("/api", consumoRoutes);
 app.use("/api", parametrosRoutes);
 app.use("/api", estadisticasRoutes);
+app.use("/api/estadisticas-zona", estadisticasZonaRoutes);
 app.use("/api/security", securityRoutes);
 app.use("/api/favorites", favoritesRoutes);
 app.use("/api/telemetria", telemetriaRoutes);
@@ -389,7 +391,7 @@ app.patch(
 // --------------------
 app.post("/api/publicaciones", (req, res) => {
   const nuevaPublicacion = req.body;
-  res.json({ message: "Publicación creada", publicacion: nuevaPublicacion });
+  res.json({ message: "Publicaci├│n creada", publicacion: nuevaPublicacion });
 });
 
 // --------------------
@@ -408,14 +410,14 @@ async function seedPlanes() {
   await prisma.plan_suscripcion.createMany({
     data: [
       {
-        nombre_plan: "Básico",
+        nombre_plan: "B├ísico",
         precio_plan: 0,
         nro_publicaciones_plan: 3,
         duracion_plan_dias: 30,
         imagen_gr_url: "/qrs/basico.png",
       },
       {
-        nombre_plan: "Estándar",
+        nombre_plan: "Est├índar",
         precio_plan: 99,
         nro_publicaciones_plan: 10,
         duracion_plan_dias: 30,
@@ -430,26 +432,26 @@ async function seedPlanes() {
       },
     ],
   });
-  console.log("✅ Planes de suscripción inicializados en DB");
+  console.log("Ô£à Planes de suscripci├│n inicializados en DB");
 }
 
 iniciarCronRetroalimentacion();
 
 app.listen(PORT, async () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`­ƒÜÇ Server running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);
 
   try {
     await seedPlanes();
   } catch (error) {
-    console.error("❌ Error al inicializar planes:", error);
+    console.error("ÔØî Error al inicializar planes:", error);
   }
 
   try {
     await verifyEmailTransport();
-    console.log("✅ Servicio de email de registro listo");
+    console.log("Ô£à Servicio de email de registro listo");
   } catch (error) {
-    console.error("❌ Error en configuración de email de registro:", error);
+    console.error("ÔØî Error en configuraci├│n de email de registro:", error);
   }
 });
 
