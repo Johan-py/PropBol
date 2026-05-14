@@ -16,35 +16,35 @@ model Rol {
 }
 
 model Usuario {
-  id                                    Int                         @id @default(autoincrement())
+  id                                    Int                           @id @default(autoincrement())
   nombre                                String
   apellido                              String
-  correo                                String                      @unique
+  correo                                String                        @unique
   password                              String
   pais                                  String?
   avatar                                String?
   genero                                Genero?
   direccion                             String?
-  activo                                Boolean?                    @default(true)
-  fechaRegistro                         DateTime?                   @default(now()) @db.Timestamp(6)
-  createdAt                             DateTime?                   @default(now()) @db.Timestamp(6)
-  intentos_fallidos_cambio_password     Int                         @default(0)
-  bloqueo_cambio_password_hasta         DateTime?                   @db.Timestamptz(6)
-  password_actualizado_en               DateTime                    @default(now()) @db.Timestamptz(6)
-  two_factor_activo                     Boolean                     @default(false)
-  two_factor_metodo                     String                      @default("email") @db.VarChar(20)
-  two_factor_activado_en                DateTime?                   @db.Timestamptz(6)
-  controlador                           Boolean                     @default(false)
-  notificacionWhatsapp                  Boolean?                    @default(false)
+  activo                                Boolean?                      @default(true)
+  fechaRegistro                         DateTime?                     @default(now()) @db.Timestamp(6)
+  createdAt                             DateTime?                     @default(now()) @db.Timestamp(6)
+  intentos_fallidos_cambio_password     Int                           @default(0)
+  bloqueo_cambio_password_hasta         DateTime?                     @db.Timestamptz(6)
+  password_actualizado_en               DateTime                      @default(now()) @db.Timestamptz(6)
+  two_factor_activo                     Boolean                       @default(false)
+  two_factor_metodo                     String                        @default("email") @db.VarChar(20)
+  two_factor_activado_en                DateTime?                     @db.Timestamptz(6)
+  controlador                           Boolean                       @default(false)
+  notificacionWhatsapp                  Boolean?                      @default(false)
   rolId                                 Int?
-  notificacion_email                    Boolean?                    @default(true)
-  notificacion_whatsapp                 Boolean?                    @default(false)
-  fecha_registro                        DateTime?                   @default(now()) @db.Timestamp(6)
-  updatedAt                             DateTime?                   @updatedAt @db.Timestamp(6)
-  desactivado_en                        DateTime?                   @db.Timestamp(6)
-  fecha_nacimiento                      DateTime?                   @db.Timestamp(6)
-  telemetria_compartida                 Boolean?                    @default(false)
-  zona_conexion                         String?                     @db.VarChar(100)
+  notificacion_email                    Boolean?                      @default(true)
+  notificacion_whatsapp                 Boolean?                      @default(false)
+  fecha_registro                        DateTime?                     @default(now()) @db.Timestamp(6)
+  updatedAt                             DateTime?                     @updatedAt @db.Timestamp(6)
+  desactivado_en                        DateTime?                     @db.Timestamp(6)
+  fecha_nacimiento                      DateTime?                     @db.Timestamp(6)
+  telemetria_compartida                 Boolean?                      @default(false)
+  zona_conexion                         String?                       @db.VarChar(100)
   autenticacion_social                  autenticacion_social[]
   bitacora_pagos                        bitacora_pagos[]
   blog                                  blog[]
@@ -67,12 +67,12 @@ model Usuario {
   sesiones                              Sesion[]
   suscripciones_activas                 suscripciones_activas[]
   telefonos                             Telefono[]
-  telefono_telefono_usuario_idTousuario Telefono[]                  @relation("telefono_usuario_idTousuario")
-  testimonios                           Testimonio[]
-  testimonioLikes                       TestimonioLike[]
+  telefono_telefono_usuario_idTousuario Telefono[]                    @relation("telefono_usuario_idTousuario")
+  testimonio                            testimonio[]
+  testimonio_like                       testimonio_like[]
   transacciones                         transacciones[]
-  tutorialPublicacion                   TutorialPublicacionUsuario?
-  rol                                   Rol?                        @relation(fields: [rolId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tutorial_publicacion_usuario          tutorial_publicacion_usuario?
+  rol                                   Rol?                          @relation(fields: [rolId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   verificacion_pago                     verificacion_pago[]
   visitor                               Visitor[]
   zona_usuario                          zona_usuario[]
@@ -121,8 +121,13 @@ model Notificacion {
   eliminada     Boolean   @default(false)
   archivada     Boolean   @default(false)
   usuarioId     Int
+  tipo          String    @default("GENERAL") @db.VarChar(30)
+  blog_id       Int?
+  blog          blog?     @relation(fields: [blog_id], references: [id], onUpdate: NoAction, map: "notificacion_blog_fk")
   usuario       Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "notificacion_usuario_id_fkey")
 
+  @@index([blog_id], map: "idx_notificacion_blog")
+  @@index([usuarioId, leida], map: "idx_notificacion_usuario_leida")
   @@map("notificacion")
 }
 
@@ -229,15 +234,21 @@ model Publicacion {
   estado                EstadoPublicacion?      @default(ACTIVA) @map("estado")
   fechaPublicacion      DateTime?               @default(now()) @map("fecha_publicacion") @db.Timestamp(6)
   usuarioId             Int                     @map("usuario_id")
+  promoted              Boolean                 @default(false)
+  promotedAt            DateTime?               @map("promoted_at") @db.Timestamp(6)
+  promotedExpiresAt     DateTime?               @map("promoted_expires_at") @db.Timestamp(6)
+  paymentIntentId       String?                 @map("payment_intent_id")
   inmuebleId            Int                     @map("inmueble_id")
   multimedia            Multimedia[]
   inmueble              Inmueble                @relation(fields: [inmuebleId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "publicacion_inmueble_fk")
   usuario               Usuario                 @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "publicacion_usuario_fk")
   publicacion_parametro publicacion_parametro[]
+  publicacion_tag       publicacion_tag[]
 
   @@index([estado], map: "idx_publicacion_estado")
   @@index([inmuebleId], map: "idx_publicacion_inmueble")
   @@index([usuarioId], map: "idx_publicacion_usuario")
+  @@index([promoted], map: "idx_publicacion_promoted")
   @@map("publicacion")
 }
 
@@ -679,6 +690,7 @@ model blog {
   usuario           Usuario        @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "blog_usuario_fk")
   blog_rechazo      blog_rechazo[]
   comentario        comentario[]
+  notificacion      Notificacion[]
 
   @@index([estado])
   @@index([usuario_id], map: "blog_usuario_idx")
@@ -774,33 +786,25 @@ model zona_geografica {
   @@unique([nombre, municipio_id], map: "zona_geografica_nombre_municipio_unique")
 }
 
-model Testimonio {
-  id             Int              @id @default(autoincrement())
-  comentario     String
-  calificacion   Int?
-  visible        Boolean?         @default(true)
-  eliminado      Boolean?         @default(false)
-  fecha_creacion DateTime?        @default(now()) @db.Timestamp(6)
-  usuarioId      Int              @map("usuario_id")
-  ciudad         String?          @db.VarChar(100)
-  zona           String?          @db.VarChar(100)
-  categoria      String?          @db.VarChar(255)
-  usuario        Usuario          @relation(fields: [usuarioId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  likes          TestimonioLike[]
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model entrenamiento_ml {
+  id                Int      @id @default(autoincrement())
+  usuario_id        Int
+  inmueble_id       Int
+  tipo_evento       String   @default("CLICK") @db.VarChar(20)
+  score_real        Float    @default(0) @db.Real
+  retroalimentacion Int?     @db.SmallInt
+  features          Json?
+  fecha_evento      DateTime @default(now()) @db.Timestamp(6)
+  usado_en_modelo   Boolean  @default(false)
+  version_modelo    String?  @db.VarChar(20)
+  inmueble          Inmueble @relation(fields: [inmueble_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  usuario           Usuario  @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
-  @@map("testimonio")
-}
-
-model TestimonioLike {
-  id           Int        @id @default(autoincrement())
-  testimonioId Int        @map("testimonio_id")
-  usuarioId    Int        @map("usuario_id")
-  creado_en    DateTime?  @default(now()) @db.Timestamp(6)
-  testimonio   Testimonio @relation(fields: [testimonioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  usuario      Usuario    @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@unique([testimonioId, usuarioId], map: "uq_testimonio_like")
-  @@map("testimonio_like")
+  @@index([fecha_evento(sort: Desc)], map: "idx_ml_fecha")
+  @@index([tipo_evento], map: "idx_ml_tipo_evento")
+  @@index([usuario_id, usado_en_modelo], map: "idx_ml_usuario_usado")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -823,15 +827,18 @@ model magic_link {
   @@index([usuario_id, activo], map: "idx_magic_link_usuario_activo")
 }
 
-model TutorialPublicacionUsuario {
-  id           Int       @id @default(autoincrement())
-  usuarioId    Int       @unique @map("usuario_id")
-  confirmado   Boolean   @default(false)
-  vistoEn      DateTime? @map("visto_en") @db.Timestamp(6)
-  confirmadoEn DateTime? @map("confirmado_en") @db.Timestamp(6)
-  usuario      Usuario   @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@map("tutorial_publicacion_usuario")
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model modelo_version {
+  id           Int      @id @default(autoincrement())
+  version      String   @unique @db.VarChar(20)
+  archivo_path String   @db.VarChar(255)
+  algoritmo    String   @db.VarChar(50)
+  precision    Float?   @db.Real
+  recall       Float?   @db.Real
+  datos_usados Int?
+  activo       Boolean  @unique(map: "idx_modelo_activo", where: raw("(activo = true)")) @default(false)
+  entrenado_en DateTime @default(now()) @db.Timestamp(6)
+  notas        String?
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -880,39 +887,59 @@ model punto_interes {
   @@index([inmueble_id], map: "idx_punto_interes_inmueble")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model entrenamiento_ml {
-  id                Int      @id @default(autoincrement())
-  usuario_id        Int
-  inmueble_id       Int
-  tipo_evento       String   @default("CLICK") @db.VarChar(20)
-  score_real        Float    @default(0) @db.Real
-  retroalimentacion Int?     @db.SmallInt
-  features          Json?
-  fecha_evento      DateTime @default(now()) @db.Timestamp(6)
-  usado_en_modelo   Boolean  @default(false)
-  version_modelo    String?  @db.VarChar(20)
-  inmueble          Inmueble @relation(fields: [inmueble_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  usuario           Usuario  @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@index([fecha_evento(sort: Desc)], map: "idx_ml_fecha")
-  @@index([tipo_evento], map: "idx_ml_tipo_evento")
-  @@index([usuario_id, usado_en_modelo], map: "idx_ml_usuario_usado")
+model testimonio {
+  id              Int               @id @default(autoincrement())
+  comentario      String
+  calificacion    Int?
+  visible         Boolean?          @default(true)
+  eliminado       Boolean?          @default(false)
+  fecha_creacion  DateTime?         @default(now()) @db.Timestamp(6)
+  usuario_id      Int
+  ciudad          String?           @db.VarChar(100)
+  zona            String?           @db.VarChar(100)
+  categoria       String?           @db.VarChar(255)
+  usuario         Usuario           @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  testimonio_like testimonio_like[]
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model modelo_version {
-  id           Int      @id @default(autoincrement())
-  version      String   @unique @db.VarChar(20)
-  archivo_path String   @db.VarChar(255)
-  algoritmo    String   @db.VarChar(50)
-  precision    Float?   @db.Real
-  recall       Float?   @db.Real
-  datos_usados Int?
-  activo       Boolean  @unique(map: "idx_modelo_activo", where: raw("(activo = true)")) @default(false)
-  entrenado_en DateTime @default(now()) @db.Timestamp(6)
-  notas        String?
+model testimonio_like {
+  id            Int        @id @default(autoincrement())
+  testimonio_id Int
+  usuario_id    Int
+  creado_en     DateTime?  @default(now()) @db.Timestamp(6)
+  testimonio    testimonio @relation(fields: [testimonio_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  usuario       Usuario    @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([testimonio_id, usuario_id], map: "uq_testimonio_like")
+}
+
+model tutorial_publicacion_usuario {
+  id            Int       @id @default(autoincrement())
+  usuario_id    Int       @unique
+  confirmado    Boolean   @default(false)
+  visto_en      DateTime? @db.Timestamp(6)
+  confirmado_en DateTime? @db.Timestamp(6)
+  usuario       Usuario   @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+model Tag {
+  id              Int               @id @default(autoincrement())
+  nombre          String            @unique @db.VarChar(30)
+  creado_en       DateTime?         @default(now()) @db.Timestamptz(6)
+  publicacion_tag publicacion_tag[]
+
+  @@map("tag")
+}
+
+model publicacion_tag {
+  publicacion_id  Int
+  tag_id          Int
+  agregado_en     DateTime    @default(now()) @db.Timestamptz(6)
+  publicacion     Publicacion @relation(fields: [publicacion_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  tag             Tag         @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([publicacion_id, tag_id])
+  @@index([tag_id])
+  @@map("publicacion_tag")
 }
 
 enum Genero {
