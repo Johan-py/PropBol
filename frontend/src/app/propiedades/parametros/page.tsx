@@ -3,6 +3,12 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import ExtrasPropiedad from "@/components/extras-propiedad/ExtrasPropiedad";
+import TagsPropiedad from "@/components/extras-propiedad/TagsPropiedad";
+
+type TagBackend = {
+  id: number;
+  nombre: string;
+};
 
 type ParametroBackend = {
   id: number;
@@ -58,6 +64,8 @@ function ParametrosPageContent() {
   const [guardando, setGuardando] = useState(false);
   const [mensaje, setMensaje] = useState("");
   const [mostrarModalExito, setMostrarModalExito] = useState(false);
+  const [catalogoTags, setCatalogoTags] = useState<TagBackend[]>([]);
+  const [tagsGuardados, setTagsGuardados] = useState<string[]>([]);
 
   const volverSegunOrigen = () => {
     const destino = returnTo || origen;
@@ -92,13 +100,17 @@ function ParametrosPageContent() {
         setCargando(true);
         setMensaje("");
 
-        const [catalogoRes, publicacionRes] = await Promise.all([
+        const [catalogoRes, publicacionRes, tagsRes, tagsPubRes] = await Promise.all([
           fetch(`${getApiUrl()}/api/parametros`),
           fetch(`${getApiUrl()}/api/publicaciones/${publicacionId}/parametros`),
+          fetch(`${getApiUrl()}/api/tags`),
+          fetch(`${getApiUrl()}/api/publicaciones/${publicacionId}/tags`),
         ]);
 
         const catalogoJson = await catalogoRes.json().catch(() => null);
         const publicacionJson = await publicacionRes.json().catch(() => null);
+        const tagsJson = await tagsRes.json().catch(() => null);
+        const tagsPubJson = await tagsPubRes.json().catch(() => null);
 
         if (!catalogoRes.ok) {
           throw new Error(catalogoJson?.message || "No se pudieron obtener los parámetros.");
@@ -125,6 +137,15 @@ function ParametrosPageContent() {
 
         setCatalogoParametros(catalogo);
         setParametrosGuardados(parametrosPublicacion.map((item) => item.nombre));
+
+        const catalogoTagsData: TagBackend[] = Array.isArray(tagsJson?.data)
+          ? tagsJson.data : [];
+        const tagsPubData: string[] = Array.isArray(tagsPubJson?.data)
+          ? tagsPubJson.data.map((item: any) => item.tag?.nombre).filter(Boolean)
+          : [];
+
+        setCatalogoTags(catalogoTagsData);
+        setTagsGuardados(tagsPubData);
       } catch (error) {
         const mensajeError =
           error instanceof Error ? error.message : "Error al cargar parámetros.";
@@ -137,6 +158,32 @@ function ParametrosPageContent() {
     cargarDatos();
   }, [publicacionId]);
 
+  const manejarGuardarTags = async (tags: string[]) => {
+    if (!publicacionId || Number.isNaN(publicacionId)) return;
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No se encontró la sesión del usuario.");
+
+      const response = await fetch(
+        `${getApiUrl()}/api/publicaciones/${publicacionId}/tags`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ tags }),
+        }
+      );
+
+      const data = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(data?.mensaje || "No se pudieron guardar los tags.");
+      setTagsGuardados(tags);
+    } catch (error) {
+      setMensaje(error instanceof Error ? error.message : "Error al guardar tags.");
+    }
+  };
+  
   const crearParametroSiNoExiste = async (nombre: string, token: string) => {
     const existente = catalogoParametros.find(
       (item) => item.nombre.trim().toLowerCase() === nombre.trim().toLowerCase()
@@ -259,12 +306,27 @@ function ParametrosPageContent() {
         {cargando ? (
           <p className="text-gray-600">Cargando parámetros...</p>
         ) : (
-          <ExtrasPropiedad
-            valoresIniciales={parametrosGuardados}
-            catalogoParametros={catalogoParametros}
-            onGuardar={manejarGuardarParametros}
-            onCancelar={volverSegunOrigen}
-          />
+          <>
+            {publicacionId && (
+              <div className="mb-8">
+                <TagsPropiedad
+                  publicacionId={publicacionId}
+                  tagsIniciales={tagsGuardados}
+                  catalogoTags={catalogoTags}
+                  onGuardar={manejarGuardarTags}
+                />
+              </div>
+            )}
+
+            <div className="border-t border-[#EAECF0] pt-8">
+              <ExtrasPropiedad
+                valoresIniciales={parametrosGuardados}
+                catalogoParametros={catalogoParametros}
+                onGuardar={manejarGuardarParametros}
+                onCancelar={volverSegunOrigen}
+              />
+            </div>
+          </>
         )}
 
         {guardando && !mostrarModalExito && (
@@ -278,7 +340,6 @@ function ParametrosPageContent() {
             <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-orange-500 text-5xl font-bold text-white">
               ✓
             </div>
-
             <p className="text-xl font-bold text-[#1f1f1f]">
               Parámetros personalizados guardados con éxito!
             </p>

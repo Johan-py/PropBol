@@ -85,12 +85,14 @@ import {
   startDiscordRegisterController,
 } from "./modules/auth/discord/discord.controller.js";
 
-import multimediaRoutes from "./modules/multimedia/multimedia.routes.js";
-import publicacionRoutes from "./modules/publicacion/publicacion.routes.js";
-import router from "./modules/registro-publicacion/publicacion.routes.js";
-import parametrosRoutes from "./modules/parametros-publicacion/parametros.routes.js";
-import tutorialPublicacionRoutes from "./modules/tutorial-publicacion/tutorial-publicacion.routes.js";
-import estadisticasRoutes from "./modules/estadisticas-publicacion/estadisticas.routes.js";
+import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
+import publicacionRoutes from './modules/publicacion/publicacion.routes.js'
+import router from './modules/registro-publicacion/publicacion.routes.js'
+import parametrosRoutes from './modules/parametros-publicacion/parametros.routes.js'
+import tutorialPublicacionRoutes from './modules/tutorial-publicacion/tutorial-publicacion.routes.js'
+import estadisticasRoutes from './modules/estadisticas-publicacion/estadisticas.routes.js'
+import estadisticasZonaRoutes from './modules/estadisticas-zona/estadisticas-zona.routes.js'
+import tagsRoutes from './modules/tags/tags.routes.js'
 
 import {
   facebookCallbackController,
@@ -105,9 +107,9 @@ import {
   getLinkedInOriginalEmailController,
 } from "./modules/auth/social-links/social-links.controller.js";
 
-import securityRoutes from "./routes/security.routes.js";
-import propiedadRoutes from "./routes/propiedad.routes.js";
-import { validarPublicacionesFree } from "./controllers/publicacionesController.js";
+import securityRoutes from './routes/security.routes.js'
+import propiedadRoutes from './routes/propiedad.routes.js'
+import { validarPublicacionesFree } from './controllers/publicacionesController.js'
 // --------------------
 // LEGACY
 // --------------------
@@ -119,7 +121,7 @@ import testimoniosRoutes from "./modules/testimonios/testimonios.routes.js";
 // --------------------
 // LEGACY
 // --------------------
-// Borra la línea 66 y pon esta:
+// Borra la l├¡nea 66 y pon esta:
 import historialRoutes from "./modules/perfil/historial.routes.js";
 
 // --------------------
@@ -214,6 +216,7 @@ app.use("/api", router);
 app.use("/api", consumoRoutes);
 app.use("/api", parametrosRoutes);
 app.use("/api", estadisticasRoutes);
+app.use("/api/estadisticas-zona", estadisticasZonaRoutes);
 app.use("/api/security", securityRoutes);
 app.use("/api/favorites", favoritesRoutes);
 app.use("/api/telemetria", telemetriaRoutes);
@@ -275,17 +278,17 @@ app.post("/api/auth/activate-by-code", activateAccountByCodeController);
 
 app.get("/api/auth/me", getMeController);
 
-app.get("/api/auth/google/login", StratGoogleLoginController);
-app.get("/api/auth/google/register", StartGoogleRegisterController);
-app.get("/api/auth/google/callback", googleCallbackController);
+app.get('/api/auth/google/login', StratGoogleLoginController)
+app.get('/api/auth/google/register', StartGoogleRegisterController)
+app.get('/api/auth/google/callback', googleCallbackController)
 
-app.get("/api/auth/discord/login", startDiscordLoginController);
-app.get("/api/auth/discord/register", startDiscordRegisterController);
-app.get("/api/auth/discord/callback", discordCallbackController);
+app.get('/api/auth/discord/login', startDiscordLoginController)
+app.get('/api/auth/discord/register', startDiscordRegisterController)
+app.get('/api/auth/discord/callback', discordCallbackController)
 
-app.get("/api/auth/facebook/login", startFacebookLoginController);
-app.get("/api/auth/facebook/register", startFacebookRegisterController);
-app.get("/api/auth/facebook/callback", facebookCallbackController);
+app.get('/api/auth/facebook/login', startFacebookLoginController)
+app.get('/api/auth/facebook/register', startFacebookRegisterController)
+app.get('/api/auth/facebook/callback', facebookCallbackController)
 
 app.get("/api/auth/social-links", requireAuth, getSocialLinksController);
 app.get(
@@ -387,7 +390,7 @@ app.patch(
 // --------------------
 app.post("/api/publicaciones", (req, res) => {
   const nuevaPublicacion = req.body;
-  res.json({ message: "Publicación creada", publicacion: nuevaPublicacion });
+  res.json({ message: "Publicaci├│n creada", publicacion: nuevaPublicacion });
 });
 
 // --------------------
@@ -406,14 +409,14 @@ async function seedPlanes() {
   await prisma.plan_suscripcion.createMany({
     data: [
       {
-        nombre_plan: "Básico",
+        nombre_plan: "B├ísico",
         precio_plan: 0,
         nro_publicaciones_plan: 3,
         duracion_plan_dias: 30,
         imagen_gr_url: "/qrs/basico.png",
       },
       {
-        nombre_plan: "Estándar",
+        nombre_plan: "Est├índar",
         precio_plan: 99,
         nro_publicaciones_plan: 10,
         duracion_plan_dias: 30,
@@ -428,26 +431,26 @@ async function seedPlanes() {
       },
     ],
   });
-  console.log("✅ Planes de suscripción inicializados en DB");
+  console.log("Ô£à Planes de suscripci├│n inicializados en DB");
 }
 
 iniciarCronRetroalimentacion()
 
 app.listen(PORT, async () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`­ƒÜÇ Server running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);
 
   try {
     await seedPlanes();
   } catch (error) {
-    console.error("❌ Error al inicializar planes:", error);
+    console.error("ÔØî Error al inicializar planes:", error);
   }
 
   try {
     await verifyEmailTransport();
-    console.log("✅ Servicio de email de registro listo");
+    console.log("Ô£à Servicio de email de registro listo");
   } catch (error) {
-    console.error("❌ Error en configuración de email de registro:", error);
+    console.error("ÔØî Error en configuraci├│n de email de registro:", error);
   }
 });
 
