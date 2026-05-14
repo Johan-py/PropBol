@@ -9,6 +9,7 @@ import zonaRoutes from './modules/perfil/zonaUsario.routes.js'
 import telemetriaRouter from './modules/perfil/telemetria.routes.js'
 import locationRoutes from './modules/locations/locations.routes.js'
 import consumoRoutes from './modules/LimiteSuscripcion/consumo.routes.js'
+import { iniciarCronRetroalimentacion } from './modules/recomendaciones/retroalimentacionCron.js'
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -132,7 +133,7 @@ import suscripcionesRoutes from './modules/suscripciones/suscripciones.routes.js
 import plansRoutes from './modules/plans/plans.routes.js'
 import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js'
 import whatsappRoutes from './modules/whatsapp/whatsapp.routes.js'
-import { getAdminTestimonios } from './modules/testimonios/adminTestimonios.controller.js'
+import adminTestimoniosRoutes from './modules/testimonios/adminTestimonios.routes.js'
 import sesionRoutes from './modules/perfil/sesion.routes.js'
 
 import './jobs/suscripcion.job.js'
@@ -367,7 +368,7 @@ app.post('/api/publicaciones', (req, res) => {
 // --------------------
 // TESTIMONIOSADMIN
 // --------------------
-app.get('/api/admin/testimonios', getAdminTestimonios)
+app.use('/api/admin', adminTestimoniosRoutes)
 
 // --------------------
 // LEVANTAR SERVIDOR
@@ -404,6 +405,8 @@ async function seedPlanes() {
   })
   console.log('✅ Planes de suscripción inicializados en DB')
 }
+
+iniciarCronRetroalimentacion()
 
 app.listen(PORT, async () => {
   console.log(`🚀 Server running on port ${PORT}`)
