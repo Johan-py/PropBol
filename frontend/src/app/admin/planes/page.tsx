@@ -56,7 +56,7 @@ export default function AdminPlanesPage() {
     }
   }
 
-  useEffect(() => { fetchPlanes() }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { fetchPlanes() }, []) // eslint-disable-line
 
   const openCreate = () => {
     setEditId(null)
