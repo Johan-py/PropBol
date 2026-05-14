@@ -1,5 +1,9 @@
 import { estado_blog } from "@prisma/client";
 import { blogsRepository, comentariosRepository } from "./blogs.repository.js";
+import {
+  createBlogNotificationService,
+  createAdminBlogPendingNotificationService,
+} from "../notificaciones/notificaciones.service.js";
 import { getIO } from "../../services/socket.service.js";
 
 // BLOGS SERVICE PE
@@ -22,6 +26,7 @@ export const blogsService = {
     if (!blog) throw new Error("BLOG_NOT_FOUND");
     return blog;
   },
+
   async crear(
     usuario_id: number,
     data: {
@@ -35,7 +40,7 @@ export const blogsService = {
     const estado: estado_blog =
       data.accion === "pendiente" ? "PENDIENTE" : "BORRADOR";
 
-    const nuevoBlog = await blogsRepository.create({
+    const blog = await blogsRepository.create({
       titulo: data.titulo,
       contenido: data.contenido,
       imagen: data.imagen,
@@ -43,13 +48,24 @@ export const blogsService = {
       usuario_id,
       estado,
     });
+
     if (estado === "PENDIENTE") {
+      try {
+        await createAdminBlogPendingNotificationService({
+          blog_id: blog.id,
+          blogTitulo: blog.titulo,
+        });
+      } catch (e) {
+        console.error("[Blog] Error al notificar al admin (crear):", e);
+      }
       const io = getIO();
-      io.emit("admin:nuevo_blog_pendiente", nuevoBlog); // Criterio: Reflejar en panel admin
-      io.emit(`usuario:${usuario_id}:actualizar_mis_blogs`, nuevoBlog); // Criterio: Sección "Mis blogs"
+      io.emit("admin:nuevo_blog_pendiente", blog);
+      io.emit(`usuario:${usuario_id}:actualizar_mis_blogs`, blog);
     }
-    return nuevoBlog;
+
+    return blog;
   },
+
   async actualizar(
     id: number,
     usuario_id: number,
@@ -85,7 +101,9 @@ export const blogsService = {
       estado = "BORRADOR";
     }
 
-    const blogActualizado = await blogsRepository.update(id, {
+    const wasNotPending = blog.estado !== "PENDIENTE";
+
+    const updatedBlog = await blogsRepository.update(id, {
       titulo: data.titulo,
       contenido: data.contenido,
       imagen: data.imagen,
@@ -93,14 +111,28 @@ export const blogsService = {
       ...(estado ? { estado } : {}),
     });
 
+    if (wasNotPending && updatedBlog.estado === "PENDIENTE") {
+      try {
+        await createAdminBlogPendingNotificationService({
+          blog_id: id,
+          blogTitulo: updatedBlog.titulo,
+        });
+      } catch (e) {
+        console.error("[Blog] Error al notificar al admin (actualizar):", e);
+      }
+    }
+
     const io = getIO();
-    io.emit("blog:actualizado", blogActualizado); // Criterio: Cambios automáticos en título/imagen/contenido
-    io.emit(`usuario:${usuario_id}:actualizar_mis_blogs`, blogActualizado);
-    return blogActualizado;
+    io.emit("blog:actualizado", updatedBlog);
+    io.emit(`usuario:${usuario_id}:actualizar_mis_blogs`, updatedBlog);
+
+    return updatedBlog;
   },
+
   async subirImagen(file: Express.Multer.File, usuario_id: number) {
     return blogsRepository.uploadImage(file, usuario_id);
   },
+
   async cambiarEstado(
     id: number,
     estado: "PUBLICADO" | "RECHAZADO",
@@ -113,20 +145,54 @@ export const blogsService = {
       throw new Error("RAZON_RECHAZO_REQUIRED");
     }
 
-    const blogActualizado = await blogsRepository.changeEstado(
+    const updatedBlog = await blogsRepository.changeEstado(
       id,
       estado as estado_blog,
       razon_rechazo,
     );
+
+    try {
+      await createBlogNotificationService({
+        usuarioId: blog.usuario_id,
+        blog_id: id,
+        blogTitulo: blog.titulo,
+        tipo: estado === "PUBLICADO" ? "BLOG_APROBADO" : "BLOG_RECHAZADO",
+        ...(razon_rechazo ? { razonRechazo: razon_rechazo } : {}),
+      });
+    } catch (notifError) {
+      console.error("[Blog] Error al crear notificación de blog:", notifError);
+    }
+
     const io = getIO();
     if (estado === "PUBLICADO") {
-      io.emit("blog:publicado_global", blog);
+      io.emit("blog:publicado_global", updatedBlog);
     }
-    io.emit(`usuario:${blog.usuario_id}:actualizar_mis_blogs`, blog);
+    io.emit(`usuario:${blog.usuario_id}:actualizar_mis_blogs`, updatedBlog);
     io.emit("admin:blog_revisado", { id, estado });
 
-    return blog;
+    return updatedBlog;
   },
+
+  async resubmit(id: number, usuario_id: number) {
+    const blog = await blogsRepository.findById(id);
+    if (!blog) throw new Error("BLOG_NOT_FOUND");
+    if (blog.usuario_id !== usuario_id) throw new Error("FORBIDDEN");
+    if (blog.estado !== "RECHAZADO") throw new Error("BLOG_NOT_REJECTED");
+
+    const updatedBlog = await blogsRepository.resubmit(id);
+
+    try {
+      await createAdminBlogPendingNotificationService({
+        blog_id: id,
+        blogTitulo: blog.titulo,
+      });
+    } catch (e) {
+      console.error("[Blog] Error al notificar al admin (resubmit):", e);
+    }
+
+    return updatedBlog;
+  },
+
   async eliminar(id: number, usuario_id: number) {
     const blogeliminado = await blogsRepository.findById(id);
     if (!blogeliminado) throw new Error("BLOG_NOT_FOUND");
@@ -137,6 +203,7 @@ export const blogsService = {
     io.emit(`blog:${id}:notificacion_eliminado`);
     return blogeliminado;
   },
+
   async listarAdmin(params: {
     estado?: estado_blog;
     categoria_id?: number;
@@ -145,10 +212,12 @@ export const blogsService = {
   }) {
     return blogsRepository.findAllAdmin(params);
   },
+
   async listarCategorias() {
     return blogsRepository.findAllCategories();
   },
 };
+
 // COMENTARIOS SERVICE
 export const comentariosService = {
   async crear(data: {

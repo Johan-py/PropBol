@@ -606,7 +606,11 @@ export const registerUser = async (payload: RegisterDTO) => {
   const nonce = crypto.randomUUID();
 
   const codigoHash = hash2FACode(codigo);
-  cache.set(`last_reg_code_${normalized.correo}`, codigoHash, REGISTER_CODE_TTL_MINUTES * 60 * 1000);
+  cache.set(
+    `last_reg_code_${normalized.correo}`,
+    codigoHash,
+    REGISTER_CODE_TTL_MINUTES * 60 * 1000,
+  );
 
   const verificationToken = generatePendingRegisterToken({
     purpose: "pending-register",
@@ -1513,7 +1517,11 @@ export const resendRegisterCodeService = async (verificationToken: string) => {
   const nonce = crypto.randomUUID();
 
   const codigoHash = hash2FACode(codigo);
-  cache.set(`last_reg_code_${decoded.correo}`, codigoHash, REGISTER_CODE_TTL_MINUTES * 60 * 1000);
+  cache.set(
+    `last_reg_code_${decoded.correo}`,
+    codigoHash,
+    REGISTER_CODE_TTL_MINUTES * 60 * 1000,
+  );
 
   const newToken = generatePendingRegisterToken({
     purpose: "pending-register",
