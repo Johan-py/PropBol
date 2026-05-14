@@ -31,7 +31,7 @@ function entrenarRegresionLogistica(
   epochs = 1000
 ): { pesos: number[]; bias: number } {
   const n = X[0].length
-  let pesos = new Array(n).fill(0)
+  const pesos = new Array(n).fill(0)
   let bias = 0
 
   for (let epoch = 0; epoch < epochs; epoch++) {
