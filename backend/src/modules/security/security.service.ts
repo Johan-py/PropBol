@@ -2,7 +2,9 @@ import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
 import { env } from "../../config/env.js";
 import { prisma } from "../../lib/prisma.client.js";
-import { enviarCodigoDesactivacionCuenta } from "../../lib/email.service.js";
+import { enviarCodigoDesactivacionCuenta,
+         enviarCodigoActivacion2FA,
+} from "../../lib/email.service.js";
 
 import {
   deactivateUserAccountRepository,
@@ -493,7 +495,7 @@ export const sendActivate2FACodeService = async (userId: number) => {
     }),
   });
 
-  const emailResult = await enviarCodigoDesactivacionCuenta({
+  const emailResult = await enviarCodigoActivacion2FA({
     emailDestino: user.correo,
     codigo,
     nombreUsuario: user.nombre,
