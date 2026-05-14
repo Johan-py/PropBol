@@ -227,7 +227,7 @@ export const useBlogComments = (blogId: string) => {
     const editadoEvento = `blog:${cleanId}:comentario_actualizado`;
     const eliminadoEvento = `blog:${cleanId}:comentario_eliminado`;
 
-    socket.on(nuevoEvento, (data: any) => {
+    socket.on(nuevoEvento, (data) => {
       setComments((prev) => {
         if (prev.some((c) => c.id === String(data.id))) return prev;
         const mapped = mapBackendComment(data);
@@ -235,7 +235,7 @@ export const useBlogComments = (blogId: string) => {
       });
     });
 
-    socket.on(editadoEvento, (data: any) => {
+    socket.on(editadoEvento, (data) => {
       setComments((prev) =>
         prev.map((c) =>
           c.id === String(data.id) ? mapBackendComment(data) : c,
@@ -243,7 +243,7 @@ export const useBlogComments = (blogId: string) => {
       );
     });
 
-    socket.on(eliminadoEvento, ({ id }: { id: string }) => {
+    socket.on(eliminadoEvento, ({ id }) => {
       setComments((prev) => prev.filter((c) => c.id !== String(id)));
     });
 
