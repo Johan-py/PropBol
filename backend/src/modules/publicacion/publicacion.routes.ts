@@ -9,7 +9,11 @@ import {
   eliminarPublicacionController,
   obtenerDetallePublicacionController,
   obtenerDetallePublicacionPorInmuebleController,
-  confirmarPublicacionController
+  confirmarPublicacionController,
+  iniciarPublicidadController,
+  confirmarPublicidadController,
+  cancelarPublicidadController,
+  obtenerEstadoPublicidadController
 } from './publicacion.controller.js'
 
 const router = Router()
@@ -29,5 +33,8 @@ router.put(
 
 router.put('/:id', requireAuth, editarPublicacionController)
 router.delete('/:id', requireAuth, eliminarPublicacionController)
-
+router.post('/:id/publicitar', requireAuth, iniciarPublicidadController)
+router.post('/:id/publicitar/confirmar', requireAuth, confirmarPublicidadController)
+router.delete('/:id/publicitar/cancelar', requireAuth, cancelarPublicidadController)
+router.get('/:id/publicitar/estado', obtenerEstadoPublicidadController)
 export default router

@@ -5,6 +5,8 @@ import PublicacionCard from '@/components/publicacion/PublicacionCard'
 import { publicacionService } from '@/services/publicacionn.service'
 import type { MisPublicacionesItem } from '@/types/publicacion'
 
+type TabType = 'todas' | 'activas' | 'pausadas' | 'promocionadas'
+
 export default function MisPublicacionesList() {
   const [publicaciones, setPublicaciones] = useState<MisPublicacionesItem[]>([])
   const [estadisticas, setEstadisticas] = useState<{
@@ -28,7 +30,7 @@ export default function MisPublicacionesList() {
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [filtro, setFiltro] = useState<'todas' | 'activas' | 'pausadas'>('todas')
+  const [filtro, setFiltro] = useState<TabType>('todas')
 
   const transformarPublicacion = (pub: any): MisPublicacionesItem => {
     return {
@@ -105,17 +107,43 @@ export default function MisPublicacionesList() {
     )
   }
 
+  const handlePromocionChange = (id: number, promoted: boolean) => {
+  setPublicaciones(prev =>
+    prev.map(p => (p.id === id ? { ...p, promoted } : p))
+  )
+  
+  if (!promoted) {
+    setFiltro('activas')
+  }
+}
+
   useEffect(() => {
     cargarPublicaciones()
   }, [])
 
+  const getTabCount = (tab: TabType) => {
+    switch (tab) {
+      case 'activas':
+        return publicaciones.filter(p => p.activa === true && !p.promoted).length
+      case 'pausadas':
+        return publicaciones.filter(p => p.activa === false).length
+      case 'promocionadas':
+        return publicaciones.filter(p => p.promoted === true).length
+      default:
+        return publicaciones.length
+    }
+  }
+
   const publicacionesFiltradas = publicaciones.filter(p => {
-    if (filtro === 'activas') return p.activa === true
+    if (filtro === 'activas') return p.activa === true && !p.promoted
     if (filtro === 'pausadas') return p.activa === false
+     if (filtro === 'promocionadas') return p.promoted === true
     return true
   })
 
-  const publicacionesActivas = publicaciones.filter(p => p.activa === true)
+   const publicacionesActivas = publicaciones.filter(p => p.activa === true && !p.promoted)
+   const publicacionesPublicidad = publicaciones.filter(p => p.promoted === true)
+ 
 
   const limiteMostrado = estadisticas.tieneSuscripcion
     ? estadisticas.limite
@@ -161,16 +189,16 @@ export default function MisPublicacionesList() {
         </p>
       </div>
 
-      <div className="flex gap-2 border-b border-gray-200 pb-2">
+      <div className="flex gap-2 border-b border-gray-200 pb-2 overflow-x-auto">
         <button
           onClick={() => setFiltro('todas')}
-          className={`px-4 py-2 rounded-lg transition ${
+          className={`px-4 py-2 rounded-lg transition whitespace-nowrap ${
             filtro === 'todas'
               ? 'bg-blue-600 text-white'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
-          Todas ({publicaciones.length})
+          Todas ({getTabCount('todas')})
         </button>
 
         <button
@@ -181,7 +209,7 @@ export default function MisPublicacionesList() {
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
-          Activas ({publicaciones.filter(p => p.activa).length})
+          Activas ({getTabCount('activas')})
         </button>
 
         <button
@@ -192,7 +220,18 @@ export default function MisPublicacionesList() {
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
-          Pausadas ({publicaciones.filter(p => !p.activa).length})
+          Pausadas ({getTabCount('pausadas')})
+        </button>
+
+         <button
+          onClick={() => setFiltro('promocionadas')}
+          className={`px-4 py-2 rounded-lg transition whitespace-nowrap ${
+            filtro === 'promocionadas'
+              ? 'bg-orange-600 text-white'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+          }`}
+        >
+          Publicidad ({getTabCount('promocionadas')})
         </button>
       </div>
 
@@ -202,6 +241,7 @@ export default function MisPublicacionesList() {
             {filtro === 'todas' && 'No tienes publicaciones.'}
             {filtro === 'activas' && 'No tienes publicaciones activas.'}
             {filtro === 'pausadas' && 'No tienes publicaciones pausadas.'}
+            {filtro === 'promocionadas' && 'No tienes propiedades en publicidad.'}
           </p>
         </div>
       ) : (
@@ -212,6 +252,9 @@ export default function MisPublicacionesList() {
               publicacion={pub}
               onDeleted={handleDeleted}
               onEstadoChange={handleEstadoChange}
+              onPromocionChange={handlePromocionChange}
+              showPromoteButton={filtro === 'activas'}
+              showCancelPromoteButton={filtro === 'promocionadas'}
             />
           ))}
         </div>

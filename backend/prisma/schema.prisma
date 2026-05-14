@@ -250,6 +250,7 @@ model Publicacion {
   @@index([usuarioId], map: "idx_publicacion_usuario")
   @@index([promoted], map: "idx_publicacion_promoted")
   @@map("publicacion")
+
 }
 
 model Multimedia {
@@ -846,6 +847,7 @@ model TutorialPublicacionUsuario {
   @@map("tutorial_publicacion_usuario")
 }
 
+
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model publicacion_compartido {
   id             Int      @id @default(autoincrement())
@@ -926,6 +928,7 @@ model modelo_version {
   entrenado_en DateTime @default(now()) @db.Timestamp(6)
   notas        String?
 }
+
 model Tag {
   id              Int               @id @default(autoincrement())
   nombre          String            @unique @db.VarChar(30)

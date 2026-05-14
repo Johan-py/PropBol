@@ -4,6 +4,8 @@ type PublicarSectionProps = {
   onPublish: () => void
   publishError?: string
   canPublish: boolean
+  progreso?: number        // ← agrega
+  isPublishing?: boolean  // ← agrega
 }
 
 export default function PublicarSection({
@@ -11,7 +13,9 @@ export default function PublicarSection({
   onConfirmedChange,
   onPublish,
   publishError,
-  canPublish
+  canPublish,
+  progreso = 0,      
+  isPublishing = false
 }: PublicarSectionProps) {
   return (
     <section
@@ -48,10 +52,26 @@ export default function PublicarSection({
             type="checkbox"
             checked={confirmed}
             onChange={(e) => onConfirmedChange(e.target.checked)}
+            disabled={isPublishing}
           />
           Confirmo que la información ingresada es correcta
         </label>
-
+          {isPublishing && (
+          <div style={{ marginBottom: '18px' }}>
+            <p style={{ fontSize: '14px', color: '#f57c00', marginBottom: '6px' }}>
+              Publicando... {progreso}%
+            </p>
+            <div style={{ background: '#f0dfd8', borderRadius: '10px', height: '10px' }}>
+              <div style={{
+                background: '#ff7f11',
+                borderRadius: '10px',
+                height: '10px',
+                width: `${progreso}%`,
+                transition: 'width 0.4s ease'
+              }} />
+            </div>
+          </div>
+        )}
         {!canPublish && (
           <p style={{ color: '#d32f2f', fontSize: '14px', marginBottom: '12px' }}>
             Debes agregar al menos una imagen o un video para habilitar la publicación.
@@ -79,6 +99,24 @@ export default function PublicarSection({
         >
           Publicar inmueble
         </button>
+          {isPublishing && (
+         <button
+         onClick={() => window.location.reload()}
+         style={{
+         marginTop: '10px',
+         background: 'transparent',
+         border: '1px solid #ccc',
+         borderRadius: '10px',
+         padding: '10px 22px',
+         fontSize: '14px',
+         cursor: 'pointer',
+         color: '#555'
+         }}
+   >
+    Cancelar
+  </button>
+)}
+
       </div>
     </section>
   )

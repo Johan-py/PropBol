@@ -59,7 +59,7 @@ function ContenidoMultimediaPageContent() {
   const [isUploadingImages, setIsUploadingImages] = useState(false)
   const [isUploadingVideos, setIsUploadingVideos] = useState(false)
   const [isPublishing, setIsPublishing] = useState(false)
-
+  const [progreso, setProgreso] = useState(0)
   const [showPlanModal, setShowPlanModal] = useState(false)
 
   const imageInputRef = useRef<HTMLInputElement | null>(null)
@@ -350,6 +350,19 @@ function ContenidoMultimediaPageContent() {
       }
     }
   }
+  const simularProgreso = (desde: number, hasta: number, velocidad = 800) => {
+  return new Promise<void>((resolve) => {
+    let actual = desde
+    const interval = setInterval(() => {
+      actual += 10
+      setProgreso(actual)
+      if (actual >= hasta) {
+        clearInterval(interval)
+        resolve()
+      }
+    }, velocidad)
+  })
+}
 
   const handlePublish = async () => {
     setPublishError('')
@@ -390,9 +403,15 @@ function ContenidoMultimediaPageContent() {
 
     try {
       setIsPublishing(true)
+      setProgreso(0)  
 
       await uploadImages(token)
+      await simularProgreso(0, 50, 2000)
+     
+
       await uploadYoutubeLinks(token)
+      await simularProgreso(50, 100, 2000)
+      
 
       router.push(`/resumen-final?id=${publicacionId}`)
     } catch (error) {
@@ -493,6 +512,8 @@ function ContenidoMultimediaPageContent() {
           onPublish={handlePublish}
           publishError={isPublishing ? 'Publicando contenido multimedia...' : publishError}
           canPublish={hasRequiredPhoto && !isPublishing}
+          progreso={progreso}
+          isPublishing={isPublishing}
         />
 
         <PlanModal
