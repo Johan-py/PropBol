@@ -131,6 +131,22 @@ export default function NotificationDetailPage() {
                   {notification.status === 'no leida' ? 'No leída' : 'Leída'}
                 </span>
 
+                {notification.tipo === 'BLOG_APROBADO' && (
+                  <span className="rounded-full bg-green-100 px-2.5 py-1 font-semibold text-green-700">
+                    Aprobado
+                  </span>
+                )}
+                {notification.tipo === 'BLOG_RECHAZADO' && (
+                  <span className="rounded-full bg-red-100 px-2.5 py-1 font-semibold text-red-600">
+                    Rechazado
+                  </span>
+                )}
+                {notification.tipo === 'BLOG_PENDIENTE' && (
+                  <span className="rounded-full bg-amber-100 px-2.5 py-1 font-semibold text-amber-700">
+                    Pendiente
+                  </span>
+                )}
+
                 {notification.fechaCreacion && (
                   <span>{formatRelativeTime(notification.fechaCreacion)}</span>
                 )}
