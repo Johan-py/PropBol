@@ -111,7 +111,7 @@ export default function LimiteConsumoPage() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
             <div className="flex items-center gap-3 mb-1">
-              <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+              <h1 className="text-3xl md:text-5xl font-bold text-gray-900">
                 Panel de consumo
               </h1>
             </div>
