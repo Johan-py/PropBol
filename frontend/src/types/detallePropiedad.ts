@@ -1,7 +1,9 @@
 export interface DetallePropiedad {
   id: number
+  inmuebleId: number
   titulo: string
   precio: number
+  precio_anterior?: number;
   tipoInmueble: string | null
   tipoOperacion: string
   ubicacionTexto: string

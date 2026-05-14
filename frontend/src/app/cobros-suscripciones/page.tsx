@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Calendar, ArrowRight } from 'lucide-react'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
@@ -22,7 +23,7 @@ const plansData: Plan[] = [
     price: 0,
     description: 'Ideal para comenzar',
     comment: 'Perfecto para empezar y explorar nuestras funciones esenciales sin complicaciones.',
-    benefits: ['3 publicaciones activas', 'Acceso limitado', 'Soporte basico', '1 usuario'],
+    benefits: ['2 publicaciones activas', 'Acceso limitado', 'Soporte basico', '1 usuario'],
     subscribers: 25
   },
   {
@@ -91,22 +92,22 @@ export default function CobrosSuscripciones() {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50 flex justify-center p-10 font-inter">
+    <div className="min-h-screen bg-stone-50 flex justify-center px-4 py-6 sm:p-10 font-inter">
       <div className="w-full max-w-6xl">
         <div className="mb-10">
-          <h1 className="text-4xl font-bold text-stone-900">Planes de membresía</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-stone-900">Planes de membresía</h1>
 
-          <p className="text-stone-400 mt-2 text-lg">
+          <p className="text-sm sm:text-base md:text-lg text-stone-400 mt-2">
             Amplia tu alcance en el mercado inmobiliario de Bolivia.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {plans.map((plan) => (
             <div
               key={plan.id}
               className={`
-                relative p-6 w-80 flex flex-col justify-between
+                relative p-4 sm:p-6 w-full flex flex-col justify-between
                 rounded-3xl border transition-all duration-300
                 bg-white border-stone-200
                 hover:bg-amber-50
@@ -168,6 +169,28 @@ export default function CobrosSuscripciones() {
               </button>
             </div>
           ))}
+        </div>
+
+        {/* Banner de Suscripciones Anuales */}
+        <div className="mt-12 p-4 sm:p-6 rounded-3xl bg-amber-50/50 border border-amber-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 shadow-sm">
+          <div className="flex items-center gap-5">
+            <div className="p-4 bg-white rounded-2xl shadow-sm border border-amber-100">
+              <Calendar className="w-8 h-8 text-amber-600" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-stone-900">Tu suscripción actual</h3>
+              <p className="text-stone-600 text-sm max-w-md">
+                Revisa cuántas publicaciones has usado este mes y el límite de tu plan.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => router.push('/LimiteConsumo')}
+            className="whitespace-nowrap px-8 py-3 bg-white border-2 border-amber-600/20 text-amber-700 rounded-2xl hover:bg-amber-100 hover:border-amber-600/40 transition-all font-bold flex items-center gap-2 shadow-sm active:scale-95"
+          >
+            Ir al panel de consumo
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </div>

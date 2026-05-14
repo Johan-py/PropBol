@@ -2,11 +2,15 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import EditarMultimediaModal from '@/components/publicacion/EditarMultimediaModal'
 import {
   editarPublicacion,
   obtenerDetallePublicacion
 } from '@/services/publicacion.service'
-import type { EditarPublicacionPayload } from '@/types/publicacion'
+import type {
+  EditarPublicacionPayload,
+  PublicacionDetalle
+} from '@/types/publicacion'
 
 type FormState = {
   titulo: string
@@ -66,6 +70,10 @@ export default function EditarPublicacionPage() {
     ubicacion: ''
   })
 
+  const [detallePublicacion, setDetallePublicacion] =
+    useState<PublicacionDetalle | null>(null)
+
+  const [mostrarModalMultimedia, setMostrarModalMultimedia] = useState(false)
   const [originalForm, setOriginalForm] = useState<FormState | null>(null)
   const [fieldErrors, setFieldErrors] = useState<FormErrors>({})
   const [loading, setLoading] = useState(true)
@@ -89,6 +97,7 @@ export default function EditarPublicacionPage() {
           ubicacion: detalle.ubicacionTexto ?? ''
         }
 
+        setDetallePublicacion(detalle)
         setForm(formCargado)
         setOriginalForm(formCargado)
       } catch (err) {
@@ -136,6 +145,133 @@ export default function EditarPublicacionPage() {
       ? JSON.stringify(form) !== JSON.stringify(originalForm)
       : false
   }
+
+  useEffect(() => {
+    const protegerSalidaEditarPublicacion = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+
+      const elementoNavegable = target.closest('a, button') as
+        | HTMLAnchorElement
+        | HTMLButtonElement
+        | null
+
+      if (!elementoNavegable) return
+
+      const estaDentroDelFormulario = elementoNavegable.closest('form')
+
+      if (estaDentroDelFormulario) return
+
+      const href =
+        elementoNavegable instanceof HTMLAnchorElement
+          ? elementoNavegable.getAttribute('href')
+          : null
+
+      const textoBoton =
+        elementoNavegable.textContent?.trim().toLowerCase() ?? ''
+
+      const esLinkValido =
+        href &&
+        !href.startsWith('#') &&
+        !href.startsWith('mailto:') &&
+        !href.startsWith('tel:') &&
+        href !== window.location.pathname
+
+      const esBotonDeNavegacion =
+        textoBoton.includes('propbol') ||
+        textoBoton.includes('propiedades') ||
+        textoBoton.includes('blogs') ||
+        textoBoton.includes('planes') ||
+        textoBoton.includes('ayuda') ||
+        textoBoton.includes('publica tu inmueble') ||
+        textoBoton.includes('mi cuenta') ||
+        textoBoton.includes('mis propiedades vistas') ||
+        textoBoton.includes('mis favoritos') ||
+        textoBoton.includes('mis publicaciones') ||
+        textoBoton.includes('mis zonas') ||
+        textoBoton.includes('mis comparaciones') ||
+        textoBoton.includes('seguridad') ||
+        textoBoton.includes('cerrar sesión') ||
+        textoBoton.includes('contacto') ||
+        textoBoton.includes('términos') ||
+        textoBoton.includes('terminos') ||
+        textoBoton.includes('privacidad') ||
+        textoBoton.includes('política') ||
+        textoBoton.includes('politica') ||
+        textoBoton.includes('facebook') ||
+        textoBoton.includes('instagram') ||
+        textoBoton.includes('twitter') ||
+        textoBoton.includes('linkedin')
+
+      if (esLinkValido || esBotonDeNavegacion) {
+        const confirmar = window.confirm(
+          '¿Estás seguro que quieres salirte sin editar nada?'
+        )
+
+        if (!confirmar) {
+          event.preventDefault()
+          event.stopPropagation()
+          event.stopImmediatePropagation()
+        }
+      }
+    }
+
+    document.addEventListener('click', protegerSalidaEditarPublicacion, true)
+
+    return () => {
+      document.removeEventListener(
+        'click',
+        protegerSalidaEditarPublicacion,
+        true
+      )
+    }
+  }, [])
+
+  useEffect(() => {
+    const estadoActual = window.history.state
+
+    window.history.pushState(estadoActual, '', window.location.href)
+
+    const protegerBotonAtras = () => {
+      if (hayCambiosPendientes()) {
+        const confirmar = window.confirm(
+          '¿Estás seguro que quieres salirte sin editar nada?'
+        )
+
+        if (!confirmar) {
+          window.history.pushState(
+            window.history.state,
+            '',
+            window.location.href
+          )
+          return
+        }
+      }
+
+      window.removeEventListener('popstate', protegerBotonAtras)
+      window.history.back()
+    }
+
+    window.addEventListener('popstate', protegerBotonAtras)
+
+    return () => {
+      window.removeEventListener('popstate', protegerBotonAtras)
+    }
+  }, [form, originalForm])
+
+  useEffect(() => {
+    const protegerRecargaOCierre = (event: BeforeUnloadEvent) => {
+      if (hayCambiosPendientes()) {
+        event.preventDefault()
+        event.returnValue = ''
+      }
+    }
+
+    window.addEventListener('beforeunload', protegerRecargaOCierre)
+
+    return () => {
+      window.removeEventListener('beforeunload', protegerRecargaOCierre)
+    }
+  }, [form, originalForm])
 
   const handleCancelar = () => {
     if (hayCambiosPendientes()) {
@@ -205,9 +341,19 @@ export default function EditarPublicacionPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
-      <h1 className="mb-6 text-3xl font-bold text-black">
-        Editar publicación
-      </h1>
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-3xl font-bold text-black">
+          Editar publicación
+        </h1>
+
+        <button
+          type="button"
+          onClick={() => setMostrarModalMultimedia(true)}
+          className="rounded-lg border border-[#D97706] bg-white px-4 py-2 text-sm font-semibold text-[#D97706] transition hover:bg-orange-50"
+        >
+          Editar imágenes y video
+        </button>
+      </div>
 
       {error && (
         <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700">
@@ -359,6 +505,28 @@ export default function EditarPublicacionPage() {
           </button>
         </div>
       </form>
+
+          {detallePublicacion && (
+        <EditarMultimediaModal
+          open={mostrarModalMultimedia}
+          publicacionId={publicacionId}
+          imagenesActuales={
+            detallePublicacion.imagenes?.map((imagen) =>
+              typeof imagen === 'string' ? imagen : imagen.url
+            ) ?? []
+          }
+          videoActual={detallePublicacion.videoUrl}
+          onClose={() => setMostrarModalMultimedia(false)}
+          onSaved={async () => {
+            const detalleActualizado =
+              await obtenerDetallePublicacion(publicacionId)
+
+            setDetallePublicacion(detalleActualizado)
+            setMostrarModalMultimedia(false)
+            router.refresh()
+          }}
+        />
+      )}
     </div>
   )
 }

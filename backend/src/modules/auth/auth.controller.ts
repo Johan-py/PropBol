@@ -11,7 +11,12 @@ import {
   registerUser,
   resetPasswordService,
   verify2FAService,
-  verifyRegisterCodeService
+  verifyRegisterCodeService,
+  resend2FAService,
+  activateAccountByPasswordService,
+  requestActivationCodeService,
+  activateAccountByCodeService,
+  resendRegisterCodeService,
 } from './auth.service.js'
 
 type RegisterBody = {
@@ -60,6 +65,27 @@ const getRegisterErrorMessage = (message: string) => {
 
   return message;
 };
+
+export const resend2FAController = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.body
+
+    const result = await resend2FAService(userId)
+
+    return res.status(200).json(result)
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message
+      })
+    }
+
+    const message =
+      error instanceof Error ? error.message : 'Error al reenviar el código 2FA'
+
+    return res.status(400).json({ message })
+  }
+}
 
 export const loginController = async (req: Request, res: Response) => {
   try {
@@ -316,6 +342,7 @@ export const get2FAStatusController = async (req: Request, res: Response) => {
       })
     }
 
+    
     const result = await get2FAStatusService(userId)
 
     return res.status(200).json(result)
@@ -361,3 +388,95 @@ export const resetPasswordController = async (req: Request, res: Response) => {
     return res.status(400).json({ message })
   }
 }
+
+export const activateAccountByPasswordController = async (req: Request, res: Response) => {
+  try {
+    const { correo, password } = req.body;
+    const result = await activateAccountByPasswordService({ correo, password });
+
+    return res.status(200).json(result);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
+    console.error("Error inesperado al activar cuenta por contraseña:", error);
+
+    return res.status(500).json({
+      message: "Error interno del servidor",
+    });
+  }
+};
+
+export const requestActivationCodeController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { correo } = req.body;
+    const result = await requestActivationCodeService(correo);
+
+    return res.status(200).json(result);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
+    console.error("Error inesperado al solicitar código de activación:", error);
+
+    return res.status(500).json({
+      message: "Error interno del servidor",
+    });
+  }
+};
+
+export const activateAccountByCodeController = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { correo, codigo } = req.body;
+    const result = await activateAccountByCodeService(correo, codigo);
+
+    return res.status(200).json(result);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
+    console.error("Error inesperado al activar cuenta por código:", error);
+
+    return res.status(500).json({
+      message: "Error interno del servidor",
+    });
+  }
+};
+
+export const resendRegisterCodeController = async (req: Request, res: Response) => {
+  try {
+    const { verificationToken } = req.body;
+    const result = await resendRegisterCodeService(verificationToken);
+
+    return res.status(200).json({
+      message: "Te enviamos un nuevo código de verificación.",
+      ...result,
+    });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      return res.status(error.statusCode).json({
+        message: error.message,
+      });
+    }
+
+    const message =
+      error instanceof Error ? error.message : "Error al reenviar el código";
+
+    return res.status(400).json({ message });
+  }
+};

@@ -28,6 +28,7 @@ export class FavoritesService {
       }),
     ])
 
+    // Por esto:
     return {
       total,
       page,
@@ -35,30 +36,60 @@ export class FavoritesService {
       data: favoritos.map((f) => ({
         id: f.id,
         agregadoEn: f.agregadoEn,
-        inmueble: f.inmueble
+        inmueble: {
+          ...f.inmueble,
+          imagen_principal: f.inmueble.publicaciones[0]?.multimedia[0]?.url || null
+        }
       })),
-      inmuebles: favoritos.map((f) => f.inmueble),
       totalPages: Math.ceil(total / perPage)
     }
   }
 
   static async add(usuarioId: number, inmuebleId: number) {
-    try {
-      // Usar create directamente con el unique compuesto
-      return await prisma.favorito.create({
+  try {
+    const favorito = await prisma.favorito.create({
+      data: { usuarioId, inmuebleId }
+    })
+
+    // Guardar en entrenamiento_ml de forma asíncrona
+    const inmueble = await prisma.inmueble.findUnique({
+      where: { id: inmuebleId },
+      include: { ubicacion: true, inmueble_amenidad: true }
+    })
+
+    if (inmueble) {
+      prisma.entrenamiento_ml.create({
         data: {
-          usuarioId,
-          inmuebleId
-        },
-      })
-    } catch (error: any) {
-      // P2002 es el error de Prisma para unique constraint violation
-      if (error.code === 'P2002') {
-        throw new Error('ALREADY_EXISTS')
-      }
-      throw error
+          usuario_id: usuarioId,
+          inmueble_id: inmuebleId,
+          tipo_evento: 'FAVORITO',
+          score_real: 1.0,
+          features: {
+            categoria: inmueble.categoria,
+            tipoAccion: inmueble.tipoAccion,
+            precio: Number(inmueble.precio),
+            superficieM2: Number(inmueble.superficieM2 || 0),
+            nroCuartos: inmueble.nroCuartos || 0,
+            nroBanos: inmueble.nroBanos || 0,
+            zona: inmueble.ubicacion?.zona || null,
+            ciudad: inmueble.ubicacion?.ciudad || null,
+            amenidades: inmueble.inmueble_amenidad.map(a => a.amenidad_id),
+            precioReducido: inmueble.precio_anterior !== null &&
+              Number(inmueble.precio_anterior) > Number(inmueble.precio)
+          },
+          usado_en_modelo: false
+        }
+      }).catch(err => console.error('[ML] Error guardando favorito en entrenamiento_ml:', err))
     }
+
+    return favorito
+  } catch (error: any) {
+    if (error.code === 'P2002') {
+      throw new Error('ALREADY_EXISTS')
+    }
+    throw error
   }
+}
 
   static async remove(usuarioId: number, inmuebleId: number) {
     try {

@@ -45,6 +45,11 @@ function ParametrosPageContent() {
 
   const publicacionIdParam = searchParams.get("publicacionId");
   const publicacionId = publicacionIdParam ? Number(publicacionIdParam) : null;
+
+  // Acepta los dos nombres por seguridad:
+  // returnTo viene desde Mis Publicaciones
+  // origen puede venir desde Multimedia u otro flujo
+  const returnTo = searchParams.get("returnTo");
   const origen = searchParams.get("origen");
 
   const [catalogoParametros, setCatalogoParametros] = useState<ParametroBackend[]>([]);
@@ -55,12 +60,14 @@ function ParametrosPageContent() {
   const [mostrarModalExito, setMostrarModalExito] = useState(false);
 
   const volverSegunOrigen = () => {
-    if (origen === "mis-publicaciones") {
+    const destino = returnTo || origen;
+
+    if (destino === "mis-publicaciones") {
       router.push("/mis-publicaciones");
       return;
     }
 
-    if (origen === "multimedia" && publicacionId && !Number.isNaN(publicacionId)) {
+    if (destino === "multimedia" && publicacionId && !Number.isNaN(publicacionId)) {
       router.push(`/contenido-multimedia?publicacionId=${publicacionId}`);
       return;
     }
@@ -187,6 +194,7 @@ function ParametrosPageContent() {
 
       for (const nombre of parametros) {
         const parametro = await crearParametroSiNoExiste(nombre, token);
+
         parametrosConId.push({
           parametroId: parametro.id,
           valor: null,
@@ -221,7 +229,7 @@ function ParametrosPageContent() {
       setTimeout(() => {
         setMostrarModalExito(false);
         volverSegunOrigen();
-      }, 4000);
+      }, 1500);
     } catch (error) {
       const mensajeError =
         error instanceof Error ? error.message : "Ocurrió un error al guardar.";
@@ -253,6 +261,7 @@ function ParametrosPageContent() {
         ) : (
           <ExtrasPropiedad
             valoresIniciales={parametrosGuardados}
+            catalogoParametros={catalogoParametros}
             onGuardar={manejarGuardarParametros}
             onCancelar={volverSegunOrigen}
           />

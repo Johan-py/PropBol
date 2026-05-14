@@ -1,456 +1,331 @@
-"use client";
+'use client'
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  Eye,
-  EyeOff,
-  Mail,
-  User,
-  Phone,
-  Lock,
-  AlertCircle,
-} from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { validateEmail, validatePassword } from "@/lib/validators/auth";
-import GoogleRegisterButton from "@/components/layout/auth/google/GoogleRegisterButton";
-
+import { useEffect, useMemo, useRef, useState } from 'react'
+import DiscordRegisterButton from '@/components/layout/auth/discord/DiscordRegisterButton'
+import { Eye, EyeOff, Mail, User, Phone, Lock, AlertCircle } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { validateEmail, validatePassword } from '@/lib/validators/auth'
+import GoogleRegisterButton from '@/components/layout/auth/google/GoogleRegisterButton'
+import FacebookRegisterButton from '@/components/layout/auth/facebook/FacebookRegisterButton'
+import LinkedInRegisterButton from '@/components/layout/auth/linkedin/LinkedInRegisterButton'
 type FormData = {
-  email: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  password: string;
-  confirmPassword: string;
-};
+  email: string
+  firstName: string
+  lastName: string
+  phone: string
+  password: string
+  confirmPassword: string
+}
 
 type FormErrors = {
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
-  password?: string;
-  confirmPassword?: string;
-};
+  email?: string
+  firstName?: string
+  lastName?: string
+  phone?: string
+  password?: string
+  confirmPassword?: string
+}
 
 interface RegisterResponse {
-  message: string;
-  verificationToken?: string;
-  email?: string;
-  requiresEmailVerification?: boolean;
-  expiresInMinutes?: number;
+  message: string
+  verificationToken?: string
+  email?: string
+  requiresEmailVerification?: boolean
+  expiresInMinutes?: number
 }
 
 type GooglePopupSuccessPayload = {
-  type: "propbol:google-login-success";
-  message: string;
-  token: string;
+  type: 'propbol:google-login-success'
+  message: string
+  token: string
   user: {
-    id: number;
-    correo: string;
-    nombre?: string;
-    apellido?: string;
-  };
-};
+    id: number
+    correo: string
+    nombre?: string
+    apellido?: string
+  }
+}
 
-type DiscordPopupSuccessPayload = {
-  type: "propbol:discord-login-success";
-  message: string;
-  token: string;
-  user: {
-    id: number;
-    correo: string;
-    nombre?: string;
-    apellido?: string;
-  };
-};
-
-type DiscordPopupErrorPayload = {
-  type: "propbol:discord-login-error";
-  code: string;
-  message: string;
-};
-
-type DiscordPopupMessage =
-  | DiscordPopupSuccessPayload
-  | DiscordPopupErrorPayload;
-
-type FacebookPopupSuccessPayload = {
-  type: "propbol:facebook-login-success";
-  message: string;
-  token: string;
-  user: {
-    id: number;
-    correo: string;
-    nombre?: string;
-    apellido?: string;
-  };
-};
-
-type FacebookPopupErrorPayload = {
-  type: "propbol:facebook-login-error";
-  code: string;
-  message: string;
-};
-
-type FacebookPopupMessage =
-  | FacebookPopupSuccessPayload
-  | FacebookPopupErrorPayload;
-
-const MAX_NAME_LENGTH = 30;
-const MAX_LAST_NAME_LENGTH = 30;
-const SESSION_DURATION_MS = 60 * 60 * 1000;
+const MAX_NAME_LENGTH = 30
+const MAX_LAST_NAME_LENGTH = 30
+const SESSION_DURATION_MS = 60 * 60 * 1000
 
 const initialFormData: FormData = {
-  email: "",
-  firstName: "",
-  lastName: "",
-  phone: "",
-  password: "",
-  confirmPassword: "",
-};
+  email: '',
+  firstName: '',
+  lastName: '',
+  phone: '',
+  password: '',
+  confirmPassword: ''
+}
 
 function getInputClasses(hasError?: boolean, hasRightIcon?: boolean) {
   return [
-    "w-full rounded-md border bg-white pl-9 py-2.5 outline-none",
-    hasRightIcon ? "pr-10" : "pr-3",
-    "text-[12px] text-[#292524] placeholder:text-[#78716c] transition-all duration-200",
+    'w-full rounded-md border bg-white pl-9 py-2.5 outline-none',
+    hasRightIcon ? 'pr-10' : 'pr-3',
+    'text-[12px] text-[#292524] placeholder:text-[#78716c] transition-all duration-200',
     hasError
-      ? "border-red-400 focus:border-red-400 focus:ring-1 focus:ring-red-200"
-      : "border-[#d6d3d1] focus:border-[#D97706] focus:ring-1 focus:ring-amber-200",
-  ].join(" ");
+      ? 'border-red-400 focus:border-red-400 focus:ring-1 focus:ring-red-200'
+      : 'border-[#d6d3d1] focus:border-[#D97706] focus:ring-1 focus:ring-amber-200'
+  ].join(' ')
 }
 
 function FieldError({ id, error }: { id: string; error?: string }) {
-  if (!error) return null;
+  if (!error) return null
 
   return (
-    <p
-      id={id}
-      className="mt-1 flex items-center gap-1 text-[11px] text-red-500"
-    >
+    <p id={id} className="mt-1 flex items-center gap-1 text-[11px] text-red-500">
       <AlertCircle size={12} />
       <span>{error}</span>
     </p>
-  );
+  )
 }
 
-function FieldLabel({
-  htmlFor,
-  children,
-}: {
-  htmlFor: string;
-  children: React.ReactNode;
-}) {
+function FieldLabel({ htmlFor, children }: { htmlFor: string; children: React.ReactNode }) {
   return (
-    <label
-      htmlFor={htmlFor}
-      className="mb-1 block text-[12px] font-medium text-[#292524]"
-    >
+    <label htmlFor={htmlFor} className="mb-1 block text-[12px] font-medium text-[#292524]">
       {children}
     </label>
-  );
+  )
 }
 
-const saveGoogleSession = (payload: GooglePopupSuccessPayload) => {
+const saveSession = (payload: {
+  token: string
+  user: { id: number; correo: string; nombre?: string; apellido?: string; avatar?: string | null }
+}) => {
   const userName =
     payload.user.nombre && payload.user.apellido
       ? `${payload.user.nombre} ${payload.user.apellido}`
-      : payload.user.nombre || payload.user.correo || "Usuario";
+      : payload.user.nombre || payload.user.correo || 'Usuario'
 
-  localStorage.setItem("token", payload.token);
+  localStorage.setItem('token', payload.token)
   localStorage.setItem(
-    "propbol_user",
-    JSON.stringify({
-      name: userName,
-      email: payload.user.correo,
-      avatar: null,
-    }),
-  );
-  localStorage.setItem("nombre", userName);
-  localStorage.setItem("correo", payload.user.correo);
-  localStorage.setItem("avatar", "");
-  localStorage.setItem(
-    "propbol_session_expires",
-    String(Date.now() + SESSION_DURATION_MS),
-  );
+    'propbol_user',
+    JSON.stringify({ name: userName, email: payload.user.correo, avatar: null })
+  )
+  localStorage.setItem('nombre', userName)
+  localStorage.setItem('correo', payload.user.correo)
+  localStorage.setItem('avatar', payload.user.avatar ?? '')
+  localStorage.setItem('propbol_session_expires', String(Date.now() + SESSION_DURATION_MS))
 
-  window.dispatchEvent(new Event("propbol:login"));
-  window.dispatchEvent(new Event("propbol:session-changed"));
-  window.dispatchEvent(new Event("auth-state-changed"));
-};
+  window.dispatchEvent(new Event('propbol:login'))
+  window.dispatchEvent(new Event('propbol:session-changed'))
+  window.dispatchEvent(new Event('auth-state-changed'))
+}
 
-const saveDiscordSession = (payload: DiscordPopupSuccessPayload) => {
-  const userName =
-    payload.user.nombre && payload.user.apellido
-      ? `${payload.user.nombre} ${payload.user.apellido}`
-      : payload.user.nombre || payload.user.correo || "Usuario";
-
-  localStorage.setItem("token", payload.token);
-  localStorage.setItem(
-    "propbol_user",
-    JSON.stringify({
-      name: userName,
-      email: payload.user.correo,
-      avatar: null,
-    }),
-  );
-  localStorage.setItem("nombre", userName);
-  localStorage.setItem("correo", payload.user.correo);
-  localStorage.setItem("avatar", "");
-  localStorage.setItem(
-    "propbol_session_expires",
-    String(Date.now() + SESSION_DURATION_MS),
-  );
-
-  window.dispatchEvent(new Event("propbol:login"));
-  window.dispatchEvent(new Event("propbol:session-changed"));
-  window.dispatchEvent(new Event("auth-state-changed"));
-};
-
-const saveFacebookSession = (payload: FacebookPopupSuccessPayload) => {
-  const userName =
-    payload.user.nombre && payload.user.apellido
-      ? `${payload.user.nombre} ${payload.user.apellido}`
-      : payload.user.nombre || payload.user.correo || "Usuario";
-
-  localStorage.setItem("token", payload.token);
-  localStorage.setItem(
-    "propbol_user",
-    JSON.stringify({
-      name: userName,
-      email: payload.user.correo,
-      avatar: null,
-    }),
-  );
-  localStorage.setItem("nombre", userName);
-  localStorage.setItem("correo", payload.user.correo);
-  localStorage.setItem("avatar", "");
-  localStorage.setItem(
-    "propbol_session_expires",
-    String(Date.now() + SESSION_DURATION_MS),
-  );
-
-  window.dispatchEvent(new Event("propbol:login"));
-  window.dispatchEvent(new Event("propbol:session-changed"));
-  window.dispatchEvent(new Event("auth-state-changed"));
-};
+const saveGoogleSession = (payload: GooglePopupSuccessPayload) => saveSession(payload)
 
 export default function SignUpForm() {
-  const router = useRouter();
-  const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+  const router = useRouter()
+  const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
 
-  const [formData, setFormData] = useState<FormData>(initialFormData);
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const passwordContainerRef = useRef<HTMLDivElement>(null);
-  const confirmPasswordContainerRef = useRef<HTMLDivElement>(null);
-  const [serverError, setServerError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoadingFacebook, setIsLoadingFacebook] = useState(false);
+  const [formData, setFormData] = useState<FormData>(initialFormData)
+  const [errors, setErrors] = useState<FormErrors>({})
+  const [touched, setTouched] = useState<Record<string, boolean>>({})
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const passwordContainerRef = useRef<HTMLDivElement>(null)
+  const confirmPasswordContainerRef = useRef<HTMLDivElement>(null)
+  const [serverError, setServerError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const onlyLettersRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
-  const onlyNumbersRegex = /^[0-9]*$/;
+  const onlyLettersRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/
+  const onlyNumbersRegex = /^[0-9]*$/
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token')
 
     if (token) {
-      router.replace("/");
+      router.replace('/')
     }
-  }, [router]);
+  }, [router])
 
   const validateFirstName = (value: string) => {
-    const trimmed = value.trim();
+    const trimmed = value.trim()
 
-    if (trimmed === "") return "El campo no puede estar vacío";
+    if (trimmed === '') return 'El campo no puede estar vacío'
     if (trimmed.length > MAX_NAME_LENGTH) {
-      return `El nombre no puede superar ${MAX_NAME_LENGTH} caracteres`;
+      return `El nombre no puede superar ${MAX_NAME_LENGTH} caracteres`
     }
     if (!onlyLettersRegex.test(value)) {
-      return "El nombre solo puede contener letras";
+      return 'El nombre solo puede contener letras'
     }
 
-    return undefined;
-  };
+    return undefined
+  }
 
   const validateLastName = (value: string) => {
-    const trimmed = value.trim();
+    const trimmed = value.trim()
 
-    if (trimmed === "") return "El campo no puede estar vacío";
+    if (trimmed === '') return 'El campo no puede estar vacío'
     if (trimmed.length > MAX_LAST_NAME_LENGTH) {
-      return `El apellido no puede superar ${MAX_LAST_NAME_LENGTH} caracteres`;
+      return `El apellido no puede superar ${MAX_LAST_NAME_LENGTH} caracteres`
     }
     if (!onlyLettersRegex.test(value)) {
-      return "El apellido solo puede contener letras";
+      return 'El apellido solo puede contener letras'
     }
 
-    return undefined;
-  };
+    return undefined
+  }
 
   const validatePhone = (value: string) => {
-    const trimmed = value.trim();
+    const trimmed = value.trim()
 
-    if (trimmed === "") return "El campo no puede estar vacío";
+    if (trimmed === '') return 'El campo no puede estar vacío'
     if (!onlyNumbersRegex.test(value)) {
-      return "El teléfono solo permite números";
+      return 'El teléfono solo permite números'
     }
 
-    return undefined;
-  };
+    return undefined
+  }
 
   const validateConfirmPassword = (value: string, password: string) => {
-    if (value.trim() === "") return "El campo no puede estar vacío";
-    if (value !== password) return "Las contraseñas no coinciden";
+    if (value.trim() === '') return 'El campo no puede estar vacío'
+    if (value !== password) return 'Las contraseñas no coinciden'
 
-    return undefined;
-  };
+    return undefined
+  }
 
-  const handleChange =
-    (field: keyof FormData) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      const rawValue = event.target.value;
-      const value = field === "email" ? rawValue.trimStart() : rawValue;
+  const handleChange = (field: keyof FormData) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = event.target.value
+    const value = field === 'email' ? rawValue.trimStart() : rawValue
 
-      setFormData((prev) => ({
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value
+    }))
+
+    setServerError('')
+
+    if (field === 'email') {
+      setErrors((prev) => ({
         ...prev,
-        [field]: value,
-      }));
+        email: validateEmail(value) || undefined
+      }))
+    }
 
-      setServerError("");
+    if (field === 'firstName') {
+      setErrors((prev) => ({
+        ...prev,
+        firstName: validateFirstName(value)
+      }))
+    }
 
-      if (field === "email") {
-        setErrors((prev) => ({
-          ...prev,
-          email: validateEmail(value) || undefined,
-        }));
-      }
+    if (field === 'lastName') {
+      setErrors((prev) => ({
+        ...prev,
+        lastName: validateLastName(value)
+      }))
+    }
 
-      if (field === "firstName") {
-        setErrors((prev) => ({
-          ...prev,
-          firstName: validateFirstName(value),
-        }));
-      }
+    if (field === 'phone') {
+      setErrors((prev) => ({
+        ...prev,
+        phone: validatePhone(value)
+      }))
+    }
 
-      if (field === "lastName") {
-        setErrors((prev) => ({
-          ...prev,
-          lastName: validateLastName(value),
-        }));
-      }
+    if (field === 'password') {
+      const passwordError = validatePassword(value)
 
-      if (field === "phone") {
-        setErrors((prev) => ({
-          ...prev,
-          phone: validatePhone(value),
-        }));
-      }
+      setErrors((prev) => ({
+        ...prev,
+        password: passwordError || undefined,
+        confirmPassword:
+          formData.confirmPassword.trim() === ''
+            ? prev.confirmPassword
+            : validateConfirmPassword(formData.confirmPassword, value)
+      }))
+    }
 
-      if (field === "password") {
-        const passwordError = validatePassword(value);
-
-        setErrors((prev) => ({
-          ...prev,
-          password: passwordError || undefined,
-          confirmPassword:
-            formData.confirmPassword.trim() === ""
-              ? prev.confirmPassword
-              : validateConfirmPassword(formData.confirmPassword, value),
-        }));
-      }
-
-      if (field === "confirmPassword") {
-        setErrors((prev) => ({
-          ...prev,
-          confirmPassword: validateConfirmPassword(value, formData.password),
-        }));
-      }
-    };
+    if (field === 'confirmPassword') {
+      setErrors((prev) => ({
+        ...prev,
+        confirmPassword: validateConfirmPassword(value, formData.password)
+      }))
+    }
+  }
 
   const handleBlur = (field: keyof FormData) => () => {
     setTouched((prev) => ({
       ...prev,
-      [field]: true,
-    }));
+      [field]: true
+    }))
 
-    if (field === "email") {
+    if (field === 'email') {
       setErrors((prev) => ({
         ...prev,
-        email: validateEmail(formData.email) || undefined,
-      }));
+        email: validateEmail(formData.email) || undefined
+      }))
     }
 
-    if (field === "firstName") {
+    if (field === 'firstName') {
       setErrors((prev) => ({
         ...prev,
-        firstName: validateFirstName(formData.firstName),
-      }));
+        firstName: validateFirstName(formData.firstName)
+      }))
     }
 
-    if (field === "lastName") {
+    if (field === 'lastName') {
       setErrors((prev) => ({
         ...prev,
-        lastName: validateLastName(formData.lastName),
-      }));
+        lastName: validateLastName(formData.lastName)
+      }))
     }
 
-    if (field === "phone") {
+    if (field === 'phone') {
       setErrors((prev) => ({
         ...prev,
-        phone: validatePhone(formData.phone),
-      }));
+        phone: validatePhone(formData.phone)
+      }))
     }
 
-    if (field === "password") {
+    if (field === 'password') {
       setErrors((prev) => ({
         ...prev,
-        password: validatePassword(formData.password) || undefined,
-      }));
+        password: validatePassword(formData.password) || undefined
+      }))
     }
 
-    if (field === "confirmPassword") {
+    if (field === 'confirmPassword') {
       setErrors((prev) => ({
         ...prev,
-        confirmPassword: validateConfirmPassword(
-          formData.confirmPassword,
-          formData.password,
-        ),
-      }));
+        confirmPassword: validateConfirmPassword(formData.confirmPassword, formData.password)
+      }))
     }
-  };
+  }
 
   const handleCancel = () => {
-    setFormData(initialFormData);
-    setErrors({});
-    setTouched({});
-    setShowPassword(false);
-    setShowConfirmPassword(false);
-    setServerError("");
-    setIsSubmitting(false);
-  };
+    setFormData(initialFormData)
+    setErrors({})
+    setTouched({})
+    setShowPassword(false)
+    setShowConfirmPassword(false)
+    setServerError('')
+    setIsSubmitting(false)
+  }
 
   const hasFormContent = useMemo(() => {
     return (
-      formData.email.trim() !== "" ||
-      formData.firstName.trim() !== "" ||
-      formData.lastName.trim() !== "" ||
-      formData.phone.trim() !== "" ||
-      formData.password.trim() !== "" ||
-      formData.confirmPassword.trim() !== "" ||
-      serverError !== ""
-    );
-  }, [formData, serverError]);
+      formData.email.trim() !== '' ||
+      formData.firstName.trim() !== '' ||
+      formData.lastName.trim() !== '' ||
+      formData.phone.trim() !== '' ||
+      formData.password.trim() !== '' ||
+      formData.confirmPassword.trim() !== '' ||
+      serverError !== ''
+    )
+  }, [formData, serverError])
 
   const isFormValid = useMemo(() => {
     const requiredFieldsCompleted =
-      formData.email.trim() !== "" &&
-      formData.firstName.trim() !== "" &&
-      formData.lastName.trim() !== "" &&
-      formData.phone.trim() !== "" &&
-      formData.password.trim() !== "" &&
-      formData.confirmPassword.trim() !== "";
+      formData.email.trim() !== '' &&
+      formData.firstName.trim() !== '' &&
+      formData.lastName.trim() !== '' &&
+      formData.phone.trim() !== '' &&
+      formData.password.trim() !== '' &&
+      formData.confirmPassword.trim() !== ''
 
     return (
       requiredFieldsCompleted &&
@@ -460,15 +335,15 @@ export default function SignUpForm() {
       !validatePhone(formData.phone) &&
       !validatePassword(formData.password) &&
       !validateConfirmPassword(formData.confirmPassword, formData.password)
-    );
-  }, [formData]);
+    )
+  }, [formData])
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    if (isSubmitting) return;
+    if (isSubmitting) return
 
-    setServerError("");
+    setServerError('')
 
     const newErrors: FormErrors = {
       email: validateEmail(formData.email) || undefined,
@@ -476,24 +351,21 @@ export default function SignUpForm() {
       lastName: validateLastName(formData.lastName),
       phone: validatePhone(formData.phone),
       password: validatePassword(formData.password) || undefined,
-      confirmPassword: validateConfirmPassword(
-        formData.confirmPassword,
-        formData.password,
-      ),
-    };
+      confirmPassword: validateConfirmPassword(formData.confirmPassword, formData.password)
+    }
 
-    setErrors(newErrors);
+    setErrors(newErrors)
     setTouched({
       email: true,
       firstName: true,
       lastName: true,
       phone: true,
       password: true,
-      confirmPassword: true,
-    });
+      confirmPassword: true
+    })
 
     if (Object.values(newErrors).some(Boolean)) {
-      return;
+      return
     }
 
     const payload = {
@@ -502,276 +374,70 @@ export default function SignUpForm() {
       correo: formData.email.trim().toLowerCase(),
       telefono: formData.phone.trim(),
       password: formData.password.trim(),
-      confirmPassword: formData.confirmPassword.trim(),
-    };
+      confirmPassword: formData.confirmPassword.trim()
+    }
 
-    setIsSubmitting(true);
+    setIsSubmitting(true)
 
     try {
       const response = await fetch(`${API_URL}/api/auth/register`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(payload),
-      });
+        body: JSON.stringify(payload)
+      })
 
-      let data: RegisterResponse | null = null;
+      let data: RegisterResponse | null = null
 
       try {
-        data = (await response.json()) as RegisterResponse;
+        data = (await response.json()) as RegisterResponse
       } catch {
-        data = null;
+        data = null
       }
 
       if (!response.ok) {
-        throw new Error(data?.message || "No se pudo completar el registro");
+        throw new Error(data?.message || 'No se pudo completar el registro')
       }
 
       if (!data?.verificationToken || !data?.email) {
-        throw new Error("No se recibió la verificación del registro");
+        throw new Error('No se recibió la verificación del registro')
       }
 
-      sessionStorage.setItem("pendingRegisterToken", data.verificationToken);
+      sessionStorage.setItem('pendingRegisterToken', data.verificationToken)
+      sessionStorage.setItem('pendingRegisterPassword', formData.password.trim())
+      sessionStorage.setItem('pendingRegisterEmail', data.email)
       sessionStorage.setItem(
-        "pendingRegisterPassword",
-        formData.password.trim(),
-      );
-      sessionStorage.setItem("pendingRegisterEmail", data.email);
-      sessionStorage.setItem(
-        "register_success_message",
-        data.message || "Te enviamos un código de verificación a tu correo.",
-      );
+        'register_success_message',
+        data.message || 'Te enviamos un código de verificación a tu correo.'
+      )
 
-      router.replace("/verify-email");
+      router.replace('/verify-email')
     } catch (error) {
       const message =
         error instanceof TypeError
-          ? "No hay conexión a internet o no se pudo conectar con el servidor"
+          ? 'No hay conexión a internet o no se pudo conectar con el servidor'
           : error instanceof Error
             ? error.message
-            : "No se pudo completar el registro";
+            : 'No se pudo completar el registro'
 
-      setServerError(message);
-      console.error("Error al registrar:", error);
+      setServerError(message)
+      console.error('Error al registrar:', error)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
-
-  const handleFacebookRegister = () => {
-    setServerError("");
-    setIsLoadingFacebook(true);
-
-    const popupWidth = 500;
-    const popupHeight = 600;
-    const left = window.screenX + (window.outerWidth - popupWidth) / 2;
-    const top = window.screenY + (window.outerHeight - popupHeight) / 2;
-
-    const popupWindow = window.open(
-      `${API_URL}/api/auth/facebook/register`,
-      "facebook-register",
-      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`,
-    );
-
-    if (
-      !popupWindow ||
-      popupWindow.closed ||
-      typeof popupWindow.closed === "undefined"
-    ) {
-      setServerError(
-        "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.",
-      );
-      setIsLoadingFacebook(false);
-      return;
-    }
-
-    const popup = popupWindow;
-    popup.focus();
-
-    const expectedOrigin = new URL(API_URL).origin;
-    let authWasResolved = false;
-    let checkPopupIntervalId = 0;
-    let facebookTimeoutId = 0;
-
-    function cleanup() {
-      window.removeEventListener("message", handleMessage);
-      window.clearInterval(checkPopupIntervalId);
-      window.clearTimeout(facebookTimeoutId);
-      setIsLoadingFacebook(false);
-    }
-
-    async function handleMessage(event: MessageEvent<FacebookPopupMessage>) {
-      if (event.origin !== expectedOrigin) return;
-
-      const data = event.data;
-      if (
-        !data ||
-        typeof data !== "object" ||
-        !("type" in data) ||
-        (data.type !== "propbol:facebook-login-success" &&
-          data.type !== "propbol:facebook-login-error")
-      ) {
-        return;
-      }
-
-      authWasResolved = true;
-      cleanup();
-
-      if (data.type === "propbol:facebook-login-success") {
-        try {
-          saveFacebookSession(data);
-          popup.close();
-          router.replace("/");
-        } catch {
-          setServerError("No se pudo guardar la sesión iniciada con Facebook.");
-          popup.close();
-        }
-        return;
-      }
-
-      setServerError(
-        data.message || "No se pudo completar el registro con Facebook.",
-      );
-      popup.close();
-    }
-
-    checkPopupIntervalId = window.setInterval(() => {
-      if (!popup.closed) return;
-
-      cleanup();
-
-      if (!authWasResolved) {
-        setServerError(
-          "Cancelaste el registro con Facebook. Puedes intentarlo nuevamente.",
-        );
-      }
-    }, 500);
-
-    facebookTimeoutId = window.setTimeout(
-      () => {
-        cleanup();
-        if (!popup.closed) popup.close();
-        setServerError(
-          "La autenticación con Facebook tardó demasiado. Por favor intenta nuevamente.",
-        );
-      },
-      2 * 60 * 1000,
-    );
-
-    window.addEventListener("message", handleMessage);
-  };
-
-  const handleDiscordRegister = () => {
-    setServerError("");
-
-    const popupWidth = 500;
-    const popupHeight = 600;
-    const left = window.screenX + (window.outerWidth - popupWidth) / 2;
-    const top = window.screenY + (window.outerHeight - popupHeight) / 2;
-
-    const popupWindow = window.open(
-      `${API_URL}/api/auth/discord/register`,
-      "discord-register",
-      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`,
-    );
-
-    if (
-      !popupWindow ||
-      popupWindow.closed ||
-      typeof popupWindow.closed === "undefined"
-    ) {
-      setServerError(
-        "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.",
-      );
-      return;
-    }
-
-    const popup = popupWindow;
-    popup.focus();
-
-    const expectedOrigin = new URL(API_URL).origin;
-    let authWasResolved = false;
-    let checkPopupIntervalId = 0;
-    let discordTimeoutId = 0;
-
-    function cleanup() {
-      window.removeEventListener("message", handleMessage);
-      window.clearInterval(checkPopupIntervalId);
-      window.clearTimeout(discordTimeoutId);
-    }
-
-    async function handleMessage(event: MessageEvent<DiscordPopupMessage>) {
-      if (event.origin !== expectedOrigin) return;
-
-      const data = event.data;
-      if (
-        !data ||
-        typeof data !== "object" ||
-        !("type" in data) ||
-        (data.type !== "propbol:discord-login-success" &&
-          data.type !== "propbol:discord-login-error")
-      ) {
-        return;
-      }
-
-      authWasResolved = true;
-      cleanup();
-
-      if (data.type === "propbol:discord-login-success") {
-        try {
-          saveDiscordSession(data);
-          popup.close();
-          router.replace("/");
-        } catch {
-          setServerError("No se pudo guardar la sesión iniciada con Discord.");
-          popup.close();
-        }
-        return;
-      }
-
-      setServerError(
-        data.message || "No se pudo completar el registro con Discord.",
-      );
-      popup.close();
-    }
-
-    checkPopupIntervalId = window.setInterval(() => {
-      if (!popup.closed) return;
-
-      cleanup();
-
-      if (!authWasResolved) {
-        setServerError(
-          "Cancelaste el registro con Discord. Puedes intentarlo nuevamente.",
-        );
-      }
-    }, 500);
-
-    discordTimeoutId = window.setTimeout(
-      () => {
-        cleanup();
-        if (!popup.closed) popup.close();
-        setServerError(
-          "La autenticación con Discord tardó demasiado. Por favor intenta nuevamente.",
-        );
-      },
-      2 * 60 * 1000,
-    );
-
-    window.addEventListener("message", handleMessage);
-  };
+  }
 
   const handleGoogleSuccess = async (payload: GooglePopupSuccessPayload) => {
-    setServerError("");
+    setServerError('')
 
     try {
-      saveGoogleSession(payload);
-      router.replace("/");
+      saveGoogleSession(payload)
+      router.replace('/')
     } catch {
-      setServerError("No se pudo guardar la sesión iniciada con Google.");
+      setServerError('No se pudo guardar la sesión iniciada con Google.')
     }
-  };
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#f5f5f4] px-4 py-8">
@@ -806,20 +472,15 @@ export default function SignUpForm() {
                   type="email"
                   autoFocus
                   value={formData.email}
-                  onChange={handleChange("email")}
-                  onBlur={handleBlur("email")}
+                  onChange={handleChange('email')}
+                  onBlur={handleBlur('email')}
                   placeholder="Ingresa tu correo electrónico"
-                  className={getInputClasses(
-                    Boolean(touched.email && errors.email),
-                  )}
+                  className={getInputClasses(Boolean(touched.email && errors.email))}
                   aria-invalid={Boolean(touched.email && errors.email)}
                   aria-describedby="email-error"
                 />
               </div>
-              <FieldError
-                id="email-error"
-                error={touched.email ? errors.email : undefined}
-              />
+              <FieldError id="email-error" error={touched.email ? errors.email : undefined} />
             </div>
 
             <div>
@@ -831,12 +492,10 @@ export default function SignUpForm() {
                   name="firstName"
                   type="text"
                   value={formData.firstName}
-                  onChange={handleChange("firstName")}
-                  onBlur={handleBlur("firstName")}
+                  onChange={handleChange('firstName')}
+                  onBlur={handleBlur('firstName')}
                   placeholder="Ingresa tu nombre"
-                  className={getInputClasses(
-                    Boolean(touched.firstName && errors.firstName),
-                  )}
+                  className={getInputClasses(Boolean(touched.firstName && errors.firstName))}
                   aria-invalid={Boolean(touched.firstName && errors.firstName)}
                   aria-describedby="firstName-error"
                 />
@@ -856,12 +515,10 @@ export default function SignUpForm() {
                   name="lastName"
                   type="text"
                   value={formData.lastName}
-                  onChange={handleChange("lastName")}
-                  onBlur={handleBlur("lastName")}
+                  onChange={handleChange('lastName')}
+                  onBlur={handleBlur('lastName')}
                   placeholder="Ingresa tu apellido"
-                  className={getInputClasses(
-                    Boolean(touched.lastName && errors.lastName),
-                  )}
+                  className={getInputClasses(Boolean(touched.lastName && errors.lastName))}
                   aria-invalid={Boolean(touched.lastName && errors.lastName)}
                   aria-describedby="lastName-error"
                 />
@@ -881,20 +538,15 @@ export default function SignUpForm() {
                   name="phone"
                   type="text"
                   value={formData.phone}
-                  onChange={handleChange("phone")}
-                  onBlur={handleBlur("phone")}
+                  onChange={handleChange('phone')}
+                  onBlur={handleBlur('phone')}
                   placeholder="Ingresa tu numero de telefono"
-                  className={getInputClasses(
-                    Boolean(touched.phone && errors.phone),
-                  )}
+                  className={getInputClasses(Boolean(touched.phone && errors.phone))}
                   aria-invalid={Boolean(touched.phone && errors.phone)}
                   aria-describedby="phone-error"
                 />
               </div>
-              <FieldError
-                id="phone-error"
-                error={touched.phone ? errors.phone : undefined}
-              />
+              <FieldError id="phone-error" error={touched.phone ? errors.phone : undefined} />
             </div>
 
             <div>
@@ -903,13 +555,9 @@ export default function SignUpForm() {
                 className="relative"
                 ref={passwordContainerRef}
                 onBlur={(e) => {
-                  if (
-                    !passwordContainerRef.current?.contains(
-                      e.relatedTarget as Node,
-                    )
-                  ) {
-                    setShowPassword(false);
-                    handleBlur("password")();
+                  if (!passwordContainerRef.current?.contains(e.relatedTarget as Node)) {
+                    setShowPassword(false)
+                    handleBlur('password')()
                   }
                 }}
               >
@@ -917,14 +565,14 @@ export default function SignUpForm() {
                 <input
                   id="password"
                   name="password"
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? 'text' : 'password'}
                   value={formData.password}
-                  onChange={handleChange("password")}
+                  onChange={handleChange('password')}
                   placeholder="Ingresa tu contraseña"
                   maxLength={255}
                   className={`${getInputClasses(
                     Boolean(touched.password && errors.password),
-                    true,
+                    true
                   )} hide-native-password-toggle`}
                   aria-invalid={Boolean(touched.password && errors.password)}
                   aria-describedby="password-error"
@@ -933,9 +581,7 @@ export default function SignUpForm() {
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
                   className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-[#78716c] hover:bg-[#f5f5f4] hover:text-[#292524]"
-                  aria-label={
-                    showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
-                  }
+                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                 >
                   {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
@@ -947,20 +593,14 @@ export default function SignUpForm() {
             </div>
 
             <div>
-              <FieldLabel htmlFor="confirmPassword">
-                Confirmar contraseña
-              </FieldLabel>
+              <FieldLabel htmlFor="confirmPassword">Confirmar contraseña</FieldLabel>
               <div
                 className="relative"
                 ref={confirmPasswordContainerRef}
                 onBlur={(e) => {
-                  if (
-                    !confirmPasswordContainerRef.current?.contains(
-                      e.relatedTarget as Node,
-                    )
-                  ) {
-                    setShowConfirmPassword(false);
-                    handleBlur("confirmPassword")();
+                  if (!confirmPasswordContainerRef.current?.contains(e.relatedTarget as Node)) {
+                    setShowConfirmPassword(false)
+                    handleBlur('confirmPassword')()
                   }
                 }}
               >
@@ -968,18 +608,16 @@ export default function SignUpForm() {
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
+                  type={showConfirmPassword ? 'text' : 'password'}
                   value={formData.confirmPassword}
-                  onChange={handleChange("confirmPassword")}
+                  onChange={handleChange('confirmPassword')}
                   placeholder="Ingresa tu contraseña"
                   maxLength={255}
                   className={`${getInputClasses(
                     Boolean(touched.confirmPassword && errors.confirmPassword),
-                    true,
+                    true
                   )} hide-native-password-toggle`}
-                  aria-invalid={Boolean(
-                    touched.confirmPassword && errors.confirmPassword,
-                  )}
+                  aria-invalid={Boolean(touched.confirmPassword && errors.confirmPassword)}
                   aria-describedby="confirmPassword-error"
                 />
                 <button
@@ -988,22 +626,16 @@ export default function SignUpForm() {
                   className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-[#78716c] hover:bg-[#f5f5f4] hover:text-[#292524]"
                   aria-label={
                     showConfirmPassword
-                      ? "Ocultar confirmación de contraseña"
-                      : "Mostrar confirmación de contraseña"
+                      ? 'Ocultar confirmación de contraseña'
+                      : 'Mostrar confirmación de contraseña'
                   }
                 >
-                  {showConfirmPassword ? (
-                    <EyeOff size={15} />
-                  ) : (
-                    <Eye size={15} />
-                  )}
+                  {showConfirmPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
               </div>
               <FieldError
                 id="confirmPassword-error"
-                error={
-                  touched.confirmPassword ? errors.confirmPassword : undefined
-                }
+                error={touched.confirmPassword ? errors.confirmPassword : undefined}
               />
             </div>
 
@@ -1013,11 +645,11 @@ export default function SignUpForm() {
                 disabled={!isFormValid || isSubmitting}
                 className={`w-full rounded-md px-4 py-2.5 text-[13px] font-semibold transition ${
                   isFormValid && !isSubmitting
-                    ? "bg-amber-500 text-white hover:bg-amber-600"
-                    : "cursor-not-allowed bg-[#e7e5e4] text-[#78716c]"
+                    ? 'bg-amber-500 text-white hover:bg-amber-600'
+                    : 'cursor-not-allowed bg-[#e7e5e4] text-[#78716c]'
                 }`}
               >
-                {isSubmitting ? "Registrando..." : "Registrarse"}
+                {isSubmitting ? 'Registrando...' : 'Registrarse'}
               </button>
             </div>
 
@@ -1027,36 +659,57 @@ export default function SignUpForm() {
               disabled={isSubmitting}
             />
 
-            <div className="space-y-3">
-              <button
-                type="button"
-                onClick={handleFacebookRegister}
-                disabled={isLoadingFacebook}
-                className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#1877F2] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-70"
-              >
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/15 text-base font-bold text-white">
-                  f
-                </span>
-                {isLoadingFacebook
-                  ? "Autenticando..."
-                  : "Registrarse con Facebook"}
-              </button>
+            <FacebookRegisterButton
+              onSuccess={async (payload) => {
+                setServerError('')
+                try {
+                  saveGoogleSession({
+                    type: 'propbol:google-login-success',
+                    message: payload.message,
+                    token: payload.token,
+                    user: payload.user
+                  })
+                  router.replace('/')
+                } catch {
+                  setServerError('No se pudo guardar la sesión iniciada con Facebook.')
+                }
+              }}
+              onError={setServerError}
+              disabled={isSubmitting}
+            />
+            <DiscordRegisterButton
+              onSuccess={async (payload) => {
+                setServerError('')
+                try {
+                  saveSession({
+                    token: payload.token,
+                    user: payload.user
+                  })
+                  router.replace('/')
+                } catch {
+                  setServerError('No se pudo guardar la sesión iniciada con Discord.')
+                }
+              }}
+              onError={setServerError}
+              disabled={isSubmitting}
+            />
 
-              <button
-                type="button"
-                onClick={handleDiscordRegister}
-                className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#5865F2] px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:brightness-95"
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  className="h-5 w-5 fill-white"
-                  aria-hidden="true"
-                >
-                  <path d="M20.317 4.369A19.79 19.79 0 0 0 15.885 3c-.191.328-.403.769-.552 1.117a18.27 18.27 0 0 0-5.333 0A11.64 11.64 0 0 0 9.448 3a19.736 19.736 0 0 0-4.433 1.369C2.211 8.58 1.443 12.686 1.826 16.735A19.923 19.923 0 0 0 7.239 19.5c.438-.6.828-1.235 1.164-1.904-.634-.24-1.239-.541-1.813-.896.152-.111.301-.227.445-.347 3.495 1.643 7.285 1.643 10.739 0 .146.12.294.236.446.347-.575.355-1.182.656-1.817.896.336.669.726 1.304 1.164 1.904a19.874 19.874 0 0 0 5.416-2.765c.451-4.695-.769-8.763-3.666-12.366ZM9.349 14.546c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.84 2.154-1.909 2.154Zm5.303 0c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.831 2.154-1.909 2.154Z" />
-                </svg>
-                Registrarse con Discord
-              </button>
-            </div>
+            <LinkedInRegisterButton
+              onSuccess={async (payload) => {
+                setServerError('')
+                try {
+                  saveSession({
+                    token: payload.token,
+                    user: payload.user
+                  })
+                  router.replace('/')
+                } catch {
+                  setServerError('No se pudo guardar la sesión iniciada con LinkedIn.')
+                }
+              }}
+              onError={setServerError}
+              disabled={isSubmitting}
+            />
 
             <button
               type="button"
@@ -1064,15 +717,15 @@ export default function SignUpForm() {
               disabled={!hasFormContent}
               className={`mx-auto block rounded-md px-4 py-2 text-[11px] font-semibold transition ${
                 hasFormContent
-                  ? "bg-[#292524] text-white hover:bg-[#1c1917]"
-                  : "cursor-not-allowed bg-[#d6d3d1] text-[#a8a29e]"
+                  ? 'bg-[#292524] text-white hover:bg-[#1c1917]'
+                  : 'cursor-not-allowed bg-[#d6d3d1] text-[#a8a29e]'
               }`}
             >
               Cancelar registro
             </button>
 
             <p className="pt-1 text-center text-[12px] text-[#78716c]">
-              ¿Ya tienes una cuenta?{" "}
+              ¿Ya tienes una cuenta?{' '}
               <Link
                 href="/sign-in"
                 className="font-medium text-amber-600 transition hover:text-amber-700"
@@ -1083,7 +736,7 @@ export default function SignUpForm() {
 
             <button
               type="button"
-              onClick={() => router.push("/")}
+              onClick={() => router.push('/')}
               className="mt-2 w-full text-center text-[12px] font-medium text-[#57534e] underline transition hover:text-[#292524]"
             >
               Ir a la página principal
@@ -1092,5 +745,5 @@ export default function SignUpForm() {
         </div>
       </div>
     </div>
-  );
+  )
 }

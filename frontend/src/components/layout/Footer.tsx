@@ -17,38 +17,43 @@ const exploreActions: FooterAction[] = [
   {
     label: 'En venta',
     href: '/busqueda_mapa?modoInmueble=VENTA',
-    requiresAuth: true
+    requiresAuth: true,
   },
   {
     label: 'Alquileres',
     href: '/busqueda_mapa?modoInmueble=ALQUILER',
-    requiresAuth: true
+    requiresAuth: true,
   },
   {
     label: 'Anticrético',
     href: '/busqueda_mapa?modoInmueble=ANTICRETO',
-    requiresAuth: true
+    requiresAuth: true,
   },
-  { label: 'Publica tu inmueble', href: '/registro-inmueble', requiresAuth: true,  id: 'tour-publicar' }
+  {
+    label: 'Publica tu inmueble',
+    href: '/registro-inmueble',
+    requiresAuth: true,
+    id: 'tour-publicar',
+  },
 ]
 
 const companyActions: FooterAction[] = [
   { label: 'Sobre Nosotros', href: '/sobre-nosotros' },
   { label: 'Términos y Condiciones', href: '/terminos-y-condiciones' },
-  { label: 'Políticas de Privacidad', href: '/politicas-privacidad' }
+  { label: 'Políticas de Privacidad', href: '/politicas-privacidad' },
 ]
 
 const socialActions: FooterAction[] = [
   {
     href: 'https://www.facebook.com/share/1DtBkxKBWf/',
     isExternal: true,
-    label: 'Facebook'
+    label: 'Facebook',
   },
   {
     href: 'https://www.instagram.com/prop.bol?igsh=MWlsZzUwZWhtbDlwOA==',
     isExternal: true,
-    label: 'Instagram'
-  }
+    label: 'Instagram',
+  },
 ]
 
 function scrollToHomeTop() {
@@ -101,16 +106,14 @@ function FooterSection({
   title,
   id,
 }: {
-  actions: FooterAction[];
-  title: string;
-  id?: string;
+  actions: FooterAction[]
+  title: string
+  id?: string
 }) {
-  const router = useRouter();
+  const router = useRouter()
 
   const handleProtectedNavigation = (action: FooterAction) => {
-    if (!action.href) {
-      return
-    }
+    if (!action.href) return
 
     const token = localStorage.getItem('token')
 
@@ -126,6 +129,7 @@ function FooterSection({
   return (
     <section id={id} className="border-t border-amber-600 pt-4">
       <h2 className="text-xl font-bold text-stone-900">{title}</h2>
+
       <ul className="mt-4 space-y-4">
         {actions.map((action) => (
           <li key={action.label}>
@@ -133,6 +137,7 @@ function FooterSection({
               <button
                 id={action.id}
                 type="button"
+                data-confirm-exit="true"
                 onClick={() => handleProtectedNavigation(action)}
                 className="text-left text-sm text-stone-600 transition-colors hover:text-amber-600"
               >
@@ -142,6 +147,7 @@ function FooterSection({
               <Link
                 id={action.id}
                 href={action.href}
+                data-confirm-exit="true"
                 className="text-sm text-stone-600 transition-colors hover:text-amber-600"
               >
                 {action.label}
@@ -152,13 +158,14 @@ function FooterSection({
                 href={action.href}
                 target={action.isExternal ? '_blank' : undefined}
                 rel={action.isExternal ? 'noreferrer' : undefined}
+                data-confirm-exit="true"
                 className="text-sm text-stone-600 transition-colors hover:text-amber-600"
               >
                 {action.label}
               </a>
             ) : (
               <button
-                id={action.id} 
+                id={action.id}
                 type="button"
                 className="text-left text-sm text-stone-600 transition-colors hover:text-amber-600"
               >
@@ -194,6 +201,7 @@ function FooterBottomBar() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={action.label}
+                data-confirm-exit="true"
                 className="transition-colors hover:text-amber-600"
               >
                 <Icon size={18} strokeWidth={2} />
@@ -212,16 +220,19 @@ export default function Footer() {
       <div className="mx-auto max-w-6xl px-6 py-10 sm:px-8 lg:px-10">
         <div className="grid gap-8 [grid-template-columns:repeat(auto-fit,minmax(180px,1fr))]">
           <FooterBrand />
+
           <FooterSection
             id="tour-footer-explorar"
             actions={exploreActions}
             title="Explorar"
           />
+
           <FooterSection
             id="tour-footer-conocenos"
             actions={companyActions}
             title="Conócenos"
           />
+
           <FooterSection
             id="tour-footer-redes-texto"
             actions={socialActions}
@@ -229,7 +240,8 @@ export default function Footer() {
           />
         </div>
       </div>
+
       <FooterBottomBar />
     </footer>
-  );
+  )
 }

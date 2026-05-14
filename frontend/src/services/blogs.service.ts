@@ -1,6 +1,6 @@
-import { MOCK_PUBLIC_BLOGS } from "@/lib/mock/publicBlogs.mock";
-import { createPlainTextExcerpt } from "@/lib/blogMarkdown";
-import { PublicBlogCard, BlogCategory } from "@/types/publicBlog";
+import { MOCK_PUBLIC_BLOGS } from '@/lib/mock/publicBlogs.mock'
+import { createPlainTextExcerpt } from '@/lib/blogMarkdown'
+import { PublicBlogCard, BlogCategory } from '@/types/publicBlog'
 
 export type BlogCreationAction = 'borrador' | 'pendiente'
 
@@ -87,6 +87,13 @@ export type PublicBlogDetail = PublicBlogCard & {
   content: string
 }
 
+const formatImageUrl = (imagen: string | null | undefined, apiUrl: string) => {
+  if (!imagen) return '/placeholder-blog.jpg'
+  if (imagen.startsWith('http://') || imagen.startsWith('https://')) return imagen
+  if (imagen.startsWith('/')) return imagen
+  return `${apiUrl}/${imagen}`
+}
+
 export const getPublishedBlogs = async (limit: number = 10): Promise<PublicBlogCard[]> => {
   const apiUrl = getApiUrl()
 
@@ -106,7 +113,7 @@ export const getPublishedBlogs = async (limit: number = 10): Promise<PublicBlogC
       id: String(row.id),
       title: row.titulo,
       excerpt: row.resumen || createPlainTextExcerpt(row.contenido),
-      imageUrl: row.imagen || '/placeholder-blog.jpg',
+      imageUrl: formatImageUrl(row.imagen, apiUrl),
       category: (row.categoria_blog?.nombre || 'General') as BlogCategory,
       authorName: `${row.usuario?.nombre || ''} ${row.usuario?.apellido || ''}`.trim() || 'Anónimo',
       publishedAt: row.fecha_publicacion || row.fecha_creacion
@@ -142,7 +149,7 @@ export const getPublishedBlogById = async (id: string): Promise<PublicBlogDetail
       id: String(row.id),
       title: row.titulo,
       excerpt: row.resumen || createPlainTextExcerpt(row.contenido),
-      imageUrl: row.imagen || '/placeholder-blog.jpg',
+      imageUrl: formatImageUrl(row.imagen, apiUrl),
       category: (row.categoria_blog?.nombre || 'General') as BlogCategory,
       authorName: `${row.usuario?.nombre || ''} ${row.usuario?.apellido || ''}`.trim() || 'Anónimo',
       publishedAt: row.fecha_publicacion || row.fecha_creacion,

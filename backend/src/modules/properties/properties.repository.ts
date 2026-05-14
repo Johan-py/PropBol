@@ -1,5 +1,4 @@
 import { prisma } from '../../lib/prisma.client.js'
-import { Prisma } from '@prisma/client'
 
 export interface FiltrosBusqueda {
   categoria?: string | string[]
@@ -12,7 +11,7 @@ export interface FiltrosBusqueda {
   municipioId?: string | number
   zonaId?: string | number
   barrioId?: string | number
-  fecha?: 'mas-recientes' | 'mas-populares' | 'mas-antiguos'
+  fecha?: 'mas-recientes' | 'mas-populares' | 'mas-antiguos' | 'mayor-descuento'
   precio?: 'menor-a-mayor' | 'mayor-a-menor'
   superficie?: 'menor-a-mayor' | 'mayor-a-menor'
   minPrice?: number | null
@@ -26,10 +25,12 @@ export interface FiltrosBusqueda {
   banosMin?: number
   banosMax?: number
   banoCompartido?: boolean
-
   lat?: number
   lng?: number
   radius?: number
+  amenities?: number[]
+  labels?: number[]
+  soloOfertas?: boolean // NUEVO: Filtro para mostrar solo ofertas (precio actual < precio anterior)
 }
 
 // Helper para limpiar las variaciones de Anticrético
@@ -41,48 +42,18 @@ function normalizarModoAccion(m: string): string {
 export const propertiesRepository = {
   async getAll(filtros: FiltrosBusqueda = {}) {
     // ── WHERE ──────────────────────────────────────────────────────────────
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const where: any = { estado: 'ACTIVO' }
-    // FILTRO GEOESPACIAL CON FÓRMULA DE HAVERSINE
-    // Si llegan coordenadas, le pedimos a Postgres que mida las distancias primero.
-    if (filtros.lat !== undefined && filtros.lng !== undefined) {
-      const radio = filtros.radius || 1; // 1km por defecto
-      
-      console.log(`🌍 Filtrando inmuebles a ${radio}km del punto [${filtros.lat}, ${filtros.lng}]`);
-
-      try {
-        const ubicacionesCercanas = await prisma.$queryRaw<{ inmueble_id: number }[]>`
-          SELECT inmueble_id 
-          FROM ubicacion_inmueble
-          WHERE (
-            6371 * acos(
-              cos(radians(${filtros.lat})) *
-              cos(radians(latitud)) *
-              cos(radians(longitud) - radians(${filtros.lng})) +
-              sin(radians(${filtros.lat})) *
-              sin(radians(latitud))
-            )
-          ) <= ${radio}
-        `;
-
-        const idsCercanos = ubicacionesCercanas.map(u => u.inmueble_id);
-
-        // Si no hay nada cerca, cortamos la ejecución para no gastar recursos
-        if (idsCercanos.length === 0) {
-          return [];
-        }
-
-        // Restringimos la búsqueda de Prisma a los IDs que están en el radio
-        where.id = { in: idsCercanos };
-
-      } catch (error) {
-        console.error("❌ Error ejecutando consulta SQL geoespacial:", error);
-        // Si falla la matemática, por seguridad no devolvemos nada o podrías hacer un throw
-        return [];
-      }
-    }
 
     // 1. Filtro de Categoría / Tipo Inmueble (Soporta múltiples selecciones)
-    const CATEGORIAS_VALIDAS = ['CASA', 'DEPARTAMENTO', 'TERRENO', 'OFICINA']
+    const CATEGORIAS_VALIDAS = [
+      'CASA',
+      'DEPARTAMENTO',
+      'TERRENO',
+      'OFICINA',
+      'CUARTO',
+      'TERRENO_MORTUORIO'
+    ]
     const rawTipo = filtros.tipoInmueble || filtros.categoria
     if (rawTipo) {
       const rawArr = (Array.isArray(rawTipo) ? rawTipo : [rawTipo])
@@ -118,57 +89,83 @@ export const propertiesRepository = {
     }
 
     // 3. Filtro de Ubicación (EL CEREBRO JERÁRQUICO)
-    if (filtros.lat === undefined && filtros.lng === undefined) {
-      if (filtros.query && filtros.query.trim() !== '') {
-        const texto = filtros.query.trim()
+    if (filtros.lat && filtros.lng) {
+      // Búsqueda geoespacial por latitud/longitud con un radio (en km)
+    } else if (filtros.query && filtros.query.trim().length >= 3) {
+      // NUEVO: Refuerzo de >= 3 caracteres
+      // Fallback original: Búsqueda estricta por texto
+      const texto = filtros.query.trim()
 
-        where.OR = [
-          { titulo: { contains: texto, mode: 'insensitive' } },
-          { descripcion: { contains: texto, mode: 'insensitive' } },
-          {
-            ubicacion: {
-              OR: [
-                { direccion: { contains: texto, mode: 'insensitive' } },
-                { barrio: { nombre: { contains: texto, mode: 'insensitive' } } },
-                { barrio: { zona: { nombre: { contains: texto, mode: 'insensitive' } } } },
-                {
-                  barrio: {
-                    zona: { municipio: { nombre: { contains: texto, mode: 'insensitive' } } }
-                  }
-                },
-                {
-                  barrio: {
-                    zona: {
-                      municipio: { provincia: { nombre: { contains: texto, mode: 'insensitive' } } }
+      where.OR = [
+        { titulo: { contains: texto, mode: 'insensitive' } },
+        { descripcion: { contains: texto, mode: 'insensitive' } },
+        {
+          ubicacion: {
+            OR: [
+              { direccion: { contains: texto, mode: 'insensitive' } },
+              { barrio: { nombre: { contains: texto, mode: 'insensitive' } } },
+              {
+                barrio: {
+                  zona: { nombre: { contains: texto, mode: 'insensitive' } }
+                }
+              },
+              {
+                barrio: {
+                  zona: {
+                    municipio: {
+                      nombre: { contains: texto, mode: 'insensitive' }
                     }
                   }
-                },
-                {
-                  barrio: {
-                    zona: {
-                      municipio: {
-                        provincia: {
-                          departamento: { nombre: { contains: texto, mode: 'insensitive' } }
+                }
+              },
+              {
+                barrio: {
+                  zona: {
+                    municipio: {
+                      provincia: {
+                        nombre: { contains: texto, mode: 'insensitive' }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                barrio: {
+                  zona: {
+                    municipio: {
+                      provincia: {
+                        departamento: {
+                          nombre: { contains: texto, mode: 'insensitive' }
                         }
                       }
                     }
                   }
-                },
-                { ubicacion_maestra: { nombre: { contains: texto, mode: 'insensitive' } } }
-              ]
-            }
+                }
+              },
+              {
+                ubicacion_maestra: {
+                  nombre: { contains: texto, mode: 'insensitive' }
+                }
+              }
+            ]
           }
-        ]
-      } else if (filtros.locationId) {
-        // Fallback: Si no hay texto, asumimos que viene de un botón antiguo de "Ciudades Destacadas"
-        where.ubicacion = { ubicacionMaestraId: Number(filtros.locationId) }
-      }
+        }
+      ]
+    } else if (filtros.locationId) {
+      // Fallback: Si no hay texto, asumimos que viene de un botón antiguo de "Ciudades Destacadas"
+      where.ubicacion = { ubicacionMaestraId: Number(filtros.locationId) }
     }
     // Si un nivel está seleccionado y no es "todos", lo aplicamos y las demás condiciones (else if) se ignoran.
     if (filtros.barrioId && String(filtros.barrioId).toLowerCase() !== 'todos') {
-      where.ubicacion = { ...where.ubicacion, barrio_id: Number(filtros.barrioId) }
+      where.ubicacion = {
+        ...where.ubicacion,
+        barrio_id: Number(filtros.barrioId)
+      }
     } else if (filtros.zonaId && String(filtros.zonaId).toLowerCase() !== 'todos') {
-      where.ubicacion = { ...where.ubicacion, barrio: { zona_id: Number(filtros.zonaId) } }
+      where.ubicacion = {
+        ...where.ubicacion,
+        barrio: { zona_id: Number(filtros.zonaId) }
+      }
     } else if (filtros.municipioId && String(filtros.municipioId).toLowerCase() !== 'todos') {
       where.ubicacion = {
         ...where.ubicacion,
@@ -177,13 +174,19 @@ export const propertiesRepository = {
     } else if (filtros.provinciaId && String(filtros.provinciaId).toLowerCase() !== 'todos') {
       where.ubicacion = {
         ...where.ubicacion,
-        barrio: { zona: { municipio: { provincia_id: Number(filtros.provinciaId) } } }
+        barrio: {
+          zona: { municipio: { provincia_id: Number(filtros.provinciaId) } }
+        }
       }
     } else if (filtros.departamentoId && String(filtros.departamentoId).toLowerCase() !== 'todos') {
       where.ubicacion = {
         ...where.ubicacion,
         barrio: {
-          zona: { municipio: { provincia: { departamento_id: Number(filtros.departamentoId) } } }
+          zona: {
+            municipio: {
+              provincia: { departamento_id: Number(filtros.departamentoId) }
+            }
+          }
         }
       }
     }
@@ -203,10 +206,16 @@ export const propertiesRepository = {
     }
 
     if (queryMinPrice != null) {
-      where.precio = { ...((where.precio as object) ?? {}), gte: queryMinPrice }
+      where.precio = {
+        ...((where.precio as object) ?? {}),
+        gte: queryMinPrice
+      }
     }
     if (queryMaxPrice != null) {
-      where.precio = { ...((where.precio as object) ?? {}), lte: queryMaxPrice }
+      where.precio = {
+        ...((where.precio as object) ?? {}),
+        lte: queryMaxPrice
+      }
     }
 
     if (filtros.dormitoriosMin !== undefined || filtros.dormitoriosMax !== undefined) {
@@ -242,8 +251,55 @@ export const propertiesRepository = {
         where.superficieM2.lte = filtros.maxSuperficie
       }
     }
+    //HU6
+    // Filtros por Amenidades (Lógica AND: debe tener TODAS las seleccionadas)
+    if (filtros.amenities && filtros.amenities.length > 0) {
+      where.AND = [
+        ...(where.AND || []),
+        ...filtros.amenities.map((id) => ({
+          inmueble_amenidad: { some: { amenidad_id: id } }
+        }))
+      ]
+    }
+
+    // Filtros por Etiquetas (Lógica AND)
+    if (filtros.labels && filtros.labels.length > 0) {
+      where.AND = [
+        ...(where.AND || []),
+        ...filtros.labels.map((labelId) => ({
+          publicaciones: {
+            some: {
+              estado: 'ACTIVA' as const,
+              publicacion_parametro: {
+                some: {
+                  parametro_id: labelId
+                }
+              }
+            }
+          }
+        }))
+      ]
+    }
+
+    // HU6 - Filtro solo ofertas
+    if (filtros.soloOfertas === true) {
+      where.AND = [
+        ...(where.AND || []),
+        {
+          precio_anterior: {
+            not: null
+          }
+        },
+        {
+          precio: {
+            gt: 0
+          }
+        }
+      ]
+    }
 
     // ── ORDER BY ───────────────────────────────────────────────────────────
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const orderBy: any[] = []
 
     if (filtros.precio === 'menor-a-mayor') {
@@ -260,7 +316,10 @@ export const propertiesRepository = {
     } else if (filtros.fecha === 'mas-antiguos') {
       orderBy.push({ fechaPublicacion: 'asc' })
     } else if (filtros.fecha === 'mas-populares') {
-      orderBy.push({ fechaPublicacion: 'desc' }) // fallback mientras se ordena en memoria
+      // fallback mientras se ordena en memoria
+      orderBy.push({ fechaPublicacion: 'desc' })
+    } else if (filtros.fecha === 'mayor-descuento') {
+      orderBy.push({ id: 'asc' })
     }
 
     orderBy.push({ id: 'asc' }) // Desempate default
@@ -297,6 +356,40 @@ export const propertiesRepository = {
       }
     })
 
+    const resultados =
+      filtros.lat && filtros.lng
+        ? inmuebles.filter((inmueble) => {
+            const u = inmueble.ubicacion
+            if (!u || !u.latitud || !u.longitud) return false
+
+            const lat = Number(u.latitud)
+            const lng = Number(u.longitud)
+
+            // Ignorar coordenadas inválidas
+            if (isNaN(lat) || isNaN(lng) || (lat === 0 && lng === 0)) return false
+
+            const centerLat = Number(filtros.lat)
+            const centerLng = Number(filtros.lng)
+            const radiusKm = filtros.radius || 1 // 1 km por defecto (igual que en el mapa)
+
+            // Fórmula matemática para calcular distancia exacta en esfera (Tierra)
+            const R = 6371 // Radio de la Tierra en km
+            const dLat = ((lat - centerLat) * Math.PI) / 180
+            const dLng = ((lng - centerLng) * Math.PI) / 180
+            const a =
+              Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos((centerLat * Math.PI) / 180) *
+                Math.cos((lat * Math.PI) / 180) *
+                Math.sin(dLng / 2) *
+                Math.sin(dLng / 2)
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+            const distancia = R * c
+
+            // Solo retorna true si la propiedad está estrictamente dentro del radio
+            return distancia <= radiusKm
+          })
+        : inmuebles
+
     if (filtros.fecha === 'mas-populares') {
       console.log('🔥 Entrando al bloque mas-populares')
       const vistas = await prisma.propiedad_vista.groupBy({
@@ -305,8 +398,53 @@ export const propertiesRepository = {
         orderBy: { _count: { usuarioId: 'desc' } }
       })
       const vistaMap = new Map(vistas.map((v) => [v.inmuebleId, v._count.usuarioId ?? 0]))
-      return inmuebles.sort((a, b) => (vistaMap.get(b.id) ?? 0) - (vistaMap.get(a.id) ?? 0))
+      return resultados.sort((a, b) => (vistaMap.get(b.id) ?? 0) - (vistaMap.get(a.id) ?? 0))
     }
+    if (filtros.fecha === 'mayor-descuento') {
+      return resultados.sort((a, b) => {
+        const precioAnteriorA = Number((a as any).precio_anterior ?? 0)
+        const precioActualA = Number(a.precio)
+
+        const precioAnteriorB = Number((b as any).precio_anterior ?? 0)
+        const precioActualB = Number(b.precio)
+
+        const descuentoA =
+          precioAnteriorA > precioActualA
+            ? ((precioAnteriorA - precioActualA) / precioAnteriorA) * 100
+            : 0
+
+        const descuentoB =
+          precioAnteriorB > precioActualB
+            ? ((precioAnteriorB - precioActualB) / precioAnteriorB) * 100
+            : 0
+
+        return descuentoB - descuentoA
+      })
+    }
+
+    return resultados
+  },
+  // NUEVO MÉTODO PARA EL COMPARADOR
+  async getByIds(ids: number[]) {
+    const inmuebles = await prisma.inmueble.findMany({
+      where: {
+        id: { in: ids },
+        estado: 'ACTIVO'
+      },
+      // Incluimos exactamente lo necesario para la matriz comparativa
+      include: {
+        publicaciones: {
+          where: { estado: 'ACTIVA' },
+          include: { multimedia: true }
+        },
+        inmueble_etiqueta: {
+          include: { etiqueta: true }
+        },
+        inmueble_amenidad: {
+          include: { amenidad: true }
+        }
+      }
+    })
 
     return inmuebles
   }

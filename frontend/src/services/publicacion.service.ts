@@ -43,7 +43,12 @@ export async function obtenerMisPublicaciones(): Promise<MisPublicacionesItem[]>
     throw new Error(data.message || 'No se pudieron obtener las publicaciones')
   }
 
-  return data.data
+  const publicaciones = Array.isArray(data.data) ? data.data : []
+  return publicaciones.map((pub: any) => ({
+    ...pub,
+    totalVisualizaciones: Number(pub.totalVisualizaciones ?? 0),
+    totalCompartidos: Number(pub.totalCompartidos ?? 0)
+  }))
 }
 
 export async function obtenerDetallePublicacion(id: number): Promise<PublicacionDetalle> {
@@ -107,4 +112,28 @@ export async function eliminarPublicacion(id: number) {
   }
 
   return data
+}
+
+export async function editarMultimediaPublicacion(
+  id: number,
+  formData: FormData
+) {
+  const apiUrl = getApiUrl()
+  const token = getToken()
+
+  const response = await fetch(`${apiUrl}/api/publicaciones/${id}/multimedia`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    body: formData
+  })
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(data.message || 'No se pudo actualizar la multimedia')
+  }
+
+  return data.data
 }

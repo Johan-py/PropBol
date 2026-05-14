@@ -1,16 +1,20 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
-import { Star, Calendar, Trash2 } from "lucide-react";
 
-const PropertyCard = ({ prop }: { prop: any }) => {
-    const [favorito, setFavorito] = useState(false);
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
+import { Calendar, Trash2, ChevronLeft, ChevronRight, X } from "lucide-react";
+
+const PropertyCard = ({ prop, onVerDetalle }: { prop: any; onVerDetalle: (id: number) => void }) => {
     const fecha = new Date(prop.viewedDate).toLocaleDateString('es-ES', {
         day: '2-digit', month: '2-digit'
     });
 
     return (
         <div className="group bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden relative hover:shadow-md transition-all">
-            <div className="relative h-44 w-full bg-gray-200">
+            <div
+                className="relative h-44 w-full bg-gray-200 cursor-pointer"
+                onClick={() => onVerDetalle(prop.id)}
+            >
                 <img
                     src={prop.imageUrl || 'https://via.placeholder.com/400x300'}
                     alt={prop.title}
@@ -25,19 +29,21 @@ const PropertyCard = ({ prop }: { prop: any }) => {
                     <span className="text-[9px] text-gray-300 font-medium">Ref: #{prop.id}</span>
                 </div>
                 <p className="text-[#E87B00] font-bold text-lg">${prop.price?.toLocaleString()} USD</p>
-                <h3 className="font-bold text-black text-sm mt-1 truncate">{prop.title}</h3>
+                <h3
+                    className="font-bold text-black text-sm mt-1 truncate cursor-pointer hover:text-[#E87B00] transition-colors"
+                    onClick={() => onVerDetalle(prop.id)}
+                >
+                    {prop.title}
+                </h3>
                 <p className="text-black text-[11px] mt-1 font-medium italic">{prop.location}</p>
                 <div className="flex items-center gap-2 mt-3 text-[10px] text-black font-medium italic">
                     <span>3 hab</span><span>•</span><span>2 baños</span><span>•</span><span>1 garaje</span>
                 </div>
                 <div className="mt-4 flex gap-2">
                     <button
-                        onClick={() => setFavorito(!favorito)}
-                        className="flex items-center justify-center px-3 bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 transition-colors"
+                        onClick={() => onVerDetalle(prop.id)}
+                        className="w-full bg-[#E87B00] text-white py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm text-center transition-colors"
                     >
-                        <Star size={16} fill={favorito ? "black" : "none"} color="black" />
-                    </button>
-                    <button className="w-full bg-[#E87B00] text-black py-2.5 rounded-lg text-xs font-bold hover:bg-orange-600 shadow-sm text-center">
                         Ver Detalle
                     </button>
                 </div>
@@ -47,20 +53,43 @@ const PropertyCard = ({ prop }: { prop: any }) => {
 };
 
 export default function VistasRecientesPage() {
+    const router = useRouter();
     const [properties, setProperties] = useState<any[]>([]);
     const [filteredProperties, setFilteredProperties] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const dateInputRef = useRef<HTMLInputElement>(null);
+
+    // --- ESTADOS PARA EL FILTRO DE CALENDARIO ---
+    const [showCalendar, setShowCalendar] = useState(false);
+    const hoy = new Date(2026, 4, 9); // Referencia actual: 9 de Mayo 2026
+    const [currentDate, setCurrentDate] = useState(new Date(2026, 4, 1));
+    const [rangeStart, setRangeStart] = useState<Date | null>(null);
+    const [rangeEnd, setRangeEnd] = useState<Date | null>(null);
+
+    // --- CONFIGURACIÓN DE PAGINACIÓN (CAMBIADO A 10) ---
+    const [currentPage, setCurrentPage] = useState(1);
+    const propertiesPerPage = 10;
+
+    const totalPages = useMemo(() => {
+        return Math.ceil(filteredProperties.length / propertiesPerPage);
+    }, [filteredProperties, propertiesPerPage]);
+
+    const currentProperties = useMemo(() => {
+        const lastIndex = currentPage * propertiesPerPage;
+        const firstIndex = lastIndex - propertiesPerPage;
+        return filteredProperties.slice(firstIndex, lastIndex);
+    }, [currentPage, filteredProperties, propertiesPerPage]);
 
     const fetchHistorial = async () => {
         const token = localStorage.getItem('token');
         try {
-            const response = await fetch('http://localhost:5000/api/perfil/historial/vistas', {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/perfil/historial/vistas`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
-            setProperties(data);
-            setFilteredProperties(data);
+            const allData = Array.isArray(data) ? data : (data.data || []);
+            setProperties(allData);
+            setFilteredProperties(allData);
+            setCurrentPage(1);
         } catch (error) {
             console.error("Error cargando historial:", error);
         } finally {
@@ -68,62 +97,147 @@ export default function VistasRecientesPage() {
         }
     };
 
-    useEffect(() => { fetchHistorial(); }, []);
+    useEffect(() => {
+        fetchHistorial();
+    }, []);
 
-    // FUNCIONALIDAD: Filtrar por fecha (Calendario)
-    const handleDateFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedDate = e.target.value; // Formato YYYY-MM-DD
-        if (!selectedDate) {
-            setFilteredProperties(properties);
-            return;
-        }
-        const filtered = properties.filter(p =>
-            new Date(p.viewedDate).toISOString().split('T')[0] === selectedDate
-        );
-        setFilteredProperties(filtered);
+    // --- LÓGICA DEL CALENDARIO ---
+    const changeMonth = (offset: number) => {
+        const newDate = new Date(currentDate);
+        newDate.setMonth(newDate.getMonth() + offset);
+        setCurrentDate(newDate);
     };
 
-    // FUNCIONALIDAD: Borrar historial
+    const handleDateClick = (day: number, monthOffset: number) => {
+        const clickedDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + monthOffset, day);
+        if (!rangeStart || (rangeStart && rangeEnd)) {
+            setRangeStart(clickedDate);
+            setRangeEnd(null);
+        } else if (clickedDate < rangeStart) {
+            setRangeStart(clickedDate);
+        } else {
+            setRangeEnd(clickedDate);
+        }
+    };
+
+    const handleResetFilter = () => {
+        setRangeStart(null);
+        setRangeEnd(null);
+        setCurrentDate(new Date(hoy.getFullYear(), hoy.getMonth(), 1));
+        setFilteredProperties(properties);
+        setCurrentPage(1);
+    };
+
+    const applyRangeFilter = () => {
+        if (!rangeStart || !rangeEnd) return;
+        const filtered = properties.filter(p => {
+            const pDate = new Date(p.viewedDate);
+            const start = new Date(rangeStart.setHours(0,0,0,0));
+            const end = new Date(rangeEnd.setHours(23,59,59,999));
+            return pDate >= start && pDate <= end;
+        });
+        setFilteredProperties(filtered);
+        setCurrentPage(1);
+        setShowCalendar(false);
+    };
+
+    const renderMonth = (date: Date, offset: number) => {
+        const target = new Date(date.getFullYear(), date.getMonth() + offset, 1);
+        const daysInMonth = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
+        const firstDayOfMonth = target.getDay();
+        const monthName = target.toLocaleString('es-ES', { month: 'long', year: 'numeric' });
+
+        return (
+            <div className="flex-1">
+                <div className="flex justify-between items-center mb-6 px-2 text-[#E87B00]">
+                    {offset === 0 ? <ChevronLeft size={18} className="cursor-pointer" onClick={() => changeMonth(-1)} /> : <div className="w-4" />}
+                    <span className="font-bold text-gray-800 text-sm capitalize">{monthName}</span>
+                    {offset === 1 ? <ChevronRight size={18} className="cursor-pointer" onClick={() => changeMonth(1)} /> : <div className="w-4" />}
+                </div>
+                <div className="grid grid-cols-7 text-center text-[12px]">
+                    {['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'].map(d => (
+                        <div key={d} className="text-gray-400 font-medium mb-3">{d}</div>
+                    ))}
+                    {[...Array(firstDayOfMonth)].map((_, i) => <div key={i} className="py-2"></div>)}
+                    {[...Array(daysInMonth)].map((_, i) => {
+                        const day = i + 1;
+                        const dObj = new Date(target.getFullYear(), target.getMonth(), day);
+                        const isStart = rangeStart?.toDateString() === dObj.toDateString();
+                        const isEnd = rangeEnd?.toDateString() === dObj.toDateString();
+                        const inRange = rangeStart && rangeEnd && dObj > rangeStart && dObj < rangeEnd;
+                        const isToday = hoy.toDateString() === dObj.toDateString();
+
+                        return (
+                            <div
+                                key={day}
+                                onClick={() => handleDateClick(day, offset)}
+                                className={`relative py-2 cursor-pointer flex justify-center items-center ${inRange || isStart || isEnd ? 'bg-[#F7D8B5]' : 'hover:bg-gray-50'}`}
+                            >
+                                <span className={`z-10 w-7 h-7 flex items-center justify-center rounded-full font-bold 
+                                    ${isStart || isEnd ? 'border-2 border-black' : ''} 
+                                    ${isToday ? 'bg-[#E87B00] border-2 border-black text-white' : ''}`}
+                                >
+                                    {day}
+                                </span>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    };
+
+    const paginate = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     const handleClearHistory = async () => {
+        if (properties.length === 0) return;
         if (!confirm("¿Deseas borrar todo tu historial de vistas?")) return;
+        
         const token = localStorage.getItem('token');
         try {
-            await fetch('http://localhost:5000/api/perfil/historial/vistas', {
-                method: 'DELETE',
-                headers: { 'Authorization': `Bearer ${token}` }
+            // CAMBIO: Usamos PATCH y el endpoint /limpiar para el borrado lógico
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/perfil/historial/limpiar`, {
+                method: 'PATCH',
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json' 
+                }
             });
-            setProperties([]);
-            setFilteredProperties([]);
-        } catch (error) {
-            console.error("Error al borrar:", error);
+
+            if (response.ok) {
+                setProperties([]);
+                setFilteredProperties([]);
+                setCurrentPage(1);
+                // Opcional: alert("Historial limpiado correctamente");
+            } else {
+                console.error("Error al intentar limpiar el historial en el servidor");
+            }
+        } catch (error) { 
+            console.error("Error de red:", error); 
         }
     };
 
     if (loading) return <div className="p-20 text-center font-bold text-black">Conectando con PropBol...</div>;
 
     return (
-        <main className="min-h-screen bg-[#F8F9FA] p-4 md:p-6 font-sans">
-            <div className="max-w-7xl mx-auto">
+        <main className="min-h-screen bg-[#F8F9FA] p-4 md:p-6 font-sans text-black">
+            <div className="max-w-7xl mx-auto relative">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                     <div>
                         <h1 className="text-xl md:text-2xl font-bold text-gray-900">Propiedades vistas recientemente</h1>
-                        <p className="text-gray-500 text-xs">{filteredProperties.length} propiedades encontradas</p>
+                        <p className="text-gray-500 text-xs font-semibold">
+                            Total en sistema: {filteredProperties.length} propiedades
+                        </p>
                     </div>
 
                     <div className="flex gap-3 items-center">
                         <div className="relative">
-                            {/* BUG FIX: Atributos min y max añadidos para habilitar navegación libre de años */}
-                            <input
-                                type="date"
-                                ref={dateInputRef}
-                                onChange={handleDateFilter}
-                                min="2000-01-01"
-                                max="2100-12-31"
-                                className="absolute opacity-0 pointer-events-none"
-                            />
                             <button
-                                onClick={() => dateInputRef.current?.showPicker()}
-                                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium hover:bg-gray-50 text-black"
+                                onClick={() => setShowCalendar(!showCalendar)}
+                                className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium hover:bg-gray-50 transition-colors"
                             >
                                 <Calendar size={16} /> Filtrar por Fecha
                             </button>
@@ -131,28 +245,95 @@ export default function VistasRecientesPage() {
 
                         <button
                             onClick={handleClearHistory}
-                            className="flex items-center gap-2 px-4 py-2 bg-white border border-red-100 text-red-600 rounded-lg shadow-sm text-sm font-medium hover:bg-red-50"
+                            disabled={properties.length === 0}
+                            className="flex items-center gap-2 px-4 py-2 bg-white border border-red-100 text-red-600 rounded-lg shadow-sm text-sm font-medium hover:bg-red-50 transition-colors disabled:opacity-50"
                         >
                             <Trash2 size={16} /> Limpiar Historial
                         </button>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {properties.length === 0 ? (
-                        <div className="col-span-full text-center py-20 text-gray-400 font-medium">
-                            Aún no has visto ninguna propiedad
+                {/* CALENDARIO */}
+                {showCalendar && (
+                    <div className="absolute top-16 right-0 z-50 bg-[#FDF9F0] border-2 border-[#F3C291] rounded-2xl shadow-xl p-8 w-[650px] animate-in fade-in zoom-in duration-200">
+                        <button
+                            onClick={() => setShowCalendar(false)}
+                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+                        >
+                            <X size={20} />
+                        </button>
+                        <div className="flex gap-10">
+                            {renderMonth(currentDate, 0)}
+                            {renderMonth(currentDate, 1)}
                         </div>
-                    ) : filteredProperties.length > 0 ? (
-                        filteredProperties.map((prop: any) => (
-                            <PropertyCard key={prop.id} prop={prop} />
+                        <div className="flex justify-center gap-4 mt-10">
+                            <button
+                                onClick={applyRangeFilter}
+                                className="bg-[#E87B00] text-white px-10 py-2.5 rounded-xl font-bold text-sm shadow-md hover:bg-orange-600 transition-colors"
+                            >
+                                aplicar rango
+                            </button>
+                            <button
+                                onClick={handleResetFilter}
+                                className="bg-[#D1D5DB] text-[#4B4B4B] px-8 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-gray-300 transition-colors"
+                            >
+                                <Trash2 size={16} /> limpiar
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* GRID DE CARDS (AJUSTADO PARA 10) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 min-h-[600px]">
+                    {currentProperties.length > 0 ? (
+                        currentProperties.map((prop: any) => (
+                            <PropertyCard
+                                key={prop.id}
+                                prop={prop}
+                                onVerDetalle={(id) => router.push(`/detalle-propiedad/${id}`)}
+                            />
                         ))
                     ) : (
-                        <div className="col-span-full text-center py-20 text-gray-400 font-medium">
-                            No se encontraron propiedades para esta selección.
+                        <div className="col-span-full text-center py-20 text-gray-400 font-medium border-2 border-dashed border-gray-200 rounded-xl">
+                            {properties.length === 0 ? "No hay registros en tu historial." : "No hay resultados para esta fecha."}
                         </div>
                     )}
                 </div>
+
+                {/* PAGINACIÓN */}
+                {totalPages > 1 && (
+                    <div className="flex justify-center items-center mt-12 mb-10 gap-2">
+                        <button
+                            onClick={() => paginate(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className="p-2 border rounded-lg hover:bg-gray-100 disabled:opacity-30 transition-colors"
+                        >
+                            <ChevronLeft size={20} />
+                        </button>
+
+                        {[...Array(totalPages)].map((_, i) => (
+                            <button
+                                key={i + 1}
+                                onClick={() => paginate(i + 1)}
+                                className={`w-10 h-10 rounded-lg text-sm font-bold transition-all ${
+                                    currentPage === i + 1
+                                        ? 'bg-[#E87B00] text-white shadow-md'
+                                        : 'bg-white text-black border border-gray-300 hover:bg-gray-50'
+                                }`}
+                            >
+                                {i + 1}
+                            </button>
+                        ))}
+
+                        <button
+                            onClick={() => paginate(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className="p-2 border rounded-lg hover:bg-gray-100 disabled:opacity-30 transition-colors"
+                        >
+                            <ChevronRight size={20} />
+                        </button>
+                    </div>
+                )}
             </div>
         </main>
     );

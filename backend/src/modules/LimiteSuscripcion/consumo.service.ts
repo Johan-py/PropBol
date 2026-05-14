@@ -1,6 +1,6 @@
 import { prisma } from '../../lib/prisma.client.js'
 
-const USE_MOCK = true
+const USE_MOCK = false
 
 export const obtenerConsumo = async (userId: number) => {
   // 🟡MODO MOCK (datos simulados)
@@ -54,11 +54,15 @@ export const obtenerConsumo = async (userId: number) => {
     }
   }
 
-  // 🔥 CONTAR PUBLICACIONES
+  // Contar publicaciones del mes actual (incluye eliminadas para no reducir el contador)
+  const ahora = new Date()
+  const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1)
+
   const publicacionesMes = await prisma.publicacion.count({
     where: {
-      usuarioId: userId
-    }
+      usuarioId: userId,
+      fechaPublicacion: { gte: inicioMes },
+    },
   })
 
   return {

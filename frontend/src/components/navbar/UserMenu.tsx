@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import type { User } from "../layout/Navbar";
-import { User as UserIcon, Eye, FileText, Map, Star, Shield, LayoutDashboard } from "lucide-react";
+import { User as UserIcon, Eye, FileText, Map, Star, Shield, LayoutDashboard, CheckCircle } from "lucide-react";
 
 type UserMenuProps = {
   user: User | null;
@@ -189,7 +189,7 @@ export default function UserMenu({
       </button>
 
       <div
-        className={`absolute right-0 mt-3 w-72 rounded-xl border border-gray-200 bg-[#F9F6EE] shadow-lg p-5 z-50 transition-all duration-200 ${isPanelOpen ? "opacity-100 translate-y-0 visible" : "opacity-0 -translate-y-2 invisible pointer-events-none"}`}
+        className={`fixed left-1/2 -translate-x-1/2 top-[60px] w-[calc(100vw-2rem)] max-w-[340px] rounded-xl border border-gray-200 bg-[#F9F6EE] shadow-[0_8px_30px_rgba(0,0,0,0.12)] p-5 z-[999] transition-all duration-200 sm:absolute sm:left-auto sm:-translate-x-0 sm:top-auto sm:right-0 sm:mt-3 sm:w-72 ${isPanelOpen ? "opacity-100 translate-y-0 visible" : "opacity-0 -translate-y-4 sm:-translate-y-2 invisible pointer-events-none"}`}
       >
         <div className="flex justify-between items-center mb-4 border-b border-gray-300 pb-2">
           <span className="font-bold text-sm text-gray-900">
@@ -267,6 +267,19 @@ export default function UserMenu({
                 label="Mis comparaciones"
                 href="/mis-comparaciones"
                 icon={FileText}
+                onClick={onClosePanel}
+              />
+              <MenuLink
+                label="Sesiones activas"
+                href="/profile/sesiones-activas"
+                icon={CheckCircle}
+                onClick={onClosePanel}
+              />
+              {/* HU13: acceso a ajustes de visualización y accesibilidad */}
+              <MenuLink
+                label="Ajustes de Visualización"
+                href="/profile/ajustes-visualizacion"
+                icon={Eye}
                 onClick={onClosePanel}
               />
               <MenuLink

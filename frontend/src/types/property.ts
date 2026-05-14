@@ -20,10 +20,15 @@ export interface PropertyMapPin {
   type: PropertyType
   title: string
   descripcion?: string | null
+  ubicacionTexto?: string | null
+  categoriaTexto?: string | null
+  accionTexto?: string | null
   thumbnailUrl?: string
   nroCuartos?: number | null
   nroBanos?: number | null
   superficieM2?: number | null
+  score?: number
+  razones?: string[]
 }
 
 // Respuesta esperada del endpoint real futuro:

@@ -25,6 +25,14 @@ export default function BlogCard({
 }: BlogCardProps) {
   const cardHref = href || `/blog/${id}`;
 
+  // Trunca el excerpt a una longitud fija y añade tres puntos suspensivos
+  const truncateExcerpt = (text: string, max = 140) => {
+    if (!text) return '';
+    const t = text.replace(/\s+/g, ' ').trim();
+    if (t.length <= max) return t;
+    return t.slice(0, max).trimEnd() + '...';
+  };
+
   return (
     <Link href={cardHref} className="block group">
       <article
@@ -47,7 +55,7 @@ export default function BlogCard({
             alt={title}
             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
-          <div className="absolute inset-0 bg-stone-900/5 transition-opacity duration-500 group-hover:opacity-0" />
+          <div className="absolute inset-0 bg-black/5 transition-opacity duration-500 group-hover:opacity-0" />
         </div>
 
         <div className="flex flex-1 flex-col p-6 sm:p-8">
@@ -65,7 +73,7 @@ export default function BlogCard({
 
           {/* Resumen */}
           <p className="font-['Inter'] mb-6 line-clamp-3 text-sm leading-relaxed text-stone-600 sm:text-base">
-            {excerpt}
+            {truncateExcerpt(excerpt)}
           </p>
 
           {/* Botón y Metadata */}

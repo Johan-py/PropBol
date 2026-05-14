@@ -10,7 +10,7 @@ interface CarouselItem {
   location: string;
   count?: number;
   filterParam: string;
-   previews?: Array<{ imagen: string; titulo: string }>;
+  previews?: Array<{ imagen: string; titulo: string }>;
 }
 
 interface PropertyCarouselProps {
@@ -35,43 +35,43 @@ export default function PropertyCarousel({
     });
   };
 
-    useEffect(() => {
+  useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
-       const onWheel = (e: WheelEvent) => {
+    const onWheel = (e: WheelEvent) => {
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-        e.preventDefault(); 
+        e.preventDefault();
         el.scrollLeft += e.deltaY;
       }
     };
-    
+
     el.addEventListener("wheel", onWheel, { passive: false });
 
     return () => el.removeEventListener("wheel", onWheel);
   }, []);
 
   const handleCardClick = (filterParam: string) => {
-  const modoMap: Record<"alquiler" | "venta", string> = {
-    alquiler: "ALQUILER",
-    venta: "VENTA",
+    const modoMap: Record<"alquiler" | "venta", string> = {
+      alquiler: "ALQUILER",
+      venta: "VENTA",
+    };
+
+    const modo = modoMap[category];
+    const params = new URLSearchParams({
+      modoInmueble: modo,
+      query: filterParam,
+    });
+
+    const currentFilters = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}');
+    sessionStorage.setItem('propbol_global_filters', JSON.stringify({
+      ...currentFilters,
+      modoInmueble: [modo],
+      query: filterParam,
+      updatedAt: new Date().toISOString()
+    }));
+
+    router.push(`/busqueda_mapa?${params.toString()}`);
   };
-
-  const modo = modoMap[category];
-  const params = new URLSearchParams({
-    modoInmueble: modo,
-    query: filterParam, 
-  });
-
-  const currentFilters = JSON.parse(sessionStorage.getItem('propbol_global_filters') || '{}');
-  sessionStorage.setItem('propbol_global_filters', JSON.stringify({
-    ...currentFilters,
-    modoInmueble: [modo],
-    query: filterParam,
-    updatedAt: new Date().toISOString()
-  }));
-
-  router.push(`/busqueda_mapa?${params.toString()}`);
-};
 
   return (
     <div className="mb-10">
@@ -97,29 +97,29 @@ export default function PropertyCarousel({
         <div
           ref={scrollRef}
           className=" flex gap-3 overflow-x-auto scroll-smooth px-9 py-2"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none", overscrollBehaviorX: "contain", touchAction: "pan-x"}}
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none", overscrollBehaviorX: "contain", touchAction: "pan-x" }}
         >
           {/* ... dentro del ref={scrollRef} ... */}
-{items.map((item, i) => {
-  // Obtenemos la primera imagen de las previews para mostrarla de entrada
-  const mainImage = item.previews && item.previews.length > 0 
-    ? item.previews[0].imagen 
-    : item.image;
+          {items.map((item, i) => {
+            // Obtenemos la primera imagen de las previews para mostrarla de entrada
+            const mainImage = item.previews && item.previews.length > 0
+              ? item.previews[0].imagen
+              : item.image;
 
-  return (
-    <PropertyCard
-      key={i}
-      image={mainImage} 
-      title={item.title}
-      location={item.location}
-      count={item.count}
-      variant={category}
-      isEmpty={item.count === 0}
-      previews={item.previews ?? []}
-      onClick={() => handleCardClick(item.filterParam)}
-    />
-  );
-})}
+            return (
+              <PropertyCard
+                key={i}
+                image={mainImage}
+                title={item.title}
+                location={item.location}
+                count={item.count}
+                variant={category}
+                isEmpty={item.count === 0}
+                previews={item.previews ?? []}
+                onClick={() => handleCardClick(item.filterParam)}
+              />
+            );
+          })}
         </div>
 
         {/* Botón derecha */}

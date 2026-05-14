@@ -1,15 +1,14 @@
 import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
 import { env } from "../../config/env.js";
-import { 
-  enviarCodigoDesactivacionCuenta 
-
-} from "../../lib/email.service.js";
+import { prisma } from "../../lib/prisma.client.js";
+import { enviarCodigoDesactivacionCuenta } from "../../lib/email.service.js";
 
 import {
   deactivateUserAccountRepository,
   findUserPasswordByIdRepository,
   findSecurityUserByIdRepository,
+  findUserGoogleAuthRepository,
 } from "./security.repository.js";
 
 export class SecurityError extends Error {
@@ -163,8 +162,6 @@ const verifyPendingDeactivationToken = (token: string) => {
   }
 };
 
-
-
 const clearAttemptState = (userId: number) => {
   attemptsStore.delete(userId);
 };
@@ -275,10 +272,10 @@ export const sendDeactivateAccountCodeService = async (userId: number) => {
   });
 
   const emailResult = await enviarCodigoDesactivacionCuenta({
-  emailDestino: user.correo,
-  codigo,
-  nombreUsuario: user.nombre,
-});
+    emailDestino: user.correo,
+    codigo,
+    nombreUsuario: user.nombre,
+  });
   if (!emailResult.success) {
     throw new SecurityError(
       "No se pudo enviar el código de verificación. Intenta nuevamente.",
@@ -343,4 +340,65 @@ export const verifyDeactivateAccountCodeService = async ({
   await deactivateUserAccountRepository(userId);
 
   return { message: "Tu cuenta ha sido desactivada correctamente." };
+};
+
+export const activate2FAService = async (userId: number, password?: string) => {
+  if (!Number.isInteger(userId) || userId <= 0) {
+    throw new SecurityError("Usuario no autorizado.", 401);
+  }
+
+  const isGoogleUser = await findUserGoogleAuthRepository(userId);
+
+  if (isGoogleUser) {
+    const updatedUser = await prisma.usuario.update({
+      where: { id: userId },
+      data: {
+        two_factor_activo: true,
+        two_factor_activado_en: new Date(),
+        two_factor_metodo: "email",
+      },
+      select: {
+        two_factor_activo: true,
+      },
+    });
+    return {
+      message: "Verificación en dos pasos activada correctamente.",
+      two_factor_activo: updatedUser.two_factor_activo,
+    };
+  }
+
+  await validateCurrentPasswordService(userId, password ?? "");
+
+  const updatedUser = await prisma.usuario.update({
+    where: { id: userId },
+    data: {
+      two_factor_activo: true,
+      two_factor_activado_en: new Date(),
+      two_factor_metodo: "email",
+    },
+    select: {
+      two_factor_activo: true,
+    },
+  });
+
+  return {
+    message: "Verificación en dos pasos activada correctamente.",
+    two_factor_activo: updatedUser.two_factor_activo,
+  };
+};
+
+export const get2FAStatusService = async (userId: number) => {
+  if (!Number.isInteger(userId) || userId <= 0) {
+    throw new SecurityError("Usuario no autorizado.", 401);
+  }
+
+  const user = await findUserPasswordByIdRepository(userId);
+  if (!user) throw new SecurityError("Usuario no encontrado.", 404);
+
+  const isGoogleUser = await findUserGoogleAuthRepository(userId);
+
+  return {
+    two_factor_activo: user.two_factor_activo ?? false,
+    isGoogleUser,
+  };
 };

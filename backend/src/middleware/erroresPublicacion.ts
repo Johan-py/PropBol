@@ -17,6 +17,7 @@ export const reglasValidacionHU5 = [
     .withMessage("El precio debe ser un número válido"),
 ];
 
+// Manejo de errores de validación HU‑5
 export const manejarErroresPublicacion = (
   req: Request,
   res: Response,
@@ -47,6 +48,39 @@ export const manejarErroresPublicacion = (
       estado: "Pendiente de revisión",
       totalErrores: errors.array().length,
       errores: agrupados,
+      progress: 0, // BUG‑E02: progreso inicial
+    });
+  }
+  next();
+};
+
+//  Validar etapa final 
+export const validarEtapaFinal = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.body.step !== "final") {
+    return res.status(400).json({
+      error: "FORM_INCOMPLETE",
+      message: "Debes completar todas las etapas antes de publicar.",
+      progress: 20,
+    });
+  }
+  next();
+};
+
+// Cancelación explícita 
+export const validarCancelacion = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.body.cancelado === true) {
+    return res.status(400).json({
+      error: "PUBLICATION_CANCELLED",
+      message: "La publicación fue cancelada por el usuario.",
+      progress: 50,
     });
   }
   next();

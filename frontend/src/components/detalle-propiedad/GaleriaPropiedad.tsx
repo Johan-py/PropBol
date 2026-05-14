@@ -1,7 +1,6 @@
-
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 interface Props {
   imagenes: Array<{
@@ -11,11 +10,37 @@ interface Props {
     pesoMb: number | null
   }>
   titulo: string
+  esOferta?: boolean           
+  porcentajeDescuento?: number 
+}
+
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
+
+function resolverUrlMultimedia(url: string) {
+  if (!url) return '/placeholder-house.jpg'
+
+  // Si ya viene absoluta (Cloudinary, YouTube, etc.), la dejamos tal cual
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url
+  }
+
+  // Si viene relativa desde backend, la apuntamos al backend
+  if (url.startsWith('/')) {
+    return `${API_URL}${url}`
+  }
+
+  return `${API_URL}/${url}`
 }
 
 export default function GaleriaPropiedad({ imagenes, titulo }: Props) {
   const imagenesValidas = useMemo(
-    () => imagenes.filter((img) => img.tipo === 'IMAGEN'),
+    () =>
+      imagenes
+        .filter((img) => img.tipo === 'IMAGEN')
+        .map((img) => ({
+          ...img,
+          url: resolverUrlMultimedia(img.url)
+        })),
     [imagenes]
   )
 
@@ -25,6 +50,10 @@ export default function GaleriaPropiedad({ imagenes, titulo }: Props) {
       : [{ id: 0, url: '/placeholder-house.jpg', tipo: 'IMAGEN', pesoMb: null }]
 
   const [imagenPrincipal, setImagenPrincipal] = useState(lista[0].url)
+
+  useEffect(() => {
+    setImagenPrincipal(lista[0].url)
+  }, [lista])
 
   return (
     <section className="grid gap-3 lg:grid-cols-[1.65fr_1fr]">

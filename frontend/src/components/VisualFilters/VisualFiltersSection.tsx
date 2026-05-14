@@ -104,13 +104,17 @@ export default function VisualFiltersSection() {
         setVentas(mergeDepartamentos(DEPARTAMENTOS_BASE, payload.sales ?? []));
 
         // Tipos: mapear categories del backend
-        const tiposBase = ["casa", "departamento", "oficina", "terreno"];
+        const tiposBase = ["casa", "departamento", "cuarto", "terreno", "terreno_mortuorio"];
         const tiposMapped = tiposBase.map((base) => {
           const found = (payload.categories ?? []).find((c) =>
             normalizeName(c.name).includes(base.toUpperCase())
           );
+
+          let label = base.charAt(0).toUpperCase() + base.slice(1) + "s";
+          if (base === "terreno_mortuorio") label = "Espacios Cementerios";
+
           return {
-            nombre: found?.name ?? (base.charAt(0).toUpperCase() + base.slice(1) + "s"),
+            nombre: label,
             total: found?.count ?? 0,
           };
         });
@@ -124,8 +128,9 @@ export default function VisualFiltersSection() {
         setTipos([
           { nombre: "Casas", total: 0 },
           { nombre: "Departamentos", total: 0 },
-          { nombre: "Oficinas", total: 0 },
+          { nombre: "Cuartos", total: 0 },
           { nombre: "Terrenos", total: 0 },
+          { nombre: "Espacios Cementerios", total: 0 },
         ]);
       } finally {
         setLoading(false);

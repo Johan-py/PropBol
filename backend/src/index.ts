@@ -9,6 +9,7 @@ import zonaRoutes from './modules/perfil/zonaUsario.routes.js'
 import telemetriaRouter from './modules/perfil/telemetria.routes.js'
 import locationRoutes from './modules/locations/locations.routes.js'
 import consumoRoutes from './modules/LimiteSuscripcion/consumo.routes.js'
+import { iniciarCronRetroalimentacion } from './modules/recomendaciones/retroalimentacionCron.js'
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -42,7 +43,12 @@ import {
   deactivate2FAController,
   get2FAStatusController,
   forgotPasswordController,
-  resetPasswordController
+  resetPasswordController,
+  resend2FAController,
+  activateAccountByPasswordController,
+  requestActivationCodeController,
+  activateAccountByCodeController,
+  resendRegisterCodeController,
 } from './modules/auth/auth.controller.js'
 import { requireAuth } from './middleware/auth.middleware.js'
 
@@ -53,12 +59,21 @@ import locationSearchHandler from './api/locations/search.js'
 import { getZonasController } from './modules/zonas/zonas.controller.js'
 import correoverificacionRoutes from './modules/perfil/correoverificacion.routes.js'
 import perfilRoutes from './modules/perfil/perfil.routes.js'
+import comparacionRoutes from './modules/perfil/comparacion.routes.js'
 
 import {
   googleCallbackController,
+  getGoogleLinkUrlController,
   StratGoogleLoginController,
   StartGoogleRegisterController
 } from './modules/auth/google/google.controller.js'
+
+import {
+  startLinkedInLoginController,
+  startLinkedInRegisterController,
+  linkedInCallbackController,
+  getLinkedInLinkUrlController
+} from './modules/auth/linkedin/linkedin.controller.js'
 
 import {
   discordCallbackController,
@@ -67,10 +82,12 @@ import {
   startDiscordRegisterController
 } from './modules/auth/discord/discord.controller.js'
 
-import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
-import publicacionRoutes from './modules/publicacion/publicacion.routes.js'
-import router from './modules/registro-publicacion/publicacion.routes.js'
-import parametrosRoutes from './modules/parametros-publicacion/parametros.routes.js'
+import multimediaRoutes from "./modules/multimedia/multimedia.routes.js";
+import publicacionRoutes from "./modules/publicacion/publicacion.routes.js";
+import router from "./modules/registro-publicacion/publicacion.routes.js";
+import parametrosRoutes from "./modules/parametros-publicacion/parametros.routes.js";
+import tutorialPublicacionRoutes from "./modules/tutorial-publicacion/tutorial-publicacion.routes.js";
+import estadisticasRoutes from "./modules/estadisticas-publicacion/estadisticas.routes.js";
 
 import {
   facebookCallbackController,
@@ -81,10 +98,13 @@ import {
 
 import {
   getSocialLinksController,
-  unlinkSocialProviderController
+  unlinkSocialProviderController,
+  getLinkedInOriginalEmailController
 } from './modules/auth/social-links/social-links.controller.js'
 
-import securityRoutes from './routes/security.routes.js'
+import securityRoutes from "./routes/security.routes.js";
+import propiedadRoutes from "./routes/propiedad.routes.js";
+import { validarPublicacionesFree } from "./controllers/publicacionesController.js";
 // --------------------
 // LEGACY
 // --------------------
@@ -92,6 +112,7 @@ import authRoutes from './routes/auth.routes.js'
 import publicacionesRoutes from './routes/publicaciones.js'
 import { authMiddleware } from './middleware/authMiddleware.js'
 import blogsRoutes from './modules/blogs/blogs.routes.js'
+import testimoniosRoutes from './modules/testimonios/testimonios.routes.js'
 // --------------------
 // LEGACY
 // --------------------
@@ -112,6 +133,8 @@ import suscripcionesRoutes from './modules/suscripciones/suscripciones.routes.js
 import plansRoutes from './modules/plans/plans.routes.js'
 import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js'
 import whatsappRoutes from './modules/whatsapp/whatsapp.routes.js'
+import { getAdminTestimonios } from './modules/testimonios/adminTestimonios.controller.js'
+import sesionRoutes from './modules/perfil/sesion.routes.js'
 
 import './jobs/suscripcion.job.js'
 
@@ -147,6 +170,8 @@ app.use(
   })
 )
 
+app.use(express.json({ limit: '100mb' }))
+app.use(express.urlencoded({ extended: true, limit: '100mb' }))
 app.use(express.json())
 app.use('/uploads', express.static(path.resolve('uploads')))
 
@@ -154,43 +179,54 @@ app.use('/uploads', express.static(path.resolve('uploads')))
 // RUTAS LEGACY
 // --------------------
 app.post('/api/auth/forgot-password', forgotPasswordController)
+app.post('/api/auth/resend-2fa', resend2FAController)
 app.post('/api/auth/reset-password', resetPasswordController)
 app.use('/api/auth-legacy', authRoutes)
 app.get('/api/users/:id/publicaciones/free', authMiddleware, (_req, res) => {
   res.json({ restantes: 2 })
 })
+app.get(
+  '/api/publicaciones/validar-limite/:id',
+  authMiddleware,
+  validarPublicacionesFree
+)
 app.use('/api/publicaciones-legacy', publicacionesRoutes)
 
 // --------------------
 // RUTAS PRINCIPALES
 // --------------------
-app.use('/api/publicaciones', publicacionRoutes)
-app.use('/api/publicaciones', multimediaRoutes)
-app.use('/api/perfil', correoverificacionRoutes)
-app.use('/api/perfil/usuario', perfilRoutes)
-app.use('/api/perfil/zonas', zonaRoutes)
-app.use('/api', router)
-app.use('/api', consumoRoutes)
-app.use('/api', parametrosRoutes)
-app.use('/api/security', securityRoutes)
-app.use('/api/favorites', favoritesRoutes)
-app.use('/api/telemetria', telemetriaRoutes)
-app.use('/api/recomendaciones', recomendacionesRoutes)
-app.use('/api/publicaciones', publicacionRoutes)
-app.use('/api/publicaciones', multimediaRoutes)
-app.use('/api/perfil', correoverificacionRoutes)
-app.use('/api/perfil/usuario', perfilRoutes)
-app.use('/api/perfil/zonas', zonaRoutes)
-app.use('/api/perfil/historial', historialRoutes)
-app.use('/api/perfil/historial-busqueda', historialBusquedaRoutes)
-app.use('/api', router)
-app.use('/api', parametrosRoutes)
-app.use('/api/security', securityRoutes)
-app.use('/api/favorites', favoritesRoutes)
-app.use('/api/telemetria', telemetriaRoutes)
-app.use('/api/recomendaciones', recomendacionesRoutes)
-app.use('/api/blogs', blogsRoutes)
-app.use('/api/telemetria', telemetriaRouter)
+app.use("/api/publicaciones", publicacionRoutes);
+app.use("/api/publicaciones", multimediaRoutes);
+app.use("/api/publicaciones/tutorial", tutorialPublicacionRoutes);
+app.use("/api/perfil", correoverificacionRoutes);
+app.use("/api/perfil/usuario", perfilRoutes);
+app.use("/api/perfil/zonas", zonaRoutes);
+app.use("/api", router);
+app.use("/api", consumoRoutes);
+app.use("/api", parametrosRoutes);
+app.use("/api", estadisticasRoutes);
+app.use("/api/security", securityRoutes);
+app.use("/api/favorites", favoritesRoutes);
+app.use("/api/telemetria", telemetriaRoutes);
+app.use("/api/recomendaciones", recomendacionesRoutes);
+app.use("/api/propiedad", propiedadRoutes);
+app.use("/api/publicaciones", publicacionRoutes);
+app.use("/api/publicaciones", multimediaRoutes);
+app.use("/api/perfil", correoverificacionRoutes);
+app.use("/api/perfil/usuario", perfilRoutes);
+app.use("/api/perfil/zonas", zonaRoutes);
+app.use("/api/perfil/historial", historialRoutes);
+app.use("/api/perfil/historial-busqueda", historialBusquedaRoutes);
+app.use("/api", router);
+app.use("/api", parametrosRoutes);
+app.use("/api/security", securityRoutes);
+app.use("/api/favorites", favoritesRoutes);
+app.use("/api/telemetria", telemetriaRoutes);
+app.use("/api/recomendaciones", recomendacionesRoutes);
+app.use("/api/blogs", blogsRoutes);
+app.use("/api/testimonios", testimoniosRoutes);
+app.use("/api/telemetria", telemetriaRouter);
+app.use("/api/comparaciones", comparacionRoutes);
 
 app.use('/api/transacciones', transaccionesRoutes)
 app.use('/api/suscripciones', suscripcionesRoutes)
@@ -209,36 +245,61 @@ app.post('/api/users', (req, res) => {
 // --------------------
 // AUTH
 // --------------------
-app.post('/api/auth/register', registerController)
-app.post('/api/auth/login', loginController)
-app.post('/api/auth/verify-2fa', verify2FAController)
-app.post('/api/auth/activate-2fa', requireAuth, activate2FAController)
-app.post('/api/auth/deactivate-2fa', requireAuth, deactivate2FAController)
-app.get('/api/auth/2fa-status', requireAuth, get2FAStatusController)
-app.post('/api/auth/logout', logoutController)
-app.post('/api/auth/verify-register', verifyRegisterCodeController)
-app.get('/api/auth/me', getMeController)
-app.get('/api/auth/google/login', StratGoogleLoginController)
-app.get('/api/auth/google/register', StartGoogleRegisterController)
-app.get('/api/auth/google/callback', googleCallbackController)
-app.post('/api/auth/register', registerController)
-app.post('/api/auth/login', loginController)
-app.post('/api/auth/logout', logoutController)
-app.post('/api/auth/verify-register', verifyRegisterCodeController)
-app.get('/api/auth/me', getMeController)
-app.get('/api/auth/google/login', StratGoogleLoginController)
-app.get('/api/auth/google/register', StartGoogleRegisterController)
-app.get('/api/auth/google/callback', googleCallbackController)
-app.get('/api/auth/discord/login', startDiscordLoginController)
-app.get('/api/auth/discord/register', startDiscordRegisterController)
-app.get('/api/auth/discord/callback', discordCallbackController)
-app.get('/api/auth/facebook/login', startFacebookLoginController)
-app.get('/api/auth/facebook/register', startFacebookRegisterController)
-app.get('/api/auth/facebook/callback', facebookCallbackController)
-app.get('/api/auth/social-links', requireAuth, getSocialLinksController)
-app.delete('/api/auth/social-links/:provider', requireAuth, unlinkSocialProviderController)
-app.get('/api/auth/facebook/link-url', requireAuth, getFacebookLinkUrlController)
-app.get('/api/auth/discord/link-url', requireAuth, getDiscordLinkUrlController)
+app.post("/api/auth/register", registerController);
+app.post("/api/auth/login", loginController);
+app.post("/api/auth/verify-2fa", verify2FAController);
+app.post("/api/auth/activate-2fa", requireAuth, activate2FAController);
+app.post("/api/auth/deactivate-2fa", requireAuth, deactivate2FAController);
+app.get("/api/auth/2fa-status", requireAuth, get2FAStatusController);
+app.post("/api/auth/logout", logoutController);
+app.post("/api/auth/verify-register", verifyRegisterCodeController);
+app.post("/api/auth/resend-register-code", resendRegisterCodeController);
+app.post("/api/auth/activate-by-password", activateAccountByPasswordController);
+app.post("/api/auth/request-activation-code", requestActivationCodeController);
+app.post("/api/auth/activate-by-code", activateAccountByCodeController);
+app.get("/api/auth/me", getMeController);
+
+app.get("/api/auth/google/login", StratGoogleLoginController);
+app.get("/api/auth/google/register", StartGoogleRegisterController);
+app.get("/api/auth/google/callback", googleCallbackController);
+
+app.get("/api/auth/discord/login", startDiscordLoginController);
+app.get("/api/auth/discord/register", startDiscordRegisterController);
+app.get("/api/auth/discord/callback", discordCallbackController);
+
+app.get("/api/auth/facebook/login", startFacebookLoginController);
+app.get("/api/auth/facebook/register", startFacebookRegisterController);
+app.get("/api/auth/facebook/callback", facebookCallbackController);
+
+app.get("/api/auth/social-links", requireAuth, getSocialLinksController);
+app.get(
+  "/api/auth/linkedin/original-email",
+  requireAuth,
+  getLinkedInOriginalEmailController,
+);
+
+app.delete(
+  "/api/auth/social-links/:provider",
+  requireAuth,
+  unlinkSocialProviderController,
+);
+
+app.get(
+  "/api/auth/facebook/link-url",
+  requireAuth,
+  getFacebookLinkUrlController,
+);
+app.get("/api/auth/discord/link-url", requireAuth, getDiscordLinkUrlController);
+app.get("/api/auth/google/link-url", requireAuth, getGoogleLinkUrlController);
+
+app.get("/api/auth/linkedin/login", startLinkedInLoginController);
+app.get("/api/auth/linkedin/callback", linkedInCallbackController);
+app.get(
+  "/api/auth/linkedin/link-url",
+  requireAuth,
+  getLinkedInLinkUrlController,
+);
+app.get("/api/auth/linkedin/register", startLinkedInRegisterController);
 //comentario
 
 // --------------------
@@ -281,6 +342,7 @@ app.get('/health', (_req, res) => {
 app.get('/api/properties/search', propertiesController.search)
 app.get('/api/inmuebles', propertiesController.getAll)
 app.get('/api/properties/inmuebles', propertiesController.getAll)
+app.use('/api/propiedad', propiedadRoutes)
 
 // --------------------
 // NOTIFICACIONES
@@ -302,6 +364,11 @@ app.post('/api/publicaciones', (req, res) => {
   const nuevaPublicacion = req.body
   res.json({ message: 'Publicación creada', publicacion: nuevaPublicacion })
 })
+
+// --------------------
+// TESTIMONIOSADMIN
+// --------------------
+app.get('/api/admin/testimonios', getAdminTestimonios)
 
 // --------------------
 // LEVANTAR SERVIDOR
@@ -338,6 +405,8 @@ async function seedPlanes() {
   })
   console.log('✅ Planes de suscripción inicializados en DB')
 }
+
+iniciarCronRetroalimentacion()
 
 app.listen(PORT, async () => {
   console.log(`🚀 Server running on port ${PORT}`)

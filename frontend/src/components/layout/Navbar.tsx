@@ -23,7 +23,8 @@ import LogoutModal from "../navbar/LogoutModal";
 import { useNotifications } from "@/hooks/useNotifications";
 import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 import type { NotificationFilter } from "@/types/notification";
- 
+import ThemeToggleButton from "./ThemeToggleButton";
+
 export type User = {
   name: string;
   email: string;
@@ -85,6 +86,7 @@ export default function Navbar() {
     isLoadingMore,
     error,
     isOnline,
+    hasRealtimeUpdate,
     scrollContainerRef,
     saveScrollPosition,
     toggleNotifications,
@@ -108,7 +110,6 @@ export default function Navbar() {
       localStorage.removeItem("nombre");
       localStorage.removeItem("correo");
       localStorage.removeItem("avatar");
-      localStorage.removeItem("searchHistory");
       setUser(null);
       setIsPanelOpen(false);
       setShowLogoutModal(false);
@@ -222,13 +223,13 @@ export default function Navbar() {
       month: "short",
     });
   };
- 
+
   // Tick para forzar re-render cada minuto (timestamps relativos)
   useEffect(() => {
     const interval = setInterval(() => setTick((t) => t + 1), 60000);
     return () => clearInterval(interval);
   }, []);
- 
+
   // Restaurar sesión y escuchar cambios
   useEffect(() => {
     void restoreSession();
@@ -248,7 +249,7 @@ export default function Navbar() {
       window.removeEventListener("online", handleOnline);
     };
   }, [restoreSession]);
- 
+
   // Cerrar paneles al hacer clic fuera
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -270,7 +271,7 @@ export default function Navbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open, toggleNotifications]);
- 
+
   // Verificar expiración de sesión cada 10 segundos (una sola instancia)
   useEffect(() => {
     const interval = setInterval(() => {
@@ -282,7 +283,7 @@ export default function Navbar() {
  
     return () => clearInterval(interval);
   }, [user, router, clearSession]);
- 
+
   // Cerrar panel de notificaciones con Escape
   useEffect(() => {
     if (!open) return;
@@ -294,7 +295,7 @@ export default function Navbar() {
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [open, toggleNotifications]);
- 
+
   // Escuchar eventos para abrir/cerrar menú móvil desde el tour
   useEffect(() => {
     const abrir = () => setIsMobileMenuOpen(true);
@@ -317,7 +318,10 @@ export default function Navbar() {
   };
  
   const handleLoginRedirect = () => router.push("/sign-in");
-  const handleOpenLogoutModal = () => setShowLogoutModal(true);
+  const handleOpenLogoutModal = () => {
+    setShowLogoutModal(true);
+    setIsPanelOpen(false);
+  };
  
   const handleCancelLogout = () => {
     if (isLoggingOut) return;
@@ -345,7 +349,7 @@ export default function Navbar() {
     setIsLoggingOut(false);
     router.push("/");
   };
- 
+
   // Lanzar el tour: si ya estamos en "/", disparar evento directo;
   // si no, navegar primero y esperar a que el componente monte.
   const handleIniciarTour = () => {
@@ -359,7 +363,7 @@ export default function Navbar() {
       }, 600);
     }
   };
- 
+
   return (
     <>
       <nav className="sticky top-0 z-[999] w-full border-b border-stone-200 bg-[#F9F6EE] shadow-sm">
@@ -378,6 +382,11 @@ export default function Navbar() {
               >
                 Publica tu inmueble
               </Link>
+
+              {/* HU13: botón general para alternar modo claro/oscuro */}
+              <div className="hidden md:block">
+                <ThemeToggleButton />
+              </div>
  
               <div className="relative" ref={notificationPanelRef}>
                 <button
@@ -656,6 +665,12 @@ export default function Navbar() {
         </div>
       </nav>
  
+      {hasRealtimeUpdate && (
+        <div className="fixed right-4 top-20 z-[9999] rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm font-medium text-orange-700 shadow-lg">
+          Nueva notificación recibida
+        </div>
+      )}
+
       <LogoutModal
         show={showLogoutModal}
         isLoggingOut={isLoggingOut}
@@ -698,6 +713,11 @@ export default function Navbar() {
               >
                 Publica tu inmueble
               </Link>
+
+              {/* HU13: botón general para alternar modo claro/oscuro en menú móvil */}
+              <div className="px-3 py-2">
+                <ThemeToggleButton />
+              </div>
  
               <div id="tour-propiedades-mobile" className="flex flex-col">
                 <button
@@ -775,7 +795,7 @@ export default function Navbar() {
               >
                 Planes de membresía
               </Link>
- 
+
               <button
                 id="tour-ayuda-mobile"
                 type="button"
