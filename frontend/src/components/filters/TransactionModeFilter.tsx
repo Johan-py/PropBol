@@ -39,19 +39,19 @@ export default function TransactionModeFilter({
                   }
                 }}
                 className={`
-                  w-[28px] h-[18px] rounded border cursor-pointer appearance-none transition-colors
+                  w-[28px] h-[18px] rounded cursor-pointer appearance-none transition-colors border 
                   group-hover:border-[#d97706] dark:group-hover:border-[#E87C1E]
-                  ${
-                    isSelected
-                      ? 'bg-[#d97706] dark:bg-[#E87C1E] border-[#d97706] dark:border-[#E87C1E]'
-                      : 'bg-white dark:bg-slate-800 border-gray-400 dark:border-slate-600'
-                  }
+                  bg-white border-gray-400 
+                  dark:bg-transparent dark:border-slate-600 
+                  checked:!bg-[#d97706] checked:!border-[#d97706] 
+                  dark:checked:!bg-transparent dark:checked:!border-[#E87C1E]
                 `}
               />
               {isSelected && (
                 <svg
-                  // Cambiamos el color según el modo (negro en claro, blanco en oscuro)
-                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[11px] h-[11px] pointer-events-none text-black dark:text-white"
+                  // El check siempre será blanco, ya que en modo claro el fondo es naranja 
+                  // y en modo oscuro el fondo es negro/transparente.
+                  className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[11px] h-[11px] pointer-events-none text-white"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor" 
