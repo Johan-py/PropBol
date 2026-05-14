@@ -750,7 +750,7 @@ useEffect(() => {
             onClick={handleSkip}
             style={{
               fontSize: fontSkip,
-              color: "#9ca3af",
+              color: theme.textSubtle,
               background: "none",
               border: "none",
               cursor: "pointer",
