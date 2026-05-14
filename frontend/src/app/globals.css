@@ -783,3 +783,23 @@ html.propbol-theme-dark body :where([class*="text-amber-600"], [class*="text-amb
 html.propbol-theme-dark body :where([class*="text-red-600"], [class*="text-[#D94848]"]) {
   color: #fca5a5 !important;
 }
+/* === FIX MAPAS MODO OSCURO (RESTAURADO) === */
+html.dark .leaflet-popup-content-wrapper,
+html.propbol-theme-dark .leaflet-popup-content-wrapper {
+  background-color: #1f2937 !important;
+}
+html.dark .leaflet-popup-tip,
+html.propbol-theme-dark .leaflet-popup-tip {
+  background-color: #1f2937 !important;
+}
+html.dark .pb-map-popup-dark-fix,
+html.propbol-theme-dark .pb-map-popup-dark-fix {
+  color: var(--popup-dark-color, inherit) !important;
+}
+html:not(.dark):not(.propbol-theme-dark) .pb-map-popup-dark-fix {
+  color: var(--popup-light-color, inherit) !important;
+}
+html.dark .pb-map-label-container > .pb-map-label,
+html.propbol-theme-dark .pb-map-label-container > .pb-map-label {
+  text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 -1px 3px rgba(0,0,0,0.95), 1px 0 3px rgba(0,0,0,0.95), -1px 0 3px rgba(0,0,0,0.95) !important;
+}
