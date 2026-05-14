@@ -960,6 +960,227 @@ type ForgotPasswordDTO = {
 
 const RESET_PASSWORD_TTL_MINUTES = 15;
 
+export const requestMagicLinkService = async (payload: RequestMagicLinkDTO) => {
+  const correo = payload.correo?.trim().toLowerCase();
+
+  if (!correo) {
+    throw new AuthError("El correo es obligatorio", 400);
+  }
+
+  const emailRegex = /\S+@\S+\.\S+/;
+
+  if (!emailRegex.test(correo)) {
+    throw new AuthError("Formato de correo inválido", 400);
+  }
+
+  const user = await findUserByCorreo(correo);
+
+  if (!user) {
+    throw new AuthError(
+      "No existe una cuenta registrada con este correo electrónico.",
+      404,
+    );
+  }
+
+  if (user.activo === false) {
+    throw new AuthError("Esta cuenta está desactivada", 403);
+  }
+
+  if (magicLinkRequestsInProgress.has(correo)) {
+    throw new AuthError(
+      "Ya se está procesando una solicitud de Magic Link para este correo. Espera unos segundos e intenta nuevamente.",
+      429,
+      MAGIC_LINK_IN_PROGRESS_RETRY_SECONDS,
+    );
+  }
+
+  magicLinkRequestsInProgress.add(correo);
+  validateMagicLinkResendCooldown(correo);
+
+  try {
+    validateMagicLinkRequestLimit(correo);
+
+    const serverNow = await getServerTime();
+    const expiraEn = new Date(
+      serverNow.getTime() + MAGIC_LINK_TTL_MINUTES * 60 * 1000,
+    );
+
+    const magicToken = jwt.sign(
+      {
+        purpose: "magic-link-login",
+        userId: user.id,
+        correo: user.correo,
+        nonce: crypto.randomUUID(),
+      },
+      env.JWT_SECRET,
+      {
+        expiresIn: MAGIC_LINK_TTL_SECONDS,
+      },
+    );
+
+    const tokenHash = hashMagicLinkToken(magicToken);
+
+    await invalidateActiveMagicLinksByUserId(user.id);
+
+    await createMagicLink({
+      usuarioId: user.id,
+      tokenHash,
+      correo: user.correo,
+      expiraEn,
+    });
+
+    const magicLink = `${env.FRONTEND_URL}/magic-link-sent?token=${magicToken}`;
+
+    const emailResult = await sendMagicLinkEmail({
+      emailDestino: user.correo,
+      nombreUsuario: user.nombre ?? undefined,
+      magicLink,
+      minutosExpiracion: MAGIC_LINK_TTL_MINUTES,
+    });
+
+    if (!emailResult.success) {
+      throw new AuthError(
+        "No se pudo enviar el link mágico. Intenta nuevamente.",
+        500,
+      );
+    }
+    registerMagicLinkSent(correo);
+    return {
+      message: "Te enviamos un link mágico a tu correo electrónico.",
+    };
+  } finally {
+    magicLinkRequestsInProgress.delete(correo);
+  }
+};
+
+export const resendMagicLinkService = async (payload: RequestMagicLinkDTO) => {
+  return await requestMagicLinkService(payload);
+};
+
+const verifyMagicLinkToken = (token: string) => {
+  try {
+    const decoded = jwt.verify(token, env.JWT_SECRET) as MagicLinkJwtPayload;
+
+    if (
+      decoded.purpose !== "magic-link-login" ||
+      typeof decoded.userId !== "number" ||
+      !decoded.correo
+    ) {
+      throw new AuthError("El Magic Link fue alterado o no es válido.", 401);
+    }
+
+    return decoded;
+  } catch (error) {
+    if (error instanceof AuthError) {
+      throw error;
+    }
+
+    if (error instanceof jwt.TokenExpiredError) {
+      throw new AuthError("Este Magic Link ha expirado.", 401);
+    }
+
+    if (error instanceof jwt.JsonWebTokenError) {
+      throw new AuthError("El Magic Link fue alterado o no es válido.", 401);
+    }
+
+    throw new AuthError("El Magic Link no es válido.", 401);
+  }
+};
+
+export const loginWithMagicLinkService = async ({
+  token,
+}: LoginWithMagicLinkDTO) => {
+  const magicToken = token?.trim();
+
+  if (!magicToken) {
+    throw new AuthError("El token es obligatorio", 400);
+  }
+
+  const decoded = verifyMagicLinkToken(magicToken);
+  const tokenHash = hashMagicLinkToken(magicToken);
+
+  const magicLink = await findMagicLinkByTokenHash(tokenHash);
+
+  if (!magicLink) {
+    throw new AuthError(
+      "Este enlace no es reconocido. Solicita un nuevo Magic Link para ingresar.",
+      404,
+    );
+  }
+
+  if (magicLink.activo === false || magicLink.usado_en) {
+    throw new AuthError("Este Magic Link ya fue utilizado.", 401);
+  }
+
+  if (magicLink.invalidado_en) {
+    throw new AuthError(
+      "Este Magic Link fue invalidado porque se solicitó uno nuevo.",
+      401,
+    );
+  }
+
+  const serverNow = await getServerTime();
+
+  if (magicLink.expira_en.getTime() < serverNow.getTime()) {
+    await deactivateMagicLink(magicLink.id);
+
+    throw new AuthError("Este Magic Link ha expirado.", 401);
+  }
+
+  if (
+    magicLink.usuario_id !== decoded.userId ||
+    magicLink.correo !== decoded.correo
+  ) {
+    throw new AuthError("El Magic Link no corresponde al usuario.", 401);
+  }
+
+  const user = await findUserById(decoded.userId);
+
+  if (!user) {
+    throw new AuthError("Usuario no encontrado", 404);
+  }
+
+  if (user.activo === false) {
+    throw new AuthError("Esta cuenta está desactivada", 403);
+  }
+
+  const wasMarkedAsUsed = await markMagicLinkAsUsed(magicLink.id);
+
+  if (!wasMarkedAsUsed) {
+    throw new AuthError("Este Magic Link ya fue utilizado.", 401);
+  }
+
+  await invalidateAllUserSessions(user.id);
+
+  const sessionPayload: JwtPayload = {
+    id: user.id,
+    correo: user.correo,
+  };
+
+  const sessionToken = generateToken(sessionPayload);
+  const fechaExpiracion = new Date(Date.now() + 60 * 60 * 1000);
+
+  await createSession({
+    token: sessionToken,
+    usuarioId: user.id,
+    fechaExpiracion,
+    metodo_auth: "magic_link",
+  });
+
+  return {
+    user: {
+      id: user.id,
+      correo: user.correo,
+      nombre: user.nombre,
+      apellido: user.apellido,
+      avatar: user.avatar,
+      rol: user.rol,
+      controlador: user.controlador,
+    },
+    token: sessionToken,
+  };
+};
+
 export const forgotPasswordService = async (payload: ForgotPasswordDTO) => {
   const correo = payload.correo?.trim().toLowerCase();
 
@@ -1296,7 +1517,11 @@ export const resendRegisterCodeService = async (verificationToken: string) => {
   const nonce = crypto.randomUUID();
 
   const codigoHash = hash2FACode(codigo);
-  cache.set(`last_reg_code_${decoded.correo}`, codigoHash, REGISTER_CODE_TTL_MINUTES * 60 * 1000);
+  cache.set(
+    `last_reg_code_${decoded.correo}`,
+    codigoHash,
+    REGISTER_CODE_TTL_MINUTES * 60 * 1000,
+  );
 
   const newToken = generatePendingRegisterToken({
     purpose: "pending-register",
