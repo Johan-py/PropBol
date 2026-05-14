@@ -100,10 +100,14 @@ export default function MisPublicacionesList() {
   }
 
   const handlePromocionChange = (id: number, promoted: boolean) => {
-    setPublicaciones(prev =>
-      prev.map(p => (p.id === id ? { ...p, promoted } : p))
-    )
+  setPublicaciones(prev =>
+    prev.map(p => (p.id === id ? { ...p, promoted } : p))
+  )
+  
+  if (!promoted) {
+    setFiltro('activas')
   }
+}
 
   useEffect(() => {
     cargarPublicaciones()

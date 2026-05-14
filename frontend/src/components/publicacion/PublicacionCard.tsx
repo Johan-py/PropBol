@@ -141,6 +141,7 @@ export default function PublicacionCard({
   const irAParametros = () => {
     router.push(`/propiedades/parametros?publicacionId=${publicacion.id}&returnTo=mis-publicaciones`)
   }
+  
 
   const mostrarMetricas = false
 
