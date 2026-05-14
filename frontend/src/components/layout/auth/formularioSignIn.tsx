@@ -105,7 +105,12 @@ type LinkedInPopupSuccessMessage = {
   type: "propbol:linkedin-login-success";
   message: string;
   token: string;
-  user: { id: number; correo: string; nombre?: string; apellido?: string };
+  user: {
+    id: number;
+    correo: string;
+    nombre?: string;
+    apellido?: string;
+  };
 };
 
 type LinkedInPopupErrorMessage = {
@@ -136,8 +141,14 @@ const GOOGLE_TIMEOUT_MESSAGE =
   "La autenticación con Google tardó demasiado. Por favor intenta nuevamente.";
 const FACEBOOK_TIMEOUT_MESSAGE =
   "La autenticación con Facebook tardó demasiado. Por favor intenta nuevamente.";
+const DISCORD_TIMEOUT_MESSAGE =
+  "La autenticación con Discord tardó demasiado. Por favor intenta nuevamente.";
 
 const DEACTIVATED_ACCOUNT_MESSAGE = "Esta cuenta está desactivada";
+const ACTIVATION_CONNECTION_ERROR_MESSAGE =
+  "Ocurrió un problema de conexión. Por favor, inténtelo de nuevo más tarde";
+const ACTIVATION_REQUEST_TIMEOUT_MS = 10000;
+const ACTIVATION_CODE_LENGTH = 6;
 
 const clearClientSession = () => {
   localStorage.removeItem("token");
@@ -146,6 +157,7 @@ const clearClientSession = () => {
   localStorage.removeItem("nombre");
   localStorage.removeItem("correo");
   localStorage.removeItem("avatar");
+  localStorage.removeItem("controlador");
 
   window.dispatchEvent(new Event("propbol:session-changed"));
   window.dispatchEvent(new Event("auth-state-changed"));
@@ -183,11 +195,11 @@ const saveSession = (
   controlador?: boolean,
 ) => {
   localStorage.setItem("token", token);
+
   const sessionUser = buildSessionUser(user);
 
   localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(sessionUser));
   localStorage.setItem("controlador", String(controlador ?? false));
-
   localStorage.setItem("nombre", sessionUser.name);
   localStorage.setItem("correo", sessionUser.email);
   localStorage.setItem("avatar", sessionUser.avatar ?? "");
@@ -280,21 +292,51 @@ export default function LoginForm() {
   const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
   const [isLoadingDiscord, setIsLoadingDiscord] = useState(false);
   const [isLoadingFacebook, setIsLoadingFacebook] = useState(false);
+  const [isLoadingLinkedIn, setIsLoadingLinkedIn] = useState(false);
+
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ correo?: string; password?: string }>(
     {},
   );
+
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [googleError, setGoogleError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const [showMagicLinkForm, setShowMagicLinkForm] = useState(false);
   const [magicLinkEmail, setMagicLinkEmail] = useState("");
   const [magicLinkError, setMagicLinkError] = useState("");
   const [magicLinkSuccess, setMagicLinkSuccess] = useState("");
   const [isLoadingMagicLink, setIsLoadingMagicLink] = useState(false);
-  const [isLoadingLinkedIn, setIsLoadingLinkedIn] = useState(false);
+
+  const [showActivationModal, setShowActivationModal] = useState(false);
+  const [activationStep, setActivationStep] = useState<
+    "options" | "password" | "code"
+  >("options");
+  const [activationPassword, setActivationPassword] = useState("");
+  const [showActivationPassword, setShowActivationPassword] = useState(false);
+  const [activationCode, setActivationCode] = useState("");
+  const [activationEmail, setActivationEmail] = useState("");
+  const [activationError, setActivationError] = useState("");
+  const [isActivating, setIsActivating] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
+
+  const activationModalRef = useRef<HTMLDivElement>(null);
+  const passwordContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setTimeLeft((previousTime) => Math.max(previousTime - 1, 0));
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [timeLeft]);
 
   useEffect(() => {
     const authMessage = sessionStorage.getItem("authMessage");
@@ -304,8 +346,6 @@ export default function LoginForm() {
       sessionStorage.removeItem("authMessage");
     }
   }, []);
-
-  const passwordContainerRef = useRef<HTMLDivElement>(null);
 
   const redirectAfterSuccessfulLogin = () => {
     const redirect = getRedirectAfterLogin();
@@ -338,6 +378,7 @@ export default function LoginForm() {
     setIsLoadingGoogle(false);
     setIsLoadingFacebook(false);
     setIsLoadingDiscord(false);
+    setIsLoadingLinkedIn(false);
   };
 
   const handleOpenMagicLinkForm = () => {
@@ -361,8 +402,8 @@ export default function LoginForm() {
     setShowMagicLinkForm(false);
   };
 
-  const handleMagicLinkSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleMagicLinkSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
     if (isLoadingMagicLink) {
       return;
@@ -422,6 +463,8 @@ export default function LoginForm() {
         );
         return;
       }
+
+      sessionStorage.setItem("magicLinkEmail", trimmedEmail);
 
       setMagicLinkSuccess(
         data.message ||
@@ -671,23 +714,34 @@ export default function LoginForm() {
     let authWasResolved = false;
     let checkPopupIntervalId = 0;
     let linkedinTimeoutId = 0;
+    let wasTimeout = false;
 
     function cleanup(shouldStopLoading = true) {
       window.removeEventListener("message", handleMessage);
       window.clearInterval(checkPopupIntervalId);
       window.clearTimeout(linkedinTimeoutId);
-      if (shouldStopLoading) setIsLoadingLinkedIn(false);
+
+      if (shouldStopLoading) {
+        setIsLoadingLinkedIn(false);
+      }
     }
 
     async function handleMessage(event: MessageEvent<LinkedInPopupMessage>) {
-      if (event.origin !== expectedOrigin) return;
-      const data = event.data;
-      if (!data || typeof data !== "object" || !("type" in data)) return;
-      if (
-        data.type !== "propbol:linkedin-login-success" &&
-        data.type !== "propbol:linkedin-login-error"
-      )
+      if (event.origin !== expectedOrigin) {
         return;
+      }
+
+      const data = event.data;
+
+      if (
+        !data ||
+        typeof data !== "object" ||
+        !("type" in data) ||
+        (data.type !== "propbol:linkedin-login-success" &&
+          data.type !== "propbol:linkedin-login-error")
+      ) {
+        return;
+      }
 
       authWasResolved = true;
       cleanup(false);
@@ -695,16 +749,19 @@ export default function LoginForm() {
       if (data.type === "propbol:linkedin-login-success") {
         try {
           await finalizeValidatedSession(data.token, data.user);
+
           localStorage.setItem(
             "welcome_message",
             `¡Bienvenido, ${data.user.nombre ?? ""}! Has iniciado sesión con LinkedIn.`,
           );
+
           setSuccessMessage(
             data.message || "Inicio de sesión con LinkedIn exitoso",
           );
           setGoogleError("");
           setIsLoadingLinkedIn(false);
           popup.close();
+
           window.setTimeout(() => {
             redirectAfterSuccessfulLogin();
           }, 1000);
@@ -718,6 +775,7 @@ export default function LoginForm() {
           setIsLoadingLinkedIn(false);
           popup.close();
         }
+
         return;
       }
 
@@ -727,17 +785,21 @@ export default function LoginForm() {
       popup.close();
     }
 
-    let wasTimeout = false;
-
     checkPopupIntervalId = window.setInterval(() => {
-      if (!popup.closed) return;
+      if (!popup.closed) {
+        return;
+      }
+
       cleanup();
+
       if (!authWasResolved && !wasTimeout) {
         clearClientSession();
+
         if (hasNoInternetConnection()) {
           setGoogleError(NO_CONNECTION_MESSAGE);
           return;
         }
+
         setGoogleError(
           "Cancelaste el inicio de sesión con LinkedIn. Puedes intentarlo nuevamente.",
         );
@@ -748,7 +810,11 @@ export default function LoginForm() {
       wasTimeout = true;
       cleanup();
       clearClientSession();
-      if (!popup.closed) popup.close();
+
+      if (!popup.closed) {
+        popup.close();
+      }
+
       if (!authWasResolved) {
         setGoogleError(
           hasNoInternetConnection()
@@ -761,8 +827,8 @@ export default function LoginForm() {
     window.addEventListener("message", handleMessage);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
     const trimmedCorreo = correo.trim().toLowerCase();
     const trimmedPassword = password.trim();
@@ -814,12 +880,13 @@ export default function LoginForm() {
         signal: controller.signal,
       });
 
-      const data: LoginResponse = await response.json();
+      const data = (await response.json()) as LoginResponse;
 
       if (!response.ok) {
         setPassword("");
 
         if (response.status === 403) {
+          setActivationEmail(trimmedCorreo);
           setErrorMessage(DEACTIVATED_ACCOUNT_MESSAGE);
           return;
         }
@@ -881,6 +948,275 @@ export default function LoginForm() {
       window.clearTimeout(timeoutId);
       setIsLoading(false);
     }
+  };
+
+  const closeActivationModal = () => {
+    setShowActivationModal(false);
+    setActivationStep("options");
+    setActivationPassword("");
+    setShowActivationPassword(false);
+    setActivationCode("");
+    setActivationError("");
+    setTimeLeft(0);
+  };
+
+  const handleActivateByPassword = async () => {
+    const trimmedPassword = activationPassword.trim();
+
+    if (!trimmedPassword) {
+      setActivationError("La contraseña es obligatoria");
+      return;
+    }
+
+    if (isActivating) {
+      return;
+    }
+
+    if (!navigator.onLine) {
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => {
+      controller.abort();
+    }, ACTIVATION_REQUEST_TIMEOUT_MS);
+
+    setActivationError("");
+    setIsActivating(true);
+
+    try {
+      const response = await fetch(`${API_URL}/api/auth/activate-by-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          correo: activationEmail,
+          password: trimmedPassword,
+        }),
+        signal: controller.signal,
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.status >= 500) {
+        setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+        return;
+      }
+
+      if (!response.ok) {
+        setActivationError(data.message || "Error al activar la cuenta");
+        return;
+      }
+
+      setSuccessMessage(
+        data.message || "Cuenta activada correctamente. Ahora puedes iniciar sesión.",
+      );
+      setErrorMessage("");
+      setPassword("");
+      closeActivationModal();
+      router.push("/sign-in");
+    } catch {
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+    } finally {
+      window.clearTimeout(timeoutId);
+      setIsActivating(false);
+    }
+  };
+
+  const handleRequestActivationCode = async () => {
+    if (!activationEmail) {
+      setActivationError("No se encontró el correo de la cuenta.");
+      return;
+    }
+
+    if (isActivating) {
+      return;
+    }
+
+    if (!navigator.onLine) {
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => {
+      controller.abort();
+    }, ACTIVATION_REQUEST_TIMEOUT_MS);
+
+    setActivationError("");
+    setIsActivating(true);
+
+    try {
+      const response = await fetch(`${API_URL}/api/auth/request-activation-code`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo: activationEmail }),
+        signal: controller.signal,
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.status >= 500) {
+        setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+        return;
+      }
+
+      if (!response.ok) {
+        setActivationError(data.message || "Error al enviar el código");
+        return;
+      }
+
+      setActivationStep("code");
+      setActivationCode("");
+      setTimeLeft(60);
+    } catch {
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+    } finally {
+      window.clearTimeout(timeoutId);
+      setIsActivating(false);
+    }
+  };
+
+  const handleActivateByCode = async () => {
+    const trimmedCode = activationCode.trim();
+
+    if (!trimmedCode) {
+      setActivationError("El código es obligatorio");
+      return;
+    }
+
+    if (!/^\d{6}$/.test(trimmedCode)) {
+      setActivationError("El código debe tener exactamente 6 dígitos numéricos");
+      return;
+    }
+
+    if (isActivating) {
+      return;
+    }
+
+    if (!navigator.onLine) {
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => {
+      controller.abort();
+    }, ACTIVATION_REQUEST_TIMEOUT_MS);
+
+    setActivationError("");
+    setIsActivating(true);
+
+    try {
+      const response = await fetch(`${API_URL}/api/auth/activate-by-code`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          correo: activationEmail,
+          codigo: trimmedCode,
+        }),
+        signal: controller.signal,
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.status >= 500) {
+        setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+        return;
+      }
+
+      if (!response.ok) {
+        setActivationError(data.message || "Error al activar la cuenta");
+        return;
+      }
+
+      setSuccessMessage(
+        data.message || "Cuenta activada correctamente. Ahora puedes iniciar sesión.",
+      );
+      setErrorMessage("");
+      setPassword("");
+      closeActivationModal();
+      router.push("/sign-in");
+    } catch {
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+    } finally {
+      window.clearTimeout(timeoutId);
+      setIsActivating(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!showActivationModal) {
+      return;
+    }
+
+    const modal = activationModalRef.current;
+
+    const getFocusableElements = () => {
+      if (!modal) {
+        return [];
+      }
+
+      return Array.from(
+        modal.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), input:not([disabled]), a[href], textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+    };
+
+    const focusableElements = getFocusableElements();
+    focusableElements[0]?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closeActivationModal();
+        return;
+      }
+
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      const elements = getFocusableElements();
+
+      if (elements.length === 0) {
+        event.preventDefault();
+        return;
+      }
+
+      const firstElement = elements[0];
+      const lastElement = elements[elements.length - 1];
+
+      if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+        return;
+      }
+
+      if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [showActivationModal, activationStep, isActivating]);
+
+  const maskEmail = (email: string) => {
+    const [name, domain] = email.split("@");
+
+    if (!name || !domain) {
+      return email;
+    }
+
+    const visiblePart = name.slice(0, 3);
+    const hiddenPart = "*".repeat(Math.max(name.length - 3, 3));
+
+    return `${visiblePart}${hiddenPart}@${domain}`;
   };
 
   const handleFacebookLogin = () => {
@@ -1159,7 +1495,7 @@ export default function LoginForm() {
       setGoogleError(
         hasNoInternetConnection()
           ? NO_CONNECTION_MESSAGE
-          : "La autenticación con Discord tardó demasiado. Por favor intenta nuevamente.",
+          : DISCORD_TIMEOUT_MESSAGE,
       );
     }, GOOGLE_LOGIN_TIMEOUT_MS);
 
@@ -1188,8 +1524,8 @@ export default function LoginForm() {
               autoFocus
               placeholder="Ingresa tu correo electrónico"
               value={magicLinkEmail}
-              onChange={(e) => {
-                const value = e.target.value;
+              onChange={(event) => {
+                const value = event.target.value;
 
                 setMagicLinkEmail(value);
                 setMagicLinkSuccess("");
@@ -1272,9 +1608,9 @@ export default function LoginForm() {
             autoFocus
             placeholder="Ingresa tu correo electrónico"
             value={correo}
-            onChange={(e) => {
-              setCorreo(e.target.value);
-              validate("correo", e.target.value);
+            onChange={(event) => {
+              setCorreo(event.target.value);
+              validate("correo", event.target.value);
             }}
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500"
           />
@@ -1292,9 +1628,11 @@ export default function LoginForm() {
           <div
             className="relative"
             ref={passwordContainerRef}
-            onBlur={(e) => {
+            onBlur={(event) => {
               if (
-                !passwordContainerRef.current?.contains(e.relatedTarget as Node)
+                !passwordContainerRef.current?.contains(
+                  event.relatedTarget as Node,
+                )
               ) {
                 setShowPassword(false);
               }
@@ -1306,9 +1644,9 @@ export default function LoginForm() {
               placeholder="Ingresa tu contraseña"
               value={password}
               maxLength={16}
-              onChange={(e) => {
-                setPassword(e.target.value);
-                validate("password", e.target.value);
+              onChange={(event) => {
+                setPassword(event.target.value);
+                validate("password", event.target.value);
               }}
               className="w-full rounded-md border border-gray-300 px-3 py-2 pr-10 text-sm outline-none focus:border-orange-500"
             />
@@ -1336,10 +1674,34 @@ export default function LoginForm() {
           </Link>
         </div>
 
-        {errorMessage && (
-          <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
-            {errorMessage}
-          </p>
+        {errorMessage === DEACTIVATED_ACCOUNT_MESSAGE ? (
+          <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3">
+            <p className="text-sm font-semibold text-red-600">
+              {DEACTIVATED_ACCOUNT_MESSAGE}
+            </p>
+
+            <p className="mt-2 text-xs text-gray-600">
+              Puedes solicitar su activación para volver a ingresar.
+            </p>
+
+            <button
+              type="button"
+              onClick={() => {
+                setActivationStep("options");
+                setActivationError("");
+                setShowActivationModal(true);
+              }}
+              className="mt-3 text-sm font-medium text-orange-500 hover:underline"
+            >
+              Activar cuenta
+            </button>
+          </div>
+        ) : (
+          errorMessage && (
+            <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+              {errorMessage}
+            </p>
+          )
         )}
 
         {successMessage && (
@@ -1493,6 +1855,297 @@ export default function LoginForm() {
       >
         Ir a la página principal
       </button>
+
+      {showActivationModal && (
+        <div
+          onClick={closeActivationModal}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+        >
+          {activationStep === "password" && (
+            <div
+              ref={activationModalRef}
+              onClick={(event) => event.stopPropagation()}
+              className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg"
+            >
+              <h2 className="text-xl font-bold text-gray-900">
+                Activar cuenta
+              </h2>
+
+              <p className="mt-3 text-sm text-gray-600">
+                Ingresa tu contraseña para activar tu cuenta.
+              </p>
+
+              <div className="mt-5">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Contraseña
+                </label>
+
+                <div className="relative">
+                  <input
+                    type={showActivationPassword ? "text" : "password"}
+                    value={activationPassword}
+                    onChange={(event) =>
+                      setActivationPassword(event.target.value)
+                    }
+                    onKeyDown={(event) => {
+                      if (event.key !== "Enter") {
+                        return;
+                      }
+
+                      event.preventDefault();
+
+                      if (!isActivating && activationPassword.trim()) {
+                        handleActivateByPassword();
+                      }
+                    }}
+                    placeholder="Ingresa tu contraseña"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 pr-16 text-sm outline-none focus:border-orange-500"
+                    disabled={isActivating}
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setShowActivationPassword(!showActivationPassword)
+                    }
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-orange-500 hover:underline"
+                  >
+                    {showActivationPassword ? "Ocultar" : "Ver"}
+                  </button>
+                </div>
+
+                {activationError && (
+                  <p className="mt-2 text-xs text-red-500">{activationError}</p>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setActivationStep("options");
+                  setActivationPassword("");
+                  setShowActivationPassword(false);
+                  setActivationError("");
+                }}
+                disabled={isActivating}
+                className="mt-4 text-sm font-medium text-gray-500 underline hover:text-gray-700 disabled:opacity-50"
+              >
+                ← Volver
+              </button>
+
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={closeActivationModal}
+                  disabled={isActivating}
+                  className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-50"
+                >
+                  Cancelar
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleActivateByPassword}
+                  disabled={isActivating || !activationPassword.trim()}
+                  className="rounded-md bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:bg-orange-300"
+                >
+                  {isActivating ? "Activando..." : "Confirmar"}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {activationStep === "code" && (
+            <div
+              ref={activationModalRef}
+              onClick={(event) => event.stopPropagation()}
+              className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg"
+            >
+              <h2 className="text-xl font-bold text-gray-900">
+                Activar cuenta
+              </h2>
+
+              <p className="mt-3 text-sm text-gray-600">
+                Hemos enviado un código de verificación a tu correo electrónico.
+                Ingresa el código para activar tu cuenta.
+              </p>
+
+              <div className="mt-5">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Código de verificación
+                </label>
+
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={activationCode}
+                  onChange={(event) => {
+                    const onlyNumbers = event.target.value
+                      .replace(/\D/g, "")
+                      .slice(0, ACTIVATION_CODE_LENGTH);
+
+                    setActivationCode(onlyNumbers);
+                  }}
+                  onPaste={(event) => {
+                    event.preventDefault();
+
+                    const pastedText = event.clipboardData.getData("text");
+                    const onlyNumbers = pastedText
+                      .replace(/\D/g, "")
+                      .slice(0, ACTIVATION_CODE_LENGTH);
+
+                    setActivationCode(onlyNumbers);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key !== "Enter") {
+                      return;
+                    }
+
+                    event.preventDefault();
+
+                    if (
+                      !isActivating &&
+                      activationCode.length === ACTIVATION_CODE_LENGTH
+                    ) {
+                      handleActivateByCode();
+                    }
+                  }}
+                  placeholder="Ingresa tu código"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500"
+                  disabled={isActivating}
+                />
+
+                {activationError && (
+                  <p className="mt-2 text-xs text-red-500">{activationError}</p>
+                )}
+              </div>
+
+              <div className="mt-3 flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActivationStep("options");
+                    setActivationCode("");
+                    setActivationError("");
+                  }}
+                  disabled={isActivating}
+                  className="text-sm font-medium text-gray-500 underline hover:text-gray-700 disabled:opacity-50"
+                >
+                  ← Volver
+                </button>
+
+                {timeLeft > 0 ? (
+                  <p className="text-xs text-gray-500">
+                    Reenviar en {Math.floor(timeLeft / 60)}:
+                    {(timeLeft % 60).toString().padStart(2, "0")}
+                  </p>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleRequestActivationCode}
+                    disabled={isActivating}
+                    className="text-xs font-semibold text-orange-500 hover:underline disabled:opacity-50"
+                  >
+                    Volver a enviar
+                  </button>
+                )}
+              </div>
+
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={closeActivationModal}
+                  disabled={isActivating}
+                  className="rounded-md border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-50"
+                >
+                  Cancelar
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleActivateByCode}
+                  disabled={
+                    isActivating ||
+                    activationCode.length !== ACTIVATION_CODE_LENGTH
+                  }
+                  className="rounded-md bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:bg-orange-300"
+                >
+                  {isActivating ? "Activando..." : "Confirmar"}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {activationStep === "options" && (
+            <div
+              ref={activationModalRef}
+              onClick={(event) => event.stopPropagation()}
+              className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg"
+            >
+              <button
+                type="button"
+                onClick={closeActivationModal}
+                className="absolute right-4 top-4 text-2xl font-medium text-gray-700 hover:text-gray-900"
+                aria-label="Cerrar ventana"
+              >
+                ×
+              </button>
+
+              <h2 className="text-xl font-bold text-gray-900">
+                Activar cuenta
+              </h2>
+
+              <p className="mt-3 text-sm text-gray-600">
+                Correo asociado:{" "}
+                <span className="font-medium text-gray-700">
+                  {maskEmail(activationEmail)}
+                </span>
+              </p>
+
+              <p className="mt-5 text-sm text-gray-600">
+                Escoja el método de activación
+              </p>
+
+              <div className="mt-3 space-y-3">
+                <button
+                  type="button"
+                  onClick={() => setActivationStep("password")}
+                  className="flex w-full items-center justify-between rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-800 transition hover:bg-gray-50"
+                >
+                  <span className="flex items-center gap-3">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100 text-orange-500">
+                      🔒
+                    </span>
+                    Contraseña
+                  </span>
+
+                  <span className="text-xl text-gray-700">›</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleRequestActivationCode}
+                  disabled={isActivating}
+                  className="flex w-full items-center justify-between rounded-lg border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-800 transition hover:bg-gray-50 disabled:opacity-50"
+                >
+                  <span className="flex items-center gap-3">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100 text-orange-500">
+                      ✉️
+                    </span>
+                    {isActivating ? "Enviando..." : "Código de Verificación"}
+                  </span>
+
+                  <span className="text-xl text-gray-700">›</span>
+                </button>
+              </div>
+
+              {activationError && (
+                <p className="mt-3 text-xs text-red-500">{activationError}</p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

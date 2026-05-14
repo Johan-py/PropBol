@@ -266,6 +266,18 @@ export const findActive2FACodeByUserId = async (usuarioId: number) => {
   });
 };
 
+export const findAny2FACodeByUserIdAndHash = async (usuarioId: number, codigoHash: string) => {
+  return await prisma.codigo_2fa.findFirst({
+    where: {
+      usuarioId,
+      codigoHash,
+    },
+    orderBy: {
+      creadoEn: "desc",
+    },
+  });
+};
+
 export const mark2FACodeAsUsed = async (id: number) => {
   return await prisma.codigo_2fa.update({
     where: { id },
@@ -482,6 +494,16 @@ export const completeTourByUserId = async (id: number) => {
   return await prisma.usuario.update({
     where: { id },
     data: { controlador: true },
+  });
+};
+
+export const activateUser = async (id: number) => {
+  return await prisma.usuario.update({
+    where: { id },
+    data: {
+      activo: true,
+      desactivado_en: null,
+    },
   });
 };
 

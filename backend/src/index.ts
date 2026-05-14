@@ -9,6 +9,7 @@ import zonaRoutes from "./modules/perfil/zonaUsario.routes.js";
 import telemetriaRouter from "./modules/perfil/telemetria.routes.js";
 import locationRoutes from "./modules/locations/locations.routes.js";
 import consumoRoutes from "./modules/LimiteSuscripcion/consumo.routes.js";
+import { iniciarCronRetroalimentacion } from './modules/recomendaciones/retroalimentacionCron.js'
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -47,8 +48,12 @@ import {
   requestMagicLinkController,
   loginWithMagicLinkController,
   resendMagicLinkController,
-} from "./modules/auth/auth.controller.js";
-import { requireAuth } from "./middleware/auth.middleware.js";
+  activateAccountByPasswordController,
+  requestActivationCodeController,
+  activateAccountByCodeController,
+  resendRegisterCodeController,
+} from './modules/auth/auth.controller.js'
+import { requireAuth } from './middleware/auth.middleware.js'
 
 // --------------------
 // ROUTES / HANDLERS
@@ -168,8 +173,10 @@ app.use(
   }),
 );
 
-app.use(express.json());
-app.use("/uploads", express.static(path.resolve("uploads")));
+app.use(express.json({ limit: '100mb' }))
+app.use(express.urlencoded({ extended: true, limit: '100mb' }))
+app.use(express.json())
+app.use('/uploads', express.static(path.resolve('uploads')))
 
 // --------------------
 // RUTAS LEGACY
@@ -257,24 +264,30 @@ app.post("/api/auth/deactivate-2fa", requireAuth, deactivate2FAController);
 app.get("/api/auth/2fa-status", requireAuth, get2FAStatusController);
 app.post("/api/auth/logout", logoutController);
 app.post("/api/auth/verify-register", verifyRegisterCodeController);
-app.get("/api/auth/me", getMeController);
-app.get("/api/auth/google/login", StratGoogleLoginController);
-app.get("/api/auth/google/register", StartGoogleRegisterController);
-app.get("/api/auth/google/callback", googleCallbackController);
 app.post("/api/auth/register", registerController);
 app.post("/api/auth/login", loginController);
 app.post("/api/auth/logout", logoutController);
 app.post("/api/auth/verify-register", verifyRegisterCodeController);
+app.post("/api/auth/resend-register-code", resendRegisterCodeController);
+
+app.post("/api/auth/activate-by-password", activateAccountByPasswordController);
+app.post("/api/auth/request-activation-code", requestActivationCodeController);
+app.post("/api/auth/activate-by-code", activateAccountByCodeController);
+
 app.get("/api/auth/me", getMeController);
+
 app.get("/api/auth/google/login", StratGoogleLoginController);
 app.get("/api/auth/google/register", StartGoogleRegisterController);
 app.get("/api/auth/google/callback", googleCallbackController);
+
 app.get("/api/auth/discord/login", startDiscordLoginController);
 app.get("/api/auth/discord/register", startDiscordRegisterController);
 app.get("/api/auth/discord/callback", discordCallbackController);
+
 app.get("/api/auth/facebook/login", startFacebookLoginController);
 app.get("/api/auth/facebook/register", startFacebookRegisterController);
 app.get("/api/auth/facebook/callback", facebookCallbackController);
+
 app.get("/api/auth/social-links", requireAuth, getSocialLinksController);
 app.get(
   "/api/auth/linkedin/original-email",
@@ -419,6 +432,8 @@ async function seedPlanes() {
   console.log("✅ Planes de suscripción inicializados en DB");
 }
 
+iniciarCronRetroalimentacion()
+
 app.listen(PORT, async () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);
@@ -437,4 +452,4 @@ app.listen(PORT, async () => {
   }
 });
 
-export default app;
+export default app

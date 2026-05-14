@@ -421,6 +421,44 @@ export const enviarCodigoDesactivacionCuenta = async ({
   })
 }
 
+export const enviarCodigoActivacionCuenta = async ({
+  emailDestino,
+  codigo,
+  nombreUsuario,
+}: EnviarCodigoParams): Promise<EmailSendResult> => {
+  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : "Hola,";
+
+  return sendBrevoEmail({
+    to: emailDestino,
+    subject: "Código de verificación - Activación de cuenta PropBol",
+    htmlContent: `
+      <!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
+      <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
+        <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:10px;overflow:hidden;">
+          <div style="background:#ea580c;padding:20px;text-align:center;">
+            <h1 style="color:#fff;margin:0;font-size:24px;">Activación de cuenta</h1>
+          </div>
+          <div style="padding:30px;">
+            <p style="font-size:16px;color:#333;">${saludo}</p>
+            <p style="font-size:16px;color:#333;">Ingresa el siguiente código para completar la activación de tu cuenta:</p>
+            <div style="background:#fff7ed;padding:20px;text-align:center;margin:25px 0;border-radius:8px;border:1px solid #ffedd5;">
+              <span style="font-size:36px;font-weight:bold;letter-spacing:5px;color:#9a3412;">${codigo}</span>
+            </div>
+            <p style="font-size:14px;color:#666;">Este código expirará en <strong style="color:#ea580c;">1 minuto</strong>.</p>
+            <div style="background:#fff7ed;border-left:4px solid #ea580c;padding:12px;margin:20px 0;">
+              <p style="margin:0;font-size:13px;color:#7c2d12;">Si no solicitaste esta acción, ignora este mensaje.</p>
+            </div>
+          </div>
+          <div style="background:#f9fafb;padding:20px;text-align:center;border-top:1px solid #e5e7eb;">
+            <p style="font-size:12px;color:#9ca3af;margin:0;">Este es un mensaje automático, por favor no responder.</p>
+          </div>
+        </div>
+      </body></html>
+    `,
+    textContent: `${saludo}\n\nTu código de verificación para activar la cuenta es: ${codigo}\n\nEste código expirará en 1 minuto.`,
+  });
+};
+
 export const enviarAvisoCambioPassword = async ({
   emailDestino,
   nombreUsuario
