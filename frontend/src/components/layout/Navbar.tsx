@@ -615,7 +615,7 @@ export default function Navbar() {
                                         </p>
                                       </div>
 
-                                      <p className="mt-1 line-clamp-2 text-sm text-stone-600">
+                                      <p className={`mt-1 line-clamp-2 text-sm ${notification.tipo === "BLOG_RECHAZADO" ? "text-red-600" : "text-stone-600"}`}>
                                         {notification.description?.trim() ||
                                           "(Sin descripción disponible)"}
                                       </p>
