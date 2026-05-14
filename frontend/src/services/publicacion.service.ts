@@ -113,3 +113,27 @@ export async function eliminarPublicacion(id: number) {
 
   return data
 }
+
+export async function editarMultimediaPublicacion(
+  id: number,
+  formData: FormData
+) {
+  const apiUrl = getApiUrl()
+  const token = getToken()
+
+  const response = await fetch(`${apiUrl}/api/publicaciones/${id}/multimedia`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
+    body: formData
+  })
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(data.message || 'No se pudo actualizar la multimedia')
+  }
+
+  return data.data
+}
