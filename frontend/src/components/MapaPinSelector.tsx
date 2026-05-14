@@ -1,7 +1,7 @@
 'use client'
 
 import 'leaflet/dist/leaflet.css'
-import { MapContainer, TileLayer, Marker, Polygon, CircleMarker, useMapEvents } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Polygon, CircleMarker, Tooltip, useMapEvents } from 'react-leaflet'
 import { useState } from 'react'
 import L from 'leaflet'
 
@@ -41,6 +41,24 @@ type Props = {
 
   modoPinActivo: boolean
   modoDifuminadoActivo: boolean
+  pois: {
+  id: number
+  nombre: string
+  lat: number
+  lng: number
+}[]
+setPois: React.Dispatch<
+  React.SetStateAction<
+    {
+      id: number
+      nombre: string
+      lat: number
+      lng: number
+    }[]
+  >
+>
+poiSeleccionado: number | null
+setPoiSeleccionado: (v: number | null) => void
 }
 
 function EventosMapa({
@@ -107,8 +125,18 @@ export default function MapaPinSelector({
   vertices,
   setVertices,
   modoPinActivo,
-  modoDifuminadoActivo
+  modoDifuminadoActivo,
+  pois,
+  setPois,
+  poiSeleccionado,
+  setPoiSeleccionado
 }: Props) {
+ const offsets = [
+  [0, -40],
+  [40, 0],
+  [0, 40],
+  [-40, 0]
+]
  
   return (
     <MapContainer
@@ -134,39 +162,64 @@ export default function MapaPinSelector({
   <Marker
     position={[pinCoords.lat, pinCoords.lng]}
     icon={pinIcon}
-    draggable={true}
-     eventHandlers={{
-      drag: (e) => {
-        const map = e.target._map
-        const bounds = map.getBounds()
-        const pos = e.target.getLatLng()
-
-        const lat = Math.min(
-          Math.max(pos.lat, bounds.getSouth()),
-          bounds.getNorth()
-        )
-
-        const lng = Math.min(
-          Math.max(pos.lng, bounds.getWest()),
-          bounds.getEast()
-        )
-        e.target.setLatLng([lat, lng])
-      },
-
-      dragend: (e) => {
-        const pos = e.target.getLatLng()
-
-        setPinCoords({
-          lat: pos.lat,
-          lng: pos.lng
-        })
-      }
-    }}
-    
+    draggable={false}
   />
 )}
 
-{vertices.length >= 3 && (
+{pois.map((poi, i) => (
+  <CircleMarker
+    key={poi.id}
+    center={[poi.lat, poi.lng]}
+    radius={1}
+    opacity={0}
+    fillOpacity={0}
+  >
+    <Tooltip
+      permanent
+      interactive={true}
+      sticky={false}
+      direction="center"
+      offset={[
+        offsets[i % 4][0] + Math.floor(i / 4) * 15,
+        offsets[i % 4][1] + Math.floor(i / 4) * 15
+      ] as [number, number]}
+      opacity={1}
+      className="!bg-transparent !border-0 !shadow-none"
+    >
+      <input
+        type="text"
+        maxLength={20}
+        value={poi.nombre ?? ''}
+        placeholder="..."
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+        onFocus={() => setPoiSeleccionado(poi.id)}
+        onKeyDown={(e) => e.stopPropagation()}
+        onChange={(e) => {
+          const nuevosPois = [...pois]
+          nuevosPois[i].nombre = e.target.value
+          setPois(nuevosPois)
+        }}
+         className={`
+  px-3
+  py-1
+  rounded-full
+  text-[11px]
+  bg-white
+  border
+  ${poiSeleccionado === poi.id ? 'border-red-500' : 'border-gray-300'}
+  shadow-sm
+  min-w-[70px]
+  max-w-[90px]
+  outline-none
+  text-center
+              `}
+                />
+             </Tooltip>
+          </CircleMarker>
+             ))}
+
+           {vertices.length >= 3 && (
   <Polygon
     positions={vertices}
     pathOptions={{
@@ -174,10 +227,10 @@ export default function MapaPinSelector({
       fillOpacity: 0.45
     }}
   />
-)}
+          )}
 
-{vertices.map((p, i) => (
-  <CircleMarker
+          {vertices.map((p, i) => (
+        <CircleMarker
     key={i}
     center={p}
     radius={5}
@@ -188,6 +241,7 @@ export default function MapaPinSelector({
     }}
   />
 ))}
+
     </MapContainer>
   )
 }
