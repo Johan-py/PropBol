@@ -1,5 +1,6 @@
 import { estado_blog } from "@prisma/client";
 import { blogsRepository, comentariosRepository } from "./blogs.repository.js";
+import { getIO } from "../../services/socket.service.js";
 
 // BLOGS SERVICE PE
 
@@ -34,7 +35,7 @@ export const blogsService = {
     const estado: estado_blog =
       data.accion === "pendiente" ? "PENDIENTE" : "BORRADOR";
 
-    return blogsRepository.create({
+    const nuevoBlog = await blogsRepository.create({
       titulo: data.titulo,
       contenido: data.contenido,
       imagen: data.imagen,
@@ -42,6 +43,12 @@ export const blogsService = {
       usuario_id,
       estado,
     });
+    if (estado === "PENDIENTE") {
+      const io = getIO();
+      io.emit("admin:nuevo_blog_pendiente", nuevoBlog); // Criterio: Reflejar en panel admin
+      io.emit(`usuario:${usuario_id}:actualizar_mis_blogs`, nuevoBlog); // Criterio: Sección "Mis blogs"
+    }
+    return nuevoBlog;
   },
   async actualizar(
     id: number,
@@ -78,13 +85,18 @@ export const blogsService = {
       estado = "BORRADOR";
     }
 
-    return blogsRepository.update(id, {
+    const blogActualizado = await blogsRepository.update(id, {
       titulo: data.titulo,
       contenido: data.contenido,
       imagen: data.imagen,
       categoria_id: data.categoria_id,
       ...(estado ? { estado } : {}),
     });
+
+    const io = getIO();
+    io.emit("blog:actualizado", blogActualizado); // Criterio: Cambios automáticos en título/imagen/contenido
+    io.emit(`usuario:${usuario_id}:actualizar_mis_blogs`, blogActualizado);
+    return blogActualizado;
   },
   async subirImagen(file: Express.Multer.File, usuario_id: number) {
     return blogsRepository.uploadImage(file, usuario_id);
@@ -101,17 +113,29 @@ export const blogsService = {
       throw new Error("RAZON_RECHAZO_REQUIRED");
     }
 
-    return blogsRepository.changeEstado(
+    const blogActualizado = await blogsRepository.changeEstado(
       id,
       estado as estado_blog,
       razon_rechazo,
     );
+    const io = getIO();
+    if (estado === "PUBLICADO") {
+      io.emit("blog:publicado_global", blog);
+    }
+    io.emit(`usuario:${blog.usuario_id}:actualizar_mis_blogs`, blog);
+    io.emit("admin:blog_revisado", { id, estado });
+
+    return blog;
   },
   async eliminar(id: number, usuario_id: number) {
-    const blog = await blogsRepository.findById(id);
-    if (!blog) throw new Error("BLOG_NOT_FOUND");
-    if (blog.usuario_id !== usuario_id) throw new Error("FORBIDDEN");
-    return blogsRepository.delete(id);
+    const blogeliminado = await blogsRepository.findById(id);
+    if (!blogeliminado) throw new Error("BLOG_NOT_FOUND");
+    if (blogeliminado.usuario_id !== usuario_id) throw new Error("FORBIDDEN");
+
+    const io = getIO();
+    io.emit("blog:eliminado_global", { id });
+    io.emit(`blog:${id}:notificacion_eliminado`);
+    return blogeliminado;
   },
   async listarAdmin(params: {
     estado?: estado_blog;
@@ -133,19 +157,40 @@ export const comentariosService = {
     blog_id: number;
     comentario_padre_id?: number;
   }) {
-    return comentariosRepository.create(data);
+    const nuevoComentario = await comentariosRepository.create(data);
+    getIO().emit(`blog:${data.blog_id}:nuevo_comentario`, nuevoComentario);
+    return nuevoComentario;
   },
 
-  async listarPorBlog(blog_id: number, usuario_id?: number, page: number = 1, limit: number = 10) {
-    return comentariosRepository.findByBlogId({ blog_id, usuario_id, page, limit });
+  async listarPorBlog(
+    blog_id: number,
+    usuario_id?: number,
+    page: number = 1,
+    limit: number = 10,
+  ) {
+    return comentariosRepository.findByBlogId({
+      blog_id,
+      usuario_id,
+      page,
+      limit,
+    });
   },
 
-  async actualizar(id: number, usuario_id: number, data: { contenido: string }) {
+  async actualizar(
+    id: number,
+    usuario_id: number,
+    data: { contenido: string },
+  ) {
     const comentario = await comentariosRepository.findById(id);
     if (!comentario) throw new Error("COMENTARIO_NOT_FOUND");
     if (comentario.usuario_id !== usuario_id) throw new Error("FORBIDDEN");
 
-    return comentariosRepository.update(id, data);
+    const comentarioActualizado = await comentariosRepository.update(id, data);
+    getIO().emit(
+      `blog:${comentario.blog_id}:comentario_actualizado`,
+      comentarioActualizado,
+    );
+    return comentarioActualizado;
   },
 
   async toggleLike(usuario_id: number, comentario_id: number) {
@@ -156,6 +201,8 @@ export const comentariosService = {
     const comentario = await comentariosRepository.findById(id);
     if (!comentario) throw new Error("COMENTARIO_NOT_FOUND");
     if (comentario.usuario_id !== usuario_id) throw new Error("FORBIDDEN");
-    return comentariosRepository.delete(id);
+    const comentarioEliminado = await comentariosRepository.delete(id);
+    getIO().emit(`blog:${comentario.blog_id}:comentario_eliminado`, { id });
+    return comentarioEliminado;
   },
 };
