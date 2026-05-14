@@ -445,7 +445,13 @@ html.propbol-theme-dark body :where([class*="bg-white"],
   [class*="bg-[#D"],
   [class*="bg-[#d"],
   [class*="bg-[#E7"],
-  [class*="bg-[#e7"]) {
+  [class*="bg-[#e7"],
+  [class*="bg-[#fb"],
+  [class*="bg-[#FB"],
+  [class*="bg-[#f5"],
+  [class*="bg-[#F5"],
+  [class*="bg-[#f8"],
+  [class*="bg-[#F8"]) {
   background: var(--pb-surface) !important;
   background-image: none !important;
   color: var(--pb-text) !important;
@@ -711,8 +717,14 @@ html.propbol-theme-dark .propbol-btn-close-session:hover {
 }
 
 /* Fix para botones naranjas y overlays en modo oscuro */
-html.propbol-theme-dark body :where([class*="bg-[#D97706]"], [class*="bg-primary"]) {
+html.propbol-theme-dark body :where([class*="bg-orange-500"], [class*="bg-orange-600"], [class*="bg-amber-"], [class*="bg-primary"], [class*="bg-[#A67C00]"], [class*="bg-[#D97706]"], [class*="bg-stone-900"]) {
   background: var(--pb-accent) !important;
   color: #ffffff !important;
   border-color: var(--pb-accent) !important;
+}
+
+/* Forzar fondo oscuro en contenedores con gradientes específicos de blogs */
+html.propbol-theme-dark :where([class*="bg-[linear-gradient"]) {
+  background: var(--pb-bg) !important;
+  background-image: none !important;
 }
