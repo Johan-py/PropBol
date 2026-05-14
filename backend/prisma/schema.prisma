@@ -234,11 +234,11 @@ model Publicacion {
   estado                EstadoPublicacion?      @default(ACTIVA) @map("estado")
   fechaPublicacion      DateTime?               @default(now()) @map("fecha_publicacion") @db.Timestamp(6)
   usuarioId             Int                     @map("usuario_id")
+  inmuebleId            Int                     @map("inmueble_id")
+  paymentIntentId       String?                 @map("payment_intent_id")
   promoted              Boolean                 @default(false)
   promotedAt            DateTime?               @map("promoted_at") @db.Timestamp(6)
   promotedExpiresAt     DateTime?               @map("promoted_expires_at") @db.Timestamp(6)
-  paymentIntentId       String?                 @map("payment_intent_id")
-  inmuebleId            Int                     @map("inmueble_id")
   multimedia            Multimedia[]
   inmueble              Inmueble                @relation(fields: [inmuebleId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "publicacion_inmueble_fk")
   usuario               Usuario                 @relation(fields: [usuarioId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "publicacion_usuario_fk")
@@ -921,6 +921,7 @@ model tutorial_publicacion_usuario {
   confirmado_en DateTime? @db.Timestamp(6)
   usuario       Usuario   @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
+
 model Tag {
   id              Int               @id @default(autoincrement())
   nombre          String            @unique @db.VarChar(30)
@@ -931,11 +932,11 @@ model Tag {
 }
 
 model publicacion_tag {
-  publicacion_id  Int
-  tag_id          Int
-  agregado_en     DateTime    @default(now()) @db.Timestamptz(6)
-  publicacion     Publicacion @relation(fields: [publicacion_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  tag             Tag         @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  publicacion_id Int
+  tag_id         Int
+  agregado_en    DateTime    @default(now()) @db.Timestamptz(6)
+  publicacion    Publicacion @relation(fields: [publicacion_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  tag            Tag         @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@id([publicacion_id, tag_id])
   @@index([tag_id])

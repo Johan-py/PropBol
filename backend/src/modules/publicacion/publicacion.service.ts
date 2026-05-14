@@ -12,6 +12,11 @@ import {
   eliminarVideosDePublicacionRepository,
   crearMultimediaRepository,
   buscarMultimediaPublicacionRepository,
+   // ==================== NUEVAS IMPORTACIONES HU-11 ====================
+  activarPublicidadRepository,
+  cancelarPublicidadRepository,
+  buscarPublicacionPorIdSimpleRepository,
+  verificarPublicidadActivaRepository,
 } from "./publicacion.repository.js";
 import { cloudinary } from "../../config/cloudinary.js";
 
@@ -871,5 +876,171 @@ export const editarMultimediaPublicacionService = async (
     videoUrl: videos[0]?.url ?? null,
     videoUrls: videos.map((item) => item.url),
     videoError: videosValidos ? null : "VIDEO_INVALIDO",
+  };
+};
+// ==================== NUEVOS SERVICIOS HU-11 ====================
+// PUBLICIDAD DE PROPIEDADES
+
+export const iniciarPublicidadService = async (
+  publicacionId: number,
+  usuarioId: number
+): Promise<{ checkoutUrl: string }> => {
+  if (Number.isNaN(publicacionId) || publicacionId <= 0) {
+    throw new Error("ID_INVALIDO");
+  }
+
+  if (Number.isNaN(usuarioId) || usuarioId <= 0) {
+    throw new Error("USUARIO_INVALIDO");
+  }
+
+  const publicacion = await buscarPublicacionPorIdRepository(publicacionId);
+
+  if (!publicacion) {
+    throw new Error("PUBLICACION_NO_EXISTE");
+  }
+
+  if (publicacion.usuarioId !== usuarioId) {
+    throw new Error("NO_AUTORIZADO");
+  }
+
+  if (publicacion.estado === ESTADO_PUBLICACION_ELIMINADA) {
+    throw new Error("PUBLICACION_YA_ELIMINADA");
+  }
+
+  // Verificar si ya tiene publicidad activa
+  const yaPublicitada = await verificarPublicidadActivaRepository(
+    publicacionId
+  );
+  if (yaPublicitada) {
+    throw new Error("PUBLICACION_YA_PUBLICITADA");
+  }
+
+  // SIMULACIÓN - Reemplazar con integración real de pagos después
+  const checkoutUrl = `${
+    process.env.FRONTEND_URL || "http://localhost:3000"
+  }/pago?publicacion=${publicacionId}&monto=9.99`;
+
+  return { checkoutUrl };
+};
+
+export const confirmarPublicidadService = async (
+  publicacionId: number,
+  usuarioId: number,
+  paymentIntentId: string,
+  planId?: number
+) => {
+  if (Number.isNaN(publicacionId) || publicacionId <= 0) {
+    throw new Error("ID_INVALIDO");
+  }
+
+  if (Number.isNaN(usuarioId) || usuarioId <= 0) {
+    throw new Error("USUARIO_INVALIDO");
+  }
+
+  if (!paymentIntentId || paymentIntentId.trim() === "") {
+    throw new Error("PAYMENT_INTENT_REQUERIDO");
+  }
+
+  const publicacion = await buscarPublicacionPorIdRepository(publicacionId);
+
+  if (!publicacion) {
+    throw new Error("PUBLICACION_NO_EXISTE");
+  }
+
+  if (publicacion.usuarioId !== usuarioId) {
+    throw new Error("NO_AUTORIZADO");
+  }
+
+  if (publicacion.estado === ESTADO_PUBLICACION_ELIMINADA) {
+    throw new Error("PUBLICACION_YA_ELIMINADA");
+  }
+
+  // Duración según el plan seleccionado (por defecto 30 días)
+  let duracionDias = 30;
+  if (planId === 2) {
+    duracionDias = 60; // Plan Premium
+  }
+
+  const publicacionActualizada = await activarPublicidadRepository(
+    publicacionId,
+    usuarioId,
+    paymentIntentId,
+    duracionDias
+  );
+
+  return {
+    id: publicacionActualizada.id,
+    promoted: publicacionActualizada.promoted,
+    promotedAt: publicacionActualizada.promotedAt,
+    promotedExpiresAt: publicacionActualizada.promotedExpiresAt,
+    message: `Publicidad activada correctamente por ${duracionDias} días`,
+  };
+};
+
+export const cancelarPublicidadService = async (
+  publicacionId: number,
+  usuarioId: number
+) => {
+  if (Number.isNaN(publicacionId) || publicacionId <= 0) {
+    throw new Error("ID_INVALIDO");
+  }
+
+  if (Number.isNaN(usuarioId) || usuarioId <= 0) {
+    throw new Error("USUARIO_INVALIDO");
+  }
+
+  const publicacion = await buscarPublicacionPorIdRepository(publicacionId);
+
+  if (!publicacion) {
+    throw new Error("PUBLICACION_NO_EXISTE");
+  }
+
+  if (publicacion.usuarioId !== usuarioId) {
+    throw new Error("NO_AUTORIZADO");
+  }
+
+  if (publicacion.estado === ESTADO_PUBLICACION_ELIMINADA) {
+    throw new Error("PUBLICACION_YA_ELIMINADA");
+  }
+
+  if (!publicacion.promoted) {
+    throw new Error("PUBLICACION_NO_PUBLICITADA");
+  }
+
+  const publicacionActualizada = await cancelarPublicidadRepository(
+    publicacionId,
+    usuarioId
+  );
+
+  return {
+    id: publicacionActualizada.id,
+    promoted: false,
+    message: "Publicidad cancelada correctamente",
+  };
+};
+
+export const obtenerEstadoPublicidadService = async (publicacionId: number) => {
+  if (Number.isNaN(publicacionId) || publicacionId <= 0) {
+    throw new Error("ID_INVALIDO");
+  }
+
+  const publicacion = await buscarPublicacionPorIdSimpleRepository(
+    publicacionId
+  );
+
+  if (!publicacion) {
+    throw new Error("PUBLICACION_NO_EXISTE");
+  }
+
+  const activa =
+    publicacion.promoted === true &&
+    publicacion.promotedExpiresAt !== null &&
+    new Date(publicacion.promotedExpiresAt) > new Date();
+
+  return {
+    id: publicacion.id,
+    promoted: activa,
+    promotedAt: activa ? publicacion.promotedAt : null,
+    promotedExpiresAt: activa ? publicacion.promotedExpiresAt : null,
   };
 };

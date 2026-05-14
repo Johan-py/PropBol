@@ -87,16 +87,16 @@ export default function AdvancedFiltersModal({ isOpen, onClose, onApply }: Advan
       />
 
       {/* Ventana del Modal */}
-      <div className="relative w-full max-w-xl bg-white rounded-[32px] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+      <div className="relative w-full max-w-xl bg-white dark:bg-slate-900 rounded-[32px] shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200 border dark:border-slate-800">
         
         {/* Header */}
-        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100">
-          <div className="flex-1" /> {/* Spacer */}
-          <h2 className="text-2xl font-bold text-gray-800 text-center">Filtros avanzados</h2>
+        <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100 dark:border-slate-800">
+          <div className="flex-1" />
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-slate-100 text-center">Filtros avanzados</h2>
           <div className="flex-1 flex justify-end">
             <button 
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400"
+              className="p-2 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-full transition-colors text-gray-400 dark:text-slate-400"
             >
               <X size={24} />
             </button>
@@ -108,7 +108,7 @@ export default function AdvancedFiltersModal({ isOpen, onClose, onApply }: Advan
           
           {/* SECCIÓN AMENIDADES */}
           <section>
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">Amenidades</h3>
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-slate-200 mb-4">Amenidades</h3>
             <div className="flex flex-wrap gap-3">
               {AMENITIES_DATA.slice(0, showAllAmenities ? undefined : 8).map((amenity) => {
                 const isActive = selectedAmenities.includes(amenity.id)
@@ -118,9 +118,9 @@ export default function AdvancedFiltersModal({ isOpen, onClose, onApply }: Advan
                     onClick={() => toggleAmenity(amenity.id)}
                     className={`
                       flex items-center gap-2 px-5 py-2.5 rounded-xl border text-sm font-medium transition-all
-                      ${isActive 
-                        ? 'bg-[#d97706] border-[#d97706] text-white shadow-md' 
-                        : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-[#d97706]'}
+                      ${isActive
+                        ? 'bg-[#d97706] border-[#d97706] text-white shadow-md dark:bg-[#E87C1E] dark:border-[#E87C1E]'
+                        : 'bg-gray-50 dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-[#d97706] dark:hover:border-[#E87C1E]'}
                     `}
                   >
                     {isActive && <Check size={16} strokeWidth={3} />}
@@ -132,7 +132,7 @@ export default function AdvancedFiltersModal({ isOpen, onClose, onApply }: Advan
               {!showAllAmenities && (
                 <button 
                   onClick={() => setShowAllAmenities(true)}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gray-50 border border-gray-200 text-[#d97706] text-sm font-bold hover:bg-gray-100"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-[#d97706] dark:text-[#E87C1E] text-sm font-bold hover:bg-gray-100 dark:hover:bg-slate-700"
                 >
                   <Plus size={16} /> Más
                 </button>
@@ -142,7 +142,7 @@ export default function AdvancedFiltersModal({ isOpen, onClose, onApply }: Advan
 
           {/* SECCIÓN ETIQUETAS */}
           <section>
-            <h3 className="text-lg font-semibold text-gray-700 mb-4">Etiquetas</h3>
+            <h3 className="text-lg font-semibold text-gray-700 dark:text-slate-200 mb-4">Etiquetas</h3>
             <div className="flex flex-wrap gap-3">
               {LABELS_DATA.map((label) => {
                 const isActive = selectedLabels.includes(label.id)
@@ -153,8 +153,8 @@ export default function AdvancedFiltersModal({ isOpen, onClose, onApply }: Advan
                     className={`
                       px-6 py-2.5 rounded-full border text-sm font-medium transition-all
                       ${isActive 
-                        ? 'bg-[#d97706] border-[#d97706] text-white shadow-md' 
-                        : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-[#d97706]'}
+                        ? 'bg-[#d97706] border-[#d97706] text-white shadow-md dark:bg-[#E87C1E] dark:border-[#E87C1E]' 
+                        : 'bg-gray-50 dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-[#d97706] dark:hover:border-[#E87C1E]'}
                     `}
                   >
                     {label.name}
