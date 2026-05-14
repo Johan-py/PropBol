@@ -140,6 +140,7 @@ import usdtRoutes from "./modules/usdt/usdt.routes.js";
 import historialBusquedaRoutes from "./modules/perfil/historialBusqueda.routes.js";
 import whatsappRoutes from "./modules/whatsapp/whatsapp.routes.js";
 import adminTestimoniosRoutes from "./modules/testimonios/adminTestimonios.routes.js";
+import adminPlanesRoutes from "./modules/planes/adminPlanes.routes.js";
 import sesionRoutes from "./modules/perfil/sesion.routes.js";
 
 import "./jobs/suscripcion.job.js";
@@ -401,6 +402,7 @@ app.post("/api/publicaciones", (req, res) => {
 // TESTIMONIOSADMIN
 // --------------------
 app.use("/api/admin", adminTestimoniosRoutes);
+app.use("/api/admin", adminPlanesRoutes);
 
 // --------------------
 // LEVANTAR SERVIDOR

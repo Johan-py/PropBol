@@ -258,6 +258,42 @@ export default function PagoQRPage() {
               </div>
             </div>
 
+            {/* Comprobante preview */}
+            <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-5">
+              <p className="text-xs font-semibold uppercase tracking-wide text-stone-400 mb-3">
+                Previsualización del comprobante
+              </p>
+              <div className="rounded-xl border border-dashed border-stone-200 p-4 space-y-2 text-xs font-mono text-stone-600">
+                <div className="flex justify-between">
+                  <span className="text-stone-400">REF</span>
+                  <span className="font-bold text-stone-800">#{payment.referencia}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-stone-400">Plan</span>
+                  <span>{payment.planNombre ?? '—'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-stone-400">Método</span>
+                  <span>QR Bancario</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-stone-400">Subtotal</span>
+                  <span>Bs. {Number(payment.subtotal ?? 0).toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-stone-400">IVA 13%</span>
+                  <span>Bs. {Number(payment.iva_monto ?? 0).toFixed(2)}</span>
+                </div>
+                <div className="border-t border-stone-100 pt-2 flex justify-between font-bold text-stone-900">
+                  <span>TOTAL</span>
+                  <span>Bs. {Number(payment.monto).toFixed(2)}</span>
+                </div>
+                <p className="text-center text-stone-300 pt-1 text-[10px]">
+                  El comprobante completo se enviará a tu correo tras confirmación.
+                </p>
+              </div>
+            </div>
+
             {/* Confirmar pago */}
             <div className="bg-white rounded-2xl border border-stone-100 shadow-sm p-4">
               <p className="text-sm font-semibold text-stone-800 mb-1">¿Ya realizaste el pago?</p>

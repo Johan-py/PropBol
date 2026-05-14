@@ -3,6 +3,7 @@ import { prisma } from '../../lib/prisma.client.js'
 import { crearTransaccion } from './servicios/transaccion.service.js'
 import { emitirComprobante } from './servicios/comprobanteService.js'
 import { suscripcionesService } from '../suscripciones/suscripciones.service.js'
+import { createNotificationService } from '../notificaciones/notificaciones.service.js'
 
 interface AuthRequest extends Request {
   user?: { id: number }
@@ -165,7 +166,10 @@ export const confirmarPago = async (req: Request, res: Response) => {
 
     const transaccion = await prisma.transacciones.findUnique({
       where: { id: transaccionId },
-      select: { estado: true, id_usuario: true, id_suscripcion: true, metodo_pago: true },
+      include: {
+        usuario: { select: { correo: true, nombre: true } },
+        plan_suscripcion: { select: { nombre_plan: true } },
+      },
     })
 
     if (!transaccion) {
@@ -177,7 +181,7 @@ export const confirmarPago = async (req: Request, res: Response) => {
     }
 
     const suscripcionVigente = await suscripcionesService.obtenerSuscripcionActiva(
-      transaccion.id_usuario
+      transaccion.id_usuario!
     )
     if (suscripcionVigente) {
       const planVigente = suscripcionVigente.plan_suscripcion?.nombre_plan ?? 'activa'
@@ -199,8 +203,8 @@ export const confirmarPago = async (req: Request, res: Response) => {
 
     await prisma.suscripciones_activas.create({
       data: {
-        id_usuario: transaccion.id_usuario,
-        id_suscripcion: transaccion.id_suscripcion,
+        id_usuario: transaccion.id_usuario!,
+        id_suscripcion: transaccion.id_suscripcion!,
         id_transaccion: transaccionId,
         fecha_inicio: ahora,
         fecha_fin: new Date(ahora.getTime() + diasSuscripcion * 24 * 60 * 60 * 1000),
@@ -209,6 +213,14 @@ export const confirmarPago = async (req: Request, res: Response) => {
     })
 
     const comprobanteEnviado = await emitirComprobante(transaccionId)
+
+    try {
+      await createNotificationService({
+        correo: transaccion.usuario.correo,
+        titulo: '¡Tu pago fue confirmado!',
+        mensaje: `Tu pago del plan ${transaccion.plan_suscripcion?.nombre_plan ?? '—'} (REF-${transaccionId}) fue aprobado. Tu suscripción ya está activa.`,
+      })
+    } catch { /* no bloquea el flujo */ }
 
     return res.status(200).json({
       mensaje: comprobanteEnviado
@@ -279,12 +291,87 @@ export const listarTransaccionesAdmin = async (_req: Request, res: Response) => 
   }
 }
 
+export const listarMisTransacciones = async (req: AuthRequest, res: Response) => {
+  try {
+    const usuarioId = req.user?.id
+    if (!usuarioId) return res.status(401).json({ error: 'No autenticado' })
+
+    const transacciones = await prisma.transacciones.findMany({
+      where: { id_usuario: usuarioId },
+      include: { plan_suscripcion: { select: { nombre_plan: true } } },
+      orderBy: { fecha_intento: 'desc' },
+    })
+
+    return res.json(
+      transacciones.map((t) => ({
+        id: t.id,
+        referencia: `REF-${t.id}`,
+        plan: t.plan_suscripcion?.nombre_plan ?? '—',
+        subtotal: Number(t.subtotal),
+        iva_monto: Number(t.iva_monto),
+        total: Number(t.total),
+        monto_descuento: Number(t.monto_descuento ?? 0),
+        metodo_pago: t.metodo_pago ?? 'QR_BANCARIO',
+        estado: t.estado ?? 'PENDIENTE',
+        fecha: t.fecha_intento,
+        fecha_completado: t.fecha_completado,
+      }))
+    )
+  } catch (error) {
+    return res.status(500).json({ error: toMessage(error) })
+  }
+}
+
+export const notificarAdmin = async (req: AuthRequest, res: Response) => {
+  try {
+    const id = parseInt(String(req.params.id))
+    if (isNaN(id)) return res.status(400).json({ error: 'ID inválido' })
+
+    const transaccion = await prisma.transacciones.findUnique({
+      where: { id },
+      include: {
+        usuario: { select: { nombre: true, apellido: true, correo: true } },
+        plan_suscripcion: { select: { nombre_plan: true } },
+      },
+    })
+    if (!transaccion) return res.status(404).json({ error: 'Transacción no encontrada' })
+
+    const admins = await prisma.usuario.findMany({
+      where: { rol: { nombre: 'ADMIN' } },
+      select: { correo: true },
+    })
+
+    const nombreUsuario = `${transaccion.usuario.nombre} ${transaccion.usuario.apellido}`
+    const planNombre = transaccion.plan_suscripcion?.nombre_plan ?? '—'
+
+    await Promise.allSettled(
+      admins.map((a) =>
+        createNotificationService({
+          correo: a.correo,
+          titulo: 'Nuevo pago pendiente de verificación',
+          mensaje: `${nombreUsuario} indica haber realizado el pago REF-${id} del plan ${planNombre}. Revisa el panel de pagos.`,
+        })
+      )
+    )
+
+    return res.json({ ok: true, notificados: admins.length })
+  } catch (error) {
+    return res.status(500).json({ error: toMessage(error) })
+  }
+}
+
 export const rechazarPago = async (req: Request, res: Response) => {
   try {
     const id = parseInt(String(req.params.id))
     if (isNaN(id)) return res.status(400).json({ error: 'ID inválido' })
 
-    const transaccion = await prisma.transacciones.findUnique({ where: { id } })
+    const transaccion = await prisma.transacciones.findUnique({
+      where: { id },
+      include: {
+        usuario: { select: { correo: true } },
+        plan_suscripcion: { select: { nombre_plan: true } },
+      },
+    })
     if (!transaccion) return res.status(404).json({ error: 'Transacción no encontrada' })
 
     if (transaccion.estado !== 'PENDIENTE') {
@@ -305,6 +392,14 @@ export const rechazarPago = async (req: Request, res: Response) => {
         mensaje: `Transacción ${id} rechazada por el administrador`,
       },
     })
+
+    try {
+      await createNotificationService({
+        correo: transaccion.usuario.correo,
+        titulo: 'Pago rechazado',
+        mensaje: `Tu pago del plan ${transaccion.plan_suscripcion?.nombre_plan ?? '—'} (REF-${id}) fue rechazado. Contacta al soporte si crees que es un error.`,
+      })
+    } catch { /* no bloquea el flujo */ }
 
     return res.json({ mensaje: 'Pago rechazado correctamente' })
   } catch (error) {
