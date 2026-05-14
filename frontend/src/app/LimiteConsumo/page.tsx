@@ -171,7 +171,7 @@ export default function LimiteConsumoPage() {
         {/* CARDS */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 text-center">
-            <BarChart2 className="mx-auto mb-2 text-blue-500" size={22} />
+            <BarChart2 className="mx-auto mb-2 text-blue-600" size={22} />
             <h3 className="text-blue-600 text-2xl font-bold">{disponibles}</h3>
             <p className="text-gray-500 text-sm mt-1">Disponibles</p>
           </div>
