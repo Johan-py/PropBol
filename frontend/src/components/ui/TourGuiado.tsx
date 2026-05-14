@@ -712,7 +712,7 @@ useEffect(() => {
                 flex: 1,
                 height: 3,
                 borderRadius: 99,
-                background: i <= currentStep ? "#E68B25" : "#e5e7eb",
+                background: i <= currentStep ? "#E68B25" : theme.stepInactive,
               }}
             />
           ))}
