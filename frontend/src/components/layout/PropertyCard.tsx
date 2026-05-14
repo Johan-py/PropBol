@@ -58,7 +58,7 @@ export default function PropertyCard({
   // Calcular oferta HU6
   const precioNum = Number(precio)
   const precioAnteriorNum = Number(precio_anterior)
-  const esOferta = precioAnteriorNum && precioNum && precioNum < precioAnteriorNum
+  const esOferta = !isNaN(precioAnteriorNum) && precioAnteriorNum > 0 && !isNaN(precioNum) && precioNum > 0 && precioNum < precioAnteriorNum
   const porcentajeDescuento = esOferta
     ? Math.round(((precioAnteriorNum - precioNum) / precioAnteriorNum) * 100)
     : 0
