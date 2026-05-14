@@ -113,18 +113,6 @@ export async function eliminarPublicacion(id: number) {
 
   return data
 }
-<<<<<<< HEAD
-export async function iniciarPublicidad(publicacionId: number): Promise<{ checkoutUrl: string }> {
-  const apiUrl = getApiUrl()
-  const token = getToken()
-
-  const response = await fetch(`${apiUrl}/api/publicaciones/${publicacionId}/publicitar`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    }
-=======
 
 export async function editarMultimediaPublicacion(
   id: number,
@@ -139,43 +127,13 @@ export async function editarMultimediaPublicacion(
       Authorization: `Bearer ${token}`
     },
     body: formData
->>>>>>> c6a97b8f2833225a78a0841470b09eae6a8ba279
   })
 
   const data = await response.json()
 
   if (!response.ok) {
-<<<<<<< HEAD
-    throw new Error(data.message || 'Error al iniciar publicidad')
-  }
-
-  return data
-}
-
-
-export async function cancelarPublicidad(publicacionId: number): Promise<{ ok: boolean; message: string }> {
-  const apiUrl = getApiUrl()
-  const token = getToken()
-
-  const response = await fetch(`${apiUrl}/api/publicaciones/${publicacionId}/publicitar/cancelar`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    }
-  })
-
-  const data = await response.json()
-
-  if (!response.ok) {
-    throw new Error(data.message || 'Error al cancelar publicidad')
-  }
-
-  return data
-=======
     throw new Error(data.message || 'No se pudo actualizar la multimedia')
   }
 
   return data.data
->>>>>>> c6a97b8f2833225a78a0841470b09eae6a8ba279
 }

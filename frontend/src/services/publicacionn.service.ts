@@ -56,39 +56,6 @@ export const publicacionService = {
       throw new Error(data.msg || 'Error al obtener publicaciones')
     }
 
-<<<<<<< HEAD
-    return data;
-  },
-
-  async iniciarPublicidad(publicacionId: number): Promise<{ checkoutUrl: string }> {
-    const response = await fetch(`${API_URL}/api/publicaciones/${publicacionId}/publicitar`, {
-      method: 'POST',
-      headers: getHeaders(),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.msg || data.message || 'Error al iniciar publicidad');
-    }
-
-    return data;
-  },
-
-  async cancelarPublicidad(publicacionId: number): Promise<{ ok: boolean; msg: string }> {
-    const response = await fetch(`${API_URL}/api/publicaciones/${publicacionId}/publicitar/cancelar`, {
-      method: 'DELETE',
-      headers: getHeaders(),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.msg || data.message || 'Error al cancelar publicidad');
-    }
-
-    return data;
-=======
     return data
   },
   // para obtener estadisticas de cant de vistas y compartidas
@@ -112,6 +79,5 @@ export const publicacionService = {
       totalVisualizaciones: Number(pub.totalVisualizaciones ?? 0),
       totalCompartidos: Number(pub.totalCompartidos ?? 0)
     }))
->>>>>>> c6a97b8f2833225a78a0841470b09eae6a8ba279
   }
 }
