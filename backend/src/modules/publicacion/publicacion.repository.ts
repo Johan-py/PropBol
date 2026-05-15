@@ -415,50 +415,128 @@ type NuevaMultimediaInput = {
 
 export const eliminarMultimediaPorIdsRepository = async (
   publicacionId: number,
-  multimediaIds: number[]
+  multimediaIds: number[],
 ) => {
-  if (multimediaIds.length === 0) return { count: 0 }
+  if (multimediaIds.length === 0) return { count: 0 };
 
   return prisma.multimedia.deleteMany({
     where: {
       id: {
-        in: multimediaIds
+        in: multimediaIds,
       },
-      publicacionId
-    }
-  })
-}
+      publicacionId,
+    },
+  });
+};
 
 export const eliminarVideosDePublicacionRepository = async (
-  publicacionId: number
+  publicacionId: number,
 ) => {
   return prisma.multimedia.deleteMany({
     where: {
       publicacionId,
-      tipo: 'VIDEO'
-    }
-  })
-}
+      tipo: "VIDEO",
+    },
+  });
+};
 
 export const crearMultimediaRepository = async (
-  data: NuevaMultimediaInput[]
+  data: NuevaMultimediaInput[],
 ) => {
-  if (data.length === 0) return { count: 0 }
+  if (data.length === 0) return { count: 0 };
 
   return prisma.multimedia.createMany({
-    data
-  })
-}
+    data,
+  });
+};
 
 export const buscarMultimediaPublicacionRepository = async (
-  publicacionId: number
+  publicacionId: number,
 ) => {
   return prisma.multimedia.findMany({
     where: {
-      publicacionId
+      publicacionId,
     },
     orderBy: {
-      id: 'asc'
-    }
-  })
-}
+      id: "asc",
+    },
+  });
+};
+// ==================== NUEVOS REPOSITORIOS PARA HU-11 ====================
+// PUBLICIDAD DE PROPIEDADES
+
+export const activarPublicidadRepository = async (
+  publicacionId: number,
+  usuarioId: number,
+  paymentIntentId: string,
+  duracionDias: number = 30
+) => {
+  const fechaInicio = new Date();
+  const fechaExpiracion = new Date();
+  fechaExpiracion.setDate(fechaExpiracion.getDate() + duracionDias);
+
+  return prisma.publicacion.update({
+    where: {
+      id: publicacionId,
+      usuarioId: usuarioId,
+    },
+    data: {
+      promoted: true,
+      promotedAt: fechaInicio,
+      promotedExpiresAt: fechaExpiracion,
+      paymentIntentId: paymentIntentId,
+    },
+  });
+};
+
+export const cancelarPublicidadRepository = async (
+  publicacionId: number,
+  usuarioId: number
+) => {
+  return prisma.publicacion.update({
+    where: {
+      id: publicacionId,
+      usuarioId: usuarioId,
+    },
+    data: {
+      promoted: false,
+      promotedAt: null,
+      promotedExpiresAt: null,
+      paymentIntentId: null,
+    },
+  });
+};
+
+export const buscarPublicacionPorIdSimpleRepository = async (
+  publicacionId: number
+) => {
+  return prisma.publicacion.findUnique({
+    where: { id: publicacionId },
+    select: {
+      id: true,
+      promoted: true,
+      promotedAt: true,
+      promotedExpiresAt: true,
+    },
+  });
+};
+
+export const verificarPublicidadActivaRepository = async (
+  publicacionId: number
+) => {
+  const publicacion = await prisma.publicacion.findUnique({
+    where: { id: publicacionId },
+    select: {
+      promoted: true,
+      promotedExpiresAt: true,
+    },
+  });
+
+  if (!publicacion) return false;
+
+  return (
+    publicacion.promoted === true &&
+    publicacion.promotedExpiresAt !== null &&
+    new Date(publicacion.promotedExpiresAt) > new Date()
+  );
+};
