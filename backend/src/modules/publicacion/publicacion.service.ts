@@ -418,19 +418,20 @@ export const obtenerResumenFinalService = async (
           ? Number(resumen.inmueble.precio)
           : null,
       areaM2:
-        resumen.inmueble?.superficieM2 !== null && resumen.inmueble?.superficieM2 !== undefined
+        resumen.inmueble?.superficieM2 !== null &&
+        resumen.inmueble?.superficieM2 !== undefined
           ? Number(resumen.inmueble.superficieM2)
           : null,
       coordenadas: {
         latitud: resumen.inmueble?.ubicacion?.latitud ?? null,
-        longitud: resumen.inmueble?.ubicacion?.longitud ?? null
-      }
+        longitud: resumen.inmueble?.ubicacion?.longitud ?? null,
+      },
     },
 
     caracteristicas: {
       habitaciones: resumen.inmueble?.nroCuartos ?? null,
       banos: resumen.inmueble?.nroBanos ?? null,
-      estacionamiento: null
+      estacionamiento: null,
     },
 
     parametrosPersonalizados: parametrosUnicos,
@@ -438,26 +439,30 @@ export const obtenerResumenFinalService = async (
     multimedia: {
       total: multimedia.length,
       imagenes,
-      videos
+      videos,
     },
 
-    soloLectura: true
-  }
-}
+    soloLectura: true,
+  };
+};
 
-export const obtenerDetallePublicacionService = async (publicacionId: number) => {
+export const obtenerDetallePublicacionService = async (
+  publicacionId: number,
+) => {
   if (Number.isNaN(publicacionId) || publicacionId <= 0) {
-    throw new Error('ID_INVALIDO')
+    throw new Error("ID_INVALIDO");
   }
 
-  const publicacion = await buscarDetallePublicacionPorIdRepository(publicacionId)
+  const publicacion =
+    await buscarDetallePublicacionPorIdRepository(publicacionId);
 
-  if (!publicacion || publicacion.estado === 'ELIMINADA') {
-    throw new Error('PUBLICACION_NO_EXISTE')
+  if (!publicacion || publicacion.estado === "ELIMINADA") {
+    throw new Error("PUBLICACION_NO_EXISTE");
   }
 
   const telefonoPrincipal =
-    publicacion.usuario.telefonos.find((item) => item.principal) ?? publicacion.usuario.telefonos[0]
+    publicacion.usuario.telefonos.find((item) => item.principal) ??
+    publicacion.usuario.telefonos[0];
 
   return {
     id: publicacion.id,
@@ -465,30 +470,38 @@ export const obtenerDetallePublicacionService = async (publicacionId: number) =>
     precio: Number(publicacion.inmueble.precio),
     tipoInmueble: publicacion.inmueble.categoria ?? null,
     tipoOperacion: publicacion.inmueble.tipoAccion,
-    ubicacionTexto: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
+    ubicacionTexto:
+      publicacion.inmueble.ubicacion?.direccion || "Ubicación no disponible",
     descripcion:
-      publicacion.descripcion || publicacion.inmueble.descripcion || 'Sin descripción disponible',
+      publicacion.descripcion ||
+      publicacion.inmueble.descripcion ||
+      "Sin descripción disponible",
     imagenes: publicacion.multimedia
-      .filter((item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN)
+      .filter(
+        (item) =>
+          normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN,
+      )
       .map((item) => ({
         id: item.id,
         url: item.url,
         tipo: item.tipo,
-        pesoMb: item.pesoMb ? Number(item.pesoMb) : null
+        pesoMb: item.pesoMb ? Number(item.pesoMb) : null,
       })),
     videoUrl:
       publicacion.multimedia.find(
-        (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_VIDEO
+        (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_VIDEO,
       )?.url ?? null,
     detalles: {
       habitaciones: publicacion.inmueble.nroCuartos ?? null,
       banos: publicacion.inmueble.nroBanos ?? null,
       superficieUtil: publicacion.inmueble.superficieM2
         ? Number(publicacion.inmueble.superficieM2)
-        : null
+        : null,
     },
     caracteristicasAdicionales:
-      publicacion.inmueble.inmueble_etiqueta?.map((item) => item.etiqueta.nombre) ?? [],
+      publicacion.inmueble.inmueble_etiqueta?.map(
+        (item) => item.etiqueta.nombre,
+      ) ?? [],
     mapa: {
       latitud: publicacion.inmueble.ubicacion?.latitud
         ? Number(publicacion.inmueble.ubicacion.latitud)
@@ -496,31 +509,35 @@ export const obtenerDetallePublicacionService = async (publicacionId: number) =>
       longitud: publicacion.inmueble.ubicacion?.longitud
         ? Number(publicacion.inmueble.ubicacion.longitud)
         : null,
-      direccion: publicacion.inmueble.ubicacion?.direccion || null
+      direccion: publicacion.inmueble.ubicacion?.direccion || null,
     },
     contacto: {
       nombre: `${publicacion.usuario.nombre} ${publicacion.usuario.apellido}`,
       correo: publicacion.usuario.correo ?? null,
       telefono: telefonoPrincipal
         ? `${telefonoPrincipal.codigoPais} ${telefonoPrincipal.numero}`
-        : null
-    }
-  }
-}
+        : null,
+    },
+  };
+};
 
-export const obtenerDetallePublicacionPorInmuebleService = async (inmuebleId: number) => {
+export const obtenerDetallePublicacionPorInmuebleService = async (
+  inmuebleId: number,
+) => {
   if (Number.isNaN(inmuebleId) || inmuebleId <= 0) {
-    throw new Error('ID_INVALIDO')
+    throw new Error("ID_INVALIDO");
   }
 
-  const publicacion = await buscarDetallePublicacionPorInmuebleIdRepository(inmuebleId)
+  const publicacion =
+    await buscarDetallePublicacionPorInmuebleIdRepository(inmuebleId);
 
-  if (!publicacion || publicacion.estado === 'ELIMINADA') {
-    throw new Error('PUBLICACION_NO_EXISTE')
+  if (!publicacion || publicacion.estado === "ELIMINADA") {
+    throw new Error("PUBLICACION_NO_EXISTE");
   }
 
   const telefonoPrincipal =
-    publicacion.usuario.telefonos.find((item) => item.principal) ?? publicacion.usuario.telefonos[0]
+    publicacion.usuario.telefonos.find((item) => item.principal) ??
+    publicacion.usuario.telefonos[0];
 
   return {
     id: publicacion.id,
@@ -528,33 +545,43 @@ export const obtenerDetallePublicacionPorInmuebleService = async (inmuebleId: nu
     titulo: publicacion.titulo,
     precio: Number(publicacion.inmueble.precio),
     //HU6-precio Anterior
-    precio_anterior: publicacion.inmueble.precio_anterior ? Number(publicacion.inmueble.precio_anterior) : undefined,
+    precio_anterior: publicacion.inmueble.precio_anterior
+      ? Number(publicacion.inmueble.precio_anterior)
+      : undefined,
     tipoInmueble: publicacion.inmueble.categoria ?? null,
     tipoOperacion: publicacion.inmueble.tipoAccion,
-    ubicacionTexto: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
+    ubicacionTexto:
+      publicacion.inmueble.ubicacion?.direccion || "Ubicación no disponible",
     descripcion:
-      publicacion.descripcion || publicacion.inmueble.descripcion || 'Sin descripción disponible',
+      publicacion.descripcion ||
+      publicacion.inmueble.descripcion ||
+      "Sin descripción disponible",
     imagenes: publicacion.multimedia
-      .filter((item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN)
+      .filter(
+        (item) =>
+          normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN,
+      )
       .map((item) => ({
         id: item.id,
         url: item.url,
         tipo: item.tipo,
-        pesoMb: item.pesoMb ? Number(item.pesoMb) : null
+        pesoMb: item.pesoMb ? Number(item.pesoMb) : null,
       })),
     videoUrl:
       publicacion.multimedia.find(
-        (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_VIDEO
+        (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_VIDEO,
       )?.url ?? null,
     detalles: {
       habitaciones: publicacion.inmueble.nroCuartos ?? null,
       banos: publicacion.inmueble.nroBanos ?? null,
       superficieUtil: publicacion.inmueble.superficieM2
         ? Number(publicacion.inmueble.superficieM2)
-        : null
+        : null,
     },
     caracteristicasAdicionales:
-      publicacion.inmueble.inmueble_etiqueta?.map((item) => item.etiqueta.nombre) ?? [],
+      publicacion.inmueble.inmueble_etiqueta?.map(
+        (item) => item.etiqueta.nombre,
+      ) ?? [],
     mapa: {
       latitud: publicacion.inmueble.ubicacion?.latitud
         ? Number(publicacion.inmueble.ubicacion.latitud)
@@ -562,17 +589,17 @@ export const obtenerDetallePublicacionPorInmuebleService = async (inmuebleId: nu
       longitud: publicacion.inmueble.ubicacion?.longitud
         ? Number(publicacion.inmueble.ubicacion.longitud)
         : null,
-      direccion: publicacion.inmueble.ubicacion?.direccion || null
+      direccion: publicacion.inmueble.ubicacion?.direccion || null,
     },
     contacto: {
       nombre: `${publicacion.usuario.nombre} ${publicacion.usuario.apellido}`,
       correo: publicacion.usuario.correo ?? null,
       telefono: telefonoPrincipal
         ? `${telefonoPrincipal.codigoPais} ${telefonoPrincipal.numero}`
-        : null
-    }
-  }
-}
+        : null,
+    },
+  };
+};
 
 export const confirmarPublicacionService = async (
   publicacionId: number,
