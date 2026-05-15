@@ -215,25 +215,27 @@ export const actualizarPublicacionRepository = async (
 
 export const eliminarLogicamentePublicacionRepository = async (
   publicacionId: number,
-  inmuebleId: number
+  inmuebleId: number,
 ) => {
   return prisma.$transaction([
     prisma.publicacion.update({
       where: { id: publicacionId },
       data: {
-        estado: ESTADO_PUBLICACION_ELIMINADA
-      }
+        estado: ESTADO_PUBLICACION_ELIMINADA,
+      },
     }),
     prisma.inmueble.update({
       where: { id: inmuebleId },
       data: {
-        estado: ESTADO_INMUEBLE_INACTIVO
-      }
-    })
-  ])
-}
+        estado: ESTADO_INMUEBLE_INACTIVO,
+      },
+    }),
+  ]);
+};
 
-export const buscarDetallePublicacionPorIdRepository = async (publicacionId: number) => {
+export const buscarDetallePublicacionPorIdRepository = async (
+  publicacionId: number,
+) => {
   return prisma.publicacion.findUnique({
     where: { id: publicacionId },
     select: {
@@ -254,10 +256,10 @@ export const buscarDetallePublicacionPorIdRepository = async (publicacionId: num
             select: {
               codigoPais: true,
               numero: true,
-              principal: true
-            }
-          }
-        }
+              principal: true,
+            },
+          },
+        },
       },
       inmueble: {
         select: {
@@ -277,43 +279,45 @@ export const buscarDetallePublicacionPorIdRepository = async (publicacionId: num
               latitud: true,
               longitud: true,
               inmuebleId: true,
-              ubicacionMaestraId: true
-            }
+              ubicacionMaestraId: true,
+            },
           },
           inmueble_etiqueta: {
             select: {
               etiqueta: {
                 select: {
                   id: true,
-                  nombre: true
-                }
-              }
-            }
-          }
-        }
+                  nombre: true,
+                },
+              },
+            },
+          },
+        },
       },
       multimedia: {
         select: {
           id: true,
           url: true,
           tipo: true,
-          pesoMb: true
+          pesoMb: true,
         },
         orderBy: {
-          id: 'asc'
-        }
-      }
-    }
-  })
-}
+          id: "asc",
+        },
+      },
+    },
+  });
+};
 
-export const buscarDetallePublicacionPorInmuebleIdRepository = async (inmuebleId: number) => {
+export const buscarDetallePublicacionPorInmuebleIdRepository = async (
+  inmuebleId: number,
+) => {
   return prisma.publicacion.findFirst({
     where: {
       inmuebleId,
       estado: {
-        not: 'ELIMINADA'
-      }
+        not: "ELIMINADA",
+      },
     },
     select: {
       id: true,
@@ -333,10 +337,10 @@ export const buscarDetallePublicacionPorInmuebleIdRepository = async (inmuebleId
             select: {
               codigoPais: true,
               numero: true,
-              principal: true
-            }
-          }
-        }
+              principal: true,
+            },
+          },
+        },
       },
       inmueble: {
         select: {
@@ -355,59 +359,59 @@ export const buscarDetallePublicacionPorInmuebleIdRepository = async (inmuebleId
             select: {
               direccion: true,
               latitud: true,
-              longitud: true
-            }
+              longitud: true,
+            },
           },
           inmueble_etiqueta: {
             select: {
               etiqueta: {
                 select: {
                   id: true,
-                  nombre: true
-                }
-              }
-            }
-          }
-        }
+                  nombre: true,
+                },
+              },
+            },
+          },
+        },
       },
       multimedia: {
         select: {
           id: true,
           url: true,
           tipo: true,
-          pesoMb: true
+          pesoMb: true,
         },
         orderBy: {
-          id: 'asc'
-        }
-      }
-    }
-  })
-}
+          id: "asc",
+        },
+      },
+    },
+  });
+};
 
 export const confirmarPublicacionRepository = async (publicacionId: number) => {
   return prisma.publicacion.update({
     where: { id: publicacionId },
     data: {
-      estado: 'ACTIVA'
+      estado: "ACTIVA",
     },
     include: {
       multimedia: true,
       inmueble: {
         include: {
-          ubicacion: true
-        }
-      }
-    }
-  })
-}
+          ubicacion: true,
+        },
+      },
+    },
+  });
+};
 
 type NuevaMultimediaInput = {
-  url: string
-  tipo: 'IMAGEN' | 'VIDEO'
-  pesoMb?: number | null
-  publicacionId: number
-}
+  url: string;
+  tipo: "IMAGEN" | "VIDEO";
+  pesoMb?: number | null;
+  publicacionId: number;
+};
 
 export const eliminarMultimediaPorIdsRepository = async (
   publicacionId: number,
