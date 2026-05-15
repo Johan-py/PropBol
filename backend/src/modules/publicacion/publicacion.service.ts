@@ -603,203 +603,205 @@ export const obtenerDetallePublicacionPorInmuebleService = async (
 
 export const confirmarPublicacionService = async (
   publicacionId: number,
-  usuarioSolicitanteId: number
+  usuarioSolicitanteId: number,
 ) => {
   if (Number.isNaN(publicacionId) || publicacionId <= 0) {
-    throw new Error('ID_INVALIDO')
+    throw new Error("ID_INVALIDO");
   }
 
   if (Number.isNaN(usuarioSolicitanteId) || usuarioSolicitanteId <= 0) {
-    throw new Error('USUARIO_INVALIDO')
+    throw new Error("USUARIO_INVALIDO");
   }
 
-  const publicacion = await buscarPublicacionPorIdRepository(publicacionId)
+  const publicacion = await buscarPublicacionPorIdRepository(publicacionId);
 
   if (!publicacion) {
-    throw new Error('PUBLICACION_NO_EXISTE')
+    throw new Error("PUBLICACION_NO_EXISTE");
   }
 
   if (publicacion.usuarioId !== usuarioSolicitanteId) {
-    throw new Error('NO_AUTORIZADO')
+    throw new Error("NO_AUTORIZADO");
   }
 
   if (publicacion.estado === ESTADO_PUBLICACION_ELIMINADA) {
-    throw new Error('PUBLICACION_YA_ELIMINADA')
+    throw new Error("PUBLICACION_YA_ELIMINADA");
   }
 
   if (!publicacion.multimedia || publicacion.multimedia.length === 0) {
-    throw new Error('MULTIMEDIA_REQUERIDA')
+    throw new Error("MULTIMEDIA_REQUERIDA");
   }
 
-  const publicacionConfirmada = await confirmarPublicacionRepository(publicacion.id)
+  const publicacionConfirmada = await confirmarPublicacionRepository(
+    publicacion.id,
+  );
 
   return {
     id: publicacionConfirmada.id,
     estado: publicacionConfirmada.estado,
     fechaPublicacion: publicacionConfirmada.fechaPublicacion,
-    multimediaTotal: publicacionConfirmada.multimedia.length
-  }
-}
+    multimediaTotal: publicacionConfirmada.multimedia.length,
+  };
+};
 
 type EditarMultimediaInput = {
-  imagenesAEliminar?: unknown
-  videoUrl?: unknown
-}
+  imagenesAEliminar?: unknown;
+  videoUrl?: unknown;
+};
 
 const esVideoPermitido = (url: string) => {
-  const valor = url.trim()
+  const valor = url.trim();
 
-  if (!valor) return true
+  if (!valor) return true;
 
   return (
-    valor.includes('youtube.com') ||
-    valor.includes('youtu.be') ||
-    valor.includes('vimeo.com')
-  )
-}
+    valor.includes("youtube.com") ||
+    valor.includes("youtu.be") ||
+    valor.includes("vimeo.com")
+  );
+};
 
 const parseImagenesAEliminar = (valor: unknown): number[] => {
-  if (!valor) return []
+  if (!valor) return [];
 
   if (Array.isArray(valor)) {
     return valor
       .map((item) => Number(item))
-      .filter((item) => !Number.isNaN(item) && item > 0)
+      .filter((item) => !Number.isNaN(item) && item > 0);
   }
 
-  if (typeof valor === 'string') {
+  if (typeof valor === "string") {
     try {
-      const parsed = JSON.parse(valor)
+      const parsed = JSON.parse(valor);
 
       if (Array.isArray(parsed)) {
         return parsed
           .map((item) => Number(item))
-          .filter((item) => !Number.isNaN(item) && item > 0)
+          .filter((item) => !Number.isNaN(item) && item > 0);
       }
     } catch {
-      const numero = Number(valor)
-      return !Number.isNaN(numero) && numero > 0 ? [numero] : []
+      const numero = Number(valor);
+      return !Number.isNaN(numero) && numero > 0 ? [numero] : [];
     }
   }
 
-  return []
-}
+  return [];
+};
 
 const subirImagenACloudinary = async (
-  file: Express.Multer.File
+  file: Express.Multer.File,
 ): Promise<string> => {
-  const base64 = file.buffer.toString('base64')
-  const dataUri = `data:${file.mimetype};base64,${base64}`
+  const base64 = file.buffer.toString("base64");
+  const dataUri = `data:${file.mimetype};base64,${base64}`;
 
   const resultado = await cloudinary.uploader.upload(dataUri, {
-    folder: 'propbol/publicaciones',
-    resource_type: 'image'
-  })
+    folder: "propbol/publicaciones",
+    resource_type: "image",
+  });
 
-  return resultado.secure_url
-}
+  return resultado.secure_url;
+};
 
 export const editarMultimediaPublicacionService = async (
   publicacionId: number,
   usuarioSolicitanteId: number,
   data: EditarMultimediaInput & {
-    imagenesActuales?: unknown
-    imagenesNuevas?: unknown
-    videoUrls?: unknown
+    imagenesActuales?: unknown;
+    imagenesNuevas?: unknown;
+    videoUrls?: unknown;
   },
-  archivos: Express.Multer.File[]
+  archivos: Express.Multer.File[],
 ) => {
   if (Number.isNaN(publicacionId) || publicacionId <= 0) {
-    throw new Error('ID_INVALIDO')
+    throw new Error("ID_INVALIDO");
   }
 
   if (Number.isNaN(usuarioSolicitanteId) || usuarioSolicitanteId <= 0) {
-    throw new Error('USUARIO_INVALIDO')
+    throw new Error("USUARIO_INVALIDO");
   }
 
-  const publicacion = await buscarPublicacionPorIdRepository(publicacionId)
+  const publicacion = await buscarPublicacionPorIdRepository(publicacionId);
 
   if (!publicacion) {
-    throw new Error('PUBLICACION_NO_EXISTE')
+    throw new Error("PUBLICACION_NO_EXISTE");
   }
 
   if (publicacion.usuarioId !== usuarioSolicitanteId) {
-    throw new Error('NO_AUTORIZADO')
+    throw new Error("NO_AUTORIZADO");
   }
 
   if (publicacion.estado === ESTADO_PUBLICACION_ELIMINADA) {
-    throw new Error('PUBLICACION_YA_ELIMINADA')
+    throw new Error("PUBLICACION_YA_ELIMINADA");
   }
 
   const parseStringArray = (valor: unknown): string[] => {
-    if (!valor) return []
+    if (!valor) return [];
 
     if (Array.isArray(valor)) {
-      return valor.map((item) => String(item).trim()).filter(Boolean)
+      return valor.map((item) => String(item).trim()).filter(Boolean);
     }
 
-    if (typeof valor === 'string') {
+    if (typeof valor === "string") {
       try {
-        const parsed = JSON.parse(valor)
+        const parsed = JSON.parse(valor);
 
         if (Array.isArray(parsed)) {
-          return parsed.map((item) => String(item).trim()).filter(Boolean)
+          return parsed.map((item) => String(item).trim()).filter(Boolean);
         }
       } catch {
-        return valor.trim() ? [valor.trim()] : []
+        return valor.trim() ? [valor.trim()] : [];
       }
     }
 
-    return []
-  }
+    return [];
+  };
 
   const subirBase64ACloudinary = async (base64: string) => {
     const resultado = await cloudinary.uploader.upload(base64, {
-      folder: 'propbol/publicaciones',
-      resource_type: 'image'
-    })
+      folder: "propbol/publicaciones",
+      resource_type: "image",
+    });
 
-    return resultado.secure_url
-  }
+    return resultado.secure_url;
+  };
 
-  const imagenesActualesUrls = parseStringArray(data.imagenesActuales)
-  const imagenesNuevasBase64 = parseStringArray(data.imagenesNuevas)
-  const videosUrls = parseStringArray(data.videoUrls)
-  const videoUrlLegacy = normalizarTexto(data.videoUrl)
+  const imagenesActualesUrls = parseStringArray(data.imagenesActuales);
+  const imagenesNuevasBase64 = parseStringArray(data.imagenesNuevas);
+  const videosUrls = parseStringArray(data.videoUrls);
+  const videoUrlLegacy = normalizarTexto(data.videoUrl);
 
   const videosFinales =
     videosUrls.length > 0
       ? videosUrls.slice(0, 2)
       : videoUrlLegacy
         ? [videoUrlLegacy]
-        : []
+        : [];
 
   const imagenesActualesDb = publicacion.multimedia.filter(
-    (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN
-  )
+    (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN,
+  );
 
   const imagenesAEliminarPorUrl = imagenesActualesDb
     .filter((item) => !imagenesActualesUrls.includes(item.url))
-    .map((item) => item.id)
+    .map((item) => item.id);
 
-  const imagenesAEliminarPorId = parseImagenesAEliminar(data.imagenesAEliminar)
+  const imagenesAEliminarPorId = parseImagenesAEliminar(data.imagenesAEliminar);
 
   const imagenesAEliminar = Array.from(
-    new Set([...imagenesAEliminarPorUrl, ...imagenesAEliminarPorId])
-  )
+    new Set([...imagenesAEliminarPorUrl, ...imagenesAEliminarPorId]),
+  );
 
   const totalImagenesDespues =
     imagenesActualesDb.length -
     imagenesAEliminar.length +
     archivos.length +
-    imagenesNuevasBase64.length
+    imagenesNuevasBase64.length;
 
   if (totalImagenesDespues <= 0) {
-    throw new Error('MINIMO_UNA_IMAGEN')
+    throw new Error("MINIMO_UNA_IMAGEN");
   }
 
   if (totalImagenesDespues > 5) {
-    throw new Error('LIMITE_IMAGENES')
+    throw new Error("LIMITE_IMAGENES");
   }
 
   await eliminarMultimediaPorIdsRepository(publicacionId, imagenesAEliminar)
