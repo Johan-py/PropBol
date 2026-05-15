@@ -296,57 +296,48 @@ export const propertiesRepository = {
               estado: "ACTIVA" as const,
               publicacion_parametro: {
                 some: {
-                  parametro_id: labelId
-                }
-              }
-            }
-          }
-        }))
-      ]
+                  parametro_id: labelId,
+                },
+              },
+            },
+          },
+        })),
+      ];
     }
 
     // HU6 - Filtro solo ofertas
     if (filtros.soloOfertas === true) {
-      where.AND = [
-        ...(where.AND || []),
-        {
-          precio_anterior: {
-            not: null
-          }
-        },
-        {
-          precio: {
-            gt: 0
-          }
-        }
-      ]
+      where.precio = {
+        ...((where.precio as object) ?? {}),
+        lt: prisma.inmueble.fields.precio_anterior,
+      };
     }
 
     // ── ORDER BY ───────────────────────────────────────────────────────────
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const orderBy: any[] = []
+    const orderBy: any[] = [];
 
-    if (filtros.precio === 'menor-a-mayor') {
-      orderBy.push({ precio: 'asc' })
-      orderBy.push({ id: 'asc' })
-    } else if (filtros.precio === 'mayor-a-menor') {
-      orderBy.push({ precio: 'desc' })
-    } else if (filtros.superficie === 'menor-a-mayor') {
-      orderBy.push({ superficieM2: 'asc' })
-    } else if (filtros.superficie === 'mayor-a-menor') {
-      orderBy.push({ superficieM2: 'desc' })
-    } else if (filtros.fecha === 'mas-recientes') {
-      orderBy.push({ fechaPublicacion: 'desc' })
-    } else if (filtros.fecha === 'mas-antiguos') {
-      orderBy.push({ fechaPublicacion: 'asc' })
-    } else if (filtros.fecha === 'mas-populares') {
+    if (filtros.precio === "menor-a-mayor") {
+      orderBy.push({ precio: "asc" });
+      orderBy.push({ id: "asc" });
+    } else if (filtros.precio === "mayor-a-menor") {
+      orderBy.push({ precio: "desc" });
+    } else if (filtros.superficie === "menor-a-mayor") {
+      orderBy.push({ superficieM2: "asc" });
+    } else if (filtros.superficie === "mayor-a-menor") {
+      orderBy.push({ superficieM2: "desc" });
+    } else if (filtros.fecha === "mas-recientes") {
+      orderBy.push({ fechaPublicacion: "desc" });
+    } else if (filtros.fecha === "mas-antiguos") {
+      orderBy.push({ fechaPublicacion: "asc" });
+    } else if (filtros.fecha === "mas-populares") {
       // fallback mientras se ordena en memoria
-      orderBy.push({ fechaPublicacion: 'desc' })
-    } else if (filtros.fecha === 'mayor-descuento') {
-      orderBy.push({ id: 'asc' })
+      orderBy.push({ fechaPublicacion: "desc" });
+    } else if (filtros.fecha === "mayor-descuento") {
+      orderBy.push({ id: "asc" });
     }
 
-    orderBy.push({ id: 'asc' }) // Desempate default
+    orderBy.push({ id: "asc" }); // Desempate default
 
     // ── EJECUCIÓN PRISMA ───────────────────────────────────────────────────
     const inmuebles = await prisma.inmueble.findMany({
@@ -362,114 +353,119 @@ export const propertiesRepository = {
                     municipio: {
                       include: {
                         provincia: {
-                          include: { departamento: true }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+                          include: { departamento: true },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
-            ubicacion_maestra: true
-          }
+            ubicacion_maestra: true,
+          },
         },
         publicaciones: {
-          where: { estado: 'ACTIVA' },
-          include: { multimedia: true }
-        }
-      }
-    })
+          where: { estado: "ACTIVA" },
+          include: { multimedia: true },
+        },
+      },
+    });
 
     const resultados =
       filtros.lat && filtros.lng
         ? inmuebles.filter((inmueble) => {
-            const u = inmueble.ubicacion
-            if (!u || !u.latitud || !u.longitud) return false
+            const u = inmueble.ubicacion;
+            if (!u || !u.latitud || !u.longitud) return false;
 
-            const lat = Number(u.latitud)
-            const lng = Number(u.longitud)
+            const lat = Number(u.latitud);
+            const lng = Number(u.longitud);
 
             // Ignorar coordenadas inválidas
-            if (isNaN(lat) || isNaN(lng) || (lat === 0 && lng === 0)) return false
+            if (isNaN(lat) || isNaN(lng) || (lat === 0 && lng === 0))
+              return false;
 
-            const centerLat = Number(filtros.lat)
-            const centerLng = Number(filtros.lng)
-            const radiusKm = filtros.radius || 1 // 1 km por defecto (igual que en el mapa)
+            const centerLat = Number(filtros.lat);
+            const centerLng = Number(filtros.lng);
+            const radiusKm = filtros.radius || 1; // 1 km por defecto (igual que en el mapa)
 
             // Fórmula matemática para calcular distancia exacta en esfera (Tierra)
-            const R = 6371 // Radio de la Tierra en km
-            const dLat = ((lat - centerLat) * Math.PI) / 180
-            const dLng = ((lng - centerLng) * Math.PI) / 180
+            const R = 6371; // Radio de la Tierra en km
+            const dLat = ((lat - centerLat) * Math.PI) / 180;
+            const dLng = ((lng - centerLng) * Math.PI) / 180;
             const a =
               Math.sin(dLat / 2) * Math.sin(dLat / 2) +
               Math.cos((centerLat * Math.PI) / 180) *
                 Math.cos((lat * Math.PI) / 180) *
                 Math.sin(dLng / 2) *
-                Math.sin(dLng / 2)
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-            const distancia = R * c
+                Math.sin(dLng / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            const distancia = R * c;
 
             // Solo retorna true si la propiedad está estrictamente dentro del radio
-            return distancia <= radiusKm
+            return distancia <= radiusKm;
           })
-        : inmuebles
+        : inmuebles;
 
-    if (filtros.fecha === 'mas-populares') {
-      console.log('🔥 Entrando al bloque mas-populares')
+    if (filtros.fecha === "mas-populares") {
+      console.log("🔥 Entrando al bloque mas-populares");
       const vistas = await prisma.propiedad_vista.groupBy({
-        by: ['inmuebleId'],
+        by: ["inmuebleId"],
         _count: { usuarioId: true }, // usuarios únicos por inmueble
-        orderBy: { _count: { usuarioId: 'desc' } }
-      })
-      const vistaMap = new Map(vistas.map((v) => [v.inmuebleId, v._count.usuarioId ?? 0]))
-      return resultados.sort((a, b) => (vistaMap.get(b.id) ?? 0) - (vistaMap.get(a.id) ?? 0))
+        orderBy: { _count: { usuarioId: "desc" } },
+      });
+      const vistaMap = new Map(
+        vistas.map((v) => [v.inmuebleId, v._count.usuarioId ?? 0]),
+      );
+      return resultados.sort(
+        (a, b) => (vistaMap.get(b.id) ?? 0) - (vistaMap.get(a.id) ?? 0),
+      );
     }
-    if (filtros.fecha === 'mayor-descuento') {
+    if (filtros.fecha === "mayor-descuento") {
       return resultados.sort((a, b) => {
-        const precioAnteriorA = Number((a as any).precio_anterior ?? 0)
-        const precioActualA = Number(a.precio)
+        const precioAnteriorA = Number((a as any).precio_anterior ?? 0);
+        const precioActualA = Number(a.precio);
 
-        const precioAnteriorB = Number((b as any).precio_anterior ?? 0)
-        const precioActualB = Number(b.precio)
+        const precioAnteriorB = Number((b as any).precio_anterior ?? 0);
+        const precioActualB = Number(b.precio);
 
         const descuentoA =
           precioAnteriorA > precioActualA
             ? ((precioAnteriorA - precioActualA) / precioAnteriorA) * 100
-            : 0
+            : 0;
 
         const descuentoB =
           precioAnteriorB > precioActualB
             ? ((precioAnteriorB - precioActualB) / precioAnteriorB) * 100
-            : 0
+            : 0;
 
-        return descuentoB - descuentoA
-      })
+        return descuentoB - descuentoA;
+      });
     }
 
-    return resultados
+    return resultados;
   },
   // NUEVO MÉTODO PARA EL COMPARADOR
   async getByIds(ids: number[]) {
     const inmuebles = await prisma.inmueble.findMany({
       where: {
         id: { in: ids },
-        estado: 'ACTIVO'
+        estado: "ACTIVO",
       },
       // Incluimos exactamente lo necesario para la matriz comparativa
       include: {
         publicaciones: {
-          where: { estado: 'ACTIVA' },
-          include: { multimedia: true }
+          where: { estado: "ACTIVA" },
+          include: { multimedia: true },
         },
         inmueble_etiqueta: {
-          include: { etiqueta: true }
+          include: { etiqueta: true },
         },
         inmueble_amenidad: {
-          include: { amenidad: true }
-        }
-      }
-    })
+          include: { amenidad: true },
+        },
+      },
+    });
 
-    return inmuebles
-  }
-}
+    return inmuebles;
+  },
+};
