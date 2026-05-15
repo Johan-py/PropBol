@@ -619,11 +619,12 @@ const [poiSeleccionado, setPoiSeleccionado] = useState<number | null>(null)
       }
 
       const publicacionId = result?.property?.publicacion?.id
+      const inmuebleId = result?.property?.inmueble?.id
       for (const poi of pois) {
   if (!poi.nombre.trim()) continue
 
   const responsePoi = await fetch(
-    `${API_URL}/api/pois/inmueble/${publicacionId}`,
+    `${API_URL}/api/pois/inmueble/${inmuebleId}`,
     {
       method: 'POST',
       headers: {
