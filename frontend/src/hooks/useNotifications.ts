@@ -399,138 +399,163 @@ export function useNotifications() {
   useEffect(() => {
     const handleAuthStateChanged = () => {
       if (!getStoredToken()) {
-        clearNotificationsState()
-        return
+        clearNotificationsState();
+        return;
       }
 
-      void refreshNotifications(filter, { silent: true })
-    }
+      void refreshNotifications(filter, { silent: true });
+    };
 
     const handleStorage = (event: StorageEvent) => {
       if (
-        event.key === 'token' ||
-        event.key === 'propbol_user' ||
-        event.key === 'propbol_session_expires'
+        event.key === "token" ||
+        event.key === "propbol_user" ||
+        event.key === "propbol_session_expires"
       ) {
-        handleAuthStateChanged()
+        handleAuthStateChanged();
       }
-    }
+    };
 
-    window.addEventListener(AUTH_STATE_CHANGED_EVENT, handleAuthStateChanged)
-    window.addEventListener('storage', handleStorage)
+    window.addEventListener(AUTH_STATE_CHANGED_EVENT, handleAuthStateChanged);
+    window.addEventListener("storage", handleStorage);
 
     return () => {
-      window.removeEventListener(AUTH_STATE_CHANGED_EVENT, handleAuthStateChanged)
-      window.removeEventListener('storage', handleStorage)
-    }
-  }, [clearNotificationsState, filter, refreshNotifications])
+      window.removeEventListener(
+        AUTH_STATE_CHANGED_EVENT,
+        handleAuthStateChanged,
+      );
+      window.removeEventListener("storage", handleStorage);
+    };
+  }, [clearNotificationsState, filter, refreshNotifications]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-        setOpen(false)
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
       }
-    }
+    };
 
-    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
-    if (!open) return
+    if (!open) return;
 
     const restoreScroll = () => {
       if (scrollContainerRef.current) {
-        scrollContainerRef.current.scrollTop = savedScrollTopRef.current
+        scrollContainerRef.current.scrollTop = savedScrollTopRef.current;
       }
-    }
+    };
 
-    restoreScroll()
+    restoreScroll();
 
-    const frame = window.requestAnimationFrame(restoreScroll)
+    const frame = window.requestAnimationFrame(restoreScroll);
 
     return () => {
-      window.cancelAnimationFrame(frame)
-    }
-  }, [open, notifications.length])
+      window.cancelAnimationFrame(frame);
+    };
+  }, [open, notifications.length]);
 
   useEffect(() => {
-    savedScrollTopRef.current = 0
+    savedScrollTopRef.current = 0;
 
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTop = 0
+      scrollContainerRef.current.scrollTop = 0;
     }
-  }, [filter])
+  }, [filter]);
+
+  // Refrescar silenciosamente al abrir el panel para mostrar datos frescos
+  useEffect(() => {
+    if (open && !wasOpenRef.current) {
+      void refreshNotifications(filter, { silent: true });
+    }
+    wasOpenRef.current = open;
+  }, [open, filter, refreshNotifications]);
 
   useEffect(() => {
-    const token = getStoredToken()
+    const token = getStoredToken();
 
     if (!token || !isLoggedIn || !isOnline) {
       if (eventSourceRef.current) {
-        eventSourceRef.current.close()
-        eventSourceRef.current = null
+        eventSourceRef.current.close();
+        eventSourceRef.current = null;
       }
 
-      return
+      return;
     }
 
     if (eventSourceRef.current) {
-      eventSourceRef.current.close()
-      eventSourceRef.current = null
+      eventSourceRef.current.close();
+      eventSourceRef.current = null;
     }
 
-    const streamUrl = `${API_URL}/notificaciones/stream?token=${encodeURIComponent(token)}`
-    const eventSource = new EventSource(streamUrl)
+    const streamUrl = `${API_URL}/notificaciones/stream?token=${encodeURIComponent(token)}`;
+    const eventSource = new EventSource(streamUrl);
 
-    eventSourceRef.current = eventSource
+    eventSourceRef.current = eventSource;
 
-    eventSource.addEventListener('connected', () => {})
-    eventSource.addEventListener('created', () => {
-    setHasRealtimeUpdate(true)
-    void refreshNotifications(filter, { silent: true })
+    eventSource.addEventListener("connected", () => {});
+    eventSource.addEventListener("created", () => {
+      setHasRealtimeUpdate(true);
+      void refreshNotifications(filter, { silent: true });
 
     window.setTimeout(() => {
-     setHasRealtimeUpdate(false)
-    }, 3000)
-  })
+        setHasRealtimeUpdate(false);
+      }, 3000);
+    });
 
-    const realtimeEvents = ['read', 'read-all', 'deleted', 'archived']
+    const realtimeEvents = ["read", "read-all", "deleted", "archived"];
 
       realtimeEvents.forEach((eventName) => {
       eventSource.addEventListener(eventName, () => {
-        void refreshNotifications(filter, { silent: true })
-      })
-    })
+        void refreshNotifications(filter, { silent: true });
+      });
+    });
 
-eventSource.addEventListener('ping', () => {})
+    eventSource.addEventListener("ping", () => {});
 
     eventSource.onerror = () => {
-      eventSource.close()
-      eventSourceRef.current = null
+      eventSource.close();
+      eventSourceRef.current = null;
 
       window.setTimeout(() => {
-        const latestToken = getStoredToken()
+        const latestToken = getStoredToken();
 
-        if (!latestToken || !window.navigator.onLine) return
+        if (!latestToken || !window.navigator.onLine) return;
 
-        void refreshNotifications(filter, { silent: true })
-      }, 2000)
-    }
+        void refreshNotifications(filter, { silent: true });
+      }, 2000);
+    };
 
     return () => {
-      eventSource.close()
+      eventSource.close();
 
       if (eventSourceRef.current === eventSource) {
-        eventSourceRef.current = null
+        eventSourceRef.current = null;
       }
-    }
-  }, [filter, isLoggedIn, isOnline, refreshNotifications])
+    };
+  }, [filter, isLoggedIn, isOnline, refreshNotifications]);
 
-  const filteredNotifications = useMemo(() => notifications, [notifications])
-  const visibleNotifications = useMemo(() => notifications, [notifications])
+  // Polling de 60s como fallback cuando SSE no está disponible
+  useEffect(() => {
+    if (!isLoggedIn || !isOnline) return;
+
+    const interval = window.setInterval(() => {
+      void refreshNotifications(filter, { silent: true });
+    }, 60000);
+
+    return () => window.clearInterval(interval);
+  }, [isLoggedIn, isOnline, filter, refreshNotifications]);
+
+  const filteredNotifications = useMemo(() => notifications, [notifications]);
+  const visibleNotifications = useMemo(() => notifications, [notifications]);
 
   return {
     open,
@@ -558,6 +583,6 @@ eventSource.addEventListener('ping', () => {})
     hasMore,
     refreshNotifications,
     isLoggedIn,
-    setIsLoggedIn
-  }
+    setIsLoggedIn,
+  };
 }
