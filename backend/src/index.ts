@@ -1,4 +1,5 @@
 import path from "path";
+import http from "http";
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
@@ -9,7 +10,8 @@ import zonaRoutes from "./modules/perfil/zonaUsario.routes.js";
 import telemetriaRouter from "./modules/perfil/telemetria.routes.js";
 import locationRoutes from "./modules/locations/locations.routes.js";
 import consumoRoutes from "./modules/LimiteSuscripcion/consumo.routes.js";
-import { iniciarCronRetroalimentacion } from "./modules/recomendaciones/retroalimentacionCron.js";
+import { iniciarCronRetroalimentacion } from './modules/recomendaciones/retroalimentacionCron.js'
+import mlRoutes from './modules/ml/ml.routes.js'
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -52,8 +54,8 @@ import {
   requestActivationCodeController,
   activateAccountByCodeController,
   resendRegisterCodeController,
-} from "./modules/auth/auth.controller.js";
-import { requireAuth } from "./middleware/auth.middleware.js";
+} from './modules/auth/auth.controller.js'
+import { requireAuth } from './middleware/auth.middleware.js'
 
 // --------------------
 // ROUTES / HANDLERS
@@ -93,7 +95,6 @@ import tutorialPublicacionRoutes from "./modules/tutorial-publicacion/tutorial-p
 import estadisticasRoutes from "./modules/estadisticas-publicacion/estadisticas.routes.js";
 import tagsRoutes from "./modules/tags/tags.routes.js";
 import estadisticasZonaRoutes from "./modules/estadisticas-zona/estadisticas-zona.routes.js";
-
 
 import {
   facebookCallbackController,
@@ -145,6 +146,7 @@ import adminPlanesRoutes from "./modules/planes/adminPlanes.routes.js";
 import sesionRoutes from "./modules/perfil/sesion.routes.js";
 
 import "./jobs/suscripcion.job.js";
+import { initSocket } from "./services/socket.service.js";
 
 // --------------------
 // SERVER
@@ -178,10 +180,10 @@ app.use(
   }),
 );
 
-app.use(express.json({ limit: "100mb" }));
-app.use(express.urlencoded({ extended: true, limit: "100mb" }));
-app.use(express.json());
-app.use("/uploads", express.static(path.resolve("uploads")));
+app.use(express.json({ limit: '100mb' }))
+app.use(express.urlencoded({ extended: true, limit: '100mb' }))
+app.use(express.json())
+app.use('/uploads', express.static(path.resolve('uploads')))
 
 // --------------------
 // RUTAS LEGACY
@@ -199,7 +201,7 @@ app.get("/api/users/:id/publicaciones/free", authMiddleware, (_req, res) => {
 app.get(
   "/api/publicaciones/validar-limite/:id",
   authMiddleware,
-  validarPublicacionesFree,
+  validarPublicacionesFree
 );
 app.use("/api/publicaciones-legacy", publicacionesRoutes);
 
@@ -229,7 +231,7 @@ app.use("/api/perfil/usuario", perfilRoutes);
 app.use("/api/perfil/zonas", zonaRoutes);
 app.use("/api/perfil/historial", historialRoutes);
 app.use("/api/perfil/historial-busqueda", historialBusquedaRoutes);
-app.use('/api/sesion', sesionRoutes);
+app.use("/api/sesion", sesionRoutes);
 app.use("/api", router);
 app.use("/api", parametrosRoutes);
 app.use("/api/security", securityRoutes);
@@ -241,7 +243,7 @@ app.use("/api/testimonios", testimoniosRoutes);
 app.use("/api/telemetria", telemetriaRouter);
 app.use("/api/comparaciones", comparacionRoutes);
 app.use("/api/sesiones", sesionRoutes);
-
+app.use('/api/ml', mlRoutes)
 app.use("/api/transacciones", transaccionesRoutes);
 app.use("/api/suscripciones", suscripcionesRoutes);
 app.use("/api/planes", plansRoutes);
@@ -437,9 +439,12 @@ async function seedPlanes() {
   console.log("Ô£à Planes de suscripci├│n inicializados en DB");
 }
 
-iniciarCronRetroalimentacion();
+iniciarCronRetroalimentacion()
 
-app.listen(PORT, async () => {
+const server = http.createServer(app);
+initSocket(server);
+
+server.listen(PORT, async () => {
   console.log(`­ƒÜÇ Server running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);
 
@@ -457,4 +462,4 @@ app.listen(PORT, async () => {
   }
 });
 
-export default app;
+export default app
