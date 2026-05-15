@@ -621,6 +621,292 @@ model spatial_ref_sys {
   proj4text String? @db.VarChar(2048)
 }
 
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model amenidad {
+  id                Int                 @id @default(autoincrement())
+  nombre            String              @unique @db.VarChar(255)
+  inmueble_amenidad inmueble_amenidad[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model barrio {
+  id                 Int                 @id @default(autoincrement())
+  nombre             String              @db.VarChar(255)
+  zona_id            Int
+  zona               zona_geografica     @relation(fields: [zona_id], references: [id], onUpdate: NoAction, map: "barrio_zona_fk")
+  ubicacion_inmueble UbicacionInmueble[]
+
+  @@unique([nombre, zona_id], map: "barrio_nombre_zona_unique")
+}
+
+model blog {
+  id                Int            @id @default(autoincrement())
+  titulo            String
+  contenido         String
+  imagen            String?
+  estado            estado_blog
+  eliminado         Boolean?       @default(false)
+  fecha_creacion    DateTime?      @default(now()) @db.Timestamp(6)
+  fecha_publicacion DateTime?      @db.Timestamp(6)
+  usuario_id        Int
+  categoria_id      Int
+  categoria_blog    categoria_blog @relation(fields: [categoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "blog_categoria_fk")
+  usuario           Usuario        @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "blog_usuario_fk")
+  blog_rechazo      blog_rechazo[]
+  comentario        comentario[]
+  notificacion      Notificacion[]
+
+  @@index([estado])
+  @@index([usuario_id], map: "blog_usuario_idx")
+}
+
+model blog_rechazo {
+  id         Int       @id @default(autoincrement())
+  comentario String
+  fecha      DateTime? @default(now()) @db.Timestamp(6)
+  blog_id    Int
+  blog       blog      @relation(fields: [blog_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "blog_rechazo_blog_fk")
+}
+
+model categoria_blog {
+  id     Int    @id @default(autoincrement())
+  nombre String @unique @db.VarChar(100)
+  blog   blog[]
+}
+
+model comentario {
+  id                  Int               @id @default(autoincrement())
+  contenido           String
+  fecha_creacion      DateTime?         @default(now()) @db.Timestamp(6)
+  usuario_id          Int
+  blog_id             Int
+  comentario_padre_id Int?
+  blog                blog              @relation(fields: [blog_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "comentario_blog_fk")
+  comentario          comentario?       @relation("comentarioTocomentario", fields: [comentario_padre_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "comentario_padre_fk")
+  other_comentario    comentario[]      @relation("comentarioTocomentario")
+  usuario             Usuario           @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "comentario_usuario_fk")
+  comentario_like     comentario_like[]
+
+  @@index([blog_id], map: "comentario_blog_idx")
+}
+
+model comentario_like {
+  id            Int        @id @default(autoincrement())
+  usuario_id    Int
+  comentario_id Int
+  comentario    comentario @relation(fields: [comentario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "comentario_like_comentario_fk")
+  usuario       Usuario    @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "comentario_like_usuario_fk")
+
+  @@unique([usuario_id, comentario_id], map: "comentario_like_unique")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model departamento {
+  id         Int         @id @default(autoincrement())
+  nombre     String      @unique @db.VarChar(255)
+  provincias provincia[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model inmueble_amenidad {
+  inmueble_id Int
+  amenidad_id Int
+  amenidad    amenidad @relation(fields: [amenidad_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "inmueble_amenidad_amenidad_fk")
+  inmueble    Inmueble @relation(fields: [inmueble_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "inmueble_amenidad_inmueble_fk")
+
+  @@id([inmueble_id, amenidad_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model municipio {
+  id           Int               @id @default(autoincrement())
+  nombre       String            @db.VarChar(255)
+  provincia_id Int?              @map("provincia")
+  provincia    provincia?        @relation(fields: [provincia_id], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  zonas        zona_geografica[]
+
+  @@unique([nombre, provincia_id], map: "municipio_nombre_provincia_unique")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model provincia {
+  id              Int          @id @default(autoincrement())
+  nombre          String       @db.VarChar(255)
+  departamento_id Int          @map("departamento")
+  municipios      municipio[]
+  departamento    departamento @relation(fields: [departamento_id], references: [id], onUpdate: NoAction)
+
+  @@unique([nombre, departamento_id], map: "provincia_nombre_departamento_unique")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model zona_geografica {
+  id           Int       @id @default(autoincrement())
+  nombre       String    @db.VarChar(255)
+  municipio_id Int       @map("municipio")
+  barrios      barrio[]
+  municipio    municipio @relation(fields: [municipio_id], references: [id], onUpdate: NoAction)
+
+  @@unique([nombre, municipio_id], map: "zona_geografica_nombre_municipio_unique")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model entrenamiento_ml {
+  id                Int      @id @default(autoincrement())
+  usuario_id        Int
+  inmueble_id       Int
+  tipo_evento       String   @default("CLICK") @db.VarChar(20)
+  score_real        Float    @default(0) @db.Real
+  retroalimentacion Int?     @db.SmallInt
+  features          Json?
+  fecha_evento      DateTime @default(now()) @db.Timestamp(6)
+  usado_en_modelo   Boolean  @default(false)
+  version_modelo    String?  @db.VarChar(20)
+  inmueble          Inmueble @relation(fields: [inmueble_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  usuario           Usuario  @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([fecha_evento(sort: Desc)], map: "idx_ml_fecha")
+  @@index([tipo_evento], map: "idx_ml_tipo_evento")
+  @@index([usuario_id, usado_en_modelo], map: "idx_ml_usuario_usado")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model magic_link {
+  id                Int       @id @default(autoincrement())
+  usuario_id        Int
+  token_hash        String    @unique @db.VarChar(64)
+  correo            String    @db.VarChar(255)
+  expira_en         DateTime  @db.Timestamptz(6)
+  usado_en          DateTime? @db.Timestamptz(6)
+  activo            Boolean?  @default(true)
+  creado_en         DateTime? @default(now()) @db.Timestamptz(6)
+  intentos_reenvio  Int?      @default(0)
+  ultimo_reenvio_en DateTime? @db.Timestamptz(6)
+  invalidado_en     DateTime? @db.Timestamptz(6)
+  usuario           Usuario   @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([token_hash], map: "idx_magic_link_token_hash")
+  @@index([usuario_id], map: "idx_magic_link_usuario")
+  @@index([usuario_id, activo], map: "idx_magic_link_usuario_activo")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model modelo_version {
+  id           Int      @id @default(autoincrement())
+  version      String   @unique @db.VarChar(20)
+  archivo_path String   @db.VarChar(255)
+  algoritmo    String   @db.VarChar(50)
+  precision    Float?   @db.Real
+  recall       Float?   @db.Real
+  datos_usados Int?
+  activo       Boolean  @unique(map: "idx_modelo_activo", where: raw("(activo = true)")) @default(false)
+  entrenado_en DateTime @default(now()) @db.Timestamp(6)
+  notas        String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model publicacion_compartido {
+  id             Int      @id @default(autoincrement())
+  publicacion_id Int
+  usuario_id     Int
+  medio          String?  @db.VarChar(50)
+  creado_en      DateTime @default(now()) @db.Timestamp(6)
+
+  @@index([publicacion_id], map: "idx_publicacion_compartido_publicacion")
+  @@index([usuario_id], map: "idx_publicacion_compartido_usuario")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model publicacion_estadistica {
+  id                    Int      @id @default(autoincrement())
+  publicacion_id        Int      @unique
+  total_visualizaciones Int      @default(0)
+  total_compartidos     Int      @default(0)
+  actualizado_en        DateTime @default(now()) @db.Timestamp(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model publicacion_vista {
+  id             Int      @id @default(autoincrement())
+  publicacion_id Int
+  usuario_id     Int?
+  visitor_id     Int?
+  ip             String?
+  user_agent     String?
+  creado_en      DateTime @default(now()) @db.Timestamp(6)
+
+  @@index([publicacion_id], map: "idx_publicacion_vista_publicacion")
+  @@index([usuario_id], map: "idx_publicacion_vista_usuario")
+  @@index([visitor_id], map: "idx_publicacion_vista_visitor")
+}
+
+model punto_interes {
+  id          Int     @id @default(autoincrement())
+  nombre      String
+  latitud     Decimal @db.Decimal(10, 7)
+  longitud    Decimal @db.Decimal(10, 7)
+  inmueble_id Int
+
+  @@index([inmueble_id], map: "idx_punto_interes_inmueble")
+}
+
+model testimonio {
+  id              Int               @id @default(autoincrement())
+  comentario      String
+  calificacion    Int?
+  visible         Boolean?          @default(true)
+  eliminado       Boolean?          @default(false)
+  fecha_creacion  DateTime?         @default(now()) @db.Timestamp(6)
+  usuario_id      Int
+  ciudad          String?           @db.VarChar(100)
+  zona            String?           @db.VarChar(100)
+  categoria       String?           @db.VarChar(255)
+  usuario         Usuario           @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  testimonio_like testimonio_like[]
+}
+
+model testimonio_like {
+  id            Int        @id @default(autoincrement())
+  testimonio_id Int
+  usuario_id    Int
+  creado_en     DateTime?  @default(now()) @db.Timestamp(6)
+  testimonio    testimonio @relation(fields: [testimonio_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  usuario       Usuario    @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([testimonio_id, usuario_id], map: "uq_testimonio_like")
+}
+
+model tutorial_publicacion_usuario {
+  id            Int       @id @default(autoincrement())
+  usuario_id    Int       @unique
+  confirmado    Boolean   @default(false)
+  visto_en      DateTime? @db.Timestamp(6)
+  confirmado_en DateTime? @db.Timestamp(6)
+  usuario       Usuario   @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model Tag {
+  id              Int               @id @default(autoincrement())
+  nombre          String            @unique @db.VarChar(30)
+  creado_en       DateTime?         @default(now()) @db.Timestamptz(6)
+  publicacion_tag publicacion_tag[]
+
+  @@map("tag")
+}
+
+model publicacion_tag {
+  publicacion_id Int
+  tag_id         Int
+  agregado_en    DateTime    @default(now()) @db.Timestamptz(6)
+  publicacion    Publicacion @relation(fields: [publicacion_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  tag            Tag         @relation(fields: [tag_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([publicacion_id, tag_id])
+  @@index([tag_id])
+  @@map("publicacion_tag")
+}
+
 enum Genero {
   MASCULINO
   FEMENINO
