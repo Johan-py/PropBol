@@ -107,10 +107,10 @@ export class EstadisticasPublicacionController {
 
       const resultado =
         await EstadisticasPublicacionService.registrarVistaPorInmueble({
-        inmuebleId,
-        usuarioId,
-        visitorToken,
-        ip,
+          inmuebleId,
+          usuarioId,
+          visitorToken,
+          ip,
           userAgent,
         });
 
@@ -163,8 +163,8 @@ export class EstadisticasPublicacionController {
 
       const resultado =
         await EstadisticasPublicacionService.registrarCompartido({
-        publicacionId,
-        usuarioId,
+          publicacionId,
+          usuarioId,
           medio,
         });
 
@@ -209,8 +209,8 @@ export class EstadisticasPublicacionController {
 
       const resultado =
         await EstadisticasPublicacionService.registrarCompartidoPorInmueble({
-        inmuebleId,
-        usuarioId,
+          inmuebleId,
+          usuarioId,
           medio,
         });
 
@@ -254,7 +254,7 @@ export class EstadisticasPublicacionController {
 
       const estadisticas =
         await EstadisticasPublicacionService.obtenerEstadisticas({
-        publicacionId,
+          publicacionId,
           usuarioId,
         });
 
