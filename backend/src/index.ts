@@ -297,108 +297,80 @@ app.get("/api/auth/facebook/login", startFacebookLoginController);
 app.get("/api/auth/facebook/register", startFacebookRegisterController);
 app.get("/api/auth/facebook/callback", facebookCallbackController);
 
-app.get("/api/auth/social-links", requireAuth, getSocialLinksController);
-app.get(
-  "/api/auth/linkedin/original-email",
-  requireAuth,
-  getLinkedInOriginalEmailController,
-);
-app.delete(
-  "/api/auth/social-links/:provider",
-  requireAuth,
-  unlinkSocialProviderController,
-);
-app.get(
-  "/api/auth/facebook/link-url",
-  requireAuth,
-  getFacebookLinkUrlController,
-);
-app.get("/api/auth/discord/link-url", requireAuth, getDiscordLinkUrlController);
-app.get("/api/auth/google/link-url", requireAuth, getGoogleLinkUrlController);
-app.get("/api/auth/linkedin/login", startLinkedInLoginController);
-app.get("/api/auth/linkedin/callback", linkedInCallbackController);
-app.get(
-  "/api/auth/linkedin/link-url",
-  requireAuth,
-  getLinkedInLinkUrlController,
-);
-app.get("/api/auth/linkedin/register", startLinkedInRegisterController);
+app.get('/api/auth/social-links', requireAuth, getSocialLinksController)
+app.get('/api/auth/linkedin/original-email', requireAuth, getLinkedInOriginalEmailController)
+app.delete('/api/auth/social-links/:provider', requireAuth, unlinkSocialProviderController)
+app.get('/api/auth/facebook/link-url', requireAuth, getFacebookLinkUrlController)
+app.get('/api/auth/discord/link-url', requireAuth, getDiscordLinkUrlController)
+app.get('/api/auth/google/link-url', requireAuth, getGoogleLinkUrlController)
+app.get('/api/auth/linkedin/login', startLinkedInLoginController)
+app.get('/api/auth/linkedin/callback', linkedInCallbackController)
+app.get('/api/auth/linkedin/link-url', requireAuth, getLinkedInLinkUrlController)
+app.get('/api/auth/linkedin/register', startLinkedInRegisterController)
 //comentario
 
 // --------------------
 // BANNERS & FILTERS
 // --------------------
-const bannersController = new BannersController();
-const filtersController = new FiltersHomepageController();
+const bannersController = new BannersController()
+const filtersController = new FiltersHomepageController()
 
-app.get("/api/filters", filtersController.getFilters);
-app.get("/api/banners", (req, res) => bannersController.getBanners(req, res));
-const cityController = new CityController();
+app.get('/api/filters', filtersController.getFilters)
+app.get('/api/banners', (req, res) => bannersController.getBanners(req, res))
+const cityController = new CityController()
 
-app.get("/api/filters", filtersController.getFilters);
-app.get("/api/banners", (req, res) => bannersController.getBanners(req, res));
-app.get("/api/cities", (req, res) => cityController.getFeatured(req, res));
+app.get('/api/filters', filtersController.getFilters)
+app.get('/api/banners', (req, res) => bannersController.getBanners(req, res))
+app.get('/api/cities', (req, res) => cityController.getFeatured(req, res))
 
 // --------------------
 // LOCATIONS
 // --------------------
-app.get("/api/zonas", getZonasController);
+app.get('/api/zonas', getZonasController)
 
-app.get("/api/locations/search", async (req: Request, res: Response) => {
-  await locationSearchHandler(req as any, res as any);
-});
-app.get("/api/locations/search", async (req: Request, res: Response) => {
+app.get('/api/locations/search', async (req: Request, res: Response) => {
+  await locationSearchHandler(req as any, res as any)
+})
+app.get('/api/locations/search', async (req: Request, res: Response) => {
   // @ts-ignore
-  await locationSearchHandler(req, res);
-});
+  await locationSearchHandler(req, res)
+})
 
 // --------------------
 // HEALTH
 // --------------------
-app.get("/health", (_req, res) => {
-  res.json({ status: "ok", message: "Backend is running" });
-});
+app.get('/health', (_req, res) => {
+  res.json({ status: 'ok', message: 'Backend is running' })
+})
 
 // --------------------
 // PROPERTIES
 // --------------------
-app.get("/api/properties/search", propertiesController.search);
-app.get("/api/inmuebles", propertiesController.getAll);
-app.get("/api/properties/inmuebles", propertiesController.getAll);
-app.use("/api/propiedad", propiedadRoutes);
+app.get('/api/properties/search', propertiesController.search)
+app.get('/api/inmuebles', propertiesController.getAll)
+app.get('/api/properties/inmuebles', propertiesController.getAll)
+app.use('/api/propiedad', propiedadRoutes)
 
 // --------------------
 // NOTIFICACIONES
 // --------------------
-app.post("/notificaciones", requireAuth, createNotificationController);
-app.get("/notificaciones", requireAuth, getNotificationsController);
-app.get("/notificaciones/unread-count", requireAuth, getUnreadCountController);
-app.use("/notificaciones", notificationStreamRoutes);
-app.get("/notificaciones/:id", requireAuth, getNotificationByIdController);
-app.patch(
-  "/notificaciones/:id/read",
-  requireAuth,
-  markNotificationAsReadController,
-);
-app.patch(
-  "/notificaciones/read-all",
-  requireAuth,
-  markAllNotificationsAsReadController,
-);
-app.delete("/notificaciones/:id", requireAuth, deleteNotificationController);
-app.patch(
-  "/notificaciones/:id/archivar",
-  requireAuth,
-  archiveNotificationController,
-);
+app.post('/notificaciones', requireAuth, createNotificationController)
+app.get('/notificaciones', requireAuth, getNotificationsController)
+app.get('/notificaciones/unread-count', requireAuth, getUnreadCountController)
+app.use('/notificaciones', notificationStreamRoutes)
+app.get('/notificaciones/:id', requireAuth, getNotificationByIdController)
+app.patch('/notificaciones/:id/read', requireAuth, markNotificationAsReadController)
+app.patch('/notificaciones/read-all', requireAuth, markAllNotificationsAsReadController)
+app.delete('/notificaciones/:id', requireAuth, deleteNotificationController)
+app.patch('/notificaciones/:id/archivar', requireAuth, archiveNotificationController)
 
 // --------------------
 // PUBLICACIONES MOCK
 // --------------------
-app.post("/api/publicaciones", (req, res) => {
-  const nuevaPublicacion = req.body;
-  res.json({ message: "Publicaci├│n creada", publicacion: nuevaPublicacion });
-});
+app.post('/api/publicaciones', (req, res) => {
+  const nuevaPublicacion = req.body
+  res.json({ message: 'Publicaci├│n creada', publicacion: nuevaPublicacion })
+})
 
 // --------------------
 // TESTIMONIOSADMIN
@@ -409,37 +381,37 @@ app.use("/api/admin", adminPlanesRoutes);
 // --------------------
 // LEVANTAR SERVIDOR
 // --------------------
-const PORT = Number(process.env.PORT) || 5000;
+const PORT = Number(process.env.PORT) || 5000
 
 async function seedPlanes() {
-  const count = await prisma.plan_suscripcion.count();
-  if (count > 0) return;
+  const count = await prisma.plan_suscripcion.count()
+  if (count > 0) return
   await prisma.plan_suscripcion.createMany({
     data: [
       {
-        nombre_plan: "B├ísico",
+        nombre_plan: 'B├ísico',
         precio_plan: 0,
         nro_publicaciones_plan: 3,
         duracion_plan_dias: 30,
-        imagen_gr_url: "/qrs/basico.png",
+        imagen_gr_url: '/qrs/basico.png'
       },
       {
-        nombre_plan: "Est├índar",
+        nombre_plan: 'Est├índar',
         precio_plan: 99,
         nro_publicaciones_plan: 10,
         duracion_plan_dias: 30,
-        imagen_gr_url: "/qrs/estandar.png",
+        imagen_gr_url: '/qrs/estandar.png'
       },
       {
-        nombre_plan: "Pro",
+        nombre_plan: 'Pro',
         precio_plan: 199,
         nro_publicaciones_plan: 100,
         duracion_plan_dias: 30,
-        imagen_gr_url: "/qrs/pro.png",
-      },
-    ],
-  });
-  console.log("Ô£à Planes de suscripci├│n inicializados en DB");
+        imagen_gr_url: '/qrs/pro.png'
+      }
+    ]
+  })
+  console.log('Ô£à Planes de suscripci├│n inicializados en DB')
 }
 
 iniciarCronRetroalimentacion()
@@ -450,19 +422,23 @@ initSocket(server);
 server.listen(PORT, async () => {
   console.log(`­ƒÜÇ Server running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);
+  await cargarModeloActivo()
+
 
   try {
-    await seedPlanes();
+    await seedPlanes()
   } catch (error) {
-    console.error("ÔØî Error al inicializar planes:", error);
+    console.error('ÔØî Error al inicializar planes:', error)
   }
 
+   
+
   try {
-    await verifyEmailTransport();
-    console.log("Ô£à Servicio de email de registro listo");
+    await verifyEmailTransport()
+    console.log('Ô£à Servicio de email de registro listo')
   } catch (error) {
-    console.error("ÔØî Error en configuraci├│n de email de registro:", error);
+    console.error('ÔØî Error en configuraci├│n de email de registro:', error)
   }
-});
+})
 
 export default app
