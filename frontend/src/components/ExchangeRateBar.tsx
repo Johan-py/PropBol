@@ -13,6 +13,7 @@ export default function ExchangeRateBar({
   updatedAt,
   isLoading = false,
 }: ExchangeRateBarProps) {
+  const hasOfficialRate = officialRate > 0;
   const isHigher = referentialRate !== null && referentialRate > officialRate;
   const isLower = referentialRate !== null && referentialRate < officialRate;
   const TrendIcon = isHigher ? ArrowUpRight : ArrowDownRight;
@@ -33,7 +34,7 @@ export default function ExchangeRateBar({
       <div className="mx-auto flex max-w-[1600px] flex-col gap-3 px-4 py-3 text-sm text-stone-600 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <span className="flex items-center gap-2 font-medium"><BadgeDollarSign className="h-4 w-4 text-emerald-600" />Tipo de Cambio:</span>
-          <span>Oficial: <strong className="text-stone-900">Bs {officialRate.toFixed(2)}</strong></span>
+          <span>Oficial: <strong className="text-stone-900">{hasOfficialRate ? `Bs ${officialRate.toFixed(2)}` : "No disponible"}</strong></span>
           <span className="hidden text-stone-300 sm:inline">|</span>
           <span className="flex items-center gap-1 text-[#D97706]">
             Referencial:{" "}
