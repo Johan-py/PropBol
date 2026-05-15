@@ -13,7 +13,7 @@ export interface MisPublicacionesItem {
   // Estadísticas de la publicación
   totalVisualizaciones?: number;
   totalCompartidos?: number;
-  
+
   metricas?: {
     visitas: number;
     favoritos: number;
