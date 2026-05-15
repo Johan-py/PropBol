@@ -104,7 +104,7 @@ function ParametrosPageContent() {
           fetch(`${getApiUrl()}/api/parametros`),
           fetch(`${getApiUrl()}/api/publicaciones/${publicacionId}/parametros`),
           fetch(`${getApiUrl()}/api/tags`),
-          fetch(`${getApiUrl()}/api/publicaciones/${publicacionId}/tags`),
+          fetch(`${getApiUrl()}/api/tags/publicaciones/${publicacionId}`),
         ]);
 
         const catalogoJson = await catalogoRes.json().catch(() => null);
@@ -165,7 +165,7 @@ function ParametrosPageContent() {
       if (!token) throw new Error("No se encontró la sesión del usuario.");
 
       const response = await fetch(
-        `${getApiUrl()}/api/publicaciones/${publicacionId}/tags`,
+        `${getApiUrl()}/api/tags/publicaciones/${publicacionId}`,
         {
           method: "PUT",
           headers: {
