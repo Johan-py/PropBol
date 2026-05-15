@@ -222,29 +222,29 @@ export const enviarComprobantePago = async ({
       textContent: `Hola ${nombreUsuario},\n\nTu pago ha sido procesado.\n\nN° Transacción: #${idTransaccion}\nPlan: ${nombrePlan}\nFacturación: ${tipoFacturacion === "anual" ? "Anual" : "Mensual"}\nMonto: Bs. ${monto.toFixed(2)}\nFecha: ${fechaStr}\nMoneda: BOB / Bolivianos\n\nEl comprobante PDF está adjunto.`,
       attachment: {
         content: pdfBase64,
-        name: `comprobante-${idTransaccion}.pdf`
-      }
-    })
-  )
-}
+        name: `comprobante-${idTransaccion}.pdf`,
+      },
+    }),
+  );
+};
 
 export const verifyEmailTransport = async (): Promise<void> => {
   if (!env.EMAIL_USER || !env.EMAIL_PASSWORD) {
-    throw new Error('Credenciales de email no configuradas')
+    throw new Error("Credenciales de email no configuradas");
   }
-  console.log('✅ Servicio de email listo (Brevo API)')
-}
+  console.log("✅ Servicio de email listo (Brevo API)");
+};
 
 export const enviarCodigoCambioEmail = async ({
   emailDestino,
   codigo,
-  nombreUsuario
+  nombreUsuario,
 }: EnviarCodigoParams): Promise<EmailSendResult> => {
-  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : 'Hola,'
+  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : "Hola,";
 
   return sendBrevoEmail({
     to: emailDestino,
-    subject: 'Código de verificación - Cambio de email',
+    subject: "Código de verificación - Cambio de email",
     htmlContent: `
       <!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
       <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
@@ -269,20 +269,20 @@ export const enviarCodigoCambioEmail = async ({
         </div>
       </body></html>
     `,
-    textContent: `${saludo}\n\nTu código de verificación es: ${codigo}\n\nExpira en 5 minutos.`
-  })
-}
+    textContent: `${saludo}\n\nTu código de verificación es: ${codigo}\n\nExpira en 5 minutos.`,
+  });
+};
 
 export const enviarCodigoRegistro = async ({
   emailDestino,
   codigo,
-  nombreUsuario
+  nombreUsuario,
 }: EnviarCodigoParams): Promise<EmailSendResult> => {
-  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : 'Hola,'
+  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : "Hola,";
 
   return sendBrevoEmail({
     to: emailDestino,
-    subject: 'Código de verificación - Registro PropBol',
+    subject: "Código de verificación - Registro PropBol",
     htmlContent: `
       <!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
       <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
@@ -304,26 +304,26 @@ export const enviarCodigoRegistro = async ({
         </div>
       </body></html>
     `,
-    textContent: `${saludo}\n\nTu código de verificación es: ${codigo}\n\nExpira en 5 minutos.`
-  })
-}
+    textContent: `${saludo}\n\nTu código de verificación es: ${codigo}\n\nExpira en 5 minutos.`,
+  });
+};
 
 export const enviarCorreoRecuperacionPassword = async ({
   emailDestino,
   nombreUsuario,
   resetLink,
-  minutosExpiracion
+  minutosExpiracion,
 }: {
-  emailDestino: string
-  nombreUsuario?: string
-  resetLink: string
-  minutosExpiracion: number
+  emailDestino: string;
+  nombreUsuario?: string;
+  resetLink: string;
+  minutosExpiracion: number;
 }): Promise<EmailSendResult> => {
-  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : 'Hola,'
+  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : "Hola,";
 
   return sendBrevoEmail({
     to: emailDestino,
-    subject: 'Restablece tu contraseña - PropBol',
+    subject: "Restablece tu contraseña - PropBol",
     htmlContent: `
       <!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
       <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
@@ -350,20 +350,20 @@ export const enviarCorreoRecuperacionPassword = async ({
         </div>
       </body></html>
     `,
-    textContent: `${saludo}\n\nRestablece tu contraseña desde este enlace: ${resetLink}\n\nExpira en ${minutosExpiracion} minutos.`
-  })
-}
+    textContent: `${saludo}\n\nRestablece tu contraseña desde este enlace: ${resetLink}\n\nExpira en ${minutosExpiracion} minutos.`,
+  });
+};
 
 export const enviarCodigo2FA = async ({
   emailDestino,
   codigo,
-  nombreUsuario
+  nombreUsuario,
 }: EnviarCodigoParams): Promise<EmailSendResult> => {
-  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : 'Hola,'
+  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : "Hola,";
 
   return sendBrevoEmail({
     to: emailDestino,
-    subject: 'Código de verificación - Inicio de sesión PropBol',
+    subject: "Código de verificación - Inicio de sesión PropBol",
     htmlContent: `
       <!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
       <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
@@ -388,20 +388,20 @@ export const enviarCodigo2FA = async ({
         </div>
       </body></html>
     `,
-    textContent: `${saludo}\n\nTu código de verificación es: ${codigo}\n\nEste código expirará en 5 minutos.`
-  })
-}
+    textContent: `${saludo}\n\nTu código de verificación es: ${codigo}\n\nEste código expirará en 5 minutos.`,
+  });
+};
 
 export const enviarCodigoDesactivacionCuenta = async ({
   emailDestino,
   codigo,
-  nombreUsuario
+  nombreUsuario,
 }: EnviarCodigoParams): Promise<EmailSendResult> => {
-  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : 'Hola,'
+  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : "Hola,";
 
   return sendBrevoEmail({
     to: emailDestino,
-    subject: 'Código de verificación - Desactivación de cuenta PropBol',
+    subject: "Código de verificación - Desactivación de cuenta PropBol",
     htmlContent: `
       <!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
       <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
@@ -426,9 +426,9 @@ export const enviarCodigoDesactivacionCuenta = async ({
         </div>
       </body></html>
     `,
-    textContent: `${saludo}\n\nTu código de verificación para desactivar la cuenta es: ${codigo}\n\nEste código expirará en 5 minutos.`
-  })
-}
+    textContent: `${saludo}\n\nTu código de verificación para desactivar la cuenta es: ${codigo}\n\nEste código expirará en 5 minutos.`,
+  });
+};
 
 export const enviarCodigoActivacionCuenta = async ({
   emailDestino,
@@ -470,16 +470,16 @@ export const enviarCodigoActivacionCuenta = async ({
 
 export const enviarAvisoCambioPassword = async ({
   emailDestino,
-  nombreUsuario
+  nombreUsuario,
 }: {
-  emailDestino: string
-  nombreUsuario?: string
+  emailDestino: string;
+  nombreUsuario?: string;
 }): Promise<EmailSendResult> => {
-  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : 'Hola,'
+  const saludo = nombreUsuario ? `Hola ${nombreUsuario},` : "Hola,";
 
   return sendBrevoEmail({
     to: emailDestino,
-    subject: 'Tu contraseña ha sido cambiada - PropBol',
+    subject: "Tu contraseña ha sido cambiada - PropBol",
     htmlContent: `
       <!DOCTYPE html><html><head><meta charset="UTF-8"/></head>
       <body style="font-family:Arial,sans-serif;background:#f4f4f4;margin:0;padding:20px;">
@@ -507,13 +507,13 @@ export const enviarAvisoCambioPassword = async ({
         </div>
       </body></html>
     `,
-    textContent: `${saludo}\n\nTe informamos que la contraseña de tu cuenta en PropBol ha sido actualizada correctamente.\n\nSi no realizaste este cambio, por favor contacta a soporte de inmediato.`
-  })
-}
+    textContent: `${saludo}\n\nTe informamos que la contraseña de tu cuenta en PropBol ha sido actualizada correctamente.\n\nSi no realizaste este cambio, por favor contacta a soporte de inmediato.`,
+  });
+};
 
 export const enviarCorreoBienvenidaLinkedIn = async ({
   emailDestino,
-  nombreUsuario
+  nombreUsuario,
 }: {
   emailDestino: string
   nombreUsuario?: string
