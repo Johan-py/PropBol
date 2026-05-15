@@ -1,118 +1,120 @@
-import { useState, useEffect } from "react";
-import { PropertyMapPin, PropertyType } from "@/types/property";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect } from 'react'
+import { PropertyMapPin, PropertyType } from '@/types/property'
+import { useSearchParams } from 'next/navigation'
 
-const API_URL = (
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
-).replace(/\/$/, "");
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
 
 interface RawPropertyItem {
-  id: number;
-  titulo: string;
-  descripcion?: string;
-  precio: string | number;
-  precio_anterior?: string | number; 
-  categoria?: string;
-  currency?: string;
-  moneda?: string;
-  nroCuartos?: number;
-  nroBanos?: number;
-  superficieM2?: string | number;
-  tipoAccion?: string;
+  id: number
+  titulo: string
+  descripcion?: string
+  precio: string | number
+  precio_anterior?: string | number
+  categoria?: string
+  currency?: string
+  moneda?: string
+  nroCuartos?: number
+  nroBanos?: number
+  superficieM2?: string | number
+  tipoAccion?: string
   ubicacion?: {
-    latitud: string | number;
-    longitud: string | number;
-    direccion?: string;
+    latitud: string | number
+    longitud: string | number
+    direccion?: string
     barrio?: {
-      nombre?: string;
+      nombre?: string
       zona?: {
-        nombre?: string;
+        nombre?: string
         municipio?: {
-          nombre?: string;
+          nombre?: string
           provincia?: {
-            nombre?: string;
+            nombre?: string
             departamento?: {
-              nombre?: string;
-            };
-          };
-        };
-      };
-    };
-    ubicacion_maestra?: { nombre?: string };
-  };
-  ubicacion_inmueble?: { latitud: string | number; longitud: string | number };
-  publicaciones?: Array<{ multimedia?: Array<{ url: string }> }>;
-  publicacion?: Array<{ multimedia?: Array<{ url: string }> }>;
+              nombre?: string
+            }
+          }
+        }
+      }
+    }
+    ubicacion_maestra?: { nombre?: string }
+  }
+  ubicacion_inmueble?: { latitud: string | number; longitud: string | number }
+  publicaciones?: Array<{ multimedia?: Array<{ url: string }> }>
+  publicacion?: Array<{ multimedia?: Array<{ url: string }> }>
 }
-const BOB_EXCHANGE_RATE = 6.96;
+const BOB_EXCHANGE_RATE = 6.96
 
 function traducirCategoria(categoria?: string): string {
-  const normalizada = String(categoria || "").toUpperCase().trim();
+  const normalizada = String(categoria || '')
+    .toUpperCase()
+    .trim()
   switch (normalizada) {
-    case "CASA":
-      return "Casa";
-    case "DEPARTAMENTO":
-      return "Departamento";
-    case "TERRENO":
-      return "Terreno";
-    case "OFICINA":
-      return "Oficina";
-    case "CUARTO":
-      return "Cuarto";
-    case "TERRENO_MORTUORIO":
-      return "Terreno mortuorio";
+    case 'CASA':
+      return 'Casa'
+    case 'DEPARTAMENTO':
+      return 'Departamento'
+    case 'TERRENO':
+      return 'Terreno'
+    case 'OFICINA':
+      return 'Oficina'
+    case 'CUARTO':
+      return 'Cuarto'
+    case 'TERRENO_MORTUORIO':
+      return 'Terreno mortuorio'
     default:
-      return categoria || "Inmueble";
+      return categoria || 'Inmueble'
   }
 }
 
 function traducirAccion(accion?: string): string {
-  const normalizada = String(accion || "").toUpperCase().trim();
+  const normalizada = String(accion || '')
+    .toUpperCase()
+    .trim()
   switch (normalizada) {
-    case "VENTA":
-      return "Venta";
-    case "ALQUILER":
-      return "Alquiler";
-    case "ANTICRETO":
-      return "Anticrético";
+    case 'VENTA':
+      return 'Venta'
+    case 'ALQUILER':
+      return 'Alquiler'
+    case 'ANTICRETO':
+      return 'Anticrético'
     default:
-      return accion || "Sin acción";
+      return accion || 'Sin acción'
   }
 }
 
 function construirUbicacionTexto(item: RawPropertyItem): string {
-  const ubicacion = item.ubicacion as RawPropertyItem["ubicacion"] | undefined;
+  const ubicacion = item.ubicacion as RawPropertyItem['ubicacion'] | undefined
   const partes = [
     ubicacion?.direccion,
     ubicacion?.barrio?.nombre,
     ubicacion?.barrio?.zona?.nombre,
     ubicacion?.barrio?.zona?.municipio?.nombre,
-    ubicacion?.barrio?.zona?.municipio?.provincia?.departamento?.nombre,
+    ubicacion?.barrio?.zona?.municipio?.provincia?.departamento?.nombre
   ]
-    .map((value) => (typeof value === "string" ? value.trim() : ""))
-    .filter(Boolean);
+    .map((value) => (typeof value === 'string' ? value.trim() : ''))
+    .filter(Boolean)
 
-  if (partes.length > 0) return partes.join(", ");
+  if (partes.length > 0) return partes.join(', ')
 
-  const fallback = ubicacion?.ubicacion_maestra?.nombre;
-  if (typeof fallback === "string" && fallback.trim().length > 0) return fallback.trim();
+  const fallback = ubicacion?.ubicacion_maestra?.nombre
+  if (typeof fallback === 'string' && fallback.trim().length > 0) return fallback.trim()
 
-  return "Ubicación no especificada";
+  return 'Ubicación no especificada'
 }
 
 interface UsePropertiesResult {
-  properties: PropertyMapPin[];
-  isLoading: boolean;
-  error: string | null;
+  properties: PropertyMapPin[]
+  isLoading: boolean
+  error: string | null
 }
 
 export function useProperties(): UsePropertiesResult {
-  const searchParams = useSearchParams();
-  const [properties, setProperties] = useState<PropertyMapPin[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const searchParams = useSearchParams()
+  const [properties, setProperties] = useState<PropertyMapPin[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const searchParamsStr = searchParams.toString();
+  const searchParamsStr = searchParams.toString()
 
   useEffect(() => {
     let cancelled = false
@@ -121,57 +123,40 @@ export function useProperties(): UsePropertiesResult {
     async function fetchNormalSearch() {
       // Configuramos el temporizador de 1 segundo
       const loaderTimer = setTimeout(() => {
-        if (!cancelled) setIsLoading(true);
-      }, 1000);
+        if (!cancelled) setIsLoading(true)
+      }, 1000)
       try {
-        const res = await fetch(
-          `${API_URL}/api/properties/inmuebles?${searchParamsStr}`,
-        );
-        if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
-        const json = await res.json();
+        const res = await fetch(`${API_URL}/api/properties/inmuebles?${searchParamsStr}`)
+        if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`)
+        const json = await res.json()
 
         const selectedCurrency = (
-          (searchParams.get("currency") || "USD").toUpperCase() === "BOB"
-            ? "BOB"
-            : "USD"
-        ) as "USD" | "BOB";
+          (searchParams.get('currency') || 'USD').toUpperCase() === 'BOB' ? 'BOB' : 'USD'
+        ) as 'USD' | 'BOB'
 
         if (!cancelled) {
           const mappedData: PropertyMapPin[] = (json.data || [])
             .filter((item: RawPropertyItem) => {
-              const ubicacion = item.ubicacion ?? item.ubicacion_inmueble;
-              const lat = Number(ubicacion?.latitud);
-              const lng = Number(ubicacion?.longitud);
-              return (
-                ubicacion &&
-                !isNaN(lat) &&
-                !isNaN(lng) &&
-                lat !== 0 &&
-                lng !== 0
-              );
+              const ubicacion = item.ubicacion ?? item.ubicacion_inmueble
+              const lat = Number(ubicacion?.latitud)
+              const lng = Number(ubicacion?.longitud)
+              return ubicacion && !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0
             })
             .map((item: RawPropertyItem) => {
-              const ubicacion = (item.ubicacion ?? item.ubicacion_inmueble)!;
-              const publicaciones =
-                item.publicaciones ?? item.publicacion ?? [];
-              const basePrice = Number(item.precio);
-              const sourceCurrency = String(
-                item.currency || item.moneda || "USD",
-              ).toUpperCase();
+              const ubicacion = (item.ubicacion ?? item.ubicacion_inmueble)!
+              const publicaciones = item.publicaciones ?? item.publicacion ?? []
+              const basePrice = Number(item.precio)
+              const sourceCurrency = String(item.currency || item.moneda || 'USD').toUpperCase()
               const priceInUsd =
-                sourceCurrency === "BOB"
-                  ? basePrice / BOB_EXCHANGE_RATE
-                  : basePrice;
+                sourceCurrency === 'BOB' ? basePrice / BOB_EXCHANGE_RATE : basePrice
               const displayPrice =
-                selectedCurrency === "BOB"
-                  ? priceInUsd * BOB_EXCHANGE_RATE
-                  : priceInUsd;
+                selectedCurrency === 'BOB' ? priceInUsd * BOB_EXCHANGE_RATE : priceInUsd
               const formattedText =
-                selectedCurrency === "BOB"
-                  ? `Bs ${displayPrice.toLocaleString("es-BO")}`
-                  : `$${displayPrice.toLocaleString("en-US")} USD`;
-              const categoriaTexto = traducirCategoria(item.categoria);
-              const accionTexto = traducirAccion(item.tipoAccion);
+                selectedCurrency === 'BOB'
+                  ? `Bs ${displayPrice.toLocaleString('es-BO')}`
+                  : `$${displayPrice.toLocaleString('en-US')} USD`
+              const categoriaTexto = traducirCategoria(item.categoria)
+              const accionTexto = traducirAccion(item.tipoAccion)
 
               return {
                 id: item.id.toString(),
@@ -180,10 +165,9 @@ export function useProperties(): UsePropertiesResult {
                 price: displayPrice,
                 currency: selectedCurrency,
                 precioFormateado: formattedText,
-                precio: Number(item.precio),                               
+                precio: Number(item.precio),
                 precio_anterior: item.precio_anterior ? Number(item.precio_anterior) : null,
-                type: (item.categoria?.toLowerCase().trim() ||
-                  "casa") as PropertyType,
+                type: (item.categoria?.toLowerCase().trim() || 'casa') as PropertyType,
                 title: item.titulo,
                 descripcion: item.descripcion ?? null,
                 ubicacionTexto: construirUbicacionTexto(item),
@@ -191,33 +175,26 @@ export function useProperties(): UsePropertiesResult {
                 accionTexto,
                 nroCuartos: item.nroCuartos ?? null,
                 nroBanos: item.nroBanos ?? null,
-                superficieM2: item.superficieM2
-                  ? Number(item.superficieM2)
-                  : null,
-                thumbnailUrl:
-                  publicaciones?.[0]?.multimedia?.[0]?.url ?? undefined,
-              };
-            });
-          setProperties(mappedData);
+                superficieM2: item.superficieM2 ? Number(item.superficieM2) : null,
+                thumbnailUrl: publicaciones?.[0]?.multimedia?.[0]?.url ?? undefined
+              }
+            })
+          setProperties(mappedData)
         }
       } catch (err) {
         if (!cancelled)
-          setError(
-            err instanceof Error
-              ? err.message
-              : "Error al conectar con PropBol",
-          );
+          setError(err instanceof Error ? err.message : 'Error al conectar con PropBol')
       } finally {
         // Limpiamos el temporizador si fue rápido
-        clearTimeout(loaderTimer);
-        if (!cancelled) setIsLoading(false);
+        clearTimeout(loaderTimer)
+        if (!cancelled) setIsLoading(false)
       }
     }
 
     async function fetchRecomendados() {
       const loaderTimer = setTimeout(() => {
-        if (!cancelled) setIsLoading(true);
-      }, 1000);
+        if (!cancelled) setIsLoading(true)
+      }, 1000)
       try {
         const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
         const headers: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {}
@@ -225,7 +202,7 @@ export function useProperties(): UsePropertiesResult {
           const modos = searchParams.getAll('modoInmueble')
           const qs = new URLSearchParams()
           qs.set('fecha', 'mas-populares')
-          modos.forEach(m => qs.append('modoInmueble', m))
+          modos.forEach((m) => qs.append('modoInmueble', m))
           const res = await fetch(`${API_URL}/api/properties/inmuebles?${qs.toString()}`)
           if (!res.ok) throw new Error(`Error ${res.status}`)
           const json = await res.json()
@@ -243,13 +220,16 @@ export function useProperties(): UsePropertiesResult {
               .map((item: any) => {
                 const ubicacion = item.ubicacion ?? item.ubicacion_inmueble
                 const basePrice = Number(item.precio)
-                const priceInUsd = String(item.currency || 'USD').toUpperCase() === 'BOB'
-                  ? basePrice / BOB_EXCHANGE_RATE : basePrice
-                const displayPrice = selectedCurrency === 'BOB'
-                  ? priceInUsd * BOB_EXCHANGE_RATE : priceInUsd
-                const formattedText = selectedCurrency === 'BOB'
-                  ? `Bs ${displayPrice.toLocaleString('es-BO')}`
-                  : `$${displayPrice.toLocaleString('en-US')} USD`
+                const priceInUsd =
+                  String(item.currency || 'USD').toUpperCase() === 'BOB'
+                    ? basePrice / BOB_EXCHANGE_RATE
+                    : basePrice
+                const displayPrice =
+                  selectedCurrency === 'BOB' ? priceInUsd * BOB_EXCHANGE_RATE : priceInUsd
+                const formattedText =
+                  selectedCurrency === 'BOB'
+                    ? `Bs ${displayPrice.toLocaleString('es-BO')}`
+                    : `$${displayPrice.toLocaleString('en-US')} USD`
                 const publicaciones = item.publicaciones ?? item.publicacion ?? []
                 return {
                   id: item.id.toString(),
@@ -269,7 +249,7 @@ export function useProperties(): UsePropertiesResult {
                   nroCuartos: item.nroCuartos ?? null,
                   nroBanos: item.nroBanos ?? null,
                   superficieM2: item.superficieM2 ? Number(item.superficieM2) : null,
-                  thumbnailUrl: publicaciones?.[0]?.multimedia?.[0]?.url ?? undefined,
+                  thumbnailUrl: publicaciones?.[0]?.multimedia?.[0]?.url ?? undefined
                 }
               })
             setProperties(mappedData)
@@ -303,8 +283,7 @@ export function useProperties(): UsePropertiesResult {
             const ubicacion = item.ubicacion ?? item.ubicacion_inmueble
             const basePrice = Number(item.precio)
             const sourceCurrency = String(item.currency || item.moneda || 'USD').toUpperCase()
-            const priceInUsd =
-              sourceCurrency === 'BOB' ? basePrice / BOB_EXCHANGE_RATE : basePrice
+            const priceInUsd = sourceCurrency === 'BOB' ? basePrice / BOB_EXCHANGE_RATE : basePrice
             const displayPrice =
               selectedCurrency === 'BOB' ? priceInUsd * BOB_EXCHANGE_RATE : priceInUsd
             const formattedText =
@@ -326,8 +305,8 @@ export function useProperties(): UsePropertiesResult {
               price: displayPrice,
               currency: selectedCurrency,
               precioFormateado: formattedText,
-              precio: Number(item.precio),                                   
-              precio_anterior: item.precio_anterior ? Number(item.precio_anterior) : null,  
+              precio: Number(item.precio),
+              precio_anterior: item.precio_anterior ? Number(item.precio_anterior) : null,
               type: (item.categoria?.toLowerCase().trim() || 'casa') as any,
               title: item.titulo,
               descripcion: item.descripcion ?? null,
@@ -339,7 +318,7 @@ export function useProperties(): UsePropertiesResult {
               superficieM2: item.superficieM2 ? Number(item.superficieM2) : null,
               thumbnailUrl: item.thumbnailUrl,
               score: item.score,
-              razones: item.razones,
+              razones: item.razones
             }
           })
 
@@ -350,7 +329,7 @@ export function useProperties(): UsePropertiesResult {
           await fetchNormalSearch()
         }
       } finally {
-        clearTimeout(loaderTimer);
+        clearTimeout(loaderTimer)
         if (!cancelled) setIsLoading(false)
       }
     }
@@ -364,7 +343,6 @@ export function useProperties(): UsePropertiesResult {
         return
       }
 
-      // Si no es modo recomendados, búsqueda normal
       await fetchNormalSearch()
     }
 
@@ -374,5 +352,5 @@ export function useProperties(): UsePropertiesResult {
     }
   }, [searchParamsStr, searchParams])
 
-  return { properties, isLoading, error };
+  return { properties, isLoading, error }
 }
