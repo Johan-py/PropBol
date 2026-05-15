@@ -921,34 +921,34 @@ export default function LoginForm() {
         setPassword("");
 
         window.setTimeout(() => {
-          router.push('/sign-in/verify-2fa')
-        }, 800)
+          router.push("/sign-in/verify-2fa");
+        }, 800);
 
-        return
+        return;
       }
 
       if (!data.token) {
-        clearClientSession()
-        setErrorMessage('El servidor no devolvió un token válido')
-        return
+        clearClientSession();
+        setErrorMessage("El servidor no devolvió un token válido");
+        return;
       }
 
-      await finalizeValidatedSession(data.token, data.user)
+      await finalizeValidatedSession(data.token, data.user);
 
-      setSuccessMessage(data.message || 'Inicio de sesión exitoso')
+      setSuccessMessage(data.message || "Inicio de sesión exitoso");
 
       window.setTimeout(() => {
-        redirectAfterSuccessfulLogin()
-      }, 1000)
+        redirectAfterSuccessfulLogin();
+      }, 1000);
     } catch (error) {
-      clearClientSession()
-      setPassword('')
-      setErrorMessage(getRequestErrorMessage(error))
+      clearClientSession();
+      setPassword("");
+      setErrorMessage(getRequestErrorMessage(error));
     } finally {
-      window.clearTimeout(timeoutId)
-      setIsLoading(false)
+      window.clearTimeout(timeoutId);
+      setIsLoading(false);
     }
-  }
+  };
 
   const closeActivationModal = () => {
     setShowActivationModal(false);
@@ -1008,12 +1008,136 @@ export default function LoginForm() {
         return;
       }
 
-      setSuccessMessage(data.message || "Cuenta activada correctamente. Ahora puedes iniciar sesión.");
+      setSuccessMessage(
+        data.message || "Cuenta activada correctamente. Ahora puedes iniciar sesión.",
+      );
       setErrorMessage("");
       setPassword("");
       closeActivationModal();
       router.push("/sign-in");
-    } catch (error) {
+    } catch {
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+    } finally {
+      window.clearTimeout(timeoutId);
+      setIsActivating(false);
+    }
+  };
+
+  const handleRequestActivationCode = async () => {
+    if (!activationEmail) {
+      setActivationError("No se encontró el correo de la cuenta.");
+      return;
+    }
+
+    if (isActivating) {
+        return;
+      }
+
+    if (!navigator.onLine) {
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+        return;
+      }
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => {
+      controller.abort();
+    }, ACTIVATION_REQUEST_TIMEOUT_MS);
+
+    setActivationError("");
+    setIsActivating(true);
+
+    try {
+      const response = await fetch(`${API_URL}/api/auth/request-activation-code`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ correo: activationEmail }),
+        signal: controller.signal,
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.status >= 500) {
+        setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+        return;
+      }
+
+      if (!response.ok) {
+        setActivationError(data.message || "Error al enviar el código");
+        return;
+      }
+
+      setActivationStep("code");
+      setActivationCode("");
+      setTimeLeft(60);
+    } catch {
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+    } finally {
+      window.clearTimeout(timeoutId);
+      setIsActivating(false);
+    }
+  };
+
+  const handleActivateByCode = async () => {
+    const trimmedCode = activationCode.trim();
+
+    if (!trimmedCode) {
+      setActivationError("El código es obligatorio");
+      return;
+    }
+
+    if (!/^\d{6}$/.test(trimmedCode)) {
+      setActivationError("El código debe tener exactamente 6 dígitos numéricos");
+      return;
+    }
+
+    if (isActivating) {
+      return;
+    }
+
+    if (!navigator.onLine) {
+      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => {
+      controller.abort();
+    }, ACTIVATION_REQUEST_TIMEOUT_MS);
+
+    setActivationError("");
+    setIsActivating(true);
+
+    try {
+      const response = await fetch(`${API_URL}/api/auth/activate-by-code`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          correo: activationEmail,
+          codigo: trimmedCode,
+        }),
+        signal: controller.signal,
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (response.status >= 500) {
+        setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
+        return;
+      }
+
+      if (!response.ok) {
+        setActivationError(data.message || "Error al activar la cuenta");
+        return;
+      }
+
+      setSuccessMessage(
+        data.message || "Cuenta activada correctamente. Ahora puedes iniciar sesión.",
+      );
+      setErrorMessage("");
+      setPassword("");
+      closeActivationModal();
+      router.push("/sign-in");
+    } catch {
       setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
     } finally {
       window.clearTimeout(timeoutId);
@@ -1082,103 +1206,6 @@ export default function LoginForm() {
     };
   }, [showActivationModal, activationStep, isActivating]);
 
-  const handleRequestActivationCode = async () => {
-    setActivationError("");
-    setIsActivating(true);
-
-    try {
-      const response = await fetch(`${API_URL}/api/auth/request-activation-code`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ correo: activationEmail }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        setActivationError(data.message || "Error al enviar el código");
-        return;
-      }
-
-      setActivationStep("code");
-      setTimeLeft(60);
-    } catch (error) {
-      setActivationError(
-        error instanceof Error
-          ? error.message
-          : "Error al conectar con el servidor",
-      );
-    } finally {
-      setIsActivating(false);
-    }
-  };
-
-  const handleActivateByCode = async () => {
-    const trimmedCode = activationCode.trim();
-
-    if (!trimmedCode) {
-      setActivationError("El código es obligatorio");
-      return;
-    }
-
-    if (!/^\d{6}$/.test(trimmedCode)) {
-      setActivationError("El código debe tener exactamente 6 dígitos numéricos");
-      return;
-    }
-
-    if (isActivating) {
-      return;
-    }
-
-    if (!navigator.onLine) {
-      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
-      return;
-    }
-
-    const controller = new AbortController();
-    const timeoutId = window.setTimeout(() => {
-      controller.abort();
-    }, ACTIVATION_REQUEST_TIMEOUT_MS);
-
-    setActivationError("");
-    setIsActivating(true);
-
-    try {
-      const response = await fetch(`${API_URL}/api/auth/activate-by-code`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          correo: activationEmail,
-          codigo: trimmedCode,
-        }),
-        signal: controller.signal,
-      });
-
-      const data = await response.json().catch(() => ({}));
-
-      if (response.status >= 500) {
-        setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
-        return;
-      }
-
-      if (!response.ok) {
-        setActivationError(data.message || "Error al activar la cuenta");
-        return;
-      }
-
-      setSuccessMessage(data.message || "Cuenta activada correctamente. Ahora puedes iniciar sesión.");
-      setErrorMessage("");
-      setPassword("");
-      closeActivationModal();
-      router.push("/sign-in");
-    } catch (error) {
-      setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
-    } finally {
-      window.clearTimeout(timeoutId);
-      setIsActivating(false);
-    }
-  };
-
   const maskEmail = (email: string) => {
     const [name, domain] = email.split("@");
 
@@ -1193,10 +1220,10 @@ export default function LoginForm() {
   };
 
   const handleFacebookLogin = () => {
-    clearClientSession()
-    setGoogleError('')
-    setErrorMessage('')
-    setSuccessMessage('')
+    clearClientSession();
+    setGoogleError("");
+    setErrorMessage("");
+    setSuccessMessage("");
 
     if (hasNoInternetConnection()) {
       setGoogleError(NO_CONNECTION_MESSAGE)
