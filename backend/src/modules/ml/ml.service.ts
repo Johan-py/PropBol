@@ -1,4 +1,5 @@
 import { prisma } from '../../lib/prisma.client.js'
+import { recargarModelo } from './model-loader.js'
 import * as fs from 'fs'
 import * as path from 'path'
 
@@ -115,6 +116,15 @@ export async function ejecutarEntrenamientoManual() {
     where: { usado_en_modelo: false },
     data: { usado_en_modelo: true, version_modelo: version }
   })
+
+  recargarModelo({
+  version,
+  pesos,
+  bias,
+  precision,
+  recall,
+  cargadoEn: new Date().toISOString()
+})
 
   return {
     entrenado: true,
