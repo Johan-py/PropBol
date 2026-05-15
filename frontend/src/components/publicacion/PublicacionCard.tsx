@@ -1,24 +1,31 @@
 'use client'
 
 import { useState } from 'react'
-import { Bath, BedDouble, MapPin, Square, Trash2, Eye, Heart, Mail, Plus } from 'lucide-react'
+import { Bath, BedDouble, Eye, Heart, Mail, MapPin, Plus, Share2, Square, Sparkles, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { publicacionService } from '@/services/publicacionn.service'
 import type { MisPublicacionesItem } from '@/types/publicacion'
 import ConfirmDeleteModal from './ConfirmDeleteModal'
 import DeleteSuccessModal from './DeleteSuccessModal'
 import DeleteErrorModal from './DeleteErrorModal'
-
+import PromocionarModal from './PromocionarModal'
+import CancelPromocionModal from './CancelPromocionModal'  // <--- CORREGIDO
 interface Props {
   publicacion: MisPublicacionesItem
   onDeleted: (id: number) => void
   onEstadoChange?: (id: number, nuevoEstado: boolean) => void
+  onPromocionChange?: (id: number, promoted: boolean) => void
+  showPromoteButton?: boolean
+  showCancelPromoteButton?: boolean
 }
 
 export default function PublicacionCard({
   publicacion,
   onDeleted,
-  onEstadoChange
+  onEstadoChange,
+  onPromocionChange,
+  showPromoteButton = false,
+  showCancelPromoteButton = false,
 }: Props) {
   const router = useRouter()
 
@@ -31,6 +38,10 @@ export default function PublicacionCard({
   const [modalErrorAbierto, setModalErrorAbierto] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  const [modalPromocionAbierto, setModalPromocionAbierto] = useState(false)
+  const [modalCancelPromocionAbierto, setModalCancelPromocionAbierto] = useState(false)
+  const [canceling, setCanceling] = useState(false)
 
   const handleToggle = async () => {
     const nuevoEstado = !activa
@@ -62,10 +73,49 @@ export default function PublicacionCard({
       setModalExitoAbierto(true)
     } catch (err) {
       setModalConfirmacionAbierto(false)
-      setError(err instanceof Error ? err.message : 'No se puede eliminar la publicación, intente nuevamente')
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'No se puede eliminar la publicación, intente nuevamente'
+      )
       setModalErrorAbierto(true)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handlePromocionar = async (propiedadId: number, planId: number, precio: number) => {
+    try {
+      // Simulación de pago - aquí se integraría con pasarela real
+      const paymentIntentId = `simulado_${Date.now()}_${planId}`
+      
+      // Llamar al servicio de confirmar publicidad
+      await publicacionService.confirmarPublicidad(propiedadId, paymentIntentId, planId)
+      
+      // Notificar al padre que la propiedad ahora está promocionada
+      onPromocionChange?.(propiedadId, true)
+      
+      setModalPromocionAbierto(false)
+    } catch (err) {
+      console.error('Error al promocionar:', err)
+      throw err
+    }
+  }
+
+  const handleCancelarPromocion = async () => {
+    setCanceling(true)
+    try {
+      await publicacionService.cancelarPublicidad(publicacion.id)
+      onPromocionChange?.(publicacion.id, false)
+      setModalCancelPromocionAbierto(false)
+    } catch (err) {
+      console.error('Error al cancelar publicidad:', err)
+      setModalCancelPromocionAbierto(false)
+      setTimeout(() => {
+        alert('Error al cancelar publicidad. Intenta nuevamente.')
+      }, 100)
+    } finally {
+      setCanceling(false)
     }
   }
 
@@ -92,12 +142,17 @@ export default function PublicacionCard({
   const precioFormateado = `USD ${publicacion.precio.toLocaleString('en-US')}`
   const tipoOperacionTexto = publicacion.tipoOperacion || 'Venta / Alquiler'
 
+  const totalVisualizaciones = publicacion.totalVisualizaciones ?? 0
+  const totalCompartidos = publicacion.totalCompartidos ?? 0
+
   const irAEditar = () => {
     router.push(`/mis-publicaciones/${publicacion.id}/editar`)
   }
 
   const irAParametros = () => {
-    router.push(`/propiedades/parametros?publicacionId=${publicacion.id}&returnTo=mis-publicaciones`)
+    router.push(
+      `/propiedades/parametros?publicacionId=${publicacion.id}&returnTo=mis-publicaciones`
+    )
   }
 
   const mostrarMetricas = false
@@ -119,6 +174,16 @@ export default function PublicacionCard({
               </span>
             </div>
           )}
+
+          {/* Badge Destacada - HU-11 */}
+          {publicacion.promoted && (
+            <div className="absolute top-2 right-2">
+              <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 px-2 py-1 text-xs font-bold text-white shadow-md">
+                <Sparkles size={12} />
+                Destacada
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="p-5">
@@ -137,7 +202,31 @@ export default function PublicacionCard({
                 {precioFormateado}
               </p>
 
-              <div className="mt-2 grid grid-cols-3 gap-2 text-xs text-gray-500">
+              <div className="mt-2 flex items-center gap-8 text-xs text-[#1f1f1f]">
+                <div className="flex items-center gap-2">
+                  <Eye className="h-5 w-5 text-black" />
+                  <div className="leading-tight">
+                    <p className="text-[10px] text-[#5f5f5f]">
+                      Visualizaciones
+                    </p>
+                    <p className="text-center text-sm font-semibold text-black">
+                      {totalVisualizaciones}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Share2 className="h-5 w-5 text-black" />
+                  <div className="leading-tight">
+                    <p className="text-[10px] text-[#5f5f5f]">Compartidos</p>
+                    <p className="text-center text-sm font-semibold text-black">
+                      {totalCompartidos}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-3 grid grid-cols-3 gap-2 text-xs text-gray-500">
                 <div className="flex items-center gap-1">
                   <BedDouble size={14} />
                   <span>{publicacion.nroCuartos ?? '-'} habs</span>
@@ -245,6 +334,29 @@ export default function PublicacionCard({
               </button>
             </div>
 
+            {/* Botón Publicitar propiedad - HU-11 (solo en activas) */}
+            {showPromoteButton && !publicacion.promoted && (
+              <button
+                type="button"
+                onClick={() => setModalPromocionAbierto(true)}
+                className="mt-2 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 text-[13px] font-semibold text-white transition hover:from-orange-600 hover:to-orange-700"
+              >
+                <Sparkles size={16} />
+                Publicitar propiedad
+              </button>
+            )}
+
+            {/* Botón Cancelar publicidad - HU-11 (solo en publicidad) */}
+            {showCancelPromoteButton && publicacion.promoted && (
+              <button
+                type="button"
+                onClick={() => setModalCancelPromocionAbierto(true)}
+                className="mt-2 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-red-500 bg-white text-[13px] font-semibold text-red-600 transition hover:bg-red-50"
+              >
+                Cancelar publicidad
+              </button>
+            )}
+
             <div className="mt-1 flex justify-start">
               <button
                 type="button"
@@ -266,15 +378,29 @@ export default function PublicacionCard({
         loading={loading}
       />
 
-      <DeleteSuccessModal
-        abierto={modalExitoAbierto}
-        onAceptar={cerrarExito}
-      />
+      <DeleteSuccessModal abierto={modalExitoAbierto} onAceptar={cerrarExito} />
 
       <DeleteErrorModal
         abierto={modalErrorAbierto}
         mensaje={error || 'No se puede eliminar la publicación, intente nuevamente'}
         onAceptar={cerrarError}
+      />
+
+      {/* Modales HU-11 */}
+      <PromocionarModal
+        abierto={modalPromocionAbierto}
+        propiedadNombre={publicacion.titulo}
+        propiedadId={publicacion.id}
+        onConfirmar={handlePromocionar}
+        onCancelar={() => setModalPromocionAbierto(false)}
+      />
+
+      <CancelPromocionModal
+        abierto={modalCancelPromocionAbierto}
+        propiedadNombre={publicacion.titulo}
+        onConfirmar={handleCancelarPromocion}
+        onCancelar={() => setModalCancelPromocionAbierto(false)}
+        loading={canceling}
       />
     </>
   )

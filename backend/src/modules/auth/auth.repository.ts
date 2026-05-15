@@ -72,9 +72,9 @@ export const createUser = async (data: CreateUserInput) => {
       },
       include: {
         telefonos: true,
-        rol: true
-      }
-    })
+        rol: true,
+      },
+    });
   } catch (error) {
     if (isUniqueConstraintError(error)) {
       throw new Error(getUniqueConstraintMessage(error));
@@ -98,10 +98,10 @@ export const findUser = async (correo: string) => {
       activo: true,
       two_factor_activo: true,
       controlador: true,
-      rol: true
-    }
-  })
-}
+      rol: true,
+    },
+  });
+};
 export const findUserByCorreo = async (correo: string) => {
   return await prisma.usuario.findUnique({
     where: { correo },
@@ -124,10 +124,12 @@ export const createSession = async ({
   token,
   usuarioId,
   fechaExpiracion,
+  metodo_auth,
 }: {
   token: string;
   usuarioId: number;
   fechaExpiracion: Date;
+  metodo_auth?: string;
 }) => {
   return await prisma.sesion.create({
     data: {
@@ -135,6 +137,7 @@ export const createSession = async ({
       usuarioId,
       fechaExpiracion,
       estado: true,
+      metodo_auth: metodo_auth ?? "email",
     },
   });
 };
@@ -256,6 +259,21 @@ export const findActive2FACodeByUserId = async (usuarioId: number) => {
       usuarioId,
       activo: true,
       usadoEn: null,
+    },
+    orderBy: {
+      creadoEn: "desc",
+    },
+  });
+};
+
+export const findAny2FACodeByUserIdAndHash = async (
+  usuarioId: number,
+  codigoHash: string,
+) => {
+  return await prisma.codigo_2fa.findFirst({
+    where: {
+      usuarioId,
+      codigoHash,
     },
     orderBy: {
       creadoEn: "desc",
@@ -391,6 +409,8 @@ export const createSocialLink = async ({
         usuarioId,
         correoProveedor: correoProveedor ?? null,
         activo: true,
+        vinculadoEn: new Date(),
+        ultimo_uso_en: new Date(),
       },
     });
   }
@@ -402,6 +422,8 @@ export const createSocialLink = async ({
       idExterno,
       correoProveedor: correoProveedor ?? null,
       activo: true,
+      vinculadoEn: new Date(),
+      ultimo_uso_en: new Date(),
     },
   });
 };
@@ -428,7 +450,7 @@ export const listSocialLinksByUser = async (usuarioId: number) => {
       usuarioId,
       activo: true,
       proveedor: {
-        in: ["facebook", "discord", "google"],
+        in: ["facebook", "discord", "google", "linkedin"],
       },
     },
     select: {
@@ -436,6 +458,7 @@ export const listSocialLinksByUser = async (usuarioId: number) => {
       correoProveedor: true,
       idExterno: true,
       vinculadoEn: true,
+      token_expira_en: true,
     },
   });
 };
@@ -467,15 +490,25 @@ export const invalidateOtherUserSessions = async (
       token: { not: currentToken },
       estado: true,
     },
-    data: { estado: false }
-  })
-}
+    data: { estado: false },
+  });
+};
 export const completeTourByUserId = async (id: number) => {
   return await prisma.usuario.update({
     where: { id },
-    data: { controlador: true }
-  })
-}
+    data: { controlador: true },
+  });
+};
+
+export const activateUser = async (id: number) => {
+  return await prisma.usuario.update({
+    where: { id },
+    data: {
+      activo: true,
+      desactivado_en: null,
+    },
+  });
+};
 
 export const countActiveSocialLinksByUser = async (usuarioId: number) => {
   return await prisma.autenticacion_social.count({
@@ -483,8 +516,146 @@ export const countActiveSocialLinksByUser = async (usuarioId: number) => {
       usuarioId,
       activo: true,
       proveedor: {
-        in: ["facebook", "discord", "google"],
+        in: ["facebook", "discord", "google", "linkedin"],
       },
+    },
+  });
+};
+
+export const invalidateSessionsByAuthMethod = async (
+  usuarioId: number,
+  metodo_auth: string,
+) => {
+  return prisma.sesion.updateMany({
+    where: {
+      usuarioId,
+      metodo_auth,
+      estado: true,
+    },
+    data: {
+      estado: false,
+    },
+  });
+};
+
+export const invalidateActiveMagicLinksByUserId = async (usuarioId: number) => {
+  return await prisma.$executeRaw`
+    UPDATE magic_link
+    SET
+      activo = false,
+      invalidado_en = NOW(),
+      ultimo_reenvio_en = NOW()
+    WHERE usuario_id = ${usuarioId}
+      AND activo = true
+      AND usado_en IS NULL
+      AND invalidado_en IS NULL
+  `;
+};
+
+type ServerTimeRow = {
+  now: Date;
+};
+
+export const getServerTime = async () => {
+  const rows = await prisma.$queryRaw<ServerTimeRow[]>`
+    SELECT NOW() AS now
+  `;
+
+  return rows[0]?.now ?? new Date();
+};
+
+export const createMagicLink = async ({
+  usuarioId,
+  tokenHash,
+  correo,
+  expiraEn,
+}: {
+  usuarioId: number;
+  tokenHash: string;
+  correo: string;
+  expiraEn: Date;
+}) => {
+  return await prisma.magic_link.create({
+    data: {
+      usuario_id: usuarioId,
+      token_hash: tokenHash,
+      correo,
+      expira_en: expiraEn,
+      activo: true,
+      intentos_reenvio: 0,
+    },
+  });
+};
+
+type MagicLinkRecord = {
+  id: number;
+  usuario_id: number;
+  token_hash: string;
+  correo: string;
+  expira_en: Date;
+  usado_en: Date | null;
+  activo: boolean | null;
+  invalidado_en: Date | null;
+};
+
+export const findMagicLinkByTokenHash = async (tokenHash: string) => {
+  const rows = await prisma.$queryRaw<MagicLinkRecord[]>`
+    SELECT
+      id,
+      usuario_id,
+      token_hash,
+      correo,
+      expira_en,
+      usado_en,
+      activo,
+      invalidado_en
+    FROM magic_link
+    WHERE token_hash = ${tokenHash}
+    LIMIT 1
+  `;
+
+  return rows[0] ?? null;
+};
+
+export const markMagicLinkAsUsed = async (id: number) => {
+  const affectedRows = await prisma.$executeRaw`
+    UPDATE magic_link
+    SET
+      usado_en = NOW(),
+      activo = false
+    WHERE id = ${id}
+      AND activo = true
+      AND usado_en IS NULL
+      AND invalidado_en IS NULL
+  `;
+
+  return affectedRows > 0;
+};
+
+export const deactivateMagicLink = async (id: number) => {
+  return await prisma.$executeRaw`
+    UPDATE magic_link
+    SET activo = false
+    WHERE id = ${id}
+  `;
+};
+
+export const invalidateOtherSessionsByAuthMethod = async (
+  usuarioId: number,
+  metodo_auth: string,
+  currentToken: string,
+) => {
+  return prisma.sesion.updateMany({
+    where: {
+      usuarioId,
+      metodo_auth,
+      estado: true,
+      token: {
+        not: currentToken,
+      },
+    },
+    data: {
+      estado: false,
     },
   });
 };

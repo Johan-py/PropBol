@@ -71,32 +71,32 @@ export default function MisZonasSidebar({
   const inner = (
     <>
       {/* Toggles de visibilidad de zonas */}
-      <div className="px-4 py-3 border-b border-stone-200 space-y-3 shrink-0">
+      <div className="px-4 py-3 border-b border-stone-200 dark:border-stone-700 space-y-3 shrink-0">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-stone-700">Zonas predefinidas</span>
+          <span className="text-sm font-medium text-stone-700 dark:text-stone-300">Zonas predefinidas</span>
           <button
             onClick={() => onShowPredefinidas?.(!showPredefinidas)}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              showPredefinidas ? 'bg-amber-500' : 'bg-stone-300'
-            }`}
+            style={{ backgroundColor: showPredefinidas ? '#f97316' : '#57534e' }}
+            className={`map-toggle-switch relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-lg transition-transform ${
+              style={{ backgroundColor: '#ffffff' }}
+              className={`inline-block h-4 w-4 transform rounded-full shadow-lg transition-transform ${
                 showPredefinidas ? 'translate-x-6' : 'translate-x-1'
               }`}
             />
           </button>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-stone-700">Mis zonas</span>
+          <span className="text-sm font-medium text-stone-700 dark:text-stone-300">Mis zonas</span>
           <button
             onClick={() => onShowPersonalizadas?.(!showPersonalizadas)}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              showPersonalizadas ? 'bg-green-500' : 'bg-stone-300'
-            }`}
+            style={{ backgroundColor: showPersonalizadas ? '#22c55e' : '#57534e' }}
+            className={`map-toggle-switch relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
           >
             <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white shadow-lg transition-transform ${
+              style={{ backgroundColor: '#ffffff' }}
+              className={`inline-block h-4 w-4 transform rounded-full shadow-lg transition-transform ${
                 showPersonalizadas ? 'translate-x-6' : 'translate-x-1'
               }`}
             />
@@ -134,14 +134,14 @@ export default function MisZonasSidebar({
                   editingZoneId === zona.id ? (
                     <li
                       key={zona.id}
-                      className="flex items-center gap-2 p-2.5 bg-stone-50 border border-stone-200 rounded-xl shadow-sm"
+                      className="flex items-center gap-2 p-2.5 bg-stone-50 dark:bg-stone-600 border border-stone-200 dark:border-stone-400 rounded-xl shadow-sm"
                     >
                       <input
                         value={editingZoneName}
                         onChange={(e) => onEditingZoneNameChange?.(e.target.value)}
                         placeholder="Nueva zona"
                         maxLength={100}
-                        className="min-w-0 flex-1 text-sm text-stone-700 placeholder:text-stone-400 placeholder:italic bg-transparent outline-none"
+                        className="min-w-0 flex-1 text-sm text-stone-700 dark:text-stone-300 placeholder:text-stone-400 placeholder:italic bg-transparent outline-none"
                         disabled={isSavingEditZone}
                       />
                       <button
@@ -165,9 +165,9 @@ export default function MisZonasSidebar({
                     <li
                       key={zona.id}
                       onClick={() => onZoneSelect?.(Number(zona.id))}
-                      className="flex items-center justify-between p-3 bg-stone-50 border border-stone-100 rounded-lg cursor-pointer hover:border-orange-200 hover:-translate-y-1 hover:shadow-md active:translate-y-0 active:shadow-sm transition-all duration-200 group"
+                      className="flex items-center justify-between p-3 bg-stone-50 dark:bg-stone-600 border border-stone-100 dark:border-stone-400 rounded-lg cursor-pointer hover:border-orange-200 dark:hover:border-orange-400 hover:-translate-y-1 hover:shadow-md active:translate-y-0 active:shadow-sm transition-all duration-200 group"
                     >
-                      <span className="text-sm font-medium text-stone-700 truncate pr-2">
+                      <span className="text-sm font-medium text-stone-700 dark:text-white truncate pr-2">
                         {zona.nombre}
                       </span>
                       <div className="flex items-center gap-1 opacity-100">
@@ -197,13 +197,13 @@ export default function MisZonasSidebar({
                 )}
 
                 {isDraftZoneVisible && (
-                  <li className="flex items-center gap-2 p-2.5 bg-stone-50 border border-stone-200 rounded-xl shadow-sm">
+                  <li className="flex items-center gap-2 p-2.5 bg-stone-50 dark:bg-stone-600 border border-stone-200 dark:border-stone-400 rounded-xl shadow-sm">
                     <input
                       value={draftZoneName}
                       onChange={(e) => onDraftZoneNameChange?.(e.target.value)}
                       placeholder="Nueva zona"
                       maxLength={100}
-                      className="min-w-0 flex-1 text-sm text-stone-700 placeholder:text-stone-400 placeholder:italic bg-transparent outline-none"
+                      className="min-w-0 flex-1 text-sm text-stone-700 dark:text-stone-300 placeholder:text-stone-400 placeholder:italic bg-transparent outline-none"
                       disabled={isSavingDraftZone}
                     />
                     <button

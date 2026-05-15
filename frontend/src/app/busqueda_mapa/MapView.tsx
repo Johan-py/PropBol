@@ -140,7 +140,7 @@ function MapClickHandler({ onMapClick, isDrawingMode }: {
   isDrawingMode: boolean
 }) {
   const map = useMap()
-
+  
   // AÑADIDO: Control nativo del cursor y bloqueo de arrastre (Criterios 2 y 20)
   useEffect(() => {
     if (isDrawingMode) {
@@ -152,57 +152,117 @@ function MapClickHandler({ onMapClick, isDrawingMode }: {
     }
   }, [isDrawingMode, map])
 
-  // Doble toque y arrastre para zoom (one-finger zoom)
-  useEffect(() => {
-    let lastTapTime = 0
-    let isDragging = false
-    let startY = 0
-    let startZoom = 0
+// 4 y 6. Double tap zoom + one finger zoom
+useEffect(() => {
+  const DOUBLE_TAP_DELAY = 300
+  const DRAG_THRESHOLD = 10
 
-    const handleTouchStart = (e: TouchEvent) => {
-      if (e.touches.length !== 1) return
+  let lastTapTime = 0
 
-      const now = Date.now()
-      const timeSinceLast = now - lastTapTime
+  let secondTap = false
+  let isDraggingZoom = false
 
-      if (timeSinceLast < 350) {
-        // Segundo toque rápido → iniciar modo arrastre
-        isDragging = true
-        startY = e.touches[0].clientY
-        startZoom = map.getZoom()
+  let startY = 0
+  let startZoom = 0
+
+  let touchStartTime = 0
+
+  const container = map.getContainer()
+
+  const handleTouchStart = (e: TouchEvent) => {
+    if (e.touches.length !== 1) return
+
+    const now = Date.now()
+    const timeSinceLast = now - lastTapTime
+
+    if (timeSinceLast < DOUBLE_TAP_DELAY) {
+      secondTap = true
+      touchStartTime = now
+
+      startY = e.touches[0].clientY
+      startZoom = map.getZoom()
+
+      // FIX: Detener la propagación al motor de scroll del navegador desde el momento exacto en que se registra el segundo tap.
+      if (e.cancelable) {
         e.preventDefault()
       }
-
-      lastTapTime = now
+    } else {
+      // Limpiar estados residuales si pasó mucho tiempo
+      secondTap = false
+      isDraggingZoom = false
     }
 
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!isDragging || e.touches.length !== 1) return
+    lastTapTime = now
+  }
 
-      const currentY = e.touches[0].clientY
-      const deltaY = startY - currentY
+  const handleTouchMove = (e: TouchEvent) => {
+    if (!secondTap) return
 
-      // Cada 50px de movimiento = 1 nivel de zoom
-      const zoomDelta = deltaY / 50
-      map.setZoom(startZoom + zoomDelta, { animate: false })
+    // FIX: Bloquear el scroll de la página de forma incondicional en cada frame de movimiento mientras estemos en el segundo tap.
+    if (e.cancelable) {
       e.preventDefault()
     }
 
-    const handleTouchEnd = () => {
-      isDragging = false
+    const currentY = e.touches[0].clientY
+    const deltaY = startY - currentY
+
+    // Activar modo drag zoom
+    if (Math.abs(deltaY) > DRAG_THRESHOLD) {
+      isDraggingZoom = true
+
+      const zoomDelta = deltaY / 80
+
+      map.setZoom(startZoom + zoomDelta, {
+        animate: false
+      })
+    }
+  }
+
+  const handleTouchEnd = (e: TouchEvent) => {
+    if (!secondTap) return
+
+    // Si NO hubo arrastre => doble toque normal
+    if (!isDraggingZoom) {
+      const touch = e.changedTouches[0]
+
+      const rect = container.getBoundingClientRect()
+
+      const point = L.point(
+        touch.clientX - rect.left,
+        touch.clientY - rect.top
+      )
+
+      const latlng = map.containerPointToLatLng(point)
+
+      map.flyTo(
+        latlng,
+        Math.min(map.getZoom() + 1, 19),
+        {
+          duration: 0.35
+        }
+      )
     }
 
-    const container = map.getContainer()
-    container.addEventListener('touchstart', handleTouchStart, { passive: false })
-    container.addEventListener('touchmove', handleTouchMove, { passive: false })
-    container.addEventListener('touchend', handleTouchEnd)
+    secondTap = false
+    isDraggingZoom = false
+  }
 
-    return () => {
-      container.removeEventListener('touchstart', handleTouchStart)
-      container.removeEventListener('touchmove', handleTouchMove)
-      container.removeEventListener('touchend', handleTouchEnd)
-    }
-  }, [map])
+  container.addEventListener('touchstart', handleTouchStart, {
+    passive: false
+  })
+
+  container.addEventListener('touchmove', handleTouchMove, {
+    passive: false
+  })
+
+  container.addEventListener('touchend', handleTouchEnd)
+
+  return () => {
+    container.removeEventListener('touchstart', handleTouchStart)
+    container.removeEventListener('touchmove', handleTouchMove)
+    container.removeEventListener('touchend', handleTouchEnd)
+  }
+}, [map])
 
   // Doble toque con dos dedos para alejar zoom
   useEffect(() => {
@@ -227,8 +287,16 @@ function MapClickHandler({ onMapClick, isDrawingMode }: {
         lastTwoFingerTapTime = now
 
         if (timeSinceLast < 350) {
-          map.zoomOut(1)
-        }
+  const center = map.getCenter()
+
+  map.flyTo(
+    center,
+    Math.max(map.getZoom() - 1, 1),
+    {
+      duration: 0.35
+    }
+  )
+}
       }
 
       // Reiniciamos el contador para el próximo gesto
@@ -246,20 +314,12 @@ function MapClickHandler({ onMapClick, isDrawingMode }: {
   }, [map])
 
 useEffect(() => {
-  let lastClickTime = 0
-
   const handleClick = (e: L.LeafletMouseEvent) => {
-    const now = Date.now()
-    const timeSinceLast = now - lastClickTime
-    lastClickTime = now
-
-    // Si dos toques llegan en menos de 350ms es doble toque → dejar que Leaflet haga zoom
-    if (timeSinceLast < 350) return
-
     onMapClick(e.latlng)
   }
 
   map.on('click', handleClick)
+
   return () => {
     map.off('click', handleClick)
   }
@@ -469,13 +529,6 @@ export default function MapView({
         style={{ height: '100%', width: '100%' }}
         className={`z-0 ${isDrawingMode && !isPolygonClosed ? '[&.leaflet-container]:cursor-crosshair [&_.leaflet-interactive]:cursor-crosshair' : ''}`}
         gestureHandling={typeof window !== 'undefined' && L ? L.Browser.mobile : false}
-        gestureHandlingOptions={{
-          text: {
-            touch: "Usa dos dedos para mover el mapa",
-            scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
-            scrollMac: "Usa ⌘ + scroll para hacer zoom en el mapa"
-          }
-        }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -598,7 +651,7 @@ export default function MapView({
         )}
 
         <Marker position={center} icon={createGpsIcon()}>
-          <Popup>Tu ubicación actual</Popup>
+          <Popup><span className="pb-map-popup-dark-fix" style={{ '--popup-light-color': '#1f2937', '--popup-dark-color': '#f3f4f6' } as React.CSSProperties}>Tu ubicación actual</span></Popup>
         </Marker>
 
         {/* NUEVO: Marcador de Origen y Círculo de Radio */}
@@ -611,9 +664,9 @@ export default function MapView({
             />
             <Marker position={searchOrigin} icon={createSearchOriginIcon()} zIndexOffset={1000}>
               <Popup>
-                <div className="text-center min-w-[120px]">
-                  <p className="font-bold text-blue-600 mb-1">Centro de búsqueda</p>
-                  <p className="text-xs text-stone-500">Mostrando radio de 1km</p>
+                <div className="text-center min-w-[120px] pb-map-popup-dark-fix">
+                  <p className="font-bold mb-1" style={{ '--popup-light-color': '#2563EB', '--popup-dark-color': '#60a5fa' } as React.CSSProperties}>Centro de búsqueda</p>
+                  <p className="text-xs" style={{ '--popup-light-color': '#78716c', '--popup-dark-color': '#a8a29e' } as React.CSSProperties}>Mostrando radio de 1km</p>
                 </div>
               </Popup>
             </Marker>
@@ -680,12 +733,12 @@ export default function MapView({
                 }}
               >
                 <Popup>
-                  <div className="text-sm min-w-[160px]">
-                    <p className="font-semibold text-gray-800 mb-1">{property.title}</p>
-                    <p className="font-bold" style={{ color: PIN_LABEL[property.type] }}>
+                  <div className="text-sm min-w-[160px] pb-map-popup-dark-fix">
+                    <p className="font-semibold mb-1" style={{ '--popup-light-color': '#1f2937', '--popup-dark-color': '#f3f4f6' } as React.CSSProperties}>{property.title}</p>
+                    <p className="font-bold" style={{ '--popup-light-color': PIN_LABEL[property.type], '--popup-dark-color': property.type === 'casa' ? '#60a5fa' : '#a78bfa' } as React.CSSProperties}>
                       {formatPrice(property.price, property.currency)}
                     </p>
-                    <p className="text-gray-500 capitalize mt-1">{property.type}</p>
+                    <p className="capitalize mt-1" style={{ '--popup-light-color': '#6b7280', '--popup-dark-color': '#9ca3af' } as React.CSSProperties}>{property.type}</p>
                   </div>
                 </Popup>
               </Marker>

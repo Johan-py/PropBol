@@ -1,6 +1,6 @@
 'use client'
 
-import { MapContainer as BaseMapContainer, TileLayer, Marker, Polygon, CircleMarker, useMapEvents } from 'react-leaflet'
+import { MapContainer as BaseMapContainer, TileLayer, Marker, Polygon, CircleMarker, Tooltip, useMapEvents } from 'react-leaflet'
 import { useState, useEffect } from 'react'
 import L from 'leaflet'
 // Importar CSS y L dinámicamente para evitar errores de SSR
@@ -58,6 +58,24 @@ type Props = {
 
   modoPinActivo: boolean
   modoDifuminadoActivo: boolean
+  pois: {
+  id: number
+  nombre: string
+  lat: number
+  lng: number
+}[]
+setPois: React.Dispatch<
+  React.SetStateAction<
+    {
+      id: number
+      nombre: string
+      lat: number
+      lng: number
+    }[]
+  >
+>
+poiSeleccionado: number | null
+setPoiSeleccionado: (v: number | null) => void
 }
 
 function EventosMapa({
@@ -126,75 +144,109 @@ function EventosMapa({
 }
   })
 
-  // Doble toque con un dedo para acercar zoom
-  useEffect(() => {
-    let lastClickTime = 0
+  // 4 y 6. Double tap zoom + one-finger zoom
+useEffect(() => {
+  const DOUBLE_TAP_DELAY = 300
+  const DRAG_THRESHOLD = 10
 
-    const handleClick = (e: L.LeafletMouseEvent) => {
-      const now = Date.now()
-      const timeSinceLast = now - lastClickTime
-      lastClickTime = now
+  let lastTapTime = 0
+  let secondTap = false
+  let isDraggingZoom = false
 
-      if (timeSinceLast < 350) {
-        map.zoomIn(1, { animate: true })
-      }
-    }
+  let startY = 0
+  let startZoom = 0
+  let touchStartTime = 0
 
-    map.on('click', handleClick)
-    return () => {
-      map.off('click', handleClick)
-    }
-  }, [map])
+  const container = map.getContainer()
 
-  // Doble toque y arrastre para zoom continuo (one-finger zoom)
-  useEffect(() => {
-    let lastTapTime = 0
-    let isDragging = false
-    let startY = 0
-    let startZoom = 0
+  const handleTouchStart = (e: TouchEvent) => {
+    if (e.touches.length !== 1) return
 
-    const handleTouchStart = (e: TouchEvent) => {
-      if (e.touches.length !== 1) return
+    const now = Date.now()
+    const timeSinceLast = now - lastTapTime
 
-      const now = Date.now()
-      const timeSinceLast = now - lastTapTime
+    if (timeSinceLast < DOUBLE_TAP_DELAY) {
+      secondTap = true
+      touchStartTime = now
+      startY = e.touches[0].clientY
+      startZoom = map.getZoom()
 
-      if (timeSinceLast < 350) {
-        isDragging = true
-        startY = e.touches[0].clientY
-        startZoom = map.getZoom()
+      if (e.cancelable) {
         e.preventDefault()
       }
-
-      lastTapTime = now
+    } else {
+      secondTap = false
+      isDraggingZoom = false
     }
 
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!isDragging || e.touches.length !== 1) return
+    lastTapTime = now
+  }
 
-      const currentY = e.touches[0].clientY
-      const deltaY = startY - currentY
+  const handleTouchMove = (e: TouchEvent) => {
+    if (!secondTap) return
 
-      const zoomDelta = deltaY / 50
-      map.setZoom(startZoom + zoomDelta, { animate: false })
-      e.preventDefault()
+    if (e.cancelable) { e.preventDefault() }
+
+    const currentY = e.touches[0].clientY
+    const deltaY = startY - currentY
+
+    if (Math.abs(deltaY) > DRAG_THRESHOLD) {
+      isDraggingZoom = true
+
+      const zoomDelta = deltaY / 80
+
+      map.setZoom(startZoom + zoomDelta, {
+        animate: false
+      })
+    }
+  }
+
+  const handleTouchEnd = (e: TouchEvent) => {
+    if (!secondTap || e.changedTouches.length === 0) return
+    
+    e.preventDefault()
+    e.stopPropagation()
+    // Si no arrastró → doble toque normal
+    if (!isDraggingZoom) {
+      const touch = e.changedTouches[0]
+      const rect = container.getBoundingClientRect()
+
+      const point = L.point(
+        touch.clientX - rect.left,
+        touch.clientY - rect.top
+      )
+
+      const latlng = map.containerPointToLatLng(point)
+
+      map.flyTo(
+        latlng,
+        Math.min(map.getZoom() + 1, 19),
+        {
+          duration: 0.35
+        }
+      )
     }
 
-    const handleTouchEnd = () => {
-      isDragging = false
-    }
+    secondTap = false
+    isDraggingZoom = false
+  }
 
-    const container = map.getContainer()
-    container.addEventListener('touchstart', handleTouchStart, { passive: false })
-    container.addEventListener('touchmove', handleTouchMove, { passive: false })
-    container.addEventListener('touchend', handleTouchEnd)
+  container.addEventListener('touchstart', handleTouchStart, {
+    passive: false
+  })
 
-    return () => {
-      container.removeEventListener('touchstart', handleTouchStart)
-      container.removeEventListener('touchmove', handleTouchMove)
-      container.removeEventListener('touchend', handleTouchEnd)
-    }
-  }, [map])
+  container.addEventListener('touchmove', handleTouchMove, {
+    passive: false
+  })
+
+  container.addEventListener('touchend', handleTouchEnd)
+
+  return () => {
+    container.removeEventListener('touchstart', handleTouchStart)
+    container.removeEventListener('touchmove', handleTouchMove)
+    container.removeEventListener('touchend', handleTouchEnd)
+  }
+}, [map])
 
   // Doble toque con dos dedos para alejar zoom
   useEffect(() => {
@@ -216,7 +268,13 @@ function EventosMapa({
         lastTwoFingerTapTime = now
 
         if (timeSinceLast < 350) {
-          map.zoomOut(1)
+          map.flyTo(
+            map.getCenter(),
+            Math.max(map.getZoom() - 1, 1),
+            {
+              duration: 0.35
+            }
+          )
         }
       }
 
@@ -242,8 +300,18 @@ export default function MapaPinSelector({
   vertices,
   setVertices,
   modoPinActivo,
-  modoDifuminadoActivo
+  modoDifuminadoActivo,
+  pois,
+  setPois,
+  poiSeleccionado,
+  setPoiSeleccionado
 }: Props) {
+const offsets = [
+    [0, -40],
+    [40, 0],
+    [0, 40],
+    [-40, 0]
+  ]
   const [mensajeLimite, setMensajeLimite] = useState(false)
  
   return (
@@ -254,13 +322,6 @@ export default function MapaPinSelector({
       scrollWheelZoom={true}
       style={{ height: '320px', width: '100%' }}
       gestureHandling={typeof window !== 'undefined' && L ? L.Browser.mobile : false}
-      gestureHandlingOptions={{
-        text: {
-          touch: "Usa dos dedos para mover el mapa",
-          scroll: "Usa ctrl + scroll para hacer zoom en el mapa",
-          scrollMac: "Usa ⌘ + scroll para hacer zoom en el mapa"
-        }
-      }}
     >
       <TileLayer
         attribution="&copy; OpenStreetMap"
@@ -280,39 +341,64 @@ export default function MapaPinSelector({
   <Marker
     position={[pinCoords.lat, pinCoords.lng]}
     icon={pinIcon}
-    draggable={true}
-     eventHandlers={{
-      drag: (e) => {
-        const map = e.target._map
-        const bounds = map.getBounds()
-        const pos = e.target.getLatLng()
-
-        const lat = Math.min(
-          Math.max(pos.lat, bounds.getSouth()),
-          bounds.getNorth()
-        )
-
-        const lng = Math.min(
-          Math.max(pos.lng, bounds.getWest()),
-          bounds.getEast()
-        )
-        e.target.setLatLng([lat, lng])
-      },
-
-      dragend: (e) => {
-        const pos = e.target.getLatLng()
-
-        setPinCoords({
-          lat: pos.lat,
-          lng: pos.lng
-        })
-      }
-    }}
-    
+    draggable={false}
   />
 )}
 
-{vertices.length >= 3 && (
+{pois.map((poi, i) => (
+  <CircleMarker
+    key={poi.id}
+    center={[poi.lat, poi.lng]}
+    radius={1}
+    opacity={0}
+    fillOpacity={0}
+  >
+    <Tooltip
+      permanent
+      interactive={true}
+      sticky={false}
+      direction="center"
+      offset={[
+        offsets[i % 4][0] + Math.floor(i / 4) * 15,
+        offsets[i % 4][1] + Math.floor(i / 4) * 15
+      ] as [number, number]}
+      opacity={1}
+      className="!bg-transparent !border-0 !shadow-none"
+    >
+      <input
+        type="text"
+        maxLength={20}
+        value={poi.nombre ?? ''}
+        placeholder="..."
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+        onFocus={() => setPoiSeleccionado(poi.id)}
+        onKeyDown={(e) => e.stopPropagation()}
+        onChange={(e) => {
+          const nuevosPois = [...pois]
+          nuevosPois[i].nombre = e.target.value
+          setPois(nuevosPois)
+        }}
+         className={`
+  px-3
+  py-1
+  rounded-full
+  text-[11px]
+  bg-white
+  border
+  ${poiSeleccionado === poi.id ? 'border-red-500' : 'border-gray-300'}
+  shadow-sm
+  min-w-[70px]
+  max-w-[90px]
+  outline-none
+  text-center
+              `}
+                />
+             </Tooltip>
+          </CircleMarker>
+             ))}
+
+           {vertices.length >= 3 && (
   <Polygon
     positions={vertices}
     pathOptions={{
@@ -320,28 +406,27 @@ export default function MapaPinSelector({
       fillOpacity: 0.45
     }}
   />
-)}
+          )}
 
-{vertices.map((p, i) => (
-  <CircleMarker
-    key={i}
-    center={p}
-    radius={5}
-    pathOptions={{
-      color: '#f97316',
-      fillColor: '#f97316',
-      fillOpacity: 1
-    }}
-  />
-))}
-   </MapContainer>
+          {vertices.map((p, i) => (
+          <CircleMarker
+            key={i}
+            center={p}
+            radius={5}
+            pathOptions={{
+              color: '#f97316',
+              fillColor: '#f97316',
+              fillOpacity: 1
+            }}
+          />
+        ))}
+      </MapContainer>
 
-{mensajeLimite && (
- <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[9999] text-orange-500 text-sm font-medium">
-    Límite máximo de 10 puntos alcanzado
-  </div>
-)}
-
-</div>
-)
+      {mensajeLimite && (
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[9999] text-orange-500 text-sm font-medium">
+          Límite máximo de 10 puntos alcanzado
+        </div>
+      )}
+    </div>
+  )
 }
