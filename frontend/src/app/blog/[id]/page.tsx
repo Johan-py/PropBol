@@ -75,7 +75,7 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
 
           <div className="mt-8 flex items-center justify-between gap-4 border-b border-stone-200 pb-8">
             <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-stone-900 text-sm font-bold text-white">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#d68b1a] to-[#a56400] text-lg font-black text-white shadow-lg shadow-[#a56400]/30 border border-white/20">
                 {authorName.charAt(0).toUpperCase()}
               </div>
 
@@ -110,8 +110,8 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
             </div>
 
             <div className="no-capture">
-              <BlogSharePlaceholder 
-                title={title} 
+              <BlogSharePlaceholder
+                title={title}
                 author={authorName}
                 category={publicBlog?.category || 'General'}
                 imageUrl={imageUrl}
