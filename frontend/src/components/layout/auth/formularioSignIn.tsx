@@ -1400,100 +1400,196 @@ export default function LoginForm() {
     let discordTimeoutId = 0;
 
     function cleanup(shouldStopLoading = true) {
-      window.removeEventListener('message', handleMessage)
-      window.clearInterval(checkPopupIntervalId)
-      window.clearTimeout(discordTimeoutId)
+      window.removeEventListener("message", handleMessage);
+      window.clearInterval(checkPopupIntervalId);
+      window.clearTimeout(discordTimeoutId);
 
       if (shouldStopLoading) {
-        setIsLoadingDiscord(false)
+        setIsLoadingDiscord(false);
       }
     }
 
     async function handleMessage(event: MessageEvent<DiscordPopupMessage>) {
       if (event.origin !== expectedOrigin) {
-        return
+        return;
       }
 
-      const data = event.data
+      const data = event.data;
 
       if (
         !data ||
-        typeof data !== 'object' ||
-        !('type' in data) ||
-        (data.type !== 'propbol:discord-login-success' &&
-          data.type !== 'propbol:discord-login-error')
+        typeof data !== "object" ||
+        !("type" in data) ||
+        (data.type !== "propbol:discord-login-success" &&
+          data.type !== "propbol:discord-login-error")
       ) {
-        return
+        return;
       }
 
-      authWasResolved = true
-      cleanup(false)
+      authWasResolved = true;
+      cleanup(false);
 
-      if (data.type === 'propbol:discord-login-success') {
+      if (data.type === "propbol:discord-login-success") {
         try {
-          await finalizeValidatedSession(data.token, data.user)
+          await finalizeValidatedSession(data.token, data.user);
 
-          setSuccessMessage(data.message || 'Inicio de sesión con Discord exitoso')
-          setGoogleError('')
-          setIsLoadingDiscord(false)
-          popup.close()
+          setSuccessMessage(
+            data.message || "Inicio de sesión con Discord exitoso",
+          );
+          setGoogleError("");
+          setIsLoadingDiscord(false);
+          popup.close();
 
           window.setTimeout(() => {
-            redirectAfterSuccessfulLogin()
-          }, 1000)
+            redirectAfterSuccessfulLogin();
+          }, 1000);
         } catch (error) {
-          clearClientSession()
+          clearClientSession();
           setGoogleError(
-            error instanceof Error ? error.message : 'No se pudo consolidar la sesión con Discord.'
-          )
-          setIsLoadingDiscord(false)
-          popup.close()
+            error instanceof Error
+              ? error.message
+              : "No se pudo consolidar la sesión con Discord.",
+          );
+          setIsLoadingDiscord(false);
+          popup.close();
         }
 
-        return
+        return;
       }
 
-      clearClientSession()
-      setGoogleError(data.message || 'No se pudo iniciar sesión con Discord.')
-      setIsLoadingDiscord(false)
-      popup.close()
+      clearClientSession();
+      setGoogleError(data.message || "No se pudo iniciar sesión con Discord.");
+      setIsLoadingDiscord(false);
+      popup.close();
     }
 
     checkPopupIntervalId = window.setInterval(() => {
       if (!popup.closed) {
-        return
+        return;
       }
 
-      cleanup()
+      cleanup();
 
       if (!authWasResolved) {
-        clearClientSession()
+        clearClientSession();
 
         if (hasNoInternetConnection()) {
-          setGoogleError(NO_CONNECTION_MESSAGE)
-          return
+          setGoogleError(NO_CONNECTION_MESSAGE);
+          return;
         }
 
-        setGoogleError('Cancelaste el inicio de sesión con Discord. Puedes intentarlo nuevamente.')
+        setGoogleError(
+          "Cancelaste el inicio de sesión con Discord. Puedes intentarlo nuevamente.",
+        );
       }
-    }, 500)
+    }, 500);
 
     discordTimeoutId = window.setTimeout(() => {
-      cleanup()
-      clearClientSession()
+      cleanup();
+      clearClientSession();
 
       if (!popup.closed) {
-        popup.close()
+        popup.close();
       }
 
       setGoogleError(
         hasNoInternetConnection()
           ? NO_CONNECTION_MESSAGE
-          : 'La autenticación con Discord tardó demasiado. Por favor intenta nuevamente.'
-      )
-    }, GOOGLE_LOGIN_TIMEOUT_MS)
+          : DISCORD_TIMEOUT_MESSAGE,
+      );
+    }, GOOGLE_LOGIN_TIMEOUT_MS);
 
-    window.addEventListener('message', handleMessage)
+    window.addEventListener("message", handleMessage);
+  };
+
+  if (showMagicLinkForm) {
+    return (
+      <div className="w-full max-w-sm rounded-md bg-white p-6 shadow-md">
+        <h1 className="mb-4 text-3xl font-bold text-gray-900">
+          Ingresa sin contraseña
+        </h1>
+
+        <p className="mb-6 text-sm leading-6 text-gray-600">
+          Te enviaremos un enlace de acceso único a tu correo electrónico.
+        </p>
+
+        <form className="space-y-4" onSubmit={handleMagicLinkSubmit}>
+          <div>
+            <label className="mb-2 block text-sm font-medium text-gray-700">
+              Correo electrónico
+            </label>
+
+            <input
+              type="email"
+              autoFocus
+              placeholder="Ingresa tu correo electrónico"
+              value={magicLinkEmail}
+              onChange={(event) => {
+                const value = event.target.value;
+
+                setMagicLinkEmail(value);
+                setMagicLinkSuccess("");
+
+                if (!value.trim()) {
+                  setMagicLinkError("");
+                  return;
+                }
+
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())) {
+                  setMagicLinkError("Formato de correo inválido");
+                  return;
+                }
+
+                setMagicLinkError("");
+              }}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500"
+            />
+          </div>
+
+          {magicLinkError && (
+            <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600">
+              {magicLinkError}
+            </p>
+          )}
+
+          {magicLinkSuccess && (
+            <p className="rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-600">
+              {magicLinkSuccess}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={isLoadingMagicLink}
+            className={`w-full rounded-md py-2.5 text-sm font-semibold text-white transition ${
+              isLoadingMagicLink
+                ? "cursor-not-allowed bg-orange-300"
+                : "bg-orange-500 hover:bg-orange-600"
+            }`}
+          >
+            {isLoadingMagicLink
+              ? magicLinkSuccess
+                ? "Reenviando..."
+                : "Enviando..."
+              : magicLinkSuccess
+                ? "Solicitar nuevo enlace"
+                : "Enviar link mágico"}
+          </button>
+
+          <button
+            type="button"
+            onClick={handleBackToLogin}
+            className="w-full rounded-md bg-[#1f2937] py-2.5 text-sm font-semibold text-white transition hover:bg-[#111827]"
+          >
+            Volver al inicio de sesión
+          </button>
+
+          <p className="pt-4 text-center text-xs text-gray-500">
+            El enlace expirará en 15 minutos y solo podrá usarse una vez.
+          </p>
+        </form>
+      </div>
+    );
   }
 
   return (
@@ -1502,7 +1598,9 @@ export default function LoginForm() {
 
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Correo electrónico</label>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Correo electrónico
+          </label>
 
           <input
             type="email"
