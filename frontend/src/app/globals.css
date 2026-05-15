@@ -731,10 +731,75 @@ html.dark .propbol-btn-close-session:hover {
 .leaflet-gesture-handling-scroll-warning::after,
 .leaflet-container[data-gesture-handling-touch-warning]::after,
 .leaflet-container[data-gesture-handling-scroll-warning]::after {
-    display: none !important;
-    content: none !important;
-    opacity: 0 !important;
-    visibility: hidden !important;
-    background: transparent !important;
-    pointer-events: none !important;
+  display: none !important;
+  content: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  background: transparent !important;
+  pointer-events: none !important;
+}
+
+/* Fix para botones naranjas y overlays en modo oscuro */
+html.propbol-theme-dark body :where([class*="bg-orange-500"], [class*="bg-orange-600"], [class*="bg-amber-"], [class*="bg-primary"], [class*="bg-[#A67C00]"], [class*="bg-[#D97706]"]) {
+  background: var(--pb-accent) !important;
+  color: #ffffff !important;
+  border-color: var(--pb-accent) !important;
+}
+
+
+/* Forzar fondo oscuro en contenedores con gradientes específicos de blogs */
+html.propbol-theme-dark :where([class*="bg-[linear-gradient"]) {
+  background: var(--pb-bg) !important;
+  background-image: none !important;
+}
+
+/* Protegemos colores semánticos sin afectar al modo claro */
+html.propbol-theme-dark body :where([class*="bg-[#E8F7EE]"], [class*="bg-green-50"]) {
+  background: rgba(22, 101, 52, 0.25) !important;
+  color: #86efac !important;
+  border-color: rgba(34, 197, 94, 0.4) !important;
+}
+
+html.propbol-theme-dark body :where([class*="bg-[#FDECEC]"], [class*="bg-red-50"]) {
+  background: rgba(127, 29, 29, 0.25) !important;
+  color: #fca5a5 !important;
+  border-color: rgba(239, 68, 68, 0.4) !important;
+}
+
+html.propbol-theme-dark body :where([class*="bg-amber-50"]) {
+  background: rgba(120, 53, 15, 0.25) !important;
+  color: #fcd34d !important;
+  border-color: rgba(217, 119, 6, 0.4) !important;
+}
+
+html.propbol-theme-dark body :where([class*="text-green-600"], [class*="text-[#198754]"]) {
+  color: #86efac !important;
+}
+
+html.propbol-theme-dark body :where([class*="text-amber-600"], [class*="text-amber-700"]) {
+  color: #fbbf24 !important;
+}
+
+html.propbol-theme-dark body :where([class*="text-red-600"], [class*="text-[#D94848]"]) {
+  color: #fca5a5 !important;
+}
+/* === FIX MAPAS MODO OSCURO (RESTAURADO) === */
+html.dark .leaflet-popup-content-wrapper,
+html.propbol-theme-dark .leaflet-popup-content-wrapper {
+  background-color: #1f2937 !important;
+}
+html.dark .leaflet-popup-tip,
+html.propbol-theme-dark .leaflet-popup-tip {
+  background-color: #1f2937 !important;
+}
+html.dark .pb-map-popup-dark-fix,
+html.propbol-theme-dark .pb-map-popup-dark-fix {
+  color: var(--popup-dark-color, inherit) !important;
+}
+html:not(.dark):not(.propbol-theme-dark) .pb-map-popup-dark-fix {
+  color: var(--popup-light-color, inherit) !important;
+}
+html.dark .pb-map-label-container > .pb-map-label,
+html.propbol-theme-dark .pb-map-label-container > .pb-map-label {
+  text-shadow: 0 1px 3px rgba(0,0,0,0.95), 0 -1px 3px rgba(0,0,0,0.95), 1px 0 3px rgba(0,0,0,0.95), -1px 0 3px rgba(0,0,0,0.95) !important;
 }
