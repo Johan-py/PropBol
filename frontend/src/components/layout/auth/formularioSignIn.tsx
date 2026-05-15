@@ -1226,162 +1226,178 @@ export default function LoginForm() {
     setSuccessMessage("");
 
     if (hasNoInternetConnection()) {
-      setGoogleError(NO_CONNECTION_MESSAGE)
-      return
+      setGoogleError(NO_CONNECTION_MESSAGE);
+      return;
     }
 
-    setIsLoadingFacebook(true)
+    setIsLoadingFacebook(true);
 
-    const popupWidth = 500
-    const popupHeight = 600
-    const left = window.screenX + (window.outerWidth - popupWidth) / 2
-    const top = window.screenY + (window.outerHeight - popupHeight) / 2
+    const popupWidth = 500;
+    const popupHeight = 600;
+    const left = window.screenX + (window.outerWidth - popupWidth) / 2;
+    const top = window.screenY + (window.outerHeight - popupHeight) / 2;
 
     const popupWindow = window.open(
       `${API_URL}/api/auth/facebook/login`,
-      'facebook-login',
-      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`
-    )
+      "facebook-login",
+      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`,
+    );
 
-    if (!popupWindow || popupWindow.closed || typeof popupWindow.closed === 'undefined') {
+    if (
+      !popupWindow ||
+      popupWindow.closed ||
+      typeof popupWindow.closed === "undefined"
+    ) {
       setGoogleError(
-        'El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.'
-      )
-      setIsLoadingFacebook(false)
-      return
+        "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.",
+      );
+      setIsLoadingFacebook(false);
+      return;
     }
 
-    const popup = popupWindow
-    popup.focus()
+    const popup = popupWindow;
+    popup.focus();
 
-    const expectedOrigin = new URL(API_URL).origin
-    let authWasResolved = false
-    let checkPopupIntervalId = 0
-    let facebookTimeoutId = 0
+    const expectedOrigin = new URL(API_URL).origin;
+    let authWasResolved = false;
+    let checkPopupIntervalId = 0;
+    let facebookTimeoutId = 0;
 
     function cleanup(shouldStopLoading = true) {
-      window.removeEventListener('message', handleMessage)
-      window.clearInterval(checkPopupIntervalId)
-      window.clearTimeout(facebookTimeoutId)
+      window.removeEventListener("message", handleMessage);
+      window.clearInterval(checkPopupIntervalId);
+      window.clearTimeout(facebookTimeoutId);
 
       if (shouldStopLoading) {
-        setIsLoadingFacebook(false)
+        setIsLoadingFacebook(false);
       }
     }
 
     async function handleMessage(event: MessageEvent<FacebookPopupMessage>) {
       if (event.origin !== expectedOrigin) {
-        return
+        return;
       }
 
       if (!isFacebookPopupMessage(event.data)) {
-        return
+        return;
       }
 
-      authWasResolved = true
-      cleanup(false)
+      authWasResolved = true;
+      cleanup(false);
 
-      if (event.data.type === 'propbol:facebook-login-success') {
+      if (event.data.type === "propbol:facebook-login-success") {
         try {
-          await finalizeValidatedSession(event.data.token, event.data.user)
+          await finalizeValidatedSession(event.data.token, event.data.user);
 
-          setSuccessMessage(event.data.message || 'Inicio de sesión con Facebook exitoso')
-          setGoogleError('')
-          setIsLoadingFacebook(false)
-          popup.close()
+          setSuccessMessage(
+            event.data.message || "Inicio de sesión con Facebook exitoso",
+          );
+          setGoogleError("");
+          setIsLoadingFacebook(false);
+          popup.close();
 
           window.setTimeout(() => {
-            redirectAfterSuccessfulLogin()
-          }, 1000)
+            redirectAfterSuccessfulLogin();
+          }, 1000);
         } catch (error) {
-          clearClientSession()
+          clearClientSession();
           setGoogleError(
-            error instanceof Error ? error.message : 'No se pudo consolidar la sesión con Facebook.'
-          )
-          setIsLoadingFacebook(false)
-          popup.close()
+            error instanceof Error
+              ? error.message
+              : "No se pudo consolidar la sesión con Facebook.",
+          );
+          setIsLoadingFacebook(false);
+          popup.close();
         }
 
-        return
+        return;
       }
 
-      clearClientSession()
-      setGoogleError(event.data.message || 'No se pudo iniciar sesión con Facebook.')
-      setIsLoadingFacebook(false)
-      popup.close()
+      clearClientSession();
+      setGoogleError(
+        event.data.message || "No se pudo iniciar sesión con Facebook.",
+      );
+      setIsLoadingFacebook(false);
+      popup.close();
     }
 
     checkPopupIntervalId = window.setInterval(() => {
       if (!popup.closed) {
-        return
+        return;
       }
 
-      cleanup()
+      cleanup();
 
       if (!authWasResolved) {
         if (hasNoInternetConnection()) {
-          setGoogleError(NO_CONNECTION_MESSAGE)
-          return
+          setGoogleError(NO_CONNECTION_MESSAGE);
+          return;
         }
 
-        setGoogleError('Cancelaste el inicio de sesión con Facebook. Puedes intentarlo nuevamente.')
+        setGoogleError(
+          "Cancelaste el inicio de sesión con Facebook. Puedes intentarlo nuevamente.",
+        );
       }
-    }, 500)
+    }, 500);
 
     facebookTimeoutId = window.setTimeout(() => {
-      cleanup()
+      cleanup();
 
       if (!popup.closed) {
-        popup.close()
+        popup.close();
       }
 
       if (!authWasResolved) {
-        setGoogleError(FACEBOOK_TIMEOUT_MESSAGE)
+        setGoogleError(FACEBOOK_TIMEOUT_MESSAGE);
       }
-    }, GOOGLE_LOGIN_TIMEOUT_MS)
+    }, GOOGLE_LOGIN_TIMEOUT_MS);
 
-    window.addEventListener('message', handleMessage)
-  }
+    window.addEventListener("message", handleMessage);
+  };
 
   const handleDiscordLogin = () => {
-    clearClientSession()
-    setGoogleError('')
-    setErrorMessage('')
-    setSuccessMessage('')
+    clearClientSession();
+    setGoogleError("");
+    setErrorMessage("");
+    setSuccessMessage("");
 
     if (hasNoInternetConnection()) {
-      setGoogleError(NO_CONNECTION_MESSAGE)
-      return
+      setGoogleError(NO_CONNECTION_MESSAGE);
+      return;
     }
 
-    setIsLoadingDiscord(true)
+    setIsLoadingDiscord(true);
 
-    const popupWidth = 500
-    const popupHeight = 600
-    const left = window.screenX + (window.outerWidth - popupWidth) / 2
-    const top = window.screenY + (window.outerHeight - popupHeight) / 2
+    const popupWidth = 500;
+    const popupHeight = 600;
+    const left = window.screenX + (window.outerWidth - popupWidth) / 2;
+    const top = window.screenY + (window.outerHeight - popupHeight) / 2;
 
     const popupWindow = window.open(
       `${API_URL}/api/auth/discord/login`,
-      'discord-login',
-      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`
-    )
+      "discord-login",
+      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`,
+    );
 
-    if (!popupWindow || popupWindow.closed || typeof popupWindow.closed === 'undefined') {
+    if (
+      !popupWindow ||
+      popupWindow.closed ||
+      typeof popupWindow.closed === "undefined"
+    ) {
       setGoogleError(
-        'El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.'
-      )
-      setIsLoadingDiscord(false)
-      return
+        "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.",
+      );
+      setIsLoadingDiscord(false);
+      return;
     }
 
-    const popup = popupWindow
-    popup.focus()
+    const popup = popupWindow;
+    popup.focus();
 
-    const expectedOrigin = new URL(API_URL).origin
-    let authWasResolved = false
-    let checkPopupIntervalId = 0
-    let discordTimeoutId = 0
+    const expectedOrigin = new URL(API_URL).origin;
+    let authWasResolved = false;
+    let checkPopupIntervalId = 0;
+    let discordTimeoutId = 0;
 
     function cleanup(shouldStopLoading = true) {
       window.removeEventListener('message', handleMessage)
