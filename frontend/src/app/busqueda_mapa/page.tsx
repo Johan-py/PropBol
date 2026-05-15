@@ -1687,7 +1687,7 @@ function BusquedaMapaContent() {
                                 ? 'Propiedades con precio reducido para ti'
                                 : 'Resultados de búsqueda'}
                         </h1>
-                        <button
+                       {/* <button
                           onClick={() => {
                             if (busquedaModo === 'especifica') {
                               cambiarAModoGeneral(
@@ -1706,10 +1706,10 @@ function BusquedaMapaContent() {
                               : 'bg-stone-100 border-stone-200 text-stone-500 hover:border-stone-300'
                           }`}
                         >
-                          {busquedaModo === 'especifica'
+                           {busquedaModo === 'especifica'
                             ? '📍 Ubicación específica · cambiar a todo Bolivia'
-                            : '🌍 Todo Bolivia · buscar en zona específica'}
-                        </button>
+                            : '🌍 Todo Bolivia · buscar en zona específica'} 
+                        </button> */}
                         <h2
                           className={`font-bold text-slate-900 transition-all duration-300 flex flex-wrap items-center gap-x-2 gap-y-1 ${isScrolled ? 'text-xs mt-0.5' : 'text-sm mt-1'}`}
                         >
@@ -1727,11 +1727,7 @@ function BusquedaMapaContent() {
                                 : 'propiedades encontradas'}
                             </span>
                           </div>
-                          {/* AC 4, 6, 10 — Pills de filtros activos desktop */}
-                          <ActiveFilterTags
-                            filtros={filtrosActivos}
-                            onClearAll={handleClearAllFilters}
-                          />
+      
                           {isClusterView && (
                             <button
                               type="button"
