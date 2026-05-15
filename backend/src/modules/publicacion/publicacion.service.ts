@@ -1,4 +1,4 @@
-import { prisma } from '../../lib/prisma.client.js'
+import { prisma } from "../../lib/prisma.client.js";
 import {
   buscarPublicacionesPorUsuarioRepository,
   buscarPublicacionPorIdRepository,
@@ -11,143 +11,164 @@ import {
   eliminarMultimediaPorIdsRepository,
   eliminarVideosDePublicacionRepository,
   crearMultimediaRepository,
-  buscarMultimediaPublicacionRepository
-} from './publicacion.repository.js'
-import { cloudinary } from '../../config/cloudinary.js'
+  buscarMultimediaPublicacionRepository,
+   // ==================== NUEVAS IMPORTACIONES HU-11 ====================
+  activarPublicidadRepository,
+  cancelarPublicidadRepository,
+  buscarPublicacionPorIdSimpleRepository,
+  verificarPublicidadActivaRepository,
+} from "./publicacion.repository.js";
+import { cloudinary } from "../../config/cloudinary.js";
 
-type TipoAccionPermitido = 'VENTA' | 'ALQUILER' | 'ANTICRETO'
+type TipoAccionPermitido = "VENTA" | "ALQUILER" | "ANTICRETO";
 
 type EditarPublicacionInput = {
-  titulo?: unknown
-  title?: unknown
-  descripcion?: unknown
-  details?: unknown
-  tipoAccion?: unknown
-  operationType?: unknown
-  ubicacion?: unknown
-  location?: unknown
-  precio?: unknown
-  price?: unknown
-}
+  titulo?: unknown;
+  title?: unknown;
+  descripcion?: unknown;
+  details?: unknown;
+  tipoAccion?: unknown;
+  operationType?: unknown;
+  ubicacion?: unknown;
+  location?: unknown;
+  precio?: unknown;
+  price?: unknown;
+};
 
 type ResumenFinalRepositoryResult = NonNullable<
   Awaited<ReturnType<typeof buscarResumenFinalPorIdRepository>>
->
+>;
 
-type ParametroPersonalizadoDb = ResumenFinalRepositoryResult['inmueble'] extends {
-  inmueble_etiqueta: Array<infer T>
+type ParametroPersonalizadoDb =
+  ResumenFinalRepositoryResult["inmueble"] extends {
+    inmueble_etiqueta: Array<infer T>;
 }
   ? T
-  : never
+    : never;
 
-type MultimediaDb = ResumenFinalRepositoryResult['multimedia'] extends Array<infer T> ? T : never
+type MultimediaDb =
+  ResumenFinalRepositoryResult["multimedia"] extends Array<infer T> ? T : never;
 
 type ParametroPersonalizadoResumen = {
-  id: number
-  nombre: string
-}
+  id: number;
+  nombre: string;
+};
 
 type MultimediaResumen = {
-  id: number
-  url: string
-  tipo: string
-  pesoMb: number | null
-}
+  id: number;
+  url: string;
+  tipo: string;
+  pesoMb: number | null;
+};
 
 type EstadisticaPublicacionResumen = {
-  publicacion_id: number
-  total_visualizaciones: number
-  total_compartidos: number
-}
+  publicacion_id: number;
+  total_visualizaciones: number;
+  total_compartidos: number;
+};
 
-const ESTADO_PUBLICACION_ELIMINADA = 'ELIMINADA'
-const TIPO_MULTIMEDIA_IMAGEN = 'IMAGEN'
-const TIPO_MULTIMEDIA_VIDEO = 'VIDEO'
-const TIPOS_ACCION_VALIDOS: TipoAccionPermitido[] = ['VENTA', 'ALQUILER', 'ANTICRETO']
+const ESTADO_PUBLICACION_ELIMINADA = "ELIMINADA";
+const TIPO_MULTIMEDIA_IMAGEN = "IMAGEN";
+const TIPO_MULTIMEDIA_VIDEO = "VIDEO";
+const TIPOS_ACCION_VALIDOS: TipoAccionPermitido[] = [
+  "VENTA",
+  "ALQUILER",
+  "ANTICRETO",
+];
 
-const normalizarTexto = (valor: unknown) => String(valor ?? '').trim()
+const normalizarTexto = (valor: unknown) => String(valor ?? "").trim();
 
-const normalizarTipoMultimedia = (tipo: unknown) => normalizarTexto(tipo).toUpperCase()
+const normalizarTipoMultimedia = (tipo: unknown) =>
+  normalizarTexto(tipo).toUpperCase();
 
 const esNumeroPositivo = (valor: unknown) => {
-  if (valor === undefined || valor === null || valor === '') {
-    return false
+  if (valor === undefined || valor === null || valor === "") {
+    return false;
   }
 
-  const numero = Number(valor)
-  return !Number.isNaN(numero) && numero > 0
-}
+  const numero = Number(valor);
+  return !Number.isNaN(numero) && numero > 0;
+};
 
-const obtenerTipoAccionNormalizado = (valor: unknown): TipoAccionPermitido | null => {
-  const tipoAccion = normalizarTexto(valor).toUpperCase()
+const obtenerTipoAccionNormalizado = (
+  valor: unknown,
+): TipoAccionPermitido | null => {
+  const tipoAccion = normalizarTexto(valor).toUpperCase();
 
   if (!tipoAccion) {
-    return null
+    return null;
   }
 
   return TIPOS_ACCION_VALIDOS.includes(tipoAccion as TipoAccionPermitido)
     ? (tipoAccion as TipoAccionPermitido)
-    : null
-}
+    : null;
+};
 
 const obtenerPrimeraImagenUrl = (
   multimedia:
     | Array<{
-        url: string
-        tipo?: unknown
+        url: string;
+        tipo?: unknown;
       }>
     | null
-    | undefined
+    | undefined,
 ) => {
   if (!multimedia || multimedia.length === 0) {
-    return null
+    return null;
   }
 
   const primeraImagen = multimedia.find(
-    (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN
-  )
+    (item) => normalizarTipoMultimedia(item.tipo) === TIPO_MULTIMEDIA_IMAGEN,
+  );
 
-  return primeraImagen?.url ?? null
-}
+  return primeraImagen?.url ?? null;
+};
 
 export const listarMisPublicacionesService = async (usuarioId: number) => {
   if (Number.isNaN(usuarioId) || usuarioId <= 0) {
-    throw new Error('USUARIO_INVALIDO')
+    throw new Error("USUARIO_INVALIDO");
   }
 
-  const publicaciones = await buscarPublicacionesPorUsuarioRepository(usuarioId)
+  const publicaciones =
+    await buscarPublicacionesPorUsuarioRepository(usuarioId);
 
-  type PublicacionesPorUsuario = Awaited<ReturnType<typeof buscarPublicacionesPorUsuarioRepository>>
+  type PublicacionesPorUsuario = Awaited<
+    ReturnType<typeof buscarPublicacionesPorUsuarioRepository>
+  >;
 
-  const publicacionesIds = publicaciones.map((publicacion) => publicacion.id)
+  const publicacionesIds = publicaciones.map((publicacion) => publicacion.id);
 
   const estadisticas = await prisma.publicacion_estadistica.findMany({
     where: {
       publicacion_id: {
-        in: publicacionesIds
-      }
+        in: publicacionesIds,
+      },
     },
     select: {
       publicacion_id: true,
       total_visualizaciones: true,
-      total_compartidos: true
-    }
-  })
+      total_compartidos: true,
+    },
+  });
 
-  const estadisticasPorPublicacion = new Map<number, EstadisticaPublicacionResumen>()
+  const estadisticasPorPublicacion = new Map<
+    number,
+    EstadisticaPublicacionResumen
+  >();
 
   estadisticas.forEach((estadistica) => {
-    estadisticasPorPublicacion.set(estadistica.publicacion_id, estadistica)
-  })
+    estadisticasPorPublicacion.set(estadistica.publicacion_id, estadistica);
+  });
 
   return publicaciones.map((publicacion: PublicacionesPorUsuario[number]) => {
-    const estadistica = estadisticasPorPublicacion.get(publicacion.id)
+    const estadistica = estadisticasPorPublicacion.get(publicacion.id);
 
     return {
       id: publicacion.id,
       titulo: publicacion.titulo,
       precio: Number(publicacion.inmueble.precio),
-      ubicacion: publicacion.inmueble.ubicacion?.direccion || 'Ubicación no disponible',
+      ubicacion:
+        publicacion.inmueble.ubicacion?.direccion || "Ubicación no disponible",
       nroBanos: publicacion.inmueble.nroBanos,
       nroCuartos: publicacion.inmueble.nroCuartos,
       superficieM2:
@@ -158,40 +179,40 @@ export const listarMisPublicacionesService = async (usuarioId: number) => {
       imagenUrl: obtenerPrimeraImagenUrl(publicacion.multimedia),
 
       tipoOperacion: publicacion.inmueble.tipoAccion,
-      activa: publicacion.estado === 'ACTIVA',
+      activa: publicacion.estado === "ACTIVA",
       estado: publicacion.estado,
 
       totalVisualizaciones: estadistica?.total_visualizaciones ?? 0,
-      totalCompartidos: estadistica?.total_compartidos ?? 0
-    }
-  })
-}
+      totalCompartidos: estadistica?.total_compartidos ?? 0,
+    };
+  });
+};
 
 export const editarPublicacionService = async (
   publicacionId: number,
   usuarioSolicitanteId: number,
-  data: EditarPublicacionInput
+  data: EditarPublicacionInput,
 ) => {
   if (Number.isNaN(publicacionId) || publicacionId <= 0) {
-    throw new Error('ID_INVALIDO')
+    throw new Error("ID_INVALIDO");
   }
 
   if (Number.isNaN(usuarioSolicitanteId) || usuarioSolicitanteId <= 0) {
-    throw new Error('USUARIO_INVALIDO')
+    throw new Error("USUARIO_INVALIDO");
   }
 
-  const publicacion = await buscarPublicacionPorIdRepository(publicacionId)
+  const publicacion = await buscarPublicacionPorIdRepository(publicacionId);
 
   if (!publicacion) {
-    throw new Error('PUBLICACION_NO_EXISTE')
+    throw new Error("PUBLICACION_NO_EXISTE");
   }
 
   if (publicacion.usuarioId !== usuarioSolicitanteId) {
-    throw new Error('NO_AUTORIZADO')
+    throw new Error("NO_AUTORIZADO");
   }
 
   if (publicacion.estado === ESTADO_PUBLICACION_ELIMINADA) {
-    throw new Error('PUBLICACION_YA_ELIMINADA')
+    throw new Error("PUBLICACION_YA_ELIMINADA");
   }
 
   const titulo = data?.titulo ?? data?.title
