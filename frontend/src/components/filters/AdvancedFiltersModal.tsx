@@ -118,7 +118,7 @@ export default function AdvancedFiltersModal({ isOpen, onClose, onApply }: Advan
                     onClick={() => toggleAmenity(amenity.id)}
                     className={`
                       flex items-center gap-2 px-5 py-2.5 rounded-xl border text-sm font-medium transition-all
-                      ${isActive 
+                      ${isActive
                         ? 'bg-[#d97706] border-[#d97706] text-white shadow-md dark:bg-[#E87C1E] dark:border-[#E87C1E]'
                         : 'bg-gray-50 dark:bg-slate-800 border-gray-200 dark:border-slate-700 text-gray-600 dark:text-slate-300 hover:border-[#d97706] dark:hover:border-[#E87C1E]'}
                     `}
