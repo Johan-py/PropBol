@@ -34,9 +34,11 @@ export default function TagsPropiedad({
   const [mensajeExito, setMensajeExito] = useState("");
   const [sugerenciasFiltradas, setSugerenciasFiltradas] = useState<Tag[]>([]);
 
-  useEffect(() => {
-    setTags(tagsIniciales);
-  }, [tagsIniciales]);
+    useEffect(() => {
+    if (tagsIniciales.length > 0) {
+        setTags(tagsIniciales);
+    }
+    }, []);
 
   useEffect(() => {
     const busqueda = nuevoTag.trim().toLowerCase();
@@ -76,12 +78,12 @@ export default function TagsPropiedad({
       return;
     }
 
-    const nuevos = [...tags, valor];
+    const nuevos =  [...new Set([...tags, valor])];
     setTags(nuevos);
     setNuevoTag("");
     setError("");
-    setMensajeExito("¡Excelente! Este tag ya fue agregado.");
-    onGuardar?.(nuevos);
+    setMensajeExito("¡Excelente! El tag fue agregado.");
+    //onGuardar?.(nuevos);
 
     setTimeout(() => setMensajeExito(""), 2000);
   };
@@ -89,7 +91,9 @@ export default function TagsPropiedad({
   const eliminarTag = (index: number) => {
     const actualizados = tags.filter((_, i) => i !== index);
     setTags(actualizados);
-    onGuardar?.(actualizados);
+    setError("");
+    setMensajeExito("");
+    //onGuardar?.(actualizados);
   };
 
   return (
@@ -219,7 +223,18 @@ export default function TagsPropiedad({
         <p className="mt-3 text-[14px] text-[#667085]">
           Puedes agregar hasta {MAX_TAGS} tags. Cada tag debe tener entre {MIN_CARACTERES} y {MAX_CARACTERES} caracteres.
         </p>
+          {/* BOTÓN GUARDAR */}
+            <div className="flex justify-end pt-4">
+                <button
+                type="button"
+                disabled={tags.length === 0}
+                onClick={() => onGuardar?.(tags)}
+                className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600 disabled:opacity-50"
+                >
+                Guardar tags
+                </button>
+            </div>
+        </div>
       </div>
-    </div>
   );
 }
