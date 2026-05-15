@@ -1,18 +1,20 @@
-import path from 'path'
-import 'dotenv/config'
-import express from 'express'
-import cors from 'cors'
-import { env } from './config/env.js'
-import type { Request, Response } from 'express'
-import { prisma } from './lib/prisma.client.js'
-import zonaRoutes from './modules/perfil/zonaUsario.routes.js'
-import telemetriaRouter from './modules/perfil/telemetria.routes.js'
-import locationRoutes from './modules/locations/locations.routes.js'
-import consumoRoutes from './modules/LimiteSuscripcion/consumo.routes.js'
+import path from "path";
+import http from "http";
+import "dotenv/config";
+import express from "express";
+import cors from "cors";
+import { env } from "./config/env.js";
+import type { Request, Response } from "express";
+import { prisma } from "./lib/prisma.client.js";
+import zonaRoutes from "./modules/perfil/zonaUsario.routes.js";
+import telemetriaRouter from "./modules/perfil/telemetria.routes.js";
+import locationRoutes from "./modules/locations/locations.routes.js";
+import consumoRoutes from "./modules/LimiteSuscripcion/consumo.routes.js";
+import { iniciarCronRetroalimentacion } from './modules/recomendaciones/retroalimentacionCron.js'
 // --------------------
 // CONTROLLERS
 // --------------------
-import { propertiesController } from './modules/properties/properties.controller.js'
+import { propertiesController } from "./modules/properties/properties.controller.js";
 
 import {
   createNotificationController,
@@ -22,12 +24,12 @@ import {
   archiveNotificationController,
   getUnreadCountController,
   markAllNotificationsAsReadController,
-  markNotificationAsReadController
-} from './modules/notificaciones/notificaciones.controller.js'
-import notificationStreamRoutes from './modules/notificaciones/notificaciones-stream.routes.js'
-import { BannersController } from './modules/banners/banners.controller.js'
-import { FiltersHomepageController } from './modules/filtershomepage/filtershomepage.controller.js'
-import { CityController } from './modules/city/city.controller.js'
+  markNotificationAsReadController,
+} from "./modules/notificaciones/notificaciones.controller.js";
+import notificationStreamRoutes from "./modules/notificaciones/notificaciones-stream.routes.js";
+import { BannersController } from "./modules/banners/banners.controller.js";
+import { FiltersHomepageController } from "./modules/filtershomepage/filtershomepage.controller.js";
+import { CityController } from "./modules/city/city.controller.js";
 // --------------------
 // AUTH
 // --------------------
@@ -44,6 +46,9 @@ import {
   forgotPasswordController,
   resetPasswordController,
   resend2FAController,
+  requestMagicLinkController,
+  loginWithMagicLinkController,
+  resendMagicLinkController,
   activateAccountByPasswordController,
   requestActivationCodeController,
   activateAccountByCodeController,
@@ -54,32 +59,32 @@ import { requireAuth } from './middleware/auth.middleware.js'
 // --------------------
 // ROUTES / HANDLERS
 // --------------------
-import locationSearchHandler from './api/locations/search.js'
-import { getZonasController } from './modules/zonas/zonas.controller.js'
-import correoverificacionRoutes from './modules/perfil/correoverificacion.routes.js'
-import perfilRoutes from './modules/perfil/perfil.routes.js'
-import comparacionRoutes from './modules/perfil/comparacion.routes.js'
+import locationSearchHandler from "./api/locations/search.js";
+import { getZonasController } from "./modules/zonas/zonas.controller.js";
+import correoverificacionRoutes from "./modules/perfil/correoverificacion.routes.js";
+import perfilRoutes from "./modules/perfil/perfil.routes.js";
+import comparacionRoutes from "./modules/perfil/comparacion.routes.js";
 
 import {
   googleCallbackController,
   getGoogleLinkUrlController,
   StratGoogleLoginController,
-  StartGoogleRegisterController
-} from './modules/auth/google/google.controller.js'
+  StartGoogleRegisterController,
+} from "./modules/auth/google/google.controller.js";
 
 import {
   startLinkedInLoginController,
   startLinkedInRegisterController,
   linkedInCallbackController,
-  getLinkedInLinkUrlController
-} from './modules/auth/linkedin/linkedin.controller.js'
+  getLinkedInLinkUrlController,
+} from "./modules/auth/linkedin/linkedin.controller.js";
 
 import {
   discordCallbackController,
   getDiscordLinkUrlController,
   startDiscordLoginController,
-  startDiscordRegisterController
-} from './modules/auth/discord/discord.controller.js'
+  startDiscordRegisterController,
+} from "./modules/auth/discord/discord.controller.js";
 
 import multimediaRoutes from "./modules/multimedia/multimedia.routes.js";
 import publicacionRoutes from "./modules/publicacion/publicacion.routes.js";
@@ -87,19 +92,21 @@ import router from "./modules/registro-publicacion/publicacion.routes.js";
 import parametrosRoutes from "./modules/parametros-publicacion/parametros.routes.js";
 import tutorialPublicacionRoutes from "./modules/tutorial-publicacion/tutorial-publicacion.routes.js";
 import estadisticasRoutes from "./modules/estadisticas-publicacion/estadisticas.routes.js";
+import tagsRoutes from "./modules/tags/tags.routes.js";
+import estadisticasZonaRoutes from "./modules/estadisticas-zona/estadisticas-zona.routes.js";
 
 import {
   facebookCallbackController,
   getFacebookLinkUrlController,
   startFacebookLoginController,
-  startFacebookRegisterController
-} from './modules/auth/facebook/facebook.controller.js'
+  startFacebookRegisterController,
+} from "./modules/auth/facebook/facebook.controller.js";
 
 import {
   getSocialLinksController,
   unlinkSocialProviderController,
-  getLinkedInOriginalEmailController
-} from './modules/auth/social-links/social-links.controller.js'
+  getLinkedInOriginalEmailController,
+} from "./modules/auth/social-links/social-links.controller.js";
 
 import securityRoutes from "./routes/security.routes.js";
 import propiedadRoutes from "./routes/propiedad.routes.js";
@@ -107,67 +114,70 @@ import { validarPublicacionesFree } from "./controllers/publicacionesController.
 // --------------------
 // LEGACY
 // --------------------
-import authRoutes from './routes/auth.routes.js'
-import publicacionesRoutes from './routes/publicaciones.js'
-import { authMiddleware } from './middleware/authMiddleware.js'
-import blogsRoutes from './modules/blogs/blogs.routes.js'
-import testimoniosRoutes from './modules/testimonios/testimonios.routes.js'
+import authRoutes from "./routes/auth.routes.js";
+import publicacionesRoutes from "./routes/publicaciones.js";
+import { authMiddleware } from "./middleware/authMiddleware.js";
+import blogsRoutes from "./modules/blogs/blogs.routes.js";
+import testimoniosRoutes from "./modules/testimonios/testimonios.routes.js";
 // --------------------
 // LEGACY
 // --------------------
-// Borra la línea 66 y pon esta:
-import historialRoutes from './modules/perfil/historial.routes.js'
+// Borra la l├¡nea 66 y pon esta:
+import historialRoutes from "./modules/perfil/historial.routes.js";
 
 // --------------------
 // SERVICES
 // --------------------
-import { verifyEmailTransport } from './lib/email.service.js'
+import { verifyEmailTransport } from "./lib/email.service.js";
 
 // FAVORITES
-import favoritesRoutes from './modules/favorites/favorites.routes.js'
-import telemetriaRoutes from './modules/telemetria/telemetria.routes.js'
-import recomendacionesRoutes from './modules/recomendaciones/recomendaciones.routes.js'
-import transaccionesRoutes from './modules/transacciones/transacciones.routes.js'
-import suscripcionesRoutes from './modules/suscripciones/suscripciones.routes.js'
-import plansRoutes from './modules/plans/plans.routes.js'
-import historialBusquedaRoutes from './modules/perfil/historialBusqueda.routes.js'
-import whatsappRoutes from './modules/whatsapp/whatsapp.routes.js'
-import { getAdminTestimonios } from './modules/testimonios/adminTestimonios.controller.js'
-import sesionRoutes from './modules/perfil/sesion.routes.js'
+import favoritesRoutes from "./modules/favorites/favorites.routes.js";
+import telemetriaRoutes from "./modules/telemetria/telemetria.routes.js";
+import recomendacionesRoutes from "./modules/recomendaciones/recomendaciones.routes.js";
+import transaccionesRoutes from "./modules/transacciones/transacciones.routes.js";
+import suscripcionesRoutes from "./modules/suscripciones/suscripciones.routes.js";
+import plansRoutes from "./modules/plans/plans.routes.js";
+import usdtRoutes from "./modules/usdt/usdt.routes.js";
+import historialBusquedaRoutes from "./modules/perfil/historialBusqueda.routes.js";
+import whatsappRoutes from "./modules/whatsapp/whatsapp.routes.js";
+import adminTestimoniosRoutes from "./modules/testimonios/adminTestimonios.routes.js";
+import adminPlanesRoutes from "./modules/planes/adminPlanes.routes.js";
+import sesionRoutes from "./modules/perfil/sesion.routes.js";
 
-import './jobs/suscripcion.job.js'
+import "./jobs/suscripcion.job.js";
+import { initSocket } from "./services/socket.service.js";
 
 // --------------------
 // SERVER
 // --------------------
-const app = express()
+const app = express();
 
 // --------------------
 // MIDDLEWARES
 // --------------------
-const normalizedFrontendOrigin = env.FRONTEND_URL.replace(/\/$/, '')
+const normalizedFrontendOrigin = env.FRONTEND_URL.replace(/\/$/, "");
 const allowedOrigins = [
   normalizedFrontendOrigin,
-  'https://prop-bol-cicd.vercel.app',
-  'http://localhost:3000',
-  'http://localhost:3001',
-  'http://localhost:2000'
-]
+  "https://prop-bol-cicd.vercel.app",
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "http://localhost:2000",
+];
 
 // Middleware CORS global
 app.use(
   cors({
     origin: (origin, callback) => {
       if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true)
+        return callback(null, true);
       }
-      return callback(new Error(`CORS policy: Origin not allowed: ${origin}`))
+      return callback(new Error(`CORS policy: Origin not allowed: ${origin}`));
     },
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
-  })
-)
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  }),
+);
 
 app.use(express.json({ limit: '100mb' }))
 app.use(express.urlencoded({ extended: true, limit: '100mb' }))
@@ -177,19 +187,22 @@ app.use('/uploads', express.static(path.resolve('uploads')))
 // --------------------
 // RUTAS LEGACY
 // --------------------
-app.post('/api/auth/forgot-password', forgotPasswordController)
-app.post('/api/auth/resend-2fa', resend2FAController)
-app.post('/api/auth/reset-password', resetPasswordController)
-app.use('/api/auth-legacy', authRoutes)
-app.get('/api/users/:id/publicaciones/free', authMiddleware, (_req, res) => {
-  res.json({ restantes: 2 })
-})
+app.post("/api/auth/forgot-password", forgotPasswordController);
+app.post("/api/auth/magic-link/request", requestMagicLinkController);
+app.post("/api/auth/magic-link/login", loginWithMagicLinkController);
+app.post("/api/auth/magic-link/resend", resendMagicLinkController);
+app.post("/api/auth/resend-2fa", resend2FAController);
+app.post("/api/auth/reset-password", resetPasswordController);
+app.use("/api/auth-legacy", authRoutes);
+app.get("/api/users/:id/publicaciones/free", authMiddleware, (_req, res) => {
+  res.json({ restantes: 2 });
+});
 app.get(
-  '/api/publicaciones/validar-limite/:id',
+  "/api/publicaciones/validar-limite/:id",
   authMiddleware,
   validarPublicacionesFree
-)
-app.use('/api/publicaciones-legacy', publicacionesRoutes)
+);
+app.use("/api/publicaciones-legacy", publicacionesRoutes);
 
 // --------------------
 // RUTAS PRINCIPALES
