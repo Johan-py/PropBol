@@ -212,59 +212,59 @@ export const blogsRepository = {
   async delete(id: number) {
     return prisma.blog.update({
       where: { id },
-      data: { eliminado: true }
-    })
+      data: { eliminado: true },
+    });
   },
 
   async findAllAdmin(params: {
-    estado?: estado_blog
-    categoria_id?: number
-    page?: number
-    limit?: number
+    estado?: estado_blog;
+    categoria_id?: number;
+    page?: number;
+    limit?: number;
   }) {
-    const { estado, categoria_id, page = 1, limit = 10 } = params
-    const skip = (page - 1) * limit
+    const { estado, categoria_id, page = 1, limit = 10 } = params;
+    const skip = (page - 1) * limit;
 
     const where = {
       eliminado: false,
       ...(estado ? { estado } : {}),
-      ...(categoria_id ? { categoria_id } : {})
-    }
+      ...(categoria_id ? { categoria_id } : {}),
+    };
 
     const [data, total] = await prisma.$transaction([
       prisma.blog.findMany({
         where,
         skip,
         take: limit,
-        orderBy: { fecha_creacion: 'desc' },
+        orderBy: { fecha_creacion: "desc" },
         include: {
           usuario: {
-            select: { id: true, nombre: true, apellido: true, avatar: true }
+            select: { id: true, nombre: true, apellido: true, avatar: true },
           },
           categoria_blog: { select: { id: true, nombre: true } },
-          blog_rechazo: { orderBy: { fecha: 'desc' }, take: 1 },
-          _count: { select: { comentario: true } }
-        }
+          blog_rechazo: { orderBy: { fecha: "desc" }, take: 1 },
+          _count: { select: { comentario: true } },
+        },
       }),
-      prisma.blog.count({ where })
-    ])
+      prisma.blog.count({ where }),
+    ]);
 
-    return { data, total, page, limit, totalPages: Math.ceil(total / limit) }
+    return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
   },
 
   async findAllCategories() {
     return prisma.categoria_blog.findMany({
-      orderBy: { nombre: 'asc' }
-    })
-  }
-}
+      orderBy: { nombre: "asc" },
+    });
+  },
+};
 
 export const comentariosRepository = {
   async create(data: {
-    contenido: string
-    usuario_id: number
-    blog_id: number
-    comentario_padre_id?: number
+    contenido: string;
+    usuario_id: number;
+    blog_id: number;
+    comentario_padre_id?: number;
   }) {
     const comentario = await prisma.comentario.create({
       data,
@@ -300,61 +300,67 @@ export const comentariosRepository = {
         where: { blog_id },
         skip,
         take: limit,
-        orderBy: { fecha_creacion: 'asc' },
+        orderBy: { fecha_creacion: "asc" },
         include: {
           usuario: {
-            select: { id: true, nombre: true, apellido: true, avatar: true }
+            select: { id: true, nombre: true, apellido: true, avatar: true },
           },
           _count: { select: { comentario_like: true } },
-          ...(usuario_id ? { comentario_like: { where: { usuario_id } } } : {})
-        }
+          ...(usuario_id ? { comentario_like: { where: { usuario_id } } } : {}),
+        },
       }),
-      prisma.comentario.count({ where: { blog_id } })
-    ])
+      prisma.comentario.count({ where: { blog_id } }),
+    ]);
 
     const mappedData = data.map((comentario) => {
       const { _count, comentario_like, ...rest } = comentario as unknown as {
-        _count: { comentario_like: number }
-        comentario_like?: unknown[]
-      } & Record<string, unknown>
+        _count: { comentario_like: number };
+        comentario_like?: unknown[];
+      } & Record<string, unknown>;
       return {
         ...rest,
         likes: _count?.comentario_like || 0,
-        likedByCurrentUser: comentario_like && comentario_like.length > 0
-      }
-    })
+        likedByCurrentUser: comentario_like && comentario_like.length > 0,
+      };
+    });
 
-    return { data: mappedData, total, page, limit, totalPages: Math.ceil(total / limit) }
+    return {
+      data: mappedData,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   },
 
   async update(id: number, data: { contenido: string }) {
     return prisma.comentario.update({
       where: { id },
-      data
-    })
+      data,
+    });
   },
 
   async findById(id: number) {
-    return prisma.comentario.findUnique({ where: { id } })
+    return prisma.comentario.findUnique({ where: { id } });
   },
 
   async delete(id: number) {
-    return prisma.comentario.delete({ where: { id } })
+    return prisma.comentario.delete({ where: { id } });
   },
 
   async toggleLike(usuario_id: number, comentario_id: number) {
     const existing = await prisma.comentario_like.findUnique({
-      where: { usuario_id_comentario_id: { usuario_id, comentario_id } }
-    })
+      where: { usuario_id_comentario_id: { usuario_id, comentario_id } },
+    });
 
     if (existing) {
-      await prisma.comentario_like.delete({ where: { id: existing.id } })
-      return { liked: false }
+      await prisma.comentario_like.delete({ where: { id: existing.id } });
+      return { liked: false };
     } else {
       await prisma.comentario_like.create({
-        data: { usuario_id, comentario_id }
-      })
-      return { liked: true }
+        data: { usuario_id, comentario_id },
+      });
+      return { liked: true };
     }
-  }
-}
+  },
+};
