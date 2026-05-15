@@ -9,16 +9,22 @@ export default function TwoFactorSection() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isTwoFactorEnabled, setIsTwoFactorEnabled] = useState(false);
-  const [isGoogleUser, setIsGoogleUser] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingStatus, setLoadingStatus] = useState(true);
   const [showDisableModal, setShowDisableModal] = useState(false);
-
+  const [showEmailCodeModal, setShowEmailCodeModal] = useState(false);
+  const [emailCode, setEmailCode] = useState("");
+  const [emailCodeError, setEmailCodeError] = useState("");
+  const [emailCodeSuccess, setEmailCodeSuccess] = useState("");
+  const [isSendingCode, setIsSendingCode] = useState(false);
+  const [isVerifyingCode, setIsVerifyingCode] = useState(false);
+  const [emailVerificationToken, setEmailVerificationToken] = useState("");
   const handleOpenModal = () => {
     setShowModal(true);
     setPassword("");
     setShowPassword(false);
     setError("");
+    resetEmailCodeState();
   };
 
   const handleCancel = () => {
@@ -26,6 +32,20 @@ export default function TwoFactorSection() {
     setPassword("");
     setShowPassword(false);
     setError("");
+  resetEmailCodeState();
+};
+  const resetEmailCodeState = () => {
+    setEmailCode("");
+    setEmailCodeError("");
+    setEmailCodeSuccess("");
+    setIsSendingCode(false);
+    setIsVerifyingCode(false);
+    setEmailVerificationToken("");
+  };
+
+  const handleCancelEmailCode = () => {
+    setShowEmailCodeModal(false);
+    resetEmailCodeState();
   };
 
   useEffect(() => {
@@ -54,7 +74,7 @@ export default function TwoFactorSection() {
 
         if (res.ok) {
           setIsTwoFactorEnabled(Boolean(data.two_factor_activo));
-          setIsGoogleUser(Boolean(data.isGoogleUser));
+        
         }
       } catch {
         console.error("No se pudo obtener el estado 2FA");
@@ -67,8 +87,7 @@ export default function TwoFactorSection() {
   }, []);
 
   const handleConfirm = async () => {
-    // Si es usuario normal, validar que haya escrito contraseña
-    if (!isGoogleUser && !password.trim()) {
+  if (!password.trim()) {
       setError("Este campo es obligatorio");
       return;
     }
@@ -82,8 +101,6 @@ export default function TwoFactorSection() {
         return;
       }
 
-      const body = isGoogleUser ? {} : { password };
-
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/security/activate-2fa`,
         {
@@ -92,7 +109,7 @@ export default function TwoFactorSection() {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(body),
+        body: JSON.stringify({ password }),
         },
       );
 
@@ -116,6 +133,114 @@ export default function TwoFactorSection() {
       setLoading(false);
     }
   };
+
+  const handleOpenEmailVerification = async () => {
+  setError("");
+  setEmailCodeError("");
+  setEmailCodeSuccess("");
+
+  const token = localStorage.getItem("token");
+  if (!token) {
+    setError("No se encontró una sesión válida");
+    return;
+  }
+
+  setIsSendingCode(true);
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/security/activate-2fa/send-code`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setError(data.message || "No se pudo enviar el código.");
+      return;
+    }
+
+    setEmailVerificationToken(data.verificationToken || "");
+    setShowModal(false);
+    setShowEmailCodeModal(true);
+    setEmailCode("");
+    setEmailCodeSuccess("Enviamos un código al correo asociado a tu cuenta.");
+  } catch {
+    setError("No se pudo conectar con el servidor.");
+  } finally {
+    setIsSendingCode(false);
+  }
+};
+
+const handleActivateWithCode = async () => {
+  setEmailCodeError("");
+  setEmailCodeSuccess("");
+
+  const trimmedCode = emailCode.trim();
+
+  if (!trimmedCode) {
+    setEmailCodeError("El código es obligatorio.");
+    return;
+  }
+
+  if (!/^\d{6}$/.test(trimmedCode)) {
+    setEmailCodeError("El código debe tener exactamente 6 dígitos.");
+    return;
+  }
+
+  if (!emailVerificationToken) {
+    setEmailCodeError(
+      "No se encontró la verificación del código. Solicita uno nuevo.",
+    );
+    return;
+  }
+
+  const token = localStorage.getItem("token");
+  if (!token) {
+    setEmailCodeError("No se encontró la sesión del usuario.");
+    return;
+  }
+
+  setIsVerifyingCode(true);
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/security/activate-2fa/verify-code`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          codigo: trimmedCode,
+          verificationToken: emailVerificationToken,
+        }),
+      },
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      setEmailCodeError(data.message || "No se pudo validar el código.");
+      return;
+    }
+
+    setShowEmailCodeModal(false);
+    resetEmailCodeState();
+    setIsTwoFactorEnabled(true);
+  } catch {
+    setEmailCodeError("No se pudo conectar con el servidor.");
+  } finally {
+    setIsVerifyingCode(false);
+  }
+};
 
   const handleOpenDisableModal = () => setShowDisableModal(true);
   const handleCloseDisableModal = () => setShowDisableModal(false);
