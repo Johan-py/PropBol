@@ -1,4 +1,4 @@
-import path from "path";
+﻿import path from "path";
 import http from "http";
 import "dotenv/config";
 import express from "express";
@@ -431,7 +431,7 @@ server.listen(PORT, async () => {
     console.error('ÔØî Error al inicializar planes:', error)
   }
 
-   
+
 
   try {
     await verifyEmailTransport()
