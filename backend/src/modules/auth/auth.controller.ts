@@ -360,7 +360,7 @@ export const get2FAStatusController = async (req: Request, res: Response) => {
     }
 
     const result = await get2FAStatusService(userId);
-    
+
     return res.status(200).json(result);
   } catch (error) {
     if (error instanceof AuthError) {
