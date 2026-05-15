@@ -150,36 +150,36 @@ export function useNotifications() {
   }, []);
 
   const refreshNotifications = useCallback(
-  async (nextFilter: NotificationFilter, options: RefreshOptions = {}) => {
+    async (nextFilter: NotificationFilter, options: RefreshOptions = {}) => {
       const silent = options.silent ?? false;
       const requestId = latestRefreshRequestIdRef.current + 1;
       latestRefreshRequestIdRef.current = requestId;
 
       const token = getStoredToken();
-    if (!token) {
+      if (!token) {
         clearNotificationsState();
         return;
-    }
+      }
 
-    if (!window.navigator.onLine) {
+      if (!window.navigator.onLine) {
         return;
-    }
+      }
 
       let skeletonTimer: number | null = null;
 
-    if (!silent) {
+      if (!silent) {
         setIsLoading(true);
         setError(null);
 
-      skeletonTimer = window.setTimeout(() => {
-        if (latestRefreshRequestIdRef.current === requestId) {
+        skeletonTimer = window.setTimeout(() => {
+          if (latestRefreshRequestIdRef.current === requestId) {
             setShowSkeleton(true);
-        }
+          }
         }, SKELETON_DELAY_MS);
-    }
+      }
 
-    try {
-      const [notificationsResponse, unreadCountResponse] = await Promise.all([
+      try {
+        const [notificationsResponse, unreadCountResponse] = await Promise.all([
           requestJson<NotificationsResponse>(
             buildNotificationsUrl(nextFilter, ITEMS_PER_LOAD, 0),
           ),
@@ -188,56 +188,56 @@ export function useNotifications() {
           ),
         ]);
 
-      if (latestRefreshRequestIdRef.current !== requestId) {
+        if (latestRefreshRequestIdRef.current !== requestId) {
           return;
-      }
+        }
 
         setNotifications(notificationsResponse.items);
         setTotal(notificationsResponse.total);
         setUnreadCount(unreadCountResponse.unreadCount);
         setIsLoggedIn(true);
         setError(null);
-    } catch (err) {
-      if (latestRefreshRequestIdRef.current !== requestId) {
+      } catch (err) {
+        if (latestRefreshRequestIdRef.current !== requestId) {
           return;
-      }
+        }
 
-      if (!window.navigator.onLine) {
+        if (!window.navigator.onLine) {
           return;
-      }
+        }
 
         const error = err as Error & { status?: number };
         const technicalMessage = error.message.toLowerCase();
 
-      if (
+        if (
           technicalMessage.includes("no autorizado") ||
           technicalMessage.includes("token") ||
-        error.status === 401
-      ) {
+          error.status === 401
+        ) {
           clearNotificationsState();
           return;
-      }
+        }
 
-      if (error.status === 500) {
+        if (error.status === 500) {
           setError("Ocurrió un problema al cargar las notificaciones.");
-      } else {
+        } else {
           setError("No se pudieron cargar las notificaciones.");
-      }
-    } finally {
-      if (skeletonTimer !== null) {
+        }
+      } finally {
+        if (skeletonTimer !== null) {
           window.clearTimeout(skeletonTimer);
-      }
+        }
 
-      if (latestRefreshRequestIdRef.current !== requestId) {
+        if (latestRefreshRequestIdRef.current !== requestId) {
           return;
-      }
+        }
 
-      if (!silent) {
+        if (!silent) {
           setIsLoading(false);
           setShowSkeleton(false);
+        }
       }
-    }
-  },
+    },
     [clearNotificationsState],
   );
 
@@ -506,14 +506,14 @@ export function useNotifications() {
       setHasRealtimeUpdate(true);
       void refreshNotifications(filter, { silent: true });
 
-    window.setTimeout(() => {
+      window.setTimeout(() => {
         setHasRealtimeUpdate(false);
       }, 3000);
     });
 
     const realtimeEvents = ["read", "read-all", "deleted", "archived"];
 
-      realtimeEvents.forEach((eventName) => {
+    realtimeEvents.forEach((eventName) => {
       eventSource.addEventListener(eventName, () => {
         void refreshNotifications(filter, { silent: true });
       });
