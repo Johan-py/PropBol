@@ -250,7 +250,7 @@ function BusquedaMapaContent() {
 
   // === 1. ESTADOS COMPARTIDOS ===
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list')
   const [sheetState, setSheetState] = useState<SheetState>('peek')
   const [pinnedProperty, setPinnedProperty] = useState<any | null>(null)
   const [isMounted, setIsMounted] = useState(false)
@@ -307,6 +307,16 @@ function BusquedaMapaContent() {
   useEffect(() => {
     setIsMounted(true)
     setViewportWidth(window.innerWidth)
+  }, [])
+
+  // Vista lista (1 columna) al entrar; al restaurar desde bfcache el estado React se conserva.
+  useEffect(() => {
+    setViewMode('list')
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) setViewMode('list')
+    }
+    window.addEventListener('pageshow', onPageShow)
+    return () => window.removeEventListener('pageshow', onPageShow)
   }, [])
 
   useEffect(() => {
@@ -1644,10 +1654,10 @@ function BusquedaMapaContent() {
             // 🚀 CONTENEDOR PADRE SIN SCROLL
             <div className="flex flex-col h-full min-h-0 relative bg-stone-50">
               {/* 🚀 CABECERA (Fuera del scroll = Cero rebotes) */}
-              <div className="bg-white shrink-0 border-b border-stone-200 shadow-sm transition-all duration-300">
-                {/* BLOQUE 1: DESAPARECE CON EL SCROLL (Solo el título "Filtros") */}
+              <div className="bg-white shrink-0 border-b border-stone-200 shadow-sm">
+                {/* BLOQUE 1: DESAPARECE CON EL SCROLL (Solo el título "Filtros") — sin animar altura para evitar saltos en el listado */}
                 <div
-                  className={`px-4 transition-all duration-300 overflow-hidden ${isScrolled ? 'max-h-0 opacity-0' : 'max-h-[60px] opacity-100 pt-4'}`}
+                  className={`px-4 overflow-hidden ${isScrolled ? 'max-h-0 opacity-0' : 'max-h-[60px] opacity-100 pt-4'}`}
                 >
                   <div className="flex justify-between items-center mb-2">
                     <div className="flex items-center gap-1">
