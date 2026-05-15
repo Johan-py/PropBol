@@ -199,181 +199,202 @@ export function useNotifications() {
         setError(null);
     } catch (err) {
       if (latestRefreshRequestIdRef.current !== requestId) {
-        return
+          return;
       }
 
       if (!window.navigator.onLine) {
-        return
+          return;
       }
 
-      const error = err as Error & { status?: number }
-      const technicalMessage = error.message.toLowerCase()
+        const error = err as Error & { status?: number };
+        const technicalMessage = error.message.toLowerCase();
 
       if (
-        technicalMessage.includes('no autorizado') ||
-        technicalMessage.includes('token') ||
+          technicalMessage.includes("no autorizado") ||
+          technicalMessage.includes("token") ||
         error.status === 401
       ) {
-        clearNotificationsState()
-        return
+          clearNotificationsState();
+          return;
       }
 
       if (error.status === 500) {
-        setError('Ocurrió un problema al cargar las notificaciones.')
+          setError("Ocurrió un problema al cargar las notificaciones.");
       } else {
-        setError('No se pudieron cargar las notificaciones.')
+          setError("No se pudieron cargar las notificaciones.");
       }
     } finally {
       if (skeletonTimer !== null) {
-        window.clearTimeout(skeletonTimer)
+          window.clearTimeout(skeletonTimer);
       }
 
       if (latestRefreshRequestIdRef.current !== requestId) {
-        return
+          return;
       }
 
       if (!silent) {
-        setIsLoading(false)
-        setShowSkeleton(false)
+          setIsLoading(false);
+          setShowSkeleton(false);
       }
     }
   },
-  [clearNotificationsState]
-)
+    [clearNotificationsState],
+  );
 
   const loadMoreNotifications = useCallback(async () => {
-    const token = getStoredToken()
+    const token = getStoredToken();
 
     if (!token) {
-      clearNotificationsState()
-      return
+      clearNotificationsState();
+      return;
     }
 
-    if (isLoading || isLoadingMore || notifications.length >= total) return
+    if (isLoading || isLoadingMore || notifications.length >= total) return;
 
-    setIsLoadingMore(true)
+    setIsLoadingMore(true);
 
     try {
       const response = await requestJson<NotificationsResponse>(
-        buildNotificationsUrl(filter, ITEMS_PER_LOAD, notifications.length)
-      )
+        buildNotificationsUrl(filter, ITEMS_PER_LOAD, notifications.length),
+      );
 
-      setNotifications((prev) => [...prev, ...response.items])
-      setTotal(response.total)
+      setNotifications((prev) => [...prev, ...response.items]);
+      setTotal(response.total);
     } catch (err) {
-      const error = err as Error & { status?: number }
+      const error = err as Error & { status?: number };
 
       if (error.status === 401) {
-        clearNotificationsState()
-        return
+        clearNotificationsState();
+        return;
       }
 
-      if (!window.navigator.onLine) return
+      if (!window.navigator.onLine) return;
 
-      setError('No se pudieron cargar las notificaciones.')
+      setError("No se pudieron cargar las notificaciones.");
     } finally {
-      setIsLoadingMore(false)
+      setIsLoadingMore(false);
     }
-  }, [clearNotificationsState, filter, isLoading, isLoadingMore, notifications.length, total])
+  }, [
+    clearNotificationsState,
+    filter,
+    isLoading,
+    isLoadingMore,
+    notifications.length,
+    total,
+  ]);
 
   const toggleNotifications = () => {
-    setOpen((prev) => !prev)
-  }
+    setOpen((prev) => !prev);
+  };
 
   const changeFilter = useCallback(
     (nextFilter: NotificationFilter) => {
-      if (nextFilter === filter) return
+      if (nextFilter === filter) return;
 
-      setFilterState(nextFilter)
-      void refreshNotifications(nextFilter, { silent: true })
+      setFilterState(nextFilter);
+      void refreshNotifications(nextFilter, { silent: true });
     },
-    [filter, refreshNotifications]
-  )
+    [filter, refreshNotifications],
+  );
 
   const markAsRead = useCallback(
     async (id: number) => {
-      await requestJson(`${API_URL}/notificaciones/${id}/read`, { method: 'PATCH' })
-      await refreshNotifications(filter, { silent: true })
-      emitNotificationsUpdated()
+      await requestJson(`${API_URL}/notificaciones/${id}/read`, {
+        method: "PATCH",
+      });
+      await refreshNotifications(filter, { silent: true });
+      emitNotificationsUpdated();
     },
-    [emitNotificationsUpdated, filter, refreshNotifications]
-  )
+    [emitNotificationsUpdated, filter, refreshNotifications],
+  );
 
   const markAllAsRead = useCallback(async () => {
-    await requestJson(`${API_URL}/notificaciones/read-all`, { method: 'PATCH' })
-    await refreshNotifications(filter, { silent: true })
-    emitNotificationsUpdated()
-  }, [emitNotificationsUpdated, filter, refreshNotifications])
+    await requestJson(`${API_URL}/notificaciones/read-all`, {
+      method: "PATCH",
+    });
+    await refreshNotifications(filter, { silent: true });
+    emitNotificationsUpdated();
+  }, [emitNotificationsUpdated, filter, refreshNotifications]);
 
   const deleteNotification = useCallback(
     async (id: number) => {
-      await requestJson(`${API_URL}/notificaciones/${id}`, { method: 'DELETE' })
-      await refreshNotifications(filter, { silent: true })
-      emitNotificationsUpdated()
+      await requestJson(`${API_URL}/notificaciones/${id}`, {
+        method: "DELETE",
+      });
+      await refreshNotifications(filter, { silent: true });
+      emitNotificationsUpdated();
     },
-    [emitNotificationsUpdated, filter, refreshNotifications]
-  )
+    [emitNotificationsUpdated, filter, refreshNotifications],
+  );
 
   const archiveNotification = useCallback(
     async (id: number) => {
-      await requestJson(`${API_URL}/notificaciones/${id}/archivar`, { method: 'PATCH' })
-      await refreshNotifications(filter, { silent: true })
-      emitNotificationsUpdated()
+      await requestJson(`${API_URL}/notificaciones/${id}/archivar`, {
+        method: "PATCH",
+      });
+      await refreshNotifications(filter, { silent: true });
+      emitNotificationsUpdated();
     },
-    [emitNotificationsUpdated, filter, refreshNotifications]
-  )
+    [emitNotificationsUpdated, filter, refreshNotifications],
+  );
 
-  const hasMore = notifications.length < total
+  const hasMore = notifications.length < total;
 
   useEffect(() => {
-    setIsLoggedIn(Boolean(getStoredToken()))
-    setIsOnline(window.navigator.onLine)
-  }, [])
+    setIsLoggedIn(Boolean(getStoredToken()));
+    setIsOnline(window.navigator.onLine);
+  }, []);
 
   useEffect(() => {
     const handleOnline = () => {
-      setIsOnline(true)
-      void refreshNotifications(filter, { silent: true })
-    }
+      setIsOnline(true);
+      void refreshNotifications(filter, { silent: true });
+    };
 
     const handleOffline = () => {
-      setIsOnline(false)
-      setError(null)
+      setIsOnline(false);
+      setError(null);
 
       if (eventSourceRef.current) {
-        eventSourceRef.current.close()
-        eventSourceRef.current = null
+        eventSourceRef.current.close();
+        eventSourceRef.current = null;
       }
-    }
+    };
 
-    window.addEventListener('online', handleOnline)
-    window.addEventListener('offline', handleOffline)
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener('online', handleOnline)
-      window.removeEventListener('offline', handleOffline)
-    }
-  }, [filter, refreshNotifications])
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, [filter, refreshNotifications]);
 
   useEffect(() => {
-    void refreshNotifications('todas')
-  }, [refreshNotifications])
+    void refreshNotifications("todas");
+  }, [refreshNotifications]);
 
   useEffect(() => {
     const handleNotificationsUpdated = (event: Event) => {
-      const customEvent = event as CustomEvent<{ source?: string }>
+      const customEvent = event as CustomEvent<{ source?: string }>;
 
-      if (customEvent.detail?.source === instanceId.current) return
+      if (customEvent.detail?.source === instanceId.current) return;
 
-      void refreshNotifications(filter, { silent: true })
-    }
+      void refreshNotifications(filter, { silent: true });
+    };
 
-    window.addEventListener(NOTIFICATIONS_UPDATED_EVENT, handleNotificationsUpdated)
+    window.addEventListener(
+      NOTIFICATIONS_UPDATED_EVENT,
+      handleNotificationsUpdated,
+    );
 
     return () => {
-      window.removeEventListener(NOTIFICATIONS_UPDATED_EVENT, handleNotificationsUpdated)
-    }
-  }, [filter, refreshNotifications])
+      window.removeEventListener(
+        NOTIFICATIONS_UPDATED_EVENT,
+        handleNotificationsUpdated,
+      );
+    };
+  }, [filter, refreshNotifications]);
 
   useEffect(() => {
     const handleAuthStateChanged = () => {
