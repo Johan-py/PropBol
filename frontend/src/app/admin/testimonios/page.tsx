@@ -12,10 +12,12 @@ import {
   CheckCircle2,
   XCircle,
 } from 'lucide-react'
+import FormularioTestimonios from './formularioTestimonio'
 
 interface Testimonio {
   id: number
-  nombreUsuario: string
+  nombreTestimonial: string
+  creadoPor: string
   departamento: string
   zonaBarrio: string
   categoria: string
@@ -23,12 +25,26 @@ interface Testimonio {
   avatar: string | null
   likes: number
   activo: boolean
+  calificacion: number
+}
+
+interface EditingTestimonio extends Partial<Testimonio> {
+  // campos para edición
 }
 
 export default function AdminTestimoniosPage() {
   const [testimonios, setTestimonios] = useState<Testimonio[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [filter, setFilter] = useState('')
+  const [showForm, setShowForm] = useState(false)
+  const [editingId, setEditingId] = useState<number | null>(null)
+  const [editingData, setEditingData] = useState<Partial<EditingTestimonio>>({})
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [deletingId, setDeletingId] = useState<number | null>(null)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('')
+  const [editUserName, setEditUserName] = useState('')
+  const [editUserLastName, setEditUserLastName] = useState('')
 
   const API_URL =
     process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
@@ -37,26 +53,18 @@ export default function AdminTestimoniosPage() {
     const fetchTestimonios = async () => {
       try {
         setIsLoading(true)
-
         const token = localStorage.getItem('token')
-
-        const response = await fetch(
-          `${API_URL}/api/admin/testimonios`,
-          {
+        const response = await fetch(`${API_URL}/api/admin/testimonios`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
-        )
+        })
 
         if (!response.ok) {
           throw new Error('Error al obtener testimonios')
         }
 
         const data = await response.json()
-
-        console.log(data)
-
         setTestimonios(data)
       } catch (error) {
         console.error('Error al cargar testimonios:', error)
@@ -67,6 +75,109 @@ export default function AdminTestimoniosPage() {
 
     fetchTestimonios()
   }, [API_URL])
+
+  const handleEditClick = (testimonio: Testimonio) => {
+    setEditingId(testimonio.id)
+    setEditingData({
+      departamento: testimonio.departamento,
+      zonaBarrio: testimonio.zonaBarrio,
+      categoria: testimonio.categoria,
+      texto: testimonio.texto,
+      activo: testimonio.activo,
+      calificacion: testimonio.calificacion || 5,
+    })
+    const nameParts = (testimonio.nombreTestimonial || '').split(' ')
+    setEditUserName(nameParts[0] || '')
+    setEditUserLastName(nameParts.slice(1).join(' ') || '')
+    setShowEditModal(true)
+  }
+
+  const handleSaveEdit = async () => {
+    if (!editingId) return
+
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) throw new Error('No autenticado')
+
+      const response = await fetch(`${API_URL}/api/admin/testimonios/${editingId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          comentario: editingData.texto,
+          ciudad: editingData.departamento,
+          zona: editingData.zonaBarrio,
+          categoria: editingData.categoria,
+          visible: editingData.activo,
+          nombreAutor: editUserName.trim(),
+          apellidoAutor: editUserLastName.trim(),
+          calificacion: editingData.calificacion,
+        }),
+      })
+
+      const data = await response.json()
+      if (!response.ok) throw new Error(data?.message || 'Error al actualizar')
+
+      setTestimonios((prev) =>
+        prev.map((t) =>
+          t.id === editingId
+            ? {
+                ...t,
+                departamento: data.departamento || t.departamento,
+                zonaBarrio: data.zonaBarrio || t.zonaBarrio,
+                categoria: data.categoria || t.categoria,
+                texto: data.texto || t.texto,
+                activo: data.activo !== undefined ? data.activo : t.activo,
+                nombreTestimonial: data.nombreTestimonial || t.nombreTestimonial,
+                calificacion: data.calificacion || t.calificacion,
+                likes: data.likes !== undefined ? data.likes : t.likes,
+              }
+            : t
+        )
+      )
+
+      setSuccessMessage('✅ Testimonio actualizado correctamente')
+      setTimeout(() => {
+        setShowEditModal(false)
+        setSuccessMessage('')
+      }, 2000)
+    } catch (error) {
+      console.error('Error al actualizar:', error)
+      alert(error instanceof Error ? error.message : 'Error al actualizar testimonio')
+    }
+  }
+
+  const handleDeleteClick = (id: number) => {
+    setDeletingId(id)
+    setShowDeleteConfirm(true)
+  }
+
+  const handleConfirmDelete = async () => {
+    if (!deletingId) return
+
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) throw new Error('No autenticado')
+
+      const response = await fetch(`${API_URL}/api/admin/testimonios/${deletingId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) throw new Error('Error al eliminar')
+
+      setTestimonios((prev) => prev.filter((t) => t.id !== deletingId))
+      setShowDeleteConfirm(false)
+      setDeletingId(null)
+    } catch (error) {
+      console.error('Error al eliminar:', error)
+      alert(error instanceof Error ? error.message : 'Error al eliminar testimonio')
+    }
+  }
 
   const testimoniosFiltrados = testimonios.filter(
     (t) =>
