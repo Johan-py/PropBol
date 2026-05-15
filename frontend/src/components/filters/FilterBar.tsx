@@ -439,8 +439,8 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
   // FIX Z-INDEX MASIVO: Agregamos z-[99999] y !overflow-visible para aplastar al mapa
   const containerStyles =
     variant === 'map'
-      ? 'bg-[#faf9f6] dark:bg-slate-900 border-b border-stone-200 dark:border-slate-800 py-2 px-4 w-full flex flex-col gap-2 shadow-sm sticky top-0 z-[9999] !overflow-visible transition-colors'
-      : 'bg-white dark:bg-slate-900 shadow-lg rounded-[30px] p-6 flex flex-col gap-6 w-full max-w-[921px] relative z-[999999] !overflow-visible transition-colors'
+      ? 'bg-[#faf9f6] dark:bg-slate-900 border-b border-stone-200 dark:border-slate-800 py-2 px-3 md:px-4 w-full flex flex-col gap-2 shadow-sm sticky top-0 z-[9999] !overflow-visible transition-colors'
+      : 'bg-white dark:bg-slate-900 shadow-lg rounded-[30px] px-4 py-4 md:p-6 flex flex-col gap-6 w-full max-w-[921px] relative z-[999999] !overflow-visible transition-colors'
   return (
     <form className={containerStyles} onSubmit={handleSearch}>
 
@@ -448,62 +448,62 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       {/* LAYOUT PARA MAPA (Nuevo Diseño) */}
       {/* ========================================================= */}
       {variant === 'map' && (
-        <div className="flex flex-col gap-3 w-full max-w-screen-2xl mx-auto">
+        <div className="flex flex-col gap-2 md:gap-3 w-full max-w-screen-2xl mx-auto">
 
           {/* FILA 1: Tipo | Modos (Venta/Alquiler) | Ubicación | Buscar */}
-          <div className="flex flex-wrap md:flex-nowrap items-center w-full gap-3 relative z-[100] !overflow-visible">
+          <div className="flex flex-nowrap items-center w-full gap-2 md:gap-3 relative z-[100] overflow-x-auto md:overflow-visible scrollbar-hide !overflow-visible">
 
-            <div className="w-full md:w-48 xl:w-56 shrink-0 relative z-[100] !overflow-visible">
+            <div className="min-w-[140px] md:w-48 xl:w-56 shrink-0 relative z-[100] !overflow-visible">
               <ComboBox label="" placeholder="Cualquier tipo" icon={Home} options={propertyTypes} onChange={(val) => setTipoInmueble(val)} value={tipoInmueble} />
             </div>
 
-            <div className="shrink-0 flex items-center h-[42px] bg-white border border-stone-200 rounded-xl px-2 shadow-sm relative z-[90]">
+            <div className="shrink-0 flex items-center h-[36px] md:h-[42px] bg-white border border-stone-200 rounded-xl px-2 shadow-sm relative z-[90]">
               <TransactionModeFilter modoSeleccionado={modosSeleccionados} onModoChange={setModosSeleccionados} />
             </div>
 
-            <div className="flex-1 min-w-[200px] relative z-[90] !overflow-visible">
+            <div className="flex-1 min-w-[150px] md:flex-1 relative z-[90] !overflow-visible">
               <LocationSearch value={ubicacionTexto} onChange={handleLocationChange} />
             </div>
 
-            <div className="shrink-0 w-full md:w-auto relative z-10">
-              <button type="submit" className="w-full md:w-auto h-[42px] px-8 bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-md transition-all active:scale-95">
+            <div className="shrink-0 relative z-10">
+              <button type="submit" className="h-[36px] md:h-[42px] px-4 md:px-8 bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-md transition-all active:scale-95">
                 <SearchIcon size={18} />
               </button>
             </div>
           </div>
 
           {/* FILA 2: Filtros Rápidos (Píldoras) */}
-          <div className="flex flex-wrap items-center gap-3 relative z-[80] justify-center md:justify-start">
-            <button type="button" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('abrirPanelUbicacion')); }} className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isZonaFilterActive ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]' : 'bg-white dark:bg-slate-800 text-stone-600 dark:text-slate-300 border-stone-200 dark:border-slate-700 hover:border-[#d97706] dark:hover:border-[#E87C1E]'}`}>
-              <MapPin className={`w-4 h-4 ${isZonaFilterActive ? 'text-white' : 'text-stone-500 dark:text-slate-400'}`} />
+          <div className="flex overflow-x-auto whitespace-nowrap items-center gap-2 md:gap-3 relative z-[80] justify-start scrollbar-hide pb-1">
+            <button type="button" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('abrirPanelUbicacion')); }} className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isZonaFilterActive ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]' : 'bg-white dark:bg-slate-800 text-stone-600 dark:text-slate-300 border-stone-200 dark:border-slate-700 hover:border-[#d97706] dark:hover:border-[#E87C1E]'}`}>
+              <MapPin className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isZonaFilterActive ? 'text-white' : 'text-stone-500 dark:text-slate-400'}`} />
               <span>Zona</span>
             </button>
 
-            <button type="button" onClick={(e) => { e.preventDefault(); onOpenPriceFilter?.() }} className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isPriceFilterActive ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]' : 'bg-white dark:bg-slate-800 text-stone-600 dark:text-slate-300 border-stone-200 dark:border-slate-700 hover:border-[#d97706] dark:hover:border-[#E87C1E]'}`}>
-              <DollarSign className={`w-4 h-4 ${isPriceFilterActive ? 'text-white' : 'text-stone-500 dark:text-slate-400'}`} />
+            <button type="button" onClick={(e) => { e.preventDefault(); onOpenPriceFilter?.() }} className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isPriceFilterActive ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]' : 'bg-white dark:bg-slate-800 text-stone-600 dark:text-slate-300 border-stone-200 dark:border-slate-700 hover:border-[#d97706] dark:hover:border-[#E87C1E]'}`}>
+              <DollarSign className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isPriceFilterActive ? 'text-white' : 'text-stone-500 dark:text-slate-400'}`} />
               <span>Precio</span>
-              <ChevronDown className={`w-4 h-4 ${isPriceFilterActive ? 'text-white' : 'text-stone-400 dark:text-slate-400'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isPriceFilterActive ? 'text-white' : 'text-stone-400 dark:text-slate-400'}`} />
             </button>
 
             <div className="shrink-0">
               <CapacidadButton variant={variant} isActive={isCapacidadActive} onClick={onToggleCapacidad} />
             </div>
 
-            <button type="button" onClick={() => onOpenSuperficieFilter?.()} className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isSuperficieFilterActive ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]' : 'bg-white dark:bg-slate-800 text-stone-600 dark:text-slate-300 border-stone-200 dark:border-slate-700 hover:border-[#d97706] dark:hover:border-[#E87C1E]'}`}>
-              <Maximize className={`w-4 h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-500 dark:text-slate-400'}`} />
+            <button type="button" onClick={() => onOpenSuperficieFilter?.()} className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isSuperficieFilterActive ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]' : 'bg-white dark:bg-slate-800 text-stone-600 dark:text-slate-300 border-stone-200 dark:border-slate-700 hover:border-[#d97706] dark:hover:border-[#E87C1E]'}`}>
+              <Maximize className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-500 dark:text-slate-400'}`} />
               <span>Metros</span>
-              <ChevronDown className={`w-4 h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-400 dark:text-slate-400'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-400 dark:text-slate-400'}`} />
             </button>
 
-            <button type="button" onClick={() => onOpenEtiquetasFilter?.()} className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isEtiquetasFilterActive ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]' : 'bg-white dark:bg-slate-800 text-stone-600 dark:text-slate-300 border-stone-200 dark:border-slate-700 hover:border-[#d97706] dark:hover:border-[#E87C1E]'}`}>
-              <Tag className={`w-4 h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-500 dark:text-slate-400'}`} />
+            <button type="button" onClick={() => onOpenEtiquetasFilter?.()} className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isEtiquetasFilterActive ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]' : 'bg-white dark:bg-slate-800 text-stone-600 dark:text-slate-300 border-stone-200 dark:border-slate-700 hover:border-[#d97706] dark:hover:border-[#E87C1E]'}`}>
+              <Tag className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-500 dark:text-slate-400'}`} />
               <span>Etiquetas</span>
-              <ChevronDown className={`w-4 h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-400 dark:text-slate-400'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-400 dark:text-slate-400'}`} />
             </button>
 
             {/* Modal de Filtros Avanzados */}
-            <button type="button" onClick={() => setIsAdvancedFiltersOpen(true)} className="h-[38px] flex items-center gap-2 px-4 rounded-full bg-white border border-stone-200 text-stone-600 text-sm font-medium hover:border-[#d97706] shadow-sm transition-all focus:outline-none shrink-0">
-              <SlidersHorizontal className="w-4 h-4 text-stone-500" />
+            <button type="button" onClick={() => setIsAdvancedFiltersOpen(true)} className="h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-700 text-stone-600 dark:text-stone-300 text-[13px] md:text-sm font-medium hover:border-[#d97706] shadow-sm transition-all focus:outline-none shrink-0">
+              <SlidersHorizontal className="w-3.5 h-3.5 md:w-4 md:h-4 text-stone-500 dark:text-slate-300" />
               <span>Más Filtros</span>
             </button>
 
@@ -512,6 +512,26 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
               isActive={isOfertaActive}
               onClick={onToggleOferta}
             />
+
+            <button type="button" onClick={() => onOpenSuperficieFilter?.()} className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isSuperficieFilterActive ? 'bg-[#d97706] text-white border-[#d97706]' : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'}`}>
+              <Maximize className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-500'}`} />
+              <span>Metros</span>
+              <ChevronDown className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-400'}`} />
+            </button>
+
+            <button type="button" onClick={() => onOpenEtiquetasFilter?.()} className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isEtiquetasFilterActive ? 'bg-[#d97706] text-white border-[#d97706]' : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'}`}>
+              <Tag className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-500'}`} />
+              <span>Etiquetas</span>
+              <ChevronDown className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-400'}`} />
+            </button>
+
+            {/* Modal de Filtros Avanzados */}
+            <button type="button" onClick={() => setIsAdvancedFiltersOpen(true)} className="h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full bg-white border border-stone-200 text-stone-600 text-[13px] md:text-sm font-medium hover:border-[#d97706] shadow-sm transition-all focus:outline-none shrink-0">
+              <SlidersHorizontal className="w-3.5 h-3.5 md:w-4 md:h-4 text-stone-500" />
+              <span>Más Filtros</span>
+            </button>
+
+
 
             <button
               type="button"
@@ -591,12 +611,12 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
 
 
 
-              className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${searchParams?.get('orden') === 'recomendados'
-                  ? 'bg-[#d97706] text-white border-[#d97706]'
-                  : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+              className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${searchParams?.get('orden') === 'recomendados'
+                ? 'bg-[#d97706] text-white border-[#d97706]'
+                : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
                 }`}
             >
-              <Award className={`w-4 h-4 ${searchParams?.get('orden') === 'recomendados' ? 'text-white' : 'text-stone-500'}`} />
+              <Award className={`w-3.5 h-3.5 md:w-4 md:h-4 ${searchParams?.get('orden') === 'recomendados' ? 'text-white' : 'text-stone-500'}`} />
               <span>Recomendados</span>
             </button>
 
@@ -606,12 +626,12 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                 e.preventDefault();
                 toggleCompareMode();
               }}
-              className={`h-[38px] flex items-center gap-2 px-4 rounded-full border text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isCompareMode
+              className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isCompareMode
                 ? 'bg-[#d97706] text-white border-[#d97706]'
                 : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
                 }`}
             >
-              <BarChart2 className={`w-4 h-4 ${isCompareMode ? 'text-white' : 'text-stone-500'}`} />
+              <BarChart2 className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isCompareMode ? 'text-white' : 'text-stone-500'}`} />
               <span>Comparar {isCompareMode && selectedIds.length > 0 ? `(${selectedIds.length})` : ''}</span>
             </button>
           </div>
@@ -666,18 +686,18 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
 
       {/* ===== LAYOUT PARA HOME ===== */}
       {variant === 'home' && (
-        <div className="flex items-center w-full gap-3 relative z-[90] !overflow-visible flex-col md:flex-row flex-wrap">
-          <div className="flex w-full relative z-[100] !overflow-visible justify-center">
+        <div className="flex flex-nowrap items-center w-full gap-2 md:gap-3 relative z-[90] overflow-x-auto md:overflow-visible scrollbar-hide !overflow-visible">
+          <div className="min-w-[140px] md:w-auto shrink-0 relative z-[100]">
             <TransactionModeFilter modoSeleccionado={modosSeleccionados} onModoChange={setModosSeleccionados} />
           </div>
-          <div className="relative z-[100] !overflow-visible w-full md:w-64">
+          <div className="min-w-[150px] md:w-64 shrink-0 relative z-[100]">
             <ComboBox label="Tipo" placeholder="Cualquier tipo" icon={Home} options={propertyTypes} onChange={setTipoInmueble} value={tipoInmueble} />
           </div>
-          <div className="relative z-[90] !overflow-visible w-full flex-1">
+          <div className="flex-1 min-w-[150px] relative z-[90] !overflow-visible">
             <LocationSearch value={ubicacionTexto} onChange={handleLocationChange} />
           </div>
-          <div className="w-full md:w-auto flex justify-end relative z-10">
-            <button type="submit" className="w-full md:w-auto h-[46px] px-10 bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95">
+          <div className="shrink-0 relative z-10">
+            <button type="submit" className="h-[40px] md:h-[46px] px-5 md:px-10 bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-md transition-all active:scale-95">
               <SearchIcon size={18} /> BUSCAR
             </button>
           </div>
