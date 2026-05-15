@@ -313,8 +313,8 @@ export default function LoginForm() {
 
   const [showActivationModal, setShowActivationModal] = useState(false);
   const [activationStep, setActivationStep] = useState<
-  "options" | "password" | "code"
->("options");
+    "options" | "password" | "code"
+  >("options");
   const [activationPassword, setActivationPassword] = useState("");
   const [showActivationPassword, setShowActivationPassword] = useState(false);
   const [activationCode, setActivationCode] = useState("");
@@ -333,7 +333,7 @@ export default function LoginForm() {
 
     const timer = window.setInterval(() => {
       setTimeLeft((previousTime) => Math.max(previousTime - 1, 0));
-      }, 1000);
+    }, 1000);
 
     return () => window.clearInterval(timer);
   }, [timeLeft]);
@@ -1030,13 +1030,13 @@ export default function LoginForm() {
     }
 
     if (isActivating) {
-        return;
-      }
+      return;
+    }
 
     if (!navigator.onLine) {
       setActivationError(ACTIVATION_CONNECTION_ERROR_MESSAGE);
-        return;
-      }
+      return;
+    }
 
     const controller = new AbortController();
     const timeoutId = window.setTimeout(() => {
@@ -1857,12 +1857,12 @@ export default function LoginForm() {
       </button>
 
       {showActivationModal && (
-        <div 
-          onClick={closeActivationModal} 
+        <div
+          onClick={closeActivationModal}
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
         >
           {activationStep === "password" && (
-            <div 
+            <div
               ref={activationModalRef}
               onClick={(event) => event.stopPropagation()}
               className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg"
@@ -1956,7 +1956,7 @@ export default function LoginForm() {
           )}
 
           {activationStep === "code" && (
-            <div 
+            <div
               ref={activationModalRef}
               onClick={(event) => event.stopPropagation()}
               className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg"
@@ -2077,7 +2077,7 @@ export default function LoginForm() {
           )}
 
           {activationStep === "options" && (
-            <div 
+            <div
               ref={activationModalRef}
               onClick={(event) => event.stopPropagation()}
               className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg"
