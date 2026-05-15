@@ -178,11 +178,11 @@ export default function BlogSharePlaceholder({
                 className="w-6 h-6 sm:w-7 sm:h-7 opacity-90 group-hover:opacity-100 transition-opacity"
               />
             </button>
-            <button onClick={shareToX} className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir en X (Twitter)">
+            <button onClick={shareToX} className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-stone-100 hover:bg-stone-200 dark:bg-stone-800 dark:hover:bg-stone-700 transition-colors duration-200 group shrink-0" title="Compartir en X (Twitter)">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/c/ce/X_logo_2023.svg"
                 alt="X"
-                className="w-5 h-5 sm:w-6 sm:h-6 opacity-90 group-hover:opacity-100 transition-opacity"
+                className="w-5 h-5 sm:w-6 sm:h-6 opacity-90 group-hover:opacity-100 transition-opacity dark:invert"
               />
             </button>
             <button onClick={shareToLinkedIn} className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir en LinkedIn">
