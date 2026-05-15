@@ -13,11 +13,14 @@ import {
   verify2FAService,
   verifyRegisterCodeService,
   resend2FAService,
+  requestMagicLinkService,
+  loginWithMagicLinkService,
+  resendMagicLinkService,
   activateAccountByPasswordService,
   requestActivationCodeService,
   activateAccountByCodeService,
   resendRegisterCodeService,
-} from './auth.service.js'
+} from "./auth.service.js";
 
 type RegisterBody = {
   nombre: string;
@@ -35,13 +38,21 @@ type VerifyRegisterBody = {
 };
 
 type Verify2FABody = {
-  userId: number
-  codigo: string
-}
+  userId: number;
+  codigo: string;
+};
 
 type VerifyPasswordBody = {
-  password: string
-}
+  password: string;
+};
+
+type RequestMagicLinkBody = {
+  correo: string;
+};
+
+type LoginWithMagicLinkBody = {
+  token: string;
+};
 
 const isDuplicateEmailError = (message: string) => {
   const normalized = message.toLowerCase();
@@ -68,24 +79,26 @@ const getRegisterErrorMessage = (message: string) => {
 
 export const resend2FAController = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.body
+    const { userId } = req.body;
 
-    const result = await resend2FAService(userId)
+    const result = await resend2FAService(userId);
 
-    return res.status(200).json(result)
+    return res.status(200).json(result);
   } catch (error) {
     if (error instanceof AuthError) {
       return res.status(error.statusCode).json({
-        message: error.message
-      })
+        message: error.message,
+      });
     }
 
     const message =
-      error instanceof Error ? error.message : 'Error al reenviar el código 2FA'
+      error instanceof Error
+        ? error.message
+        : "Error al reenviar el código 2FA";
 
-    return res.status(400).json({ message })
+    return res.status(400).json({ message });
   }
-}
+};
 
 export const loginController = async (req: Request, res: Response) => {
   try {
@@ -185,33 +198,33 @@ export const verifyRegisterCodeController = async (
 
 export const verify2FAController = async (
   req: Request<unknown, unknown, Verify2FABody>,
-  res: Response
+  res: Response,
 ) => {
   try {
-    const { userId, codigo } = req.body
+    const { userId, codigo } = req.body;
 
     const result = await verify2FAService({
       userId,
-      codigo
-    })
+      codigo,
+    });
 
     return res.status(200).json({
-      message: 'Verificación 2FA exitosa',
-      ...result
-    })
+      message: "Verificación 2FA exitosa",
+      ...result,
+    });
   } catch (error) {
     if (error instanceof AuthError) {
       return res.status(error.statusCode).json({
-        message: error.message
-      })
+        message: error.message,
+      });
     }
 
     const message =
-      error instanceof Error ? error.message : 'Error al verificar código 2FA'
+      error instanceof Error ? error.message : "Error al verificar código 2FA";
 
-    return res.status(400).json({ message })
+    return res.status(400).json({ message });
   }
-}
+};
 
 export const getMeController = async (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
