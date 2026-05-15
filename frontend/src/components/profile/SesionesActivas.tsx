@@ -203,81 +203,133 @@ export default function ActiveSessions() {
 
   return (
     <div className="min-h-screen bg-[#EAEAEA] p-4">
-     <div className="bg-[#D9D9D9] rounded-sm p-6">
-    
-        {/* Header */}
+      <div className="bg-[#D9D9D9] rounded-sm p-6">
+
+        {/* HEADER */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-black">
-               Gestión de Sesiones Activas
+            Gestión de Sesiones Activas
           </h1>
-             <p className="text-lg text-black mt-2">
-               3 sesiones activas
-            </p>
+          <p className="text-lg text-black mt-2">
+            {sesiones.length} {sesiones.length === 1 ? 'sesión activa' : 'sesiones activas'}
+          </p>
         </div>
-        {/* Tabla/Card */}
-        <div className="bg-[#F4F4F4] rounded-2xl p-8">
 
-           {/* Header tabla */}
-          <div className="max-w-5xl mx-auto grid grid-cols-4 bg-[#E8962F] text-white font-bold rounded-lg py-4 px-6 mb-4 text-center text-lg">
-                <p>ID</p>
-                <p>Última actividad</p>
-                <p>Estado</p>
-                <p>Acción</p>
-                </div>
-              <div className="space-y-3">
+        {/* ERROR */}
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+            <strong>Error:</strong> {error}
+          </div>
+        )}
 
-                 {sessions.map((session) => (
-                    <div 
-                   key={session.id}
-                   className="max-w-5xl mx-auto grid grid-cols-4 items-center bg-[#E7DFD7] rounded-lg py-5 px-6 text-center text-lg">
-                    
-                    {/* ID */}
-                <p>{session.id}.</p>
+        {/* LOADING */}
+        {isLoading && sesiones.length === 0 ? (
+          <div className="flex justify-center items-center h-32">
+            <div className="w-8 h-8 border-4 border-amber-500 border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : sesiones.length === 0 && !isLoading ? (
+          <div className="bg-[#F4F4F4] rounded-2xl p-8 text-center">
+            <p className="text-gray-600 text-lg">No hay sesiones activas</p>
+          </div>
+        ) : (
+          <div className="bg-[#F4F4F4] rounded-2xl p-8">
 
-                {/* Última actividad */}
-                <p>{session.activity}</p>
-
-                {/* Estado */}
-                <p>{session.status}</p>
-                <div className="flex flex-col items-center">
-
-                  <input
-                    type="checkbox"
-                    disabled={session.status === 'Sesión actual'}
-                    className={`w-5 h-5 ${
-                    session.status === 'Sesión actual'
-                    ? 'cursor-not-allowed accent-red-500 opacity-60'
-                    : 'cursor-pointer'
-                  }`}
-                   />
-
-                  {session.status === 'Sesión actual' && (
-                    <p className="text-xs text-red-500 mt-2 text-center">
-                    No se puede cerrar esta sesión
-                  </p>
-                  )}
-                 
-
-                </div>
-              </div>
-              ))}
-
+            {/* HEADER TABLA */}
+            <div className="max-w-5xl mx-auto grid grid-cols-4 bg-[#E8962F] text-white font-bold rounded-lg py-4 px-6 mb-4 text-center text-lg">
+              <p>ID</p>
+              <p>Última actividad</p>
+              <p>Estado</p>
+              <p>Seleccionar</p>
             </div>
-                
-        </div>
-        <div className="flex flex-col items-end mt-10 gap-5 max-w-5xl mx-auto">
 
-          <button className="propbol-btn-select-all bg-[#CFCFCF] hover:bg-[#BDBDBD] transition px-8 py-3 rounded-lg text-lg font-medium">
-            Seleccionar todas
-          </button>
+            {/* FILAS */}
+            <div className="space-y-3">
+              {sesiones.map((sesion) => (
+                <div
+                  key={sesion.id}
+                  className={`max-w-5xl mx-auto grid grid-cols-4 items-center rounded-lg py-5 px-6 text-center text-lg transition-colors
+                    ${seleccionadas.includes(sesion.id)
+                      ? 'bg-amber-100'
+                      : 'bg-[#E7DFD7]'
+                    }`}
+                >
+                  <p className="font-medium">#{sesion.id}</p>
+                  <p>{formatearFecha(sesion.fechaInicio)}</p>
+                  <p>
+                    {sesion.esActual ? (
+                      <span className="text-green-600 font-semibold">✓ Sesión actual</span>
+                    ) : (
+                      <span className="text-blue-600">Activa</span>
+                    )}
+                  </p>
 
-          <button className="propbol-btn-close-session bg-[#EC7467] hover:bg-[#df6557] text-white transition px-12 py-3 rounded-lg text-xl font-bold">
-            Cerrar Sesión
-        </button>
+                  <div className="flex flex-col items-center">
+                    <input
+                      type="checkbox"
+                      checked={seleccionadas.includes(sesion.id)}
+                      onChange={() => toggleSeleccion(sesion.id, sesion.esActual)}
+                      disabled={sesion.esActual}
+                      className={`w-5 h-5 accent-amber-500 ${sesion.esActual
+                        ? 'cursor-not-allowed opacity-60'
+                        : 'cursor-pointer'
+                        }`}
+                    />
+                    {sesion.esActual && (
+                      <p className="text-xs text-red-500 mt-2 text-center">
+                        No se puede cerrar
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
 
-        </div>
+          </div>
+        )}
+
+        {/* BOTONES */}
+        {sesiones.length > 0 && (
+          <div className="flex flex-col items-end mt-10 gap-5 max-w-5xl mx-auto">
+            <button
+              onClick={seleccionarTodas}
+              disabled={sesionesActivasCount === 0}
+              className="bg-[#CFCFCF] hover:bg-[#BDBDBD] transition px-8 py-3 rounded-lg text-lg font-medium disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              {todasSeleccionadas ? 'Deseleccionar todas' : 'Seleccionar todas'}
+            </button>
+
+            <div className="flex gap-4">
+              <button
+                onClick={cerrarTodas}
+                disabled={sesionesActivasCount === 0 || isLoading}
+                className="bg-[#CFCFCF] hover:bg-[#BDBDBD] transition px-8 py-3 rounded-lg text-lg font-medium disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                Cerrar todas
+              </button>
+
+              <button
+                onClick={cerrarSesiones}
+                disabled={seleccionadas.length === 0 || isLoading}
+                className={`transition px-12 py-3 rounded-lg text-xl font-bold text-white
+                  ${seleccionadas.length === 0 || isLoading
+                    ? 'bg-red-300 cursor-not-allowed'
+                    : 'bg-[#EC7467] hover:bg-[#df6557]'
+                  }`}
+              >
+                {isLoading ? (
+                  <span className="flex items-center gap-2">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Cerrando...
+                  </span>
+                ) : (
+                  `Cerrar${seleccionadas.length > 1 ? ' todas' : ''}${seleccionadas.length > 0 ? ` (${seleccionadas.length})` : ''}`
+                )}
+              </button>
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
-
-  );
+  )
 }
