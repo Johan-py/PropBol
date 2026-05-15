@@ -804,82 +804,86 @@ export default function LoginForm() {
           "Cancelaste el inicio de sesión con LinkedIn. Puedes intentarlo nuevamente.",
         );
       }
-    }, 500)
+    }, 500);
 
     linkedinTimeoutId = window.setTimeout(() => {
-      wasTimeout = true
-      cleanup()
-      clearClientSession()
-      if (!popup.closed) popup.close()
+      wasTimeout = true;
+      cleanup();
+      clearClientSession();
+
+      if (!popup.closed) {
+        popup.close();
+      }
+
       if (!authWasResolved) {
         setGoogleError(
           hasNoInternetConnection()
             ? NO_CONNECTION_MESSAGE
-            : 'El tiempo de autorización con LinkedIn expiró. Por favor, inténtalo nuevamente.'
-        )
+            : "El tiempo de autorización con LinkedIn expiró. Por favor, inténtalo nuevamente.",
+        );
       }
-    }, GOOGLE_LOGIN_TIMEOUT_MS)
+    }, GOOGLE_LOGIN_TIMEOUT_MS);
 
-    window.addEventListener('message', handleMessage)
-  }
+    window.addEventListener("message", handleMessage);
+  };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-    const trimmedCorreo = correo.trim().toLowerCase()
-    const trimmedPassword = password.trim()
+    const trimmedCorreo = correo.trim().toLowerCase();
+    const trimmedPassword = password.trim();
 
-    const newErrors: { correo?: string; password?: string } = {}
+    const newErrors: { correo?: string; password?: string } = {};
 
     if (!trimmedCorreo) {
-      newErrors.correo = 'El correo es obligatorio'
+      newErrors.correo = "El correo es obligatorio";
     } else if (!/\S+@\S+\.\S+/.test(trimmedCorreo)) {
-      newErrors.correo = 'Formato de correo inválido'
+      newErrors.correo = "Formato de correo inválido";
     }
 
     if (!trimmedPassword) {
-      newErrors.password = 'La contraseña es obligatoria'
+      newErrors.password = "La contraseña es obligatoria";
     }
 
-    setErrors(newErrors)
-    setErrorMessage('')
-    setSuccessMessage('')
-    setGoogleError('')
+    setErrors(newErrors);
+    setErrorMessage("");
+    setSuccessMessage("");
+    setGoogleError("");
 
     if (Object.keys(newErrors).length > 0) {
-      return
+      return;
     }
 
     if (hasNoInternetConnection()) {
-      setPassword('')
-      setErrorMessage(NO_CONNECTION_MESSAGE)
-      return
+      setPassword("");
+      setErrorMessage(NO_CONNECTION_MESSAGE);
+      return;
     }
 
-    setIsLoading(true)
-    clearClientSession()
-    clearPending2FA()
+    setIsLoading(true);
+    clearClientSession();
+    clearPending2FA();
 
-    const controller = new AbortController()
+    const controller = new AbortController();
     const timeoutId = window.setTimeout(() => {
-      controller.abort()
-    }, LOGIN_TIMEOUT_MS)
+      controller.abort();
+    }, LOGIN_TIMEOUT_MS);
 
     try {
       const response = await fetch(`${API_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           correo: trimmedCorreo,
-          password: trimmedPassword
+          password: trimmedPassword,
         }),
-        signal: controller.signal
-      })
+        signal: controller.signal,
+      });
 
-      const data: LoginResponse = await response.json()
+      const data = (await response.json()) as LoginResponse;
 
       if (!response.ok) {
-        setPassword('')
+        setPassword("");
 
         if (response.status === 403) {
           setActivationEmail(trimmedCorreo);
@@ -889,30 +893,32 @@ export default function LoginForm() {
 
         if (response.status === 404) {
           setErrorMessage(
-            'Esta cuenta no está registrada. Puedes registrarte para crear una cuenta.'
-          )
-          return
+            "Esta cuenta no está registrada. Puedes registrarte para crear una cuenta.",
+          );
+          return;
         }
 
-        setErrorMessage(data.message || 'Error al iniciar sesión')
-        return
+        setErrorMessage(data.message || "Error al iniciar sesión");
+        return;
       }
 
       if (data.requires2FA) {
         if (!data.userId) {
-          clearClientSession()
-          setErrorMessage('No se pudo iniciar la verificación en dos pasos')
-          return
+          clearClientSession();
+          setErrorMessage("No se pudo iniciar la verificación en dos pasos");
+          return;
         }
 
         savePending2FA({
           userId: data.userId,
           email: data.email,
-          expiresInMinutes: data.expiresInMinutes
-        })
+          expiresInMinutes: data.expiresInMinutes,
+        });
 
-        setSuccessMessage(data.message || 'Te enviamos un código de verificación')
-        setPassword('')
+        setSuccessMessage(
+          data.message || "Te enviamos un código de verificación",
+        );
+        setPassword("");
 
         window.setTimeout(() => {
           router.push('/sign-in/verify-2fa')
