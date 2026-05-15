@@ -53,8 +53,8 @@ export default function ZoomControls() {
     alignItems: 'center',
     justifyContent: 'center',
     transition: 'background-color 0.2s ease, color 0.2s ease',
-    backgroundColor: active === type ? '#F97316' : '#ffffff',
-    color: disabled ? '#d1d5db' : active === type ? '#ffffff' : '#374151'
+    backgroundColor: disabled ? '#000000' : active === type ? '#ffffff' : '#000000',
+    color: disabled ? '#6b7280' : active === type ? '#000000' : '#ffffff'
   })
   return (
     <div
@@ -65,9 +65,9 @@ export default function ZoomControls() {
         zIndex: 1000,
         display: 'flex',
         flexDirection: 'column',
-        backgroundColor: '#ffffff',
+        backgroundColor: '#000000',
         borderRadius: '8px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.18)',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
         overflow: 'hidden',
         width: '36px'
       }}
@@ -81,7 +81,7 @@ export default function ZoomControls() {
         +
       </button>
 
-      <div style={{ height: '1px', backgroundColor: '#e5e7eb', margin: '0 6px' }} />
+      <div style={{ height: '1px', backgroundColor: '#374151', margin: '0 6px' }} />
 
       <button
         onClick={handleZoomOut}
