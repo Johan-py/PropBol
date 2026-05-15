@@ -25,10 +25,25 @@ export function useExchangeRate() {
   const [state, setState] = useState<ExchangeRateState>(initialState);
 
   useEffect(() => {
-    fetch("/api/exchange-rate", { cache: "no-store" })
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 6000);
+
+    fetch("/api/exchange-rate", { signal: controller.signal })
       .then((response) => response.json() as Promise<ExchangeRateData>)
       .then((data) => setState({ ...data, isLoading: false, isError: data.referentialRate === null }))
-      .catch(() => setState((current) => ({ ...current, isLoading: false, isError: true })));
+      .catch(() =>
+        setState((current) => ({
+          ...current,
+          isLoading: false,
+          isError: true,
+        })),
+      )
+      .finally(() => window.clearTimeout(timeoutId));
+
+    return () => {
+      controller.abort();
+      window.clearTimeout(timeoutId);
+    };
   }, []);
 
   return state;
