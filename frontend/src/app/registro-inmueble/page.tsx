@@ -52,6 +52,15 @@ export default function MiRegistroPage() {
   const [vertices, setVertices] = useState<[number, number][]>([])
   const [modoPinActivo, setModoPinActivo] = useState(false)
   const [modoDifuminadoActivo, setModoDifuminadoActivo] = useState(false)
+  const [pois, setPois] = useState<
+  {
+    id: number
+    nombre: string
+    lat: number
+    lng: number
+  }[]
+>([])
+const [poiSeleccionado, setPoiSeleccionado] = useState<number | null>(null)
 
   useEffect(() => {
     const obtenerDireccion = async () => {
@@ -538,6 +547,19 @@ export default function MiRegistroPage() {
       setEstado('error')
       return
     }
+    if (
+  pois.some(
+    (poi) =>
+      !poi.nombre.trim() ||
+      poi.nombre.trim().length < 3
+  )
+) {
+  setMensajeError(
+    'LAS REFERENCIAS DEBEN TENER MÍNIMO 3 CARACTERES'
+  )
+  setEstado('error')
+  return
+}
 
     const payload = {
       titulo: tituloLimpio,
@@ -597,6 +619,33 @@ export default function MiRegistroPage() {
       }
 
       const publicacionId = result?.property?.publicacion?.id
+      for (const poi of pois) {
+  if (!poi.nombre.trim()) continue
+
+  const responsePoi = await fetch(
+    `${API_URL}/api/pois/inmueble/${publicacionId}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        nombre: poi.nombre,
+        latitud: poi.lat,
+        longitud: poi.lng
+      })
+    }
+  )
+  if (!responsePoi.ok) {
+  setMensajeError(
+    'ERROR AL GUARDAR REFERENCIAS'
+  )
+
+  setEstado('error')
+  return
+}
+}
 
       if (!publicacionId) {
         setMensajeError('No se recibió el ID de la publicación creada')
@@ -895,17 +944,16 @@ export default function MiRegistroPage() {
               </div>
 
               <div className="mt-6">
-                <div className="flex items-center justify-between mb-4 gap-4">
-                  <div className="flex gap-3">
+                <div className="flex items-center gap-3 mb-4 gap-4">
+                  <div className="flex items-center gap-3">
                     <button
                       type="button"
                       onClick={() => {
                         setModoPinActivo(true)
                         setModoDifuminadoActivo(false)
-                        // borra polígono anterior
-                           setVertices([])
+                        setVertices([]) // Lógica de develop: borra el polígono anterior
                       }}
-                      className={`px-4 py-2 rounded-full text-sm ${
+                      className={`px-4 py-2 rounded-full text-xs transition ${
                         modoPinActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
                       }`}
                     >
@@ -917,15 +965,81 @@ export default function MiRegistroPage() {
                       onClick={() => {
                         setModoDifuminadoActivo(true)
                         setModoPinActivo(false)
-                        // borra pin anterior
-                           setPinCoords(null)
+                        setPinCoords(null) // Lógica de develop: borra el pin anterior
                       }}
-                      className={`px-4 py-2 rounded-full text-sm ${
+                      className={`px-4 py-2 rounded-full text-sm transition-colors ${
                         modoDifuminadoActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
                       }`}
                     >
                       Difuminado
                     </button>
+
+                    <button
+                      type="button"
+                      disabled={!pinCoords}
+                      onClick={() => {
+                        if (!pinCoords) return
+
+                        const referenciasEnEsePunto = pois.filter(
+                          (poi) =>
+                            poi.lat === pinCoords.lat &&
+                            poi.lng === pinCoords.lng
+                        )
+if (pois.length >= 12) {
+  alert('Máximo 12 referencias')
+  return
+}
+if (referenciasEnEsePunto.length >= 4) {
+  alert('Máximo 4 referencias por ubicación')
+  return
+}
+
+setPois([
+  ...pois,
+  {
+    id: Date.now(),
+    nombre: '',
+    lat: pinCoords.lat,
+    lng: pinCoords.lng
+  }
+])
+      }}
+      className={`px-4 py-2 rounded-full text-xs ${
+        pinCoords
+          ? 'bg-orange-500 text-white'
+          : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+      }`}
+    >
+      +Referencia
+    </button>
+
+    <button
+      type="button"
+      disabled={pois.length === 0}
+      onClick={() => {
+if (pois.length === 0) return
+
+if (poiSeleccionado !== null) {
+  setPois(
+    pois.filter((poi) => poi.id !== poiSeleccionado)
+  )
+
+  setPoiSeleccionado(null)
+
+} else {
+  setPois(pois.slice(0, -1))
+}
+}}
+      className={`px-4 py-2 rounded-full text-xs ${
+        pois.length > 0
+          ? 'bg-red-500 text-white'
+          : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+      }`}
+    >
+     <span className="whitespace-nowrap">
+  -Referencia
+     </span>
+    </button>
                   </div>
 
                   <button
@@ -937,19 +1051,23 @@ export default function MiRegistroPage() {
                       setModoPinActivo(false)
                       setModoDifuminadoActivo(false)
 
+      setPois([])
+      setPoiSeleccionado(null)
+
                       setDatos((prev) => ({
                         ...prev,
                         direccion: ''
                       }))
                     }}
-                    className={`px-4 py-2 rounded-full text-sm transition ${
+    className={`px-4 py-2 rounded-full text-xs transition ${
                       !pinCoords && vertices.length === 0
                         ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                         : 'bg-orange-500 text-white hover:bg-orange-600'
                     }`}
                   >
-                    Eliminar selección
+    Eliminar
                   </button>
+
                 </div>
 
                 <div className="relative z-0 rounded-2xl overflow-hidden border border-gray-200 max-w-full h-[320px]">
@@ -960,6 +1078,10 @@ export default function MiRegistroPage() {
                     setVertices={setVertices}
                     modoPinActivo={modoPinActivo}
                     modoDifuminadoActivo={modoDifuminadoActivo}
+                    pois={pois}
+                    setPois={setPois}
+                    poiSeleccionado={poiSeleccionado}
+                    setPoiSeleccionado={setPoiSeleccionado}
                   />
                 </div>
 
@@ -973,6 +1095,7 @@ export default function MiRegistroPage() {
                     <p>Longitud: {pinCoords.lng}</p>
                   </div>
                 )}
+                
               </div>
 
               <div className="mt-12 space-y-6">
