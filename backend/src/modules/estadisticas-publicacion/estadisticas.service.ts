@@ -227,8 +227,8 @@ export class EstadisticasPublicacionService {
     if (publicacion.estado !== EstadoPublicacion.ACTIVA) {
       return {
         registrado: false,
-        mensaje: 'La publicación no está activa. No se registró el compartido.'
-      }
+        mensaje: "La publicación no está activa. No se registró el compartido.",
+      };
     }
 
     await prisma.$transaction(async (tx) => {
@@ -236,162 +236,165 @@ export class EstadisticasPublicacionService {
         data: {
           publicacion_id: publicacionId,
           usuario_id: usuarioId,
-          medio: medio || 'GENERAL'
-        }
-      })
+          medio: medio || "GENERAL",
+        },
+      });
 
       await tx.publicacion_estadistica.upsert({
         where: {
-          publicacion_id: publicacionId
+          publicacion_id: publicacionId,
         },
         update: {
           total_compartidos: {
-            increment: 1
+            increment: 1,
           },
-          actualizado_en: new Date()
+          actualizado_en: new Date(),
         },
         create: {
           publicacion_id: publicacionId,
           total_visualizaciones: 0,
-          total_compartidos: 1
-        }
-      })
-    })
+          total_compartidos: 1,
+        },
+      });
+    });
 
     return {
       registrado: true,
-      mensaje: 'Compartido registrado correctamente.'
-    }
+      mensaje: "Compartido registrado correctamente.",
+    };
   }
 
   static async registrarCompartidoPorInmueble({
     inmuebleId,
     usuarioId,
-    medio
+    medio,
   }: RegistrarCompartidoPorInmuebleParams) {
     const publicacion = await prisma.publicacion.findFirst({
       where: {
         inmuebleId,
-        estado: EstadoPublicacion.ACTIVA
+        estado: EstadoPublicacion.ACTIVA,
       },
       select: {
-        id: true
-      }
-    })
+        id: true,
+      },
+    });
 
     if (!publicacion) {
-      throw new Error('PUBLICACION_NO_EXISTE')
+      throw new Error("PUBLICACION_NO_EXISTE");
     }
 
     return this.registrarCompartido({
       publicacionId: publicacion.id,
       usuarioId,
-      medio
-    })
+      medio,
+    });
   }
 
-  static async obtenerEstadisticas({ publicacionId, usuarioId }: ObtenerEstadisticasParams) {
+  static async obtenerEstadisticas({
+    publicacionId,
+    usuarioId,
+  }: ObtenerEstadisticasParams) {
     const publicacion = await prisma.publicacion.findUnique({
       where: {
-        id: publicacionId
+        id: publicacionId,
       },
       select: {
         id: true,
         titulo: true,
         estado: true,
-        usuarioId: true
-      }
-    })
+        usuarioId: true,
+      },
+    });
 
     if (!publicacion) {
-      throw new Error('PUBLICACION_NO_EXISTE')
+      throw new Error("PUBLICACION_NO_EXISTE");
     }
 
     if (publicacion.usuarioId !== usuarioId) {
-      throw new Error('NO_ES_PROPIETARIO')
+      throw new Error("NO_ES_PROPIETARIO");
     }
 
     const estadistica = await prisma.publicacion_estadistica.findUnique({
       where: {
-        publicacion_id: publicacionId
+        publicacion_id: publicacionId,
       },
       select: {
         total_visualizaciones: true,
-        total_compartidos: true
-      }
-    })
+        total_compartidos: true,
+      },
+    });
 
     return {
       publicacionId: publicacion.id,
       titulo: publicacion.titulo,
       estado: publicacion.estado,
       totalVisualizaciones: estadistica?.total_visualizaciones ?? 0,
-      totalCompartidos: estadistica?.total_compartidos ?? 0
-    }
+      totalCompartidos: estadistica?.total_compartidos ?? 0,
+    };
   }
 
   static async obtenerMisPropiedadesVistas(usuarioId: number) {
     const vistas = await prisma.propiedad_vista.findMany({
       where: {
         usuarioId,
-        activo: true
+        activo: true,
       },
       orderBy: {
-        vistaEn: 'desc'
+        vistaEn: "desc",
       },
       include: {
         inmueble: {
           include: {
             publicaciones: {
               where: {
-                estado: EstadoPublicacion.ACTIVA
+                estado: EstadoPublicacion.ACTIVA,
               },
               include: {
-                multimedia: true
-              }
+                multimedia: true,
+              },
             },
-            ubicacion: true
-          }
-        }
-      }
-    })
+            ubicacion: true,
+          },
+        },
+      },
+    });
 
     const publicacionesIds = vistas
       .map((vista) => vista.inmueble.publicaciones[0]?.id)
-      .filter((id): id is number => typeof id === 'number')
+      .filter((id): id is number => typeof id === "number");
 
     const estadisticas = await prisma.publicacion_estadistica.findMany({
       where: {
         publicacion_id: {
-          in: publicacionesIds
-        }
+          in: publicacionesIds,
+        },
       },
       select: {
         publicacion_id: true,
         total_visualizaciones: true,
-        total_compartidos: true
-      }
-    })
+        total_compartidos: true,
+      },
+    });
 
     const estadisticasPorPublicacion = new Map<
       number,
       {
-        publicacion_id: number
-        total_visualizaciones: number
-        total_compartidos: number
+        publicacion_id: number;
+        total_visualizaciones: number;
+        total_compartidos: number;
       }
-    >()
+    >();
 
     estadisticas.forEach((estadistica) => {
-      estadisticasPorPublicacion.set(estadistica.publicacion_id, estadistica)
-    })
+      estadisticasPorPublicacion.set(estadistica.publicacion_id, estadistica);
+    });
 
     return vistas.map((vista) => {
-      const publicacionActiva = vista.inmueble.publicaciones[0]
+      const publicacionActiva = vista.inmueble.publicaciones[0];
 
       const estadistica = publicacionActiva
         ? estadisticasPorPublicacion.get(publicacionActiva.id)
-        : undefined
+        : undefined;
 
       return {
         propiedadVistaId: vista.id,
@@ -404,12 +407,14 @@ export class EstadisticasPublicacionService {
         tipoAccion: vista.inmueble.tipoAccion,
         zona: vista.inmueble.ubicacion?.zona || null,
         ciudad: vista.inmueble.ubicacion?.ciudad || null,
-        imagen: publicacionActiva?.multimedia?.find((item) => item.tipo === 'IMAGEN')?.url || null,
+        imagen:
+          publicacionActiva?.multimedia?.find((item) => item.tipo === "IMAGEN")
+            ?.url || null,
         vecesVisto: vista.veces_visto || 1,
         ultimaVista: vista.vistaEn,
         totalVisualizaciones: estadistica?.total_visualizaciones ?? 0,
-        totalCompartidos: estadistica?.total_compartidos ?? 0
-      }
-    })
+        totalCompartidos: estadistica?.total_compartidos ?? 0,
+      };
+    });
   }
 }
