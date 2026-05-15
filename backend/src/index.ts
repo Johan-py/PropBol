@@ -1,4 +1,4 @@
-import path from "path";
+﻿import path from "path";
 import http from "http";
 import "dotenv/config";
 import express from "express";
@@ -12,6 +12,8 @@ import locationRoutes from "./modules/locations/locations.routes.js";
 import consumoRoutes from "./modules/LimiteSuscripcion/consumo.routes.js";
 import { iniciarCronRetroalimentacion } from './modules/recomendaciones/retroalimentacionCron.js'
 import mlRoutes from './modules/ml/ml.routes.js'
+import { cargarModeloActivo } from './modules/ml/model-loader.js'
+
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -420,12 +422,16 @@ initSocket(server);
 server.listen(PORT, async () => {
   console.log(`­ƒÜÇ Server running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);
+  await cargarModeloActivo()
+
 
   try {
     await seedPlanes()
   } catch (error) {
     console.error('ÔØî Error al inicializar planes:', error)
   }
+
+
 
   try {
     await verifyEmailTransport()
