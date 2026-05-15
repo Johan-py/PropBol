@@ -1608,37 +1608,45 @@ export default function LoginForm() {
             autoFocus
             placeholder="Ingresa tu correo electrónico"
             value={correo}
-            onChange={(e) => {
-              setCorreo(e.target.value)
-              validate('correo', e.target.value)
+            onChange={(event) => {
+              setCorreo(event.target.value);
+              validate("correo", event.target.value);
             }}
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-orange-500"
           />
 
-          {errors.correo && <p className="mt-1 text-xs text-red-500">{errors.correo}</p>}
+          {errors.correo && (
+            <p className="mt-1 text-xs text-red-500">{errors.correo}</p>
+          )}
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Contraseña</label>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Contraseña
+          </label>
 
           <div
             className="relative"
             ref={passwordContainerRef}
-            onBlur={(e) => {
-              if (!passwordContainerRef.current?.contains(e.relatedTarget as Node)) {
-                setShowPassword(false)
+            onBlur={(event) => {
+              if (
+                !passwordContainerRef.current?.contains(
+                  event.relatedTarget as Node,
+                )
+              ) {
+                setShowPassword(false);
               }
             }}
           >
             <input
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               required
               placeholder="Ingresa tu contraseña"
               value={password}
               maxLength={16}
-              onChange={(e) => {
-                setPassword(e.target.value)
-                validate('password', e.target.value)
+              onChange={(event) => {
+                setPassword(event.target.value);
+                validate("password", event.target.value);
               }}
               className="w-full rounded-md border border-gray-300 px-3 py-2 pr-10 text-sm outline-none focus:border-orange-500"
             />
@@ -1648,11 +1656,13 @@ export default function LoginForm() {
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-500"
             >
-              {showPassword ? 'Ocultar' : 'Ver'}
+              {showPassword ? "Ocultar" : "Ver"}
             </button>
           </div>
 
-          {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
+          {errors.password && (
+            <p className="mt-1 text-xs text-red-500">{errors.password}</p>
+          )}
         </div>
 
         <div className="-mt-2 text-left">
@@ -1676,7 +1686,11 @@ export default function LoginForm() {
 
             <button
               type="button"
-              onClick={() => setShowActivationModal(true)}
+              onClick={() => {
+                setActivationStep("options");
+                setActivationError("");
+                setShowActivationModal(true);
+              }}
               className="mt-3 text-sm font-medium text-orange-500 hover:underline"
             >
               Activar cuenta
@@ -1701,11 +1715,20 @@ export default function LoginForm() {
           disabled={!isFormValid || isLoading}
           className={`w-full rounded-md py-2 text-sm font-semibold text-white ${
             !isFormValid || isLoading
-              ? 'cursor-not-allowed bg-orange-300'
-              : 'bg-orange-500 hover:bg-orange-600'
+              ? "cursor-not-allowed bg-orange-300"
+              : "bg-orange-500 hover:bg-orange-600"
           }`}
         >
-          {isLoading ? 'Ingresando...' : 'Iniciar sesión'}
+          {isLoading ? "Ingresando..." : "Iniciar sesión"}
+        </button>
+
+        <button
+          type="button"
+          onClick={handleOpenMagicLinkForm}
+          className="flex w-full items-center justify-center gap-2 rounded-md border border-orange-500 bg-white py-2 text-sm font-semibold text-orange-500 transition hover:bg-orange-50"
+        >
+          <span aria-hidden="true">🔗</span>
+          Ingresar con link mágico
         </button>
 
         <div className="space-y-3">
@@ -1739,7 +1762,9 @@ export default function LoginForm() {
               />
             </svg>
 
-            {isLoadingGoogle ? 'Conectando con Google...' : 'Continuar con Google'}
+            {isLoadingGoogle
+              ? "Conectando con Google..."
+              : "Continuar con Google"}
           </button>
 
           <button
@@ -1751,7 +1776,9 @@ export default function LoginForm() {
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/15 text-base font-bold text-white">
               f
             </span>
-            {isLoadingFacebook ? 'Conectando con Facebook...' : 'Continuar con Facebook'}
+            {isLoadingFacebook
+              ? "Conectando con Facebook..."
+              : "Continuar con Facebook"}
           </button>
 
           <button
@@ -1760,10 +1787,16 @@ export default function LoginForm() {
             disabled={isLoadingDiscord}
             className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#5865F2] px-4 py-3 text-[15px] font-bold text-white shadow-sm transition hover:bg-[#4752C4] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <svg viewBox="0 0 24 24" className="h-5 w-5 fill-white" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              className="h-5 w-5 fill-white"
+              aria-hidden="true"
+            >
               <path d="M20.317 4.369A19.79 19.79 0 0 0 15.885 3c-.191.328-.403.769-.552 1.117a18.27 18.27 0 0 0-5.333 0A11.64 11.64 0 0 0 9.448 3a19.736 19.736 0 0 0-4.433 1.369C2.211 8.58 1.443 12.686 1.826 16.735A19.923 19.923 0 0 0 7.239 19.5c.438-.6.828-1.235 1.164-1.904-.634-.24-1.239-.541-1.813-.896.152-.111.301-.227.445-.347 3.495 1.643 7.285 1.643 10.739 0 .146.12.294.236.446.347-.575.355-1.182.656-1.817.896.336.669.726 1.304 1.164 1.904a19.874 19.874 0 0 0 5.416-2.765c.451-4.695-.769-8.763-3.666-12.366ZM9.349 14.546c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.84 2.154-1.909 2.154Zm5.303 0c-1.047 0-1.909-.966-1.909-2.154 0-1.188.84-2.154 1.909-2.154 1.078 0 1.928.975 1.909 2.154 0 1.188-.831 2.154-1.909 2.154Z" />
             </svg>
-            {isLoadingDiscord ? 'Conectando con Discord...' : 'Continuar con Discord'}
+            {isLoadingDiscord
+              ? "Conectando con Discord..."
+              : "Continuar con Discord"}
           </button>
 
           <button
@@ -1772,10 +1805,16 @@ export default function LoginForm() {
             disabled={isLoadingLinkedIn}
             className="flex w-full items-center justify-center gap-3 rounded-xl bg-[#0A66C2] px-4 py-3 text-[15px] font-bold text-white shadow-sm transition hover:bg-[#004182] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            <svg viewBox="0 0 24 24" className="h-5 w-5 fill-white" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              className="h-5 w-5 fill-white"
+              aria-hidden="true"
+            >
               <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
             </svg>
-            {isLoadingLinkedIn ? 'Conectando con LinkedIn...' : 'Continuar con LinkedIn'}
+            {isLoadingLinkedIn
+              ? "Conectando con LinkedIn..."
+              : "Continuar con LinkedIn"}
           </button>
         </div>
 
@@ -1791,8 +1830,8 @@ export default function LoginForm() {
           disabled={!hasFormContent}
           className={`mx-auto block rounded-md px-4 py-2 text-[11px] font-semibold transition ${
             hasFormContent
-              ? 'bg-[#292524] text-white hover:bg-[#1c1917]'
-              : 'cursor-not-allowed bg-[#d6d3d1] text-[#a8a29e]'
+              ? "bg-[#292524] text-white hover:bg-[#1c1917]"
+              : "cursor-not-allowed bg-[#d6d3d1] text-[#a8a29e]"
           }`}
         >
           Cancelar Inicio de sesión
@@ -1800,15 +1839,18 @@ export default function LoginForm() {
       </form>
 
       <p className="mt-4 text-center text-sm text-gray-600">
-        ¿No tienes una cuenta?{' '}
-        <Link href="/sign-up" className="font-semibold text-orange-500 hover:underline">
+        ¿No tienes una cuenta?{" "}
+        <Link
+          href="/sign-up"
+          className="font-semibold text-orange-500 hover:underline"
+        >
           Regístrate
         </Link>
       </p>
 
       <button
         type="button"
-        onClick={() => router.push('/')}
+        onClick={() => router.push("/")}
         className="mt-2 w-full text-center text-[12px] font-medium text-[#57534e] underline transition hover:text-[#292524]"
       >
         Ir a la página principal
@@ -1817,12 +1859,14 @@ export default function LoginForm() {
       {showActivationModal && (
         <div 
           onClick={closeActivationModal} 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+        >
           {activationStep === "password" && (
             <div 
               ref={activationModalRef}
               onClick={(event) => event.stopPropagation()}
-              className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
+              className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg"
+            >
               <h2 className="text-xl font-bold text-gray-900">
                 Activar cuenta
               </h2>
@@ -1840,7 +1884,9 @@ export default function LoginForm() {
                   <input
                     type={showActivationPassword ? "text" : "password"}
                     value={activationPassword}
-                    onChange={(e) => setActivationPassword(e.target.value)}
+                    onChange={(event) =>
+                      setActivationPassword(event.target.value)
+                    }
                     onKeyDown={(event) => {
                       if (event.key !== "Enter") {
                         return;
@@ -1913,7 +1959,8 @@ export default function LoginForm() {
             <div 
               ref={activationModalRef}
               onClick={(event) => event.stopPropagation()}
-              className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
+              className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg"
+            >
               <h2 className="text-xl font-bold text-gray-900">
                 Activar cuenta
               </h2>
@@ -1931,27 +1978,24 @@ export default function LoginForm() {
                 <input
                   type="text"
                   inputMode="numeric"
-                  //maxLength={ACTIVATION_CODE_LENGTH}
                   value={activationCode}
-                  onChange={(e) => {
-                    const onlyNumbers = e.target.value
+                  onChange={(event) => {
+                    const onlyNumbers = event.target.value
                       .replace(/\D/g, "")
                       .slice(0, ACTIVATION_CODE_LENGTH);
 
                     setActivationCode(onlyNumbers);
                   }}
+                  onPaste={(event) => {
+                    event.preventDefault();
 
-                  onPaste={(e) => {
-                    e.preventDefault();
-
-                    const pastedText = e.clipboardData.getData("text");
+                    const pastedText = event.clipboardData.getData("text");
                     const onlyNumbers = pastedText
                       .replace(/\D/g, "")
                       .slice(0, ACTIVATION_CODE_LENGTH);
 
                     setActivationCode(onlyNumbers);
                   }}
-
                   onKeyDown={(event) => {
                     if (event.key !== "Enter") {
                       return;
@@ -2020,7 +2064,10 @@ export default function LoginForm() {
                 <button
                   type="button"
                   onClick={handleActivateByCode}
-                  disabled={isActivating || activationCode.length !== ACTIVATION_CODE_LENGTH}
+                  disabled={
+                    isActivating ||
+                    activationCode.length !== ACTIVATION_CODE_LENGTH
+                  }
                   className="rounded-md bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:bg-orange-300"
                 >
                   {isActivating ? "Activando..." : "Confirmar"}
@@ -2033,7 +2080,8 @@ export default function LoginForm() {
             <div 
               ref={activationModalRef}
               onClick={(event) => event.stopPropagation()}
-              className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
+              className="relative w-full max-w-sm rounded-xl bg-white p-6 shadow-lg"
+            >
               <button
                 type="button"
                 onClick={closeActivationModal}
@@ -2099,5 +2147,5 @@ export default function LoginForm() {
         </div>
       )}
     </div>
-  )
+  );
 }
