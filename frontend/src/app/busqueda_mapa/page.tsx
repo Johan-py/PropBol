@@ -15,7 +15,8 @@ import {
   ChevronUp,
   ChevronDown,
   X,
-  Filter
+  Filter,
+  Check
 } from 'lucide-react'
 
 // === HOOKS ===
@@ -901,7 +902,9 @@ function BusquedaMapaContent() {
               : ''
           }`}
         >
-          {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
+          {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => {
+            const isSelected = isCompareMode && selectedIds.includes(property.id);
+            return (
             <div
               key={property.id}
               onClick={() => {
@@ -915,16 +918,24 @@ function BusquedaMapaContent() {
                   onClickItem?.(property)
                 }
               }}
-              className={`cursor-pointer transition-all duration-200 rounded-xl relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${
+              /* Hack: Cambiamos ring por outline RGB y rounded-xl por rounded-[16px] */
+              className={`cursor-pointer transition-all duration-200 rounded-[16px] relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${
                 viewMode === 'grid'
                   ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
-                  : 'w-full py-1 hover:bg-stone-100'
+                  : 'w-full py-1 hover:bg-stone-100 dark:hover:bg-slate-800'
               } ${
-                isCompareMode && selectedIds.includes(property.id)
-                  ? 'ring-4 ring-[#ea580c] scale-[0.98] shadow-lg bg-orange-50/30'
+                isSelected
+                  ? '!outline !outline-4 !outline-[rgb(234,88,12)] scale-[0.98] shadow-lg bg-orange-50/30 dark:!bg-slate-800/80 z-10'
                   : ''
               }`}
             >
+              {/* Icono flotante del Check Naranja */}
+              {isSelected && (
+                <div className="absolute top-3 right-3 z-20 !bg-[rgb(234,88,12)] text-white p-1 rounded-full shadow-md">
+                  <Check size={16} strokeWidth={3} />
+                </div>
+              )}
+
               {viewMode === 'grid' ? (
                 <PropertyCard
                   imagen={
@@ -975,7 +986,7 @@ function BusquedaMapaContent() {
                 />
               )}
             </div>
-          ))}
+          )})}
         </div>
       )}
     </div>
@@ -1558,7 +1569,11 @@ function BusquedaMapaContent() {
           className={`bg-white border-r border-stone-200 flex flex-col z-10 transition-[width] duration-200 min-h-0 overflow-hidden ${
             isSidebarOpen ? 'w-full md:h-full h-[65dvh]' : 'w-0'
           }`}
-          style={isSidebarOpen ? { width: isMounted ? effectiveSidebarWidth : 450 } : { width: 0 }}
+          style={
+            isSidebarOpen 
+              ? { width: isMounted ? (activeSidebarView === 'results' && !isPriceFilterOpen ? effectiveSidebarWidth : 450) : 450 } 
+              : { width: 0 }
+          }
         >
           {/* ✅ MODIFICADO: ternario que alterna entre filtro de precio y resultados */}
           {isPriceFilterOpen ? (
@@ -1672,7 +1687,7 @@ function BusquedaMapaContent() {
                                 ? 'Propiedades con precio reducido para ti'
                                 : 'Resultados de búsqueda'}
                         </h1>
-                        <button
+                       {/* <button
                           onClick={() => {
                             if (busquedaModo === 'especifica') {
                               cambiarAModoGeneral(
@@ -1691,10 +1706,10 @@ function BusquedaMapaContent() {
                               : 'bg-stone-100 border-stone-200 text-stone-500 hover:border-stone-300'
                           }`}
                         >
-                          {busquedaModo === 'especifica'
+                           {busquedaModo === 'especifica'
                             ? '📍 Ubicación específica · cambiar a todo Bolivia'
-                            : '🌍 Todo Bolivia · buscar en zona específica'}
-                        </button>
+                            : '🌍 Todo Bolivia · buscar en zona específica'} 
+                        </button> */}
                         <h2
                           className={`font-bold text-slate-900 transition-all duration-300 flex flex-wrap items-center gap-x-2 gap-y-1 ${isScrolled ? 'text-xs mt-0.5' : 'text-sm mt-1'}`}
                         >
@@ -1712,11 +1727,7 @@ function BusquedaMapaContent() {
                                 : 'propiedades encontradas'}
                             </span>
                           </div>
-                          {/* AC 4, 6, 10 — Pills de filtros activos desktop */}
-                          <ActiveFilterTags
-                            filtros={filtrosActivos}
-                            onClearAll={handleClearAllFilters}
-                          />
+      
                           {isClusterView && (
                             <button
                               type="button"
@@ -1854,37 +1865,43 @@ function BusquedaMapaContent() {
                         : undefined
                     }
                   >
-                    {(isClusterView ? clusterProperties : paginatedProperties).map(
-                      (property: any) => (
-                        <div
-                          key={property.id}
-                          onMouseEnter={() => setHoveredId(property.id)}
-                          onMouseLeave={() => setHoveredId(null)}
-                          style={
-                            viewMode === 'grid'
-                              ? { maxWidth: `min(100%, ${GRID_MAX_CARD_WIDTH}px)` }
-                              : undefined
-                          }
-                          onClick={() => {
-                            // NUEVA LÓGICA DE INTERCEPCIÓN
-                            if (isCompareMode) {
-                              toggleProperty(property.id)
-                            } else {
-                              setSelectedPropertyId(property.id)
-                            }
-                          }}
-                          className={`cursor-pointer transition-all duration-200 rounded-xl relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${
-                            viewMode === 'grid'
-                              ? 'h-full w-full justify-self-center'
-                              : 'w-full py-1 hover:bg-stone-100'
-                          } ${
-                            // Borde naranja si está seleccionado
-                            isCompareMode && selectedIds.includes(property.id)
-                              ? 'ring-4 ring-orange-500 scale-[0.98] shadow-lg'
-                              : ''
-                          }`}
-                        >
-                          {viewMode === 'grid' ? (
+                    {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => {
+                const isSelected = isCompareMode && selectedIds.includes(property.id);
+                return (
+                <div
+                  key={property.id}
+                  onMouseEnter={() => setHoveredId(property.id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                  style={
+                    viewMode === 'grid'
+                      ? { maxWidth: `min(100%, ${GRID_MAX_CARD_WIDTH}px)` }
+                      : undefined
+                  }
+                  onClick={() => {
+                    if (isCompareMode) {
+                      toggleProperty(property.id)
+                    } else {
+                      setSelectedPropertyId(property.id)
+                    }
+                  }}
+                  className={`cursor-pointer transition-all duration-200 rounded-[16px] relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${
+                    viewMode === 'grid'
+                      ? 'h-full w-full justify-self-center'
+                      : 'w-full py-1 hover:bg-stone-100 dark:hover:bg-slate-800'
+                  } ${
+                    isSelected
+                      ? '!outline !outline-4 !outline-[rgb(234,88,12)] scale-[0.98] shadow-lg dark:!bg-slate-800/80 z-10'
+                      : ''
+                  }`}
+                >
+                  {/* Icono flotante del Check Naranja */}
+                  {isSelected && (
+                    <div className="absolute top-3 right-3 z-20 !bg-[rgb(234,88,12)] text-white p-1 rounded-full shadow-md">
+                      <Check size={16} strokeWidth={3} />
+                    </div>
+                  )}
+
+                  {viewMode === 'grid' ? (
                             <PropertyCard
                               imagen={
                                 property.thumbnailUrl ||
@@ -1935,7 +1952,7 @@ function BusquedaMapaContent() {
                           )}
                         </div>
                       )
-                    )}
+                    })}
                   </div>
                 )}
                 {renderListPaginationFooter()}
@@ -1959,8 +1976,8 @@ function BusquedaMapaContent() {
           ) : null}
         </aside>
 
-        {/* Divider resizable (solo desktop con sidebar abierto) */}
-        {isSidebarOpen && (
+        {/* Divider resizable (solo desktop con sidebar abierto, en vista de resultados y si Precio está cerrado) */}
+        {isSidebarOpen && activeSidebarView === 'results' && !isPriceFilterOpen && (
           <div
             className="hidden md:block w-1 bg-stone-200 hover:bg-orange-300 active:bg-orange-400 cursor-col-resize relative z-20"
             onMouseDown={(e) => {

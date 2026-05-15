@@ -14,12 +14,20 @@ const replacePublicacionTags = async (publicacionId: number, userId: number, nom
   const publicacion = await tagsRepository.findPublicacionOwner(publicacionId)
 
   if (!publicacion) throw new Error('PUBLICATION_NOT_FOUND')
-  if (publicacion.usuarioId !== userId) throw new Error('FORBIDDEN')
-  if (nombres.length > MAX_TAGS) throw new Error('MAX_TAGS_EXCEEDED')
+
+  if (publicacion.usuarioId !== userId) {
+    throw new Error('FORBIDDEN')
+  }
+
+  const nombresNormalizados = [...new Set(nombres.map((tag) => tag.trim().toLowerCase()))]
+
+  if (nombresNormalizados.length > MAX_TAGS) {
+    throw new Error('MAX_TAGS_EXCEEDED')
+  }
 
   const tagIds: number[] = []
 
-  for (const nombre of nombres) {
+  for (const nombre of nombresNormalizados) {
     const tag = await tagsRepository.findOrCreate(nombre)
     tagIds.push(tag.id)
   }

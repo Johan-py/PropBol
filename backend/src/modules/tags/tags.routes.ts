@@ -10,14 +10,14 @@ import { replaceTagsRules } from './tags.validator.js'
 const router = Router()
 
 // Obtener todos los tags (para sugerencias)
-router.get('/tags', getTagsController)
+router.get('/', getTagsController)
 
 // Obtener tags de una publicación
-router.get('/publicaciones/:publicacionId/tags', getTagsByPublicacionController)
+router.get('/publicaciones/:publicacionId', getTagsByPublicacionController)
 
 // Reemplazar tags de una publicación
 router.put(
-  '/publicaciones/:publicacionId/tags',
+  '/publicaciones/:publicacionId',
   requireAuth,
   replaceTagsRules,
   replacePublicacionTagsController

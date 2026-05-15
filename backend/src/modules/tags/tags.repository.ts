@@ -42,14 +42,13 @@ const replacePublicacionTags = async (publicacionId: number, tagIds: number[]) =
 
     if (tagIds.length === 0) return []
 
-    for (const tagId of tagIds) {
-      await tx.publicacion_tag.create({
-        data: {
-          publicacion_id: publicacionId,
-          tag_id: tagId
-        }
-      })
-    }
+    await tx.publicacion_tag.createMany({
+      data: tagIds.map((tagId) => ({
+        publicacion_id: publicacionId,
+        tag_id: tagId
+      })),
+      skipDuplicates: true
+    })
 
     return tx.publicacion_tag.findMany({
       where: { publicacion_id: publicacionId },
