@@ -1,8 +1,11 @@
 import type { Request, Response } from 'express'
+import { Readable } from 'stream'
 import { prisma } from '../../lib/prisma.client.js'
+import { cloudinary } from '../../config/cloudinary.js'
 import { crearTransaccion } from './servicios/transaccion.service.js'
 import { emitirComprobante } from './servicios/comprobanteService.js'
 import { suscripcionesService } from '../suscripciones/suscripciones.service.js'
+import { createNotificationService } from '../notificaciones/notificaciones.service.js'
 
 interface AuthRequest extends Request {
   user?: { id: number }
@@ -165,7 +168,10 @@ export const confirmarPago = async (req: Request, res: Response) => {
 
     const transaccion = await prisma.transacciones.findUnique({
       where: { id: transaccionId },
-      select: { estado: true, id_usuario: true, id_suscripcion: true, metodo_pago: true },
+      include: {
+        usuario: { select: { correo: true, nombre: true } },
+        plan_suscripcion: { select: { nombre_plan: true } },
+      },
     })
 
     if (!transaccion) {
@@ -177,7 +183,7 @@ export const confirmarPago = async (req: Request, res: Response) => {
     }
 
     const suscripcionVigente = await suscripcionesService.obtenerSuscripcionActiva(
-      transaccion.id_usuario
+      transaccion.id_usuario!
     )
     if (suscripcionVigente) {
       const planVigente = suscripcionVigente.plan_suscripcion?.nombre_plan ?? 'activa'
@@ -199,8 +205,8 @@ export const confirmarPago = async (req: Request, res: Response) => {
 
     await prisma.suscripciones_activas.create({
       data: {
-        id_usuario: transaccion.id_usuario,
-        id_suscripcion: transaccion.id_suscripcion,
+        id_usuario: transaccion.id_usuario!,
+        id_suscripcion: transaccion.id_suscripcion!,
         id_transaccion: transaccionId,
         fecha_inicio: ahora,
         fecha_fin: new Date(ahora.getTime() + diasSuscripcion * 24 * 60 * 60 * 1000),
@@ -209,6 +215,17 @@ export const confirmarPago = async (req: Request, res: Response) => {
     })
 
     const comprobanteEnviado = await emitirComprobante(transaccionId)
+
+    try {
+      const fechaAprobacion = ahora.toLocaleDateString('es-BO', { day: '2-digit', month: 'short', year: 'numeric' })
+      const fechaVencimiento = new Date(ahora.getTime() + diasSuscripcion * 24 * 60 * 60 * 1000)
+        .toLocaleDateString('es-BO', { day: '2-digit', month: 'short', year: 'numeric' })
+      await createNotificationService({
+        correo: transaccion.usuario.correo,
+        titulo: '¡Tu pago fue confirmado!',
+        mensaje: `Tu pago del plan ${transaccion.plan_suscripcion?.nombre_plan ?? '—'} (REF-${transaccionId}) fue aprobado el ${fechaAprobacion}. Tu suscripción ya está activa y vence el ${fechaVencimiento}.`,
+      })
+    } catch { /* no bloquea el flujo */ }
 
     return res.status(200).json({
       mensaje: comprobanteEnviado
