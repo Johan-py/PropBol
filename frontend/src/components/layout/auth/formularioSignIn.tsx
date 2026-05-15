@@ -1,128 +1,148 @@
-'use client'
+"use client";
 
-import { useEffect, useRef, useState } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { buildSessionUser, USER_STORAGE_KEY } from '@/lib/session'
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { buildSessionUser, USER_STORAGE_KEY } from "@/lib/session";
 
 type LoginResponse = {
-  message?: string
-  token?: string
-  requires2FA?: boolean
-  userId?: number
-  email?: string
-  expiresInMinutes?: number
+  message?: string;
+  token?: string;
+  requires2FA?: boolean;
+  userId?: number;
+  email?: string;
+  expiresInMinutes?: number;
   user?: {
-    id: number
-    correo: string
-    nombre?: string
-    apellido?: string
-    avatar?: string | null
-  }
-}
+    id: number;
+    correo: string;
+    nombre?: string;
+    apellido?: string;
+    avatar?: string | null;
+  };
+};
 
 type MeResponse = {
-  message?: string
+  message?: string;
   user?: {
-    id: number
-    correo: string
-    nombre?: string
-    apellido?: string
-    avatar?: string | null
-    controlador?: boolean
-  }
-}
+    id: number;
+    correo: string;
+    nombre?: string;
+    apellido?: string;
+    avatar?: string | null;
+    controlador?: boolean;
+  };
+};
+
+type MagicLinkResponse = {
+  message?: string;
+};
 
 type GooglePopupSuccessMessage = {
-  type: 'propbol:google-login-success'
-  message: string
-  token: string
+  type: "propbol:google-login-success";
+  message: string;
+  token: string;
   user: {
-    id: number
-    correo: string
-    nombre?: string
-    apellido?: string
-  }
-}
+    id: number;
+    correo: string;
+    nombre?: string;
+    apellido?: string;
+  };
+};
 
 type GooglePopupErrorMessage = {
-  type: 'propbol:google-login-error'
-  code: 'GOOGLE_AUTH_FAILED' | 'ACCOUNT_NOT_REGISTERED' | string
-  message: string
-}
+  type: "propbol:google-login-error";
+  code: "GOOGLE_AUTH_FAILED" | "ACCOUNT_NOT_REGISTERED" | string;
+  message: string;
+};
 
-type GooglePopupMessage = GooglePopupSuccessMessage | GooglePopupErrorMessage
+type GooglePopupMessage = GooglePopupSuccessMessage | GooglePopupErrorMessage;
 
 type DiscordPopupSuccessMessage = {
-  type: 'propbol:discord-login-success'
-  message: string
-  token: string
+  type: "propbol:discord-login-success";
+  message: string;
+  token: string;
   user: {
-    id: number
-    correo: string
-    nombre?: string
-    apellido?: string
-  }
-}
+    id: number;
+    correo: string;
+    nombre?: string;
+    apellido?: string;
+  };
+};
 
 type DiscordPopupErrorMessage = {
-  type: 'propbol:discord-login-error'
-  code: 'DISCORD_AUTH_FAILED' | 'ACCOUNT_NOT_REGISTERED' | string
-  message: string
-}
+  type: "propbol:discord-login-error";
+  code: "DISCORD_AUTH_FAILED" | "ACCOUNT_NOT_REGISTERED" | string;
+  message: string;
+};
 
-type DiscordPopupMessage = DiscordPopupSuccessMessage | DiscordPopupErrorMessage
+type DiscordPopupMessage =
+  | DiscordPopupSuccessMessage
+  | DiscordPopupErrorMessage;
 
 type FacebookPopupSuccessMessage = {
-  type: 'propbol:facebook-login-success'
-  message: string
-  token: string
+  type: "propbol:facebook-login-success";
+  message: string;
+  token: string;
   user: {
-    id: number
-    correo: string
-    nombre?: string
-    apellido?: string
-  }
-}
+    id: number;
+    correo: string;
+    nombre?: string;
+    apellido?: string;
+  };
+};
 
 type FacebookPopupErrorMessage = {
-  type: 'propbol:facebook-login-error'
-  code: 'FACEBOOK_AUTH_FAILED' | 'ACCOUNT_NOT_REGISTERED' | string
-  message: string
-}
+  type: "propbol:facebook-login-error";
+  code: "FACEBOOK_AUTH_FAILED" | "ACCOUNT_NOT_REGISTERED" | string;
+  message: string;
+};
 
-type FacebookPopupMessage = FacebookPopupSuccessMessage | FacebookPopupErrorMessage
+type FacebookPopupMessage =
+  | FacebookPopupSuccessMessage
+  | FacebookPopupErrorMessage;
 
 type LinkedInPopupSuccessMessage = {
-  type: 'propbol:linkedin-login-success'
-  message: string
-  token: string
-  user: { id: number; correo: string; nombre?: string; apellido?: string }
-}
+  type: "propbol:linkedin-login-success";
+  message: string;
+  token: string;
+  user: {
+    id: number;
+    correo: string;
+    nombre?: string;
+    apellido?: string;
+  };
+};
 
 type LinkedInPopupErrorMessage = {
-  type: 'propbol:linkedin-login-error'
-  code: string
-  message: string
-}
+  type: "propbol:linkedin-login-error";
+  code: string;
+  message: string;
+};
 
-type LinkedInPopupMessage = LinkedInPopupSuccessMessage | LinkedInPopupErrorMessage
+type LinkedInPopupMessage =
+  | LinkedInPopupSuccessMessage
+  | LinkedInPopupErrorMessage;
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:5000'
-const LOGIN_TIMEOUT_MS = 10000
-const GOOGLE_LOGIN_TIMEOUT_MS = 2 * 60 * 1000
-const DEFAULT_POST_LOGIN_REDIRECT = '/'
-const REDIRECT_AFTER_LOGIN_KEY = 'redirectAfterLogin'
-const SESSION_DURATION_MS = 60 * 60 * 1000
-const PENDING_2FA_KEY = 'pending2FA'
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
+const LOGIN_TIMEOUT_MS = 10000;
+const GOOGLE_LOGIN_TIMEOUT_MS = 2 * 60 * 1000;
+const DEFAULT_POST_LOGIN_REDIRECT = "/";
+const REDIRECT_AFTER_LOGIN_KEY = "redirectAfterLogin";
+const SESSION_DURATION_MS = 60 * 60 * 1000;
+const PENDING_2FA_KEY = "pending2FA";
 
-const NO_CONNECTION_MESSAGE = 'Sin conexión a internet. Verifica tu red e intenta nuevamente.'
-const SERVER_CONNECTION_MESSAGE = 'No se pudo conectar con el servidor. Intenta nuevamente.'
-const LOGIN_TIMEOUT_MESSAGE = 'La solicitud tardó demasiado. Por favor intenta nuevamente.'
+const NO_CONNECTION_MESSAGE =
+  "Sin conexión a internet. Verifica tu red e intenta nuevamente.";
+const SERVER_CONNECTION_MESSAGE =
+  "No se pudo conectar con el servidor. Intenta nuevamente.";
+const LOGIN_TIMEOUT_MESSAGE =
+  "La solicitud tardó demasiado. Por favor intenta nuevamente.";
 const GOOGLE_TIMEOUT_MESSAGE =
-  'La autenticación con Google tardó demasiado. Por favor intenta nuevamente.'
+  "La autenticación con Google tardó demasiado. Por favor intenta nuevamente.";
 const FACEBOOK_TIMEOUT_MESSAGE =
-  'La autenticación con Facebook tardó demasiado. Por favor intenta nuevamente.'
+  "La autenticación con Facebook tardó demasiado. Por favor intenta nuevamente.";
+const DISCORD_TIMEOUT_MESSAGE =
+  "La autenticación con Discord tardó demasiado. Por favor intenta nuevamente.";
 
 const DEACTIVATED_ACCOUNT_MESSAGE = "Esta cuenta está desactivada";
 const ACTIVATION_CONNECTION_ERROR_MESSAGE =
@@ -131,46 +151,52 @@ const ACTIVATION_REQUEST_TIMEOUT_MS = 10000;
 const ACTIVATION_CODE_LENGTH = 6;
 
 const clearClientSession = () => {
-  localStorage.removeItem('token')
-  localStorage.removeItem(USER_STORAGE_KEY)
-  localStorage.removeItem('propbol_session_expires')
-  localStorage.removeItem('nombre')
-  localStorage.removeItem('correo')
-  localStorage.removeItem('avatar')
+  localStorage.removeItem("token");
+  localStorage.removeItem(USER_STORAGE_KEY);
+  localStorage.removeItem("propbol_session_expires");
+  localStorage.removeItem("nombre");
+  localStorage.removeItem("correo");
+  localStorage.removeItem("avatar");
+  localStorage.removeItem("controlador");
 
-  window.dispatchEvent(new Event('propbol:session-changed'))
-  window.dispatchEvent(new Event('auth-state-changed'))
-}
+  window.dispatchEvent(new Event("propbol:session-changed"));
+  window.dispatchEvent(new Event("auth-state-changed"));
+};
 
-const savePending2FA = (data: { userId: number; email?: string; expiresInMinutes?: number }) => {
+const savePending2FA = (data: {
+  userId: number;
+  email?: string;
+  expiresInMinutes?: number;
+}) => {
   localStorage.setItem(
     PENDING_2FA_KEY,
     JSON.stringify({
       userId: data.userId,
-      email: data.email ?? '',
+      email: data.email ?? "",
       expiresInMinutes: data.expiresInMinutes ?? 5,
-      createdAt: Date.now()
-    })
-  )
-}
+      createdAt: Date.now(),
+    }),
+  );
+};
 
 const clearPending2FA = () => {
-  localStorage.removeItem(PENDING_2FA_KEY)
-}
+  localStorage.removeItem(PENDING_2FA_KEY);
+};
 
 const saveSession = (
   token: string,
   user?: {
-    id: number
-    correo: string
-    nombre?: string
-    apellido?: string
-    avatar?: string | null
+    id: number;
+    correo: string;
+    nombre?: string;
+    apellido?: string;
+    avatar?: string | null;
   },
-  controlador?: boolean
+  controlador?: boolean,
 ) => {
-  localStorage.setItem('token', token)
-  const sessionUser = buildSessionUser(user)
+  localStorage.setItem("token", token);
+
+  const sessionUser = buildSessionUser(user);
 
   localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(sessionUser))
   localStorage.setItem('controlador', String(controlador ?? false))
