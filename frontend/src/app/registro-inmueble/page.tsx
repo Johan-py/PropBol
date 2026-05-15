@@ -1040,35 +1040,35 @@ if (poiSeleccionado !== null) {
   -Referencia
      </span>
     </button>
-                  </div>
+  </div>
 
-                  <button
-                    type="button"
-                    disabled={!pinCoords && vertices.length === 0}
-                    onClick={() => {
-                      setPinCoords(null)
-                      setVertices([])
-                      setModoPinActivo(false)
-                      setModoDifuminadoActivo(false)
+  <button
+    type="button"
+    disabled={!pinCoords && vertices.length === 0}
+    onClick={() => {
+      setPinCoords(null)
+      setVertices([])
+      setModoPinActivo(false)
+      setModoDifuminadoActivo(false)
 
       setPois([])
       setPoiSeleccionado(null)
 
-                      setDatos((prev) => ({
-                        ...prev,
-                        direccion: ''
-                      }))
-                    }}
+      setDatos((prev) => ({
+        ...prev,
+        direccion: ''
+      }))
+    }}
     className={`px-4 py-2 rounded-full text-xs transition ${
-                      !pinCoords && vertices.length === 0
-                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        : 'bg-orange-500 text-white hover:bg-orange-600'
-                    }`}
-                  >
+      !pinCoords && vertices.length === 0
+        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+        : 'bg-orange-500 text-white hover:bg-orange-600'
+    }`}
+  >
     Eliminar
-                  </button>
+  </button>
 
-                </div>
+</div>
 
                 <div className="relative z-0 rounded-2xl overflow-hidden border border-gray-200 max-w-full h-[320px]">
                   <MapaPinSelector
