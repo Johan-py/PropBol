@@ -1,53 +1,56 @@
-import { RolNombre } from '@prisma/client'
-import { prisma } from '../../lib/prisma.client.js'
+import { RolNombre } from "@prisma/client";
+import { prisma } from "../../lib/prisma.client.js";
 
 interface CreateUserInput {
-  nombre: string
-  apellido: string
-  correo: string
-  password: string
-  telefono?: string
+  nombre: string;
+  apellido: string;
+  correo: string;
+  password: string;
+  telefono?: string;
 }
 
 type PrismaLikeKnownError = {
-  code?: string
+  code?: string;
   meta?: {
-    target?: unknown
-  }
-  message?: string
-}
+    target?: unknown;
+  };
+  message?: string;
+};
 
 const ensureVisitorRole = async () => {
   return await prisma.rol.upsert({
     where: { nombre: RolNombre.VISITANTE },
     update: {},
-    create: { nombre: RolNombre.VISITANTE }
-  })
-}
+    create: { nombre: RolNombre.VISITANTE },
+  });
+};
 
-const isUniqueConstraintError = (error: unknown): error is PrismaLikeKnownError => {
+const isUniqueConstraintError = (
+  error: unknown,
+): error is PrismaLikeKnownError => {
   return (
-    typeof error === 'object' &&
+    typeof error === "object" &&
     error !== null &&
-    'code' in error &&
-    (error as PrismaLikeKnownError).code === 'P2002'
-  )
-}
+    "code" in error &&
+    (error as PrismaLikeKnownError).code === "P2002"
+  );
+};
 
 const getUniqueConstraintMessage = (error: PrismaLikeKnownError) => {
-  const rawTarget = error.meta?.target
-  const targets = Array.isArray(rawTarget) ? rawTarget.map(String) : []
-  const searchableText = `${targets.join(' ')} ${error.message ?? ''}`.toLowerCase()
+  const rawTarget = error.meta?.target;
+  const targets = Array.isArray(rawTarget) ? rawTarget.map(String) : [];
+  const searchableText =
+    `${targets.join(" ")} ${error.message ?? ""}`.toLowerCase();
 
-  if (searchableText.includes('correo')) {
-    return 'El correo ya está registrado'
+  if (searchableText.includes("correo")) {
+    return "El correo ya está registrado";
   }
 
-  return 'Ya existe un registro con esos datos'
-}
+  return "Ya existe un registro con esos datos";
+};
 
 export const createUser = async (data: CreateUserInput) => {
-  const rol = await ensureVisitorRole()
+  const rol = await ensureVisitorRole();
 
   try {
     return await prisma.usuario.create({
@@ -60,26 +63,26 @@ export const createUser = async (data: CreateUserInput) => {
         telefonos: data.telefono
           ? {
               create: {
-                codigoPais: '+591',
+                codigoPais: "+591",
                 numero: data.telefono,
-                principal: true
-              }
+                principal: true,
+              },
             }
-          : undefined
+          : undefined,
       },
       include: {
         telefonos: true,
-        rol: true
-      }
-    })
+        rol: true,
+      },
+    });
   } catch (error) {
     if (isUniqueConstraintError(error)) {
-      throw new Error(getUniqueConstraintMessage(error))
+      throw new Error(getUniqueConstraintMessage(error));
     }
 
-    throw error
+    throw error;
   }
-}
+};
 
 // Incluye el campo `activo` para que loginService pueda verificar si la cuenta está desactivada
 export const findUser = async (correo: string) => {
@@ -95,38 +98,38 @@ export const findUser = async (correo: string) => {
       activo: true,
       two_factor_activo: true,
       controlador: true,
-      rol: true
-    }
-  })
-}
+      rol: true,
+    },
+  });
+};
 export const findUserByCorreo = async (correo: string) => {
   return await prisma.usuario.findUnique({
     where: { correo },
     include: {
-      rol: true
-    }
-  })
-}
+      rol: true,
+    },
+  });
+};
 
 export const findUserById = async (id: number) => {
   return await prisma.usuario.findUnique({
     where: { id },
     include: {
-      rol: true
-    }
-  })
-}
+      rol: true,
+    },
+  });
+};
 
 export const createSession = async ({
   token,
   usuarioId,
   fechaExpiracion,
-  metodo_auth
+  metodo_auth,
 }: {
-  token: string
-  usuarioId: number
-  fechaExpiracion: Date
-  metodo_auth?: string
+  token: string;
+  usuarioId: number;
+  fechaExpiracion: Date;
+  metodo_auth?: string;
 }) => {
   return await prisma.sesion.create({
     data: {
@@ -134,10 +137,10 @@ export const createSession = async ({
       usuarioId,
       fechaExpiracion,
       estado: true,
-      metodo_auth: metodo_auth ?? 'email'
-    }
-  })
-}
+      metodo_auth: metodo_auth ?? "email",
+    },
+  });
+};
 
 export const findActiveSessionByToken = async (token: string) => {
   return await prisma.sesion.findFirst({
@@ -145,52 +148,52 @@ export const findActiveSessionByToken = async (token: string) => {
       token,
       estado: true,
       fechaExpiracion: {
-        gt: new Date()
-      }
+        gt: new Date(),
+      },
     },
     include: {
       usuario: {
         include: {
-          rol: true
-        }
-      }
-    }
-  })
-}
+          rol: true,
+        },
+      },
+    },
+  });
+};
 
 export const desactiveSessionByToken = async (token: string) => {
   return await prisma.sesion.updateMany({
     where: {
       token,
-      estado: true
+      estado: true,
     },
     data: {
-      estado: false
-    }
-  })
-}
+      estado: false,
+    },
+  });
+};
 
 export const invalidateActive2FACodesByUserId = async (usuarioId: number) => {
   return await prisma.codigo_2fa.updateMany({
     where: {
       usuarioId,
       activo: true,
-      usadoEn: null
+      usadoEn: null,
     },
     data: {
-      activo: false
-    }
-  })
-}
+      activo: false,
+    },
+  });
+};
 
 export const create2FACode = async ({
   usuarioId,
   codigoHash,
-  expiraEn
+  expiraEn,
 }: {
-  usuarioId: number
-  codigoHash: string
-  expiraEn: Date
+  usuarioId: number;
+  codigoHash: string;
+  expiraEn: Date;
 }) => {
   return await prisma.codigo_2fa.create({
     data: {
@@ -198,11 +201,13 @@ export const create2FACode = async ({
       codigoHash,
       expiraEn,
       intentos: 0,
-      activo: true
-    }
-  })
-}
-export const desactivarRecuperacionesPasswordActivas = async (usuarioId: number) => {
+      activo: true,
+    },
+  });
+};
+export const desactivarRecuperacionesPasswordActivas = async (
+  usuarioId: number,
+) => {
   return prisma.recuperacion_password.updateMany({
     where: {
       usuarioId,
