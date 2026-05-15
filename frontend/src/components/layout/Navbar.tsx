@@ -56,6 +56,7 @@ class SessionValidationError extends Error {
  
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5000";
 const SESSION_EXPIRES_KEY = "propbol_session_expires";
+const AUTH_SYNC_EVENT_KEY = "propbol_auth_sync";
  
 const filters: NotificationFilter[] = [
   "todas",
@@ -63,6 +64,16 @@ const filters: NotificationFilter[] = [
   "no leida",
   "archivada",
 ];
+
+const notifyAuthSync = (type: "logout") => {
+  localStorage.setItem(
+    AUTH_SYNC_EVENT_KEY,
+    JSON.stringify({
+      type,
+      timestamp: Date.now(),
+    }),
+  );
+};
  
 export default function Navbar() {
   const router = useRouter();
@@ -110,12 +121,16 @@ export default function Navbar() {
       localStorage.removeItem("nombre");
       localStorage.removeItem("correo");
       localStorage.removeItem("avatar");
+      localStorage.removeItem("controlador");
+      localStorage.removeItem("searchHistory");
+
       setUser(null);
       setIsPanelOpen(false);
       setShowLogoutModal(false);
       setIsLoggedIn(false);
  
       if (emitEvent) {
+        notifyAuthSync("logout");
         window.dispatchEvent(new Event("propbol:session-changed"));
         window.dispatchEvent(new Event("auth-state-changed"));
       }
@@ -230,25 +245,52 @@ export default function Navbar() {
     return () => clearInterval(interval);
   }, []);
 
-  // Restaurar sesión y escuchar cambios
+  // Restaurar sesión y escuchar cambios entre pestañas
   useEffect(() => {
     void restoreSession();
  
     const handleSessionChange = () => void restoreSession();
+
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === AUTH_SYNC_EVENT_KEY && event.newValue) {
+        try {
+          const payload = JSON.parse(event.newValue) as { type?: string };
+
+          if (payload.type === "logout") {
+            clearSession(false);
+            return;
+          }
+        } catch {
+          void restoreSession();
+          return;
+        }
+      }
+
+      if (event.key === "token" && event.newValue === null) {
+        clearSession(false);
+        return;
+      }
+
+      void restoreSession();
+    };
+
     const handleOnline = () => void restoreSession();
  
-    window.addEventListener("storage", handleSessionChange);
+    window.addEventListener("storage", handleStorageChange);
     window.addEventListener("propbol:login", handleSessionChange);
     window.addEventListener("propbol:session-changed", handleSessionChange);
     window.addEventListener("online", handleOnline);
  
     return () => {
-      window.removeEventListener("storage", handleSessionChange);
+      window.removeEventListener("storage", handleStorageChange);
       window.removeEventListener("propbol:login", handleSessionChange);
-      window.removeEventListener("propbol:session-changed", handleSessionChange);
+      window.removeEventListener(
+        "propbol:session-changed",
+        handleSessionChange,
+      );
       window.removeEventListener("online", handleOnline);
     };
-  }, [restoreSession]);
+  }, [clearSession, restoreSession]);
 
   // Cerrar paneles al hacer clic fuera
   useEffect(() => {
@@ -361,6 +403,56 @@ export default function Navbar() {
       setTimeout(() => {
         window.dispatchEvent(new Event("propbol:iniciar-tour"));
       }, 600);
+    }
+  };
+  const handlePublicarInmueble = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      router.push("/sign-in");
+      return;
+    }
+
+    try {
+      const meResponse = await fetch(`${API_URL}/api/auth/me`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const meData = (await meResponse.json()) as MeResponse;
+
+      if (!meResponse.ok || !meData.user?.id) {
+        console.error("No se pudo obtener usuario autenticado");
+        router.push("/sign-in");
+        return;
+      }
+
+      const limiteResponse = await fetch(
+        `${API_URL}/api/publicaciones/validar-limite/${meData.user.id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const limiteData = await limiteResponse.json();
+
+      if (
+        limiteResponse.ok &&
+        (limiteData.message === "LIMIT_REACHED" || Number(limiteData.restantes) <= 0)
+      ) {
+        router.push("/Cobros-Limite");
+        return;
+      }
+
+      router.push("/registro-inmueble");
+    } catch (error) {
+      console.error("Error validando publicaciones:", error);
+      router.push("/registro-inmueble");
     }
   };
 
