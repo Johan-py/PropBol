@@ -15,7 +15,8 @@ import {
   ChevronUp,
   ChevronDown,
   X,
-  Filter
+  Filter,
+  Check
 } from 'lucide-react'
 
 // === HOOKS ===
@@ -901,7 +902,9 @@ function BusquedaMapaContent() {
               : ''
           }`}
         >
-          {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => (
+          {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => {
+            const isSelected = isCompareMode && selectedIds.includes(property.id);
+            return (
             <div
               key={property.id}
               onClick={() => {
@@ -915,16 +918,24 @@ function BusquedaMapaContent() {
                   onClickItem?.(property)
                 }
               }}
-              className={`cursor-pointer transition-all duration-200 rounded-xl relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${
+              /* Hack: Cambiamos ring por outline RGB y rounded-xl por rounded-[16px] */
+              className={`cursor-pointer transition-all duration-200 rounded-[16px] relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${
                 viewMode === 'grid'
                   ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
-                  : 'w-full py-1 hover:bg-stone-100'
+                  : 'w-full py-1 hover:bg-stone-100 dark:hover:bg-slate-800'
               } ${
-                isCompareMode && selectedIds.includes(property.id)
-                  ? 'ring-4 ring-[#ea580c] scale-[0.98] shadow-lg bg-orange-50/30'
+                isSelected
+                  ? '!outline !outline-4 !outline-[rgb(234,88,12)] scale-[0.98] shadow-lg bg-orange-50/30 dark:!bg-slate-800/80 z-10'
                   : ''
               }`}
             >
+              {/* Icono flotante del Check Naranja */}
+              {isSelected && (
+                <div className="absolute top-3 right-3 z-20 !bg-[rgb(234,88,12)] text-white p-1 rounded-full shadow-md">
+                  <Check size={16} strokeWidth={3} />
+                </div>
+              )}
+
               {viewMode === 'grid' ? (
                 <PropertyCard
                   imagen={
@@ -975,7 +986,7 @@ function BusquedaMapaContent() {
                 />
               )}
             </div>
-          ))}
+          )})}
         </div>
       )}
     </div>
@@ -1858,37 +1869,43 @@ function BusquedaMapaContent() {
                         : undefined
                     }
                   >
-                    {(isClusterView ? clusterProperties : paginatedProperties).map(
-                      (property: any) => (
-                        <div
-                          key={property.id}
-                          onMouseEnter={() => setHoveredId(property.id)}
-                          onMouseLeave={() => setHoveredId(null)}
-                          style={
-                            viewMode === 'grid'
-                              ? { maxWidth: `min(100%, ${GRID_MAX_CARD_WIDTH}px)` }
-                              : undefined
-                          }
-                          onClick={() => {
-                            // NUEVA LÓGICA DE INTERCEPCIÓN
-                            if (isCompareMode) {
-                              toggleProperty(property.id)
-                            } else {
-                              setSelectedPropertyId(property.id)
-                            }
-                          }}
-                          className={`cursor-pointer transition-all duration-200 rounded-xl relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${
-                            viewMode === 'grid'
-                              ? 'h-full w-full justify-self-center'
-                              : 'w-full py-1 hover:bg-stone-100'
-                          } ${
-                            // Borde naranja si está seleccionado
-                            isCompareMode && selectedIds.includes(property.id)
-                              ? 'ring-4 ring-orange-500 scale-[0.98] shadow-lg'
-                              : ''
-                          }`}
-                        >
-                          {viewMode === 'grid' ? (
+                    {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => {
+                const isSelected = isCompareMode && selectedIds.includes(property.id);
+                return (
+                <div
+                  key={property.id}
+                  onMouseEnter={() => setHoveredId(property.id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                  style={
+                    viewMode === 'grid'
+                      ? { maxWidth: `min(100%, ${GRID_MAX_CARD_WIDTH}px)` }
+                      : undefined
+                  }
+                  onClick={() => {
+                    if (isCompareMode) {
+                      toggleProperty(property.id)
+                    } else {
+                      setSelectedPropertyId(property.id)
+                    }
+                  }}
+                  className={`cursor-pointer transition-all duration-200 rounded-[16px] relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${
+                    viewMode === 'grid'
+                      ? 'h-full w-full justify-self-center'
+                      : 'w-full py-1 hover:bg-stone-100 dark:hover:bg-slate-800'
+                  } ${
+                    isSelected
+                      ? '!outline !outline-4 !outline-[rgb(234,88,12)] scale-[0.98] shadow-lg dark:!bg-slate-800/80 z-10'
+                      : ''
+                  }`}
+                >
+                  {/* Icono flotante del Check Naranja */}
+                  {isSelected && (
+                    <div className="absolute top-3 right-3 z-20 !bg-[rgb(234,88,12)] text-white p-1 rounded-full shadow-md">
+                      <Check size={16} strokeWidth={3} />
+                    </div>
+                  )}
+
+                  {viewMode === 'grid' ? (
                             <PropertyCard
                               imagen={
                                 property.thumbnailUrl ||
@@ -1939,7 +1956,7 @@ function BusquedaMapaContent() {
                           )}
                         </div>
                       )
-                    )}
+                    })}
                   </div>
                 )}
                 {renderListPaginationFooter()}
