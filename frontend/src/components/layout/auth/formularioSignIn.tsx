@@ -600,168 +600,209 @@ export default function LoginForm() {
         try {
           await finalizeValidatedSession(event.data.token, event.data.user);
 
-          setSuccessMessage(event.data.message || 'Inicio de sesión con Google exitoso')
-          setGoogleError('')
-          setIsLoadingGoogle(false)
-          popup.close()
+          setSuccessMessage(
+            event.data.message || "Inicio de sesión con Google exitoso",
+          );
+          setGoogleError("");
+          setIsLoadingGoogle(false);
+          popup.close();
 
           window.setTimeout(() => {
-            redirectAfterSuccessfulLogin()
-          }, 1000)
+            redirectAfterSuccessfulLogin();
+          }, 1000);
         } catch (error) {
-          clearClientSession()
+          clearClientSession();
           setGoogleError(
-            error instanceof Error ? error.message : 'No se pudo consolidar la sesión con Google.'
-          )
-          setIsLoadingGoogle(false)
-          popup.close()
+            error instanceof Error
+              ? error.message
+              : "No se pudo consolidar la sesión con Google.",
+          );
+          setIsLoadingGoogle(false);
+          popup.close();
         }
 
-        return
+        return;
       }
 
-      clearClientSession()
-      setGoogleError(event.data.message || 'No se pudo iniciar sesión con Google.')
-      setIsLoadingGoogle(false)
-      popup.close()
+      clearClientSession();
+      setGoogleError(
+        event.data.message || "No se pudo iniciar sesión con Google.",
+      );
+      setIsLoadingGoogle(false);
+      popup.close();
     }
 
     checkPopupIntervalId = window.setInterval(() => {
       if (!popup.closed) {
-        return
+        return;
       }
 
-      cleanup()
+      cleanup();
 
       if (!authWasResolved) {
-        clearClientSession()
+        clearClientSession();
 
         if (hasNoInternetConnection()) {
-          setGoogleError(NO_CONNECTION_MESSAGE)
-          return
+          setGoogleError(NO_CONNECTION_MESSAGE);
+          return;
         }
 
-        setGoogleError('Cancelaste el inicio de sesión con Google. Puedes intentarlo nuevamente.')
+        setGoogleError(
+          "Cancelaste el inicio de sesión con Google. Puedes intentarlo nuevamente.",
+        );
       }
-    }, 500)
+    }, 500);
 
     googleTimeoutId = window.setTimeout(() => {
-      cleanup()
-      clearClientSession()
+      cleanup();
+      clearClientSession();
 
       if (!popup.closed) {
-        popup.close()
+        popup.close();
       }
 
-      setGoogleError(hasNoInternetConnection() ? NO_CONNECTION_MESSAGE : GOOGLE_TIMEOUT_MESSAGE)
-    }, GOOGLE_LOGIN_TIMEOUT_MS)
+      setGoogleError(
+        hasNoInternetConnection()
+          ? NO_CONNECTION_MESSAGE
+          : GOOGLE_TIMEOUT_MESSAGE,
+      );
+    }, GOOGLE_LOGIN_TIMEOUT_MS);
 
-    window.addEventListener('message', handleMessage)
-  }
+    window.addEventListener("message", handleMessage);
+  };
 
   const handleLinkedInLogin = () => {
-    clearClientSession()
-    setGoogleError('')
-    setErrorMessage('')
-    setSuccessMessage('')
+    clearClientSession();
+    setGoogleError("");
+    setErrorMessage("");
+    setSuccessMessage("");
 
     if (hasNoInternetConnection()) {
-      setGoogleError(NO_CONNECTION_MESSAGE)
-      return
+      setGoogleError(NO_CONNECTION_MESSAGE);
+      return;
     }
 
-    setIsLoadingLinkedIn(true)
+    setIsLoadingLinkedIn(true);
 
-    const popupWidth = 500
-    const popupHeight = 600
-    const left = window.screenX + (window.outerWidth - popupWidth) / 2
-    const top = window.screenY + (window.outerHeight - popupHeight) / 2
+    const popupWidth = 500;
+    const popupHeight = 600;
+    const left = window.screenX + (window.outerWidth - popupWidth) / 2;
+    const top = window.screenY + (window.outerHeight - popupHeight) / 2;
 
     const popupWindow = window.open(
       `${API_URL}/api/auth/linkedin/login`,
-      'linkedin-login',
-      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`
-    )
+      "linkedin-login",
+      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`,
+    );
 
-    if (!popupWindow || popupWindow.closed || typeof popupWindow.closed === 'undefined') {
+    if (
+      !popupWindow ||
+      popupWindow.closed ||
+      typeof popupWindow.closed === "undefined"
+    ) {
       setGoogleError(
-        'El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.'
-      )
-      setIsLoadingLinkedIn(false)
-      return
+        "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.",
+      );
+      setIsLoadingLinkedIn(false);
+      return;
     }
 
-    const popup = popupWindow
-    popup.focus()
+    const popup = popupWindow;
+    popup.focus();
 
-    const expectedOrigin = new URL(API_URL).origin
-    let authWasResolved = false
-    let checkPopupIntervalId = 0
-    let linkedinTimeoutId = 0
+    const expectedOrigin = new URL(API_URL).origin;
+    let authWasResolved = false;
+    let checkPopupIntervalId = 0;
+    let linkedinTimeoutId = 0;
+    let wasTimeout = false;
 
     function cleanup(shouldStopLoading = true) {
-      window.removeEventListener('message', handleMessage)
-      window.clearInterval(checkPopupIntervalId)
-      window.clearTimeout(linkedinTimeoutId)
-      if (shouldStopLoading) setIsLoadingLinkedIn(false)
+      window.removeEventListener("message", handleMessage);
+      window.clearInterval(checkPopupIntervalId);
+      window.clearTimeout(linkedinTimeoutId);
+
+      if (shouldStopLoading) {
+        setIsLoadingLinkedIn(false);
+      }
     }
 
     async function handleMessage(event: MessageEvent<LinkedInPopupMessage>) {
-      if (event.origin !== expectedOrigin) return
-      const data = event.data
-      if (!data || typeof data !== 'object' || !('type' in data)) return
-      if (
-        data.type !== 'propbol:linkedin-login-success' &&
-        data.type !== 'propbol:linkedin-login-error'
-      )
-        return
-
-      authWasResolved = true
-      cleanup(false)
-
-      if (data.type === 'propbol:linkedin-login-success') {
-        try {
-          await finalizeValidatedSession(data.token, data.user)
-          localStorage.setItem(
-            'welcome_message',
-            `¡Bienvenido, ${data.user.nombre ?? ''}! Has iniciado sesión con LinkedIn.`
-          )
-          setSuccessMessage(data.message || 'Inicio de sesión con LinkedIn exitoso')
-          setGoogleError('')
-          setIsLoadingLinkedIn(false)
-          popup.close()
-          window.setTimeout(() => {
-            redirectAfterSuccessfulLogin()
-          }, 1000)
-        } catch (error) {
-          clearClientSession()
-          setGoogleError(
-            error instanceof Error ? error.message : 'No se pudo consolidar la sesión con LinkedIn.'
-          )
-          setIsLoadingLinkedIn(false)
-          popup.close()
-        }
-        return
+      if (event.origin !== expectedOrigin) {
+        return;
       }
 
-      clearClientSession()
-      setGoogleError(data.message || 'No se pudo iniciar sesión con LinkedIn.')
-      setIsLoadingLinkedIn(false)
-      popup.close()
+      const data = event.data;
+
+      if (
+        !data ||
+        typeof data !== "object" ||
+        !("type" in data) ||
+        (data.type !== "propbol:linkedin-login-success" &&
+          data.type !== "propbol:linkedin-login-error")
+      ) {
+        return;
+      }
+
+      authWasResolved = true;
+      cleanup(false);
+
+      if (data.type === "propbol:linkedin-login-success") {
+        try {
+          await finalizeValidatedSession(data.token, data.user);
+
+          localStorage.setItem(
+            "welcome_message",
+            `¡Bienvenido, ${data.user.nombre ?? ""}! Has iniciado sesión con LinkedIn.`,
+          );
+
+          setSuccessMessage(
+            data.message || "Inicio de sesión con LinkedIn exitoso",
+          );
+          setGoogleError("");
+          setIsLoadingLinkedIn(false);
+          popup.close();
+
+          window.setTimeout(() => {
+            redirectAfterSuccessfulLogin();
+          }, 1000);
+        } catch (error) {
+          clearClientSession();
+          setGoogleError(
+            error instanceof Error
+              ? error.message
+              : "No se pudo consolidar la sesión con LinkedIn.",
+          );
+          setIsLoadingLinkedIn(false);
+          popup.close();
+        }
+
+        return;
+      }
+
+      clearClientSession();
+      setGoogleError(data.message || "No se pudo iniciar sesión con LinkedIn.");
+      setIsLoadingLinkedIn(false);
+      popup.close();
     }
 
-    let wasTimeout = false
-
     checkPopupIntervalId = window.setInterval(() => {
-      if (!popup.closed) return
-      cleanup()
+      if (!popup.closed) {
+        return;
+      }
+
+      cleanup();
+
       if (!authWasResolved && !wasTimeout) {
-        clearClientSession()
+        clearClientSession();
+
         if (hasNoInternetConnection()) {
-          setGoogleError(NO_CONNECTION_MESSAGE)
-          return
+          setGoogleError(NO_CONNECTION_MESSAGE);
+          return;
         }
-        setGoogleError('Cancelaste el inicio de sesión con LinkedIn. Puedes intentarlo nuevamente.')
+
+        setGoogleError(
+          "Cancelaste el inicio de sesión con LinkedIn. Puedes intentarlo nuevamente.",
+        );
       }
     }, 500)
 
