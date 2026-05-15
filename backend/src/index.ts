@@ -146,6 +146,7 @@ import whatsappRoutes from "./modules/whatsapp/whatsapp.routes.js";
 import adminTestimoniosRoutes from "./modules/testimonios/adminTestimonios.routes.js";
 import adminPlanesRoutes from "./modules/planes/adminPlanes.routes.js";
 import sesionRoutes from "./modules/perfil/sesion.routes.js";
+import poisRoutes from "./modules/pois/pois.routes.js";
 
 import "./jobs/suscripcion.job.js";
 import { initSocket } from "./services/socket.service.js";
@@ -376,6 +377,7 @@ app.post('/api/publicaciones', (req, res) => {
 // --------------------
 app.use("/api/admin", adminTestimoniosRoutes);
 app.use("/api/admin", adminPlanesRoutes);
+app.use("/api/pois", poisRoutes);
 
 // --------------------
 // LEVANTAR SERVIDOR
