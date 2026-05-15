@@ -13,7 +13,7 @@ import type * as Prisma from '../internal/prismaNamespace.js'
 
 /**
  * Model notificacion
- *
+ * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
  */
 export type notificacionModel = runtime.Types.Result.DefaultSelection<Prisma.$notificacionPayload>
 
@@ -27,12 +27,14 @@ export type AggregateNotificacion = {
 
 export type NotificacionAvgAggregateOutputType = {
   id: number | null
-  usuario_id: number | null
+  usuarioId: number | null
+  blog_id: number | null
 }
 
 export type NotificacionSumAggregateOutputType = {
   id: number | null
-  usuario_id: number | null
+  usuarioId: number | null
+  blog_id: number | null
 }
 
 export type NotificacionMinAggregateOutputType = {
@@ -40,11 +42,13 @@ export type NotificacionMinAggregateOutputType = {
   titulo: string | null
   mensaje: string | null
   leida: boolean | null
-  fecha_creacion: Date | null
-  fecha_lectura: Date | null
+  fechaCreacion: Date | null
+  fechaLectura: Date | null
   eliminada: boolean | null
   archivada: boolean | null
-  usuario_id: number | null
+  usuarioId: number | null
+  tipo: string | null
+  blog_id: number | null
 }
 
 export type NotificacionMaxAggregateOutputType = {
@@ -52,11 +56,13 @@ export type NotificacionMaxAggregateOutputType = {
   titulo: string | null
   mensaje: string | null
   leida: boolean | null
-  fecha_creacion: Date | null
-  fecha_lectura: Date | null
+  fechaCreacion: Date | null
+  fechaLectura: Date | null
   eliminada: boolean | null
   archivada: boolean | null
-  usuario_id: number | null
+  usuarioId: number | null
+  tipo: string | null
+  blog_id: number | null
 }
 
 export type NotificacionCountAggregateOutputType = {
@@ -64,22 +70,26 @@ export type NotificacionCountAggregateOutputType = {
   titulo: number
   mensaje: number
   leida: number
-  fecha_creacion: number
-  fecha_lectura: number
+  fechaCreacion: number
+  fechaLectura: number
   eliminada: number
   archivada: number
-  usuario_id: number
+  usuarioId: number
+  tipo: number
+  blog_id: number
   _all: number
 }
 
 export type NotificacionAvgAggregateInputType = {
   id?: true
-  usuario_id?: true
+  usuarioId?: true
+  blog_id?: true
 }
 
 export type NotificacionSumAggregateInputType = {
   id?: true
-  usuario_id?: true
+  usuarioId?: true
+  blog_id?: true
 }
 
 export type NotificacionMinAggregateInputType = {
@@ -87,11 +97,13 @@ export type NotificacionMinAggregateInputType = {
   titulo?: true
   mensaje?: true
   leida?: true
-  fecha_creacion?: true
-  fecha_lectura?: true
+  fechaCreacion?: true
+  fechaLectura?: true
   eliminada?: true
   archivada?: true
-  usuario_id?: true
+  usuarioId?: true
+  tipo?: true
+  blog_id?: true
 }
 
 export type NotificacionMaxAggregateInputType = {
@@ -99,11 +111,13 @@ export type NotificacionMaxAggregateInputType = {
   titulo?: true
   mensaje?: true
   leida?: true
-  fecha_creacion?: true
-  fecha_lectura?: true
+  fechaCreacion?: true
+  fechaLectura?: true
   eliminada?: true
   archivada?: true
-  usuario_id?: true
+  usuarioId?: true
+  tipo?: true
+  blog_id?: true
 }
 
 export type NotificacionCountAggregateInputType = {
@@ -111,11 +125,13 @@ export type NotificacionCountAggregateInputType = {
   titulo?: true
   mensaje?: true
   leida?: true
-  fecha_creacion?: true
-  fecha_lectura?: true
+  fechaCreacion?: true
+  fechaLectura?: true
   eliminada?: true
   archivada?: true
-  usuario_id?: true
+  usuarioId?: true
+  tipo?: true
+  blog_id?: true
   _all?: true
 }
 
@@ -214,12 +230,14 @@ export type NotificacionGroupByOutputType = {
   id: number
   titulo: string
   mensaje: string
-  leida: boolean | null
-  fecha_creacion: Date | null
-  fecha_lectura: Date | null
-  eliminada: boolean | null
-  archivada: boolean | null
-  usuario_id: number
+  leida: boolean
+  fechaCreacion: Date | null
+  fechaLectura: Date | null
+  eliminada: boolean
+  archivada: boolean
+  usuarioId: number
+  tipo: string
+  blog_id: number | null
   _count: NotificacionCountAggregateOutputType | null
   _avg: NotificacionAvgAggregateOutputType | null
   _sum: NotificacionSumAggregateOutputType | null
@@ -246,12 +264,15 @@ export type notificacionWhereInput = {
   id?: Prisma.IntFilter<'notificacion'> | number
   titulo?: Prisma.StringFilter<'notificacion'> | string
   mensaje?: Prisma.StringFilter<'notificacion'> | string
-  leida?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-  fecha_creacion?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
-  fecha_lectura?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
-  eliminada?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-  archivada?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-  usuario_id?: Prisma.IntFilter<'notificacion'> | number
+  leida?: Prisma.BoolFilter<'notificacion'> | boolean
+  fechaCreacion?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
+  fechaLectura?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
+  eliminada?: Prisma.BoolFilter<'notificacion'> | boolean
+  archivada?: Prisma.BoolFilter<'notificacion'> | boolean
+  usuarioId?: Prisma.IntFilter<'notificacion'> | number
+  tipo?: Prisma.StringFilter<'notificacion'> | string
+  blog_id?: Prisma.IntNullableFilter<'notificacion'> | number | null
+  blog?: Prisma.XOR<Prisma.BlogNullableScalarRelationFilter, Prisma.blogWhereInput> | null
   usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
 }
 
@@ -259,12 +280,15 @@ export type notificacionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   titulo?: Prisma.SortOrder
   mensaje?: Prisma.SortOrder
-  leida?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_creacion?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_lectura?: Prisma.SortOrderInput | Prisma.SortOrder
-  eliminada?: Prisma.SortOrderInput | Prisma.SortOrder
-  archivada?: Prisma.SortOrderInput | Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
+  leida?: Prisma.SortOrder
+  fechaCreacion?: Prisma.SortOrderInput | Prisma.SortOrder
+  fechaLectura?: Prisma.SortOrderInput | Prisma.SortOrder
+  eliminada?: Prisma.SortOrder
+  archivada?: Prisma.SortOrder
+  usuarioId?: Prisma.SortOrder
+  tipo?: Prisma.SortOrder
+  blog_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  blog?: Prisma.blogOrderByWithRelationInput
   usuario?: Prisma.usuarioOrderByWithRelationInput
 }
 
@@ -276,12 +300,15 @@ export type notificacionWhereUniqueInput = Prisma.AtLeast<
     NOT?: Prisma.notificacionWhereInput | Prisma.notificacionWhereInput[]
     titulo?: Prisma.StringFilter<'notificacion'> | string
     mensaje?: Prisma.StringFilter<'notificacion'> | string
-    leida?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-    fecha_creacion?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
-    fecha_lectura?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
-    eliminada?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-    archivada?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-    usuario_id?: Prisma.IntFilter<'notificacion'> | number
+    leida?: Prisma.BoolFilter<'notificacion'> | boolean
+    fechaCreacion?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
+    fechaLectura?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
+    eliminada?: Prisma.BoolFilter<'notificacion'> | boolean
+    archivada?: Prisma.BoolFilter<'notificacion'> | boolean
+    usuarioId?: Prisma.IntFilter<'notificacion'> | number
+    tipo?: Prisma.StringFilter<'notificacion'> | string
+    blog_id?: Prisma.IntNullableFilter<'notificacion'> | number | null
+    blog?: Prisma.XOR<Prisma.BlogNullableScalarRelationFilter, Prisma.blogWhereInput> | null
     usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
   },
   'id'
@@ -291,12 +318,14 @@ export type notificacionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   titulo?: Prisma.SortOrder
   mensaje?: Prisma.SortOrder
-  leida?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_creacion?: Prisma.SortOrderInput | Prisma.SortOrder
-  fecha_lectura?: Prisma.SortOrderInput | Prisma.SortOrder
-  eliminada?: Prisma.SortOrderInput | Prisma.SortOrder
-  archivada?: Prisma.SortOrderInput | Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
+  leida?: Prisma.SortOrder
+  fechaCreacion?: Prisma.SortOrderInput | Prisma.SortOrder
+  fechaLectura?: Prisma.SortOrderInput | Prisma.SortOrder
+  eliminada?: Prisma.SortOrder
+  archivada?: Prisma.SortOrder
+  usuarioId?: Prisma.SortOrder
+  tipo?: Prisma.SortOrder
+  blog_id?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.notificacionCountOrderByAggregateInput
   _avg?: Prisma.notificacionAvgOrderByAggregateInput
   _max?: Prisma.notificacionMaxOrderByAggregateInput
@@ -315,26 +344,26 @@ export type notificacionScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<'notificacion'> | number
   titulo?: Prisma.StringWithAggregatesFilter<'notificacion'> | string
   mensaje?: Prisma.StringWithAggregatesFilter<'notificacion'> | string
-  leida?: Prisma.BoolNullableWithAggregatesFilter<'notificacion'> | boolean | null
-  fecha_creacion?:
-    | Prisma.DateTimeNullableWithAggregatesFilter<'notificacion'>
-    | Date
-    | string
-    | null
-  fecha_lectura?: Prisma.DateTimeNullableWithAggregatesFilter<'notificacion'> | Date | string | null
-  eliminada?: Prisma.BoolNullableWithAggregatesFilter<'notificacion'> | boolean | null
-  archivada?: Prisma.BoolNullableWithAggregatesFilter<'notificacion'> | boolean | null
-  usuario_id?: Prisma.IntWithAggregatesFilter<'notificacion'> | number
+  leida?: Prisma.BoolWithAggregatesFilter<'notificacion'> | boolean
+  fechaCreacion?: Prisma.DateTimeNullableWithAggregatesFilter<'notificacion'> | Date | string | null
+  fechaLectura?: Prisma.DateTimeNullableWithAggregatesFilter<'notificacion'> | Date | string | null
+  eliminada?: Prisma.BoolWithAggregatesFilter<'notificacion'> | boolean
+  archivada?: Prisma.BoolWithAggregatesFilter<'notificacion'> | boolean
+  usuarioId?: Prisma.IntWithAggregatesFilter<'notificacion'> | number
+  tipo?: Prisma.StringWithAggregatesFilter<'notificacion'> | string
+  blog_id?: Prisma.IntNullableWithAggregatesFilter<'notificacion'> | number | null
 }
 
 export type notificacionCreateInput = {
   titulo: string
   mensaje: string
-  leida?: boolean | null
-  fecha_creacion?: Date | string | null
-  fecha_lectura?: Date | string | null
-  eliminada?: boolean | null
-  archivada?: boolean | null
+  leida?: boolean
+  fechaCreacion?: Date | string | null
+  fechaLectura?: Date | string | null
+  eliminada?: boolean
+  archivada?: boolean
+  tipo?: string
+  blog?: Prisma.blogCreateNestedOneWithoutNotificacionInput
   usuario: Prisma.usuarioCreateNestedOneWithoutNotificacionInput
 }
 
@@ -342,22 +371,26 @@ export type notificacionUncheckedCreateInput = {
   id?: number
   titulo: string
   mensaje: string
-  leida?: boolean | null
-  fecha_creacion?: Date | string | null
-  fecha_lectura?: Date | string | null
-  eliminada?: boolean | null
-  archivada?: boolean | null
-  usuario_id: number
+  leida?: boolean
+  fechaCreacion?: Date | string | null
+  fechaLectura?: Date | string | null
+  eliminada?: boolean
+  archivada?: boolean
+  usuarioId: number
+  tipo?: string
+  blog_id?: number | null
 }
 
 export type notificacionUpdateInput = {
   titulo?: Prisma.StringFieldUpdateOperationsInput | string
   mensaje?: Prisma.StringFieldUpdateOperationsInput | string
-  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_lectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  leida?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fechaCreacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fechaLectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  eliminada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tipo?: Prisma.StringFieldUpdateOperationsInput | string
+  blog?: Prisma.blogUpdateOneWithoutNotificacionNestedInput
   usuario?: Prisma.usuarioUpdateOneRequiredWithoutNotificacionNestedInput
 }
 
@@ -365,92 +398,53 @@ export type notificacionUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   titulo?: Prisma.StringFieldUpdateOperationsInput | string
   mensaje?: Prisma.StringFieldUpdateOperationsInput | string
-  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_lectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
+  leida?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fechaCreacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fechaLectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  eliminada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  usuarioId?: Prisma.IntFieldUpdateOperationsInput | number
+  tipo?: Prisma.StringFieldUpdateOperationsInput | string
+  blog_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type notificacionCreateManyInput = {
   id?: number
   titulo: string
   mensaje: string
-  leida?: boolean | null
-  fecha_creacion?: Date | string | null
-  fecha_lectura?: Date | string | null
-  eliminada?: boolean | null
-  archivada?: boolean | null
-  usuario_id: number
+  leida?: boolean
+  fechaCreacion?: Date | string | null
+  fechaLectura?: Date | string | null
+  eliminada?: boolean
+  archivada?: boolean
+  usuarioId: number
+  tipo?: string
+  blog_id?: number | null
 }
 
 export type notificacionUpdateManyMutationInput = {
   titulo?: Prisma.StringFieldUpdateOperationsInput | string
   mensaje?: Prisma.StringFieldUpdateOperationsInput | string
-  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_lectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  leida?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fechaCreacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fechaLectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  eliminada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tipo?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type notificacionUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   titulo?: Prisma.StringFieldUpdateOperationsInput | string
   mensaje?: Prisma.StringFieldUpdateOperationsInput | string
-  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_lectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
-}
-
-export type notificacionCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  mensaje?: Prisma.SortOrder
-  leida?: Prisma.SortOrder
-  fecha_creacion?: Prisma.SortOrder
-  fecha_lectura?: Prisma.SortOrder
-  eliminada?: Prisma.SortOrder
-  archivada?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
-
-export type notificacionAvgOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
-
-export type notificacionMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  mensaje?: Prisma.SortOrder
-  leida?: Prisma.SortOrder
-  fecha_creacion?: Prisma.SortOrder
-  fecha_lectura?: Prisma.SortOrder
-  eliminada?: Prisma.SortOrder
-  archivada?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
-
-export type notificacionMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  titulo?: Prisma.SortOrder
-  mensaje?: Prisma.SortOrder
-  leida?: Prisma.SortOrder
-  fecha_creacion?: Prisma.SortOrder
-  fecha_lectura?: Prisma.SortOrder
-  eliminada?: Prisma.SortOrder
-  archivada?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
-}
-
-export type notificacionSumOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  usuario_id?: Prisma.SortOrder
+  leida?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fechaCreacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fechaLectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  eliminada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  usuarioId?: Prisma.IntFieldUpdateOperationsInput | number
+  tipo?: Prisma.StringFieldUpdateOperationsInput | string
+  blog_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type NotificacionListRelationFilter = {
@@ -461,6 +455,146 @@ export type NotificacionListRelationFilter = {
 
 export type notificacionOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type notificacionCountOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  titulo?: Prisma.SortOrder
+  mensaje?: Prisma.SortOrder
+  leida?: Prisma.SortOrder
+  fechaCreacion?: Prisma.SortOrder
+  fechaLectura?: Prisma.SortOrder
+  eliminada?: Prisma.SortOrder
+  archivada?: Prisma.SortOrder
+  usuarioId?: Prisma.SortOrder
+  tipo?: Prisma.SortOrder
+  blog_id?: Prisma.SortOrder
+}
+
+export type notificacionAvgOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  usuarioId?: Prisma.SortOrder
+  blog_id?: Prisma.SortOrder
+}
+
+export type notificacionMaxOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  titulo?: Prisma.SortOrder
+  mensaje?: Prisma.SortOrder
+  leida?: Prisma.SortOrder
+  fechaCreacion?: Prisma.SortOrder
+  fechaLectura?: Prisma.SortOrder
+  eliminada?: Prisma.SortOrder
+  archivada?: Prisma.SortOrder
+  usuarioId?: Prisma.SortOrder
+  tipo?: Prisma.SortOrder
+  blog_id?: Prisma.SortOrder
+}
+
+export type notificacionMinOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  titulo?: Prisma.SortOrder
+  mensaje?: Prisma.SortOrder
+  leida?: Prisma.SortOrder
+  fechaCreacion?: Prisma.SortOrder
+  fechaLectura?: Prisma.SortOrder
+  eliminada?: Prisma.SortOrder
+  archivada?: Prisma.SortOrder
+  usuarioId?: Prisma.SortOrder
+  tipo?: Prisma.SortOrder
+  blog_id?: Prisma.SortOrder
+}
+
+export type notificacionSumOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  usuarioId?: Prisma.SortOrder
+  blog_id?: Prisma.SortOrder
+}
+
+export type notificacionCreateNestedManyWithoutBlogInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.notificacionCreateWithoutBlogInput,
+        Prisma.notificacionUncheckedCreateWithoutBlogInput
+      >
+    | Prisma.notificacionCreateWithoutBlogInput[]
+    | Prisma.notificacionUncheckedCreateWithoutBlogInput[]
+  connectOrCreate?:
+    | Prisma.notificacionCreateOrConnectWithoutBlogInput
+    | Prisma.notificacionCreateOrConnectWithoutBlogInput[]
+  createMany?: Prisma.notificacionCreateManyBlogInputEnvelope
+  connect?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
+}
+
+export type notificacionUncheckedCreateNestedManyWithoutBlogInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.notificacionCreateWithoutBlogInput,
+        Prisma.notificacionUncheckedCreateWithoutBlogInput
+      >
+    | Prisma.notificacionCreateWithoutBlogInput[]
+    | Prisma.notificacionUncheckedCreateWithoutBlogInput[]
+  connectOrCreate?:
+    | Prisma.notificacionCreateOrConnectWithoutBlogInput
+    | Prisma.notificacionCreateOrConnectWithoutBlogInput[]
+  createMany?: Prisma.notificacionCreateManyBlogInputEnvelope
+  connect?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
+}
+
+export type notificacionUpdateManyWithoutBlogNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.notificacionCreateWithoutBlogInput,
+        Prisma.notificacionUncheckedCreateWithoutBlogInput
+      >
+    | Prisma.notificacionCreateWithoutBlogInput[]
+    | Prisma.notificacionUncheckedCreateWithoutBlogInput[]
+  connectOrCreate?:
+    | Prisma.notificacionCreateOrConnectWithoutBlogInput
+    | Prisma.notificacionCreateOrConnectWithoutBlogInput[]
+  upsert?:
+    | Prisma.notificacionUpsertWithWhereUniqueWithoutBlogInput
+    | Prisma.notificacionUpsertWithWhereUniqueWithoutBlogInput[]
+  createMany?: Prisma.notificacionCreateManyBlogInputEnvelope
+  set?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
+  disconnect?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
+  delete?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
+  connect?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
+  update?:
+    | Prisma.notificacionUpdateWithWhereUniqueWithoutBlogInput
+    | Prisma.notificacionUpdateWithWhereUniqueWithoutBlogInput[]
+  updateMany?:
+    | Prisma.notificacionUpdateManyWithWhereWithoutBlogInput
+    | Prisma.notificacionUpdateManyWithWhereWithoutBlogInput[]
+  deleteMany?: Prisma.notificacionScalarWhereInput | Prisma.notificacionScalarWhereInput[]
+}
+
+export type notificacionUncheckedUpdateManyWithoutBlogNestedInput = {
+  create?:
+    | Prisma.XOR<
+        Prisma.notificacionCreateWithoutBlogInput,
+        Prisma.notificacionUncheckedCreateWithoutBlogInput
+      >
+    | Prisma.notificacionCreateWithoutBlogInput[]
+    | Prisma.notificacionUncheckedCreateWithoutBlogInput[]
+  connectOrCreate?:
+    | Prisma.notificacionCreateOrConnectWithoutBlogInput
+    | Prisma.notificacionCreateOrConnectWithoutBlogInput[]
+  upsert?:
+    | Prisma.notificacionUpsertWithWhereUniqueWithoutBlogInput
+    | Prisma.notificacionUpsertWithWhereUniqueWithoutBlogInput[]
+  createMany?: Prisma.notificacionCreateManyBlogInputEnvelope
+  set?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
+  disconnect?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
+  delete?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
+  connect?: Prisma.notificacionWhereUniqueInput | Prisma.notificacionWhereUniqueInput[]
+  update?:
+    | Prisma.notificacionUpdateWithWhereUniqueWithoutBlogInput
+    | Prisma.notificacionUpdateWithWhereUniqueWithoutBlogInput[]
+  updateMany?:
+    | Prisma.notificacionUpdateManyWithWhereWithoutBlogInput
+    | Prisma.notificacionUpdateManyWithWhereWithoutBlogInput[]
+  deleteMany?: Prisma.notificacionScalarWhereInput | Prisma.notificacionScalarWhereInput[]
 }
 
 export type notificacionCreateNestedManyWithoutUsuarioInput = {
@@ -549,25 +683,112 @@ export type notificacionUncheckedUpdateManyWithoutUsuarioNestedInput = {
   deleteMany?: Prisma.notificacionScalarWhereInput | Prisma.notificacionScalarWhereInput[]
 }
 
+export type notificacionCreateWithoutBlogInput = {
+  titulo: string
+  mensaje: string
+  leida?: boolean
+  fechaCreacion?: Date | string | null
+  fechaLectura?: Date | string | null
+  eliminada?: boolean
+  archivada?: boolean
+  tipo?: string
+  usuario: Prisma.usuarioCreateNestedOneWithoutNotificacionInput
+}
+
+export type notificacionUncheckedCreateWithoutBlogInput = {
+  id?: number
+  titulo: string
+  mensaje: string
+  leida?: boolean
+  fechaCreacion?: Date | string | null
+  fechaLectura?: Date | string | null
+  eliminada?: boolean
+  archivada?: boolean
+  usuarioId: number
+  tipo?: string
+}
+
+export type notificacionCreateOrConnectWithoutBlogInput = {
+  where: Prisma.notificacionWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.notificacionCreateWithoutBlogInput,
+    Prisma.notificacionUncheckedCreateWithoutBlogInput
+  >
+}
+
+export type notificacionCreateManyBlogInputEnvelope = {
+  data: Prisma.notificacionCreateManyBlogInput | Prisma.notificacionCreateManyBlogInput[]
+  skipDuplicates?: boolean
+}
+
+export type notificacionUpsertWithWhereUniqueWithoutBlogInput = {
+  where: Prisma.notificacionWhereUniqueInput
+  update: Prisma.XOR<
+    Prisma.notificacionUpdateWithoutBlogInput,
+    Prisma.notificacionUncheckedUpdateWithoutBlogInput
+  >
+  create: Prisma.XOR<
+    Prisma.notificacionCreateWithoutBlogInput,
+    Prisma.notificacionUncheckedCreateWithoutBlogInput
+  >
+}
+
+export type notificacionUpdateWithWhereUniqueWithoutBlogInput = {
+  where: Prisma.notificacionWhereUniqueInput
+  data: Prisma.XOR<
+    Prisma.notificacionUpdateWithoutBlogInput,
+    Prisma.notificacionUncheckedUpdateWithoutBlogInput
+  >
+}
+
+export type notificacionUpdateManyWithWhereWithoutBlogInput = {
+  where: Prisma.notificacionScalarWhereInput
+  data: Prisma.XOR<
+    Prisma.notificacionUpdateManyMutationInput,
+    Prisma.notificacionUncheckedUpdateManyWithoutBlogInput
+  >
+}
+
+export type notificacionScalarWhereInput = {
+  AND?: Prisma.notificacionScalarWhereInput | Prisma.notificacionScalarWhereInput[]
+  OR?: Prisma.notificacionScalarWhereInput[]
+  NOT?: Prisma.notificacionScalarWhereInput | Prisma.notificacionScalarWhereInput[]
+  id?: Prisma.IntFilter<'notificacion'> | number
+  titulo?: Prisma.StringFilter<'notificacion'> | string
+  mensaje?: Prisma.StringFilter<'notificacion'> | string
+  leida?: Prisma.BoolFilter<'notificacion'> | boolean
+  fechaCreacion?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
+  fechaLectura?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
+  eliminada?: Prisma.BoolFilter<'notificacion'> | boolean
+  archivada?: Prisma.BoolFilter<'notificacion'> | boolean
+  usuarioId?: Prisma.IntFilter<'notificacion'> | number
+  tipo?: Prisma.StringFilter<'notificacion'> | string
+  blog_id?: Prisma.IntNullableFilter<'notificacion'> | number | null
+}
+
 export type notificacionCreateWithoutUsuarioInput = {
   titulo: string
   mensaje: string
-  leida?: boolean | null
-  fecha_creacion?: Date | string | null
-  fecha_lectura?: Date | string | null
-  eliminada?: boolean | null
-  archivada?: boolean | null
+  leida?: boolean
+  fechaCreacion?: Date | string | null
+  fechaLectura?: Date | string | null
+  eliminada?: boolean
+  archivada?: boolean
+  tipo?: string
+  blog?: Prisma.blogCreateNestedOneWithoutNotificacionInput
 }
 
 export type notificacionUncheckedCreateWithoutUsuarioInput = {
   id?: number
   titulo: string
   mensaje: string
-  leida?: boolean | null
-  fecha_creacion?: Date | string | null
-  fecha_lectura?: Date | string | null
-  eliminada?: boolean | null
-  archivada?: boolean | null
+  leida?: boolean
+  fechaCreacion?: Date | string | null
+  fechaLectura?: Date | string | null
+  eliminada?: boolean
+  archivada?: boolean
+  tipo?: string
+  blog_id?: number | null
 }
 
 export type notificacionCreateOrConnectWithoutUsuarioInput = {
@@ -611,62 +832,106 @@ export type notificacionUpdateManyWithWhereWithoutUsuarioInput = {
   >
 }
 
-export type notificacionScalarWhereInput = {
-  AND?: Prisma.notificacionScalarWhereInput | Prisma.notificacionScalarWhereInput[]
-  OR?: Prisma.notificacionScalarWhereInput[]
-  NOT?: Prisma.notificacionScalarWhereInput | Prisma.notificacionScalarWhereInput[]
-  id?: Prisma.IntFilter<'notificacion'> | number
-  titulo?: Prisma.StringFilter<'notificacion'> | string
-  mensaje?: Prisma.StringFilter<'notificacion'> | string
-  leida?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-  fecha_creacion?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
-  fecha_lectura?: Prisma.DateTimeNullableFilter<'notificacion'> | Date | string | null
-  eliminada?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-  archivada?: Prisma.BoolNullableFilter<'notificacion'> | boolean | null
-  usuario_id?: Prisma.IntFilter<'notificacion'> | number
+export type notificacionCreateManyBlogInput = {
+  id?: number
+  titulo: string
+  mensaje: string
+  leida?: boolean
+  fechaCreacion?: Date | string | null
+  fechaLectura?: Date | string | null
+  eliminada?: boolean
+  archivada?: boolean
+  usuarioId: number
+  tipo?: string
+}
+
+export type notificacionUpdateWithoutBlogInput = {
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string
+  mensaje?: Prisma.StringFieldUpdateOperationsInput | string
+  leida?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fechaCreacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fechaLectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  eliminada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tipo?: Prisma.StringFieldUpdateOperationsInput | string
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutNotificacionNestedInput
+}
+
+export type notificacionUncheckedUpdateWithoutBlogInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string
+  mensaje?: Prisma.StringFieldUpdateOperationsInput | string
+  leida?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fechaCreacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fechaLectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  eliminada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  usuarioId?: Prisma.IntFieldUpdateOperationsInput | number
+  tipo?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
+export type notificacionUncheckedUpdateManyWithoutBlogInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string
+  mensaje?: Prisma.StringFieldUpdateOperationsInput | string
+  leida?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fechaCreacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fechaLectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  eliminada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  usuarioId?: Prisma.IntFieldUpdateOperationsInput | number
+  tipo?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type notificacionCreateManyUsuarioInput = {
   id?: number
   titulo: string
   mensaje: string
-  leida?: boolean | null
-  fecha_creacion?: Date | string | null
-  fecha_lectura?: Date | string | null
-  eliminada?: boolean | null
-  archivada?: boolean | null
+  leida?: boolean
+  fechaCreacion?: Date | string | null
+  fechaLectura?: Date | string | null
+  eliminada?: boolean
+  archivada?: boolean
+  tipo?: string
+  blog_id?: number | null
 }
 
 export type notificacionUpdateWithoutUsuarioInput = {
   titulo?: Prisma.StringFieldUpdateOperationsInput | string
   mensaje?: Prisma.StringFieldUpdateOperationsInput | string
-  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_lectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  leida?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fechaCreacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fechaLectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  eliminada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tipo?: Prisma.StringFieldUpdateOperationsInput | string
+  blog?: Prisma.blogUpdateOneWithoutNotificacionNestedInput
 }
 
 export type notificacionUncheckedUpdateWithoutUsuarioInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   titulo?: Prisma.StringFieldUpdateOperationsInput | string
   mensaje?: Prisma.StringFieldUpdateOperationsInput | string
-  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_lectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  leida?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fechaCreacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fechaLectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  eliminada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tipo?: Prisma.StringFieldUpdateOperationsInput | string
+  blog_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type notificacionUncheckedUpdateManyWithoutUsuarioInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   titulo?: Prisma.StringFieldUpdateOperationsInput | string
   mensaje?: Prisma.StringFieldUpdateOperationsInput | string
-  leida?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  fecha_creacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  fecha_lectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  eliminada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
-  archivada?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  leida?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  fechaCreacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  fechaLectura?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  eliminada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  archivada?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  tipo?: Prisma.StringFieldUpdateOperationsInput | string
+  blog_id?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type notificacionSelect<
@@ -677,11 +942,14 @@ export type notificacionSelect<
     titulo?: boolean
     mensaje?: boolean
     leida?: boolean
-    fecha_creacion?: boolean
-    fecha_lectura?: boolean
+    fechaCreacion?: boolean
+    fechaLectura?: boolean
     eliminada?: boolean
     archivada?: boolean
-    usuario_id?: boolean
+    usuarioId?: boolean
+    tipo?: boolean
+    blog_id?: boolean
+    blog?: boolean | Prisma.notificacion$blogArgs<ExtArgs>
     usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
   },
   ExtArgs['result']['notificacion']
@@ -695,11 +963,14 @@ export type notificacionSelectCreateManyAndReturn<
     titulo?: boolean
     mensaje?: boolean
     leida?: boolean
-    fecha_creacion?: boolean
-    fecha_lectura?: boolean
+    fechaCreacion?: boolean
+    fechaLectura?: boolean
     eliminada?: boolean
     archivada?: boolean
-    usuario_id?: boolean
+    usuarioId?: boolean
+    tipo?: boolean
+    blog_id?: boolean
+    blog?: boolean | Prisma.notificacion$blogArgs<ExtArgs>
     usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
   },
   ExtArgs['result']['notificacion']
@@ -713,11 +984,14 @@ export type notificacionSelectUpdateManyAndReturn<
     titulo?: boolean
     mensaje?: boolean
     leida?: boolean
-    fecha_creacion?: boolean
-    fecha_lectura?: boolean
+    fechaCreacion?: boolean
+    fechaLectura?: boolean
     eliminada?: boolean
     archivada?: boolean
-    usuario_id?: boolean
+    usuarioId?: boolean
+    tipo?: boolean
+    blog_id?: boolean
+    blog?: boolean | Prisma.notificacion$blogArgs<ExtArgs>
     usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
   },
   ExtArgs['result']['notificacion']
@@ -728,11 +1002,13 @@ export type notificacionSelectScalar = {
   titulo?: boolean
   mensaje?: boolean
   leida?: boolean
-  fecha_creacion?: boolean
-  fecha_lectura?: boolean
+  fechaCreacion?: boolean
+  fechaLectura?: boolean
   eliminada?: boolean
   archivada?: boolean
-  usuario_id?: boolean
+  usuarioId?: boolean
+  tipo?: boolean
+  blog_id?: boolean
 }
 
 export type notificacionOmit<
@@ -742,26 +1018,31 @@ export type notificacionOmit<
   | 'titulo'
   | 'mensaje'
   | 'leida'
-  | 'fecha_creacion'
-  | 'fecha_lectura'
+  | 'fechaCreacion'
+  | 'fechaLectura'
   | 'eliminada'
   | 'archivada'
-  | 'usuario_id',
+  | 'usuarioId'
+  | 'tipo'
+  | 'blog_id',
   ExtArgs['result']['notificacion']
 >
 export type notificacionInclude<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
+  blog?: boolean | Prisma.notificacion$blogArgs<ExtArgs>
   usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
 }
 export type notificacionIncludeCreateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
+  blog?: boolean | Prisma.notificacion$blogArgs<ExtArgs>
   usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
 }
 export type notificacionIncludeUpdateManyAndReturn<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
+  blog?: boolean | Prisma.notificacion$blogArgs<ExtArgs>
   usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
 }
 
@@ -770,6 +1051,7 @@ export type $notificacionPayload<
 > = {
   name: 'notificacion'
   objects: {
+    blog: Prisma.$blogPayload<ExtArgs> | null
     usuario: Prisma.$usuarioPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<
@@ -777,12 +1059,14 @@ export type $notificacionPayload<
       id: number
       titulo: string
       mensaje: string
-      leida: boolean | null
-      fecha_creacion: Date | null
-      fecha_lectura: Date | null
-      eliminada: boolean | null
-      archivada: boolean | null
-      usuario_id: number
+      leida: boolean
+      fechaCreacion: Date | null
+      fechaLectura: Date | null
+      eliminada: boolean
+      archivada: boolean
+      usuarioId: number
+      tipo: string
+      blog_id: number | null
     },
     ExtArgs['result']['notificacion']
   >
@@ -1321,6 +1605,19 @@ export interface Prisma__notificacionClient<
   GlobalOmitOptions = {}
 > extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: 'PrismaPromise'
+  blog<T extends Prisma.notificacion$blogArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.notificacion$blogArgs<ExtArgs>>
+  ): Prisma.Prisma__blogClient<
+    runtime.Types.Result.GetResult<
+      Prisma.$blogPayload<ExtArgs>,
+      T,
+      'findUniqueOrThrow',
+      GlobalOmitOptions
+    > | null,
+    null,
+    ExtArgs,
+    GlobalOmitOptions
+  >
   usuario<T extends Prisma.usuarioDefaultArgs<ExtArgs> = {}>(
     args?: Prisma.Subset<T, Prisma.usuarioDefaultArgs<ExtArgs>>
   ): Prisma.Prisma__usuarioClient<
@@ -1370,11 +1667,13 @@ export interface notificacionFieldRefs {
   readonly titulo: Prisma.FieldRef<'notificacion', 'String'>
   readonly mensaje: Prisma.FieldRef<'notificacion', 'String'>
   readonly leida: Prisma.FieldRef<'notificacion', 'Boolean'>
-  readonly fecha_creacion: Prisma.FieldRef<'notificacion', 'DateTime'>
-  readonly fecha_lectura: Prisma.FieldRef<'notificacion', 'DateTime'>
+  readonly fechaCreacion: Prisma.FieldRef<'notificacion', 'DateTime'>
+  readonly fechaLectura: Prisma.FieldRef<'notificacion', 'DateTime'>
   readonly eliminada: Prisma.FieldRef<'notificacion', 'Boolean'>
   readonly archivada: Prisma.FieldRef<'notificacion', 'Boolean'>
-  readonly usuario_id: Prisma.FieldRef<'notificacion', 'Int'>
+  readonly usuarioId: Prisma.FieldRef<'notificacion', 'Int'>
+  readonly tipo: Prisma.FieldRef<'notificacion', 'String'>
+  readonly blog_id: Prisma.FieldRef<'notificacion', 'Int'>
 }
 
 // Custom InputTypes
@@ -1812,6 +2111,27 @@ export type notificacionDeleteManyArgs<
    * Limit how many notificacions to delete.
    */
   limit?: number
+}
+
+/**
+ * notificacion.blog
+ */
+export type notificacion$blogArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the blog
+   */
+  select?: Prisma.blogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the blog
+   */
+  omit?: Prisma.blogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.blogInclude<ExtArgs> | null
+  where?: Prisma.blogWhereInput
 }
 
 /**

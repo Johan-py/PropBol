@@ -35,12 +35,12 @@ export type RolSumAggregateOutputType = {
 
 export type RolMinAggregateOutputType = {
   id: number | null
-  nombre: $Enums.rol_nombre | null
+  nombre: $Enums.RolNombre | null
 }
 
 export type RolMaxAggregateOutputType = {
   id: number | null
-  nombre: $Enums.rol_nombre | null
+  nombre: $Enums.RolNombre | null
 }
 
 export type RolCountAggregateOutputType = {
@@ -162,7 +162,7 @@ export type rolGroupByArgs<
 
 export type RolGroupByOutputType = {
   id: number
-  nombre: $Enums.rol_nombre
+  nombre: $Enums.RolNombre
   _count: RolCountAggregateOutputType | null
   _avg: RolAvgAggregateOutputType | null
   _sum: RolSumAggregateOutputType | null
@@ -187,7 +187,7 @@ export type rolWhereInput = {
   OR?: Prisma.rolWhereInput[]
   NOT?: Prisma.rolWhereInput | Prisma.rolWhereInput[]
   id?: Prisma.IntFilter<'rol'> | number
-  nombre?: Prisma.Enumrol_nombreFilter<'rol'> | $Enums.rol_nombre
+  nombre?: Prisma.EnumRolNombreFilter<'rol'> | $Enums.RolNombre
   usuario?: Prisma.UsuarioListRelationFilter
 }
 
@@ -200,7 +200,7 @@ export type rolOrderByWithRelationInput = {
 export type rolWhereUniqueInput = Prisma.AtLeast<
   {
     id?: number
-    nombre?: $Enums.rol_nombre
+    nombre?: $Enums.RolNombre
     AND?: Prisma.rolWhereInput | Prisma.rolWhereInput[]
     OR?: Prisma.rolWhereInput[]
     NOT?: Prisma.rolWhereInput | Prisma.rolWhereInput[]
@@ -224,43 +224,43 @@ export type rolScalarWhereWithAggregatesInput = {
   OR?: Prisma.rolScalarWhereWithAggregatesInput[]
   NOT?: Prisma.rolScalarWhereWithAggregatesInput | Prisma.rolScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<'rol'> | number
-  nombre?: Prisma.Enumrol_nombreWithAggregatesFilter<'rol'> | $Enums.rol_nombre
+  nombre?: Prisma.EnumRolNombreWithAggregatesFilter<'rol'> | $Enums.RolNombre
 }
 
 export type rolCreateInput = {
-  nombre: $Enums.rol_nombre
+  nombre: $Enums.RolNombre
   usuario?: Prisma.usuarioCreateNestedManyWithoutRolInput
 }
 
 export type rolUncheckedCreateInput = {
   id?: number
-  nombre: $Enums.rol_nombre
+  nombre: $Enums.RolNombre
   usuario?: Prisma.usuarioUncheckedCreateNestedManyWithoutRolInput
 }
 
 export type rolUpdateInput = {
-  nombre?: Prisma.Enumrol_nombreFieldUpdateOperationsInput | $Enums.rol_nombre
+  nombre?: Prisma.EnumRolNombreFieldUpdateOperationsInput | $Enums.RolNombre
   usuario?: Prisma.usuarioUpdateManyWithoutRolNestedInput
 }
 
 export type rolUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  nombre?: Prisma.Enumrol_nombreFieldUpdateOperationsInput | $Enums.rol_nombre
+  nombre?: Prisma.EnumRolNombreFieldUpdateOperationsInput | $Enums.RolNombre
   usuario?: Prisma.usuarioUncheckedUpdateManyWithoutRolNestedInput
 }
 
 export type rolCreateManyInput = {
   id?: number
-  nombre: $Enums.rol_nombre
+  nombre: $Enums.RolNombre
 }
 
 export type rolUpdateManyMutationInput = {
-  nombre?: Prisma.Enumrol_nombreFieldUpdateOperationsInput | $Enums.rol_nombre
+  nombre?: Prisma.EnumRolNombreFieldUpdateOperationsInput | $Enums.RolNombre
 }
 
 export type rolUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  nombre?: Prisma.Enumrol_nombreFieldUpdateOperationsInput | $Enums.rol_nombre
+  nombre?: Prisma.EnumRolNombreFieldUpdateOperationsInput | $Enums.RolNombre
 }
 
 export type rolCountOrderByAggregateInput = {
@@ -286,13 +286,13 @@ export type rolSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
 }
 
-export type RolScalarRelationFilter = {
-  is?: Prisma.rolWhereInput
-  isNot?: Prisma.rolWhereInput
+export type RolNullableScalarRelationFilter = {
+  is?: Prisma.rolWhereInput | null
+  isNot?: Prisma.rolWhereInput | null
 }
 
-export type Enumrol_nombreFieldUpdateOperationsInput = {
-  set?: $Enums.rol_nombre
+export type EnumRolNombreFieldUpdateOperationsInput = {
+  set?: $Enums.RolNombre
 }
 
 export type rolCreateNestedOneWithoutUsuarioInput = {
@@ -304,13 +304,15 @@ export type rolCreateNestedOneWithoutUsuarioInput = {
   connect?: Prisma.rolWhereUniqueInput
 }
 
-export type rolUpdateOneRequiredWithoutUsuarioNestedInput = {
+export type rolUpdateOneWithoutUsuarioNestedInput = {
   create?: Prisma.XOR<
     Prisma.rolCreateWithoutUsuarioInput,
     Prisma.rolUncheckedCreateWithoutUsuarioInput
   >
   connectOrCreate?: Prisma.rolCreateOrConnectWithoutUsuarioInput
   upsert?: Prisma.rolUpsertWithoutUsuarioInput
+  disconnect?: Prisma.rolWhereInput | boolean
+  delete?: Prisma.rolWhereInput | boolean
   connect?: Prisma.rolWhereUniqueInput
   update?: Prisma.XOR<
     Prisma.XOR<
@@ -322,12 +324,12 @@ export type rolUpdateOneRequiredWithoutUsuarioNestedInput = {
 }
 
 export type rolCreateWithoutUsuarioInput = {
-  nombre: $Enums.rol_nombre
+  nombre: $Enums.RolNombre
 }
 
 export type rolUncheckedCreateWithoutUsuarioInput = {
   id?: number
-  nombre: $Enums.rol_nombre
+  nombre: $Enums.RolNombre
 }
 
 export type rolCreateOrConnectWithoutUsuarioInput = {
@@ -359,12 +361,12 @@ export type rolUpdateToOneWithWhereWithoutUsuarioInput = {
 }
 
 export type rolUpdateWithoutUsuarioInput = {
-  nombre?: Prisma.Enumrol_nombreFieldUpdateOperationsInput | $Enums.rol_nombre
+  nombre?: Prisma.EnumRolNombreFieldUpdateOperationsInput | $Enums.RolNombre
 }
 
 export type rolUncheckedUpdateWithoutUsuarioInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  nombre?: Prisma.Enumrol_nombreFieldUpdateOperationsInput | $Enums.rol_nombre
+  nombre?: Prisma.EnumRolNombreFieldUpdateOperationsInput | $Enums.RolNombre
 }
 
 /**
@@ -465,7 +467,7 @@ export type $rolPayload<
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
       id: number
-      nombre: $Enums.rol_nombre
+      nombre: $Enums.RolNombre
     },
     ExtArgs['result']['rol']
   >
@@ -1019,7 +1021,7 @@ export interface Prisma__rolClient<
  */
 export interface rolFieldRefs {
   readonly id: Prisma.FieldRef<'rol', 'Int'>
-  readonly nombre: Prisma.FieldRef<'rol', 'rol_nombre'>
+  readonly nombre: Prisma.FieldRef<'rol', 'RolNombre'>
 }
 
 // Custom InputTypes

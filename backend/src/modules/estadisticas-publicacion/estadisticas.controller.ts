@@ -241,8 +241,8 @@ export class EstadisticasPublicacionController {
       if (!usuarioId) {
         return res.status(401).json({
           ok: false,
-          mensaje: "Debe iniciar sesión para ver las estadísticas.",
-        });
+          mensaje: 'Debe iniciar sesión para ver las estadísticas.'
+        })
       }
 
       if (Number.isNaN(publicacionId)) {

@@ -45,6 +45,10 @@ export type PublicacionMinAggregateOutputType = {
   fecha_publicacion: Date | null
   usuario_id: number | null
   inmueble_id: number | null
+  payment_intent_id: string | null
+  promoted: boolean | null
+  promoted_at: Date | null
+  promoted_expires_at: Date | null
 }
 
 export type PublicacionMaxAggregateOutputType = {
@@ -55,6 +59,10 @@ export type PublicacionMaxAggregateOutputType = {
   fecha_publicacion: Date | null
   usuario_id: number | null
   inmueble_id: number | null
+  payment_intent_id: string | null
+  promoted: boolean | null
+  promoted_at: Date | null
+  promoted_expires_at: Date | null
 }
 
 export type PublicacionCountAggregateOutputType = {
@@ -65,6 +73,10 @@ export type PublicacionCountAggregateOutputType = {
   fecha_publicacion: number
   usuario_id: number
   inmueble_id: number
+  payment_intent_id: number
+  promoted: number
+  promoted_at: number
+  promoted_expires_at: number
   _all: number
 }
 
@@ -88,6 +100,10 @@ export type PublicacionMinAggregateInputType = {
   fecha_publicacion?: true
   usuario_id?: true
   inmueble_id?: true
+  payment_intent_id?: true
+  promoted?: true
+  promoted_at?: true
+  promoted_expires_at?: true
 }
 
 export type PublicacionMaxAggregateInputType = {
@@ -98,6 +114,10 @@ export type PublicacionMaxAggregateInputType = {
   fecha_publicacion?: true
   usuario_id?: true
   inmueble_id?: true
+  payment_intent_id?: true
+  promoted?: true
+  promoted_at?: true
+  promoted_expires_at?: true
 }
 
 export type PublicacionCountAggregateInputType = {
@@ -108,6 +128,10 @@ export type PublicacionCountAggregateInputType = {
   fecha_publicacion?: true
   usuario_id?: true
   inmueble_id?: true
+  payment_intent_id?: true
+  promoted?: true
+  promoted_at?: true
+  promoted_expires_at?: true
   _all?: true
 }
 
@@ -210,6 +234,10 @@ export type PublicacionGroupByOutputType = {
   fecha_publicacion: Date | null
   usuario_id: number
   inmueble_id: number
+  payment_intent_id: string | null
+  promoted: boolean
+  promoted_at: Date | null
+  promoted_expires_at: Date | null
   _count: PublicacionCountAggregateOutputType | null
   _avg: PublicacionAvgAggregateOutputType | null
   _sum: PublicacionSumAggregateOutputType | null
@@ -243,9 +271,15 @@ export type publicacionWhereInput = {
   fecha_publicacion?: Prisma.DateTimeNullableFilter<'publicacion'> | Date | string | null
   usuario_id?: Prisma.IntFilter<'publicacion'> | number
   inmueble_id?: Prisma.IntFilter<'publicacion'> | number
+  payment_intent_id?: Prisma.StringNullableFilter<'publicacion'> | string | null
+  promoted?: Prisma.BoolFilter<'publicacion'> | boolean
+  promoted_at?: Prisma.DateTimeNullableFilter<'publicacion'> | Date | string | null
+  promoted_expires_at?: Prisma.DateTimeNullableFilter<'publicacion'> | Date | string | null
   multimedia?: Prisma.MultimediaListRelationFilter
   inmueble?: Prisma.XOR<Prisma.InmuebleScalarRelationFilter, Prisma.inmuebleWhereInput>
   usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
+  publicacion_parametro?: Prisma.Publicacion_parametroListRelationFilter
+  publicacion_tag?: Prisma.Publicacion_tagListRelationFilter
 }
 
 export type publicacionOrderByWithRelationInput = {
@@ -256,9 +290,15 @@ export type publicacionOrderByWithRelationInput = {
   fecha_publicacion?: Prisma.SortOrderInput | Prisma.SortOrder
   usuario_id?: Prisma.SortOrder
   inmueble_id?: Prisma.SortOrder
+  payment_intent_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  promoted?: Prisma.SortOrder
+  promoted_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  promoted_expires_at?: Prisma.SortOrderInput | Prisma.SortOrder
   multimedia?: Prisma.multimediaOrderByRelationAggregateInput
   inmueble?: Prisma.inmuebleOrderByWithRelationInput
   usuario?: Prisma.usuarioOrderByWithRelationInput
+  publicacion_parametro?: Prisma.publicacion_parametroOrderByRelationAggregateInput
+  publicacion_tag?: Prisma.publicacion_tagOrderByRelationAggregateInput
 }
 
 export type publicacionWhereUniqueInput = Prisma.AtLeast<
@@ -276,9 +316,15 @@ export type publicacionWhereUniqueInput = Prisma.AtLeast<
     fecha_publicacion?: Prisma.DateTimeNullableFilter<'publicacion'> | Date | string | null
     usuario_id?: Prisma.IntFilter<'publicacion'> | number
     inmueble_id?: Prisma.IntFilter<'publicacion'> | number
+    payment_intent_id?: Prisma.StringNullableFilter<'publicacion'> | string | null
+    promoted?: Prisma.BoolFilter<'publicacion'> | boolean
+    promoted_at?: Prisma.DateTimeNullableFilter<'publicacion'> | Date | string | null
+    promoted_expires_at?: Prisma.DateTimeNullableFilter<'publicacion'> | Date | string | null
     multimedia?: Prisma.MultimediaListRelationFilter
     inmueble?: Prisma.XOR<Prisma.InmuebleScalarRelationFilter, Prisma.inmuebleWhereInput>
     usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.usuarioWhereInput>
+    publicacion_parametro?: Prisma.Publicacion_parametroListRelationFilter
+    publicacion_tag?: Prisma.Publicacion_tagListRelationFilter
   },
   'id'
 >
@@ -291,6 +337,10 @@ export type publicacionOrderByWithAggregationInput = {
   fecha_publicacion?: Prisma.SortOrderInput | Prisma.SortOrder
   usuario_id?: Prisma.SortOrder
   inmueble_id?: Prisma.SortOrder
+  payment_intent_id?: Prisma.SortOrderInput | Prisma.SortOrder
+  promoted?: Prisma.SortOrder
+  promoted_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  promoted_expires_at?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.publicacionCountOrderByAggregateInput
   _avg?: Prisma.publicacionAvgOrderByAggregateInput
   _max?: Prisma.publicacionMaxOrderByAggregateInput
@@ -320,6 +370,14 @@ export type publicacionScalarWhereWithAggregatesInput = {
     | null
   usuario_id?: Prisma.IntWithAggregatesFilter<'publicacion'> | number
   inmueble_id?: Prisma.IntWithAggregatesFilter<'publicacion'> | number
+  payment_intent_id?: Prisma.StringNullableWithAggregatesFilter<'publicacion'> | string | null
+  promoted?: Prisma.BoolWithAggregatesFilter<'publicacion'> | boolean
+  promoted_at?: Prisma.DateTimeNullableWithAggregatesFilter<'publicacion'> | Date | string | null
+  promoted_expires_at?:
+    | Prisma.DateTimeNullableWithAggregatesFilter<'publicacion'>
+    | Date
+    | string
+    | null
 }
 
 export type publicacionCreateInput = {
@@ -327,9 +385,15 @@ export type publicacionCreateInput = {
   descripcion?: string | null
   estado?: $Enums.estado_publicacion | null
   fecha_publicacion?: Date | string | null
+  payment_intent_id?: string | null
+  promoted?: boolean
+  promoted_at?: Date | string | null
+  promoted_expires_at?: Date | string | null
   multimedia?: Prisma.multimediaCreateNestedManyWithoutPublicacionInput
   inmueble: Prisma.inmuebleCreateNestedOneWithoutPublicacionInput
   usuario: Prisma.usuarioCreateNestedOneWithoutPublicacionInput
+  publicacion_parametro?: Prisma.publicacion_parametroCreateNestedManyWithoutPublicacionInput
+  publicacion_tag?: Prisma.publicacion_tagCreateNestedManyWithoutPublicacionInput
 }
 
 export type publicacionUncheckedCreateInput = {
@@ -340,7 +404,13 @@ export type publicacionUncheckedCreateInput = {
   fecha_publicacion?: Date | string | null
   usuario_id: number
   inmueble_id: number
+  payment_intent_id?: string | null
+  promoted?: boolean
+  promoted_at?: Date | string | null
+  promoted_expires_at?: Date | string | null
   multimedia?: Prisma.multimediaUncheckedCreateNestedManyWithoutPublicacionInput
+  publicacion_parametro?: Prisma.publicacion_parametroUncheckedCreateNestedManyWithoutPublicacionInput
+  publicacion_tag?: Prisma.publicacion_tagUncheckedCreateNestedManyWithoutPublicacionInput
 }
 
 export type publicacionUpdateInput = {
@@ -351,9 +421,15 @@ export type publicacionUpdateInput = {
     | $Enums.estado_publicacion
     | null
   fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payment_intent_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promoted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  promoted_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   multimedia?: Prisma.multimediaUpdateManyWithoutPublicacionNestedInput
   inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutPublicacionNestedInput
   usuario?: Prisma.usuarioUpdateOneRequiredWithoutPublicacionNestedInput
+  publicacion_parametro?: Prisma.publicacion_parametroUpdateManyWithoutPublicacionNestedInput
+  publicacion_tag?: Prisma.publicacion_tagUpdateManyWithoutPublicacionNestedInput
 }
 
 export type publicacionUncheckedUpdateInput = {
@@ -367,7 +443,13 @@ export type publicacionUncheckedUpdateInput = {
   fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
   inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
+  payment_intent_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promoted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  promoted_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   multimedia?: Prisma.multimediaUncheckedUpdateManyWithoutPublicacionNestedInput
+  publicacion_parametro?: Prisma.publicacion_parametroUncheckedUpdateManyWithoutPublicacionNestedInput
+  publicacion_tag?: Prisma.publicacion_tagUncheckedUpdateManyWithoutPublicacionNestedInput
 }
 
 export type publicacionCreateManyInput = {
@@ -378,6 +460,10 @@ export type publicacionCreateManyInput = {
   fecha_publicacion?: Date | string | null
   usuario_id: number
   inmueble_id: number
+  payment_intent_id?: string | null
+  promoted?: boolean
+  promoted_at?: Date | string | null
+  promoted_expires_at?: Date | string | null
 }
 
 export type publicacionUpdateManyMutationInput = {
@@ -388,6 +474,10 @@ export type publicacionUpdateManyMutationInput = {
     | $Enums.estado_publicacion
     | null
   fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payment_intent_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promoted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  promoted_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type publicacionUncheckedUpdateManyInput = {
@@ -401,6 +491,10 @@ export type publicacionUncheckedUpdateManyInput = {
   fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
   inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
+  payment_intent_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promoted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  promoted_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type PublicacionListRelationFilter = {
@@ -426,6 +520,10 @@ export type publicacionCountOrderByAggregateInput = {
   fecha_publicacion?: Prisma.SortOrder
   usuario_id?: Prisma.SortOrder
   inmueble_id?: Prisma.SortOrder
+  payment_intent_id?: Prisma.SortOrder
+  promoted?: Prisma.SortOrder
+  promoted_at?: Prisma.SortOrder
+  promoted_expires_at?: Prisma.SortOrder
 }
 
 export type publicacionAvgOrderByAggregateInput = {
@@ -442,6 +540,10 @@ export type publicacionMaxOrderByAggregateInput = {
   fecha_publicacion?: Prisma.SortOrder
   usuario_id?: Prisma.SortOrder
   inmueble_id?: Prisma.SortOrder
+  payment_intent_id?: Prisma.SortOrder
+  promoted?: Prisma.SortOrder
+  promoted_at?: Prisma.SortOrder
+  promoted_expires_at?: Prisma.SortOrder
 }
 
 export type publicacionMinOrderByAggregateInput = {
@@ -452,12 +554,21 @@ export type publicacionMinOrderByAggregateInput = {
   fecha_publicacion?: Prisma.SortOrder
   usuario_id?: Prisma.SortOrder
   inmueble_id?: Prisma.SortOrder
+  payment_intent_id?: Prisma.SortOrder
+  promoted?: Prisma.SortOrder
+  promoted_at?: Prisma.SortOrder
+  promoted_expires_at?: Prisma.SortOrder
 }
 
 export type publicacionSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   usuario_id?: Prisma.SortOrder
   inmueble_id?: Prisma.SortOrder
+}
+
+export type PublicacionNullableScalarRelationFilter = {
+  is?: Prisma.publicacionWhereInput | null
+  isNot?: Prisma.publicacionWhereInput | null
 }
 
 export type publicacionCreateNestedManyWithoutInmuebleInput = {
@@ -576,6 +687,60 @@ export type NullableEnumestado_publicacionFieldUpdateOperationsInput = {
   set?: $Enums.estado_publicacion | null
 }
 
+export type publicacionCreateNestedOneWithoutPublicacion_parametroInput = {
+  create?: Prisma.XOR<
+    Prisma.publicacionCreateWithoutPublicacion_parametroInput,
+    Prisma.publicacionUncheckedCreateWithoutPublicacion_parametroInput
+  >
+  connectOrCreate?: Prisma.publicacionCreateOrConnectWithoutPublicacion_parametroInput
+  connect?: Prisma.publicacionWhereUniqueInput
+}
+
+export type publicacionUpdateOneWithoutPublicacion_parametroNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.publicacionCreateWithoutPublicacion_parametroInput,
+    Prisma.publicacionUncheckedCreateWithoutPublicacion_parametroInput
+  >
+  connectOrCreate?: Prisma.publicacionCreateOrConnectWithoutPublicacion_parametroInput
+  upsert?: Prisma.publicacionUpsertWithoutPublicacion_parametroInput
+  disconnect?: Prisma.publicacionWhereInput | boolean
+  delete?: Prisma.publicacionWhereInput | boolean
+  connect?: Prisma.publicacionWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.publicacionUpdateToOneWithWhereWithoutPublicacion_parametroInput,
+      Prisma.publicacionUpdateWithoutPublicacion_parametroInput
+    >,
+    Prisma.publicacionUncheckedUpdateWithoutPublicacion_parametroInput
+  >
+}
+
+export type publicacionCreateNestedOneWithoutPublicacion_tagInput = {
+  create?: Prisma.XOR<
+    Prisma.publicacionCreateWithoutPublicacion_tagInput,
+    Prisma.publicacionUncheckedCreateWithoutPublicacion_tagInput
+  >
+  connectOrCreate?: Prisma.publicacionCreateOrConnectWithoutPublicacion_tagInput
+  connect?: Prisma.publicacionWhereUniqueInput
+}
+
+export type publicacionUpdateOneRequiredWithoutPublicacion_tagNestedInput = {
+  create?: Prisma.XOR<
+    Prisma.publicacionCreateWithoutPublicacion_tagInput,
+    Prisma.publicacionUncheckedCreateWithoutPublicacion_tagInput
+  >
+  connectOrCreate?: Prisma.publicacionCreateOrConnectWithoutPublicacion_tagInput
+  upsert?: Prisma.publicacionUpsertWithoutPublicacion_tagInput
+  connect?: Prisma.publicacionWhereUniqueInput
+  update?: Prisma.XOR<
+    Prisma.XOR<
+      Prisma.publicacionUpdateToOneWithWhereWithoutPublicacion_tagInput,
+      Prisma.publicacionUpdateWithoutPublicacion_tagInput
+    >,
+    Prisma.publicacionUncheckedUpdateWithoutPublicacion_tagInput
+  >
+}
+
 export type publicacionCreateNestedManyWithoutUsuarioInput = {
   create?:
     | Prisma.XOR<
@@ -667,8 +832,14 @@ export type publicacionCreateWithoutInmuebleInput = {
   descripcion?: string | null
   estado?: $Enums.estado_publicacion | null
   fecha_publicacion?: Date | string | null
+  payment_intent_id?: string | null
+  promoted?: boolean
+  promoted_at?: Date | string | null
+  promoted_expires_at?: Date | string | null
   multimedia?: Prisma.multimediaCreateNestedManyWithoutPublicacionInput
   usuario: Prisma.usuarioCreateNestedOneWithoutPublicacionInput
+  publicacion_parametro?: Prisma.publicacion_parametroCreateNestedManyWithoutPublicacionInput
+  publicacion_tag?: Prisma.publicacion_tagCreateNestedManyWithoutPublicacionInput
 }
 
 export type publicacionUncheckedCreateWithoutInmuebleInput = {
@@ -678,7 +849,13 @@ export type publicacionUncheckedCreateWithoutInmuebleInput = {
   estado?: $Enums.estado_publicacion | null
   fecha_publicacion?: Date | string | null
   usuario_id: number
+  payment_intent_id?: string | null
+  promoted?: boolean
+  promoted_at?: Date | string | null
+  promoted_expires_at?: Date | string | null
   multimedia?: Prisma.multimediaUncheckedCreateNestedManyWithoutPublicacionInput
+  publicacion_parametro?: Prisma.publicacion_parametroUncheckedCreateNestedManyWithoutPublicacionInput
+  publicacion_tag?: Prisma.publicacion_tagUncheckedCreateNestedManyWithoutPublicacionInput
 }
 
 export type publicacionCreateOrConnectWithoutInmuebleInput = {
@@ -736,6 +913,10 @@ export type publicacionScalarWhereInput = {
   fecha_publicacion?: Prisma.DateTimeNullableFilter<'publicacion'> | Date | string | null
   usuario_id?: Prisma.IntFilter<'publicacion'> | number
   inmueble_id?: Prisma.IntFilter<'publicacion'> | number
+  payment_intent_id?: Prisma.StringNullableFilter<'publicacion'> | string | null
+  promoted?: Prisma.BoolFilter<'publicacion'> | boolean
+  promoted_at?: Prisma.DateTimeNullableFilter<'publicacion'> | Date | string | null
+  promoted_expires_at?: Prisma.DateTimeNullableFilter<'publicacion'> | Date | string | null
 }
 
 export type publicacionCreateWithoutMultimediaInput = {
@@ -743,8 +924,14 @@ export type publicacionCreateWithoutMultimediaInput = {
   descripcion?: string | null
   estado?: $Enums.estado_publicacion | null
   fecha_publicacion?: Date | string | null
+  payment_intent_id?: string | null
+  promoted?: boolean
+  promoted_at?: Date | string | null
+  promoted_expires_at?: Date | string | null
   inmueble: Prisma.inmuebleCreateNestedOneWithoutPublicacionInput
   usuario: Prisma.usuarioCreateNestedOneWithoutPublicacionInput
+  publicacion_parametro?: Prisma.publicacion_parametroCreateNestedManyWithoutPublicacionInput
+  publicacion_tag?: Prisma.publicacion_tagCreateNestedManyWithoutPublicacionInput
 }
 
 export type publicacionUncheckedCreateWithoutMultimediaInput = {
@@ -755,6 +942,12 @@ export type publicacionUncheckedCreateWithoutMultimediaInput = {
   fecha_publicacion?: Date | string | null
   usuario_id: number
   inmueble_id: number
+  payment_intent_id?: string | null
+  promoted?: boolean
+  promoted_at?: Date | string | null
+  promoted_expires_at?: Date | string | null
+  publicacion_parametro?: Prisma.publicacion_parametroUncheckedCreateNestedManyWithoutPublicacionInput
+  publicacion_tag?: Prisma.publicacion_tagUncheckedCreateNestedManyWithoutPublicacionInput
 }
 
 export type publicacionCreateOrConnectWithoutMultimediaInput = {
@@ -793,8 +986,14 @@ export type publicacionUpdateWithoutMultimediaInput = {
     | $Enums.estado_publicacion
     | null
   fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payment_intent_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promoted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  promoted_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutPublicacionNestedInput
   usuario?: Prisma.usuarioUpdateOneRequiredWithoutPublicacionNestedInput
+  publicacion_parametro?: Prisma.publicacion_parametroUpdateManyWithoutPublicacionNestedInput
+  publicacion_tag?: Prisma.publicacion_tagUpdateManyWithoutPublicacionNestedInput
 }
 
 export type publicacionUncheckedUpdateWithoutMultimediaInput = {
@@ -808,6 +1007,204 @@ export type publicacionUncheckedUpdateWithoutMultimediaInput = {
   fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
   inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
+  payment_intent_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promoted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  promoted_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  publicacion_parametro?: Prisma.publicacion_parametroUncheckedUpdateManyWithoutPublicacionNestedInput
+  publicacion_tag?: Prisma.publicacion_tagUncheckedUpdateManyWithoutPublicacionNestedInput
+}
+
+export type publicacionCreateWithoutPublicacion_parametroInput = {
+  titulo: string
+  descripcion?: string | null
+  estado?: $Enums.estado_publicacion | null
+  fecha_publicacion?: Date | string | null
+  payment_intent_id?: string | null
+  promoted?: boolean
+  promoted_at?: Date | string | null
+  promoted_expires_at?: Date | string | null
+  multimedia?: Prisma.multimediaCreateNestedManyWithoutPublicacionInput
+  inmueble: Prisma.inmuebleCreateNestedOneWithoutPublicacionInput
+  usuario: Prisma.usuarioCreateNestedOneWithoutPublicacionInput
+  publicacion_tag?: Prisma.publicacion_tagCreateNestedManyWithoutPublicacionInput
+}
+
+export type publicacionUncheckedCreateWithoutPublicacion_parametroInput = {
+  id?: number
+  titulo: string
+  descripcion?: string | null
+  estado?: $Enums.estado_publicacion | null
+  fecha_publicacion?: Date | string | null
+  usuario_id: number
+  inmueble_id: number
+  payment_intent_id?: string | null
+  promoted?: boolean
+  promoted_at?: Date | string | null
+  promoted_expires_at?: Date | string | null
+  multimedia?: Prisma.multimediaUncheckedCreateNestedManyWithoutPublicacionInput
+  publicacion_tag?: Prisma.publicacion_tagUncheckedCreateNestedManyWithoutPublicacionInput
+}
+
+export type publicacionCreateOrConnectWithoutPublicacion_parametroInput = {
+  where: Prisma.publicacionWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.publicacionCreateWithoutPublicacion_parametroInput,
+    Prisma.publicacionUncheckedCreateWithoutPublicacion_parametroInput
+  >
+}
+
+export type publicacionUpsertWithoutPublicacion_parametroInput = {
+  update: Prisma.XOR<
+    Prisma.publicacionUpdateWithoutPublicacion_parametroInput,
+    Prisma.publicacionUncheckedUpdateWithoutPublicacion_parametroInput
+  >
+  create: Prisma.XOR<
+    Prisma.publicacionCreateWithoutPublicacion_parametroInput,
+    Prisma.publicacionUncheckedCreateWithoutPublicacion_parametroInput
+  >
+  where?: Prisma.publicacionWhereInput
+}
+
+export type publicacionUpdateToOneWithWhereWithoutPublicacion_parametroInput = {
+  where?: Prisma.publicacionWhereInput
+  data: Prisma.XOR<
+    Prisma.publicacionUpdateWithoutPublicacion_parametroInput,
+    Prisma.publicacionUncheckedUpdateWithoutPublicacion_parametroInput
+  >
+}
+
+export type publicacionUpdateWithoutPublicacion_parametroInput = {
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  estado?:
+    | Prisma.NullableEnumestado_publicacionFieldUpdateOperationsInput
+    | $Enums.estado_publicacion
+    | null
+  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payment_intent_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promoted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  promoted_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  multimedia?: Prisma.multimediaUpdateManyWithoutPublicacionNestedInput
+  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutPublicacionNestedInput
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutPublicacionNestedInput
+  publicacion_tag?: Prisma.publicacion_tagUpdateManyWithoutPublicacionNestedInput
+}
+
+export type publicacionUncheckedUpdateWithoutPublicacion_parametroInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  estado?:
+    | Prisma.NullableEnumestado_publicacionFieldUpdateOperationsInput
+    | $Enums.estado_publicacion
+    | null
+  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
+  payment_intent_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promoted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  promoted_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  multimedia?: Prisma.multimediaUncheckedUpdateManyWithoutPublicacionNestedInput
+  publicacion_tag?: Prisma.publicacion_tagUncheckedUpdateManyWithoutPublicacionNestedInput
+}
+
+export type publicacionCreateWithoutPublicacion_tagInput = {
+  titulo: string
+  descripcion?: string | null
+  estado?: $Enums.estado_publicacion | null
+  fecha_publicacion?: Date | string | null
+  payment_intent_id?: string | null
+  promoted?: boolean
+  promoted_at?: Date | string | null
+  promoted_expires_at?: Date | string | null
+  multimedia?: Prisma.multimediaCreateNestedManyWithoutPublicacionInput
+  inmueble: Prisma.inmuebleCreateNestedOneWithoutPublicacionInput
+  usuario: Prisma.usuarioCreateNestedOneWithoutPublicacionInput
+  publicacion_parametro?: Prisma.publicacion_parametroCreateNestedManyWithoutPublicacionInput
+}
+
+export type publicacionUncheckedCreateWithoutPublicacion_tagInput = {
+  id?: number
+  titulo: string
+  descripcion?: string | null
+  estado?: $Enums.estado_publicacion | null
+  fecha_publicacion?: Date | string | null
+  usuario_id: number
+  inmueble_id: number
+  payment_intent_id?: string | null
+  promoted?: boolean
+  promoted_at?: Date | string | null
+  promoted_expires_at?: Date | string | null
+  multimedia?: Prisma.multimediaUncheckedCreateNestedManyWithoutPublicacionInput
+  publicacion_parametro?: Prisma.publicacion_parametroUncheckedCreateNestedManyWithoutPublicacionInput
+}
+
+export type publicacionCreateOrConnectWithoutPublicacion_tagInput = {
+  where: Prisma.publicacionWhereUniqueInput
+  create: Prisma.XOR<
+    Prisma.publicacionCreateWithoutPublicacion_tagInput,
+    Prisma.publicacionUncheckedCreateWithoutPublicacion_tagInput
+  >
+}
+
+export type publicacionUpsertWithoutPublicacion_tagInput = {
+  update: Prisma.XOR<
+    Prisma.publicacionUpdateWithoutPublicacion_tagInput,
+    Prisma.publicacionUncheckedUpdateWithoutPublicacion_tagInput
+  >
+  create: Prisma.XOR<
+    Prisma.publicacionCreateWithoutPublicacion_tagInput,
+    Prisma.publicacionUncheckedCreateWithoutPublicacion_tagInput
+  >
+  where?: Prisma.publicacionWhereInput
+}
+
+export type publicacionUpdateToOneWithWhereWithoutPublicacion_tagInput = {
+  where?: Prisma.publicacionWhereInput
+  data: Prisma.XOR<
+    Prisma.publicacionUpdateWithoutPublicacion_tagInput,
+    Prisma.publicacionUncheckedUpdateWithoutPublicacion_tagInput
+  >
+}
+
+export type publicacionUpdateWithoutPublicacion_tagInput = {
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  estado?:
+    | Prisma.NullableEnumestado_publicacionFieldUpdateOperationsInput
+    | $Enums.estado_publicacion
+    | null
+  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payment_intent_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promoted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  promoted_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  multimedia?: Prisma.multimediaUpdateManyWithoutPublicacionNestedInput
+  inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutPublicacionNestedInput
+  usuario?: Prisma.usuarioUpdateOneRequiredWithoutPublicacionNestedInput
+  publicacion_parametro?: Prisma.publicacion_parametroUpdateManyWithoutPublicacionNestedInput
+}
+
+export type publicacionUncheckedUpdateWithoutPublicacion_tagInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  titulo?: Prisma.StringFieldUpdateOperationsInput | string
+  descripcion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  estado?:
+    | Prisma.NullableEnumestado_publicacionFieldUpdateOperationsInput
+    | $Enums.estado_publicacion
+    | null
+  fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
+  inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
+  payment_intent_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promoted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  promoted_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  multimedia?: Prisma.multimediaUncheckedUpdateManyWithoutPublicacionNestedInput
+  publicacion_parametro?: Prisma.publicacion_parametroUncheckedUpdateManyWithoutPublicacionNestedInput
 }
 
 export type publicacionCreateWithoutUsuarioInput = {
@@ -815,8 +1212,14 @@ export type publicacionCreateWithoutUsuarioInput = {
   descripcion?: string | null
   estado?: $Enums.estado_publicacion | null
   fecha_publicacion?: Date | string | null
+  payment_intent_id?: string | null
+  promoted?: boolean
+  promoted_at?: Date | string | null
+  promoted_expires_at?: Date | string | null
   multimedia?: Prisma.multimediaCreateNestedManyWithoutPublicacionInput
   inmueble: Prisma.inmuebleCreateNestedOneWithoutPublicacionInput
+  publicacion_parametro?: Prisma.publicacion_parametroCreateNestedManyWithoutPublicacionInput
+  publicacion_tag?: Prisma.publicacion_tagCreateNestedManyWithoutPublicacionInput
 }
 
 export type publicacionUncheckedCreateWithoutUsuarioInput = {
@@ -826,7 +1229,13 @@ export type publicacionUncheckedCreateWithoutUsuarioInput = {
   estado?: $Enums.estado_publicacion | null
   fecha_publicacion?: Date | string | null
   inmueble_id: number
+  payment_intent_id?: string | null
+  promoted?: boolean
+  promoted_at?: Date | string | null
+  promoted_expires_at?: Date | string | null
   multimedia?: Prisma.multimediaUncheckedCreateNestedManyWithoutPublicacionInput
+  publicacion_parametro?: Prisma.publicacion_parametroUncheckedCreateNestedManyWithoutPublicacionInput
+  publicacion_tag?: Prisma.publicacion_tagUncheckedCreateNestedManyWithoutPublicacionInput
 }
 
 export type publicacionCreateOrConnectWithoutUsuarioInput = {
@@ -877,6 +1286,10 @@ export type publicacionCreateManyInmuebleInput = {
   estado?: $Enums.estado_publicacion | null
   fecha_publicacion?: Date | string | null
   usuario_id: number
+  payment_intent_id?: string | null
+  promoted?: boolean
+  promoted_at?: Date | string | null
+  promoted_expires_at?: Date | string | null
 }
 
 export type publicacionUpdateWithoutInmuebleInput = {
@@ -887,8 +1300,14 @@ export type publicacionUpdateWithoutInmuebleInput = {
     | $Enums.estado_publicacion
     | null
   fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payment_intent_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promoted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  promoted_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   multimedia?: Prisma.multimediaUpdateManyWithoutPublicacionNestedInput
   usuario?: Prisma.usuarioUpdateOneRequiredWithoutPublicacionNestedInput
+  publicacion_parametro?: Prisma.publicacion_parametroUpdateManyWithoutPublicacionNestedInput
+  publicacion_tag?: Prisma.publicacion_tagUpdateManyWithoutPublicacionNestedInput
 }
 
 export type publicacionUncheckedUpdateWithoutInmuebleInput = {
@@ -901,7 +1320,13 @@ export type publicacionUncheckedUpdateWithoutInmuebleInput = {
     | null
   fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
+  payment_intent_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promoted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  promoted_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   multimedia?: Prisma.multimediaUncheckedUpdateManyWithoutPublicacionNestedInput
+  publicacion_parametro?: Prisma.publicacion_parametroUncheckedUpdateManyWithoutPublicacionNestedInput
+  publicacion_tag?: Prisma.publicacion_tagUncheckedUpdateManyWithoutPublicacionNestedInput
 }
 
 export type publicacionUncheckedUpdateManyWithoutInmuebleInput = {
@@ -914,6 +1339,10 @@ export type publicacionUncheckedUpdateManyWithoutInmuebleInput = {
     | null
   fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   usuario_id?: Prisma.IntFieldUpdateOperationsInput | number
+  payment_intent_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promoted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  promoted_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type publicacionCreateManyUsuarioInput = {
@@ -923,6 +1352,10 @@ export type publicacionCreateManyUsuarioInput = {
   estado?: $Enums.estado_publicacion | null
   fecha_publicacion?: Date | string | null
   inmueble_id: number
+  payment_intent_id?: string | null
+  promoted?: boolean
+  promoted_at?: Date | string | null
+  promoted_expires_at?: Date | string | null
 }
 
 export type publicacionUpdateWithoutUsuarioInput = {
@@ -933,8 +1366,14 @@ export type publicacionUpdateWithoutUsuarioInput = {
     | $Enums.estado_publicacion
     | null
   fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  payment_intent_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promoted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  promoted_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   multimedia?: Prisma.multimediaUpdateManyWithoutPublicacionNestedInput
   inmueble?: Prisma.inmuebleUpdateOneRequiredWithoutPublicacionNestedInput
+  publicacion_parametro?: Prisma.publicacion_parametroUpdateManyWithoutPublicacionNestedInput
+  publicacion_tag?: Prisma.publicacion_tagUpdateManyWithoutPublicacionNestedInput
 }
 
 export type publicacionUncheckedUpdateWithoutUsuarioInput = {
@@ -947,7 +1386,13 @@ export type publicacionUncheckedUpdateWithoutUsuarioInput = {
     | null
   fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
+  payment_intent_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promoted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  promoted_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   multimedia?: Prisma.multimediaUncheckedUpdateManyWithoutPublicacionNestedInput
+  publicacion_parametro?: Prisma.publicacion_parametroUncheckedUpdateManyWithoutPublicacionNestedInput
+  publicacion_tag?: Prisma.publicacion_tagUncheckedUpdateManyWithoutPublicacionNestedInput
 }
 
 export type publicacionUncheckedUpdateManyWithoutUsuarioInput = {
@@ -960,6 +1405,10 @@ export type publicacionUncheckedUpdateManyWithoutUsuarioInput = {
     | null
   fecha_publicacion?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   inmueble_id?: Prisma.IntFieldUpdateOperationsInput | number
+  payment_intent_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promoted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  promoted_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  promoted_expires_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 /**
@@ -968,12 +1417,16 @@ export type publicacionUncheckedUpdateManyWithoutUsuarioInput = {
 
 export type PublicacionCountOutputType = {
   multimedia: number
+  publicacion_parametro: number
+  publicacion_tag: number
 }
 
 export type PublicacionCountOutputTypeSelect<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = {
   multimedia?: boolean | PublicacionCountOutputTypeCountMultimediaArgs
+  publicacion_parametro?: boolean | PublicacionCountOutputTypeCountPublicacion_parametroArgs
+  publicacion_tag?: boolean | PublicacionCountOutputTypeCountPublicacion_tagArgs
 }
 
 /**
@@ -997,6 +1450,24 @@ export type PublicacionCountOutputTypeCountMultimediaArgs<
   where?: Prisma.multimediaWhereInput
 }
 
+/**
+ * PublicacionCountOutputType without action
+ */
+export type PublicacionCountOutputTypeCountPublicacion_parametroArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.publicacion_parametroWhereInput
+}
+
+/**
+ * PublicacionCountOutputType without action
+ */
+export type PublicacionCountOutputTypeCountPublicacion_tagArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  where?: Prisma.publicacion_tagWhereInput
+}
+
 export type publicacionSelect<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = runtime.Types.Extensions.GetSelect<
@@ -1008,9 +1479,15 @@ export type publicacionSelect<
     fecha_publicacion?: boolean
     usuario_id?: boolean
     inmueble_id?: boolean
+    payment_intent_id?: boolean
+    promoted?: boolean
+    promoted_at?: boolean
+    promoted_expires_at?: boolean
     multimedia?: boolean | Prisma.publicacion$multimediaArgs<ExtArgs>
     inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
     usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
+    publicacion_parametro?: boolean | Prisma.publicacion$publicacion_parametroArgs<ExtArgs>
+    publicacion_tag?: boolean | Prisma.publicacion$publicacion_tagArgs<ExtArgs>
     _count?: boolean | Prisma.PublicacionCountOutputTypeDefaultArgs<ExtArgs>
   },
   ExtArgs['result']['publicacion']
@@ -1027,6 +1504,10 @@ export type publicacionSelectCreateManyAndReturn<
     fecha_publicacion?: boolean
     usuario_id?: boolean
     inmueble_id?: boolean
+    payment_intent_id?: boolean
+    promoted?: boolean
+    promoted_at?: boolean
+    promoted_expires_at?: boolean
     inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
     usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
   },
@@ -1044,6 +1525,10 @@ export type publicacionSelectUpdateManyAndReturn<
     fecha_publicacion?: boolean
     usuario_id?: boolean
     inmueble_id?: boolean
+    payment_intent_id?: boolean
+    promoted?: boolean
+    promoted_at?: boolean
+    promoted_expires_at?: boolean
     inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
     usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
   },
@@ -1058,12 +1543,26 @@ export type publicacionSelectScalar = {
   fecha_publicacion?: boolean
   usuario_id?: boolean
   inmueble_id?: boolean
+  payment_intent_id?: boolean
+  promoted?: boolean
+  promoted_at?: boolean
+  promoted_expires_at?: boolean
 }
 
 export type publicacionOmit<
   ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
 > = runtime.Types.Extensions.GetOmit<
-  'id' | 'titulo' | 'descripcion' | 'estado' | 'fecha_publicacion' | 'usuario_id' | 'inmueble_id',
+  | 'id'
+  | 'titulo'
+  | 'descripcion'
+  | 'estado'
+  | 'fecha_publicacion'
+  | 'usuario_id'
+  | 'inmueble_id'
+  | 'payment_intent_id'
+  | 'promoted'
+  | 'promoted_at'
+  | 'promoted_expires_at',
   ExtArgs['result']['publicacion']
 >
 export type publicacionInclude<
@@ -1072,6 +1571,8 @@ export type publicacionInclude<
   multimedia?: boolean | Prisma.publicacion$multimediaArgs<ExtArgs>
   inmueble?: boolean | Prisma.inmuebleDefaultArgs<ExtArgs>
   usuario?: boolean | Prisma.usuarioDefaultArgs<ExtArgs>
+  publicacion_parametro?: boolean | Prisma.publicacion$publicacion_parametroArgs<ExtArgs>
+  publicacion_tag?: boolean | Prisma.publicacion$publicacion_tagArgs<ExtArgs>
   _count?: boolean | Prisma.PublicacionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type publicacionIncludeCreateManyAndReturn<
@@ -1095,6 +1596,8 @@ export type $publicacionPayload<
     multimedia: Prisma.$multimediaPayload<ExtArgs>[]
     inmueble: Prisma.$inmueblePayload<ExtArgs>
     usuario: Prisma.$usuarioPayload<ExtArgs>
+    publicacion_parametro: Prisma.$publicacion_parametroPayload<ExtArgs>[]
+    publicacion_tag: Prisma.$publicacion_tagPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<
     {
@@ -1105,6 +1608,10 @@ export type $publicacionPayload<
       fecha_publicacion: Date | null
       usuario_id: number
       inmueble_id: number
+      payment_intent_id: string | null
+      promoted: boolean
+      promoted_at: Date | null
+      promoted_expires_at: Date | null
     },
     ExtArgs['result']['publicacion']
   >
@@ -1682,6 +2189,28 @@ export interface Prisma__publicacionClient<
     ExtArgs,
     GlobalOmitOptions
   >
+  publicacion_parametro<T extends Prisma.publicacion$publicacion_parametroArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.publicacion$publicacion_parametroArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$publicacion_parametroPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
+  publicacion_tag<T extends Prisma.publicacion$publicacion_tagArgs<ExtArgs> = {}>(
+    args?: Prisma.Subset<T, Prisma.publicacion$publicacion_tagArgs<ExtArgs>>
+  ): Prisma.PrismaPromise<
+    | runtime.Types.Result.GetResult<
+        Prisma.$publicacion_tagPayload<ExtArgs>,
+        T,
+        'findMany',
+        GlobalOmitOptions
+      >
+    | Null
+  >
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1720,6 +2249,10 @@ export interface publicacionFieldRefs {
   readonly fecha_publicacion: Prisma.FieldRef<'publicacion', 'DateTime'>
   readonly usuario_id: Prisma.FieldRef<'publicacion', 'Int'>
   readonly inmueble_id: Prisma.FieldRef<'publicacion', 'Int'>
+  readonly payment_intent_id: Prisma.FieldRef<'publicacion', 'String'>
+  readonly promoted: Prisma.FieldRef<'publicacion', 'Boolean'>
+  readonly promoted_at: Prisma.FieldRef<'publicacion', 'DateTime'>
+  readonly promoted_expires_at: Prisma.FieldRef<'publicacion', 'DateTime'>
 }
 
 // Custom InputTypes
@@ -2183,6 +2716,64 @@ export type publicacion$multimediaArgs<
   take?: number
   skip?: number
   distinct?: Prisma.MultimediaScalarFieldEnum | Prisma.MultimediaScalarFieldEnum[]
+}
+
+/**
+ * publicacion.publicacion_parametro
+ */
+export type publicacion$publicacion_parametroArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the publicacion_parametro
+   */
+  select?: Prisma.publicacion_parametroSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the publicacion_parametro
+   */
+  omit?: Prisma.publicacion_parametroOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.publicacion_parametroInclude<ExtArgs> | null
+  where?: Prisma.publicacion_parametroWhereInput
+  orderBy?:
+    | Prisma.publicacion_parametroOrderByWithRelationInput
+    | Prisma.publicacion_parametroOrderByWithRelationInput[]
+  cursor?: Prisma.publicacion_parametroWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?:
+    | Prisma.Publicacion_parametroScalarFieldEnum
+    | Prisma.Publicacion_parametroScalarFieldEnum[]
+}
+
+/**
+ * publicacion.publicacion_tag
+ */
+export type publicacion$publicacion_tagArgs<
+  ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs
+> = {
+  /**
+   * Select specific fields to fetch from the publicacion_tag
+   */
+  select?: Prisma.publicacion_tagSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the publicacion_tag
+   */
+  omit?: Prisma.publicacion_tagOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.publicacion_tagInclude<ExtArgs> | null
+  where?: Prisma.publicacion_tagWhereInput
+  orderBy?:
+    | Prisma.publicacion_tagOrderByWithRelationInput
+    | Prisma.publicacion_tagOrderByWithRelationInput[]
+  cursor?: Prisma.publicacion_tagWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Publicacion_tagScalarFieldEnum | Prisma.Publicacion_tagScalarFieldEnum[]
 }
 
 /**
