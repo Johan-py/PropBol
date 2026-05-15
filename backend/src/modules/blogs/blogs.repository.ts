@@ -157,7 +157,7 @@ export const blogsRepository = {
       .from("blogs")
       .upload(filePath, file.buffer, {
         cacheControl: "3600",
-      contentType: file.mimetype,
+        contentType: file.mimetype,
         upsert: false,
       });
 
