@@ -1,76 +1,163 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+import { useAccessibility } from "@/hooks/useAccessibility";
+import type { AccessibilityOption } from "@/hooks/useAccessibility";
 
 type ThemeOption = "light" | "dark";
-type AccessibilityOption = "none" | "deuteranopia";
 
-type VisualOptionCardProps = {
+type ThemeCardProps = {
     title: string;
     description: string;
-    icon: ReactNode;
-    previewClassName: string;
     selected: boolean;
     onClick: () => void;
+  preview: "light" | "dark";
 };
 
-const THEME_STORAGE_KEY = "propbol-theme";
-const ACCESSIBILITY_STORAGE_KEY = "propbol-accessibility";
+type AccessibilityCardProps = {
+  title: string;
+  description: string;
+  selected: boolean;
+  onClick: () => void;
+  colors: string[];
+  icon: string;
+};
 
-const THEME_CLASSES = ["propbol-theme-light", "propbol-theme-dark"];
-const ACCESSIBILITY_CLASSES = [
-    "propbol-accessibility-none",
-    "propbol-accessibility-deuteranopia",
-];
-
-function isThemeOption(value: string | null): value is ThemeOption {
-    return value === "light" || value === "dark";
+function MiniBrowserPreview({ mode }: { mode: "light" | "dark" }) {
+  const isDark = mode === "dark";
+  return (
+    <div
+      className={`visual-option-preview w-full overflow-hidden rounded-xl border ${
+        isDark ? "border-gray-700 bg-gray-900" : "border-gray-200 bg-gray-50"
+      }`}
+    >
+      <div
+        className={`flex items-center gap-1.5 px-3 py-2 ${
+          isDark ? "bg-gray-800" : "bg-gray-100"
+        }`}
+      >
+        <span className="h-2.5 w-2.5 rounded-full bg-red-400" />
+        <span className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
+        <span className="h-2.5 w-2.5 rounded-full bg-green-400" />
+        <div
+          className={`ml-2 h-2 w-24 rounded-full ${
+            isDark ? "bg-gray-600" : "bg-gray-300"
+          }`}
+        />
+      </div>
+      <div className="space-y-2 p-4">
+        <div
+          className={`h-3 w-3/4 rounded-full ${
+            isDark ? "bg-gray-700" : "bg-gray-200"
+          }`}
+        />
+        <div
+          className={`h-2 w-full rounded-full ${
+            isDark ? "bg-gray-800" : "bg-gray-100"
+          }`}
+        />
+        <div
+          className={`h-2 w-5/6 rounded-full ${
+            isDark ? "bg-gray-800" : "bg-gray-100"
+          }`}
+        />
+        <div className="mt-3 flex gap-2">
+          <div className="h-6 w-16 rounded-lg bg-orange-400" />
+          <div
+            className={`h-6 w-16 rounded-lg ${
+              isDark ? "bg-gray-700" : "bg-gray-200"
+            }`}
+          />
+        </div>
+      </div>
+    </div>
+  );
 }
 
-function isAccessibilityOption(
-    value: string | null
-): value is AccessibilityOption {
-    return value === "none" || value === "deuteranopia";
+function ThemeCard({ title, description, selected, onClick, preview }: ThemeCardProps) {
+  return (
+    <button
+      type="button"
+      aria-pressed={selected}
+      onClick={onClick}
+      className={`group flex flex-col gap-4 rounded-2xl border-2 p-4 text-left shadow-sm transition-all duration-200 hover:shadow-md ${
+        selected
+          ? "border-orange-500 bg-orange-50/60"
+          : "border-gray-200 bg-white hover:border-orange-200"
+      }`}
+    >
+      <MiniBrowserPreview mode={preview} />
+      <div className="flex items-start gap-3">
+        <span
+          className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
+            selected
+              ? "border-orange-500 bg-orange-500"
+              : "border-gray-300 bg-white"
+          }`}
+        >
+          {selected && (
+            <span className="h-1.5 w-1.5 rounded-full bg-white" />
+          )}
+        </span>
+        <div>
+          <p className="font-semibold text-gray-900">{title}</p>
+          <p className="mt-0.5 text-sm leading-5 text-gray-500">{description}</p>
+        </div>
+      </div>
+    </button>
+  );
 }
 
-function VisualOptionCard({
+function AccessibilityCard({
     title,
     description,
-    icon,
-    previewClassName,
     selected,
     onClick,
-}: VisualOptionCardProps) {
+  colors,
+  icon,
+}: AccessibilityCardProps) {
     return (
         <button
             type="button"
             aria-pressed={selected}
             onClick={onClick}
-            className={`rounded-2xl border p-5 text-left shadow-sm transition hover:border-orange-300 ${selected
-                    ? "border-orange-500 bg-orange-50"
-                    : "border-gray-200 bg-white"
+      className={`group flex flex-col gap-4 rounded-2xl border-2 p-4 text-left shadow-sm transition-all duration-200 hover:shadow-md ${
+        selected
+          ? "border-orange-500 bg-orange-50/60"
+          : "border-gray-200 bg-white hover:border-orange-200"
                 }`}
         >
-            <div
-                className={`visual-option-preview mb-4 flex h-24 items-center justify-center rounded-xl ${previewClassName}`}
-            >
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/70 text-3xl">
-                    {icon}
+      <div className="visual-option-preview flex h-24 items-center justify-center rounded-xl bg-gray-50">
+        {colors.length > 0 ? (
+          <div className="flex gap-2">
+            {colors.map((c, i) => (
+              <span
+                key={i}
+                className="h-10 w-10 rounded-full shadow-sm ring-2 ring-white"
+                style={{ backgroundColor: c }}
+              />
+            ))}
                 </div>
+        ) : (
+          <span className="text-4xl">{icon}</span>
+        )}
             </div>
-
             <div className="flex items-start gap-3">
                 <span
-                    className={`mt-1 h-4 w-4 rounded-full border ${selected
+          className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
+            selected
                             ? "border-orange-500 bg-orange-500"
                             : "border-gray-300 bg-white"
                         }`}
-                />
-
+        >
+          {selected && (
+            <span className="h-1.5 w-1.5 rounded-full bg-white" />
+          )}
+        </span>
                 <div>
-                    <h3 className="font-semibold text-gray-900">{title}</h3>
-                    <p className="mt-1 text-sm leading-6 text-gray-500">{description}</p>
+          <p className="font-semibold text-gray-900">{title}</p>
+          <p className="mt-0.5 text-sm leading-5 text-gray-500">{description}</p>
                 </div>
             </div>
         </button>
@@ -78,77 +165,51 @@ function VisualOptionCard({
 }
 
 export default function AjustesVisualizacion() {
-    const [theme, setTheme] = useState<ThemeOption>("light");
-    const [accessibility, setAccessibility] =
-        useState<AccessibilityOption>("none");
+  const { resolvedTheme, setTheme } = useTheme();
+  const { accessibility, setAccessibility } = useAccessibility();
+  const [mounted, setMounted] = useState(false);
 
-    useEffect(() => {
-        const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
-        const savedAccessibility = localStorage.getItem(ACCESSIBILITY_STORAGE_KEY);
+  useEffect(() => setMounted(true), []);
 
-        if (isThemeOption(savedTheme)) {
-            setTheme(savedTheme);
-        }
+  const currentTheme: ThemeOption =
+    mounted && resolvedTheme === "dark" ? "dark" : "light";
 
-        if (isAccessibilityOption(savedAccessibility)) {
-            setAccessibility(savedAccessibility);
-        }
-    }, []);
-
-    useEffect(() => {
-        const handleThemeChangeFromNavbar = (event: Event) => {
-            const customEvent = event as CustomEvent<ThemeOption>;
-
-            if (isThemeOption(customEvent.detail)) {
-                setTheme(customEvent.detail);
-            }
-        };
-
-        const handleStorageChange = (event: StorageEvent) => {
-            if (event.key === THEME_STORAGE_KEY && isThemeOption(event.newValue)) {
-                setTheme(event.newValue);
-            }
-        };
-
-        window.addEventListener("propbol-theme-change", handleThemeChangeFromNavbar);
-        window.addEventListener("storage", handleStorageChange);
-
-        return () => {
-            window.removeEventListener(
-                "propbol-theme-change",
-                handleThemeChangeFromNavbar
-            );
-            window.removeEventListener("storage", handleStorageChange);
-        };
-    }, []);
-
-    useEffect(() => {
-        const root = document.documentElement;
-
-        root.classList.remove(...THEME_CLASSES);
-        root.classList.add(`propbol-theme-${theme}`);
-
-        root.classList.remove(...ACCESSIBILITY_CLASSES);
-        root.classList.add(`propbol-accessibility-${accessibility}`);
-    }, [theme, accessibility]);
-
-    const handleThemeChange = (selectedTheme: ThemeOption) => {
-        setTheme(selectedTheme);
-        localStorage.setItem(THEME_STORAGE_KEY, selectedTheme);
-
-        window.dispatchEvent(
-            new CustomEvent("propbol-theme-change", {
-                detail: selectedTheme,
-            })
-        );
-    };
-
-    const handleAccessibilityChange = (
-        selectedAccessibility: AccessibilityOption
-    ) => {
-        setAccessibility(selectedAccessibility);
-        localStorage.setItem(ACCESSIBILITY_STORAGE_KEY, selectedAccessibility);
-    };
+  const ACCESSIBILITY_OPTIONS: {
+    value: AccessibilityOption;
+    title: string;
+    description: string;
+    colors: string[];
+    icon: string;
+  }[] = [
+    {
+      value: "none",
+      title: "Sin filtro",
+      description: "Colores por defecto.",
+      colors: [],
+      icon: "👁️",
+    },
+    {
+      value: "deuteranopia",
+      title: "Deuteranopia",
+      description: "Dificultad para ver el verde.",
+      colors: ["#d4a843", "#4a90d9", "#8b8b8b"],
+      icon: "",
+    },
+    {
+      value: "protanopia",
+      title: "Protanopia",
+      description: "Dificultad para ver el rojo.",
+      colors: ["#c8a200", "#5b9bd5", "#9a9a9a"],
+      icon: "",
+    },
+    {
+      value: "tritanopia",
+      title: "Tritanopia",
+      description: "Dificultad para ver el azul.",
+      colors: ["#e05c5c", "#4db891", "#c0c0c0"],
+      icon: "",
+    },
+  ];
 
     return (
         <main className="propbol-visual-settings-page min-h-screen bg-[#f8f6f1] px-4 py-8 text-gray-900">
