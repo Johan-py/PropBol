@@ -11,6 +11,7 @@ import telemetriaRouter from "./modules/perfil/telemetria.routes.js";
 import locationRoutes from "./modules/locations/locations.routes.js";
 import consumoRoutes from "./modules/LimiteSuscripcion/consumo.routes.js";
 import { iniciarCronRetroalimentacion } from './modules/recomendaciones/retroalimentacionCron.js'
+import mlRoutes from './modules/ml/ml.routes.js'
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -242,7 +243,7 @@ app.use("/api/testimonios", testimoniosRoutes);
 app.use("/api/telemetria", telemetriaRouter);
 app.use("/api/comparaciones", comparacionRoutes);
 app.use("/api/sesiones", sesionRoutes);
-
+app.use('/api/ml', mlRoutes)
 app.use("/api/transacciones", transaccionesRoutes);
 app.use("/api/suscripciones", suscripcionesRoutes);
 app.use("/api/planes", plansRoutes);
