@@ -481,36 +481,40 @@ export default function LoginForm() {
   };
 
   const validate = (field: string, value: string) => {
-    const newErrors = { ...errors }
+    const newErrors = { ...errors };
 
-    if (field === 'correo') {
+    if (field === "correo") {
       if (!value) {
-        newErrors.correo = 'El correo es obligatorio'
+        newErrors.correo = "El correo es obligatorio";
       } else if (!/\S+@\S+\.\S+/.test(value)) {
-        newErrors.correo = 'Formato de correo inválido'
+        newErrors.correo = "Formato de correo inválido";
       } else {
-        delete newErrors.correo
+        delete newErrors.correo;
       }
     }
 
-    if (field === 'password') {
+    if (field === "password") {
       if (!value) {
-        newErrors.password = 'La contraseña es obligatoria'
+        newErrors.password = "La contraseña es obligatoria";
       } else if (value.length > 16) {
-        newErrors.password = 'La contraseña no puede tener más de 16 caracteres'
+        newErrors.password =
+          "La contraseña no puede tener más de 16 caracteres";
       } else {
-        delete newErrors.password
+        delete newErrors.password;
       }
     }
 
-    setErrors(newErrors)
-  }
+    setErrors(newErrors);
+  };
 
-  const finalizeValidatedSession = async (token: string, fallbackUser?: LoginResponse['user']) => {
-    const validatedUser = await fetchCurrentUser(token)
+  const finalizeValidatedSession = async (
+    token: string,
+    fallbackUser?: LoginResponse["user"],
+  ) => {
+    const validatedUser = await fetchCurrentUser(token);
 
     if (!validatedUser) {
-      throw new Error('No se pudo obtener el usuario autenticado.')
+      throw new Error("No se pudo obtener el usuario autenticado.");
     }
 
     saveSession(
@@ -520,77 +524,81 @@ export default function LoginForm() {
         correo: validatedUser.correo,
         nombre: validatedUser.nombre ?? fallbackUser?.nombre,
         apellido: validatedUser.apellido ?? fallbackUser?.apellido,
-        avatar: validatedUser.avatar ?? fallbackUser?.avatar ?? null
+        avatar: validatedUser.avatar ?? fallbackUser?.avatar ?? null,
       },
-      validatedUser.controlador
-    )
-  }
+      validatedUser.controlador,
+    );
+  };
 
   const handleGoogleLogin = () => {
-    clearClientSession()
-    setGoogleError('')
-    setErrorMessage('')
-    setSuccessMessage('')
+    clearClientSession();
+    setGoogleError("");
+    setErrorMessage("");
+    setSuccessMessage("");
 
     if (hasNoInternetConnection()) {
-      setGoogleError(NO_CONNECTION_MESSAGE)
-      return
+      setGoogleError(NO_CONNECTION_MESSAGE);
+      return;
     }
 
-    setIsLoadingGoogle(true)
+    setIsLoadingGoogle(true);
 
-    const popupWidth = 500
-    const popupHeight = 600
-    const left = window.screenX + (window.outerWidth - popupWidth) / 2
-    const top = window.screenY + (window.outerHeight - popupHeight) / 2
+    const popupWidth = 500;
+    const popupHeight = 600;
+    const left = window.screenX + (window.outerWidth - popupWidth) / 2;
+    const top = window.screenY + (window.outerHeight - popupHeight) / 2;
 
     const popupWindow = window.open(
       `${API_URL}/api/auth/google/login`,
-      'google-login',
-      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`
-    )
+      "google-login",
+      `width=${popupWidth},height=${popupHeight},left=${left},top=${top}`,
+    );
 
-    if (!popupWindow || popupWindow.closed || typeof popupWindow.closed === 'undefined') {
+    if (
+      !popupWindow ||
+      popupWindow.closed ||
+      typeof popupWindow.closed === "undefined"
+    ) {
       setGoogleError(
-        'El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.'
-      )
-      setIsLoadingGoogle(false)
-      return
+        "El navegador bloqueó la ventana emergente. Habilita los pop-ups para continuar.",
+      );
+      setIsLoadingGoogle(false);
+      return;
     }
 
-    const popup = popupWindow
-    popup.focus()
+    const popup = popupWindow;
+    popup.focus();
 
-    const expectedOrigin = new URL(API_URL).origin
-    let authWasResolved = false
-    let checkPopupIntervalId = 0
-    let googleTimeoutId = 0
+    const expectedOrigin = new URL(API_URL).origin;
+    let authWasResolved = false;
+    let checkPopupIntervalId = 0;
+    let googleTimeoutId = 0;
 
     function cleanup(shouldStopLoading = true) {
-      window.removeEventListener('message', handleMessage)
-      window.clearInterval(checkPopupIntervalId)
-      window.clearTimeout(googleTimeoutId)
+      window.removeEventListener("message", handleMessage);
+      window.clearInterval(checkPopupIntervalId);
+      window.clearTimeout(googleTimeoutId);
 
       if (shouldStopLoading) {
-        setIsLoadingGoogle(false)
+        setIsLoadingGoogle(false);
       }
     }
 
     async function handleMessage(event: MessageEvent<GooglePopupMessage>) {
       if (event.origin !== expectedOrigin) {
-        return
+        return;
       }
 
       if (!isGooglePopupMessage(event.data)) {
-        return
+        return;
       }
 
-      authWasResolved = true
-      cleanup(false)
+      authWasResolved = true;
+      cleanup(false);
 
-      if (event.data.type === 'propbol:google-login-success') {
+      if (event.data.type === "propbol:google-login-success") {
         try {
-          await finalizeValidatedSession(event.data.token, event.data.user)
+          await finalizeValidatedSession(event.data.token, event.data.user);
 
           setSuccessMessage(event.data.message || 'Inicio de sesión con Google exitoso')
           setGoogleError('')
