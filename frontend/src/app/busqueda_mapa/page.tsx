@@ -309,6 +309,16 @@ function BusquedaMapaContent() {
     setViewportWidth(window.innerWidth)
   }, [])
 
+  // Vista cuadrícula (cards) al entrar; al restaurar desde bfcache el estado React se conserva.
+  useEffect(() => {
+    setViewMode('grid')
+    const onPageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) setViewMode('grid')
+    }
+    window.addEventListener('pageshow', onPageShow)
+    return () => window.removeEventListener('pageshow', onPageShow)
+  }, [])
+
   useEffect(() => {
     const onResize = () => setViewportWidth(window.innerWidth)
     window.addEventListener('resize', onResize)
@@ -697,6 +707,7 @@ function BusquedaMapaContent() {
   const listScrollRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
+    setIsScrolled(false)
     listScrollRef.current?.scrollTo({ top: 0, left: 0, behavior: 'auto' })
   }, [listSafePage, listPageSize, filterResetKey, drawnPolygons])
 
@@ -1644,10 +1655,10 @@ function BusquedaMapaContent() {
             // 🚀 CONTENEDOR PADRE SIN SCROLL
             <div className="flex flex-col h-full min-h-0 relative bg-stone-50">
               {/* 🚀 CABECERA (Fuera del scroll = Cero rebotes) */}
-              <div className="bg-white shrink-0 border-b border-stone-200 shadow-sm transition-all duration-300">
-                {/* BLOQUE 1: DESAPARECE CON EL SCROLL (Solo el título "Filtros") */}
+              <div className="bg-white shrink-0 border-b border-stone-200 shadow-sm">
+                {/* BLOQUE 1: DESAPARECE CON EL SCROLL (Solo el título "Filtros") — sin animar altura para evitar saltos en el listado */}
                 <div
-                  className={`px-4 transition-all duration-300 overflow-hidden ${isScrolled ? 'max-h-0 opacity-0' : 'max-h-[60px] opacity-100 pt-4'}`}
+                  className={`px-4 overflow-hidden ${isScrolled ? 'max-h-0 opacity-0' : 'max-h-[60px] opacity-100 pt-4'}`}
                 >
                   <div className="flex justify-between items-center mb-2">
                     <div className="flex items-center gap-1">
@@ -1666,9 +1677,7 @@ function BusquedaMapaContent() {
                 </div>
 
                 {/* BLOQUE 2: títulos + orden+vista: grid evita hueco enorme al ensanchar el panel */}
-                <div
-                  className={`px-4 pb-3 flex flex-col transition-all duration-300 ${isScrolled ? 'pt-3 gap-2' : 'gap-3'}`}
-                >
+                <div className={`px-4 pb-3 flex flex-col ${isScrolled ? 'pt-3 gap-2' : 'gap-3'}`}>
                   <div
                     className={`grid items-start gap-x-4 gap-y-3 ${
                       resultsHeaderSideBySide ? 'grid-cols-[minmax(0,1fr)_auto]' : 'grid-cols-1'
@@ -1677,7 +1686,7 @@ function BusquedaMapaContent() {
                     <div className="flex min-w-0 justify-between gap-2">
                       <div className="flex min-w-0 flex-col">
                         <h1
-                          className={`font-semibold text-slate-900 transition-all duration-300 break-words line-clamp-2 ${isScrolled ? 'text-base' : 'text-xl'}`}
+                          className={`font-semibold text-slate-900 break-words line-clamp-2 ${isScrolled ? 'text-base' : 'text-xl'}`}
                         >
                           {isClusterView
                             ? `${clusterProperties.length} propiedades en este clúster`
@@ -1711,7 +1720,7 @@ function BusquedaMapaContent() {
                             : '🌍 Todo Bolivia · buscar en zona específica'} 
                         </button> */}
                         <h2
-                          className={`font-bold text-slate-900 transition-all duration-300 flex flex-wrap items-center gap-x-2 gap-y-1 ${isScrolled ? 'text-xs mt-0.5' : 'text-sm mt-1'}`}
+                          className={`font-bold text-slate-900 flex flex-wrap items-center gap-x-2 gap-y-1 ${isScrolled ? 'text-xs mt-0.5' : 'text-sm mt-1'}`}
                         >
                           <div>
                             <span className="text-orange-500">
@@ -1743,9 +1752,7 @@ function BusquedaMapaContent() {
                           )}
                         </h2>
                         {isRecomendadosActive && !isClusterView && (
-                          <p
-                            className={`text-gray-500 transition-all duration-300 ${isScrolled ? 'text-[11px]' : 'text-xs'}`}
-                          >
+                          <p className={`text-gray-500 ${isScrolled ? 'text-[11px]' : 'text-xs'}`}>
                             Mostrando resultados personalizados según tu actividad reciente
                           </p>
                         )}
@@ -1813,7 +1820,7 @@ function BusquedaMapaContent() {
               {/* 🚀 LISTA (Tiene su propio scroll independiente) */}
               <div
                 ref={listScrollRef as Ref<HTMLDivElement>}
-                className="relative flex-1 overflow-y-auto custom-scrollbar p-4"
+                className="relative flex-1 overflow-y-auto overflow-anchor-none custom-scrollbar p-4"
                 onScroll={(e) => {
                   const scrollTop = (e.target as HTMLDivElement).scrollTop
                   if (!isScrolled && scrollTop > 72) setIsScrolled(true)
@@ -1853,7 +1860,7 @@ function BusquedaMapaContent() {
                     className={`${
                       viewMode === 'list'
                         ? 'gap-4 flex flex-col'
-                        : 'grid items-stretch auto-rows-fr gap-4 [grid-template-columns:repeat(auto-fill,minmax(var(--card-min-width),1fr))]'
+                        : 'grid items-stretch gap-4 [grid-template-columns:repeat(auto-fill,minmax(var(--card-min-width),1fr))]'
                     } ${
                       viewMode === 'list'
                         ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
