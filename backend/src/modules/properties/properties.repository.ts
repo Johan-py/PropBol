@@ -1,73 +1,77 @@
-import { prisma } from '../../lib/prisma.client.js'
+import { prisma } from "../../lib/prisma.client.js";
 
 export interface FiltrosBusqueda {
-  categoria?: string | string[]
-  tipoInmueble?: string | string[]
-  modoInmueble?: string | string[]
-  query?: string
-  locationId?: number
-  departamentoId?: string | number
-  provinciaId?: string | number
-  municipioId?: string | number
-  zonaId?: string | number
-  barrioId?: string | number
-  fecha?: 'mas-recientes' | 'mas-populares' | 'mas-antiguos' | 'mayor-descuento'
-  precio?: 'menor-a-mayor' | 'mayor-a-menor'
-  superficie?: 'menor-a-mayor' | 'mayor-a-menor'
-  minPrice?: number | null
-  maxPrice?: number | null
-  currency?: string | null
-  minSuperficie?: number | null
-  maxSuperficie?: number | null
+  categoria?: string | string[];
+  tipoInmueble?: string | string[];
+  modoInmueble?: string | string[];
+  query?: string;
+  locationId?: number;
+  departamentoId?: string | number;
+  provinciaId?: string | number;
+  municipioId?: string | number;
+  zonaId?: string | number;
+  barrioId?: string | number;
+  fecha?:
+    | "mas-recientes"
+    | "mas-populares"
+    | "mas-antiguos"
+    | "mayor-descuento";
+  precio?: "menor-a-mayor" | "mayor-a-menor";
+  superficie?: "menor-a-mayor" | "mayor-a-menor";
+  minPrice?: number | null;
+  maxPrice?: number | null;
+  currency?: string | null;
+  minSuperficie?: number | null;
+  maxSuperficie?: number | null;
 
-  dormitoriosMin?: number
-  dormitoriosMax?: number
-  banosMin?: number
-  banosMax?: number
-  banoCompartido?: boolean
-  lat?: number
-  lng?: number
-  radius?: number
-  amenities?: number[]
-  labels?: number[]
-  soloOfertas?: boolean // NUEVO: Filtro para mostrar solo ofertas (precio actual < precio anterior)
+  dormitoriosMin?: number;
+  dormitoriosMax?: number;
+  banosMin?: number;
+  banosMax?: number;
+  banoCompartido?: boolean;
+  lat?: number;
+  lng?: number;
+  radius?: number;
+  amenities?: number[];
+  labels?: number[];
+  soloOfertas?: boolean; // NUEVO: Filtro para mostrar solo ofertas (precio actual < precio anterior)
 }
 
 // Helper para limpiar las variaciones de Anticrético
 function normalizarModoAccion(m: string): string {
-  const v = m.toUpperCase().trim()
-  return v.includes('ANTICR') ? 'ANTICRETO' : v
+  const v = m.toUpperCase().trim();
+  return v.includes("ANTICR") ? "ANTICRETO" : v;
 }
 
 export const propertiesRepository = {
   async getAll(filtros: FiltrosBusqueda = {}) {
     // ── WHERE ──────────────────────────────────────────────────────────────
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const where: any = { estado: 'ACTIVO' }
+    const where: any = { estado: "ACTIVO" };
 
     // 1. Filtro de Categoría / Tipo Inmueble (Soporta múltiples selecciones)
     const CATEGORIAS_VALIDAS = [
-      'CASA',
-      'DEPARTAMENTO',
-      'TERRENO',
-      'OFICINA',
-      'CUARTO',
-      'TERRENO_MORTUORIO'
-    ]
-    const rawTipo = filtros.tipoInmueble || filtros.categoria
+      "CASA",
+      "DEPARTAMENTO",
+      "TERRENO",
+      "OFICINA",
+      "CUARTO",
+      "TERRENO_MORTUORIO",
+    ];
+    const rawTipo = filtros.tipoInmueble || filtros.categoria;
     if (rawTipo) {
       const rawArr = (Array.isArray(rawTipo) ? rawTipo : [rawTipo])
         .map((t) => String(t).toUpperCase().trim())
-        .filter((t) => t && t !== 'CUALQUIER TIPO')
+        .filter((t) => t && t !== "CUALQUIER TIPO");
 
-      const tipos = rawArr.filter((t) => CATEGORIAS_VALIDAS.includes(t))
+      const tipos = rawArr.filter((t) => CATEGORIAS_VALIDAS.includes(t));
 
       if (rawArr.length > 0 && tipos.length === 0) {
-        return []
+        return [];
       } else if (tipos.length === 1) {
-        where.categoria = tipos[0]
+        where.categoria = tipos[0];
       } else if (tipos.length > 1) {
-        where.categoria = { in: tipos }
+        where.categoria = { in: tipos };
       }
     }
 
@@ -75,16 +79,16 @@ export const propertiesRepository = {
     if (filtros.modoInmueble) {
       const modosRaw = Array.isArray(filtros.modoInmueble)
         ? filtros.modoInmueble
-        : [filtros.modoInmueble]
+        : [filtros.modoInmueble];
 
       const modos = modosRaw
-        .filter((m) => m && String(m).trim() !== '')
-        .map((m) => normalizarModoAccion(String(m)))
+        .filter((m) => m && String(m).trim() !== "")
+        .map((m) => normalizarModoAccion(String(m)));
 
       if (modos.length === 1) {
-        where.tipoAccion = modos[0]
+        where.tipoAccion = modos[0];
       } else if (modos.length > 1) {
-        where.tipoAccion = { in: modos }
+        where.tipoAccion = { in: modos };
       }
     }
 
@@ -94,40 +98,40 @@ export const propertiesRepository = {
     } else if (filtros.query && filtros.query.trim().length >= 3) {
       // NUEVO: Refuerzo de >= 3 caracteres
       // Fallback original: Búsqueda estricta por texto
-      const texto = filtros.query.trim()
+      const texto = filtros.query.trim();
 
       where.OR = [
-        { titulo: { contains: texto, mode: 'insensitive' } },
-        { descripcion: { contains: texto, mode: 'insensitive' } },
+        { titulo: { contains: texto, mode: "insensitive" } },
+        { descripcion: { contains: texto, mode: "insensitive" } },
         {
           ubicacion: {
             OR: [
-              { direccion: { contains: texto, mode: 'insensitive' } },
-              { barrio: { nombre: { contains: texto, mode: 'insensitive' } } },
+              { direccion: { contains: texto, mode: "insensitive" } },
+              { barrio: { nombre: { contains: texto, mode: "insensitive" } } },
               {
                 barrio: {
-                  zona: { nombre: { contains: texto, mode: 'insensitive' } }
-                }
+                  zona: { nombre: { contains: texto, mode: "insensitive" } },
+                },
               },
               {
                 barrio: {
                   zona: {
                     municipio: {
-                      nombre: { contains: texto, mode: 'insensitive' }
-                    }
-                  }
-                }
+                      nombre: { contains: texto, mode: "insensitive" },
+                    },
+                  },
+                },
               },
               {
                 barrio: {
                   zona: {
                     municipio: {
                       provincia: {
-                        nombre: { contains: texto, mode: 'insensitive' }
-                      }
-                    }
-                  }
-                }
+                        nombre: { contains: texto, mode: "insensitive" },
+                      },
+                    },
+                  },
+                },
               },
               {
                 barrio: {
@@ -135,120 +139,140 @@ export const propertiesRepository = {
                     municipio: {
                       provincia: {
                         departamento: {
-                          nombre: { contains: texto, mode: 'insensitive' }
-                        }
-                      }
-                    }
-                  }
-                }
+                          nombre: { contains: texto, mode: "insensitive" },
+                        },
+                      },
+                    },
+                  },
+                },
               },
               {
                 ubicacion_maestra: {
-                  nombre: { contains: texto, mode: 'insensitive' }
-                }
-              }
-            ]
-          }
-        }
-      ]
+                  nombre: { contains: texto, mode: "insensitive" },
+                },
+              },
+            ],
+          },
+        },
+      ];
     } else if (filtros.locationId) {
       // Fallback: Si no hay texto, asumimos que viene de un botón antiguo de "Ciudades Destacadas"
-      where.ubicacion = { ubicacionMaestraId: Number(filtros.locationId) }
+      where.ubicacion = { ubicacionMaestraId: Number(filtros.locationId) };
     }
     // Si un nivel está seleccionado y no es "todos", lo aplicamos y las demás condiciones (else if) se ignoran.
-    if (filtros.barrioId && String(filtros.barrioId).toLowerCase() !== 'todos') {
+    if (
+      filtros.barrioId &&
+      String(filtros.barrioId).toLowerCase() !== "todos"
+    ) {
       where.ubicacion = {
         ...where.ubicacion,
-        barrio_id: Number(filtros.barrioId)
-      }
-    } else if (filtros.zonaId && String(filtros.zonaId).toLowerCase() !== 'todos') {
+        barrio_id: Number(filtros.barrioId),
+      };
+    } else if (
+      filtros.zonaId &&
+      String(filtros.zonaId).toLowerCase() !== "todos"
+    ) {
       where.ubicacion = {
         ...where.ubicacion,
-        barrio: { zona_id: Number(filtros.zonaId) }
-      }
-    } else if (filtros.municipioId && String(filtros.municipioId).toLowerCase() !== 'todos') {
+        barrio: { zona_id: Number(filtros.zonaId) },
+      };
+    } else if (
+      filtros.municipioId &&
+      String(filtros.municipioId).toLowerCase() !== "todos"
+    ) {
       where.ubicacion = {
         ...where.ubicacion,
-        barrio: { zona: { municipio_id: Number(filtros.municipioId) } }
-      }
-    } else if (filtros.provinciaId && String(filtros.provinciaId).toLowerCase() !== 'todos') {
+        barrio: { zona: { municipio_id: Number(filtros.municipioId) } },
+      };
+    } else if (
+      filtros.provinciaId &&
+      String(filtros.provinciaId).toLowerCase() !== "todos"
+    ) {
       where.ubicacion = {
         ...where.ubicacion,
         barrio: {
-          zona: { municipio: { provincia_id: Number(filtros.provinciaId) } }
-        }
-      }
-    } else if (filtros.departamentoId && String(filtros.departamentoId).toLowerCase() !== 'todos') {
+          zona: { municipio: { provincia_id: Number(filtros.provinciaId) } },
+        },
+      };
+    } else if (
+      filtros.departamentoId &&
+      String(filtros.departamentoId).toLowerCase() !== "todos"
+    ) {
       where.ubicacion = {
         ...where.ubicacion,
         barrio: {
           zona: {
             municipio: {
-              provincia: { departamento_id: Number(filtros.departamentoId) }
-            }
-          }
-        }
-      }
+              provincia: { departamento_id: Number(filtros.departamentoId) },
+            },
+          },
+        },
+      };
     }
     // ── FILTRO DE PRECIO con conversión de moneda ─────────────────
-    const TASA_CAMBIO_BOB = 6.96 // 1 USD = 6.96 BOB
+    const TASA_CAMBIO_BOB = 6.96; // 1 USD = 6.96 BOB
 
-    let queryMinPrice = filtros.minPrice
-    let queryMaxPrice = filtros.maxPrice
+    let queryMinPrice = filtros.minPrice;
+    let queryMaxPrice = filtros.maxPrice;
 
     // Si el usuario busca en BOB, convertimos a USD antes de consultar la BD
     if (filtros.currency) {
-      const monedaUpper = filtros.currency.toUpperCase()
-      if (monedaUpper === 'BOB' || monedaUpper === 'BS') {
-        if (queryMinPrice != null) queryMinPrice = queryMinPrice / TASA_CAMBIO_BOB
-        if (queryMaxPrice != null) queryMaxPrice = queryMaxPrice / TASA_CAMBIO_BOB
+      const monedaUpper = filtros.currency.toUpperCase();
+      if (monedaUpper === "BOB" || monedaUpper === "BS") {
+        if (queryMinPrice != null)
+          queryMinPrice = queryMinPrice / TASA_CAMBIO_BOB;
+        if (queryMaxPrice != null)
+          queryMaxPrice = queryMaxPrice / TASA_CAMBIO_BOB;
       }
     }
 
     if (queryMinPrice != null) {
       where.precio = {
         ...((where.precio as object) ?? {}),
-        gte: queryMinPrice
-      }
+        gte: queryMinPrice,
+      };
     }
     if (queryMaxPrice != null) {
       where.precio = {
         ...((where.precio as object) ?? {}),
-        lte: queryMaxPrice
-      }
+        lte: queryMaxPrice,
+      };
     }
 
-    if (filtros.dormitoriosMin !== undefined || filtros.dormitoriosMax !== undefined) {
-      where.nroCuartos = {}
+    if (
+      filtros.dormitoriosMin !== undefined ||
+      filtros.dormitoriosMax !== undefined
+    ) {
+      where.nroCuartos = {};
       if (filtros.dormitoriosMin !== undefined) {
-        where.nroCuartos.gte = filtros.dormitoriosMin
+        where.nroCuartos.gte = filtros.dormitoriosMin;
       }
       if (filtros.dormitoriosMax !== undefined) {
-        where.nroCuartos.lte = filtros.dormitoriosMax
+        where.nroCuartos.lte = filtros.dormitoriosMax;
       }
     }
 
     if (filtros.banosMin !== undefined || filtros.banosMax !== undefined) {
-      where.nroBanos = {}
+      where.nroBanos = {};
       if (filtros.banosMin !== undefined) {
-        where.nroBanos.gte = filtros.banosMin
+        where.nroBanos.gte = filtros.banosMin;
       }
       if (filtros.banosMax !== undefined) {
-        where.nroBanos.lte = filtros.banosMax
+        where.nroBanos.lte = filtros.banosMax;
       }
     }
 
     if (filtros.banoCompartido !== undefined) {
-      where.banoCompartido = filtros.banoCompartido
+      where.banoCompartido = filtros.banoCompartido;
     }
     // ── FILTRO DE SUPERFICIE ──────────────────────────────────────────────
     if (filtros.minSuperficie != null || filtros.maxSuperficie != null) {
-      where.superficieM2 = {}
+      where.superficieM2 = {};
       if (filtros.minSuperficie != null) {
-        where.superficieM2.gte = filtros.minSuperficie
+        where.superficieM2.gte = filtros.minSuperficie;
       }
       if (filtros.maxSuperficie != null) {
-        where.superficieM2.lte = filtros.maxSuperficie
+        where.superficieM2.lte = filtros.maxSuperficie;
       }
     }
     //HU6
@@ -257,9 +281,9 @@ export const propertiesRepository = {
       where.AND = [
         ...(where.AND || []),
         ...filtros.amenities.map((id) => ({
-          inmueble_amenidad: { some: { amenidad_id: id } }
-        }))
-      ]
+          inmueble_amenidad: { some: { amenidad_id: id } },
+        })),
+      ];
     }
 
     // Filtros por Etiquetas (Lógica AND)
@@ -269,7 +293,7 @@ export const propertiesRepository = {
         ...filtros.labels.map((labelId) => ({
           publicaciones: {
             some: {
-              estado: 'ACTIVA' as const,
+              estado: "ACTIVA" as const,
               publicacion_parametro: {
                 some: {
                   parametro_id: labelId
