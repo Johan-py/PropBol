@@ -1,10 +1,8 @@
-"use client";
-
 import ExchangeRateBar from "@/components/ExchangeRateBar";
-import { useExchangeRate } from "@/hooks/useExchangeRate";
+import { getExchangeRate } from "@/services/exchangeRateService";
 
-export default function HomeExchangeSection() {
-  const { officialRate, referentialRate, updatedAt, isLoading } = useExchangeRate();
+export default async function HomeExchangeSection() {
+  const { officialRate, referentialRate, updatedAt } = await getExchangeRate();
   const updatedLabel = updatedAt
     ? new Date(updatedAt).toLocaleString("es-BO", { day: "numeric", month: "numeric", year: "numeric" })
     : "No disponible";
@@ -14,7 +12,6 @@ export default function HomeExchangeSection() {
       officialRate={officialRate}
       referentialRate={referentialRate}
       updatedAt={updatedLabel}
-      isLoading={isLoading}
     />
   );
 }
