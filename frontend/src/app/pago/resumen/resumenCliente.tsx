@@ -26,7 +26,7 @@ export default function ResumenCliente() {
   const [tipoFacturacion, setTipoFacturacion] = useState<'mensual' | 'anual'>('mensual');
   const [descuentoPorcentaje, setDescuentoPorcentaje] = useState(0);
 
-  const nombreMetodo: Record<string, string> = { qr: 'QR Bancario' };
+  const nombreMetodo: Record<string, string> = { qr: 'QR Bancario', usdt: 'USDT TRC20' };
 
   const idSuscripcion = planIdParam ? parseInt(planIdParam, 10) : NaN;
 
@@ -161,7 +161,23 @@ export default function ResumenCliente() {
         }),
       });
 
+      if (metodoSeleccionado === 'usdt') {
+        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+        const usdtRes = await fetch(`${API_URL}/api/usdt`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({ transaccionId: t.id }),
+        });
+        if (!usdtRes.ok) throw new Error('No se pudo iniciar el pago USDT');
+        const usdtData = await usdtRes.json();
+        localStorage.setItem('usdtPayment', JSON.stringify(usdtData));
+        router.push(`/pago/usdt?transaccionId=${t.id}`);
+      } else {
       router.push(`/pago/qr?transaccionId=${t.id}`);
+      }
     } catch (err: any) {
       setError(err.message || 'No se pudo iniciar el pago');
     }
@@ -302,12 +318,24 @@ export default function ResumenCliente() {
               onClick={() => setMetodoSeleccionado('qr')}
             >
               <span className="text-2xl mr-4">📱</span>
-
               <div>
                 <div className="font-bold">Pago por QR</div>
-                <div className="text-sm text-gray-500">
-                  Escanea con tu app bancaria
+                <div className="text-sm text-gray-500">Escanea con tu app bancaria</div>
+              </div>
                 </div>
+
+            <div
+              className={`flex items-start p-3 border rounded-lg cursor-pointer transition mt-3 ${
+                metodoSeleccionado === 'usdt'
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-gray-200 bg-gray-50 hover:bg-gray-100'
+              }`}
+              onClick={() => setMetodoSeleccionado('usdt')}
+            >
+              <span className="text-2xl mr-4">💎</span>
+              <div>
+                <div className="font-bold">USDT TRC20</div>
+                <div className="text-sm text-gray-500">Criptomoneda — Testnet Shasta</div>
               </div>
             </div>
 
