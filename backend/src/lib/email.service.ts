@@ -1,23 +1,23 @@
-import PDFDocument from 'pdfkit'
-import { env } from '../config/env.js'
+import PDFDocument from "pdfkit";
+import { env } from "../config/env.js";
 
-const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email'
+const BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
 
 interface EnviarCodigoParams {
-  emailDestino: string
-  codigo: string
-  nombreUsuario?: string
+  emailDestino: string;
+  codigo: string;
+  nombreUsuario?: string;
 }
 
 interface EmailSendResult {
-  success: boolean
-  messageId?: string
-  error?: unknown
+  success: boolean;
+  messageId?: string;
+  error?: unknown;
 }
 
 interface BrevoAttachment {
-  content: string // base64
-  name: string
+  content: string; // base64
+  name: string;
 }
 
 const sendBrevoEmail = async ({
@@ -26,62 +26,63 @@ const sendBrevoEmail = async ({
   htmlContent,
   textContent,
   bcc,
-  attachment
+  attachment,
 }: {
-  to: string
-  subject: string
-  htmlContent: string
-  textContent: string
-  bcc?: string
-  attachment?: BrevoAttachment
+  to: string;
+  subject: string;
+  htmlContent: string;
+  textContent: string;
+  bcc?: string;
+  attachment?: BrevoAttachment;
 }): Promise<EmailSendResult> => {
   try {
     const payload: Record<string, unknown> = {
-      sender: { name: 'PropBol', email: env.EMAIL_USER },
+      sender: { name: "PropBol", email: env.EMAIL_USER },
       to: [{ email: to }],
       subject,
       htmlContent,
-      textContent
-    }
+      textContent,
+    };
 
-    if (bcc) payload.bcc = [{ email: bcc }]
-    if (attachment) payload.attachment = [attachment]
+    if (bcc) payload.bcc = [{ email: bcc }];
+    if (attachment) payload.attachment = [attachment];
 
     const response = await fetch(BREVO_API_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'api-key': env.EMAIL_PASSWORD
+        "Content-Type": "application/json",
+        "api-key": env.EMAIL_PASSWORD,
       },
-      body: JSON.stringify(payload)
-    })
+      body: JSON.stringify(payload),
+    });
 
     if (!response.ok) {
-      const errorData = await response.json()
-      console.error('❌ Error al enviar email:', errorData)
-      return { success: false, error: errorData }
+      const errorData = await response.json();
+      console.error("❌ Error al enviar email:", errorData);
+      return { success: false, error: errorData };
     }
 
-    const data = (await response.json()) as { messageId?: string }
-    console.log(`✅ Email enviado a ${to} - ID: ${data.messageId}`)
-    return { success: true, messageId: data.messageId }
+    const data = (await response.json()) as { messageId?: string };
+    console.log(`✅ Email enviado a ${to} - ID: ${data.messageId}`);
+    return { success: true, messageId: data.messageId };
   } catch (error) {
-    console.error('❌ Error al enviar email:', error)
-    return { success: false, error }
+    console.error("❌ Error al enviar email:", error);
+    return { success: false, error };
   }
-}
+};
 
 const enviarConReintentos = async (
   fn: () => Promise<EmailSendResult>,
-  intentos = 3
+  intentos = 3,
 ): Promise<EmailSendResult> => {
   for (let i = 0; i < intentos; i++) {
-    const resultado = await fn()
-    if (resultado.success) return resultado
-    if (i < intentos - 1) await new Promise((r) => setTimeout(r, 1000 * 2 ** i))
+    const resultado = await fn();
+    if (resultado.success) return resultado;
+    if (i < intentos - 1)
+      await new Promise((r) => setTimeout(r, 1000 * 2 ** i));
   }
-  return { success: false, error: `Falló tras ${intentos} intentos` }
-}
+  return { success: false, error: `Falló tras ${intentos} intentos` };
+};
 
 const generarPDFComprobante = ({
   idTransaccion,
@@ -89,48 +90,54 @@ const generarPDFComprobante = ({
   nombrePlan,
   monto,
   fechaHora,
-  tipoFacturacion = 'mensual'
+  tipoFacturacion = "mensual",
 }: {
-  idTransaccion: number
-  nombreUsuario: string
-  nombrePlan: string
-  monto: number
-  fechaHora: Date
-  tipoFacturacion?: string
+  idTransaccion: number;
+  nombreUsuario: string;
+  nombrePlan: string;
+  monto: number;
+  fechaHora: Date;
+  tipoFacturacion?: string;
 }): Promise<Buffer> => {
   return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({ margin: 50 })
-    const chunks: Buffer[] = []
+    const doc = new PDFDocument({ margin: 50 });
+    const chunks: Buffer[] = [];
 
-    doc.on('data', (chunk: Buffer) => chunks.push(chunk))
-    doc.on('end', () => resolve(Buffer.concat(chunks)))
-    doc.on('error', reject)
+    doc.on("data", (chunk: Buffer) => chunks.push(chunk));
+    doc.on("end", () => resolve(Buffer.concat(chunks)));
+    doc.on("error", reject);
 
-    doc.fontSize(20).text('PropBol — Comprobante de Pago', { align: 'center' })
-    doc.moveDown()
-    doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke()
-    doc.moveDown()
+    doc.fontSize(20).text("PropBol — Comprobante de Pago", { align: "center" });
+    doc.moveDown();
+    doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke();
+    doc.moveDown();
 
-    doc.fontSize(12)
-    doc.text(`N° de transacción: ${idTransaccion}`)
-    doc.text(`Titular: ${nombreUsuario}`)
-    doc.text(`Plan: ${nombrePlan}`)
-    doc.text(`Tipo de facturación: ${tipoFacturacion === 'anual' ? 'Anual' : 'Mensual'}`)
-    doc.text(`Monto: Bs. ${monto.toFixed(2)}`)
-    doc.text(`Fecha y hora: ${fechaHora.toLocaleString('es-BO', { timeZone: 'America/La_Paz' })}`)
-    doc.text(`Moneda: BOB / Bolivianos`)
+    doc.fontSize(12);
+    doc.text(`N° de transacción: ${idTransaccion}`);
+    doc.text(`Titular: ${nombreUsuario}`);
+    doc.text(`Plan: ${nombrePlan}`);
+    doc.text(
+      `Tipo de facturación: ${tipoFacturacion === "anual" ? "Anual" : "Mensual"}`,
+    );
+    doc.text(`Monto: Bs. ${monto.toFixed(2)}`);
+    doc.text(
+      `Fecha y hora: ${fechaHora.toLocaleString("es-BO", { timeZone: "America/La_Paz" })}`,
+    );
+    doc.text(`Moneda: BOB / Bolivianos`);
 
-    doc.moveDown()
-    doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke()
-    doc.moveDown()
+    doc.moveDown();
+    doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke();
+    doc.moveDown();
     doc
       .fontSize(10)
-      .fillColor('gray')
-      .text('Este comprobante es válido como constancia de pago.', { align: 'center' })
+      .fillColor("gray")
+      .text("Este comprobante es válido como constancia de pago.", {
+        align: "center",
+      });
 
-    doc.end()
-  })
-}
+    doc.end();
+  });
+};
 
 export const enviarComprobantePago = async ({
   emailUsuario,
@@ -139,15 +146,15 @@ export const enviarComprobantePago = async ({
   nombrePlan,
   monto,
   fechaHora,
-  tipoFacturacion = 'mensual'
+  tipoFacturacion = "mensual",
 }: {
-  emailUsuario: string
-  nombreUsuario: string
-  idTransaccion: number
-  nombrePlan: string
-  monto: number
-  fechaHora: Date
-  tipoFacturacion?: string
+  emailUsuario: string;
+  nombreUsuario: string;
+  idTransaccion: number;
+  nombrePlan: string;
+  monto: number;
+  fechaHora: Date;
+  tipoFacturacion?: string;
 }): Promise<EmailSendResult> => {
   const pdfBuffer = await generarPDFComprobante({
     idTransaccion,
@@ -155,11 +162,13 @@ export const enviarComprobantePago = async ({
     nombrePlan,
     monto,
     fechaHora,
-    tipoFacturacion
-  })
-  const pdfBase64 = pdfBuffer.toString('base64')
+    tipoFacturacion,
+  });
+  const pdfBase64 = pdfBuffer.toString("base64");
 
-  const fechaStr = fechaHora.toLocaleString('es-BO', { timeZone: 'America/La_Paz' })
+  const fechaStr = fechaHora.toLocaleString("es-BO", {
+    timeZone: "America/La_Paz",
+  });
 
   return enviarConReintentos(() =>
     sendBrevoEmail({
@@ -187,7 +196,7 @@ export const enviarComprobantePago = async ({
                 </tr>
                 <tr style="background:#f9fafb;">
                   <td style="padding:10px;border:1px solid #e5e7eb;font-weight:bold;color:#374151;">Facturación</td>
-                  <td style="padding:10px;border:1px solid #e5e7eb;color:#333;">${tipoFacturacion === 'anual' ? 'Anual' : 'Mensual'}</td>
+                  <td style="padding:10px;border:1px solid #e5e7eb;color:#333;">${tipoFacturacion === "anual" ? "Anual" : "Mensual"}</td>
                 </tr>
                 <tr>
                   <td style="padding:10px;border:1px solid #e5e7eb;font-weight:bold;color:#374151;">Monto</td>
@@ -210,7 +219,7 @@ export const enviarComprobantePago = async ({
           </div>
         </body></html>
       `,
-      textContent: `Hola ${nombreUsuario},\n\nTu pago ha sido procesado.\n\nN° Transacción: #${idTransaccion}\nPlan: ${nombrePlan}\nFacturación: ${tipoFacturacion === 'anual' ? 'Anual' : 'Mensual'}\nMonto: Bs. ${monto.toFixed(2)}\nFecha: ${fechaStr}\nMoneda: BOB / Bolivianos\n\nEl comprobante PDF está adjunto.`,
+      textContent: `Hola ${nombreUsuario},\n\nTu pago ha sido procesado.\n\nN° Transacción: #${idTransaccion}\nPlan: ${nombrePlan}\nFacturación: ${tipoFacturacion === "anual" ? "Anual" : "Mensual"}\nMonto: Bs. ${monto.toFixed(2)}\nFecha: ${fechaStr}\nMoneda: BOB / Bolivianos\n\nEl comprobante PDF está adjunto.`,
       attachment: {
         content: pdfBase64,
         name: `comprobante-${idTransaccion}.pdf`
