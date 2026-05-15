@@ -295,6 +295,7 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
   }
 }
+
 /* Commit 2: sin hover en touch */
 @media (max-width: 768px) {
   .cluster-bubble:hover {
@@ -302,29 +303,34 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
   }
 }
+
 /* Commit 3: popup móvil */
 @media (max-width: 768px) {
   .leaflet-popup-content-wrapper {
     max-width: 220px;
     border-radius: 12px;
   }
+
   .leaflet-popup-content {
     margin: 10px 12px;
     font-size: 13px;
     line-height: 1.4;
     word-break: break-word;
   }
+
   .leaflet-popup-tip {
     width: 10px;
     height: 10px;
   }
 }
+
 /* Commit 4: controles y animaciones */
 @media (max-width: 768px) {
   .leaflet-control-zoom {
     transform: scale(0.9);
     transform-origin: bottom right;
   }
+
   .leaflet-marker-icon,
   .leaflet-marker-shadow,
   .leaflet-cluster-anim .leaflet-marker-icon,
@@ -334,6 +340,7 @@
       opacity 250ms ease;
   }
 }
+
 /* Commit 5: celulares pequeños ≤480px */
 @media (max-width: 480px) {
   .cluster-bubble {
@@ -342,31 +349,42 @@
     font-size: 11px;
     border-width: 2px;
   }
+
   .leaflet-popup-content-wrapper {
     max-width: 180px;
   }
+
   .leaflet-popup-content {
     margin: 8px 10px;
     font-size: 12px;
   }
+
   .leaflet-control-zoom {
     transform: scale(0.85);
   }
 }
+
 @keyframes fade-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
+
 .animate-fade {
   animation: fade-in 0.6s ease-in-out;
 }
 
 /* ==================================================
-   PROPBOL - Modo oscuro global
-    / preparado para componentes nuevos
+   PROPBOL - Sistema de temas
+   next-themes emite class="dark" en <html>
+   AccessibilityProvider emite data-accessibility="..."
 ================================================== */
 
-html.propbol-theme-dark {
+html.dark {
   color-scheme: dark;
   --pb-bg: #000000;
   --pb-surface: #050505;
@@ -380,38 +398,60 @@ html.propbol-theme-dark {
 }
 
 /* Reset modo claro / accesibilidad */
-html.propbol-theme-light,
-html.propbol-accessibility-none body {
+html:not(.dark) body,
+html[data-accessibility="none"] body {
   filter: none !important;
 }
 
-html.propbol-accessibility-deuteranopia body {
+/* Daltonismo – Deuteranopia (dificultad para ver el verde) */
+html[data-accessibility="deuteranopia"] body {
   filter: saturate(0.75) hue-rotate(-18deg) contrast(1.12) !important;
 }
 
-html.propbol-accessibility-deuteranopia .propbol-visual-settings-page,
-html.propbol-accessibility-deuteranopia .visual-option-preview {
+html[data-accessibility="deuteranopia"] .propbol-visual-settings-page,
+html[data-accessibility="deuteranopia"] .visual-option-preview {
+  filter: none !important;
+}
+
+/* Daltonismo – Protanopia (dificultad para ver el rojo) */
+html[data-accessibility="protanopia"] body {
+  filter: saturate(0.65) hue-rotate(12deg) contrast(1.15) !important;
+}
+
+html[data-accessibility="protanopia"] .propbol-visual-settings-page,
+html[data-accessibility="protanopia"] .visual-option-preview {
+  filter: none !important;
+}
+
+/* Daltonismo – Tritanopia (dificultad para ver el azul) */
+html[data-accessibility="tritanopia"] body {
+  filter: saturate(0.7) hue-rotate(180deg) contrast(1.1) !important;
+}
+
+html[data-accessibility="tritanopia"] .propbol-visual-settings-page,
+html[data-accessibility="tritanopia"] .visual-option-preview {
   filter: none !important;
 }
 
 /* Fondo general */
-html.propbol-theme-dark,
-html.propbol-theme-dark body,
-html.propbol-theme-dark main,
-html.propbol-theme-dark nav,
-html.propbol-theme-dark footer,
-html.propbol-theme-dark .propbol-visual-settings-page,
-html.propbol-theme-dark .propbol-sesiones-activas,
-html.propbol-theme-dark .propbol-active-sessions-page {
+html.dark,
+html.dark body,
+html.dark main,
+html.dark nav,
+html.dark footer,
+html.dark .propbol-visual-settings-page,
+html.dark .propbol-sesiones-activas,
+html.dark .propbol-active-sessions-page {
   background: var(--pb-bg) !important;
   color: var(--pb-text) !important;
   border-color: var(--pb-border) !important;
 }
 
 /* Convierte fondos claros, azules y grises a negro */
-html.propbol-theme-dark body :where([class*="bg-white"],
+html.dark body :where([class*="bg-white"],
   [class*="bg-gray"],
   [class*="bg-slate"],
+  [class*="text-slate"],
   [class*="bg-neutral"],
   [class*="bg-zinc"],
   [class*="bg-stone"],
