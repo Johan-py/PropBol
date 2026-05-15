@@ -389,59 +389,68 @@ export const useBlogComments = (blogId: string) => {
           `${API_URL}/api/blogs/comentarios/${editingCommentId}`,
           {
             method: "PATCH",
-          headers: {
+            headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
-          },
+            },
             body: JSON.stringify({ contenido: normalizedDraft }),
           },
         );
 
         if (res.ok) {
-          const data = await res.json()
+          const data = await res.json();
           setComments((currentComments) =>
-            currentComments.map((comment) => (comment.id === editingCommentId ? { ...comment, content: data.contenido, updatedAt: new Date().toISOString() } : comment))
-          )
-          setDraft('')
-          setEditingCommentId(null)
+            currentComments.map((comment) =>
+              comment.id === editingCommentId
+                ? {
+                    ...comment,
+                    content: data.contenido,
+                    updatedAt: new Date().toISOString(),
+                  }
+                : comment,
+            ),
+          );
+          setDraft("");
+          setEditingCommentId(null);
         } else {
-          const err = await res.json()
-          alert(err.message || 'Error al editar el comentario')
+          const err = await res.json();
+          alert(err.message || "Error al editar el comentario");
         }
       } else {
         // Create
         const res = await fetch(`${API_URL}/api/blogs/comentarios`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             contenido: normalizedDraft,
             blog_id: Number(blogId),
-            comentario_padre_id: replyingToId ? Number(replyingToId) : undefined
-          })
-        })
+            comentario_padre_id: replyingToId
+              ? Number(replyingToId)
+              : undefined,
+          }),
+        });
 
         if (res.ok) {
-          const data = await res.json()
-          const newComment = mapBackendComment(data)
-          setComments((currentComments) => [...currentComments, newComment])
-          setVisibleTopLevelComments((currentVisibleCount) => (replyingToId ? currentVisibleCount : currentVisibleCount + 1))
-          setDraft('')
-          setReplyingToId(null)
+          setVisibleTopLevelComments((currentVisibleCount) =>
+            replyingToId ? currentVisibleCount : currentVisibleCount + 1,
+          );
+          setDraft("");
+          setReplyingToId(null);
         } else {
-          const err = await res.json()
-          alert(err.message || 'Error al crear el comentario')
+          const err = await res.json();
+          alert(err.message || "Error al crear el comentario");
         }
       }
     } catch (err) {
-      console.error('Submit failed:', err)
-      alert('Error de conexión')
+      console.error("Submit failed:", err);
+      alert("Error de conexión");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return {
     activeEdition,
@@ -467,6 +476,9 @@ export const useBlogComments = (blogId: string) => {
     toggleLike,
     totalComments,
     visibleComments,
-    loadMore: () => setVisibleTopLevelComments((currentVisibleCount) => currentVisibleCount + 3)
-  }
-}
+    loadMore: () =>
+      setVisibleTopLevelComments(
+        (currentVisibleCount) => currentVisibleCount + 3,
+      ),
+  };
+};
