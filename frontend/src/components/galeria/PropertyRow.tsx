@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { normalizePropertyThumbnailUrl } from '@/lib/propertyThumbnailUrl'
 import ComoLlegarButton from './ComoLlegarButton'
 import { MapPin } from 'lucide-react'
+import { useCompareStore } from '@/hooks/useCompareStore'
 
 export default function PropertyRow({
   title,
@@ -32,6 +33,7 @@ export default function PropertyRow({
   onViewDetails?: () => void
 }) {
   const [isHovered, setIsHovered] = useState(false)
+  const { isCompareMode } = useCompareStore() // Obtenemos el estado de comparación para deshabilitar botones si es necesario
   const imageSrc = normalizePropertyThumbnailUrl(
     image,
     'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
@@ -87,6 +89,7 @@ export default function PropertyRow({
       <div className="flex justify-center">
         <ActionButton
           variant="table"
+          disabled={isCompareMode}
           onClick={(event) => {
             // HU4 - Evita disparar el click general de la tabla al hacer click en el botón de detalles
             event.stopPropagation()
@@ -98,10 +101,14 @@ export default function PropertyRow({
       {/* CONTACTO: Aquí entra tu magia limpia y modular */}
       {/* HU13 #70 - Boton Como llegar modo lista con lat/lng como props */}
       <div className="flex justify-center min-h-[44px] items-center" role="navigation" aria-label="Navegar a ubicacion de la propiedad">
-        <ComoLlegarButton lat={lat} lng={lng} variant="table" data-testid="como-llegar-row" />
+        <ComoLlegarButton lat={lat} lng={lng} variant="table" disabled={isCompareMode} data-testid="como-llegar-row" /> {/* Bloqueamos si compara */}
       </div>
       <div className="flex justify-center">
-        <ContactButton type={contactType} variant="table" />
+        <ContactButton 
+          type={contactType as "whatsapp" | "messenger"} 
+          variant="table" 
+          disabled={isCompareMode} 
+        />
       </div>
     </div>
   )
