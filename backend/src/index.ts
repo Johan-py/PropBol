@@ -10,7 +10,7 @@ import zonaRoutes from "./modules/perfil/zonaUsario.routes.js";
 import telemetriaRouter from "./modules/perfil/telemetria.routes.js";
 import locationRoutes from "./modules/locations/locations.routes.js";
 import consumoRoutes from "./modules/LimiteSuscripcion/consumo.routes.js";
-import { iniciarCronRetroalimentacion } from "./modules/recomendaciones/retroalimentacionCron.js";
+import { iniciarCronRetroalimentacion } from './modules/recomendaciones/retroalimentacionCron.js'
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -52,7 +52,7 @@ import {
   activateAccountByPasswordController,
   requestActivationCodeController,
   activateAccountByCodeController,
-  resendRegisterCodeController
+  resendRegisterCodeController,
 } from './modules/auth/auth.controller.js'
 import { requireAuth } from './middleware/auth.middleware.js'
 
@@ -200,7 +200,7 @@ app.get("/api/users/:id/publicaciones/free", authMiddleware, (_req, res) => {
 app.get(
   "/api/publicaciones/validar-limite/:id",
   authMiddleware,
-  validarPublicacionesFree,
+  validarPublicacionesFree
 );
 app.use("/api/publicaciones-legacy", publicacionesRoutes);
 

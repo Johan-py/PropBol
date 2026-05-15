@@ -155,8 +155,8 @@ export default function BlogSharePlaceholder({
         <h3 className="text-xs font-bold uppercase tracking-[0.24em] text-[#a56400]">
           Compartir
         </h3>
-        <div className="flex flex-wrap items-center justify-between w-full gap-y-6">
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between w-full gap-5">
+          <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto w-full lg:w-auto pr-2 lg:pr-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <button onClick={shareToGmail} className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-stone-100 hover:bg-stone-200 transition-colors duration-200 group shrink-0" title="Compartir por Gmail">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg"
@@ -219,11 +219,11 @@ export default function BlogSharePlaceholder({
           </div>
 
           {/* MENÚ DE DESCARGA */}
-          <div className="relative shrink-0" ref={menuRef}>
+          <div className="relative w-full lg:w-auto lg:shrink-0" ref={menuRef}>
             <button
               onClick={() => setIsDownloadOpen(!isDownloadOpen)}
               disabled={isGenerating}
-              className={`flex items-center justify-between gap-3 h-11 px-4 sm:h-12 sm:px-5 rounded-xl border transition-all duration-300 group whitespace-nowrap shrink-0 ${isDownloadOpen
+              className={`flex items-center justify-between gap-3 h-11 px-4 sm:h-12 sm:px-5 w-full lg:w-auto rounded-xl border transition-all duration-300 group whitespace-nowrap ${isDownloadOpen
                 ? 'bg-stone-900 border-stone-900 text-white shadow-lg shadow-stone-200'
                 : 'border-stone-200 hover:border-stone-400 hover:bg-stone-50 text-[#433527]'
                 } ${isGenerating ? 'opacity-50 cursor-not-allowed' : ''}`}
