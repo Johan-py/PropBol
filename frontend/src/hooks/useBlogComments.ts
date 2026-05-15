@@ -218,146 +218,184 @@ export const useBlogComments = (blogId: string) => {
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (!blogId || !socket) return;
 
-    const syncCurrentUser = () => setCurrentUser(readCurrentUser())
-    window.addEventListener('storage', syncCurrentUser)
-    window.addEventListener('propbol:session-changed', syncCurrentUser)
-    window.addEventListener('profileUpdated', syncCurrentUser)
+    const cleanId = String(blogId);
+
+    socket.emit("join_blog_room", cleanId);
+    const nuevoEvento = `blog:${cleanId}:nuevo_comentario`;
+    const editadoEvento = `blog:${cleanId}:comentario_actualizado`;
+    const eliminadoEvento = `blog:${cleanId}:comentario_eliminado`;
+
+    socket.on(nuevoEvento, (data) => {
+      setComments((prev) => {
+        if (prev.some((c) => c.id === String(data.id))) return prev;
+        return [mapBackendComment(data), ...prev];
+      });
+    });
+
+    socket.on(editadoEvento, (data) => {
+      setComments((prev) =>
+        prev.map((c) =>
+          c.id === String(data.id) ? mapBackendComment(data) : c,
+        ),
+      );
+    });
+
+    socket.on(eliminadoEvento, ({ id }) => {
+      setComments((prev) => prev.filter((c) => c.id !== String(id)));
+    });
 
     return () => {
-      window.removeEventListener('storage', syncCurrentUser)
-      window.removeEventListener('propbol:session-changed', syncCurrentUser)
-      window.removeEventListener('profileUpdated', syncCurrentUser)
-    }
-  }, [])
+      socket.off(nuevoEvento);
+      socket.off(editadoEvento);
+      socket.off(eliminadoEvento);
+    };
+  }, [blogId, socket]);
 
   const topLevelComments = comments
     .filter((comment) => comment.parentId === null)
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-  const visibleComments = topLevelComments.slice(0, visibleTopLevelComments)
-  const totalComments = comments.length
-  const isDraftEmpty = draft.trim().length === 0
-  const isAtCharacterLimit = draft.length >= BLOG_COMMENT_MAX_LENGTH
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+  const visibleComments = topLevelComments.slice(0, visibleTopLevelComments);
+  const totalComments = comments.length;
+  const isDraftEmpty = draft.trim().length === 0;
+  const isAtCharacterLimit = draft.length >= BLOG_COMMENT_MAX_LENGTH;
 
-  const activeParent = replyingToId ? comments.find((c) => c.id === replyingToId) ?? null : null
-  const activeEdition = editingCommentId ? comments.find((c) => c.id === editingCommentId) ?? null : null
+  const activeParent = replyingToId
+    ? (comments.find((c) => c.id === replyingToId) ?? null)
+    : null;
+  const activeEdition = editingCommentId
+    ? (comments.find((c) => c.id === editingCommentId) ?? null)
+    : null;
 
-  const getReplies = (commentId: string) => comments.filter((comment) => comment.parentId === commentId)
+  const getReplies = (commentId: string) =>
+    comments.filter((comment) => comment.parentId === commentId);
 
   const startReply = (commentId: string) => {
-    setReplyingToId(commentId)
-    setEditingCommentId(null)
-    setMenuOpenForId(null)
-  }
+    setReplyingToId(commentId);
+    setEditingCommentId(null);
+    setMenuOpenForId(null);
+  };
 
   const startEdit = (commentId: string) => {
-    const commentToEdit = comments.find((c) => c.id === commentId)
-    if (!commentToEdit) return
-    setDraft(commentToEdit.content)
-    setEditingCommentId(commentId)
-    setReplyingToId(null)
-    setMenuOpenForId(null)
-  }
+    const commentToEdit = comments.find((c) => c.id === commentId);
+    if (!commentToEdit) return;
+    setDraft(commentToEdit.content);
+    setEditingCommentId(commentId);
+    setReplyingToId(null);
+    setMenuOpenForId(null);
+  };
 
   const cancelComposerMode = () => {
-    setReplyingToId(null)
-    setEditingCommentId(null)
-    setMenuOpenForId(null)
-    setDraft('')
-  }
+    setReplyingToId(null);
+    setEditingCommentId(null);
+    setMenuOpenForId(null);
+    setDraft("");
+  };
 
   const handleDraftChange = (value: string) => {
-    setDraft(value.slice(0, BLOG_COMMENT_MAX_LENGTH))
-  }
+    setDraft(value.slice(0, BLOG_COMMENT_MAX_LENGTH));
+  };
 
   const toggleLike = async (commentId: string) => {
-    const token = localStorage.getItem('token')
-    if (!token) return
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
     // Optimistic UI update
     setComments((currentComments) =>
       currentComments.map((comment) => {
-        if (comment.id !== commentId) return comment
-        const nextLikedState = !comment.likedByCurrentUser
+        if (comment.id !== commentId) return comment;
+        const nextLikedState = !comment.likedByCurrentUser;
         return {
           ...comment,
           likedByCurrentUser: nextLikedState,
-          likes: Math.max(0, comment.likes + (nextLikedState ? 1 : -1))
-        }
-      })
-    )
+          likes: Math.max(0, comment.likes + (nextLikedState ? 1 : -1)),
+        };
+      }),
+    );
 
     try {
-      const res = await fetch(`${API_URL}/api/blogs/comentarios/${commentId}/like`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      const res = await fetch(
+        `${API_URL}/api/blogs/comentarios/${commentId}/like`,
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       if (!res.ok) {
         // Revert on error
-        fetchComments()
+        fetchComments();
       }
     } catch {
-      fetchComments()
+      fetchComments();
     }
-  }
+  };
 
   const deleteComment = async (commentId: string) => {
-    const token = localStorage.getItem('token')
-    if (!token) return
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
     try {
       const res = await fetch(`${API_URL}/api/blogs/comentarios/${commentId}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      })
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       if (res.ok || res.status === 204) {
-        const idsToDelete = [commentId, ...getDescendantIds(comments, commentId)]
-        setComments((currentComments) => currentComments.filter((c) => !idsToDelete.includes(c.id)))
+        const idsToDelete = [
+          commentId,
+          ...getDescendantIds(comments, commentId),
+        ];
+        setMenuOpenForId(null);
 
-        if (replyingToId && idsToDelete.includes(replyingToId)) setReplyingToId(null)
+        if (replyingToId && idsToDelete.includes(replyingToId))
+          setReplyingToId(null);
         if (editingCommentId && idsToDelete.includes(editingCommentId)) {
-          setEditingCommentId(null)
-          setDraft('')
+          setEditingCommentId(null);
+          setDraft("");
         }
-        setMenuOpenForId(null)
       } else {
-        alert('Error al eliminar el comentario')
+        alert("Error al eliminar el comentario");
       }
     } catch (err) {
-      console.error('Delete failed:', err)
-      alert('Error de conexión')
+      console.error("Delete failed:", err);
+      alert("Error de conexión");
     }
-  }
+  };
 
   const requestDelete = (commentId: string) => {
-    deleteComment(commentId)
-  }
+    deleteComment(commentId);
+  };
 
   const submitComment = async () => {
-    const normalizedDraft = draft.trim()
-    if (!normalizedDraft || isSubmitting) return
+    const normalizedDraft = draft.trim();
+    if (!normalizedDraft || isSubmitting) return;
 
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token");
     if (!token) {
-      alert('Debes iniciar sesión para comentar')
-      return
+      alert("Debes iniciar sesión para comentar");
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     try {
       if (editingCommentId) {
         // Edit
-        const res = await fetch(`${API_URL}/api/blogs/comentarios/${editingCommentId}`, {
-          method: 'PATCH',
+        const res = await fetch(
+          `${API_URL}/api/blogs/comentarios/${editingCommentId}`,
+          {
+            method: "PATCH",
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ contenido: normalizedDraft })
-        })
+            body: JSON.stringify({ contenido: normalizedDraft }),
+          },
+        );
 
         if (res.ok) {
           const data = await res.json()
