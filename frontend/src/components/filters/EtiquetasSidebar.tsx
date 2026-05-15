@@ -124,31 +124,32 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
   }
 
   return (
-    <div className="flex flex-col h-full min-h-0 bg-white">
+    <div className="flex flex-col h-full min-h-0 bg-white dark:bg-slate-900 border-r border-stone-200 dark:border-slate-800">
 
       {/* HEADER */}
-      <div className="shrink-0 p-4 pb-3 border-b border-stone-100">
+      <div className="shrink-0 p-4 pb-3 border-b border-stone-100 dark:border-slate-800">
         <div className="w-full flex items-center justify-center relative mb-1">
-          <h3 className="font-bold text-sm text-stone-800 uppercase tracking-wide text-center">
+          <h3 className="font-bold text-sm text-stone-800 dark:text-slate-100 uppercase tracking-wide text-center">
             Filtrar por Etiquetas
           </h3>
-          <button onClick={onClose} className="absolute right-0 p-1 hover:bg-stone-100 rounded-full transition-colors">
-            <X size={20} className="text-stone-500" />
+          <button onClick={onClose} className="absolute right-0 p-1 hover:bg-stone-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+            <X size={20} className="text-stone-500 dark:text-slate-400" />
           </button>
         </div>
 
-        <p className="text-sm text-stone-500 text-center mb-3">
+        <p className="text-sm text-stone-500 dark:text-slate-400 text-center mb-3">
           Seleccione una o varias etiquetas para refinar la búsqueda
         </p>
 
         <div className="w-full relative">
-          <Search className="w-4 h-4 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-stone-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Buscar etiqueta..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full border border-stone-200 rounded-lg pl-9 pr-3 py-2 text-sm outline-none focus:border-[#d97706] focus:ring-1 focus:ring-[#d97706] transition-all bg-stone-50"
+            /* Input del buscador con soporte a modo oscuro (bordes y fondo RGB) */
+            className="w-full border border-stone-200 rounded-lg pl-9 pr-3 py-2 text-sm outline-none transition-all bg-stone-50 focus:border-[rgb(217,119,6)] focus:ring-1 focus:ring-[rgb(217,119,6)] dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:focus:border-[rgb(232,124,30)] dark:focus:ring-[rgb(232,124,30)]"
           />
         </div>
       </div>
@@ -166,7 +167,7 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
               <button
                 type="button"
                 onClick={() => setSelectedIds([])}
-                className="text-xs text-[#d97706] font-medium hover:opacity-75 transition-opacity"
+                className="text-xs text-[rgb(217,119,6)] dark:text-[rgb(232,124,30)] font-medium hover:opacity-75 transition-opacity"
               >
                 Limpiar
               </button>
@@ -174,23 +175,23 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
           </div>
 
           {selectedEtiquetas.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-stone-200 bg-stone-50 p-3 text-center">
-              <p className="text-sm text-stone-400">No has seleccionado ninguna etiqueta</p>
+            <div className="rounded-xl border border-dashed border-stone-200 bg-stone-50 p-3 text-center dark:border-slate-700 dark:bg-slate-800">
+              <p className="text-sm text-stone-400 dark:text-slate-500">No has seleccionado ninguna etiqueta</p>
             </div>
           ) : (
             <div className="flex flex-wrap gap-2">
               {selectedEtiquetas.map(etiqueta => (
                 <span
                   key={etiqueta.id}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200 shadow-sm text-sm font-medium text-stone-700"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-stone-200 shadow-sm text-sm font-medium text-stone-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200"
                 >
                   <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: etiqueta.color }} />
                   {etiqueta.nombre}
                   <button
                     onClick={() => toggleSelection(etiqueta.id)}
-                    className="w-4 h-4 rounded-full hover:bg-stone-100 flex items-center justify-center ml-0.5 transition-colors"
+                    className="w-4 h-4 rounded-full hover:bg-stone-100 dark:hover:bg-slate-700 flex items-center justify-center ml-0.5 transition-colors"
                   >
-                    <X size={10} className="text-stone-500" />
+                    <X size={10} className="text-stone-500 dark:text-slate-400" />
                   </button>
                 </span>
               ))}
@@ -224,7 +225,7 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
                 <button
                   key={etiqueta.id}
                   onClick={() => toggleSelection(etiqueta.id)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all border bg-white text-stone-600 border-stone-200 hover:border-[#d97706] hover:text-stone-800"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-all border bg-white text-stone-600 border-stone-200 hover:border-[rgb(217,119,6)] hover:text-stone-800 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300 dark:hover:border-[rgb(232,124,30)] dark:hover:text-slate-100"
                 >
                   <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: etiqueta.color }} />
                   <span>{etiqueta.nombre}</span>
@@ -236,27 +237,28 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
       </div>
 
       {/* FOOTER */}
-      <div className="shrink-0 px-6 pb-6 pt-4 border-t border-stone-100 bg-white flex flex-col gap-3">
+      <div className="shrink-0 px-6 pb-6 pt-4 border-t border-stone-100 bg-white flex flex-col gap-3 dark:border-slate-800 dark:bg-slate-900">
         
         {/* Notificación sutil cuando presiona Aplicar sin selección */}
         {showEmptyWarning && (
-          <p className="text-xs text-[#d97706] text-center animate-pulse">
+          <p className="text-xs text-[rgb(217,119,6)] dark:text-[rgb(232,124,30)] text-center animate-pulse">
             Selecciona al menos una etiqueta para filtrar
           </p>
         )}
 
+        {/* Letras blancas puras y subrayado en modo oscuro */}
         <button
           type="button"
           onClick={handleClear}
-          className="text-sm text-stone-400 hover:text-[#d97706] transition-colors underline text-center w-full"
+          className="text-sm text-stone-400 hover:text-[rgb(217,119,6)] transition-colors underline text-center w-full dark:!text-white dark:hover:!text-[rgb(232,124,30)]"
         >
           Limpiar filtro
         </button>
 
-        {/* Siempre naranja, sin disabled */}
+        {/* Hack RGB y rounded-[12px] para evadir a globals.css */}
         <button
           onClick={handleApply}
-          className="w-full bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold py-3 px-4 transition-all active:scale-95 shadow-md"
+          className="w-full !bg-[rgb(217,119,6)] hover:!bg-[rgb(185,94,0)] !text-white rounded-[12px] border-none font-bold py-3 px-4 transition-all active:scale-95 shadow-md dark:!bg-[rgb(232,124,30)] dark:hover:!bg-[rgb(217,119,6)]"
         >
           Aplicar
         </button>
