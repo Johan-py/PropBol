@@ -533,15 +533,117 @@ export const invalidateSessionsByAuthMethod = async (
       estado: true,
     },
     data: {
-      estado: false
-    }
-  })
-}
+      estado: false,
+    },
+  });
+};
+
+export const invalidateActiveMagicLinksByUserId = async (usuarioId: number) => {
+  return await prisma.$executeRaw`
+    UPDATE magic_link
+    SET
+      activo = false,
+      invalidado_en = NOW(),
+      ultimo_reenvio_en = NOW()
+    WHERE usuario_id = ${usuarioId}
+      AND activo = true
+      AND usado_en IS NULL
+      AND invalidado_en IS NULL
+  `;
+};
+
+type ServerTimeRow = {
+  now: Date;
+};
+
+export const getServerTime = async () => {
+  const rows = await prisma.$queryRaw<ServerTimeRow[]>`
+    SELECT NOW() AS now
+  `;
+
+  return rows[0]?.now ?? new Date();
+};
+
+export const createMagicLink = async ({
+  usuarioId,
+  tokenHash,
+  correo,
+  expiraEn,
+}: {
+  usuarioId: number;
+  tokenHash: string;
+  correo: string;
+  expiraEn: Date;
+}) => {
+  return await prisma.magic_link.create({
+    data: {
+      usuario_id: usuarioId,
+      token_hash: tokenHash,
+      correo,
+      expira_en: expiraEn,
+      activo: true,
+      intentos_reenvio: 0,
+    },
+  });
+};
+
+type MagicLinkRecord = {
+  id: number;
+  usuario_id: number;
+  token_hash: string;
+  correo: string;
+  expira_en: Date;
+  usado_en: Date | null;
+  activo: boolean | null;
+  invalidado_en: Date | null;
+};
+
+export const findMagicLinkByTokenHash = async (tokenHash: string) => {
+  const rows = await prisma.$queryRaw<MagicLinkRecord[]>`
+    SELECT
+      id,
+      usuario_id,
+      token_hash,
+      correo,
+      expira_en,
+      usado_en,
+      activo,
+      invalidado_en
+    FROM magic_link
+    WHERE token_hash = ${tokenHash}
+    LIMIT 1
+  `;
+
+  return rows[0] ?? null;
+};
+
+export const markMagicLinkAsUsed = async (id: number) => {
+  const affectedRows = await prisma.$executeRaw`
+    UPDATE magic_link
+    SET
+      usado_en = NOW(),
+      activo = false
+    WHERE id = ${id}
+      AND activo = true
+      AND usado_en IS NULL
+      AND invalidado_en IS NULL
+  `;
+
+  return affectedRows > 0;
+};
+
+export const deactivateMagicLink = async (id: number) => {
+  return await prisma.$executeRaw`
+    UPDATE magic_link
+    SET activo = false
+    WHERE id = ${id}
+  `;
+};
 
 export const invalidateOtherSessionsByAuthMethod = async (
   usuarioId: number,
   metodo_auth: string,
-  currentToken: string
+  currentToken: string,
 ) => {
   return prisma.sesion.updateMany({
     where: {
@@ -549,11 +651,11 @@ export const invalidateOtherSessionsByAuthMethod = async (
       metodo_auth,
       estado: true,
       token: {
-        not: currentToken
-      }
+        not: currentToken,
+      },
     },
     data: {
-      estado: false
-    }
-  })
-}
+      estado: false,
+    },
+  });
+};
