@@ -3,7 +3,7 @@ import { prisma } from '../../lib/prisma.client.js'
 import { Prisma } from '@prisma/client'
 
 export const crearPoi = async (req: Request, res: Response) => {
-  const inmuebleId = parseInt(req.params.inmuebleId)
+  const inmuebleId = parseInt(req.params.inmuebleId as string)
 
   if (isNaN(inmuebleId)) {
     return res.status(400).json({ mensaje: 'ID de inmueble inválido' })
