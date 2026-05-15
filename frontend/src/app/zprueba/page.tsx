@@ -14,7 +14,7 @@ export default function WelcomeForm() {
         <form className="space-y-4">
           <div>
             <label className="block mb-2 text-sm font-medium">
-              Nombre
+              Nombre clave
             </label>
 
             <input
