@@ -14,31 +14,47 @@ export default function BlogSidebar({
   isSubmitting,
   onAction
 }: BlogSidebarProps) {
+  const isPendiente = statusLabel === "PENDIENTE";
+  const isRechazado = statusLabel === "RECHAZADO";
+
   return (
     <aside className="space-y-6 lg:pt-24">
       <div className="rounded-[32px] bg-white p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5 space-y-5">
         <h2 className="text-xl font-bold text-[#1C1917]">Publicación</h2>
         <div className="space-y-3">
-          <button
-            type="button"
-            onClick={() => onAction("pendiente")}
-            disabled={isSubmitting}
-            className="w-full flex h-[56px] items-center justify-center rounded-[20px] bg-[#B45309] text-sm font-bold uppercase tracking-wider text-white transition hover:bg-[#92400E] shadow-lg shadow-amber-900/10 disabled:opacity-50"
-          >
-            {isSubmitting ? "Enviando..." : "Publicar"}
-          </button>
-          <button
-            type="button"
-            onClick={() => onAction("borrador")}
-            disabled={isSubmitting}
-            className="w-full flex h-[56px] items-center justify-center rounded-[20px] bg-[#E7E5E4] text-sm font-bold uppercase tracking-wider text-[#44403C] transition hover:bg-[#D6D3D1] disabled:opacity-50"
-          >
-            Guardar borrador
-          </button>
+          {isPendiente ? (
+            <div className="w-full flex h-[56px] items-center justify-center rounded-[20px] bg-amber-100 text-sm font-bold uppercase tracking-wider text-amber-700 border border-amber-200">
+              En revisión
+            </div>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => onAction("pendiente")}
+                disabled={isSubmitting}
+                className="w-full flex h-[56px] items-center justify-center rounded-[20px] bg-[#B45309] text-sm font-bold uppercase tracking-wider text-white transition hover:bg-[#92400E] shadow-lg shadow-amber-900/10 disabled:opacity-50"
+              >
+                {isSubmitting ? "Enviando..." : isRechazado ? "Volver a enviar" : "Publicar"}
+              </button>
+              <button
+                type="button"
+                onClick={() => onAction("borrador")}
+                disabled={isSubmitting || isPendiente}
+                className="w-full flex h-[56px] items-center justify-center rounded-[20px] bg-[#E7E5E4] text-sm font-bold uppercase tracking-wider text-[#44403C] transition hover:bg-[#D6D3D1] disabled:opacity-50"
+              >
+                Guardar borrador
+              </button>
+            </>
+          )}
         </div>
         <div className="flex items-center justify-between pt-2">
           <span className="text-sm font-medium text-[#78716C]">Estado</span>
-          <span className="inline-flex items-center rounded-lg bg-[#E7E5E4] px-3 py-1 text-[10px] font-bold text-[#44403C]">
+          <span className={`inline-flex items-center rounded-lg px-3 py-1 text-[10px] font-bold ${
+            isPendiente ? "bg-amber-100 text-amber-700" :
+            isRechazado ? "bg-red-100 text-red-600" :
+            statusLabel === "PUBLICADO" ? "bg-green-100 text-green-700" :
+            "bg-[#E7E5E4] text-[#44403C]"
+          }`}>
             {statusLabel ?? "BORRADOR"}
           </span>
         </div>

@@ -1,36 +1,34 @@
 export type TutorialPublicacionContent = {
-  titulo: string
-  mensaje: string
-  videoUrl: string
-  thumbnailUrl: string | null
-  subtitlesUrl: string | null
-  checkboxLabel: string
-}
+  titulo: string;
+  mensaje: string;
+  videoUrl: string;
+  thumbnailUrl: string | null;
+  subtitlesUrl: string | null;
+  checkboxLabel: string;
+};
 
 export type TutorialPublicacionEstado = {
-  debeMostrarTutorial: boolean
-  confirmado: boolean
-  vistoEn: string | null
-  confirmadoEn: string | null
-}
+  debeMostrarTutorial: boolean;
+  confirmado: boolean;
+  confirmadoEn: string | null;
+};
 
 export type TutorialPublicacionEstadoRecord = {
-  id: number
-  usuarioId: number
-  confirmado: boolean
-  vistoEn: Date | null
-  confirmadoEn: Date | null
-}
+  id: number;
+  usuarioId: number;
+  confirmado: boolean;
+  confirmadoEn: Date | null;
+};
 
 export type GetTutorialEstadoInput = {
-  usuarioId: number
-}
+  usuarioId: number;
+};
 
 export type ConfirmTutorialInput = {
-  usuarioId: number
-}
+  usuarioId: number;
+};
 
 export type ConfirmTutorialResult = {
-  confirmado: boolean
-  confirmadoEn: string
-}
+  confirmado: boolean;
+  confirmadoEn: string | null;
+};
