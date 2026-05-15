@@ -176,7 +176,7 @@ export default function ResumenCliente() {
         localStorage.setItem('usdtPayment', JSON.stringify(usdtData));
         router.push(`/pago/usdt?transaccionId=${t.id}`);
       } else {
-      router.push(`/pago/qr?transaccionId=${t.id}`);
+        router.push(`/pago/qr?transaccionId=${t.id}`);
       }
     } catch (err: any) {
       setError(err.message || 'No se pudo iniciar el pago');
@@ -322,7 +322,7 @@ export default function ResumenCliente() {
                 <div className="font-bold">Pago por QR</div>
                 <div className="text-sm text-gray-500">Escanea con tu app bancaria</div>
               </div>
-                </div>
+            </div>
 
             <div
               className={`flex items-start p-3 border rounded-lg cursor-pointer transition mt-3 ${
