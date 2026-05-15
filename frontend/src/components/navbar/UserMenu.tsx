@@ -265,7 +265,7 @@ export default function UserMenu({
               />
               <MenuLink
                 label="Mis comparaciones"
-                href="/profile/mis-comparaciones"
+                href="/mis-comparaciones"
                 icon={FileText}
                 onClick={onClosePanel}
               />
