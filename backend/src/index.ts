@@ -1,4 +1,5 @@
-import path from 'path'
+﻿import path from 'path'
+import http from 'http'
 import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
@@ -10,6 +11,9 @@ import telemetriaRouter from './modules/perfil/telemetria.routes.js'
 import locationRoutes from './modules/locations/locations.routes.js'
 import consumoRoutes from './modules/LimiteSuscripcion/consumo.routes.js'
 import { iniciarCronRetroalimentacion } from './modules/recomendaciones/retroalimentacionCron.js'
+import mlRoutes from './modules/ml/ml.routes.js'
+import { cargarModeloActivo } from './modules/ml/model-loader.js'
+
 // --------------------
 // CONTROLLERS
 // --------------------
@@ -71,10 +75,12 @@ import {
   StartGoogleRegisterController
 } from './modules/auth/google/google.controller.js'
 
-import multimediaRoutes from './modules/multimedia/multimedia.routes.js'
-import publicacionRoutes from './modules/publicacion/publicacion.routes.js'
-import router from './modules/registro-publicacion/publicacion.routes.js'
-import plansRoutes from './modules/plans/plans.routes.js'
+import {
+  startLinkedInLoginController,
+  startLinkedInRegisterController,
+  linkedInCallbackController,
+  getLinkedInLinkUrlController
+} from './modules/auth/linkedin/linkedin.controller.js'
 
 import {
   discordCallbackController,
@@ -140,8 +146,10 @@ import whatsappRoutes from './modules/whatsapp/whatsapp.routes.js'
 import adminTestimoniosRoutes from './modules/testimonios/adminTestimonios.routes.js'
 import adminPlanesRoutes from './modules/planes/adminPlanes.routes.js'
 import sesionRoutes from './modules/perfil/sesion.routes.js'
+import poisRoutes from './modules/pois/pois.routes.js'
 
 import './jobs/suscripcion.job.js'
+import { initSocket } from './services/socket.service.js'
 
 // --------------------
 // SERVER
@@ -201,10 +209,47 @@ app.use('/api/publicaciones-legacy', publicacionesRoutes)
 // --------------------
 app.use('/api/publicaciones', publicacionRoutes)
 app.use('/api/publicaciones', multimediaRoutes)
+app.use('/api/publicaciones/tutorial', tutorialPublicacionRoutes)
 app.use('/api/perfil', correoverificacionRoutes)
 app.use('/api/perfil/usuario', perfilRoutes)
+app.use('/api/perfil/zonas', zonaRoutes)
 app.use('/api', router)
-app.use('/api/plans', plansRoutes)
+app.use('/api', consumoRoutes)
+app.use('/api', parametrosRoutes)
+app.use('/api/tags', tagsRoutes)
+app.use('/api', estadisticasRoutes)
+app.use('/api/estadisticas-zona', estadisticasZonaRoutes)
+app.use('/api/security', securityRoutes)
+app.use('/api/favorites', favoritesRoutes)
+app.use('/api/telemetria', telemetriaRoutes)
+app.use('/api/recomendaciones', recomendacionesRoutes)
+app.use('/api/propiedad', propiedadRoutes)
+app.use('/api/publicaciones', publicacionRoutes)
+app.use('/api/publicaciones', multimediaRoutes)
+app.use('/api/perfil', correoverificacionRoutes)
+app.use('/api/perfil/usuario', perfilRoutes)
+app.use('/api/perfil/zonas', zonaRoutes)
+app.use('/api/perfil/historial', historialRoutes)
+app.use('/api/perfil/historial-busqueda', historialBusquedaRoutes)
+app.use('/api/sesion', sesionRoutes)
+app.use('/api', router)
+app.use('/api', parametrosRoutes)
+app.use('/api/security', securityRoutes)
+app.use('/api/favorites', favoritesRoutes)
+app.use('/api/telemetria', telemetriaRoutes)
+app.use('/api/recomendaciones', recomendacionesRoutes)
+app.use('/api/blogs', blogsRoutes)
+app.use('/api/testimonios', testimoniosRoutes)
+app.use('/api/telemetria', telemetriaRouter)
+app.use('/api/comparaciones', comparacionRoutes)
+app.use('/api/sesiones', sesionRoutes)
+app.use('/api/ml', mlRoutes)
+app.use('/api/transacciones', transaccionesRoutes)
+app.use('/api/suscripciones', suscripcionesRoutes)
+app.use('/api/planes', plansRoutes)
+app.use('/api/usdt', usdtRoutes)
+app.use('/api/whatsapp', whatsappRoutes)
+app.use('/api/locations', locationRoutes)
 
 // --------------------
 // MOCK / TEST
@@ -329,6 +374,7 @@ app.post('/api/publicaciones', (req, res) => {
 // --------------------
 app.use('/api/admin', adminTestimoniosRoutes)
 app.use('/api/admin', adminPlanesRoutes)
+app.use('/api/pois', poisRoutes)
 
 // --------------------
 // LEVANTAR SERVIDOR
@@ -368,9 +414,13 @@ async function seedPlanes() {
 
 iniciarCronRetroalimentacion()
 
-app.listen(PORT, async () => {
+const server = http.createServer(app)
+initSocket(server)
+
+server.listen(PORT, async () => {
   console.log(`­ƒÜÇ Server running on port ${PORT}`)
   console.log(`Health check: http://localhost:${PORT}/health`)
+  await cargarModeloActivo()
 
   try {
     await seedPlanes()
