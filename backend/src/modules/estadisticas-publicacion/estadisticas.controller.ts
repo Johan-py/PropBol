@@ -207,35 +207,36 @@ export class EstadisticasPublicacionController {
         });
       }
 
-      const resultado = await EstadisticasPublicacionService.registrarCompartidoPorInmueble({
+      const resultado =
+        await EstadisticasPublicacionService.registrarCompartidoPorInmueble({
         inmuebleId,
         usuarioId,
-        medio
-      })
+          medio,
+        });
 
       return res.status(200).json({
         ok: true,
-        ...resultado
-      })
+        ...resultado,
+      });
     } catch (error) {
-      if (error instanceof Error && error.message === 'PUBLICACION_NO_EXISTE') {
+      if (error instanceof Error && error.message === "PUBLICACION_NO_EXISTE") {
         return res.status(404).json({
           ok: false,
-          mensaje: 'No existe una publicación activa para este inmueble.'
-        })
+          mensaje: "No existe una publicación activa para este inmueble.",
+        });
       }
 
       return res.status(500).json({
         ok: false,
-        mensaje: 'Error al registrar el compartido.'
-      })
+        mensaje: "Error al registrar el compartido.",
+      });
     }
   }
 
   static async obtenerEstadisticas(req: AuthRequest, res: Response) {
     try {
-      const publicacionId = Number(req.params.publicacionId)
-      const usuarioId = req.user?.id
+      const publicacionId = Number(req.params.publicacionId);
+      const usuarioId = req.user?.id;
 
       if (!usuarioId) {
         return res.status(401).json({
@@ -247,64 +248,68 @@ export class EstadisticasPublicacionController {
       if (Number.isNaN(publicacionId)) {
         return res.status(400).json({
           ok: false,
-          mensaje: 'El id de la publicación no es válido.'
-        })
+          mensaje: "El id de la publicación no es válido.",
+        });
       }
 
-      const estadisticas = await EstadisticasPublicacionService.obtenerEstadisticas({
+      const estadisticas =
+        await EstadisticasPublicacionService.obtenerEstadisticas({
         publicacionId,
-        usuarioId
-      })
+          usuarioId,
+        });
 
       return res.status(200).json({
         ok: true,
-        data: estadisticas
-      })
+        data: estadisticas,
+      });
     } catch (error) {
-      if (error instanceof Error && error.message === 'PUBLICACION_NO_EXISTE') {
+      if (error instanceof Error && error.message === "PUBLICACION_NO_EXISTE") {
         return res.status(404).json({
           ok: false,
-          mensaje: 'La publicación no existe.'
-        })
+          mensaje: "La publicación no existe.",
+        });
       }
 
-      if (error instanceof Error && error.message === 'NO_ES_PROPIETARIO') {
+      if (error instanceof Error && error.message === "NO_ES_PROPIETARIO") {
         return res.status(403).json({
           ok: false,
-          mensaje: 'No tiene permiso para ver las estadísticas de esta publicación.'
-        })
+          mensaje:
+            "No tiene permiso para ver las estadísticas de esta publicación.",
+        });
       }
 
       return res.status(500).json({
         ok: false,
-        mensaje: 'Error al obtener estadísticas.'
-      })
+        mensaje: "Error al obtener estadísticas.",
+      });
     }
   }
 
   static async obtenerMisPropiedadesVistas(req: AuthRequest, res: Response) {
     try {
-      const usuarioId = req.user?.id
+      const usuarioId = req.user?.id;
 
       if (!usuarioId) {
         return res.status(401).json({
           ok: false,
-          mensaje: 'Debe iniciar sesión para ver sus propiedades vistas.'
-        })
+          mensaje: "Debe iniciar sesión para ver sus propiedades vistas.",
+        });
       }
 
       const propiedades =
-        await EstadisticasPublicacionService.obtenerMisPropiedadesVistas(usuarioId)
+        await EstadisticasPublicacionService.obtenerMisPropiedadesVistas(
+          usuarioId,
+        );
 
       return res.status(200).json({
         ok: true,
-        data: propiedades
-      })
+        data: propiedades,
+      });
     } catch {
       return res.status(500).json({
         ok: false,
-        mensaje: 'Error al obtener las propiedades vistas.'
-      })
+        mensaje: "Error al obtener las propiedades vistas.",
+      });
     }
   }
 }
