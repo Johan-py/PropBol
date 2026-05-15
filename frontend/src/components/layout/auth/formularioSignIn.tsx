@@ -198,102 +198,118 @@ const saveSession = (
 
   const sessionUser = buildSessionUser(user);
 
-  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(sessionUser))
-  localStorage.setItem('controlador', String(controlador ?? false))
+  localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(sessionUser));
+  localStorage.setItem("controlador", String(controlador ?? false));
+  localStorage.setItem("nombre", sessionUser.name);
+  localStorage.setItem("correo", sessionUser.email);
+  localStorage.setItem("avatar", sessionUser.avatar ?? "");
+  localStorage.setItem(
+    "propbol_session_expires",
+    String(Date.now() + SESSION_DURATION_MS),
+  );
 
-  localStorage.setItem('nombre', sessionUser.name)
-  localStorage.setItem('correo', sessionUser.email)
-  localStorage.setItem('avatar', sessionUser.avatar ?? '')
-  localStorage.setItem('propbol_session_expires', String(Date.now() + SESSION_DURATION_MS))
-
-  window.dispatchEvent(new Event('propbol:login'))
-  window.dispatchEvent(new Event('propbol:session-changed'))
-  window.dispatchEvent(new Event('auth-state-changed'))
-  window.dispatchEvent(new Event('propbol:token-guardado'))
-}
+  window.dispatchEvent(new Event("propbol:login"));
+  window.dispatchEvent(new Event("propbol:session-changed"));
+  window.dispatchEvent(new Event("auth-state-changed"));
+  window.dispatchEvent(new Event("propbol:token-guardado"));
+};
 
 const getRedirectAfterLogin = () => {
-  const redirect = localStorage.getItem(REDIRECT_AFTER_LOGIN_KEY)
+  const redirect = localStorage.getItem(REDIRECT_AFTER_LOGIN_KEY);
 
-  if (!redirect || !redirect.startsWith('/')) {
-    return DEFAULT_POST_LOGIN_REDIRECT
+  if (!redirect || !redirect.startsWith("/")) {
+    return DEFAULT_POST_LOGIN_REDIRECT;
   }
 
-  return redirect
-}
+  return redirect;
+};
 
 const clearRedirectAfterLogin = () => {
-  localStorage.removeItem(REDIRECT_AFTER_LOGIN_KEY)
-}
+  localStorage.removeItem(REDIRECT_AFTER_LOGIN_KEY);
+};
 
 const isGooglePopupMessage = (value: unknown): value is GooglePopupMessage => {
-  if (!value || typeof value !== 'object') {
-    return false
+  if (!value || typeof value !== "object") {
+    return false;
   }
 
-  return 'type' in value
-}
+  return "type" in value;
+};
 
-const isFacebookPopupMessage = (value: unknown): value is FacebookPopupMessage => {
-  if (!value || typeof value !== 'object') {
-    return false
+const isFacebookPopupMessage = (
+  value: unknown,
+): value is FacebookPopupMessage => {
+  if (!value || typeof value !== "object") {
+    return false;
   }
 
-  return 'type' in value
-}
+  return "type" in value;
+};
 
 const hasNoInternetConnection = () => {
-  if (typeof navigator === 'undefined') {
-    return false
+  if (typeof navigator === "undefined") {
+    return false;
   }
 
-  return !navigator.onLine
-}
+  return !navigator.onLine;
+};
 
 const getRequestErrorMessage = (error: unknown) => {
-  if (error instanceof Error && error.name === 'AbortError') {
-    return LOGIN_TIMEOUT_MESSAGE
+  if (error instanceof Error && error.name === "AbortError") {
+    return LOGIN_TIMEOUT_MESSAGE;
   }
 
   if (hasNoInternetConnection()) {
-    return NO_CONNECTION_MESSAGE
+    return NO_CONNECTION_MESSAGE;
   }
 
-  return SERVER_CONNECTION_MESSAGE
-}
+  return SERVER_CONNECTION_MESSAGE;
+};
 
-const fetchCurrentUser = async (token: string): Promise<NonNullable<MeResponse['user']>> => {
+const fetchCurrentUser = async (
+  token: string,
+): Promise<NonNullable<MeResponse["user"]>> => {
   const response = await fetch(`${API_URL}/api/auth/me`, {
-    method: 'GET',
+    method: "GET",
     headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
-  const data = (await response.json()) as MeResponse
+  const data = (await response.json()) as MeResponse;
 
   if (!response.ok || !data.user) {
-    throw new Error(data.message || 'No se pudo validar la sesión')
+    throw new Error(data.message || "No se pudo validar la sesión");
   }
 
-  return data.user
-}
+  return data.user;
+};
 
 export default function LoginForm() {
-  const router = useRouter()
+  const router = useRouter();
 
-  const [showPassword, setShowPassword] = useState(false)
-  const [isLoadingGoogle, setIsLoadingGoogle] = useState(false)
-  const [isLoadingDiscord, setIsLoadingDiscord] = useState(false)
-  const [isLoadingLinkedIn, setIsLoadingLinkedIn] = useState(false)
-  const [isLoadingFacebook, setIsLoadingFacebook] = useState(false)
-  const [correo, setCorreo] = useState('')
-  const [password, setPassword] = useState('')
-  const [errors, setErrors] = useState<{ correo?: string; password?: string }>({})
-  const [errorMessage, setErrorMessage] = useState('')
-  const [successMessage, setSuccessMessage] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [googleError, setGoogleError] = useState('')
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
+  const [isLoadingDiscord, setIsLoadingDiscord] = useState(false);
+  const [isLoadingFacebook, setIsLoadingFacebook] = useState(false);
+  const [isLoadingLinkedIn, setIsLoadingLinkedIn] = useState(false);
+
+  const [correo, setCorreo] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<{ correo?: string; password?: string }>(
+    {},
+  );
+
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [googleError, setGoogleError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [showMagicLinkForm, setShowMagicLinkForm] = useState(false);
+  const [magicLinkEmail, setMagicLinkEmail] = useState("");
+  const [magicLinkError, setMagicLinkError] = useState("");
+  const [magicLinkSuccess, setMagicLinkSuccess] = useState("");
+  const [isLoadingMagicLink, setIsLoadingMagicLink] = useState(false);
 
   const [showActivationModal, setShowActivationModal] = useState(false);
   const [activationStep, setActivationStep] = useState<
@@ -308,56 +324,161 @@ export default function LoginForm() {
   const [timeLeft, setTimeLeft] = useState(0);
 
   const activationModalRef = useRef<HTMLDivElement>(null);
+  const passwordContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (timeLeft > 0) {
-      timer = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
-      }, 1000);
+    if (timeLeft <= 0) {
+      return;
     }
-    return () => clearInterval(timer);
+
+    const timer = window.setInterval(() => {
+      setTimeLeft((previousTime) => Math.max(previousTime - 1, 0));
+      }, 1000);
+
+    return () => window.clearInterval(timer);
   }, [timeLeft]);
 
   useEffect(() => {
-    const authMessage = sessionStorage.getItem('authMessage')
+    const authMessage = sessionStorage.getItem("authMessage");
 
     if (authMessage) {
-      setErrorMessage(authMessage)
-      sessionStorage.removeItem('authMessage')
+      setErrorMessage(authMessage);
+      sessionStorage.removeItem("authMessage");
     }
-  }, [])
-
-  const passwordContainerRef = useRef<HTMLDivElement>(null)
+  }, []);
 
   const redirectAfterSuccessfulLogin = () => {
-    const redirect = getRedirectAfterLogin()
-    clearRedirectAfterLogin()
-    router.push(redirect)
-  }
+    const redirect = getRedirectAfterLogin();
+    clearRedirectAfterLogin();
+    router.push(redirect);
+  };
 
-  const isFormValid = correo.length > 0 && password.length > 0 && !errors.correo && !errors.password
+  const isFormValid =
+    correo.length > 0 &&
+    password.length > 0 &&
+    !errors.correo &&
+    !errors.password;
 
   const hasFormContent =
-    correo.trim() !== '' ||
-    password.trim() !== '' ||
-    errorMessage !== '' ||
-    successMessage !== '' ||
-    googleError !== ''
+    correo.trim() !== "" ||
+    password.trim() !== "" ||
+    errorMessage !== "" ||
+    successMessage !== "" ||
+    googleError !== "";
 
   const handleCancel = () => {
-    setCorreo('')
-    setPassword('')
-    setErrors({})
-    setErrorMessage('')
-    setSuccessMessage('')
-    setGoogleError('')
-    setShowPassword(false)
-    setIsLoading(false)
-    setIsLoadingGoogle(false)
-    setIsLoadingFacebook(false)
-    setIsLoadingDiscord(false)
-  }
+    setCorreo("");
+    setPassword("");
+    setErrors({});
+    setErrorMessage("");
+    setSuccessMessage("");
+    setGoogleError("");
+    setShowPassword(false);
+    setIsLoading(false);
+    setIsLoadingGoogle(false);
+    setIsLoadingFacebook(false);
+    setIsLoadingDiscord(false);
+    setIsLoadingLinkedIn(false);
+  };
+
+  const handleOpenMagicLinkForm = () => {
+    const loginEmail = correo.trim();
+
+    setMagicLinkEmail((currentMagicLinkEmail) =>
+      currentMagicLinkEmail.trim() ? currentMagicLinkEmail : loginEmail,
+    );
+    setMagicLinkError("");
+    setMagicLinkSuccess("");
+    setErrorMessage("");
+    setSuccessMessage("");
+    setGoogleError("");
+    setShowMagicLinkForm(true);
+  };
+
+  const handleBackToLogin = () => {
+    setMagicLinkError("");
+    setMagicLinkSuccess("");
+    setIsLoadingMagicLink(false);
+    setShowMagicLinkForm(false);
+  };
+
+  const handleMagicLinkSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (isLoadingMagicLink) {
+      return;
+    }
+
+    const shouldResendMagicLink = Boolean(magicLinkSuccess);
+    const trimmedEmail = magicLinkEmail.trim().toLowerCase();
+
+    setMagicLinkEmail(trimmedEmail);
+    setMagicLinkError("");
+    setMagicLinkSuccess("");
+
+    if (!trimmedEmail) {
+      setMagicLinkError("El correo es obligatorio");
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(trimmedEmail)) {
+      setMagicLinkError("Formato de correo inválido");
+      return;
+    }
+
+    if (hasNoInternetConnection()) {
+      setMagicLinkError(NO_CONNECTION_MESSAGE);
+      return;
+    }
+
+    setIsLoadingMagicLink(true);
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => {
+      controller.abort();
+    }, LOGIN_TIMEOUT_MS);
+
+    try {
+      const magicLinkEndpoint = shouldResendMagicLink ? "resend" : "request";
+
+      const response = await fetch(
+        `${API_URL}/api/auth/magic-link/${magicLinkEndpoint}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            correo: trimmedEmail,
+          }),
+          signal: controller.signal,
+        },
+      );
+
+      const data = (await response.json()) as MagicLinkResponse;
+
+      if (!response.ok) {
+        setMagicLinkError(
+          data.message || "No se pudo solicitar el link mágico.",
+        );
+        return;
+      }
+
+      sessionStorage.setItem("magicLinkEmail", trimmedEmail);
+
+      setMagicLinkSuccess(
+        data.message ||
+          (shouldResendMagicLink
+            ? "Te reenviamos un nuevo link mágico a tu correo electrónico."
+            : "Te enviamos un link mágico a tu correo electrónico."),
+      );
+    } catch (error) {
+      setMagicLinkError(getRequestErrorMessage(error));
+    } finally {
+      window.clearTimeout(timeoutId);
+      setIsLoadingMagicLink(false);
+    }
+  };
 
   const validate = (field: string, value: string) => {
     const newErrors = { ...errors }
