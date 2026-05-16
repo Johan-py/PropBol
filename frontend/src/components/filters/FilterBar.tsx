@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { OfertaButton } from '../busqueda/ofertas/OfertaButton'
 import { useEffect, useMemo, useState } from 'react'
 import { CapacidadButton } from '../busqueda/capacidad/CapacidadButton'
@@ -32,7 +32,7 @@ import { BarChart2 } from 'lucide-react'
 
 // --- DICCIONARIOS PARA MAPEAR IDs A NOMBRES ---
 const AMENITIES_MAP: Record<string, string> = {
-  '1': 'Piscina', '2': 'Terraza', '3': 'Jardín', '4': 'Cochera', '5': 'Gimnasio',
+  '1': 'Piscina', '2': 'Terraza', '3': 'JardÃ­n', '4': 'Cochera', '5': 'Gimnasio',
   '6': 'Ascensor', '7': 'Aire', '8': 'Amueblado', '9': 'Parrillero', '10': 'Seguridad'
 }
 
@@ -65,7 +65,7 @@ type LocationValue =
     locationId?: number
   }
 
-// Botón Mock
+// BotÃ³n Mock
 const MockFilterChip = ({
   icon: Icon,
   text,
@@ -156,7 +156,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     { label: 'Espacios Cementerio', icon: Flower2 }
   ], [])
 
-  // NUEVO: Sincronización reactiva desde la URL (Query Params)
+  // NUEVO: SincronizaciÃ³n reactiva desde la URL (Query Params)
   useEffect(() => {
     if (!searchParams) return
 
@@ -177,7 +177,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       setModosSeleccionados(['VENTA']) // Default
     }
 
-    // Restaurar Ubicación/Texto Libre
+    // Restaurar UbicaciÃ³n/Texto Libre
     const urlQuery = searchParams.get('query')
     if (urlQuery) {
       setUbicacionTexto(urlQuery)
@@ -187,7 +187,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
   }, [searchParams, propertyTypes])
 
   // =======================================================================
-  // 1. GENERADOR DINÁMICO DE FILTROS ACTIVOS (Fila inferior removible)
+  // 1. GENERADOR DINÃMICO DE FILTROS ACTIVOS (Fila inferior removible)
   // =======================================================================
   const activeFilters = useMemo(() => {
     const filters: { id: string; label: string; onRemove: () => void }[] = []
@@ -195,7 +195,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
 
     const params = new URLSearchParams(searchParams.toString())
 
-    // Helper para eliminar parámetros y navegar
+    // Helper para eliminar parÃ¡metros y navegar
     const removeParam = (keys: string[], customAction?: () => void) => {
       keys.forEach(k => params.delete(k))
       if (customAction) customAction()
@@ -209,7 +209,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
       filters.push({ id: 'tipo', label: tipoLabel, onRemove: () => removeParam(['tipoInmueble'], () => setTipoInmueble('Cualquier tipo')) })
     }
 
-    // -- Modos (Venta, Alquiler, Anticrético) --
+    // -- Modos (Venta, Alquiler, AnticrÃ©tico) --
     const modos = params.getAll('modoInmueble')
     modos.forEach(m => filters.push({
       id: `modo-${m}`,
@@ -227,10 +227,10 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     const query = params.get('query')
     if (query) filters.push({ id: 'query', label: `Zona: ${query}`, onRemove: () => removeParam(['query', 'lat', 'lng', 'radius'], () => { setUbicacionTexto(''); setCoords({}) }) })
 
-    // -- Ubicación Específica (Cascada) --
+    // -- UbicaciÃ³n EspecÃ­fica (Cascada) --
     const depId = params.get('departamentoId'); const provId = params.get('provinciaId'); const munId = params.get('municipioId'); const zonaId = params.get('zonaId'); const barId = params.get('barrioId')
     if (depId || provId || munId || zonaId || barId) {
-      filters.push({ id: 'geo', label: 'Ubicación específica', onRemove: () => removeParam(['departamentoId', 'provinciaId', 'municipioId', 'zonaId', 'barrioId']) })
+      filters.push({ id: 'geo', label: 'UbicaciÃ³n especÃ­fica', onRemove: () => removeParam(['departamentoId', 'provinciaId', 'municipioId', 'zonaId', 'barrioId']) })
     }
 
     // -- Precio --
@@ -247,24 +247,24 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
     const minS = params.get('minSuperficie'); const maxS = params.get('maxSuperficie')
     if (minS || maxS) {
       let lbl = 'Sup: '
-      if (minS && maxS) lbl += `${minS} a ${maxS} m²`
-      else if (minS) lbl += `Desde ${minS} m²`
-      else lbl += `Hasta ${maxS} m²`
+      if (minS && maxS) lbl += `${minS} a ${maxS} mÂ²`
+      else if (minS) lbl += `Desde ${minS} mÂ²`
+      else lbl += `Hasta ${maxS} mÂ²`
       filters.push({ id: 'superficie', label: lbl, onRemove: () => removeParam(['minSuperficie', 'maxSuperficie']) })
     }
 
-    // -- Cuartos y Baños --
+    // -- Cuartos y BaÃ±os --
     const minD = params.get('dormitoriosMin'); const maxD = params.get('dormitoriosMax')
     if (minD || maxD) filters.push({ id: 'cuartos', label: `Cuartos: ${minD || 0} a ${maxD || '+'}`, onRemove: () => removeParam(['dormitoriosMin', 'dormitoriosMax']) })
 
     const minB = params.get('banosMin'); const maxB = params.get('banosMax')
-    if (minB || maxB) filters.push({ id: 'banos', label: `Baños: ${minB || 0} a ${maxB || '+'}`, onRemove: () => removeParam(['banosMin', 'banosMax']) })
+    if (minB || maxB) filters.push({ id: 'banos', label: `BaÃ±os: ${minB || 0} a ${maxB || '+'}`, onRemove: () => removeParam(['banosMin', 'banosMax']) })
 
     const tipoBanoParam = params.get('tipoBano')
     if (tipoBanoParam === 'privado') {
-      filters.push({ id: 'tb', label: 'Baño privado', onRemove: () => removeParam(['tipoBano']) })
+      filters.push({ id: 'tb', label: 'BaÃ±o privado', onRemove: () => removeParam(['tipoBano']) })
     } else if (tipoBanoParam === 'compartido') {
-      filters.push({ id: 'tb', label: 'Baño compartido', onRemove: () => removeParam(['tipoBano']) })
+      filters.push({ id: 'tb', label: 'BaÃ±o compartido', onRemove: () => removeParam(['tipoBano']) })
     }
 
     // -- Amenidades y Etiquetas (HU6) --
@@ -439,25 +439,25 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
   // FIX Z-INDEX MASIVO: Agregamos z-[99999] y !overflow-visible para aplastar al mapa
   const containerStyles =
     variant === 'map'
-      ? 'bg-[#faf9f6] dark:bg-slate-900 border-b border-stone-200 dark:border-slate-800 py-2 px-3 md:px-4 w-full flex flex-col gap-2 shadow-sm sticky top-0 z-[9999] !overflow-visible transition-colors'
-      : 'bg-white dark:bg-slate-900 shadow-lg rounded-[30px] px-4 py-4 md:p-6 flex flex-col gap-6 w-full max-w-[921px] relative z-[999999] !overflow-visible transition-colors'
+      ? 'bg-[#faf9f6] dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800 py-2 px-3 md:px-4 w-full flex flex-col gap-2 shadow-sm sticky top-0 z-[9999] !overflow-visible transition-colors dark:shadow-stone-900/20'
+      : 'bg-white dark:bg-stone-900 shadow-lg rounded-[30px] px-4 py-4 md:p-6 flex flex-col gap-6 w-full max-w-[921px] relative z-[999999] !overflow-visible transition-colors'
   return (
     <form className={containerStyles} onSubmit={handleSearch}>
 
       {/* ========================================================= */}
-      {/* LAYOUT PARA MAPA (Nuevo Diseño) */}
+      {/* LAYOUT PARA MAPA (Nuevo DiseÃ±o) */}
       {/* ========================================================= */}
       {variant === 'map' && (
         <div className="flex flex-col gap-2 md:gap-3 w-full max-w-screen-2xl mx-auto">
 
-          {/* FILA 1: Tipo | Modos (Venta/Alquiler) | Ubicación | Buscar */}
+          {/* FILA 1: Tipo | Modos (Venta/Alquiler) | UbicaciÃ³n | Buscar */}
           <div className="flex flex-nowrap items-center w-full gap-2 md:gap-3 relative z-[100] overflow-x-auto md:overflow-visible scrollbar-hide !overflow-visible">
 
             <div className="min-w-[140px] md:w-48 xl:w-56 shrink-0 relative z-[100] !overflow-visible">
               <ComboBox label="" placeholder="Cualquier tipo" icon={Home} options={propertyTypes} onChange={(val) => setTipoInmueble(val)} value={tipoInmueble} />
             </div>
 
-            <div className="shrink-0 flex items-center h-[36px] md:h-[42px] bg-white border border-stone-200 rounded-xl px-2 shadow-sm relative z-[90]">
+            <div className="shrink-0 flex items-center h-[36px] md:h-[42px] bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl px-2 shadow-sm relative z-[90]">
               <TransactionModeFilter modoSeleccionado={modosSeleccionados} onModoChange={setModosSeleccionados} />
             </div>
 
@@ -472,39 +472,38 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
             </div>
           </div>
 
-          {/* FILA 2: Filtros Rápidos (Píldoras) */}
+          {/* FILA 2: Filtros RÃ¡pidos (PÃ­ldoras) */}
           <div className="flex overflow-x-auto whitespace-nowrap items-center gap-2 md:gap-3 relative z-[80] justify-start scrollbar-hide pb-1">
-            <button type="button" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('abrirPanelUbicacion')); }} className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isZonaFilterActive ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]' : 'bg-white dark:bg-slate-800 text-stone-600 dark:text-slate-300 border-stone-200 dark:border-slate-700 hover:border-[#d97706] dark:hover:border-[#E87C1E]'}`}>
-              <MapPin className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isZonaFilterActive ? 'text-white' : 'text-stone-500 dark:text-slate-400'}`} />
+            <button type="button" onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('abrirPanelUbicacion')); }} className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isZonaFilterActive ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]' : 'bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-300 border-stone-200 dark:border-stone-700 hover:border-[#d97706] dark:hover:border-[#E87C1E] dark:hover:bg-stone-700'}`}>
+              <MapPin className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isZonaFilterActive ? 'text-white' : 'text-stone-500 dark:text-stone-400'}`} />
               <span>Zona</span>
             </button>
 
-            <button type="button" onClick={(e) => { e.preventDefault(); onOpenPriceFilter?.() }} className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isPriceFilterActive ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]' : 'bg-white dark:bg-slate-800 text-stone-600 dark:text-slate-300 border-stone-200 dark:border-slate-700 hover:border-[#d97706] dark:hover:border-[#E87C1E]'}`}>
-              <DollarSign className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isPriceFilterActive ? 'text-white' : 'text-stone-500 dark:text-slate-400'}`} />
+            <button type="button" onClick={(e) => { e.preventDefault(); onOpenPriceFilter?.() }} className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isPriceFilterActive ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]' : 'bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-300 border-stone-200 dark:border-stone-700 hover:border-[#d97706] dark:hover:border-[#E87C1E] dark:hover:bg-stone-700'}`}>
+              <DollarSign className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isPriceFilterActive ? 'text-white' : 'text-stone-500 dark:text-stone-400'}`} />
               <span>Precio</span>
-              <ChevronDown className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isPriceFilterActive ? 'text-white' : 'text-stone-400 dark:text-slate-400'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isPriceFilterActive ? 'text-white' : 'text-stone-400 dark:text-stone-400'}`} />
             </button>
 
             <div className="shrink-0">
               <CapacidadButton variant={variant} isActive={isCapacidadActive} onClick={onToggleCapacidad} />
             </div>
 
-            <button type="button" onClick={() => onOpenSuperficieFilter?.()} className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isSuperficieFilterActive ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]' : 'bg-white dark:bg-slate-800 text-stone-600 dark:text-slate-300 border-stone-200 dark:border-slate-700 hover:border-[#d97706] dark:hover:border-[#E87C1E]'}`}>
-              <Maximize className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-500 dark:text-slate-400'}`} />
+            <button type="button" onClick={() => onOpenSuperficieFilter?.()} className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isSuperficieFilterActive ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]' : 'bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-300 border-stone-200 dark:border-stone-700 hover:border-[#d97706] dark:hover:border-[#E87C1E] dark:hover:bg-stone-700'}`}>
+              <Maximize className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-500 dark:text-stone-400'}`} />
               <span>Metros</span>
-              <ChevronDown className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-400 dark:text-slate-400'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-400 dark:text-stone-400'}`} />
             </button>
 
-            <button type="button" onClick={() => onOpenEtiquetasFilter?.()} className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isEtiquetasFilterActive ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]' : 'bg-white dark:bg-slate-800 text-stone-600 dark:text-slate-300 border-stone-200 dark:border-slate-700 hover:border-[#d97706] dark:hover:border-[#E87C1E]'}`}>
-              <Tag className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-500 dark:text-slate-400'}`} />
+            <button type="button" onClick={() => onOpenEtiquetasFilter?.()} className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isEtiquetasFilterActive ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]' : 'bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-300 border-stone-200 dark:border-stone-700 hover:border-[#d97706] dark:hover:border-[#E87C1E] dark:hover:bg-stone-700'}`}>
+              <Tag className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-500 dark:text-stone-400'}`} />
               <span>Etiquetas</span>
-              <ChevronDown className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-400 dark:text-slate-400'}`} />
+              <ChevronDown className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-400 dark:text-stone-400'}`} />
             </button>
 
-            {/* Modal de Filtros Avanzados */}
-            <button type="button" onClick={() => setIsAdvancedFiltersOpen(true)} className="h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full bg-white dark:bg-slate-800 border border-stone-200 dark:border-slate-700 text-stone-600 dark:text-stone-300 text-[13px] md:text-sm font-medium hover:border-[#d97706] shadow-sm transition-all focus:outline-none shrink-0">
-              <SlidersHorizontal className="w-3.5 h-3.5 md:w-4 md:h-4 text-stone-500 dark:text-slate-300" />
-              <span>Más Filtros</span>
+            <button type="button" onClick={() => setIsAdvancedFiltersOpen(true)} className="h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-600 dark:text-stone-300 text-[13px] md:text-sm font-medium hover:border-[#d97706] dark:hover:border-[#E87C1E] dark:hover:bg-stone-700 shadow-sm transition-all focus:outline-none shrink-0">
+              <SlidersHorizontal className="w-3.5 h-3.5 md:w-4 md:h-4 text-stone-500 dark:text-stone-400" />
+              <span>MÃ¡s Filtros</span>
             </button>
 
             <OfertaButton
@@ -512,26 +511,6 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
               isActive={isOfertaActive}
               onClick={onToggleOferta}
             />
-
-            <button type="button" onClick={() => onOpenSuperficieFilter?.()} className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isSuperficieFilterActive ? 'bg-[#d97706] text-white border-[#d97706]' : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'}`}>
-              <Maximize className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-500'}`} />
-              <span>Metros</span>
-              <ChevronDown className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isSuperficieFilterActive ? 'text-white' : 'text-stone-400'}`} />
-            </button>
-
-            <button type="button" onClick={() => onOpenEtiquetasFilter?.()} className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isEtiquetasFilterActive ? 'bg-[#d97706] text-white border-[#d97706]' : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'}`}>
-              <Tag className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-500'}`} />
-              <span>Etiquetas</span>
-              <ChevronDown className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isEtiquetasFilterActive ? 'text-white' : 'text-stone-400'}`} />
-            </button>
-
-            {/* Modal de Filtros Avanzados */}
-            <button type="button" onClick={() => setIsAdvancedFiltersOpen(true)} className="h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full bg-white border border-stone-200 text-stone-600 text-[13px] md:text-sm font-medium hover:border-[#d97706] shadow-sm transition-all focus:outline-none shrink-0">
-              <SlidersHorizontal className="w-3.5 h-3.5 md:w-4 md:h-4 text-stone-500" />
-              <span>Más Filtros</span>
-            </button>
-
-
 
             <button
               type="button"
@@ -561,14 +540,11 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
 
                 sessionStorage.setItem('propbol_filtros_respaldo', params.toString())
 
-
-
                 const cleanParams = new URLSearchParams()
                 const modoInmueble = params.getAll('modoInmueble')
                 modoInmueble.forEach(m => cleanParams.append('modoInmueble', m))
                 cleanParams.set('orden', 'recomendados')
                 cleanParams.set('ia', '1')
-
 
                 const token = localStorage.getItem('token')
                 if (token) {
@@ -583,13 +559,13 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                     }
                   } catch (error) {
                     console.error('Error obteniendo recomendaciones:', error)
-                    // Fallback silencioso: useProperties cargará los populares
+                    // Fallback silencioso: useProperties cargarÃ¡ los populares
                   }
                 } else {
-                  // ── Visitante sin cuenta → más populares de su zona ────────────────
-                  // No bloqueamos ni mostramos error. useProperties detectará
-                  // propbol_modo_recomendados=true y cargará los populares.
-                  // Opcionalmente pre-cargamos los populares para más rapidez:
+                  // â”€â”€ Visitante sin cuenta â†’ mÃ¡s populares de su zona â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                  // No bloqueamos ni mostramos error. useProperties detectarÃ¡
+                  // propbol_modo_recomendados=true y cargarÃ¡ los populares.
+                  // Opcionalmente pre-cargamos los populares para mÃ¡s rapidez:
                   try {
                     const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
                     const res = await fetch(
@@ -602,21 +578,18 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                     }
                   } catch (error) {
                     console.error('Error cargando populares para visitante:', error)
-                    // useProperties hará la carga normal como fallback
+                    // useProperties harÃ¡ la carga normal como fallback
                   }
                 }
 
                 router.push(`/busqueda_mapa?${cleanParams.toString()}`)
               }}
-
-
-
-              className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${searchParams?.get('orden') === 'recomendados'
-                ? 'bg-[#d97706] text-white border-[#d97706]'
-                : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+              className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isRecomendadosActive
+                ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]'
+                : 'bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-300 border-stone-200 dark:border-stone-700 hover:border-[#d97706] dark:hover:border-[#E87C1E] dark:hover:bg-stone-700'
                 }`}
             >
-              <Award className={`w-3.5 h-3.5 md:w-4 md:h-4 ${searchParams?.get('orden') === 'recomendados' ? 'text-white' : 'text-stone-500'}`} />
+              <Award className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isRecomendadosActive ? 'text-white' : 'text-stone-500 dark:text-stone-400'}`} />
               <span>Recomendados</span>
             </button>
 
@@ -627,18 +600,17 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                 toggleCompareMode();
               }}
               className={`h-[34px] md:h-[38px] flex items-center gap-1.5 md:gap-2 px-3 md:px-4 rounded-full border text-[13px] md:text-sm font-medium shadow-sm transition-all focus:outline-none shrink-0 ${isCompareMode
-                ? 'bg-[#d97706] text-white border-[#d97706]'
-                : 'bg-white text-stone-600 border-stone-200 hover:border-[#d97706]'
+                ? 'bg-[#d97706] text-white border-[#d97706] dark:bg-[#E87C1E] dark:border-[#E87C1E]'
+                : 'bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-300 border-stone-200 dark:border-stone-700 hover:border-[#d97706] dark:hover:border-[#E87C1E] dark:hover:bg-stone-700'
                 }`}
             >
-              <BarChart2 className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isCompareMode ? 'text-white' : 'text-stone-500'}`} />
+              <BarChart2 className={`w-3.5 h-3.5 md:w-4 md:h-4 ${isCompareMode ? 'text-white' : 'text-stone-500 dark:text-stone-400'}`} />
               <span>Comparar {isCompareMode && selectedIds.length > 0 ? `(${selectedIds.length})` : ''}</span>
             </button>
           </div>
-
           {/* FILA 3: ETIQUETAS DE FILTROS ACTIVOS (Chips Removibles) */}
           {activeFilters.length > 0 && (
-            <div className="flex flex-wrap items-center gap-2 bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm border border-stone-200 dark:border-slate-800 rounded-xl p-2.5 w-full shadow-inner min-h-[48px]">
+            <div className="flex flex-wrap items-center gap-2 bg-white/60 dark:bg-stone-950/60 backdrop-blur-sm border border-stone-200 dark:border-stone-700 rounded-xl p-2.5 w-full shadow-inner min-h-[48px]">
               <span className="text-[11px] text-stone-500 font-bold uppercase tracking-wider ml-2 mr-1">Activos:</span>
 
               {activeFilters.map(filter => (
@@ -662,7 +634,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
 
                   // 1. Vaciamos todos los estados visuales por completo
                   setTipoInmueble('Cualquier tipo')
-                  setModosSeleccionados([]) // Arreglo vacío para desmarcar todos los checkboxes
+                  setModosSeleccionados([]) // Arreglo vacÃ­o para desmarcar todos los checkboxes
                   setUbicacionTexto('')
                   setCoords({})
 
@@ -671,7 +643,7 @@ export default function FilterBar({ onSearch, variant = 'home', onOpenPriceFilte
                   sessionStorage.removeItem('propbol_modo_recomendados')
                   sessionStorage.removeItem('propbol_recomendados')
 
-                  // 3. Reseteamos la URL a su estado más puro
+                  // 3. Reseteamos la URL a su estado mÃ¡s puro
                   router.push('/busqueda_mapa')
                 }}
                 className="text-xs font-bold text-stone-400 hover:text-stone-600 underline ml-auto mr-3 transition-colors"
