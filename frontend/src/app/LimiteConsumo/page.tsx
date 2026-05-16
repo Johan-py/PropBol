@@ -127,7 +127,7 @@ export default function LimiteConsumoPage() {
               </span>
             )}
             <Link href="/cobros-suscripciones">
-              <button className="bg-[#E87B00] text-white px-4 py-2 rounded-lg text-xl font-bold hover:bg-orange-600 transition-colors">
+              <button className="bg-[#ff8800] text-white px-4 py-2 rounded-lg text-xl font-bold hover:bg-orange-600 transition-colors">
                 Ver planes de ampliación
               </button>
             </Link>
