@@ -1,6 +1,5 @@
 'use client'
-
-import { Tag, ChevronDown } from 'lucide-react'
+import { TrendingDown, ChevronDown } from 'lucide-react'
 
 interface OfertaButtonProps {
   variant?: 'home' | 'map'
@@ -29,8 +28,8 @@ export function OfertaButton({ variant = 'map', isActive = false, onClick }: Ofe
         className={buttonStyles}
       >
         <div className="flex items-center gap-2">
-          <Tag className={`w-4 h-4 ${isActive ? 'text-white' : 'text-stone-500 dark:text-stone-400'}`} />
-          <span>Ofertas</span>
+          <TrendingDown className={`w-4 h-4 ${isActive ? 'text-white' : 'text-stone-500 dark:text-stone-400'}`} />
+          <span>Solo Ofertas</span>
         </div>
         <ChevronDown className={`w-4 h-4 transition-transform ${isActive ? 'rotate-180 text-white' : 'text-stone-400 dark:text-stone-400 opacity-70'}`} />
       </button>
