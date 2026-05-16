@@ -1,9 +1,21 @@
 import { prisma } from '../../lib/prisma.client.js'
 
 const findAll = async () => {
-  return prisma.tag.findMany({
-    orderBy: { nombre: 'asc' }
+  const tags = await prisma.tag.findMany({
+    orderBy: { nombre: 'asc' },
+    include: {
+      _count: {
+        select: { publicacion_tag: true }
+      }
+    }
   })
+
+  return tags.map((tag) => ({
+    id: tag.id,
+    nombre: tag.nombre,
+    creado_en: tag.creado_en,
+    cantidad: tag._count.publicacion_tag
+  }))
 }
 
 const findByName = async (nombre: string) => {
