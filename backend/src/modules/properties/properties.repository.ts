@@ -393,10 +393,14 @@ export const propertiesRepository = {
     }
     if (filtros.fecha === 'mayor-descuento') {
       return resultados.sort((a, b) => {
-        const precioAnteriorA = Number((a as { precio_anterior?: number | null | string }).precio_anterior ?? 0);
+        const precioAnteriorA = Number(
+          (a as { precio_anterior?: number | null | string }).precio_anterior ?? 0
+        )
         const precioActualA = Number(a.precio)
 
-       const precioAnteriorB = Number((b as { precio_anterior?: number | null | string }).precio_anterior ?? 0);
+        const precioAnteriorB = Number(
+          (b as { precio_anterior?: number | null | string }).precio_anterior ?? 0
+        )
         const precioActualB = Number(b.precio)
 
         const descuentoA =
