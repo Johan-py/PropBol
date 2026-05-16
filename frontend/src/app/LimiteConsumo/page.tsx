@@ -144,7 +144,7 @@ export default function LimiteConsumoPage() {
             Publicaciones usadas este mes
           </p>
 
-          <h2 className="text-4xl font-bold mb-4">
+          <h2 className="text-5xl font-bold mb-6">
             {data.usadas}{" "}
             <span className="text-2xl opacity-70">/ {data.limite}</span>
           </h2>
