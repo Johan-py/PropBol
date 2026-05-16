@@ -1547,7 +1547,7 @@ function BusquedaMapaContent() {
   // RENDER DESKTOP
   // ────────────────────────────────────────────────────────────────────────────
   return (
-    <div className="relative z-10 flex flex-col bg-white w-full h-[calc(100dvh-54px)] overflow-hidden">
+    <div className="relative z-10 flex flex-col bg-white dark:bg-stone-950 w-full h-[calc(100dvh-54px)] overflow-hidden">
       <FilterBar
         variant="map"
         onSearch={(nuevosFiltros) => {
@@ -1574,10 +1574,10 @@ function BusquedaMapaContent() {
         onOpenEtiquetasFilter={openEtiquetas}
       />
 
-      <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200">
+      <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200 dark:border-stone-700">
         {/* Panel lateral colapsable */}
         <aside
-          className={`bg-white border-r border-stone-200 flex flex-col z-10 transition-[width] duration-200 min-h-0 overflow-hidden ${
+          className={`bg-white dark:bg-stone-900 border-r border-stone-200 dark:border-stone-800 flex flex-col z-10 transition-[width] duration-200 min-h-0 overflow-hidden ${
             isSidebarOpen ? 'w-full md:h-full h-[65dvh]' : 'w-0'
           }`}
           style={
@@ -1653,9 +1653,9 @@ function BusquedaMapaContent() {
             </div>
           ) : isSidebarOpen && activeSidebarView === 'results' ? (
             // 🚀 CONTENEDOR PADRE SIN SCROLL
-            <div className="flex flex-col h-full min-h-0 relative bg-stone-50">
+            <div className="flex flex-col h-full min-h-0 relative bg-stone-50 dark:bg-stone-950">
               {/* 🚀 CABECERA (Fuera del scroll = Cero rebotes) */}
-              <div className="bg-white shrink-0 border-b border-stone-200 shadow-sm">
+              <div className="bg-white dark:bg-stone-900 shrink-0 border-b border-stone-200 dark:border-stone-800 shadow-sm">
                 {/* BLOQUE 1: DESAPARECE CON EL SCROLL (Solo el título "Filtros") — sin animar altura para evitar saltos en el listado */}
                 <div
                   className={`px-4 overflow-hidden ${isScrolled ? 'max-h-0 opacity-0' : 'max-h-[60px] opacity-100 pt-4'}`}
@@ -1663,7 +1663,7 @@ function BusquedaMapaContent() {
                   <div className="flex justify-between items-center mb-2">
                     <div className="flex items-center gap-1">
                       <Filter className="w-4 h-4 text-orange-500" />
-                      <h1 className="text-base font-semibold text-slate-800 uppercase tracking-wide">
+                      <h1 className="text-base font-semibold text-slate-800 dark:text-stone-200 uppercase tracking-wide">
                         Filtros
                       </h1>
                     </div>
@@ -1686,7 +1686,7 @@ function BusquedaMapaContent() {
                     <div className="flex min-w-0 justify-between gap-2">
                       <div className="flex min-w-0 flex-col">
                         <h1
-                          className={`font-semibold text-slate-900 break-words line-clamp-2 ${isScrolled ? 'text-base' : 'text-xl'}`}
+                          className={`font-semibold text-slate-900 dark:text-stone-100 break-words line-clamp-2 ${isScrolled ? 'text-base' : 'text-xl'}`}
                         >
                           {isClusterView
                             ? `${clusterProperties.length} propiedades en este clúster`
@@ -1720,7 +1720,7 @@ function BusquedaMapaContent() {
                             : '🌍 Todo Bolivia · buscar en zona específica'} 
                         </button> */}
                         <h2
-                          className={`font-bold text-slate-900 flex flex-wrap items-center gap-x-2 gap-y-1 ${isScrolled ? 'text-xs mt-0.5' : 'text-sm mt-1'}`}
+                          className={`font-bold text-slate-900 dark:text-stone-100 flex flex-wrap items-center gap-x-2 gap-y-1 ${isScrolled ? 'text-xs mt-0.5' : 'text-sm mt-1'}`}
                         >
                           <div>
                             <span className="text-orange-500">
@@ -1728,7 +1728,7 @@ function BusquedaMapaContent() {
                                 ? clusterProperties.length
                                 : displayedProperties.length}
                             </span>
-                            <span className="ml-1 text-gray-600 font-normal">
+                            <span className="ml-1 text-gray-600 dark:text-stone-400 font-normal">
                               {(isClusterView
                                 ? clusterProperties.length
                                 : displayedProperties.length) === 1
@@ -1752,7 +1752,7 @@ function BusquedaMapaContent() {
                           )}
                         </h2>
                         {isRecomendadosActive && !isClusterView && (
-                          <p className={`text-gray-500 ${isScrolled ? 'text-[11px]' : 'text-xs'}`}>
+                          <p className={`text-gray-500 dark:text-stone-400 ${isScrolled ? 'text-[11px]' : 'text-xs'}`}>
                             Mostrando resultados personalizados según tu actividad reciente
                           </p>
                         )}
@@ -1787,14 +1787,14 @@ function BusquedaMapaContent() {
                           isCompact={isScrolled}
                           embeddedInPanel
                         />
-                        <div className="flex shrink-0 bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90 origin-right">
+                        <div className="flex shrink-0 bg-stone-100 dark:bg-stone-800 p-1 rounded-md border border-stone-200 dark:border-stone-700 shadow-inner scale-90 origin-right">
                           <button
                             type="button"
                             onClick={() => setViewMode('grid')}
                             className={`p-1 rounded transition-colors ${
                               viewMode === 'grid'
-                                ? 'bg-white text-[#ea580c] shadow-sm'
-                                : 'text-stone-400'
+                                ? 'bg-white dark:bg-stone-700 text-[#ea580c] shadow-sm'
+                                : 'text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300'
                             }`}
                           >
                             <LayoutGrid size={16} />
@@ -1804,8 +1804,8 @@ function BusquedaMapaContent() {
                             onClick={() => setViewMode('list')}
                             className={`p-1 rounded transition-colors ${
                               viewMode === 'list'
-                                ? 'bg-white text-[#ea580c] shadow-sm'
-                                : 'text-stone-400'
+                                ? 'bg-white dark:bg-stone-700 text-[#ea580c] shadow-sm'
+                                : 'text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300'
                             }`}
                           >
                             <ListIcon size={16} />
@@ -1863,7 +1863,7 @@ function BusquedaMapaContent() {
                         : 'grid items-stretch gap-4 [grid-template-columns:repeat(auto-fill,minmax(var(--card-min-width),1fr))]'
                     } ${
                       viewMode === 'list'
-                        ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
+                        ? 'divide-y divide-gray-100 dark:divide-stone-800 bg-white dark:bg-stone-900 border border-gray-100 dark:border-stone-800 rounded-xl shadow-sm'
                         : ''
                     }`}
                     style={
@@ -1894,10 +1894,10 @@ function BusquedaMapaContent() {
                   className={`cursor-pointer transition-all duration-200 rounded-[16px] relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${
                     viewMode === 'grid'
                       ? 'h-full w-full justify-self-center'
-                      : 'w-full py-1 hover:bg-stone-100 dark:hover:bg-slate-800'
+                      : 'w-full py-1 hover:bg-stone-100 dark:hover:bg-stone-800'
                   } ${
                     isSelected
-                      ? '!outline !outline-4 !outline-[rgb(234,88,12)] scale-[0.98] shadow-lg dark:!bg-slate-800/80 z-10'
+                      ? '!outline !outline-4 !outline-[rgb(234,88,12)] scale-[0.98] shadow-lg dark:!bg-stone-800/80 z-10'
                       : ''
                   }`}
                 >
