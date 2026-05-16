@@ -172,7 +172,7 @@ export default function LimiteConsumoPage() {
               <h3 className="text-5xl font-black text-emerald-600 leading-none">
                 {disponibles}
               </h3>
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">
+              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-3">
                 Publicaciones Disponibles
               </p>
             </div>
@@ -185,14 +185,14 @@ export default function LimiteConsumoPage() {
               <h3 className="text-5xl font-black text-amber-600 leading-none">
                 {data.usadas}
               </h3>
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-3">
+              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">
                 Publicaciones Utilizadas
               </p>
             </div>
           </div>
 
           {/* Card 3: Límite */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border-b-8 border-blue-500 flex items-center gap-5 transition-transform hover:scale-105">
+          <div className="bg-white p-6 rounded-2xl shadow-md border-b-8 border-blue-500 flex items-center gap-5 transition-transform hover:scale-105">
             <div className="bg-blue-50 p-3 rounded-xl text-4xl">📘</div>
             <div className="flex flex-col text-left">
               <h3 className="text-5xl font-black text-blue-600 leading-none">
