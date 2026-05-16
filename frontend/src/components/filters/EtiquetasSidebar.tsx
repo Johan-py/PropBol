@@ -46,18 +46,26 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
       setIsLoading(true)
       try {
         const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
-        const res = await fetch(`${API_URL}/api/parametros`)
+        const res = await fetch(`${API_URL}/api/tags`)
         if (!res.ok) throw new Error(`Error ${res.status}`)
         const json = await res.json()
 
-        const etiquetas: Etiqueta[] = (json.data || []).map((item: { id: number; nombre: string }) => ({
+        type EtiquetaApi = {
+          id: number
+          nombre: string
+          cantidad?: number | null
+        }
+
+        const etiquetas: Etiqueta[] = (json.data || []).map((item: { id: number; nombre: string; cantidad?: number }) => ({
           id: String(item.id),
           nombre: item.nombre ?? '',
           color: getFallbackColor(item.nombre ?? ''),
+          cantidad: item.cantidad ?? undefined,
         }))
-        setEtiquetasDB(etiquetas)
-        const nombresMap: Record<string, string> = {}
 
+        setEtiquetasDB(etiquetas)
+
+        const nombresMap: Record<string, string> = {}
         etiquetas.forEach((e) => {
           nombresMap[e.id] = e.nombre
         })
@@ -91,9 +99,15 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
 
   // Disponibles: excluye las ya seleccionadas + aplica buscador
   const availableEtiquetas = useMemo(() => {
-    const sinSeleccionadas = etiquetasDB.filter(e => !selectedIds.includes(e.id))
-    if (!searchQuery.trim()) return sinSeleccionadas
-    const query = searchQuery.toLowerCase()
+    const sinSeleccionadas = etiquetasDB.filter((e) => !selectedIds.includes(e.id))
+    const query = searchQuery.trim().toLowerCase()
+
+    if (!query) {
+      // Sin búsqueda: SOLO muestra las que estrictamente tienen cantidad mayor a 0
+      return sinSeleccionadas.filter(e => typeof e.cantidad === 'number' && e.cantidad > 0)
+    }
+    
+    // Con búsqueda: muestra todas las que coincidan (incluso con 0 propiedades)
     return sinSeleccionadas.filter(e => e.nombre.toLowerCase().includes(query))
   }, [etiquetasDB, selectedIds, searchQuery])
 
@@ -229,6 +243,11 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
                 >
                   <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: etiqueta.color }} />
                   <span>{etiqueta.nombre}</span>
+                  {typeof etiqueta.cantidad === 'number' && etiqueta.cantidad > 0 && (
+                    <span className="text-[10px] px-1.5 rounded-full bg-stone-100">
+                      {etiqueta.cantidad}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
