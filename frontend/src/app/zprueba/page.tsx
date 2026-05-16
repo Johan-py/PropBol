@@ -11,10 +11,10 @@ function App(): JSX.Element {
         textAlign: 'center',
         padding: '40px',
         borderRadius: '10px',
-        backgroundColor: '#f0f0f0',
+        backgroundColor: '#e08200',
         boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
       }}>
-        <h1 style={{ color: '#333', marginBottom: '20px' }}>
+        <h1 style={{ color: '#565353', marginBottom: '20px' }}>
           ¡Bienvenido! 🎉
         </h1>
         <p style={{ fontSize: '18px', color: '#666' }}>
