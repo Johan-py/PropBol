@@ -185,7 +185,7 @@ export default function LimiteConsumoPage() {
               <h3 className="text-5xl font-black text-amber-600 leading-none">
                 {data.usadas}
               </h3>
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-1">
+              <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mt-3">
                 Publicaciones Utilizadas
               </p>
             </div>
