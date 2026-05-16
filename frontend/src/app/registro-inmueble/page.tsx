@@ -954,7 +954,7 @@ const [poiSeleccionado, setPoiSeleccionado] = useState<number | null>(null)
                         setModoDifuminadoActivo(false)
                         setVertices([]) // Lógica de develop: borra el polígono anterior
                       }}
-                      className={`px-4 py-2 rounded-full text-xs transition ${
+                      className={`px-4 py-2 rounded-full text-sm transition ${
                         modoPinActivo ? 'bg-orange-500 text-white' : 'bg-gray-200'
                       }`}
                     >
@@ -1005,7 +1005,7 @@ setPois([
   }
 ])
       }}
-      className={`px-4 py-2 rounded-full text-xs ${
+      className={`px-4 py-2 rounded-full text-sm ${
         pinCoords
           ? 'bg-orange-500 text-white'
           : 'bg-gray-200 text-gray-400 cursor-not-allowed'
@@ -1031,7 +1031,7 @@ if (poiSeleccionado !== null) {
   setPois(pois.slice(0, -1))
 }
 }}
-      className={`px-4 py-2 rounded-full text-xs ${
+      className={`px-4 py-2 rounded-full text-sm ${
         pois.length > 0
           ? 'bg-red-500 text-white'
           : 'bg-gray-200 text-gray-400 cursor-not-allowed'
@@ -1060,7 +1060,7 @@ if (poiSeleccionado !== null) {
         direccion: ''
       }))
     }}
-    className={`px-4 py-2 rounded-full text-xs transition ${
+    className={`px-4 py-2 rounded-full text-sm transition ${
       !pinCoords && vertices.length === 0
         ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
         : 'bg-orange-500 text-white hover:bg-orange-600'
