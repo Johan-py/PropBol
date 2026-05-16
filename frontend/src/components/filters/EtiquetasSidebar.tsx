@@ -42,12 +42,10 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
   useEffect(() => {
     if (!isOpen) return
     const fetchEtiquetas = async () => {
-      if (etiquetasDB.length > 0) return
       setIsLoading(true)
       try {
         const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
-        const res = await fetch(`${API_URL}/api/tags`)
-        if (!res.ok) throw new Error(`Error ${res.status}`)
+        const res = await fetch(`${API_URL}/api/tags`, { cache: 'no-store' })
         const json = await res.json()
 
         type EtiquetaApi = {
@@ -56,11 +54,11 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
           cantidad?: number | null
         }
 
-        const etiquetas: Etiqueta[] = (json.data || []).map((item: { id: number; nombre: string; cantidad?: number }) => ({
+        const etiquetas: Etiqueta[] = (json.data || []).map((item: EtiquetaApi) => ({
           id: String(item.id),
-          nombre: item.nombre ?? '',
-          color: getFallbackColor(item.nombre ?? ''),
-          cantidad: item.cantidad ?? undefined,
+          nombre: item.nombre?.trim() ?? '',
+          color: getFallbackColor(item.nombre?.trim() ?? ''),
+          cantidad: Number(item.cantidad ?? 0)
         }))
 
         setEtiquetasDB(etiquetas)
@@ -69,7 +67,6 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
         etiquetas.forEach((e) => {
           nombresMap[e.id] = e.nombre
         })
-
         sessionStorage.setItem(
           'propbol_etiquetas_nombres',
           JSON.stringify(nombresMap)
@@ -97,18 +94,14 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
     [etiquetasDB, selectedIds]
   )
 
-  // Disponibles: excluye las ya seleccionadas + aplica buscador
   const availableEtiquetas = useMemo(() => {
     const sinSeleccionadas = etiquetasDB.filter((e) => !selectedIds.includes(e.id))
     const query = searchQuery.trim().toLowerCase()
 
     if (!query) {
-      // Sin búsqueda: SOLO muestra las que estrictamente tienen cantidad mayor a 0
-      return sinSeleccionadas.filter(e => typeof e.cantidad === 'number' && e.cantidad > 0)
+      return sinSeleccionadas.filter((e) => typeof e.cantidad === 'number' ? e.cantidad > 0 : true)
     }
-    
-    // Con búsqueda: muestra todas las que coincidan (incluso con 0 propiedades)
-    return sinSeleccionadas.filter(e => e.nombre.toLowerCase().includes(query))
+    return sinSeleccionadas.filter((e) => e.nombre.toLowerCase().includes(query))
   }, [etiquetasDB, selectedIds, searchQuery])
 
   if (!isOpen) return null
