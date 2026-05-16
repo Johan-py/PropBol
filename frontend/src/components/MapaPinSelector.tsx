@@ -307,11 +307,11 @@ export default function MapaPinSelector({
   setPoiSeleccionado
 }: Props) {
 const offsets = [
-    [0, -40],
-    [40, 0],
-    [0, 40],
-    [-40, 0]
-  ]
+  [0, -50], //arriba     
+  [70, 0],  //derecha    
+  [0, 40],  //abajo 
+  [-70, 0], //izquierda
+]
   const [mensajeLimite, setMensajeLimite] = useState(false)
  
   return (
@@ -358,10 +358,9 @@ const offsets = [
       interactive={true}
       sticky={false}
       direction="center"
-      offset={[
-        offsets[i % 4][0] + Math.floor(i / 4) * 15,
-        offsets[i % 4][1] + Math.floor(i / 4) * 15
-      ] as [number, number]}
+      offset={
+      offsets[i % offsets.length] as [number, number]
+    }
       opacity={1}
       className="!bg-transparent !border-0 !shadow-none"
     >
