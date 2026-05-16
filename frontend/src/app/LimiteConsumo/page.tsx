@@ -167,7 +167,7 @@ export default function LimiteConsumoPage() {
 
           {/* Card 1: Publicaciones Disponibles */}
           <div className="bg-white p-8 rounded-2xl shadow-sm border-b-8 border-emerald-500 flex items-center gap-5 transition-transform hover:scale-105">
-            <div className="bg-emerald-50 p-3 rounded-xl text-4xl">📗</div>
+            <div className="bg-emerald-50 p-3 rounded-xl text-5xl">📗</div>
             <div className="flex flex-col text-left">
               <h3 className="text-5xl font-black text-emerald-600 leading-none">
                 {disponibles}
