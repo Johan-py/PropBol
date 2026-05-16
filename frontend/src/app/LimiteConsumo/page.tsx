@@ -117,7 +117,7 @@ export default function LimiteConsumoPage() {
           </div>
           <div className="flex items-center gap-3">
             {data.plan && (
-              <span className="bg-[#4B4B4B] text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
+              <span className="bg-[#4B4B4B] text-white text-xs font-bold italic px-3 py-1.5 rounded-full shadow-sm">
                 {data.plan}
               </span>
             )}
