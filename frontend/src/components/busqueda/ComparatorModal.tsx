@@ -75,19 +75,19 @@ export default function ComparatorModal({ isOpen, onClose }: ComparatorModalProp
   // Helper para renderizar valores nulos con un guion
   const renderVal = (val: string | number | undefined | null, suffix = '') => {
     if (val === null || val === undefined || val === '') return <span className="text-stone-400 font-normal">-</span>;
-    return <span className="font-semibold text-slate-700">{val} {suffix}</span>;
+    return <span className="font-semibold text-stone-700">{val} {suffix}</span>;
   };
 
   return (
     //  Modal superpuesto oscureciendo el fondo
-    <div className="fixed inset-0 z-[9999] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[9999] bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Header del Modal */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-stone-200">
           <div className="flex items-center gap-2">
             <BarChart2 className="w-5 h-5 text-[#ea580c]" />
-            <h2 className="text-xl font-bold text-slate-800">Comparativa de Inmuebles</h2>
+            <h2 className="text-xl font-bold text-stone-800">Comparativa de Inmuebles</h2>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-stone-100 rounded-full transition-colors">
             <X className="w-5 h-5 text-stone-500" />
@@ -128,7 +128,7 @@ export default function ComparatorModal({ isOpen, onClose }: ComparatorModalProp
                             className="w-full h-full object-cover"
                           />
                         </div>
-                        <h3 className="text-sm font-bold text-slate-800 line-clamp-2 leading-tight">
+                        <h3 className="text-sm font-bold text-stone-800 line-clamp-2 leading-tight">
                           {prop.titulo}
                         </h3>
                       </th>
@@ -137,11 +137,11 @@ export default function ComparatorModal({ isOpen, onClose }: ComparatorModalProp
                 </thead>
                 <tbody className="divide-y divide-stone-200 bg-white">
                   <tr>
-                    <td className="sticky left-0 z-20 bg-white border-r border-stone-200 p-4 text-sm font-semibold text-slate-600 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">Precio</td>
+                    <td className="sticky left-0 z-20 bg-white border-r border-stone-200 p-4 text-sm font-semibold text-stone-600 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">Precio</td>
                     {properties.map(prop => <td key={prop.id} className="p-4 text-lg font-bold text-[#ea580c]">$ {prop.precio}</td>)}
                   </tr>
                   <tr>
-                    <td className="sticky left-0 z-20 bg-white border-r border-stone-200 p-4 text-sm font-semibold text-slate-600 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">Tipo</td>
+                    <td className="sticky left-0 z-20 bg-white border-r border-stone-200 p-4 text-sm font-semibold text-stone-600 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">Tipo</td>
                     {properties.map(prop => (
                       <td key={prop.id} className="p-4">
                         <span className="px-2.5 py-1 bg-stone-100 text-stone-600 text-xs font-bold rounded-md uppercase">
@@ -151,19 +151,19 @@ export default function ComparatorModal({ isOpen, onClose }: ComparatorModalProp
                     ))}
                   </tr>
                   <tr>
-                    <td className="sticky left-0 z-20 bg-white border-r border-stone-200 p-4 text-sm font-semibold text-slate-600 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">Superficie</td>
+                    <td className="sticky left-0 z-20 bg-white border-r border-stone-200 p-4 text-sm font-semibold text-stone-600 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">Superficie</td>
                     {properties.map(prop => <td key={prop.id} className="p-4 text-sm">{renderVal(prop.superficieM2, 'm²')}</td>)}
                   </tr>
                   <tr>
-                    <td className="sticky left-0 z-20 bg-white border-r border-stone-200 p-4 text-sm font-semibold text-slate-600 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">Habitaciones</td>
+                    <td className="sticky left-0 z-20 bg-white border-r border-stone-200 p-4 text-sm font-semibold text-stone-600 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">Habitaciones</td>
                     {properties.map(prop => <td key={prop.id} className="p-4 text-sm">{renderVal(prop.nroCuartos)}</td>)}
                   </tr>
                   <tr>
-                    <td className="sticky left-0 z-20 bg-white border-r border-stone-200 p-4 text-sm font-semibold text-slate-600 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">Baños</td>
+                    <td className="sticky left-0 z-20 bg-white border-r border-stone-200 p-4 text-sm font-semibold text-stone-600 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">Baños</td>
                     {properties.map(prop => <td key={prop.id} className="p-4 text-sm">{renderVal(prop.nroBanos)}</td>)}
                   </tr>
                   <tr>
-                    <td className="sticky left-0 z-20 bg-white border-r border-stone-200 p-4 text-sm font-semibold text-slate-600 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">Etiquetas</td>
+                    <td className="sticky left-0 z-20 bg-white border-r border-stone-200 p-4 text-sm font-semibold text-stone-600 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">Etiquetas</td>
                     {properties.map(prop => {
                       const tags = prop.inmueble_etiqueta || [];
                       return (
