@@ -1,6 +1,6 @@
 'use client'
 import { Inmueble } from '../../types/inmueble'
-import { BedDouble, Bath, Maximize, MapPin, Star, Check } from 'lucide-react'
+import { BedDouble, Bath, Maximize, MapPin, Star, Check, TrendingUp } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
 import { useCompareStore } from '@/hooks/useCompareStore'
