@@ -126,12 +126,12 @@ export default function PropertyCard({
           {esOferta ? (
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-orange-600">${formatPrice(precio)} USD</span>
-              <span className="text-sm text-gray-400 line-through">
+              <span className="text-lg text-gray-400 line-through">
                 ${formatPrice(precio_anterior)} USD
               </span>
             </div>
           ) : (
-            precioFormateado
+             <span className="text-orange-600">${formatPrice(precio)} USD</span>
           )}
         </h2>
 
