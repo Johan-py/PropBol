@@ -995,15 +995,23 @@ if (referenciasEnEsePunto.length >= 4) {
   return
 }
 
-setPois([
-  ...pois,
-  {
-    id: Date.now(),
-    nombre: '',
-    lat: pinCoords.lat,
-    lng: pinCoords.lng
-  }
-])
+const despl = [
+                          [0.001, 0],      // Norte
+                          [0, 0.001],      // Este
+                          [-0.001, 0],     // Sur
+                          [0, -0.001]      // Oeste
+                        ];
+                        const d = despl[pois.length % 4];
+
+                        setPois([
+                          ...pois,
+                          {
+                            id: Date.now(),
+                            nombre: '',
+                            lat: pinCoords.lat + d[0],
+                            lng: pinCoords.lng + d[1]
+                          }
+                        ])
       }}
       className={`px-4 py-2 rounded-full text-sm ${
         pinCoords
