@@ -139,7 +139,7 @@ export default function LimiteConsumoPage() {
         </div>
 
         {/* TARJETA PRINCIPAL */}
-        <div className="bg-gradient-to-r from-black to-[#E87B00] text-white p-6 rounded-xl shadow mb-6">
+        <div className="bg-gradient-to-r from-black to-[#E87B00] text-white p-6 rounded-3xl shadow mb-6">
           <p className="text-xl opacity-70 mb-2 uppercase tracking-wide">
             Publicaciones usadas este mes
           </p>
