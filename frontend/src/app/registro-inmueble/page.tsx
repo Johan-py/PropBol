@@ -945,8 +945,8 @@ const [poiSeleccionado, setPoiSeleccionado] = useState<number | null>(null)
               </div>
 
               <div className="mt-6">
-                <div className="flex items-center gap-3 mb-4 gap-4">
-                  <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3 mb-4">
+                  <div className="flex flex-wrap items-center gap-3">
                     <button
                       type="button"
                       onClick={() => {
@@ -1100,18 +1100,18 @@ if (poiSeleccionado !== null) {
               </div>
 
               <div className="mt-12 space-y-6">
-                <div className="flex justify-center md:justify-end gap-6">
+                <div className="flex flex-col sm:flex-row justify-center md:justify-end gap-4 sm:gap-6">
                   <button
                     type="button"
                     onClick={() => router.back()}
-                    className="px-12 py-3 rounded-full border border-gray-400 bg-[#D9D9D9]"
+                    className="w-full sm:w-auto px-12 py-3 rounded-full border border-gray-400 bg-[#D9D9D9]"
                   >
                     Cancelar
                   </button>
 
                   <button
                     onClick={guardarPropiedad}
-                    className="px-12 py-3 rounded-full border-2 border-orange-400 bg-[#D9D9D9] hover:bg-orange-100 transition"
+                    className="w-full sm:w-auto px-12 py-3 rounded-full border-2 border-orange-400 bg-[#D9D9D9] hover:bg-orange-100 transition"
                   >
                     Continuar
                   </button>
