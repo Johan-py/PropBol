@@ -87,11 +87,9 @@ export default function LimiteConsumoPage() {
       </div>
     );
   }
-
   const porcentaje = data.limite > 0 ? (data.usadas / data.limite) * 100 : 0;
   const disponibles = data.limite - data.usadas;
   const limitado = data.usadas >= data.limite && data.limite > 0;
-
   let colorBarra = "bg-green-500";
   let mensaje = "Consumo normal";
 
@@ -102,11 +100,9 @@ export default function LimiteConsumoPage() {
     colorBarra = "bg-yellow-400";
     mensaje = "Casi sin cupo disponible";
   }
-
   return (
     <main className="min-h-screen bg-[#F4F7FA] p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
-
         {/* HEADER */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
@@ -119,7 +115,6 @@ export default function LimiteConsumoPage() {
               Monitorea tus publicaciones activas y el límite de tu plan
             </p>
           </div>
-
           <div className="flex items-center gap-3">
             {data.plan && (
               <span className="bg-[#4B4B4B] text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
@@ -127,7 +122,7 @@ export default function LimiteConsumoPage() {
               </span>
             )}
             <Link href="/cobros-suscripciones">
-              <button className="bg-[#ff8800] text-white px-4 py-2 rounded-lg text-xl font-bold hover:bg-orange-600 transition-colors">
+              <button className="bg-[#ff8800] text-white px-4 py-2 rounded-lg text-lg font-bold hover:bg-orange-600 transition-colors">
                 Ver planes de ampliación
               </button>
             </Link>
