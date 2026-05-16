@@ -135,7 +135,7 @@ export default function LimiteConsumoPage() {
         </div>
 
         {/* NOTIFICACIÓN PUBLICACIONES RESTANTES */}
-        <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 p-4 rounded-xl mb-6 flex items-center gap-3">
+        <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 p-4 rounded-xl mb-4 flex items-center gap-3">
           <Zap size={18} className="text-yellow-600 shrink-0" />
           <span className="text-sm">
             Tienes publicaciones restantes este mes. Te quedan{" "}
