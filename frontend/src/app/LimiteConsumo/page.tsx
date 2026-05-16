@@ -104,8 +104,8 @@ export default function LimiteConsumoPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F8F9FA] p-4 md:p-6">
-      <div className="max-w-7xl mx-auto">
+<main className="min-h-screen bg-[#F4F7FA] p-4 md:p-6">     
+   <div className="max-w-7xl mx-auto">
 
         {/* HEADER */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
