@@ -8,7 +8,13 @@ export interface Etiqueta {
   id: string
   nombre: string
   color?: string
-  cantidad?: number
+  cantidad?: number 
+}
+
+type EtiquetaApi = {
+  id: number
+  nombre: string
+  cantidad?: number | null
 }
 
 interface EtiquetasSidebarProps {
@@ -46,19 +52,14 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
       try {
         const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
         const res = await fetch(`${API_URL}/api/tags`, { cache: 'no-store' })
+        if (!res.ok) throw new Error(`Error ${res.status}`)     
         const json = await res.json()
-
-        type EtiquetaApi = {
-          id: number
-          nombre: string
-          cantidad?: number | null
-        }
 
         const etiquetas: Etiqueta[] = (json.data || []).map((item: EtiquetaApi) => ({
           id: String(item.id),
           nombre: item.nombre?.trim() ?? '',
           color: getFallbackColor(item.nombre?.trim() ?? ''),
-          cantidad: Number(item.cantidad ?? 0)
+          cantidad: item.cantidad ?? undefined
         }))
 
         setEtiquetasDB(etiquetas)
@@ -99,7 +100,7 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
     const query = searchQuery.trim().toLowerCase()
 
     if (!query) {
-      return sinSeleccionadas.filter((e) => typeof e.cantidad === 'number' ? e.cantidad > 0 : true)
+      return sinSeleccionadas.filter(e => e.cantidad === undefined || e.cantidad > 0)
     }
     return sinSeleccionadas.filter((e) => e.nombre.toLowerCase().includes(query))
   }, [etiquetasDB, selectedIds, searchQuery])
@@ -155,7 +156,6 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
             placeholder="Buscar etiqueta..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            /* Input del buscador con soporte a modo oscuro (bordes y fondo RGB) */
             className="w-full border border-stone-200 rounded-lg pl-9 pr-3 py-2 text-sm outline-none transition-all bg-stone-50 focus:border-[rgb(217,119,6)] focus:ring-1 focus:ring-[rgb(217,119,6)] dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:focus:border-[rgb(232,124,30)] dark:focus:ring-[rgb(232,124,30)]"
           />
         </div>
@@ -258,19 +258,17 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
           </p>
         )}
 
-        {/* Letras blancas puras y subrayado en modo oscuro */}
         <button
           type="button"
           onClick={handleClear}
-          className="text-sm text-stone-400 hover:text-[rgb(217,119,6)] transition-colors underline text-center w-full dark:!text-white dark:hover:!text-[rgb(232,124,30)]"
+          className="text-sm text-stone-400 hover:text-[rgb(217,119,6)] transition-colors underline text-center w-full dark:text-stone-300 dark:hover:text-[#e87c1e]"
         >
           Limpiar filtro
         </button>
 
-        {/* Hack RGB y rounded-[12px] para evadir a globals.css */}
         <button
           onClick={handleApply}
-          className="w-full !bg-[rgb(217,119,6)] hover:!bg-[rgb(185,94,0)] !text-white rounded-[12px] border-none font-bold py-3 px-4 transition-all active:scale-95 shadow-md dark:!bg-[rgb(232,124,30)] dark:hover:!bg-[rgb(217,119,6)]"
+          className="w-full bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold py-3 px-4 transition-all active:scale-95 shadow-md dark:bg-[#e87c1e] dark:hover:bg-[#d97706]"
         >
           Aplicar
         </button>
