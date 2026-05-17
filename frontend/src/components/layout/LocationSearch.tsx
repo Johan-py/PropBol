@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { MapPin, Loader2, X, History, Search } from 'lucide-react'
 import { usePopularidad } from '@/hooks/usePopularidad'
 import { useSearchFilters } from '@/hooks/useSearchFilters'
-import { useDebounce } from 'use-debounce'
+import { useDebounce } from '@/hooks/useDebounce'
 
 interface MapboxFeature {
   id: string;
@@ -34,7 +34,7 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
   const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
   const [inputValue, setInputValue] = useState(value || '')
-  const [debouncedValue] = useDebounce(inputValue, 400)
+  const debouncedValue = useDebounce(inputValue, 400)
   const [suggestions, setSuggestions] = useState<MapboxFeature[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
@@ -138,10 +138,15 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
 
   useEffect(() => {
     const searchAll = async () => {
-      if (!debouncedValue || debouncedValue.length < 2) {
+      if (!debouncedValue || debouncedValue.length < 3) {
         setSuggestions([])
         return
       }
+    // NUEVA LÓGICA DE LOADER (AC: 1000ms)
+    // Iniciamos un temporizador. El loader solo será 'true' si pasan 1000ms.
+    const loaderTimer = setTimeout(() => {
+      setIsLoading(true);
+    }, 1000);
       setIsLoading(true)
       try {
         const resLocal = await fetch(`${API_BASE}/api/locations/search?q=${encodeURIComponent(debouncedValue)}`)
@@ -175,12 +180,18 @@ export function LocationSearch({ value, onChange }: LocationSearchProps) {
             center: [el.lon, el.lat]
           }))
         }
-        const resMapbox = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(debouncedValue)}.json?access_token=${MAPBOX_TOKEN}&country=bo&language=es`)
+        const resMapbox = await fetch(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(debouncedValue)}.json?access_token=${MAPBOX_TOKEN}&country=bo&language=es&autocomplete=true&types=address,neighborhood,locality,poi`
+        )
         const dataMapbox = await resMapbox.json()
         const mapboxResults = dataMapbox.features || []
         setSuggestions([...localResults, ...osmResults, ...mapboxResults])
       } catch (e) { console.error(e) }
-      finally { setIsLoading(false) }
+      finally {
+        // Si el servidor respondió en menos de 1000ms, esto cancela el temporizador y el loader NUNCA se muestra.
+        clearTimeout(loaderTimer); 
+        setIsLoading(false);
+      }
     }
     searchAll()
   }, [debouncedValue, API_BASE, MAPBOX_TOKEN])
@@ -243,7 +254,9 @@ const handleSelect = (place: MapboxFeature) => {
 
       // 2. Si no es local, intentar con Mapbox
       if (!bestMatch) {
-        const resMapbox = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(term)}.json?access_token=${MAPBOX_TOKEN}&country=bo&language=es`)
+        const resMapbox = await fetch(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(debouncedValue)}.json?access_token=${MAPBOX_TOKEN}&country=bo&language=es&autocomplete=true&types=address,neighborhood,locality,poi`
+        )
         const dataMapbox = await resMapbox.json()
         if (dataMapbox.features && dataMapbox.features.length > 0) {
           const place = dataMapbox.features[0]
@@ -288,8 +301,8 @@ const handleSelect = (place: MapboxFeature) => {
 
   return (
     <div className="w-full relative" ref={containerRef}>
-      <div className={`h-[40px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white shadow-sm ${isOpen ? 'border-[#d97706] ring-1 ring-[#d97706]' : 'border-stone-200 hover:border-[#d97706]'}`}>
-        <MapPin className={`w-5 h-5 flex-shrink-0 ${inputValue ? 'text-[#d97706]' : 'text-stone-400'}`} />
+      <div className={`h-[40px] rounded-xl border transition-all flex items-center gap-3 px-4 bg-white dark:bg-stone-800 shadow-sm dark:text-stone-100 ${isOpen ? 'border-[#d97706] dark:border-[#E87C1E] ring-1 ring-[#d97706] dark:ring-[#E87C1E]' : 'border-stone-200 dark:border-stone-700 hover:border-[#d97706] dark:hover:border-[#E87C1E]'}`}>
+        <MapPin className={`w-5 h-5 flex-shrink-0 ${inputValue ? 'text-[#d97706] dark:text-[#E87C1E]' : 'text-stone-400 dark:text-stone-400'}`} />
         
         <div className="relative flex-1 flex items-center w-full h-full min-w-0">
           <input
@@ -299,9 +312,9 @@ const handleSelect = (place: MapboxFeature) => {
             onFocus={() => { setIsOpen(true); recalcDropdown(); }}
             onKeyDown={(e) => e.key === 'Enter' && setIsOpen(false)}
             placeholder="Ej: Av. América, Plaza Colón, Cala Cala..."
-            className="w-full bg-transparent outline-none text-sm text-stone-900 placeholder:text-stone-400 pr-[70px] h-full"
+            className="w-full bg-transparent outline-none text-sm text-stone-900 dark:text-stone-100 placeholder:text-stone-400 dark:placeholder:text-stone-400 pr-[70px] h-full"
           />
-          <div className="absolute right-0 flex items-center gap-2 bg-white pl-2 h-full">
+          <div className="absolute right-0 flex items-center gap-2 bg-white dark:bg-stone-800 pl-2 h-full rounded-r-xl">
             {(inputValue.toLowerCase().includes('bolivia') || suggestions.some(s => s.isLocal)) && (
               <Image src="https://flagcdn.com/w20/bo.png" alt="BO" width={20} height={14} className="rounded-sm flex-shrink-0" />
             )}
@@ -317,22 +330,22 @@ const handleSelect = (place: MapboxFeature) => {
       </div>
 
       {isOpen && (
-        <div style={dropdownStyle} className="bg-white border border-stone-200 rounded-xl shadow-xl overflow-hidden">
+        <div style={dropdownStyle} className="bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-xl shadow-xl overflow-hidden">
           {/* HISTORIAL: Solo cuando el input está vacío */}
           {inputValue === '' && history.length > 0 && (
             <div className="max-h-60 overflow-y-auto overscroll-contain">
-              <div className="px-4 py-2 bg-stone-50 border-b border-stone-100 flex justify-between items-center">
+              <div className="px-4 py-2 bg-stone-50 dark:bg-stone-900 border-b border-stone-100 dark:border-stone-700 flex justify-between items-center">
                 <span className="text-[10px] uppercase font-bold text-stone-400 tracking-wider">Búsquedas recientes</span>
                 {!localStorage.getItem("token") && (
                   <span className="text-[9px] text-stone-300 font-medium">Limite (Máx 10)</span>
                 )}
               </div>
               {(showAll ? history : history.slice(0, 5)).map((item, idx) => (
-                <div key={`hist-${idx}`} className="group flex items-center justify-between hover:bg-orange-50 border-b border-stone-50 last:border-0">
+                <div key={`hist-${idx}`} className="group flex items-center justify-between hover:bg-orange-50 dark:hover:bg-stone-700 border-b border-stone-50 dark:border-stone-700 last:border-0">
                   <button type="button" onClick={() => handleHistorySelect(item)} className="flex-1 px-4 py-3 flex items-center gap-3 text-left">
                     <History className="w-3.5 h-3.5 text-stone-400" />
                     <div className="flex items-center justify-between w-full pr-2">
-                      <span className="text-sm text-stone-600">{item}</span>
+                      <span className="text-sm text-stone-600 dark:text-stone-300">{item}</span>
                       <Image src="https://flagcdn.com/w20/bo.png" alt="BO" width={16} height={11} className="rounded-sm opacity-70" />
                     </div>
                   </button>
@@ -342,7 +355,7 @@ const handleSelect = (place: MapboxFeature) => {
                 </div>
               ))}
               {history.length > 5 && (
-                <div className="flex justify-end border-t border-stone-50 bg-white">
+                <div className="flex justify-end border-t border-stone-50 dark:border-stone-700 bg-white dark:bg-stone-800">
                   <button type="button" onClick={() => setShowAll(!showAll)} className={`px-4 py-2 text-xs font-bold transition-colors ${showAll ? "text-stone-500 hover:text-stone-700" : "text-orange-500 hover:text-orange-600"}`}>
                     {showAll ? "Ver menos" : "Ver más"}
                   </button>
@@ -351,7 +364,7 @@ const handleSelect = (place: MapboxFeature) => {
             </div>
           )}
 
-          {inputValue.length >= 2 && (
+          {inputValue.length >= 3 && (
             <div className="max-h-[300px] overflow-y-auto overscroll-contain">
               {isLoading ? (
                 <div className="px-4 py-6 text-center flex flex-col items-center gap-2">
@@ -360,11 +373,11 @@ const handleSelect = (place: MapboxFeature) => {
                 </div>
               ) : suggestions.length > 0 ? (
                 suggestions.map((place) => (
-                  <button key={place.id} type="button" onClick={() => handleSelect(place)} className="w-full px-4 py-3 flex items-center justify-between hover:bg-orange-50 border-b border-stone-50 last:border-0 transition-colors">
+                  <button key={place.id} type="button" onClick={() => handleSelect(place)} className="w-full px-4 py-3 flex items-center justify-between hover:bg-orange-50 dark:hover:bg-stone-700 border-b border-stone-50 dark:border-stone-700 last:border-0 transition-colors">
                     <div className="flex items-center gap-3 overflow-hidden">
                       <Search className="w-4 h-4 text-stone-400 flex-shrink-0" />
                       <div className="flex flex-col text-left min-w-0">
-                        <span className="text-sm font-bold text-stone-600 truncate">{place.text}</span>
+                        <span className="text-sm font-bold text-stone-600 dark:text-stone-200 truncate">{place.text}</span>
                         <span className="text-xs text-stone-400 truncate">{place.place_name}</span>
                       </div>
                     </div>

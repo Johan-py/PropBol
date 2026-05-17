@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+// Íconos de navegación para paginación
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
@@ -24,6 +25,8 @@ export default function MapaListadoPaginacion({
   onPageSizeChange,
   hint,
 }: MapaListadoPaginacionProps) {
+  // Calcula el total de páginas
+  // Siempre mínimo 1 para evitar divisiones inválidas y mostrar controles de paginación aunque no haya resultados
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const safePage = Math.min(Math.max(1, page), totalPages);
   const disabled = total === 0;
@@ -43,8 +46,8 @@ export default function MapaListadoPaginacion({
   const to = disabled ? 0 : Math.min(safePage * pageSize, total);
 
   return (
-    <div className="shrink-0 border-t border-stone-100 bg-stone-50 px-3 py-2 flex flex-col gap-2">
-      <div className="flex flex-wrap items-center justify-between gap-2">
+    <div className="shrink-0 border-t border-stone-100 bg-stone-50 px-3 py-2 flex flex-col items-center gap-2">
+      <div className="flex flex-wrap items-center justify-center gap-3">
         <label className="flex items-center gap-2 text-xs text-stone-600">
           <span className="whitespace-nowrap">Por página</span>
           <select
@@ -59,6 +62,7 @@ export default function MapaListadoPaginacion({
               }
             }}
           >
+            {/* Render dinámico de opciones */}
             {PAGE_SIZE_OPTIONS.map((n) => (
               <option key={n} value={n}>
                 {n}
@@ -68,6 +72,7 @@ export default function MapaListadoPaginacion({
           </select>
         </label>
         {showPaginationControls ? (
+          // Botones de navegación de página
           <div className="flex items-center gap-1 shrink-0" aria-label="Paginación">
             {safePage > 1 ? (
               <button
@@ -112,17 +117,20 @@ export default function MapaListadoPaginacion({
           </div>
         ) : null}
       </div>
-      <p className="text-[11px] text-stone-500 text-center sm:text-left">
+
+      <p className="text-[11px] text-stone-500 text-center">
         {disabled
           ? "Sin inmuebles en esta búsqueda — la paginación se activará al haber resultados."
           : `Mostrando ${from}–${to} de ${total}`}
       </p>
+
       {!disabled && totalPages > 1 && safePage >= totalPages && (
         <p className="text-[11px] text-stone-400 text-center">No hay más resultados para mostrar.</p>
       )}
+      
       {disabled && hint ? (
-        <p className="text-[11px] text-red-600/90 text-center sm:text-left break-words">{hint}</p>
-      ) : null}
+        <p className="text-[11px] text-red-600/90 text-center break-words">{hint}</p>
+) : null}
     </div>
   );
 }
