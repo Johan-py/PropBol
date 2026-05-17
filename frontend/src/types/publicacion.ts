@@ -23,32 +23,32 @@ export interface MisPublicacionesItem {
 }
 
 export interface FormPublicar {
-  titulo: string
-  tipoPropiedad: string
-  precio: string
-  superficie: string
-  habitaciones: string
-  banos: string
-  direccion: string
-  ciudad: string
-  codigoPostal: string
-  descripcion: string
+  titulo: string;
+  tipoPropiedad: string;
+  precio: string;
+  superficie: string;
+  habitaciones: string;
+  banos: string;
+  direccion: string;
+  ciudad: string;
+  codigoPostal: string;
+  descripcion: string;
 }
 
 export interface ErrorValidacion {
-  campo: keyof FormPublicar
-  seccion: 'Información Básica' | 'Características' | 'Ubicación' | 'Detalles'
-  mensaje: string
+  campo: keyof FormPublicar;
+  seccion: "Información Básica" | "Características" | "Ubicación" | "Detalles";
+  mensaje: string;
 }
 
 export type EstadoPublicacion =
-  | 'idle'
-  | 'validando'
-  | 'errores'
-  | 'confirmando'
-  | 'publicando'
-  | 'exito'
-  | 'error_publicacion'
+  | "idle"
+  | "validando"
+  | "errores"
+  | "confirmando"
+  | "publicando"
+  | "exito"
+  | "error_publicacion";
 
 export interface PublicacionImagen {
   id: number;
