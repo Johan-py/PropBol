@@ -183,14 +183,9 @@ function BusquedaMapaContent() {
 
   const toggleOferta = () => {
     const newState = !isOfertaOpen
-
-    if (newState) {
-      setIsPriceFilterOpen(false)
-      setActiveSidebarView('results')
-      setIsSidebarOpen(true)
-    }
     setIsOfertaOpen(newState)
 
+    // Actualizar URL
     const params = new URLSearchParams(searchParams.toString())
     if (newState) {
       params.set('soloOfertas', 'true')
@@ -201,26 +196,12 @@ function BusquedaMapaContent() {
   }
 
   const toggleCapacidad = () => {
-    if (isOfertaOpen) {
-      setIsOfertaOpen(false)
-      const params = new URLSearchParams(searchParams.toString())
-      params.delete('soloOfertas')
-      router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
-    }
-
     setIsPriceFilterOpen(false)
     setIsSidebarOpen(true)
     setActiveSidebarView((prev) => (prev === 'capacidad' ? 'results' : 'capacidad'))
   }
 
   const openEtiquetas = () => {
-    if (isOfertaOpen) {
-      setIsOfertaOpen(false)
-      const params = new URLSearchParams(searchParams.toString())
-      params.delete('soloOfertas')
-      router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
-    }
-
     setIsPriceFilterOpen(false)
     setIsSidebarOpen(true)
     setActiveSidebarView((prev) => (prev === 'etiquetas' ? 'results' : 'etiquetas'))
@@ -874,15 +855,17 @@ function BusquedaMapaContent() {
     <div className="flex bg-stone-100 p-1 rounded-md border border-stone-200 shadow-inner scale-90">
       <button
         onClick={() => setViewMode('grid')}
-        className={`p-1 rounded transition-colors ${viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-          }`}
+        className={`p-1 rounded transition-colors ${
+          viewMode === 'grid' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
+        }`}
       >
         <LayoutGrid size={16} />
       </button>
       <button
         onClick={() => setViewMode('list')}
-        className={`p-1 rounded transition-colors ${viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
-          }`}
+        className={`p-1 rounded transition-colors ${
+          viewMode === 'list' ? 'bg-white text-[#ea580c] shadow-sm' : 'text-stone-400'
+        }`}
       >
         <ListIcon size={16} />
       </button>
@@ -924,95 +907,97 @@ function BusquedaMapaContent() {
         />
       ) : (
         <div
-          className={`gap-3 flex flex-col ${viewMode === 'list'
-            ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
-            : ''
-            }`}
+          className={`gap-3 flex flex-col ${
+            viewMode === 'list'
+              ? 'divide-y divide-gray-100 bg-white border border-gray-100 rounded-xl shadow-sm'
+              : ''
+          }`}
         >
           {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => {
             const isSelected = isCompareMode && selectedIds.includes(property.id);
             return (
-              <div
-                key={property.id}
-                onClick={() => {
-                  if (isCompareMode) {
-                    toggleProperty(property.id)
-                  } else {
-                    // HU4 - Mantiene la selección visual actual
-                    setSelectedPropertyId(property.id)
+            <div
+              key={property.id}
+              onClick={() => {
+                if (isCompareMode) {
+                  toggleProperty(property.id)
+                } else {
+                  // HU4 - Mantiene la selección visual actual
+                  setSelectedPropertyId(property.id)
 
-                    // HU4 - Conserva el comportamiento existente del listado móvil
-                    onClickItem?.(property)
-                  }
-                }}
-                /* Hack: Cambiamos ring por outline RGB y rounded-xl por rounded-[16px] */
-                className={`cursor-pointer transition-all duration-200 rounded-[16px] relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${viewMode === 'grid'
+                  // HU4 - Conserva el comportamiento existente del listado móvil
+                  onClickItem?.(property)
+                }
+              }}
+              /* Hack: Cambiamos ring por outline RGB y rounded-xl por rounded-[16px] */
+              className={`cursor-pointer transition-all duration-200 rounded-[16px] relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${
+                viewMode === 'grid'
                   ? 'transform scale-95 origin-top mx-auto mb-[-4%]'
                   : 'w-full py-1 hover:bg-stone-100 dark:hover:bg-slate-800'
-                  } ${isSelected
-                    ? '!outline !outline-4 !outline-[rgb(234,88,12)] scale-[0.98] shadow-lg bg-orange-50/30 dark:!bg-slate-800/80 z-10'
-                    : ''
-                  }`}
-              >
-                {/* Icono flotante del Check Naranja */}
-                {isSelected && (
-                  <div className="absolute top-3 right-3 z-20 !bg-[rgb(234,88,12)] text-white p-1 rounded-full shadow-md">
-                    <Check size={16} strokeWidth={3} />
-                  </div>
-                )}
+              } ${
+                isSelected
+                  ? '!outline !outline-4 !outline-[rgb(234,88,12)] scale-[0.98] shadow-lg bg-orange-50/30 dark:!bg-slate-800/80 z-10'
+                  : ''
+              }`}
+            >
+              {/* Icono flotante del Check Naranja */}
+              {isSelected && (
+                <div className="absolute top-3 right-3 z-20 !bg-[rgb(234,88,12)] text-white p-1 rounded-full shadow-md">
+                  <Check size={16} strokeWidth={3} />
+                </div>
+              )}
 
-                {viewMode === 'grid' ? (
-                  <PropertyCard
-                    imagen={
-                      property.thumbnailUrl ||
-                      property.imagen ||
-                      'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
-                    }
-                    estado={property.type}
-                    precioFormateado={property.precioFormateado || 'Consultar precio'}
-                    descripcion={property.descripcion || property.title}
-                    ubicacionTexto={property.ubicacionTexto}
-                    categoriaTexto={property.categoriaTexto}
-                    accionTexto={property.accionTexto}
-                    lat={property.lat}
-                    lng={property.lng}
-                    camas={property.nroCuartos ?? 0}
-                    banos={property.nroBanos ?? 0}
-                    metros={property.superficieM2 ?? 0}
-                    // HU4 - Pasa la acción de abrir detalle al botón "Ver detalles" en vista grilla
-                    onViewDetails={() => {
-                      if (!isCompareMode) abrirDetallePropiedad(property.id)
-                    }}
-                    precio={property.precio ? Number(property.precio) : undefined}
-                    precio_anterior={
-                      property.precio_anterior ? Number(property.precio_anterior) : undefined
-                    }
-                  />
-                ) : (
-                  <PropertyRow
-                    title={property.title}
-                    precioFormateado={property.precioFormateado || 'Consultar precio'}
-                    size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
-                    ubicacionTexto={property.ubicacionTexto}
-                    categoriaTexto={property.categoriaTexto}
-                    accionTexto={property.accionTexto}
-                    lat={property.lat}
-                    lng={property.lng}
-                    contactType="whatsapp"
-                    image={
-                      property.thumbnailUrl ||
-                      property.imagen ||
-                      'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
-                    }
-                    // HU4 - Pasa la acción de abrir detalle al botón "Ver detalles" en vista tabla
-                    onViewDetails={() => {
-                      if (!isCompareMode) abrirDetallePropiedad(property.id)
-                    }}
-                  />
-                )}
-              </div>
-            )
-          })}
+              {viewMode === 'grid' ? (
+                <PropertyCard
+                  imagen={
+                    property.thumbnailUrl ||
+                    property.imagen ||
+                    'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
+                  }
+                  estado={property.type}
+                  precioFormateado={property.precioFormateado || 'Consultar precio'}
+                  descripcion={property.descripcion || property.title}
+                  ubicacionTexto={property.ubicacionTexto}
+                  categoriaTexto={property.categoriaTexto}
+                  accionTexto={property.accionTexto}
+                  lat={property.lat}
+                  lng={property.lng}
+                  camas={property.nroCuartos ?? 0}
+                  banos={property.nroBanos ?? 0}
+                  metros={property.superficieM2 ?? 0}
+                  // HU4 - Pasa la acción de abrir detalle al botón "Ver detalles" en vista grilla
+                  onViewDetails={() => {
+                    if (!isCompareMode) abrirDetallePropiedad(property.id)
+                  }}
+                  precio={property.precio ? Number(property.precio) : undefined}
+                  precio_anterior={
+                    property.precio_anterior ? Number(property.precio_anterior) : undefined
+                  }
+                />
+              ) : (
+                <PropertyRow
+                  title={property.title}
+                  precioFormateado={property.precioFormateado || 'Consultar precio'}
+                  size={`${property.nroCuartos ?? 0} Dorm. • ${property.superficieM2 ?? 0} m²`}
+                  ubicacionTexto={property.ubicacionTexto}
+                  categoriaTexto={property.categoriaTexto}
+                  accionTexto={property.accionTexto}
+                  lat={property.lat}
+                  lng={property.lng}
+                  contactType="whatsapp"
+                  image={
+                    property.thumbnailUrl ||
+                    property.imagen ||
+                    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80'
+                  }
+                  // HU4 - Pasa la acción de abrir detalle al botón "Ver detalles" en vista tabla
+                  onViewDetails={() => {
+                    if (!isCompareMode) abrirDetallePropiedad(property.id)
+                  }}
+                />
+              )}
+            </div>
+          )})}
         </div>
       )}
     </div>
@@ -1569,25 +1554,11 @@ function BusquedaMapaContent() {
           console.log('🔍 Buscando con filtros:', nuevosFiltros)
         }}
         onOpenPriceFilter={() => {
-          if (isOfertaOpen) {
-            setIsOfertaOpen(false)
-            const params = new URLSearchParams(searchParams.toString())
-            params.delete('soloOfertas')
-            router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
-          }
-
           setIsPriceFilterOpen((prev) => !prev)
           setIsSidebarOpen(true)
           setActiveSidebarView('results')
         }}
         onOpenSuperficieFilter={() => {
-          if (isOfertaOpen) {
-            setIsOfertaOpen(false)
-            const params = new URLSearchParams(searchParams.toString())
-            params.delete('soloOfertas')
-            router.push(`/busqueda_mapa${params.toString() ? `?${params.toString()}` : ''}`)
-          }
-
           setIsPriceFilterOpen(false)
           setIsSidebarOpen(true)
           setActiveSidebarView((prev) => (prev === 'superficie' ? 'results' : 'superficie'))
@@ -1606,11 +1577,12 @@ function BusquedaMapaContent() {
       <main className="flex flex-col md:flex-row w-full flex-1 min-h-0 relative overflow-hidden border-b border-stone-200 dark:border-stone-700">
         {/* Panel lateral colapsable */}
         <aside
-          className={`bg-white dark:bg-stone-900 border-r border-stone-200 dark:border-stone-800 flex flex-col z-10 transition-[width] duration-200 min-h-0 overflow-hidden ${isSidebarOpen ? 'w-full md:h-full h-[65dvh]' : 'w-0'
-            }`}
+          className={`bg-white dark:bg-stone-900 border-r border-stone-200 dark:border-stone-800 flex flex-col z-10 transition-[width] duration-200 min-h-0 overflow-hidden ${
+            isSidebarOpen ? 'w-full md:h-full h-[65dvh]' : 'w-0'
+          }`}
           style={
-            isSidebarOpen
-              ? { width: isMounted ? (activeSidebarView === 'results' && !isPriceFilterOpen ? effectiveSidebarWidth : 450) : 450 }
+            isSidebarOpen 
+              ? { width: isMounted ? (activeSidebarView === 'results' && !isPriceFilterOpen ? effectiveSidebarWidth : 450) : 450 } 
               : { width: 0 }
           }
         >
@@ -1707,8 +1679,9 @@ function BusquedaMapaContent() {
                 {/* BLOQUE 2: títulos + orden+vista: grid evita hueco enorme al ensanchar el panel */}
                 <div className={`px-4 pb-3 flex flex-col ${isScrolled ? 'pt-3 gap-2' : 'gap-3'}`}>
                   <div
-                    className={`grid items-start gap-x-4 gap-y-3 ${resultsHeaderSideBySide ? 'grid-cols-[minmax(0,1fr)_auto]' : 'grid-cols-1'
-                      }`}
+                    className={`grid items-start gap-x-4 gap-y-3 ${
+                      resultsHeaderSideBySide ? 'grid-cols-[minmax(0,1fr)_auto]' : 'grid-cols-1'
+                    }`}
                   >
                     <div className="flex min-w-0 justify-between gap-2">
                       <div className="flex min-w-0 flex-col">
@@ -1723,7 +1696,7 @@ function BusquedaMapaContent() {
                                 ? 'Propiedades con precio reducido para ti'
                                 : 'Resultados de búsqueda'}
                         </h1>
-                        {/* <button
+                       {/* <button
                           onClick={() => {
                             if (busquedaModo === 'especifica') {
                               cambiarAModoGeneral(
@@ -1763,7 +1736,7 @@ function BusquedaMapaContent() {
                                 : 'propiedades encontradas'}
                             </span>
                           </div>
-
+      
                           {isClusterView && (
                             <button
                               type="button"
@@ -1796,14 +1769,16 @@ function BusquedaMapaContent() {
                     </div>
 
                     <div
-                      className={`flex w-full flex-col gap-2 ${resultsHeaderSideBySide ? 'w-auto max-w-full shrink-0 items-end' : ''
-                        }`}
+                      className={`flex w-full flex-col gap-2 ${
+                        resultsHeaderSideBySide ? 'w-auto max-w-full shrink-0 items-end' : ''
+                      }`}
                     >
                       <div
-                        className={`flex w-full flex-wrap items-end gap-x-2 gap-y-2 ${resultsHeaderSideBySide
-                          ? 'w-auto max-w-[22rem] justify-end'
-                          : 'justify-start'
-                          }`}
+                        className={`flex w-full flex-wrap items-end gap-x-2 gap-y-2 ${
+                          resultsHeaderSideBySide
+                            ? 'w-auto max-w-[22rem] justify-end'
+                            : 'justify-start'
+                        }`}
                       >
                         <MenuOrdenamiento
                           totalResultados={displayedProperties.length}
@@ -1816,20 +1791,22 @@ function BusquedaMapaContent() {
                           <button
                             type="button"
                             onClick={() => setViewMode('grid')}
-                            className={`p-1 rounded transition-colors ${viewMode === 'grid'
-                              ? 'bg-white dark:bg-stone-700 text-[#ea580c] shadow-sm'
-                              : 'text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300'
-                              }`}
+                            className={`p-1 rounded transition-colors ${
+                              viewMode === 'grid'
+                                ? 'bg-white dark:bg-stone-700 text-[#ea580c] shadow-sm'
+                                : 'text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300'
+                            }`}
                           >
                             <LayoutGrid size={16} />
                           </button>
                           <button
                             type="button"
                             onClick={() => setViewMode('list')}
-                            className={`p-1 rounded transition-colors ${viewMode === 'list'
-                              ? 'bg-white dark:bg-stone-700 text-[#ea580c] shadow-sm'
-                              : 'text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300'
-                              }`}
+                            className={`p-1 rounded transition-colors ${
+                              viewMode === 'list'
+                                ? 'bg-white dark:bg-stone-700 text-[#ea580c] shadow-sm'
+                                : 'text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300'
+                            }`}
                           >
                             <ListIcon size={16} />
                           </button>
@@ -1880,13 +1857,15 @@ function BusquedaMapaContent() {
                   />
                 ) : (
                   <div
-                    className={`${viewMode === 'list'
-                      ? 'gap-4 flex flex-col'
-                      : 'grid items-stretch gap-4 [grid-template-columns:repeat(auto-fill,minmax(var(--card-min-width),1fr))]'
-                      } ${viewMode === 'list'
+                    className={`${
+                      viewMode === 'list'
+                        ? 'gap-4 flex flex-col'
+                        : 'grid items-stretch gap-4 [grid-template-columns:repeat(auto-fill,minmax(var(--card-min-width),1fr))]'
+                    } ${
+                      viewMode === 'list'
                         ? 'divide-y divide-gray-100 dark:divide-stone-800 bg-white dark:bg-stone-900 border border-gray-100 dark:border-stone-800 rounded-xl shadow-sm'
                         : ''
-                      }`}
+                    }`}
                     style={
                       viewMode === 'grid'
                         ? { ['--card-min-width' as string]: `${desktopGridMinWidth}px` }
@@ -1894,40 +1873,42 @@ function BusquedaMapaContent() {
                     }
                   >
                     {(isClusterView ? clusterProperties : paginatedProperties).map((property: any) => {
-                      const isSelected = isCompareMode && selectedIds.includes(property.id);
-                      return (
-                        <div
-                          key={property.id}
-                          onMouseEnter={() => setHoveredId(property.id)}
-                          onMouseLeave={() => setHoveredId(null)}
-                          style={
-                            viewMode === 'grid'
-                              ? { maxWidth: `min(100%, ${GRID_MAX_CARD_WIDTH}px)` }
-                              : undefined
-                          }
-                          onClick={() => {
-                            if (isCompareMode) {
-                              toggleProperty(property.id)
-                            } else {
-                              setSelectedPropertyId(property.id)
-                            }
-                          }}
-                          className={`cursor-pointer transition-all duration-200 rounded-[16px] relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${viewMode === 'grid'
-                            ? 'h-full w-full justify-self-center'
-                            : 'w-full py-1 hover:bg-stone-100 dark:hover:bg-stone-800'
-                            } ${isSelected
-                              ? '!outline !outline-4 !outline-[rgb(234,88,12)] scale-[0.98] shadow-lg dark:!bg-stone-800/80 z-10'
-                              : ''
-                            }`}
-                        >
-                          {/* Icono flotante del Check Naranja */}
-                          {isSelected && (
-                            <div className="absolute top-3 right-3 z-20 !bg-[rgb(234,88,12)] text-white p-1 rounded-full shadow-md">
-                              <Check size={16} strokeWidth={3} />
-                            </div>
-                          )}
+                const isSelected = isCompareMode && selectedIds.includes(property.id);
+                return (
+                <div
+                  key={property.id}
+                  onMouseEnter={() => setHoveredId(property.id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                  style={
+                    viewMode === 'grid'
+                      ? { maxWidth: `min(100%, ${GRID_MAX_CARD_WIDTH}px)` }
+                      : undefined
+                  }
+                  onClick={() => {
+                    if (isCompareMode) {
+                      toggleProperty(property.id)
+                    } else {
+                      setSelectedPropertyId(property.id)
+                    }
+                  }}
+                  className={`cursor-pointer transition-all duration-200 rounded-[16px] relative focus:outline-none focus:ring-0 focus:ring-offset-0 ${
+                    viewMode === 'grid'
+                      ? 'h-full w-full justify-self-center'
+                      : 'w-full py-1 hover:bg-stone-100 dark:hover:bg-stone-800'
+                  } ${
+                    isSelected
+                      ? '!outline !outline-4 !outline-[rgb(234,88,12)] scale-[0.98] shadow-lg dark:!bg-stone-800/80 z-10'
+                      : ''
+                  }`}
+                >
+                  {/* Icono flotante del Check Naranja */}
+                  {isSelected && (
+                    <div className="absolute top-3 right-3 z-20 !bg-[rgb(234,88,12)] text-white p-1 rounded-full shadow-md">
+                      <Check size={16} strokeWidth={3} />
+                    </div>
+                  )}
 
-                          {viewMode === 'grid' ? (
+                  {viewMode === 'grid' ? (
                             <PropertyCard
                               imagen={
                                 property.thumbnailUrl ||
@@ -2240,7 +2221,7 @@ function BusquedaMapaContent() {
         />
       </main>
       {/* MONTAJE DEL MODAL COMPARATIVO */}
-      <CompareFooter
+      <CompareFooter 
         onOpenModal={() => {
           // Abrimos el modal instantáneamente para el usuario
           setIsModalOpen(true);
@@ -2261,12 +2242,12 @@ function BusquedaMapaContent() {
               })
             }).catch(err => console.error("Error al guardar historial de comparación:", err));
           }
-        }}
+        }} 
       />
-
-      <ComparatorModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+      
+      <ComparatorModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
       />
     </div>
   )
