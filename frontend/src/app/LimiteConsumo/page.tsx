@@ -151,7 +151,7 @@ export default function LimiteConsumoPage() {
           {/* BARRA DE PROGRESO */}
           <div className="w-full bg-white/20 rounded-full h-4 mb-3">
             <div
-              className={`h-3 rounded-full transition-all duration-700 ${colorBarra}`}
+              className={`h-3 rounded-full transition-all duration-1000 ${colorBarra}`}
               style={{ width: `${Math.min(porcentaje, 100)}%` }}
             />
           </div>
