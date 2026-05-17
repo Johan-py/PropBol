@@ -8,7 +8,13 @@ export interface Etiqueta {
   id: string
   nombre: string
   color?: string
-  cantidad?: number
+  cantidad?: number 
+}
+
+type EtiquetaApi = {
+  id: number
+  nombre: string
+  cantidad?: number | null
 }
 
 interface EtiquetasSidebarProps {
@@ -42,26 +48,26 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
   useEffect(() => {
     if (!isOpen) return
     const fetchEtiquetas = async () => {
-      if (etiquetasDB.length > 0) return
       setIsLoading(true)
       try {
         const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000').replace(/\/$/, '')
-        const res = await fetch(`${API_URL}/api/parametros`)
-        if (!res.ok) throw new Error(`Error ${res.status}`)
+        const res = await fetch(`${API_URL}/api/tags`, { cache: 'no-store' })
+        if (!res.ok) throw new Error(`Error ${res.status}`)     
         const json = await res.json()
 
-        const etiquetas: Etiqueta[] = (json.data || []).map((item: { id: number; nombre: string }) => ({
+        const etiquetas: Etiqueta[] = (json.data || []).map((item: EtiquetaApi) => ({
           id: String(item.id),
-          nombre: item.nombre ?? '',
-          color: getFallbackColor(item.nombre ?? ''),
+          nombre: item.nombre?.trim() ?? '',
+          color: getFallbackColor(item.nombre?.trim() ?? ''),
+          cantidad: item.cantidad ?? undefined
         }))
-        setEtiquetasDB(etiquetas)
-        const nombresMap: Record<string, string> = {}
 
+        setEtiquetasDB(etiquetas)
+
+        const nombresMap: Record<string, string> = {}
         etiquetas.forEach((e) => {
           nombresMap[e.id] = e.nombre
         })
-
         sessionStorage.setItem(
           'propbol_etiquetas_nombres',
           JSON.stringify(nombresMap)
@@ -89,12 +95,14 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
     [etiquetasDB, selectedIds]
   )
 
-  // Disponibles: excluye las ya seleccionadas + aplica buscador
   const availableEtiquetas = useMemo(() => {
-    const sinSeleccionadas = etiquetasDB.filter(e => !selectedIds.includes(e.id))
-    if (!searchQuery.trim()) return sinSeleccionadas
-    const query = searchQuery.toLowerCase()
-    return sinSeleccionadas.filter(e => e.nombre.toLowerCase().includes(query))
+    const sinSeleccionadas = etiquetasDB.filter((e) => !selectedIds.includes(e.id))
+    const query = searchQuery.trim().toLowerCase()
+
+    if (!query) {
+      return sinSeleccionadas.filter(e => e.cantidad === undefined || e.cantidad > 0)
+    }
+    return sinSeleccionadas.filter((e) => e.nombre.toLowerCase().includes(query))
   }, [etiquetasDB, selectedIds, searchQuery])
 
   if (!isOpen) return null
@@ -148,7 +156,6 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
             placeholder="Buscar etiqueta..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            /* Input del buscador con soporte a modo oscuro (bordes y fondo RGB) */
             className="w-full border border-stone-200 rounded-lg pl-9 pr-3 py-2 text-sm outline-none transition-all bg-stone-50 focus:border-[rgb(217,119,6)] focus:ring-1 focus:ring-[rgb(217,119,6)] dark:bg-slate-800 dark:border-slate-700 dark:text-slate-200 dark:focus:border-[rgb(232,124,30)] dark:focus:ring-[rgb(232,124,30)]"
           />
         </div>
@@ -229,6 +236,11 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
                 >
                   <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: etiqueta.color }} />
                   <span>{etiqueta.nombre}</span>
+                  {typeof etiqueta.cantidad === 'number' && etiqueta.cantidad > 0 && (
+                    <span className="text-[10px] px-1.5 rounded-full bg-stone-100">
+                      {etiqueta.cantidad}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
@@ -246,19 +258,17 @@ export default function EtiquetasSidebar({ isOpen, onClose }: EtiquetasSidebarPr
           </p>
         )}
 
-        {/* Letras blancas puras y subrayado en modo oscuro */}
         <button
           type="button"
           onClick={handleClear}
-          className="text-sm text-stone-400 hover:text-[rgb(217,119,6)] transition-colors underline text-center w-full dark:!text-white dark:hover:!text-[rgb(232,124,30)]"
+          className="text-sm text-stone-400 hover:text-[rgb(217,119,6)] transition-colors underline text-center w-full dark:text-stone-300 dark:hover:text-[#e87c1e]"
         >
           Limpiar filtro
         </button>
 
-        {/* Hack RGB y rounded-[12px] para evadir a globals.css */}
         <button
           onClick={handleApply}
-          className="w-full !bg-[rgb(217,119,6)] hover:!bg-[rgb(185,94,0)] !text-white rounded-[12px] border-none font-bold py-3 px-4 transition-all active:scale-95 shadow-md dark:!bg-[rgb(232,124,30)] dark:hover:!bg-[rgb(217,119,6)]"
+          className="w-full bg-[#d97706] hover:bg-[#b95e00] text-white rounded-xl font-bold py-3 px-4 transition-all active:scale-95 shadow-md dark:bg-[#e87c1e] dark:hover:bg-[#d97706]"
         >
           Aplicar
         </button>
